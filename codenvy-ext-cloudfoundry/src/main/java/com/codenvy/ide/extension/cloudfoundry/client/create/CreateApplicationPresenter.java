@@ -28,6 +28,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -120,6 +121,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private LoginPresenter loginPresenter;
+
    /**
     * Create presenter.
     * 
@@ -129,11 +132,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * @param console
     * @param constant
     * @param autoBeanFactory
+    * @param loginPresenter
     */
    @Inject
    protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view,
       EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.frameworks = new ArrayList<Framework>();
 
@@ -144,6 +148,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       this.eventBus = eventBus;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
 
       this.eventBus.addHandler(CreateApplicationEvent.TYPE, this);
    }
@@ -293,7 +298,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             app.memory,
             app.nostart,
             new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
@@ -412,7 +417,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             project.getId(),
             warUrl,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-               appData.server, eventBus, console, constant)
+               appData.server, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(final CloudFoundryApplication cloudFoundryApp)
@@ -567,7 +572,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          CloudFoundryClientService.getInstance().getFrameworks(
             new CloudFoundryAsyncRequestCallback<List<Framework>>(new FrameworksUnmarshaller(
                new ArrayList<Framework>(), autoBeanFactory), getFrameworksLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(List<Framework> result)

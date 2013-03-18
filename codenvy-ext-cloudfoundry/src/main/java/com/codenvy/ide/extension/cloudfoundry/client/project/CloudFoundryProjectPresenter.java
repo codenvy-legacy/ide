@@ -29,6 +29,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationCon
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
@@ -83,6 +84,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
    private DeleteApplicationPresenter deleteAppPresenter;
 
+   private LoginPresenter loginPresenter;
+
    private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>()
    {
       @Override
@@ -108,7 +111,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       UpdatePropertiesPresenter updateProperyPresenter, ManageServicesPresenter manageServicesPresenter,
       UpdateApplicationPresenter updateApplicationPresenter, EventBus eventBus, ResourceProvider resourceProvider,
       Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-      StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter)
+      StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
+      LoginPresenter loginPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -124,6 +128,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.autoBeanFactory = autoBeanFactory;
       this.startAppPresenter = startAppPresenter;
       this.deleteAppPresenter = deleteAppPresenter;
+      this.loginPresenter = loginPresenter;
    }
 
    /**
@@ -222,7 +227,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                {
                   getApplicationInfo(project);
                }
-            }, null, eventBus, console, constant)
+            }, null, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)

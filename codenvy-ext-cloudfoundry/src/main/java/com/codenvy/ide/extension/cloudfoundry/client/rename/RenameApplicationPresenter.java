@@ -26,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
@@ -59,10 +60,12 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private LoginPresenter loginPresenter;
+
    @Inject
    protected RenameApplicationPresenter(RenameApplicationView view, EventBus eventBus,
       ResourceProvider resourceProvider, Console console, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -71,6 +74,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       this.eventBus = eventBus;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
 
       this.eventBus.addHandler(RenameApplicationEvent.TYPE, this);
    }
@@ -114,7 +118,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
          CloudFoundryClientService.getInstance().renameApplication(resourceProvider.getVfsId(), projectId,
             applicationName, null, newName,
             new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
@@ -171,7 +175,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
 
          CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null,
-               eventBus, console, constant)
+               eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)

@@ -26,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
@@ -66,12 +67,14 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private LoginPresenter loginPresenter;
+
    private AsyncCallback<String> appDeleteCallback;
 
    @Inject
    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
       EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -80,6 +83,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
    }
 
    /**
@@ -145,7 +149,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null,
-               eventBus, console, constant)
+               eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -188,7 +192,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
          CloudFoundryClientService.getInstance().deleteApplication(resourceProvider.getVfsId(), projectId, appName,
             serverName, isDeleteServices,
             new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)

@@ -26,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -67,15 +68,19 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
 
    private HandlerRegistration projectBuildHandler;
 
+   private LoginPresenter loginPresenter;
+
    @Inject
    protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
-      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      LoginPresenter loginPresenter)
    {
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
    }
 
    LoggedInHandler loggedInHandler = new LoggedInHandler()
@@ -103,7 +108,8 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
       {
          CloudFoundryClientService.getInstance().updateApplication(resourceProvider.getVfsId(), projectId, null, null,
             warUrl,
-            new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, console, constant)
+            new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, console, constant,
+               loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
@@ -121,7 +127,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
                         null,
                         null,
                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null,
-                           eventBus, console, constant)
+                           eventBus, console, constant, loginPresenter)
                         {
                            @Override
                            protected void onSuccess(CloudFoundryApplication result)
@@ -176,7 +182,8 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
       {
          CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null,
             resourceProvider.getVfsId(), projectId, 0, 0, false,
-            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, eventBus, console, constant)
+            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, eventBus, console, constant,
+               loginPresenter)
             {
                @Override
                protected void onSuccess(String result)

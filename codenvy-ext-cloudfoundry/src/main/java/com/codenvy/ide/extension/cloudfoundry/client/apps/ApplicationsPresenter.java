@@ -27,6 +27,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
@@ -69,6 +70,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
 
    private DeleteApplicationPresenter deleteAppPresenter;
 
+   private LoginPresenter loginPresenter;
+
    private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>()
    {
       @Override
@@ -93,13 +96,15 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
     * @param resourceProvider
     * @param startAppPresenter
     * @param deleteAppPresenter
+    * @param loginPresenter
     * @param constant
     * @param autoBeanFactory
     */
    @Inject
    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, Console console,
       StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
-      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
+      LoginPresenter loginPresenter, CloudFoundryLocalizationConstant constant,
+      CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -109,6 +114,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
       this.autoBeanFactory = autoBeanFactory;
       this.startAppPresenter = startAppPresenter;
       this.deleteAppPresenter = deleteAppPresenter;
+      this.loginPresenter = loginPresenter;
    }
 
    /**
@@ -146,7 +152,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
                {
                   getApplicationList();
                }
-            }, null, currentServer, eventBus, console, constant)
+            }, null, currentServer, eventBus, console, constant, loginPresenter)
             {
 
                @Override

@@ -26,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.resources.model.Project;
@@ -60,6 +61,8 @@ public class StartApplicationPresenter
 
    private AsyncCallback<String> appInfoChangedCallback;
 
+   private LoginPresenter loginPresenter;
+
    /**
     * Create presenter.
     * 
@@ -68,16 +71,19 @@ public class StartApplicationPresenter
     * @param console
     * @param constant
     * @param autoBeanFactory
+    * @param loginPresenter
     */
    @Inject
    protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
-      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      LoginPresenter loginPresenter)
    {
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
    }
 
    public void bindDisplay(List<Framework> frameworks)
@@ -181,7 +187,7 @@ public class StartApplicationPresenter
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStartedLoggedInHandler,
-               null, eventBus, console, constant)
+               null, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -228,7 +234,7 @@ public class StartApplicationPresenter
             name,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
-               eventBus, console, constant)
+               eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -325,7 +331,7 @@ public class StartApplicationPresenter
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
-               null, eventBus, console, constant)
+               null, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -363,7 +369,8 @@ public class StartApplicationPresenter
       try
       {
          CloudFoundryClientService.getInstance().stopApplication(resourceProvider.getVfsId(), projectId, name, null,
-            new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, console, constant)
+            new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, console, constant,
+               loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
@@ -381,7 +388,7 @@ public class StartApplicationPresenter
                         name,
                         null,
                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null,
-                           eventBus, console, constant)
+                           eventBus, console, constant, loginPresenter)
                         {
                            @Override
                            protected void onSuccess(CloudFoundryApplication result)
@@ -442,7 +449,7 @@ public class StartApplicationPresenter
             name,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler, null,
-               eventBus, console, constant)
+               eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)

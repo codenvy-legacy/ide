@@ -25,6 +25,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
@@ -111,10 +112,12 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private LoginPresenter loginPresenter;
+
    @Inject
    protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, Console console,
       CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -123,6 +126,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       this.createServicePresenter = createServicePresenter;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
    }
 
    /**
@@ -194,7 +198,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       {
          CloudFoundryClientService.getInstance().deleteService(null, service.getName(),
             new CloudFoundryAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(Object result)
@@ -226,7 +230,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
          CloudFoundryClientService.getInstance().bindService(null, service.getName(), application.getName(), null,
             null,
             new CloudFoundryAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(Object result)
@@ -260,7 +264,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       {
          CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null,
             new CloudFoundryAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(Object result)
@@ -302,7 +306,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
             application.getName(),
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-               getApplicationInfoLoggedInHandler, null, eventBus, console, constant)
+               getApplicationInfoLoggedInHandler, null, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)

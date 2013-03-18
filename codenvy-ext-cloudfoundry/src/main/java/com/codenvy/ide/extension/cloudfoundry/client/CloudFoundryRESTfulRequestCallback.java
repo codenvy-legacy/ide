@@ -23,12 +23,14 @@ import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.rest.HTTPStatus;
 import com.codenvy.ide.websocket.rest.RequestCallback;
 import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
+
+import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 
 /**
  * WebSocket CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
@@ -57,6 +59,8 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
 
    private CloudFoundryLocalizationConstant constant;
 
+   private LoginPresenter loginPresenter;
+
    /**
     * Create callback.
     * 
@@ -64,11 +68,15 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
     * @param loggedIn
     * @param loginCanceled
     * @param eventBus
+    * @param console
+    * @param constant
+    * @param loginPresenter
     */
    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant)
+      LoginCanceledHandler loginCanceled, EventBus eventBus, Console console,
+      CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter)
    {
-      this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant);
+      this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant, loginPresenter);
    }
 
    /**
@@ -79,10 +87,13 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
     * @param loginCanceled
     * @param loginUrl
     * @param eventBus
+    * @param console
+    * @param constant
+    * @param loginPresenter
     */
    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus, Console console,
-      CloudFoundryLocalizationConstant constant)
+      CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter)
    {
       super(unmarshaller);
       this.loggedIn = loggedIn;
@@ -104,14 +115,14 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
          if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
             && serverException.getMessage().contains("Authentication required."))
          {
-            eventBus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+            loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
             return;
          }
          else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
             && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
             && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
          {
-            eventBus.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+            loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
             return;
          }
          else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()

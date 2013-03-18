@@ -26,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
@@ -54,9 +55,12 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private LoginPresenter loginPresenter;
+
    @Inject
    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
+      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      LoginPresenter loginPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -65,6 +69,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
 
       this.eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
    }
@@ -111,7 +116,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
                {
                   showApplicationInfo(projectId);
                }
-            }, null, eventBus, console, constant)
+            }, null, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)

@@ -47,7 +47,7 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
+public class LoginPresenter implements LoginView.ActionDelegate
 {
    private LoginView view;
 
@@ -78,8 +78,6 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      eventBus.addHandler(LoginEvent.TYPE, this);
    }
 
    /**
@@ -198,16 +196,15 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
    }
 
    /**
-    * {@inheritDoc}
+    * Shows dialog.
     */
-   @Override
-   public void onLogin(LoginEvent event)
+   public void showDialog(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled, String loginUrl)
    {
-      loggedIn = event.getLoggedIn();
-      loginCanceled = event.getLoginCanceled();
-      if (event.getLoginUrl() != null)
+      this.loggedIn = loggedIn;
+      this.loginCanceled = loginCanceled;
+      if (loginUrl != null)
       {
-         server = event.getLoginUrl();
+         server = loginUrl;
          if (server != null && !server.startsWith("http"))
          {
             server = "http://" + server;

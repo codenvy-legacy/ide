@@ -28,6 +28,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -91,10 +92,12 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private HandlerRegistration projectBuildHandler;
 
+   private LoginPresenter loginPresenter;
+
    @Inject
    protected DeployApplicationPresenter(DeployApplicationView view, EventBus eventBus,
       ResourceProvider resourcesProvider, Console console, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -103,6 +106,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
    }
 
    /**
@@ -233,7 +237,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
             resourcesProvider.getActiveProject().getId(),
             warUrl,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, server,
-               eventBus, console, constant)
+               eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -378,7 +382,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
          CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url,
             resourcesProvider.getVfsId(), null, 0, 0, true,
             new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)

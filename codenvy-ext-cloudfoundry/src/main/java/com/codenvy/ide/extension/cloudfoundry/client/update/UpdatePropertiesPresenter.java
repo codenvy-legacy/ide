@@ -26,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
@@ -61,15 +62,19 @@ public class UpdatePropertiesPresenter
 
    private AsyncCallback<String> updatePropertiesCallback;
 
+   private LoginPresenter loginPresenter;
+
    @Inject
    protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
-      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      LoginPresenter loginPresenter)
    {
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.loginPresenter = loginPresenter;
    }
 
    public void showUpdateMemoryDialog(AsyncCallback<String> callback)
@@ -105,7 +110,7 @@ public class UpdatePropertiesPresenter
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-               getOldMemoryValueLoggedInHandler, null, eventBus, console, constant)
+               getOldMemoryValueLoggedInHandler, null, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -162,7 +167,7 @@ public class UpdatePropertiesPresenter
          CloudFoundryClientService.getInstance().updateMemory(resourceProvider.getVfsId(), projectId, null, null,
             memory,
             new CloudFoundryAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
@@ -217,7 +222,7 @@ public class UpdatePropertiesPresenter
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-               getOldInstancesValueLoggedInHandler, null, eventBus, console, constant)
+               getOldInstancesValueLoggedInHandler, null, eventBus, console, constant, loginPresenter)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -282,7 +287,7 @@ public class UpdatePropertiesPresenter
          CloudFoundryClientService.getInstance().updateInstances(resourceProvider.getVfsId(), projectId, null, null,
             encodedExp,
             new CloudFoundryAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null, eventBus, console,
-               constant)
+               constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
@@ -300,7 +305,7 @@ public class UpdatePropertiesPresenter
                         null,
                         null,
                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null,
-                           eventBus, console, constant)
+                           eventBus, console, constant, loginPresenter)
                         {
                            @Override
                            protected void onSuccess(CloudFoundryApplication result)
