@@ -14,10 +14,7 @@
 
 package com.google.collide.shared.ot;
 
-import static com.google.collide.dto.DocOpComponent.Type.DELETE;
-import static com.google.collide.dto.DocOpComponent.Type.INSERT;
-import static com.google.collide.dto.DocOpComponent.Type.RETAIN;
-import static com.google.collide.dto.DocOpComponent.Type.RETAIN_LINE;
+import static com.google.collide.dto.DocOpComponent.Type.*;
 
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
@@ -26,12 +23,13 @@ import com.google.collide.dto.DocOpComponent.Insert;
 import com.google.collide.dto.DocOpComponent.Retain;
 import com.google.collide.dto.DocOpComponent.RetainLine;
 import com.google.collide.dto.shared.DocOpFactory;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 import java.util.List;
 

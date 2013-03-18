@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.google.collide.client.ui.menu;
 
-import com.google.collide.client.util.AnimationController;
+import com.codenvy.ide.client.util.AnimationController;
 import com.google.collide.mvp.CompositeView;
 
 import elemental.html.Element;

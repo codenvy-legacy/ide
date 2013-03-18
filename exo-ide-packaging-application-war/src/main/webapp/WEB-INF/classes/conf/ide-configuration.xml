@@ -135,8 +135,24 @@
          </value-param>
       </init-params>
    </component>
-
+   
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcher</type>
+   </component>
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcherApplication</type>
+   </component>
    <!-- End VirtualFileSystem -->
+
+  <!-- Chat -->
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.ProjectUsers</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.ide.collaboration.chat.server.ChatApplication</type>
+   </component>
+   <!-- End Chat -->
 
    <!-- LogReader -->
    <component>
@@ -618,6 +634,25 @@
 
    <component>
       <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+   </component>
+
+   <!-- End OAuth Support -->
+
+   <!--
+   ***************************************************************************************
+   ********************************** Collaboration Editor *************************************
+   ***************************************************************************************
+   -->
+   <component>
+      <type>com.google.collide.server.CollaborationEditorApplication</type>
+   </component>
+
+   <component>
+      <type>com.google.collide.server.participants.Participants</type>
+   </component>
+
+   <component>
+      <type>com.google.collide.server.documents.EditSessions</type>
    </component>
 
 </configuration>

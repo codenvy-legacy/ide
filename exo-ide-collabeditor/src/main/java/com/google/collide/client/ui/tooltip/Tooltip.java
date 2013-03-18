@@ -23,15 +23,13 @@ import com.google.collide.client.ui.menu.PositionController.Position;
 import com.google.collide.client.ui.menu.PositionController.Positioner;
 import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
-import com.google.collide.client.util.AnimationController;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.HoverController.HoverListener;
-import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.shared.util.JsonCollections;
+import com.codenvy.ide.client.util.AnimationController;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.HoverController.HoverListener;
+import com.codenvy.ide.client.util.logging.Log;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-
 import elemental.dom.Node;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -40,6 +38,8 @@ import elemental.events.EventTarget;
 import elemental.events.MouseEvent;
 import elemental.html.Element;
 import elemental.util.Timer;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Represents a single tooltip instance attached to any element, activated by

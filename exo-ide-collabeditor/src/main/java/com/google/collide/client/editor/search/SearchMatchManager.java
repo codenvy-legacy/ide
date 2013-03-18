@@ -22,10 +22,10 @@ import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.RegExpUtils;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.RegExpUtils;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 

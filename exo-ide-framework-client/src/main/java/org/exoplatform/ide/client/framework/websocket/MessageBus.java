@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.websocket;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.core.client.JavaScriptException;
+import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
@@ -27,6 +29,11 @@ import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.MessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,13 +43,38 @@ import java.util.Set;
 /**
  * Abstract WebSocket message bus, that provides two asynchronous
  * messaging patterns: RPC and list-based PubSub.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: MessageBus.java Dec 4, 2012 2:50:32 PM azatsarynnyy $
  *
  */
 public abstract class MessageBus implements MessageReceivedHandler
 {
+   /**
+    * Period (in milliseconds) to send heartbeat pings.
+    */
+   private static final int HEARTBEAT_PERIOD = 50 * 1000;
+
+   /**
+    * Period (in milliseconds) between reconnection attempts after connection has been closed.
+    */
+   private final static int FREQUENTLY_RECONNECTION_PERIOD = 2 * 1000;
+
+   /**
+    * Period (in milliseconds) between reconnection attempts after all previous
+    * <code>MAX_FREQUENTLY_RECONNECTION_ATTEMPTS</code> attempts is failed.
+    */
+   private final static int SELDOM_RECONNECTION_PERIOD = 60 * 1000;
+
+   /**
+    * Max. number of attempts to reconnect for every <code>FREQUENTLY_RECONNECTION_PERIOD</code> ms.
+    */
+   private final static int MAX_FREQUENTLY_RECONNECTION_ATTEMPTS = 5;
+
+   /**
+    * Max. number of attempts to reconnect for every <code>SELDOM_RECONNECTION_PERIOD</code> ms.
+    */
+   private final static int MAX_SELDOM_RECONNECTION_ATTEMPTS = 5;
 
    /**
     * This enumeration used to describe the ready state of the WebSocket connection.
@@ -77,6 +109,136 @@ public abstract class MessageBus implements MessageReceivedHandler
    }
 
    /**
+    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
+    */
+   private final Timer heartbeatTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         Message message = getHeartbeatMessage();
+         try
+         {
+            send(message, null);
+         }
+         catch (WebSocketException e)
+         {
+            if(getReadyState() == ReadyState.CLOSED)
+            {
+               wsListener.onClose(new WebSocketClosedEvent());
+            }
+            else
+            {
+               Log.error(MessageBus.class, e);
+            }
+         }
+      }
+   };
+
+   /**
+    * Timer for reconnecting WebSocket.
+    */
+   private Timer frequentlyReconnectionTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         if (frequentlyReconnectionAttemptsCounter == MAX_FREQUENTLY_RECONNECTION_ATTEMPTS)
+         {
+            cancel();
+            seldomReconnectionTimer.scheduleRepeating(SELDOM_RECONNECTION_PERIOD);
+            return;
+         }
+         frequentlyReconnectionAttemptsCounter++;
+         initialize();
+      }
+   };
+
+
+   /**
+    * Timer for reconnecting WebSocket.
+    */
+   private Timer seldomReconnectionTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         if (seldomReconnectionAttemptsCounter == MAX_SELDOM_RECONNECTION_ATTEMPTS)
+         {
+            cancel();
+            return;
+         }
+         seldomReconnectionAttemptsCounter++;
+         initialize();
+      }
+   };
+
+   private class WsListener implements ConnectionOpenedHandler, ConnectionClosedHandler, ConnectionErrorHandler
+   {
+
+      @Override
+      public void onClose(final WebSocketClosedEvent event)
+      {
+         heartbeatTimer.cancel();
+         frequentlyReconnectionTimer.scheduleRepeating(FREQUENTLY_RECONNECTION_PERIOD);
+         connectionClosedHandlers.dispatch(new Dispatcher<ConnectionClosedHandler>()
+         {
+            @Override
+            public void dispatch(ConnectionClosedHandler listener)
+            {
+               listener.onClose(event);
+            }
+         });
+      }
+
+      @Override
+      public void onError()
+      {
+         connectionErrorHandlers.dispatch(new Dispatcher<ConnectionErrorHandler>()
+         {
+            @Override
+            public void dispatch(ConnectionErrorHandler listener)
+            {
+               listener.onError();
+            }
+         });
+      }
+
+      @Override
+      public void onOpen()
+      {
+         // If the any timer has been started then stop it.
+         if (frequentlyReconnectionAttemptsCounter > 0)
+            frequentlyReconnectionTimer.cancel();
+         if (seldomReconnectionAttemptsCounter > 0)
+            seldomReconnectionTimer.cancel();
+
+         frequentlyReconnectionAttemptsCounter = 0;
+         seldomReconnectionAttemptsCounter = 0;
+         heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
+         connectionOpenedHandlers.dispatch(new Dispatcher<ConnectionOpenedHandler>()
+         {
+            @Override
+            public void dispatch(ConnectionOpenedHandler listener)
+            {
+               listener.onOpen();
+            }
+         });
+      }
+
+   }
+
+   /**
+    * Counter of attempts to reconnect.
+    */
+   private int frequentlyReconnectionAttemptsCounter;
+
+   /**
+    * Counter of attempts to reconnect.
+    */
+   private int seldomReconnectionAttemptsCounter;
+
+   /**
     * Internal {@link WebSocket} instance.
     */
    private WebSocket ws;
@@ -96,9 +258,17 @@ public abstract class MessageBus implements MessageReceivedHandler
     */
    private Map<String, Set<MessageHandler>> channelToSubscribersMap = new HashMap<String, Set<MessageHandler>>();
 
+   private ListenerManager<ConnectionOpenedHandler> connectionOpenedHandlers = ListenerManager.create();
+
+   private ListenerManager<ConnectionClosedHandler> connectionClosedHandlers = ListenerManager.create();
+
+   private ListenerManager<ConnectionErrorHandler> connectionErrorHandlers = ListenerManager.create();
+
+   protected WsListener wsListener;
+
    /**
     * Create new {@link MessageBus} instance.
-    * 
+    *
     * @param url WebSocket server URL
     */
    public MessageBus(String url)
@@ -111,17 +281,21 @@ public abstract class MessageBus implements MessageReceivedHandler
    /**
     * Initialize the message bus.
     */
-   public void initialize()
+   protected void initialize()
    {
       ws = WebSocket.create(url);
+      wsListener = new WsListener();
       ws.setOnMessageHandler(this);
-      callbackMap.clear();
-      channelToSubscribersMap.clear();
+      ws.setOnOpenHandler(wsListener);
+      ws.setOnCloseHandler(wsListener);
+      ws.setOnErrorHandler(wsListener);
+//      callbackMap.clear();
+//      channelToSubscribersMap.clear();
    }
 
    /**
     * Checks if the browser has support for WebSockets.
-    * 
+    *
     * @return <code>true</code> if WebSocket is supported;
     *         <code>false</code> if it's not
     */
@@ -140,7 +314,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Return the ready state of the WebSocket connection.
-    * 
+    *
     * @return ready state of the WebSocket
     * @throws WebSocketException when WebSocket is not initialized
     */
@@ -166,7 +340,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Send {@link Message}.
-    * 
+    *
     * @param message {@link Message} to send
     * @param callback callback for receiving reply to message. May be <code>null</code>.
     * @throws WebSocketException throws if an any error has occurred while sending data
@@ -174,14 +348,31 @@ public abstract class MessageBus implements MessageReceivedHandler
    public abstract void send(Message message, ReplyHandler callback) throws WebSocketException;
 
    /**
+    *Sends a message to an address.
+    * @param address the address of receiver
+    * @param message the message
+    * @throws WebSocketException throws if an any error has occurred while sending data
+    */
+   public abstract void send(String address, String message) throws WebSocketException;
+
+   /**
+    * Sends a message to an address, providing an replyHandler.
+    * @param address the address of receiver
+    * @param message  the message
+    * @param replyHandler the handler callback
+    * @throws WebSocketException throws if an any error has occurred while sending data
+    */
+   public abstract void send(String address, String message, ReplyHandler replyHandler) throws WebSocketException;
+
+   /**
     * Send text message.
-    * 
+    *
     * @param uuid a message identifier
     * @param message message to send
     * @param callback callback for receiving reply to message
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
-   protected void send(String uuid, String message, ReplyHandler callback) throws WebSocketException
+   protected void internalSend(String uuid, String message, ReplyHandler callback) throws WebSocketException
    {
       checkWebSocketConnectionState();
 
@@ -193,7 +384,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Transmit text data over WebSocket.
-    * 
+    *
     * @param message text message
     * @throws WebSocketException
     *       throws if an any error has occurred while sending data,
@@ -214,36 +405,22 @@ public abstract class MessageBus implements MessageReceivedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.events.MessageReceivedHandler#onMessageReceived(org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent)
-    */
-   @Override
-   public void onMessageReceived(MessageReceivedEvent event)
-   {
-      Message message = parseMessage(event.getMessage());
-      if (getChannel(message) != null)
-      {
-         // this is a message received by subscription
-         processSubscriptionMessage(message);
-      }
-      else
-      {
-         ReplyHandler callback = callbackMap.remove(message.getUuid());
-         if (callback != null)
-            callback.onReply(message);
-      }
-   }
-
-   /**
     * Parse text message to {@link Message} object.
-    * 
+    *
     * @param message text message
     * @return {@link Message}
     */
    protected abstract Message parseMessage(String message);
 
    /**
+    * Get message for heartbeat request
+    * @return {@link Message}
+    */
+   protected abstract Message getHeartbeatMessage();
+
+   /**
     * Process the {@link Message} that received by subscription.
-    * 
+    *
     * @param message {@link Message}
     */
    private void processSubscriptionMessage(Message message)
@@ -258,14 +435,49 @@ public abstract class MessageBus implements MessageReceivedHandler
          Set<MessageHandler> subscribersSetCopy = new HashSet<MessageHandler>(subscribersSet);
          for (MessageHandler handler : subscribersSetCopy)
          {
-            handler.onMessage(message);
+            //TODO this is nasty, need refactor this
+            if(handler instanceof SubscriptionHandler)
+            {
+               ((SubscriptionHandler)handler).onMessage(message);
+            }
+            else
+            {
+               handler.onMessage(message.getBody());
+            }
+         }
+      }
+   }
+
+   @Override
+   public void onMessageReceived(MessageReceivedEvent event)
+   {
+      Message message = parseMessage(event.getMessage());
+      if (getChannel(message) != null)
+      {
+         // this is a message received by subscription
+         processSubscriptionMessage(message);
+      }
+      else
+      {
+         ReplyHandler callback = callbackMap.remove(message.getUuid());
+         if (callback != null)
+         {
+            //TODO this is nasty, need refactor this
+            if (callback instanceof RequestCallback)
+            {
+               ((RequestCallback)callback).onReply(message);
+            }
+            else
+            {
+               callback.onReply(message.getBody());
+            }
          }
       }
    }
 
    /**
     * Get channel from which {@link Message} was received.
-    * 
+    *
     * @param message {@link Message}
     * @return channel identifier or <code>null</code> if message is invalid.
     */
@@ -273,32 +485,32 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Sets the {@link ConnectionOpenedHandler} to be notified when the {@link MessageBus} opened.
-    * 
+    *
     * @param handler {@link ConnectionOpenedHandler}
     */
    public void setOnOpenHandler(ConnectionOpenedHandler handler)
    {
-      ws.setOnOpenHandler(handler);
+      connectionOpenedHandlers.add(handler);
    }
 
    /**
     * Sets the {@link ConnectionClosedHandler} to be notified when the {@link MessageBus} closed.
-    * 
+    *
     * @param handler {@link ConnectionClosedHandler}
     */
    public void setOnCloseHandler(ConnectionClosedHandler handler)
    {
-      ws.setOnCloseHandler(handler);
+      connectionClosedHandlers.add(handler);
    }
 
    /**
     * Sets the {@link ConnectionErrorHandler} to be notified when there is any error in communication over WebSocket.
-    * 
+    *
     * @param handler {@link ConnectionErrorHandler}
     */
    public void setOnErrorHandler(ConnectionErrorHandler handler)
    {
-      ws.setOnErrorHandler(handler);
+      connectionErrorHandlers.add(handler);
    }
 
    /**
@@ -308,7 +520,7 @@ public abstract class MessageBus implements MessageReceivedHandler
     * already previously subscribed to do not trigger a send of another message
     * to the server because the client has already a subscription, and merely registers
     * (client side) the additional handler to be fired for events received on the respective channel.
-    * 
+    *
     * @param channel channel identifier
     * @param handler {@link MessageHandler} to subscribe
     * @throws WebSocketException throws if an any error has occurred while subscribing
@@ -331,7 +543,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Send message with subscription info.
-    * 
+    *
     * @param channel channel identifier
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
@@ -341,7 +553,7 @@ public abstract class MessageBus implements MessageReceivedHandler
     * Unsubscribes a previously subscribed handler listening on the specified channel.
     * If it's the last unsubscribe to a channel, a message is sent to the server to
     * unsubscribe the client for that channel.
-    * 
+    *
     * @param channel channel identifier
     * @param handler {@link MessageHandler} to unsubscribe
     * @throws WebSocketException throws if an any error has occurred while unsubscribing
@@ -364,7 +576,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Send message with unsubscription info.
-    * 
+    *
     * @param channel channel identifier
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
@@ -372,7 +584,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Check if a provided handler is subscribed to a provided channel or not.
-    * 
+    *
     * @param handler {@link MessageHandler} to check
     * @param channel channel to check
     * @return <code>true</code> if handler subscribed to channel and <code>false</code> if not
@@ -387,7 +599,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Get the WebSocket server URL.
-    * 
+    *
     * @return URL of the WebSocket server
     */
    public String getURL()

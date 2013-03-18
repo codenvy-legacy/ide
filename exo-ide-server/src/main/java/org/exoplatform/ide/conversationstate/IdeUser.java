@@ -34,6 +34,8 @@ public class IdeUser
 
    private Collection<String> roles;
 
+   private String clientId;
+
    public IdeUser()
    {
    }
@@ -42,12 +44,14 @@ public class IdeUser
     * @param userId the userId to set
     * @param groups the groups to set
     * @param roles the roles to set
+    * @param clientId
     */
-   public IdeUser(String userId, Collection<String> groups, Collection<String> roles)
+   public IdeUser(String userId, Collection<String> groups, Collection<String> roles, String clientId)
    {
       this.userId = userId;
       this.groups = groups;
       this.roles = roles;
+      this.clientId = clientId;
    }
 
    /**
@@ -98,4 +102,19 @@ public class IdeUser
       this.roles = roles;
    }
 
+   /**
+    * @return the client id
+    */
+   public String getClientId()
+   {
+      return clientId;
+   }
+
+   /**
+    * @param clientId the client id to set
+    */
+   public void setClientId(String clientId)
+   {
+      this.clientId = clientId;
+   }
 }

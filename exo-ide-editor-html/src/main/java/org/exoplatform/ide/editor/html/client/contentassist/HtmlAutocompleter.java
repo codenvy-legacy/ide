@@ -34,7 +34,6 @@ import com.google.collide.codemirror2.TokenType;
 import com.google.collide.codemirror2.TokenUtil;
 import com.google.collide.codemirror2.XmlContext;
 import com.google.collide.codemirror2.XmlState;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.TaggableLine;
 import com.google.collide.shared.document.Line;
@@ -47,6 +46,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleteProposals.HtmlProposalWithContext;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 //import javax.annotation.Nonnull;
 

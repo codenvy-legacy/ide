@@ -15,11 +15,13 @@
 package org.exoplatform.ide.editor.css.client.contentassist;
 
 
-import com.google.collide.json.client.JsoArray;
-//import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
+
+import org.exoplatform.ide.json.client.JsoArray;
+
+//import com.google.common.annotations.VisibleForTesting;
 
 /**
  * A completion query for a CSS autocompletion. Processes the relevant context

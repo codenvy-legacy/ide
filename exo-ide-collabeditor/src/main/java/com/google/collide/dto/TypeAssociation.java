@@ -14,7 +14,7 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 /**
  * Associates an identifier with its type. Code block which contains an

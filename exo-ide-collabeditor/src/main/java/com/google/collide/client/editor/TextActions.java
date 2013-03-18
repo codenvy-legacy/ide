@@ -24,7 +24,7 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.util.LineUtils;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * Implementation of some common textual actions.

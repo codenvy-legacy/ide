@@ -19,7 +19,7 @@ package org.waveprotocol.wave.model.undo;
 
 import org.waveprotocol.wave.model.operation.OperationPair;
 import org.waveprotocol.wave.model.operation.TransformException;
-import org.waveprotocol.wave.model.util.Pair;
+import com.codenvy.ide.client.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

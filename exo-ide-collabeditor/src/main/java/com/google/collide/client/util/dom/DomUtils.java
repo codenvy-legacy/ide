@@ -14,8 +14,8 @@
 
 package com.google.collide.client.util.dom;
 
-import com.google.collide.client.util.BrowserUtils;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.BrowserUtils;
+import com.codenvy.ide.client.util.Elements;
 import com.google.gwt.user.client.DOM;
 
 import elemental.events.Event;

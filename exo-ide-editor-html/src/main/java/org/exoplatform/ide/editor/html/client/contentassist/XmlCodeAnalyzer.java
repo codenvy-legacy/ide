@@ -17,15 +17,15 @@ package org.exoplatform.ide.editor.html.client.contentassist;
 import static com.google.collide.codemirror2.TokenType.ATTRIBUTE;
 import static com.google.collide.codemirror2.TokenType.TAG;
 
-import com.google.collide.shared.TaggableLine;
-
 import com.google.collide.client.code.autocomplete.CodeAnalyzer;
 import com.google.collide.client.util.collections.StringMultiset;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.codemirror2.TokenType;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.shared.util.JsonCollections;
+import com.google.collide.shared.TaggableLine;
+import org.exoplatform.ide.json.shared.JsonCollections;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 //import javax.annotation.Nonnull;
 

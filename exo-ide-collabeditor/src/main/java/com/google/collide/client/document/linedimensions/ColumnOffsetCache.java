@@ -16,7 +16,7 @@ package com.google.collide.client.document.linedimensions;
 
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.document.Line;
-import com.google.collide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.SortedList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -220,7 +220,7 @@ class ColumnOffsetCache {
 
   /**
    * Returns a {@link ColumnOffset} using the logic in {@link
-   * #getColumnOffset(com.google.collide.shared.util.SortedList.OneWayComparator)}
+   * #getColumnOffset(org.exoplatform.ide.shared.util.SortedList.OneWayComparator)}
    *
    * @return {@link #ZERO_OFFSET} if there are no items in the cache, otherwise
    *         either the matched {@link ColumnOffset} or one with less than the

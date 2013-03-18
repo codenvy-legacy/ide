@@ -16,7 +16,8 @@ package com.google.collide.client.util.dom.eventcapture;
 
 import com.google.collide.client.util.input.CharCodeWithModifiers;
 import com.google.collide.client.util.input.ModifierKeys;
-import com.google.collide.json.client.JsoStringMap;
+
+import org.exoplatform.ide.json.client.JsoStringMap;
 
 /**
  * Standard key bindings for Collide.

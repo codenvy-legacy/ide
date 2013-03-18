@@ -23,6 +23,7 @@
 
 .anchor:hover {
   text-decoration: underline;
+  color: anchorColor;
 }
 
 /* Special button Styles */

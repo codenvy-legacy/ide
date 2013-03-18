@@ -18,42 +18,95 @@
  */
 package com.google.collide.client;
 
+import com.codenvy.ide.client.util.ClientImplementationsInjector;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.notification.NotificationManager;
+import com.codenvy.ide.users.UsersModel;
+import com.google.collide.client.bootstrap.BootstrapSession;
+import com.google.collide.client.collaboration.CollaborationManager;
+import com.google.collide.client.collaboration.DocOpsSavedNotifier;
+import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
+import com.google.collide.client.collaboration.NotificationController;
 import com.google.collide.client.document.DocumentManager;
-import com.google.collide.client.util.ClientImplementationsInjector;
-import com.google.collide.client.util.Elements;
+import com.google.collide.client.status.StatusPresenter;
 import com.google.collide.codemirror2.CodeMirror2;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.DOM;
 import elemental.dom.Node;
 
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  7/18/12 evgen $
  */
-public class CollabEditorExtension extends Extension
+public class CollabEditorExtension extends Extension implements ConnectionOpenedHandler
 {
 
    private static CollabEditorExtension instance;
-   private AppContext context = AppContext.create();
+
+   private AppContext context;
+
    private DocumentManager documentManager;
+
+   public static final CollabEditorLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(
+      CollabEditorLocalizationConstant.class);
+
+   private CollaborationManager collaborationManager;
+
+   private UsersModel usersModel;
 
    public static CollabEditorExtension get()
    {
       return instance;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
+    */
    @Override
    public void initialize()
    {
       instance = this;
       ClientImplementationsInjector.inject();
 
-      //
-//    GWT.setUncaughtExceptionHandler(appContext.getUncaughtExceptionHandler());
-//    XhrWarden.watch();
-//
+      context = AppContext.create();
+      documentManager = DocumentManager.create(context);
+
+      IDE.messageBus().setOnOpenHandler(this);
+   }
+
+   public AppContext getContext()
+   {
+      return context;
+   }
+
+   public DocumentManager getManager()
+   {
+      return documentManager;
+   }
+
+   public CollaborationManager getCollaborationManager()
+   {
+      return collaborationManager;
+   }
+
+   public UsersModel getUsersModel()
+   {
+      return usersModel;
+   }
+
+   /**
+    *
+    */
+   private void init()
+   {
       com.google.collide.client.Resources resources = context.getResources();
       com.google.gwt.user.client.Element div = DOM.createDiv();
       div.setId(AppContext.GWT_ROOT);
@@ -98,9 +151,9 @@ public class CollabEditorExtension extends Extension
 //    styleBuilder.append(resources.workspaceNavigationToolBarCss().getText());
 //    styleBuilder.append(resources.workspaceNavigationFileTreeNodeRendererCss().getText());
 //    styleBuilder.append(resources.workspaceNavigationOutlineNodeRendererCss().getText());
-//    styleBuilder.append(resources.workspaceNavigationParticipantListCss().getText());
+      styleBuilder.append(resources.workspaceNavigationParticipantListCss().getText());
 //    styleBuilder.append(resources.searchContainerCss().getText());
-//    styleBuilder.append(resources.statusPresenterCss().getText());
+      styleBuilder.append(resources.statusPresenterCss().getText());
 //    styleBuilder.append(resources.noFileSelectedPanelCss().getText());
 //    styleBuilder.append(resources.diffRendererCss().getText());
 //    styleBuilder.append(resources.deltaInfoBarCss().getText());
@@ -143,17 +196,41 @@ public class CollabEditorExtension extends Extension
       styleBuilder.append(resources.notificationCss().getText());
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
-      documentManager = DocumentManager.create(context);
+
+      // Status Presenter
+      StatusPresenter statusPresenter = StatusPresenter.create(context.getResources());
+      Elements.getBody().appendChild(statusPresenter.getView().getElement());
+      context.getStatusManager().setHandler(statusPresenter);
+
    }
 
-   public AppContext getContext()
+   @Override
+   public void onOpen()
    {
-      return context;
-   }
+      if(collaborationManager != null)
+      {
+         return;
+      }
+      init();
+      IDE.messageBus().send("ide/collab_editor/participants/add", "{}", new ReplyHandler()
+      {
+         @Override
+         public void onReply(String message)
+         {
+            JSONObject object = JSONParser.parseLenient(message).isObject();
+            BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
+            BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());
+            context.initializeCollaboration();
+            //                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+            IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
+            usersModel = new UsersModel(context.getFrontendApi(), context.getMessageFilter());
+            collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient, usersModel);
+            new NotificationController(NotificationManager.get(), collaborationManager, context.getMessageFilter(),
+               usersModel, IDE.eventBus(),context.getResources().baseCss());
 
-   public DocumentManager getManager()
-   {
-      return documentManager;
+            DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+            //                     bus.close();
+         }
+      });
    }
-
 }

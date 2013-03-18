@@ -24,7 +24,7 @@ import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Provides labels for java content assist proposals. The functionality is similar to the one provided by
- * {@link org.eclipse.jdt.ui.JavaElementLabels}, but based on signatures and {@link CompletionProposal}s.
+ * {@link org.eclipse.jdt.client.ui.JavaElementLabels}, but based on signatures and {@link CompletionProposal}s.
  * 
  * @see Signature
  * @since 3.1

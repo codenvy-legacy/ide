@@ -14,7 +14,7 @@
 
 package com.google.collide.client.common;
 
-import com.google.collide.client.util.BrowserUtils;
+import com.codenvy.ide.client.util.BrowserUtils;
 
 /**
  * Constants that we can use in CssResource expressions.

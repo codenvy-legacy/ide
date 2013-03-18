@@ -15,15 +15,16 @@
 package org.exoplatform.ide.editor.css.client.contentassist;
 
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
-import com.google.collide.json.client.Jso;
-import com.google.collide.json.client.JsoArray;
-//import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.regexp.shared.RegExp;
-
 import elemental.js.util.JsMapFromStringToBoolean;
+
+import org.exoplatform.ide.json.client.Jso;
+import org.exoplatform.ide.json.client.JsoArray;
+
+//import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Based on the complete property list for CSS2, this partial parser parses

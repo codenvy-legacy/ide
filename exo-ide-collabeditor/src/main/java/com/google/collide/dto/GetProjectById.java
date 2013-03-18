@@ -15,8 +15,9 @@
 package com.google.collide.dto;
 
 import com.google.collide.dto.WorkspaceInfo.WorkspaceType;
-import com.google.collide.dtogen.shared.ClientToServerDto;
-import com.google.collide.dtogen.shared.RoutingType;
+
+import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 /**
  * Request for the a specific project.

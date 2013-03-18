@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.editor.html.client.contentassist;
 
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
