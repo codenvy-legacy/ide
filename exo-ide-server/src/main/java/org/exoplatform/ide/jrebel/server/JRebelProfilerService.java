@@ -18,7 +18,20 @@
  */
 package org.exoplatform.ide.jrebel.server;
 
+import com.exoplatform.cloudide.userdb.Profile;
+import com.exoplatform.cloudide.userdb.User;
+import com.exoplatform.cloudide.userdb.client.UserDBServiceClient;
+import com.exoplatform.cloudide.userdb.exception.AccountExistenceException;
+import com.exoplatform.cloudide.userdb.exception.DaoException;
+import com.exoplatform.cloudide.userdb.exception.UserDBServiceException;
+import com.exoplatform.cloudide.userdb.exception.UserExistenceException;
+import com.exoplatform.cloudide.userdb.exception.WorkspaceExistenceException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
+
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -38,7 +51,9 @@ import javax.ws.rs.core.SecurityContext;
 public class JRebelProfilerService
 {
    @Inject
-   JRebelProfiler profiler;
+   UserDBServiceClient userDBServiceClient;
+
+   private static final Log LOG = ExoLogger.getLogger("JRebel");
 
    @Path("profile/send")
    @POST
@@ -48,18 +63,53 @@ public class JRebelProfilerService
       throws JRebelProfilerException
    {
       Principal principal = sctx.getUserPrincipal();
-      String firstName = values.get("first_name");
-      String lastName = values.get("last_name");
-      String phone = values.get("phone");
 
-      if (principal != null && firstName != null && !firstName.isEmpty() && lastName != null && !lastName.isEmpty()
-         && phone != null && !phone.isEmpty())
+      try
       {
-         profiler.sendProfileInfo(principal.getName(), firstName, lastName, phone);
+         User user = userDBServiceClient.getUser(principal.getName());
+
+         //no need to send already filled profile to ZTA
+         if (user.getProfile().getAttribute("firstName") != null &&
+            user.getProfile().getAttribute("lastName") != null &&
+            user.getProfile().getAttribute("phone") != null)
+         {
+            return;
+         }
+
+         user.getProfile().setAttributes(values);
+
+         String formatted =
+            String.format(
+               "\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"",
+               principal.getName(),
+               values.get("firstName").replaceAll("\"", "'"),
+               values.get("lastName").replaceAll("\"", "'"),
+               values.get("phone")
+            );
+
+         userDBServiceClient.updateUser(user);
+
+         LOG.error(formatted);
       }
-      else
+      catch (UserDBServiceException e)
       {
-         throw new JRebelProfilerException("Fail to get user profile information");
+         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+      }
+      catch (DaoException e)
+      {
+         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+      }
+      catch (WorkspaceExistenceException e)
+      {
+         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+      }
+      catch (UserExistenceException e)
+      {
+         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+      }
+      catch (AccountExistenceException e)
+      {
+         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
       }
    }
 
@@ -68,6 +118,28 @@ public class JRebelProfilerService
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> getProfileInfo() throws JRebelProfilerException
    {
-      return profiler.getProfileInfo();
+      String userId = ConversationState.getCurrent().getIdentity().getUserId();
+      try
+      {
+         Profile profile = userDBServiceClient.getUser(userId).getProfile();
+         Map<String, String> jRebelProfileInfo = new HashMap<String, String>();
+         for (Map.Entry<String, String> entry : profile.getAttributes().entrySet())
+         {
+            if ("firstName".equals(entry.getKey()) || "lastName".equals(entry.getKey()) || "phone".equals(entry.getKey()))
+            {
+               jRebelProfileInfo.put(entry.getKey(), entry.getValue());
+            }
+         }
+
+         return jRebelProfileInfo;
+      }
+      catch (DaoException e)
+      {
+         throw new JRebelProfilerException("Unable to get profile info. Please contact support.", e);
+      }
+      catch (UserDBServiceException e)
+      {
+         throw new JRebelProfilerException("Unable to get profile info. Please contact support.", e);
+      }
    }
 }

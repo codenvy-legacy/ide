@@ -81,8 +81,4 @@
 		<type>org.exoplatform.ide.jrebel.server.JRebelProfilerApplication</type>
 	</component>
 
-	<component>
-		<type>org.exoplatform.ide.jrebel.server.JRebelProfiler</type>
-	</component>
-
 </configuration>
