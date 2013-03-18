@@ -262,6 +262,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       {
          Folder parent = project;
          List<Item> items = new ArrayList<Item>();
+         items.add(parent);
+         
          String []parts = item.getPath().split("/");         
          
          for (int i = 2; i < parts.length; i++)
