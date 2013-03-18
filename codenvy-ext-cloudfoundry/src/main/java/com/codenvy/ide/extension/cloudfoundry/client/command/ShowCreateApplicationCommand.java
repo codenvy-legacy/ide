@@ -19,17 +19,13 @@
 package com.codenvy.ide.extension.cloudfoundry.client.command;
 
 import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.menu.ExtendedCommand;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
+import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
+import com.codenvy.ide.menu.ExtendedCommand;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 
 /**
  * 
@@ -66,9 +62,7 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
    @Override
    public void execute()
    {
-      // TODO
-      //      presenter.showDialog();
-      eventBus.fireEvent(new CreateApplicationEvent());
+      presenter.showDialog();
    }
 
    /**

@@ -41,7 +41,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class RenameApplicationPresenter implements RenameApplicationView.ActionDelegate, RenameApplicationHandler
+public class RenameApplicationPresenter implements RenameApplicationView.ActionDelegate
 {
    private RenameApplicationView view;
 
@@ -75,8 +75,6 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
       this.loginPresenter = loginPresenter;
-
-      this.eventBus.addHandler(RenameApplicationEvent.TYPE, this);
    }
 
    /**
@@ -145,15 +143,6 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       view.close();
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onRenameApplication(RenameApplicationEvent event)
-   {
-      getApplicationInfo();
-   }
-
    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -197,6 +186,8 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       view.setName(applicationName);
       view.selectValueInRenameField();
       view.enableRenameButton(false);
+
+      getApplicationInfo();
 
       view.showDialog();
    }

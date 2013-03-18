@@ -59,8 +59,7 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, CreateApplicationHandler,
-   ProjectBuiltHandler
+public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, ProjectBuiltHandler
 {
    private class AppData
    {
@@ -149,8 +148,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
       this.loginPresenter = loginPresenter;
-
-      this.eventBus.addHandler(CreateApplicationEvent.TYPE, this);
    }
 
    @Override
@@ -667,22 +664,34 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     */
    public void showDialog()
    {
-      // set the state of fields
-      this.view.enableTypeField(false);
-      this.view.enableUrlField(false);
-      this.view.enableMemoryField(false);
-      this.view.focusInNameField();
+      Project selectedProject = resourceProvider.getActiveProject();
+      if (selectedProject != null)
+      {
+         checkIsProject(selectedProject);
 
-      // set default values to fields
-      this.view.setTypeValues(new ArrayList<String>());
-      this.view.setInstances("1");
-      this.view.setAutodetectType(true);
+         // set the state of fields
+         this.view.enableTypeField(false);
+         this.view.enableUrlField(false);
+         this.view.enableMemoryField(false);
+         this.view.focusInNameField();
 
-      view.focusInNameField();
-      getServers();
-      view.setStartAfterCreation(true);
+         // set default values to fields
+         this.view.setTypeValues(new ArrayList<String>());
+         this.view.setInstances("1");
+         this.view.setAutodetectType(true);
 
-      view.showDialog();
+         view.focusInNameField();
+         getServers();
+         view.setStartAfterCreation(true);
+
+         view.showDialog();
+      }
+      else
+      {
+         String msg = constant.createApplicationNotFolder(view.getName());
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
+         console.print(msg);
+      }
    }
 
    /**
@@ -727,26 +736,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       {
          eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
-      }
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onCreateApplication(CreateApplicationEvent event)
-   {
-      Project selectedProject = resourceProvider.getActiveProject();
-      if (selectedProject != null)
-      {
-         checkIsProject(selectedProject);
-         showDialog();
-      }
-      else
-      {
-         String msg = constant.createApplicationNotFolder(view.getName());
-         eventBus.fireEvent(new ExceptionThrownEvent(msg));
-         console.print(msg);
       }
    }
 

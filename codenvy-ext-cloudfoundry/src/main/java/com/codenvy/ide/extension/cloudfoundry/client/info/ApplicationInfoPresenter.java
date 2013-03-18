@@ -41,7 +41,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDelegate, ApplicationInfoHandler
+public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDelegate
 {
    private ApplicationInfoView view;
 
@@ -70,8 +70,6 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
       this.loginPresenter = loginPresenter;
-
-      this.eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
    }
 
    /**
@@ -87,15 +85,6 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     * Show dialog.
     */
    public void showDialog()
-   {
-      showApplicationInfo(resourceProvider.getActiveProject().getId());
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onShowApplicationInfo(ApplicationInfoEvent event)
    {
       showApplicationInfo(resourceProvider.getActiveProject().getId());
    }
