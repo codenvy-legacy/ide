@@ -30,11 +30,9 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
-
 /**
  * Asynchronous CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
- * exception, in this case - the {@link LoginEvent} is fired.
+ * exception, in this case - showDialog method calls on {@link LoginPresenter}.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryAsyncRequestCallback.java Jul 8, 2011 3:36:01 PM vereshchaka $
@@ -100,6 +98,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
       this.eventBus = eventBus;
       this.console = console;
       this.constant = constant;
+      this.loginPresenter = loginPresenter;
    }
 
    /**

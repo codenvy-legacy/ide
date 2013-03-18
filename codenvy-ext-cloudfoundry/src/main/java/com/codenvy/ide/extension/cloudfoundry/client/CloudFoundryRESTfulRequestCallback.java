@@ -30,11 +30,9 @@ import com.codenvy.ide.websocket.rest.Unmarshallable;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
-
 /**
  * WebSocket CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
- * exception, in this case - the {@link LoginEvent} is fired.
+ * exception, in this case - showDialog method calls on {@link LoginPresenter}.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: CloudFoundryRESTfulRequestCallback.java Nov 30, 2012 9:58:20 AM azatsarynnyy $
@@ -101,6 +99,7 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
       this.loginUrl = loginUrl;
       this.eventBus = eventBus;
       this.constant = constant;
+      this.loginPresenter = loginPresenter;
    }
 
    /**
