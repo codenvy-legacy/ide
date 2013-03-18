@@ -31,6 +31,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -38,6 +39,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -100,27 +102,21 @@ public class JRebelProfilerService
 
    @Path("profile/get")
    @GET
-   public String getProfileInfo() throws JRebelProfilerException
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> getProfileInfo() throws JRebelProfilerException
    {
       String userId = ConversationState.getCurrent().getIdentity().getUserId();
       try
       {
-         StringBuilder builder = new StringBuilder("{");
          Profile profile = userDBServiceClient.getUser(userId).getProfile();
-         
-         builder.append(profile.getAttribute("firstName") != null ? "\"firstName\":\""
-            + profile.getAttribute("firstName").replaceAll("\"", "'") + "\"," : "");
-         
-         builder.append(profile.getAttribute("lastName") != null ? "\"lastName\":\""
-            + profile.getAttribute("lastName").replaceAll("\"", "'") + "\"," : "");
-         
-         builder.append(profile.getAttribute("phone") != null ? "\"phone\":\"" + profile.getAttribute("phone") + "\","
-            : "");
-         
-         if (builder.charAt(builder.length() - 1) == ',')
-            builder.setLength(builder.lastIndexOf(","));
-         builder.append("}");
-         return builder.toString();
+         Map<String, String> values = new HashMap<String, String>();
+         if (profile.getAttribute("firstName") != null)
+            values.put("firstName", profile.getAttribute("firstName"));
+         if (profile.getAttribute("lastName") != null)
+            values.put("lastName", profile.getAttribute("lastName"));
+         if (profile.getAttribute("phone") != null)
+            values.put("phone", profile.getAttribute("phone"));
+         return values;
       }
       catch (DaoException e)
       {
