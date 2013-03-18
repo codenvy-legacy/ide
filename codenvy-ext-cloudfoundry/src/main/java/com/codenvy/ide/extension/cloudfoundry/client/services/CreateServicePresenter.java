@@ -21,8 +21,8 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
@@ -55,6 +55,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    /**
     * Handler for successful service creation.
     */
@@ -72,13 +74,14 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
 
    @Inject
    protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, Console console,
-      CloudFoundryLocalizationConstant constant)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(CreateServiceEvent.TYPE, this);
    }
@@ -101,7 +104,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
       String type = view.getSystemServices();
       try
       {
-         AutoBean<ProvisionedService> provisionedService = CloudFoundryExtension.AUTO_BEAN_FACTORY.provisionedService();
+         AutoBean<ProvisionedService> provisionedService = autoBeanFactory.provisionedService();
          AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
             new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
 
@@ -166,7 +169,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
       try
       {
          CloudFoundryClientService.getInstance().services(null,
-            new AsyncRequestCallback<CloudFoundryServices>(new CloudFoundryServicesUnmarshaller())
+            new AsyncRequestCallback<CloudFoundryServices>(new CloudFoundryServicesUnmarshaller(autoBeanFactory))
             {
                @Override
                protected void onSuccess(CloudFoundryServices result)

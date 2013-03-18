@@ -29,10 +29,8 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.menu.MainMenuPresenter;
-import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
@@ -44,11 +42,6 @@ import com.google.web.bindery.event.shared.EventBus;
 @Extension(title = "Cloud Foundry Support.", version = "3.0.0")
 public class CloudFoundryExtension
 {
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   public static final CloudFoundryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudFoundryAutoBeanFactory.class);
-
    /**
     * Default CloudFoundry server.
     */
@@ -73,7 +66,8 @@ public class CloudFoundryExtension
    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuPresenter menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
       ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand,
-      EventBus eventBus, DeployApplicationPresenter deployAppPresenter, CloudFoundryLocalizationConstant constant)
+      EventBus eventBus, DeployApplicationPresenter deployAppPresenter, CloudFoundryLocalizationConstant constant,
+      CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       resources.cloudFoundryCss().ensureInjected();
 
@@ -81,8 +75,9 @@ public class CloudFoundryExtension
       JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
       paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, deployAppPresenter, null);
      
+      // TODO Need get service from DI
       String restContext = "/rest/private";
-      new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant);
+      new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant, autoBeanFactory);
 
       menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
       menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);

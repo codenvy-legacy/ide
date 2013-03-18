@@ -19,18 +19,15 @@
 package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.Unmarshallable;
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 import java.util.List;
 
@@ -42,12 +39,16 @@ public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFou
 {
    private List<CloudFoundryApplication> apps;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    /**
     * @param apps
+    * @param autoBeanFactory
     */
-   public ApplicationListUnmarshaller(List<CloudFoundryApplication> apps)
+   public ApplicationListUnmarshaller(List<CloudFoundryApplication> apps, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.apps = apps;
+      this.autoBeanFactory = autoBeanFactory;
    }
 
    /**
@@ -76,7 +77,7 @@ public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFou
             String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
 
             AutoBean<CloudFoundryApplication> appInfoBean =
-               AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, CloudFoundryApplication.class, value);
+               AutoBeanCodex.decode(autoBeanFactory, CloudFoundryApplication.class, value);
             apps.add(appInfoBean.as());
          }
       }

@@ -22,6 +22,7 @@ import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
@@ -65,15 +66,18 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    @Inject
    protected LoginPresenter(LoginView view, EventBus eventBus, Console console,
-      CloudFoundryLocalizationConstant constant)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       eventBus.addHandler(LoginEvent.TYPE, this);
    }
@@ -240,7 +244,7 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
    {
       try
       {
-         AutoBean<SystemInfo> systemInfo = CloudFoundryExtension.AUTO_BEAN_FACTORY.systemInfo();
+         AutoBean<SystemInfo> systemInfo = autoBeanFactory.systemInfo();
          AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
          CloudFoundryClientService.getInstance().getSystemInfo(server,
             new AsyncRequestCallback<SystemInfo>(unmarshaller)

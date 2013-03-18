@@ -125,6 +125,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    /**
     * Create CloudFoundry client service.
     * 
@@ -132,15 +134,18 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @param loader
     * @param wsMessageBus
     * @param eventBus
+    * @param constant
+    * @param autoBeanFactory
     */
    public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
-      CloudFoundryLocalizationConstant constant)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
       this.wsMessageBus = wsMessageBus;
       this.eventBus = eventBus;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
    }
 
    /**
@@ -155,8 +160,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       server = checkServerUrl(server);
 
-      CreateApplicationRequest createApplicationRequest =
-         CloudFoundryExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
+      CreateApplicationRequest createApplicationRequest = autoBeanFactory.createApplicationRequest().as();
       createApplicationRequest.setName(name);
       createApplicationRequest.setServer(server);
       createApplicationRequest.setType(type);
@@ -185,8 +189,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       server = checkServerUrl(server);
 
-      CreateApplicationRequest createApplicationRequest =
-         CloudFoundryExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
+      CreateApplicationRequest createApplicationRequest = autoBeanFactory.createApplicationRequest().as();
       createApplicationRequest.setName(name);
       createApplicationRequest.setServer(server);
       createApplicationRequest.setType(type);
@@ -227,7 +230,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       server = checkServerUrl(server);
 
-      Credentials credentialsBean = CloudFoundryExtension.AUTO_BEAN_FACTORY.credentials().as();
+      Credentials credentialsBean = autoBeanFactory.credentials().as();
       credentialsBean.setServer(server);
       credentialsBean.setEmail(email);
       credentialsBean.setPassword(password);

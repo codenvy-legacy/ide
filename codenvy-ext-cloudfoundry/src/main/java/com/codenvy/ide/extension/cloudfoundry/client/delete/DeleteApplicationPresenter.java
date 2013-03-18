@@ -22,8 +22,8 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -63,9 +63,12 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    @Inject
    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
-      EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant)
+      EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
+      CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -73,6 +76,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       this.eventBus = eventBus;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
    }
@@ -130,9 +134,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
       try
       {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 

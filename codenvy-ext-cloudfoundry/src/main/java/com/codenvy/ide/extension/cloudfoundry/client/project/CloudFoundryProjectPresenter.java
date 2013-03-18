@@ -23,8 +23,8 @@ import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
@@ -86,12 +86,14 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    @Inject
    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view,
       ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
       UpdatePropertiesPresenter updateProperyPresenter, ManageServicesPresenter manageServicesPresenter,
       UpdateApplicationPresenter updateApplicationPresenter, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console, CloudFoundryLocalizationConstant constant)
+      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -104,6 +106,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.manageServicesPresenter = manageServicesPresenter;
       this.updateApplicationPresenter = updateApplicationPresenter;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
       this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
@@ -199,9 +202,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    {
       try
       {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 

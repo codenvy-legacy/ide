@@ -21,6 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.apps;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
@@ -70,6 +71,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    /**
     * Create presenter.
     * 
@@ -79,17 +82,20 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     * @param resourceProvider
     * @param startAppPresenter
     * @param deleteAppPresenter
+    * @param constant
+    * @param autoBeanFactory
     */
    @Inject
    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, Console console,
       StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
-      CloudFoundryLocalizationConstant constant)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
    }
@@ -122,7 +128,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
          CloudFoundryClientService.getInstance().getApplicationList(
             currentServer,
             new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
-               new ArrayList<CloudFoundryApplication>()), new LoggedInHandler()
+               new ArrayList<CloudFoundryApplication>(), autoBeanFactory), new LoggedInHandler()
             {
                @Override
                public void onLoggedIn()

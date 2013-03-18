@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
@@ -86,11 +87,14 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    private HandlerRegistration projectBuildHandler;
 
    @Inject
    protected DeployApplicationPresenter(DeployApplicationView view, EventBus eventBus,
-      ResourceProvider resourcesProvider, Console console, CloudFoundryLocalizationConstant constant)
+      ResourceProvider resourcesProvider, Console console, CloudFoundryLocalizationConstant constant,
+      CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -98,6 +102,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       this.resourcesProvider = resourcesProvider;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
    }
 
    /**
@@ -156,8 +161,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       // TODO Need to create some special service after this class
       // This class still doesn't have analog.
       //      JobManager.get().showJobSeparated();
-      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
       AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
@@ -210,8 +214,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
     */
    private void createApplicationREST(LoggedInHandler loggedInHandler)
    {
-      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
       AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 

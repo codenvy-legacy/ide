@@ -19,20 +19,16 @@
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.rest.Unmarshallable;
-
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
-
+import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
+import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
+import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-
-import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
 
 /**
  * Unmarshaller for CloudFoundry services.
@@ -47,6 +43,8 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFou
     */
    private CloudFoundryServices cloudfoundryServices;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    private final class Keys
    {
       public static final String SYSTEM = "system";
@@ -54,9 +52,10 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFou
       public static final String PROVISIONED = "provisioned";
    }
 
-   public CloudFoundryServicesUnmarshaller()
+   public CloudFoundryServicesUnmarshaller(CloudFoundryAutoBeanFactory autoBeanFactory)
    {
-      cloudfoundryServices = CloudFoundryExtension.AUTO_BEAN_FACTORY.services().as();
+      this.autoBeanFactory = autoBeanFactory;
+      this.cloudfoundryServices = this.autoBeanFactory.services().as();
    }
 
    /**
@@ -81,8 +80,7 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFou
             for (int i = 0; i < systemServices.size(); i++)
             {
                String value = systemServices.get(i).isObject().toString();
-               services[i] =
-                  AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, SystemService.class, value).as();
+               services[i] = AutoBeanCodex.decode(autoBeanFactory, SystemService.class, value).as();
             }
             cloudfoundryServices.setSystem(services);
          }
@@ -101,8 +99,7 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFou
             for (int i = 0; i < provisionedServices.size(); i++)
             {
                String value = provisionedServices.get(i).isObject().toString();
-               services[i] =
-                  AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, ProvisionedService.class, value).as();
+               services[i] = AutoBeanCodex.decode(autoBeanFactory, ProvisionedService.class, value).as();
             }
             cloudfoundryServices.setProvisioned(services);
          }

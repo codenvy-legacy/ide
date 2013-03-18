@@ -22,8 +22,8 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -63,16 +63,19 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    private HandlerRegistration projectBuildHandler;
 
    @Inject
    public UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
-      CloudFoundryLocalizationConstant constant)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
    }
@@ -111,8 +114,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
                   try
                   {
                      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                        CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+                        autoBeanFactory.cloudFoundryApplication();
                      AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                         new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 

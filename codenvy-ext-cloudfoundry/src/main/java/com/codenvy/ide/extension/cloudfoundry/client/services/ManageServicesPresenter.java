@@ -21,8 +21,8 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -109,9 +109,12 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    @Inject
    protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, Console console,
-      CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant)
+      CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant,
+      CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -119,6 +122,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       this.console = console;
       this.createServicePresenter = createServicePresenter;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
    }
@@ -276,9 +280,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
    private void getApplicationInfo()
    {
-      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
       AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
       try
@@ -315,7 +317,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       try
       {
          CloudFoundryClientService.getInstance().services(null,
-            new AsyncRequestCallback<CloudFoundryServices>(new CloudFoundryServicesUnmarshaller())
+            new AsyncRequestCallback<CloudFoundryServices>(new CloudFoundryServicesUnmarshaller(autoBeanFactory))
             {
                @Override
                protected void onSuccess(CloudFoundryServices result)

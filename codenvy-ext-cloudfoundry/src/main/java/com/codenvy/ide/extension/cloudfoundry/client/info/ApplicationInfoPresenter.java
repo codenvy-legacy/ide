@@ -22,8 +22,8 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -52,9 +52,11 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    @Inject
    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console, CloudFoundryLocalizationConstant constant)
+      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -62,6 +64,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
    }
@@ -96,9 +99,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
    {
       try
       {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 

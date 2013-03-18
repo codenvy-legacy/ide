@@ -23,6 +23,7 @@ import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
@@ -117,6 +118,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    /**
     * Create presenter.
     * 
@@ -125,10 +128,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * @param eventBus
     * @param console
     * @param constant
+    * @param autoBeanFactory
     */
    @Inject
    protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view,
-      EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant)
+      EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
+      CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.frameworks = new ArrayList<Framework>();
 
@@ -138,6 +143,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       this.console = console;
       this.eventBus = eventBus;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(CreateApplicationEvent.TYPE, this);
    }
@@ -275,8 +281,17 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       try
       {
-         CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url,
-            resourceProvider.getVfsId(), project.getId(), app.instances, app.memory, app.nostart,
+         CloudFoundryClientService.getInstance().validateAction(
+            "create",
+            app.server,
+            app.name,
+            app.type,
+            app.url,
+            resourceProvider.getVfsId(),
+            project.getId(),
+            app.instances,
+            app.memory,
+            app.nostart,
             new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, console,
                constant)
             {
@@ -327,8 +342,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       final Project project = resourceProvider.getActiveProject();
 
-      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
       AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
@@ -380,8 +394,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     */
    private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler)
    {
-      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
       AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
@@ -412,7 +425,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                         onAppCreatedSuccess(cloudFoundryApp);
                         eventBus.fireEvent(new RefreshBrowserEvent(project));
                      }
-                     
+
                      @Override
                      public void onFailure(Throwable caught)
                      {
@@ -552,9 +565,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       try
       {
          CloudFoundryClientService.getInstance().getFrameworks(
-            new CloudFoundryAsyncRequestCallback<List<Framework>>(
-               new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null, eventBus,
-               console, constant)
+            new CloudFoundryAsyncRequestCallback<List<Framework>>(new FrameworksUnmarshaller(
+               new ArrayList<Framework>(), autoBeanFactory), getFrameworksLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(List<Framework> result)

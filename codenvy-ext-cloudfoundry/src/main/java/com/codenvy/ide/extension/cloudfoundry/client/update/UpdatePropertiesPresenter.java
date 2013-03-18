@@ -22,8 +22,8 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
@@ -57,14 +57,17 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
 
    private CloudFoundryLocalizationConstant constant;
 
+   private CloudFoundryAutoBeanFactory autoBeanFactory;
+
    @Inject
    protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
-      CloudFoundryLocalizationConstant constant)
+      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.constant = constant;
+      this.autoBeanFactory = autoBeanFactory;
 
       this.eventBus.addHandler(UpdateMemoryEvent.TYPE, this);
       this.eventBus.addHandler(UpdateInstancesEvent.TYPE, this);
@@ -96,9 +99,7 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
       String projectId = resourceProvider.getActiveProject().getId();
       try
       {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
@@ -210,9 +211,7 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
 
       try
       {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
@@ -295,8 +294,7 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
                   try
                   {
                      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                        CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
+                        autoBeanFactory.cloudFoundryApplication();
                      AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                         new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
