@@ -53,7 +53,7 @@
 				</g:east>
 				<g:center>
 					<g:TextBox height="22px" addStyleNames="{style.space}"
-						ui:field="applicationName" width="97%" />
+						ui:field="applicationName" width="97%" readOnly="true" />
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>
@@ -86,7 +86,7 @@
 				</g:east>
 				<g:center>
 					<g:TextBox addStyleNames="{style.left} {style.space}"
-						height="22px" ui:field="memory" width="97%" />
+						height="22px" ui:field="memory" width="97%" readOnly="true" />
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>
@@ -103,7 +103,7 @@
 				</g:east>
 				<g:center>
 					<g:TextBox addStyleNames="{style.left} {style.space}"
-						height="22px" ui:field="instances" width="97%" />
+						height="22px" ui:field="instances" width="97%" readOnly="true" />
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>

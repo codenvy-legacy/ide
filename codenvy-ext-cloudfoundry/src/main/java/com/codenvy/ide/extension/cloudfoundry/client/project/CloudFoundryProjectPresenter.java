@@ -54,7 +54,6 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate
-// ProjectOpenedHandler, ProjectClosedHandler,  ManageCloudFoundryProjectHandler,  ActiveProjectChangedHandler
 {
    private CloudFoundryProjectView view;
 

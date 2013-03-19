@@ -113,7 +113,6 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    @Override
    public void onNameFieldChanged()
    {
-      // TODO this method definitely don't need. should delete it...
       name = view.getName();
    }
 
@@ -123,7 +122,6 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    @Override
    public void onUrlFieldChanged()
    {
-      // TODO this method definitely don't need. should delete it...
       url = view.getUrl();
    }
 
