@@ -14,9 +14,9 @@
 		<g:south size="26.0">
 			<g:FlowPanel width="100%" height="100%">
 				<g:Button addStyleNames="{style.floatRight}" ui:field="btnCancel"
-					height="22px" width="90px" />
+					width="90px" />
 				<g:Button addStyleNames="{style.floatRight}" ui:field="btnDelete"
-					height="22px" width="90px" />
+					width="90px" />
 			</g:FlowPanel>
 		</g:south>
 		<g:north size="50.0">
