@@ -47,7 +47,7 @@ import javax.ws.rs.core.MediaType;
  * @version $Id: JRebelProfilerService.java 34027 19.12.12 17:02Z vzhukovskii $
  */
 @Path("ide/jrebel")
-public class JRebelProfilerService
+public class JRebelConsumerService
 {
    @Inject
    UserDBServiceClient userDBServiceClient;
@@ -57,7 +57,7 @@ public class JRebelProfilerService
    @Path("profile/send")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void sendProfileInfo(Map<String, String> values) throws JRebelProfilerException
+   public void sendProfileInfo(Map<String, String> values) throws JRebelConsumerException
    {
       String userId = ConversationState.getCurrent().getIdentity().getUserId();
       try
@@ -80,30 +80,30 @@ public class JRebelProfilerService
       }
       catch (UserDBServiceException e)
       {
-         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+         throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
       }
       catch (DaoException e)
       {
-         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+         throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
       }
       catch (WorkspaceExistenceException e)
       {
-         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+         throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
       }
       catch (UserExistenceException e)
       {
-         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+         throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
       }
       catch (AccountExistenceException e)
       {
-         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
+         throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
       }
    }
 
    @Path("profile/get")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> getProfileInfo() throws JRebelProfilerException
+   public Map<String, String> getProfileInfo() throws JRebelConsumerException
    {
       String userId = ConversationState.getCurrent().getIdentity().getUserId();
       try
@@ -120,11 +120,11 @@ public class JRebelProfilerService
       }
       catch (DaoException e)
       {
-         throw new JRebelProfilerException("Unable to get profile info. Please contact support.", e);
+         throw new JRebelConsumerException("Unable to get profile info. Please contact support.", e);
       }
       catch (UserDBServiceException e)
       {
-         throw new JRebelProfilerException("Unable to get profile info. Please contact support.", e);
+         throw new JRebelConsumerException("Unable to get profile info. Please contact support.", e);
       }
    }
 }
