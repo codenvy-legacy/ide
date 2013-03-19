@@ -27,7 +27,7 @@ import org.picocontainer.Startable;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class LdapDummyUser implements Startable
+public class DummyUser implements Startable
 {
    @Override
    public void start()
