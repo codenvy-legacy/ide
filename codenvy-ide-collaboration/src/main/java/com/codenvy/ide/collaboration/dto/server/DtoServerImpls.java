@@ -43,7 +43,7 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "f1e06e48c00ff9b4995303bc4fc85d70b1adeebe";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "6b4de95df96270ba0aebd41b859cfdcffeca7134";
 
   public static class ChatCodePointMessageImpl extends ChatMessageImpl implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage, JsonSerializable {
 
@@ -143,6 +143,9 @@ public class DtoServerImpls {
       JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
       result.add("dateTime", dateTimeOut);
 
+      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+      result.add("clientId", clientIdOut);
+
       JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
       result.add("message", messageOut);
 
@@ -191,6 +194,12 @@ public class DtoServerImpls {
         dto.setDateTime(dateTimeOut);
       }
 
+      if (json.has("clientId")) {
+        JsonElement clientIdIn = json.get("clientId");
+        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+        dto.setClientId(clientIdOut);
+      }
+
       if (json.has("message")) {
         JsonElement messageIn = json.get("message");
         java.lang.String messageOut = gson.fromJson(messageIn, java.lang.String.class);
@@ -236,6 +245,8 @@ public class DtoServerImpls {
 
     protected java.lang.String dateTime;
     private boolean _hasDateTime;
+    protected java.lang.String clientId;
+    private boolean _hasClientId;
     protected java.lang.String message;
     private boolean _hasMessage;
     protected java.lang.String projectId;
@@ -255,6 +266,21 @@ public class DtoServerImpls {
     public ChatMessageImpl setDateTime(java.lang.String v) {
       _hasDateTime = true;
       dateTime = v;
+      return this;
+    }
+
+    public boolean hasClientId() {
+      return _hasClientId;
+    }
+
+    @Override
+    public java.lang.String getClientId() {
+      return clientId;
+    }
+
+    public ChatMessageImpl setClientId(java.lang.String v) {
+      _hasClientId = true;
+      clientId = v;
       return this;
     }
 
@@ -320,6 +346,14 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasClientId != other._hasClientId) {
+        return false;
+      }
+      if (this._hasClientId) {
+        if (!this.clientId.equals(other.clientId)) {
+          return false;
+        }
+      }
       if (this._hasMessage != other._hasMessage) {
         return false;
       }
@@ -351,6 +385,7 @@ public class DtoServerImpls {
     public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasDateTime ? dateTime.hashCode() : 0);
+      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
       hash = hash * 31 + (_hasMessage ? message.hashCode() : 0);
       hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
@@ -363,6 +398,9 @@ public class DtoServerImpls {
 
       JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
       result.add("dateTime", dateTimeOut);
+
+      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+      result.add("clientId", clientIdOut);
 
       JsonElement messageOut = (message == null) ? JsonNull.INSTANCE : new JsonPrimitive(message);
       result.add("message", messageOut);
@@ -398,6 +436,12 @@ public class DtoServerImpls {
         JsonElement dateTimeIn = json.get("dateTime");
         java.lang.String dateTimeOut = gson.fromJson(dateTimeIn, java.lang.String.class);
         dto.setDateTime(dateTimeOut);
+      }
+
+      if (json.has("clientId")) {
+        JsonElement clientIdIn = json.get("clientId");
+        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+        dto.setClientId(clientIdOut);
       }
 
       if (json.has("message")) {
@@ -443,23 +487,23 @@ public class DtoServerImpls {
       return new ChatParticipantAddImpl();
     }
 
-    protected UserDetailsImpl user;
-    private boolean _hasUser;
+    protected ParticipantInfoImpl participant;
+    private boolean _hasParticipant;
     protected java.lang.String projectId;
     private boolean _hasProjectId;
 
-    public boolean hasUser() {
-      return _hasUser;
+    public boolean hasParticipant() {
+      return _hasParticipant;
     }
 
     @Override
-    public com.codenvy.ide.collaboration.dto.UserDetails user() {
-      return user;
+    public com.codenvy.ide.collaboration.dto.ParticipantInfo participant() {
+      return participant;
     }
 
-    public ChatParticipantAddImpl setUser(UserDetailsImpl v) {
-      _hasUser = true;
-      user = v;
+    public ChatParticipantAddImpl setParticipant(ParticipantInfoImpl v) {
+      _hasParticipant = true;
+      participant = v;
       return this;
     }
 
@@ -487,11 +531,11 @@ public class DtoServerImpls {
         return false;
       }
       ChatParticipantAddImpl other = (ChatParticipantAddImpl) o;
-      if (this._hasUser != other._hasUser) {
+      if (this._hasParticipant != other._hasParticipant) {
         return false;
       }
-      if (this._hasUser) {
-        if (!this.user.equals(other.user)) {
+      if (this._hasParticipant) {
+        if (!this.participant.equals(other.participant)) {
           return false;
         }
       }
@@ -509,7 +553,7 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasUser ? user.hashCode() : 0);
+      hash = hash * 31 + (_hasParticipant ? participant.hashCode() : 0);
       hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       return hash;
     }
@@ -518,8 +562,8 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonElement userOut = user == null ? JsonNull.INSTANCE : user.toJsonElement();
-      result.add("user", userOut);
+      JsonElement participantOut = participant == null ? JsonNull.INSTANCE : participant.toJsonElement();
+      result.add("participant", participantOut);
 
       JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
       result.add("projectId", projectIdOut);
@@ -545,10 +589,10 @@ public class DtoServerImpls {
       ChatParticipantAddImpl dto = new ChatParticipantAddImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("user")) {
-        JsonElement userIn = json.get("user");
-        UserDetailsImpl userOut = UserDetailsImpl.fromJsonElement(userIn);
-        dto.setUser(userOut);
+      if (json.has("participant")) {
+        JsonElement participantIn = json.get("participant");
+        ParticipantInfoImpl participantOut = ParticipantInfoImpl.fromJsonElement(participantIn);
+        dto.setParticipant(participantOut);
       }
 
       if (json.has("projectId")) {
@@ -582,10 +626,27 @@ public class DtoServerImpls {
       return new ChatParticipantRemoveImpl();
     }
 
+    protected java.lang.String clientId;
+    private boolean _hasClientId;
     protected java.lang.String projectId;
     private boolean _hasProjectId;
     protected java.lang.String userId;
     private boolean _hasUserId;
+
+    public boolean hasClientId() {
+      return _hasClientId;
+    }
+
+    @Override
+    public java.lang.String clientId() {
+      return clientId;
+    }
+
+    public ChatParticipantRemoveImpl setClientId(java.lang.String v) {
+      _hasClientId = true;
+      clientId = v;
+      return this;
+    }
 
     public boolean hasProjectId() {
       return _hasProjectId;
@@ -626,6 +687,14 @@ public class DtoServerImpls {
         return false;
       }
       ChatParticipantRemoveImpl other = (ChatParticipantRemoveImpl) o;
+      if (this._hasClientId != other._hasClientId) {
+        return false;
+      }
+      if (this._hasClientId) {
+        if (!this.clientId.equals(other.clientId)) {
+          return false;
+        }
+      }
       if (this._hasProjectId != other._hasProjectId) {
         return false;
       }
@@ -648,6 +717,7 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
+      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
       hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
@@ -656,6 +726,9 @@ public class DtoServerImpls {
     @Override
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
+
+      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+      result.add("clientId", clientIdOut);
 
       JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
       result.add("projectId", projectIdOut);
@@ -683,6 +756,12 @@ public class DtoServerImpls {
 
       ChatParticipantRemoveImpl dto = new ChatParticipantRemoveImpl();
       JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("clientId")) {
+        JsonElement clientIdIn = json.get("clientId");
+        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+        dto.setClientId(clientIdOut);
+      }
 
       if (json.has("projectId")) {
         JsonElement projectIdIn = json.get("projectId");
@@ -821,7 +900,7 @@ public class DtoServerImpls {
       return new GetChatParticipantsResponseImpl();
     }
 
-    protected java.util.List<UserDetailsImpl> participants;
+    protected java.util.List<ParticipantInfoImpl> participants;
     private boolean _hasParticipants;
 
     public boolean hasParticipants() {
@@ -829,18 +908,18 @@ public class DtoServerImpls {
     }
 
     @Override
-    public org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.UserDetails> getParticipants() {
+    public org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants() {
       ensureParticipants();
       return (org.exoplatform.ide.json.shared.JsonArray) new org.exoplatform.ide.json.server.JsonArrayListAdapter(participants);
     }
 
-    public GetChatParticipantsResponseImpl setParticipants(java.util.List<UserDetailsImpl> v) {
+    public GetChatParticipantsResponseImpl setParticipants(java.util.List<ParticipantInfoImpl> v) {
       _hasParticipants = true;
       participants = v;
       return this;
     }
 
-    public void addParticipants(UserDetailsImpl v) {
+    public void addParticipants(ParticipantInfoImpl v) {
       ensureParticipants();
       participants.add(v);
     }
@@ -852,7 +931,7 @@ public class DtoServerImpls {
 
     private void ensureParticipants() {
       if (!_hasParticipants) {
-        setParticipants(participants != null ? participants : new java.util.ArrayList<UserDetailsImpl>());
+        setParticipants(participants != null ? participants : new java.util.ArrayList<ParticipantInfoImpl>());
       }
     }
 
@@ -889,7 +968,7 @@ public class DtoServerImpls {
 
       JsonArray participantsOut = new JsonArray();
       ensureParticipants();
-      for (UserDetailsImpl participants_ : participants) {
+      for (ParticipantInfoImpl participants_ : participants) {
         JsonElement participantsOut_ = participants_ == null ? JsonNull.INSTANCE : participants_.toJsonElement();
         participantsOut.add(participantsOut_);
       }
@@ -918,13 +997,13 @@ public class DtoServerImpls {
 
       if (json.has("participants")) {
         JsonElement participantsIn = json.get("participants");
-        java.util.ArrayList<UserDetailsImpl> participantsOut = null;
+        java.util.ArrayList<ParticipantInfoImpl> participantsOut = null;
         if (participantsIn != null && !participantsIn.isJsonNull()) {
-          participantsOut = new java.util.ArrayList<UserDetailsImpl>();
+          participantsOut = new java.util.ArrayList<ParticipantInfoImpl>();
           java.util.Iterator<JsonElement> participantsInIterator = participantsIn.getAsJsonArray().iterator();
           while (participantsInIterator.hasNext()) {
             JsonElement participantsIn_ = participantsInIterator.next();
-            UserDetailsImpl participantsOut_ = UserDetailsImpl.fromJsonElement(participantsIn_);
+            ParticipantInfoImpl participantsOut_ = ParticipantInfoImpl.fromJsonElement(participantsIn_);
             participantsOut.add(participantsOut_);
           }
         }
@@ -2171,6 +2250,133 @@ public class DtoServerImpls {
     }
   }
 
+  public static class ParticipantInfoImpl implements com.codenvy.ide.collaboration.dto.ParticipantInfo, JsonSerializable {
+
+    public static ParticipantInfoImpl make() {
+      return new ParticipantInfoImpl();
+    }
+
+    protected java.lang.String clientId;
+    private boolean _hasClientId;
+    protected UserDetailsImpl userDetails;
+    private boolean _hasUserDetails;
+
+    public boolean hasClientId() {
+      return _hasClientId;
+    }
+
+    @Override
+    public java.lang.String getClientId() {
+      return clientId;
+    }
+
+    public ParticipantInfoImpl setClientId(java.lang.String v) {
+      _hasClientId = true;
+      clientId = v;
+      return this;
+    }
+
+    public boolean hasUserDetails() {
+      return _hasUserDetails;
+    }
+
+    @Override
+    public com.codenvy.ide.collaboration.dto.UserDetails getUserDetails() {
+      return userDetails;
+    }
+
+    public ParticipantInfoImpl setUserDetails(UserDetailsImpl v) {
+      _hasUserDetails = true;
+      userDetails = v;
+      return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!(o instanceof ParticipantInfoImpl)) {
+        return false;
+      }
+      ParticipantInfoImpl other = (ParticipantInfoImpl) o;
+      if (this._hasClientId != other._hasClientId) {
+        return false;
+      }
+      if (this._hasClientId) {
+        if (!this.clientId.equals(other.clientId)) {
+          return false;
+        }
+      }
+      if (this._hasUserDetails != other._hasUserDetails) {
+        return false;
+      }
+      if (this._hasUserDetails) {
+        if (!this.userDetails.equals(other.userDetails)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = 1;
+      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+      hash = hash * 31 + (_hasUserDetails ? userDetails.hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+
+      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+      result.add("clientId", clientIdOut);
+
+      JsonElement userDetailsOut = userDetails == null ? JsonNull.INSTANCE : userDetails.toJsonElement();
+      result.add("userDetails", userDetailsOut);
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static ParticipantInfoImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      ParticipantInfoImpl dto = new ParticipantInfoImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("clientId")) {
+        JsonElement clientIdIn = json.get("clientId");
+        java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+        dto.setClientId(clientIdOut);
+      }
+
+      if (json.has("userDetails")) {
+        JsonElement userDetailsIn = json.get("userDetails");
+        UserDetailsImpl userDetailsOut = UserDetailsImpl.fromJsonElement(userDetailsIn);
+        dto.setUserDetails(userDetailsOut);
+      }
+
+      return dto;
+    }
+    public static ParticipantInfoImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
   public static class ProjectClosedDtoImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.ide.collaboration.dto.ProjectClosedDto, JsonSerializable {
 
     private ProjectClosedDtoImpl() {
@@ -2680,18 +2886,33 @@ public class DtoServerImpls {
       return new UserDetailsImpl();
     }
 
+    protected java.lang.String displayEmail;
+    private boolean _hasDisplayEmail;
     protected java.lang.String portraitUrl;
     private boolean _hasPortraitUrl;
     protected boolean isCurrentUser;
     private boolean _hasIsCurrentUser;
-    protected java.lang.String displayEmail;
-    private boolean _hasDisplayEmail;
     protected java.lang.String givenName;
     private boolean _hasGivenName;
     protected java.lang.String displayName;
     private boolean _hasDisplayName;
     protected java.lang.String userId;
     private boolean _hasUserId;
+
+    public boolean hasDisplayEmail() {
+      return _hasDisplayEmail;
+    }
+
+    @Override
+    public java.lang.String getDisplayEmail() {
+      return displayEmail;
+    }
+
+    public UserDetailsImpl setDisplayEmail(java.lang.String v) {
+      _hasDisplayEmail = true;
+      displayEmail = v;
+      return this;
+    }
 
     public boolean hasPortraitUrl() {
       return _hasPortraitUrl;
@@ -2720,21 +2941,6 @@ public class DtoServerImpls {
     public UserDetailsImpl setIsCurrentUser(boolean v) {
       _hasIsCurrentUser = true;
       isCurrentUser = v;
-      return this;
-    }
-
-    public boolean hasDisplayEmail() {
-      return _hasDisplayEmail;
-    }
-
-    @Override
-    public java.lang.String getDisplayEmail() {
-      return displayEmail;
-    }
-
-    public UserDetailsImpl setDisplayEmail(java.lang.String v) {
-      _hasDisplayEmail = true;
-      displayEmail = v;
       return this;
     }
 
@@ -2789,6 +2995,14 @@ public class DtoServerImpls {
         return false;
       }
       UserDetailsImpl other = (UserDetailsImpl) o;
+      if (this._hasDisplayEmail != other._hasDisplayEmail) {
+        return false;
+      }
+      if (this._hasDisplayEmail) {
+        if (!this.displayEmail.equals(other.displayEmail)) {
+          return false;
+        }
+      }
       if (this._hasPortraitUrl != other._hasPortraitUrl) {
         return false;
       }
@@ -2802,14 +3016,6 @@ public class DtoServerImpls {
       }
       if (this._hasIsCurrentUser) {
         if (this.isCurrentUser != other.isCurrentUser) {
-          return false;
-        }
-      }
-      if (this._hasDisplayEmail != other._hasDisplayEmail) {
-        return false;
-      }
-      if (this._hasDisplayEmail) {
-        if (!this.displayEmail.equals(other.displayEmail)) {
           return false;
         }
       }
@@ -2843,9 +3049,9 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = 1;
+      hash = hash * 31 + (_hasDisplayEmail ? displayEmail.hashCode() : 0);
       hash = hash * 31 + (_hasPortraitUrl ? portraitUrl.hashCode() : 0);
       hash = hash * 31 + (_hasIsCurrentUser ? java.lang.Boolean.valueOf(isCurrentUser).hashCode() : 0);
-      hash = hash * 31 + (_hasDisplayEmail ? displayEmail.hashCode() : 0);
       hash = hash * 31 + (_hasGivenName ? givenName.hashCode() : 0);
       hash = hash * 31 + (_hasDisplayName ? displayName.hashCode() : 0);
       hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
@@ -2856,14 +3062,14 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
+      JsonElement displayEmailOut = (displayEmail == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayEmail);
+      result.add("displayEmail", displayEmailOut);
+
       JsonElement portraitUrlOut = (portraitUrl == null) ? JsonNull.INSTANCE : new JsonPrimitive(portraitUrl);
       result.add("portraitUrl", portraitUrlOut);
 
       JsonPrimitive isCurrentUserOut = new JsonPrimitive(isCurrentUser);
       result.add("isCurrentUser", isCurrentUserOut);
-
-      JsonElement displayEmailOut = (displayEmail == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayEmail);
-      result.add("displayEmail", displayEmailOut);
 
       JsonElement givenNameOut = (givenName == null) ? JsonNull.INSTANCE : new JsonPrimitive(givenName);
       result.add("givenName", givenNameOut);
@@ -2894,6 +3100,12 @@ public class DtoServerImpls {
       UserDetailsImpl dto = new UserDetailsImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
+      if (json.has("displayEmail")) {
+        JsonElement displayEmailIn = json.get("displayEmail");
+        java.lang.String displayEmailOut = gson.fromJson(displayEmailIn, java.lang.String.class);
+        dto.setDisplayEmail(displayEmailOut);
+      }
+
       if (json.has("portraitUrl")) {
         JsonElement portraitUrlIn = json.get("portraitUrl");
         java.lang.String portraitUrlOut = gson.fromJson(portraitUrlIn, java.lang.String.class);
@@ -2904,12 +3116,6 @@ public class DtoServerImpls {
         JsonElement isCurrentUserIn = json.get("isCurrentUser");
         boolean isCurrentUserOut = isCurrentUserIn.getAsBoolean();
         dto.setIsCurrentUser(isCurrentUserOut);
-      }
-
-      if (json.has("displayEmail")) {
-        JsonElement displayEmailIn = json.get("displayEmail");
-        java.lang.String displayEmailOut = gson.fromJson(displayEmailIn, java.lang.String.class);
-        dto.setDisplayEmail(displayEmailOut);
       }
 
       if (json.has("givenName")) {

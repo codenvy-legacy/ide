@@ -21,6 +21,7 @@ package com.codenvy.ide.collaboration.chat.server;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ChatMessageImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.GetChatParticipantsImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.GetChatParticipantsResponseImpl;
+import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ParticipantInfoImpl;
 import com.codenvy.ide.collaboration.watcher.server.ProjectUsers;
 
 import java.util.Set;
@@ -55,10 +56,10 @@ public class ChatService
       {
          for (String clientId : users)
          {
-            String userId = projectUsers.getUserId(clientId);
-            if(userId != null)
+            ParticipantInfoImpl participant = projectUsers.getParticipant(clientId);
+            if(participant != null)
             {
-               response.addParticipants(projectUsers.getUserDetails(userId));
+               response.addParticipants(participant);
             }
          }
       }

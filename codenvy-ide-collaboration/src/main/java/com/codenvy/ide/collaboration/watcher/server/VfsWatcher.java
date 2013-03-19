@@ -152,7 +152,10 @@ public class VfsWatcher  implements Startable
                return;
          }
          Set<String> clientIds = new HashSet<String>(projectUsers.getProjectUsers(projectId));
-         clientIds.remove(projectUsers.getClientId(event.getUserId()));
+         if(event.getUserId() != null)
+         {
+           clientIds.removeAll(projectUsers.getClientIds(event.getUserId()));
+         }
          if (message != null && clientIds != null)
          {
             broadcastToClients(message, clientIds);

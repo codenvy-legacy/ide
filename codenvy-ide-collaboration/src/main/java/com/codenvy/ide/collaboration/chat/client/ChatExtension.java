@@ -140,8 +140,8 @@ public class ChatExtension extends Extension
          @Override
          public void onMessageReceived(GetChatParticipantsResponse message)
          {
-            chatPresenter.setChatParticipants(message.getParticipants());
             chatPresenter.setProjectId(projectId);
+            chatPresenter.setChatParticipants(message.getParticipants());
          }
       });
    }

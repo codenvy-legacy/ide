@@ -31,4 +31,6 @@ public interface ChatParticipantRemove extends ServerToClientDto
    String projectId();
 
    String userId();
+
+   String clientId();
 }

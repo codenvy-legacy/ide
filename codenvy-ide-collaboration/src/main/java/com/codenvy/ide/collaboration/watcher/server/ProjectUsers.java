@@ -21,6 +21,7 @@ package com.codenvy.ide.collaboration.watcher.server;
 import com.codenvy.ide.collaboration.chat.server.MD5Util;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ChatParticipantAddImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ChatParticipantRemoveImpl;
+import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ParticipantInfoImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.UserDetailsImpl;
 
 import org.everrest.websockets.WSConnectionContext;
@@ -29,6 +30,9 @@ import org.exoplatform.ide.shared.util.StringUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,7 +53,7 @@ public class ProjectUsers
 
    private final ConcurrentMap<String, Set<String>> projectUsers = new ConcurrentHashMap<String, Set<String>>();
 
-   private final ConcurrentMap<String, String> userId2clientId = new ConcurrentHashMap<String, String>();
+   private final ConcurrentMap<String, String> clientId2userId = new ConcurrentHashMap<String, String>();
 
    public void addProjectUser(String projectId, String clientId, String userId)
    {
@@ -58,11 +62,10 @@ public class ProjectUsers
          projectUsers.put(projectId, new ConcurrentSkipListSet<String>());
       }
       projectUsers.get(projectId).add(clientId);
-      userId2clientId.putIfAbsent(userId, clientId);
-      UserDetailsImpl userDetails = getUserDetails(getUserId(clientId));
+      clientId2userId.putIfAbsent(clientId, userId);
       ChatParticipantAddImpl message = ChatParticipantAddImpl.make();
       message.setProjectId(projectId);
-      message.setUser(userDetails);
+      message.setParticipant(getParticipant(clientId));
       broadcastToClients(message.toJson(), projectId);
    }
 
@@ -79,7 +82,8 @@ public class ProjectUsers
          ChatParticipantRemoveImpl message = ChatParticipantRemoveImpl.make();
          message.setProjectId(projectId);
          message.setUserId(getUserId(clientId));
-         userId2clientId.remove(userId);
+         message.setClientId(clientId);
+         clientId2userId.remove(clientId);
          broadcastToClients(message.toJson(), projectId);
       }
    }
@@ -92,13 +96,13 @@ public class ProjectUsers
 
    public String getProjectId(String clientId)
    {
-      for (Entry<String, Set<String>> projectEnty : projectUsers.entrySet())
+      for (Entry<String, Set<String>> projectEntry : projectUsers.entrySet())
       {
-         for (String id : projectEnty.getValue())
+         for (String id : projectEntry.getValue())
          {
             if (clientId.equals(id))
             {
-               return projectEnty.getKey();
+               return projectEntry.getKey();
             }
          }
       }
@@ -112,14 +116,7 @@ public class ProjectUsers
 
    public String getUserId(String clientId)
    {
-      for (Entry<String, String> entry : userId2clientId.entrySet())
-      {
-         if (entry.getValue().equals(clientId))
-         {
-            return entry.getKey();
-         }
-      }
-      return null;
+      return clientId2userId.get(clientId);
    }
 
    public void broadcastToClients(String message, String projectId)
@@ -138,12 +135,12 @@ public class ProjectUsers
       }
    }
 
-   public UserDetailsImpl getUserDetails(String userId)
+   private UserDetailsImpl getUserDetails(String userId)
    {
       UserDetailsImpl userDetails = UserDetailsImpl.make();
       userDetails.setUserId(userId);
       String name = userId;
-      if(name.contains("@"))
+      if (name.contains("@"))
       {
          name = name.substring(0, name.indexOf('@'));
          name = StringUtils.capitalizeFirstLetter(name);
@@ -154,8 +151,29 @@ public class ProjectUsers
       return userDetails;
    }
 
-   public String getClientId(String userId)
+   public ParticipantInfoImpl getParticipant(String clientId)
    {
-      return userId2clientId.get(userId);
+      String userId = getUserId(clientId);
+      if (userId == null)
+      {
+         return null;
+      }
+      ParticipantInfoImpl participantInfo = ParticipantInfoImpl.make();
+      participantInfo.setClientId(clientId);
+      participantInfo.setUserDetails(getUserDetails(userId));
+      return participantInfo;
+   }
+
+   public Collection<String> getClientIds(String userId)
+   {
+      List<String> clients = new ArrayList<String>();
+      for (Entry<String, String> entry : clientId2userId.entrySet())
+      {
+         if (entry.getValue().equals(userId))
+         {
+            clients.add(entry.getKey());
+         }
+      }
+      return clients;
    }
 }

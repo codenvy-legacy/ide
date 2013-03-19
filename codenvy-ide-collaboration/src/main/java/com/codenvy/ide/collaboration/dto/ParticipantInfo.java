@@ -18,25 +18,14 @@
  */
 package com.codenvy.ide.collaboration.dto;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
-
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.CHAT_MESSAGE)
-public interface ChatMessage extends ClientToServerDto, ServerToClientDto
-{
 
+public interface ParticipantInfo
+{
    String getClientId();
 
-   String getUserId();
-
-   String getMessage();
-
-   String getProjectId();
-   
-   String getDateTime();
+   UserDetails getUserDetails();
 }

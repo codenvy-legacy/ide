@@ -276,7 +276,7 @@ public class UsersModel
    private void createAndAddParticipant(
       com.google.collide.dto.Participant participantDto, UserDetails userDetails) {
       boolean isSelf =
-         participantDto.getUserId().equals(BootstrapSession.getBootstrapSession().getUserId());
+         participantDto.getId().equals(BootstrapSession.getBootstrapSession().getActiveClientId());
       String color = isSelf ? "black" : colorGenerator.nextColor();
       Participant participant = Participant.create(
          participantDto, userDetails.getDisplayName(), userDetails.getDisplayEmail(), color, isSelf);

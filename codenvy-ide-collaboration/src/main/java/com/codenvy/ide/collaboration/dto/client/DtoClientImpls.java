@@ -28,7 +28,7 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "f1e06e48c00ff9b4995303bc4fc85d70b1adeebe";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "6b4de95df96270ba0aebd41b859cfdcffeca7134";
 
 
   public static class ChatCodePointMessageImpl extends ChatMessageImpl implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage {
@@ -87,6 +87,20 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
+    public final native java.lang.String getClientId() /*-{
+      return this["clientId"];
+    }-*/;
+
+    public final native ChatMessageImpl setClientId(java.lang.String clientId) /*-{
+      this["clientId"] = clientId;
+      return this;
+    }-*/;
+
+    public final native boolean hasClientId() /*-{
+      return this.hasOwnProperty("clientId");
+    }-*/;
+
+    @Override
     public final native java.lang.String getMessage() /*-{
       return this["message"];
     }-*/;
@@ -139,17 +153,17 @@ public class DtoClientImpls {
     protected ChatParticipantAddImpl() {}
 
     @Override
-    public final native com.codenvy.ide.collaboration.dto.UserDetails user() /*-{
-      return this["user"];
+    public final native com.codenvy.ide.collaboration.dto.ParticipantInfo participant() /*-{
+      return this["participant"];
     }-*/;
 
-    public final native ChatParticipantAddImpl setUser(com.codenvy.ide.collaboration.dto.UserDetails user) /*-{
-      this["user"] = user;
+    public final native ChatParticipantAddImpl setParticipant(com.codenvy.ide.collaboration.dto.ParticipantInfo participant) /*-{
+      this["participant"] = participant;
       return this;
     }-*/;
 
-    public final native boolean hasUser() /*-{
-      return this.hasOwnProperty("user");
+    public final native boolean hasParticipant() /*-{
+      return this.hasOwnProperty("participant");
     }-*/;
 
     @Override
@@ -175,6 +189,20 @@ public class DtoClientImpls {
 
   public static class ChatParticipantRemoveImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.ide.collaboration.dto.ChatParticipantRemove {
     protected ChatParticipantRemoveImpl() {}
+
+    @Override
+    public final native java.lang.String clientId() /*-{
+      return this["clientId"];
+    }-*/;
+
+    public final native ChatParticipantRemoveImpl setClientId(java.lang.String clientId) /*-{
+      this["clientId"] = clientId;
+      return this;
+    }-*/;
+
+    public final native boolean hasClientId() /*-{
+      return this.hasOwnProperty("clientId");
+    }-*/;
 
     @Override
     public final native java.lang.String projectId() /*-{
@@ -239,11 +267,11 @@ public class DtoClientImpls {
     protected GetChatParticipantsResponseImpl() {}
 
     @Override
-    public final native org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.UserDetails> getParticipants() /*-{
+    public final native org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> getParticipants() /*-{
       return this["participants"];
     }-*/;
 
-    public final native GetChatParticipantsResponseImpl setParticipants(org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.UserDetails> participants) /*-{
+    public final native GetChatParticipantsResponseImpl setParticipants(org.exoplatform.ide.json.shared.JsonArray<com.codenvy.ide.collaboration.dto.ParticipantInfo> participants) /*-{
       this["participants"] = participants;
       return this;
     }-*/;
@@ -624,6 +652,44 @@ public class DtoClientImpls {
     }-*/;  }
 
 
+  public static class ParticipantInfoImpl extends org.exoplatform.ide.json.client.Jso implements com.codenvy.ide.collaboration.dto.ParticipantInfo {
+    protected ParticipantInfoImpl() {}
+
+    @Override
+    public final native java.lang.String getClientId() /*-{
+      return this["clientId"];
+    }-*/;
+
+    public final native ParticipantInfoImpl setClientId(java.lang.String clientId) /*-{
+      this["clientId"] = clientId;
+      return this;
+    }-*/;
+
+    public final native boolean hasClientId() /*-{
+      return this.hasOwnProperty("clientId");
+    }-*/;
+
+    @Override
+    public final native com.codenvy.ide.collaboration.dto.UserDetails getUserDetails() /*-{
+      return this["userDetails"];
+    }-*/;
+
+    public final native ParticipantInfoImpl setUserDetails(com.codenvy.ide.collaboration.dto.UserDetails userDetails) /*-{
+      this["userDetails"] = userDetails;
+      return this;
+    }-*/;
+
+    public final native boolean hasUserDetails() /*-{
+      return this.hasOwnProperty("userDetails");
+    }-*/;
+
+    public static native ParticipantInfoImpl make() /*-{
+      return {
+
+      };
+    }-*/;  }
+
+
   public static class ProjectClosedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.ide.collaboration.dto.ProjectClosedDto {
     protected ProjectClosedDtoImpl() {}
 
@@ -771,6 +837,20 @@ public class DtoClientImpls {
     protected UserDetailsImpl() {}
 
     @Override
+    public final native java.lang.String getDisplayEmail() /*-{
+      return this["displayEmail"];
+    }-*/;
+
+    public final native UserDetailsImpl setDisplayEmail(java.lang.String displayEmail) /*-{
+      this["displayEmail"] = displayEmail;
+      return this;
+    }-*/;
+
+    public final native boolean hasDisplayEmail() /*-{
+      return this.hasOwnProperty("displayEmail");
+    }-*/;
+
+    @Override
     public final native java.lang.String getPortraitUrl() /*-{
       return this["portraitUrl"];
     }-*/;
@@ -796,20 +876,6 @@ public class DtoClientImpls {
 
     public final native boolean hasIsCurrentUser() /*-{
       return this.hasOwnProperty("isCurrentUser");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getDisplayEmail() /*-{
-      return this["displayEmail"];
-    }-*/;
-
-    public final native UserDetailsImpl setDisplayEmail(java.lang.String displayEmail) /*-{
-      this["displayEmail"] = displayEmail;
-      return this;
-    }-*/;
-
-    public final native boolean hasDisplayEmail() /*-{
-      return this.hasOwnProperty("displayEmail");
     }-*/;
 
     @Override

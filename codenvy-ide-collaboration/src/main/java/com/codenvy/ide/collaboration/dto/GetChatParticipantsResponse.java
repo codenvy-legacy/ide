@@ -29,5 +29,5 @@ import org.exoplatform.ide.json.shared.JsonArray;
 @RoutingType(type = RoutingTypes.CHAT_PARTISIPANTS_RESPONSE)
 public interface GetChatParticipantsResponse extends ServerToClientDto
 {
-   JsonArray<UserDetails> getParticipants();
+   JsonArray<ParticipantInfo> getParticipants();
 }

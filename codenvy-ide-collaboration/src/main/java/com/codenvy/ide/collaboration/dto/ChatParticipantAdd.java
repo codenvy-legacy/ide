@@ -30,5 +30,5 @@ public interface ChatParticipantAdd extends ServerToClientDto
 {
    String projectId();
 
-   UserDetails user();
+   ParticipantInfo participant();
 }

@@ -33,6 +33,8 @@ public class Participant extends UserDetailsImpl
 
    private static final String COLOR_KEY = "__color";
 
+   private static final String CLIENT_ID_KEY = "__client_id";
+
    protected Participant()
    {
    }
@@ -46,4 +48,15 @@ public class Participant extends UserDetailsImpl
    {
       addField(COLOR_KEY, color);
    }
+
+   public final String getClientId()
+   {
+      return getStringField(CLIENT_ID_KEY);
+   }
+
+   public final void setClientId(String clientId)
+   {
+      addField(CLIENT_ID_KEY, clientId);
+   }
+
 }

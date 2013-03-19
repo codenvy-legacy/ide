@@ -86,10 +86,6 @@ public class ParticipantModel {
     listeners.add(listener);
   }
 
-  public int getCount() {
-    return count;
-  }
-
   public String getUserId(final String clientId) {
     return usersModel.getUserIdByClientId(clientId);
   }
@@ -196,33 +192,15 @@ public class ParticipantModel {
       String userId = userDetails.getUserId();
       // Cache the participants' user details.
       Participant participant = usersModel.getParticipant(userId);
-      participantUserDetails.put(userId, participant);
+      participantUserDetails.put(item.getParticipant().getId(), participant);
       dispatchParticipantAdded(participant);
-//      clientIdToUserId.put(item.getParticipant().getId(), userId);
-//
-//      if (isAllParticipants) {
-//         presentParticipantsTracker.add(userId);
-//         if (!participantsByUserId.containsKey(userId)) {
-//            createAndAddParticipant(item.getParticipant(), userDetails);
-//         }
-//      } else {
-//     /*
-//      * Add the participant to the list. If the user is not in presentParticipantsTracker set,
-//      * then the participant has since disconnected. If the user is in the participants map, then
-//      * the user was already added to the view.
-//      */
-//         if (presentParticipantsTracker.contains(userId)
-//            && !participantsByUserId.containsKey(userId)) {
-//            createAndAddParticipant(item.getParticipant(), userDetails);
-//         }
-//      }
    }
 
    public void removeParticipant(ParticipantUserDetails item)
    {
-      String userId = item.getUserDetails().getUserId();
-      if (participantUserDetails.containsKey(userId)) {
-         Participant participant = participantUserDetails.remove(userId);
+      String id = item.getParticipant().getId();
+      if (participantUserDetails.containsKey(id)) {
+         Participant participant = participantUserDetails.remove(id);
          if (participant != null) {
             count--;
             dispatchParticipantRemoved(participant);

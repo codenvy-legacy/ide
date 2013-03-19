@@ -19,8 +19,6 @@
 package com.codenvy.ide.collaboration.chat.client;
 
 import com.codenvy.ide.client.util.AnimationController;
-import com.codenvy.ide.client.util.AnimationController.AnimationStateListener;
-import com.codenvy.ide.client.util.AnimationController.State;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.chat.client.ChatResources.ChatCss;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display;
@@ -46,11 +44,9 @@ import elemental.html.TextAreaElement;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 import java.util.Date;
 
@@ -77,7 +73,7 @@ public class ProjectChatView extends ViewImpl implements Display
    @UiField
    ScrollPanel participantsPanel;
 
-   private String lastUserId;
+   private String lastClientId;
 
    private Element lastMessageElement;
 
@@ -119,24 +115,24 @@ public class ProjectChatView extends ViewImpl implements Display
     * {@inheritDoc}
     */
    @Override
-   public void addMessage(UserDetails userDetails, String message, long time)
+   public void addMessage(Participant participant, String message, long time)
    {
       Date d = new Date(time);
       DivElement messageElement;
-      if (userDetails.getUserId().equals(lastUserId))
+      if (participant.getClientId().equals(lastClientId))
       {
-         messageElement = getMessageElement(message, "...", d, userDetails.isCurrentUser());
+         messageElement = getMessageElement(message, "...", d, participant.isCurrentUser());
          lastMessageElement.appendChild(messageElement);
       }
       else
       {
-         messageElement = getMessageElement(message, userDetails.getDisplayName() + ":", d,
-            userDetails.isCurrentUser());
+         messageElement = getMessageElement(message, participant.getDisplayName() + ":", d,
+            participant.isCurrentUser());
          chatPanel.getElement().appendChild((Node)messageElement);
-         lastUserId = userDetails.getUserId();
+         lastClientId = participant.getClientId();
          lastMessageElement = messageElement;
       }
-      if (userDetails.isCurrentUser())
+      if (participant.isCurrentUser())
       {
          currentUserMessages.put(String.valueOf(d.getTime()), messageElement);
       }
@@ -204,11 +200,11 @@ public class ProjectChatView extends ViewImpl implements Display
     * {@inheritDoc}
     */
    @Override
-   public void removeParticipant(String userId)
+   public void removeParticipant(String clientId)
    {
-      if (participants.containsKey(userId))
+      if (participants.containsKey(clientId))
       {
-         Element element = participants.remove(userId);
+         Element element = participants.remove(clientId);
          element.removeFromParent();
       }
    }
@@ -220,7 +216,7 @@ public class ProjectChatView extends ViewImpl implements Display
    public void addParticipant(Participant participant)
    {
       Element element = getParticipantElement(participant);
-      participants.put(participant.getUserId(), element);
+      participants.put(participant.getClientId(), element);
       participantsPanel.getElement().insertAfter((Node)element, editFooter);
       animationController.show(element);
    }
@@ -256,11 +252,11 @@ public class ProjectChatView extends ViewImpl implements Display
     * {@inheritDoc}
     */
    @Override
-   public void removeEditParticipant(String userId)
+   public void removeEditParticipant(String clientId)
    {
-      if (editParticipants.containsKey(userId))
+      if (editParticipants.containsKey(clientId))
       {
-         Element element = editParticipants.remove(userId);
+         Element element = editParticipants.remove(clientId);
          element.removeFromParent();
          participantsPanel.getElement().appendChild((com.google.gwt.user.client.Element)element);
          animationController.show(element);
@@ -271,15 +267,15 @@ public class ProjectChatView extends ViewImpl implements Display
     * {@inheritDoc}
     */
    @Override
-   public void addEditParticipant(String userId)
+   public void addEditParticipant(String clientId)
    {
-      if (participants.containsKey(userId))
+      if (participants.containsKey(clientId))
       {
-         Element element = participants.get(userId);
+         Element element = participants.get(clientId);
          element.removeFromParent();
          participantsPanel.getElement().insertBefore((Node)element, editFooter);
          animationController.show(element);
-         editParticipants.put(userId, element);
+         editParticipants.put(clientId, element);
       }
    }
 

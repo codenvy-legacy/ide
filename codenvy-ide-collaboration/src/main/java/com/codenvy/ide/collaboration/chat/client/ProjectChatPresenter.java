@@ -24,6 +24,7 @@ import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.collaboration.dto.ChatMessage;
 import com.codenvy.ide.collaboration.dto.ChatParticipantAdd;
 import com.codenvy.ide.collaboration.dto.ChatParticipantRemove;
+import com.codenvy.ide.collaboration.dto.ParticipantInfo;
 import com.codenvy.ide.collaboration.dto.RoutingTypes;
 import com.codenvy.ide.collaboration.dto.UserDetails;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatMessageImpl;
@@ -33,6 +34,7 @@ import com.codenvy.ide.notification.Notification.NotificationType;
 import com.codenvy.ide.notification.NotificationManager;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.code.ParticipantModel.Listener;
 import com.google.collide.client.collaboration.DocumentCollaborationController;
@@ -79,7 +81,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
       void clearMessage();
 
-      void addMessage(UserDetails userDetails, String message, long time);
+      void addMessage(Participant participant, String message, long time);
 
       void addListener(EventListener eventListener);
 
@@ -149,13 +151,13 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       @Override
       public void participantAdded(com.google.collide.client.code.Participant participant)
       {
-         display.addEditParticipant(participant.getUserId());
+         display.addEditParticipant(participant.getId());
       }
 
       @Override
       public void participantRemoved(com.google.collide.client.code.Participant participant)
       {
-         display.removeEditParticipant(participant.getUserId());
+         display.removeEditParticipant(participant.getId());
       }
    };
 
@@ -169,7 +171,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private Display display;
 
-   private JsonStringMap<UserDetails> users = JsonCollections.createMap();
+   private JsonStringMap<Participant> users = JsonCollections.createMap();
 
    private JsonStringMap<MessagesTimer> deliverTimers = JsonCollections.createMap();
 
@@ -207,7 +209,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             @Override
             public void onMessageReceived(ChatParticipantAdd message)
             {
-               addParticipant(message.user());
+               addParticipant(message.participant());
             }
          });
 
@@ -217,48 +219,48 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             @Override
             public void onMessageReceived(ChatParticipantRemove message)
             {
-               if (userId.equals(message.userId()))
+               if (BootstrapSession.getBootstrapSession().getActiveClientId().equals(message.clientId()))
                {
                   return;
                }
-               removeParticipant(message.userId());
+               removeParticipant(message.clientId());
             }
          });
    }
 
-   private void removeParticipant(String userId)
+   private void removeParticipant(String clientId)
    {
-      users.remove(userId);
-      display.removeParticipant(userId);
+      users.remove(clientId);
+      display.removeParticipant(clientId);
    }
 
-   private void addParticipant(UserDetails user)
+   private void addParticipant(ParticipantInfo user)
    {
-      if (user.getUserId().equals(userId))
+      if (user.getClientId().equals(BootstrapSession.getBootstrapSession().getActiveClientId()))
       {
-         ((UserDetailsImpl)user).setIsCurrentUser(true);
+         ((UserDetailsImpl)user.getUserDetails()).setIsCurrentUser(true);
       }
-      users.put(user.getUserId(), user);
-      if (display != null && !user.isCurrentUser())
+      Participant participant = (Participant)user.getUserDetails();
+      participant.setClientId(user.getClientId());
+      users.put(user.getClientId(), participant);
+      if (display != null && !participant.isCurrentUser())
       {
-         Participant p = getParticipant(user);
-         display.addParticipant(p);
+         setParticipantColor(participant);
+         display.addParticipant(participant);
       }
    }
 
-   private Participant getParticipant(UserDetails user)
+   private void setParticipantColor(Participant user)
    {
       com.google.collide.client.code.Participant participant = collabExtension.getUsersModel().getParticipant(
          user.getUserId());
-      Participant p = ((Jso)user).cast();
-      p.setColor(participant.getColor());
-      return p;
+      user.setColor(participant.getColor());
    }
 
 
    private void messageReceived(ChatMessage message)
    {
-      if (message.getUserId().equals(userId))
+      if (message.getClientId().equals(BootstrapSession.getBootstrapSession().getActiveClientId()))
       {
          MessagesTimer timer = deliverTimers.remove(message.getDateTime());
          if (timer.executed)
@@ -271,10 +273,10 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          }
          return;
       }
-      display.addMessage(users.get(message.getUserId()), message.getMessage(), Long.valueOf(message.getDateTime()));
+      display.addMessage(users.get(message.getClientId()), message.getMessage(), Long.valueOf(message.getDateTime()));
       if (viewClosed || !display.asView().isViewVisible())
       {
-         ChatNotificationWidget widget = new ChatNotificationWidget(users.get(message.getUserId()),
+         ChatNotificationWidget widget = new ChatNotificationWidget(users.get(message.getClientId()),
             message.getMessage());
          Notification chatNotification = new Notification(widget, NotificationType.MESSAGE, 10000);
          NotificationManager.get().addNotification(chatNotification);
@@ -296,6 +298,8 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       ChatMessageImpl chatMessage = ChatMessageImpl.make();
       chatMessage.setUserId(userId);
       chatMessage.setProjectId(projectId);
+      String clientId = BootstrapSession.getBootstrapSession().getActiveClientId();
+      chatMessage.setClientId(clientId);
       Date d = new Date();
       chatMessage.setDateTime(String.valueOf(d.getTime()));
       MessagesTimer messagesTimer = new MessagesTimer(chatMessage.getDateTime());
@@ -305,7 +309,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       b.appendEscapedLines(message);
       chatMessage.setMessage(b.toSafeHtml().asString());
       display.clearMessage();
-      display.addMessage(users.get(userId), chatMessage.getMessage(), d.getTime());
+      display.addMessage(users.get(clientId), chatMessage.getMessage(), d.getTime());
       try
       {
          chatApi.SEND_MESSAGE.send(chatMessage);
@@ -357,16 +361,16 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       control.chatOpened(true);
    }
 
-   void setChatParticipants(JsonArray<UserDetails> chatParticipants)
+   void setChatParticipants(JsonArray<ParticipantInfo> chatParticipants)
    {
       users = JsonCollections.createMap();
-      for (UserDetails ud : chatParticipants.asIterable())
+      for (ParticipantInfo info : chatParticipants.asIterable())
       {
-         if (ud.getUserId().equals(userId))
-         {
-            ((UserDetailsImpl)ud).setIsCurrentUser(true);
-         }
-         users.put(ud.getUserId(), ud);
+         addParticipant(info);
+      }
+      if (users.size() > 1)
+      {
+         openChat();
       }
    }
 
@@ -375,19 +379,6 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       this.projectId = projectId;
       display = GWT.create(Display.class);
       display.addListener(enterListener);
-      users.iterate(new IterationCallback<UserDetails>()
-      {
-         @Override
-         public void onIteration(String key, UserDetails value)
-         {
-            Participant p = getParticipant(value);
-            display.addParticipant(p);
-         }
-      });
-      if (users.size() > 1)
-      {
-         openChat();
-      }
    }
 
    void projectClosed()
@@ -420,7 +411,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             @Override
             public void onIteration(String key, com.google.collide.client.code.Participant value)
             {
-              display.addEditParticipant(value.getUserId());
+              display.addEditParticipant(key);
             }
          });
       }
