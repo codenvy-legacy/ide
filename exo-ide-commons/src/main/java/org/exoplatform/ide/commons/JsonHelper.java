@@ -22,7 +22,6 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 
 import java.io.InputStream;
@@ -37,13 +36,22 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ * Tool to serialize/deserialize Java objects to/from JSON representation.
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see JsonNameConventions
  */
 public class JsonHelper
 {
    @SuppressWarnings("unchecked")
    public static <O> String toJson(O instance)
+   {
+      return toJson(instance, JsonNameConventions.DEFAULT);
+   }
+
+   @SuppressWarnings("unchecked")
+   public static <O> String toJson(O instance, JsonNameConvention nameConvention)
    {
       try
       {
@@ -66,7 +74,7 @@ public class JsonHelper
          }
 
          Writer w = new StringWriter();
-         json.writeTo(new JsonWriter(w));
+         json.writeTo(new NameConventionJsonWriter(w, nameConvention));
          return w.toString();
       }
       catch (JsonException jsone)
@@ -76,21 +84,38 @@ public class JsonHelper
       }
    }
 
-   @SuppressWarnings({"unchecked", "rawtypes"})
    public static <O> O fromJson(String json, Class<O> klass, Type type) throws JsonParseException
    {
       return fromJson(parseJson(json), klass, type);
    }
+
+   public static <O> O fromJson(String json, Class<O> klass, Type type, JsonNameConvention nameConvention) throws JsonParseException
+   {
+      return fromJson(parseJson(json, nameConvention), klass, type);
+   }
+
 
    public static <O> O fromJson(InputStream json, Class<O> klass, Type type) throws JsonParseException
    {
       return fromJson(parseJson(json), klass, type);
    }
 
+   public static <O> O fromJson(InputStream json, Class<O> klass, Type type, JsonNameConvention nameConvention) throws JsonParseException
+   {
+      return fromJson(parseJson(json, nameConvention), klass, type);
+   }
+
+
    public static <O> O fromJson(Reader json, Class<O> klass, Type type) throws JsonParseException
    {
       return fromJson(parseJson(json), klass, type);
    }
+
+   public static <O> O fromJson(Reader json, Class<O> klass, Type type, JsonNameConvention nameConvention) throws JsonParseException
+   {
+      return fromJson(parseJson(json, nameConvention), klass, type);
+   }
+
 
    private static <O> O fromJson(JsonValue jsonValue, Class<O> klass, Type type) throws JsonParseException
    {
@@ -128,16 +153,33 @@ public class JsonHelper
       return parseJson(new StringReader(json));
    }
 
+   public static JsonValue parseJson(String json, JsonNameConvention nameConvention) throws JsonParseException
+   {
+      return parseJson(new StringReader(json), nameConvention);
+   }
+
+
    public static JsonValue parseJson(InputStream json) throws JsonParseException
    {
       return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")));
    }
 
+   public static JsonValue parseJson(InputStream json, JsonNameConvention nameConvention) throws JsonParseException
+   {
+      return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")), nameConvention);
+   }
+
+
    public static JsonValue parseJson(Reader json) throws JsonParseException
+   {
+      return parseJson(json, JsonNameConventions.DEFAULT);
+   }
+
+   public static JsonValue parseJson(Reader json, JsonNameConvention nameConvention) throws JsonParseException
    {
       try
       {
-         JsonParser parser = new JsonParser();
+         JsonParser parser = new NameConventionJsonParser(nameConvention);
          parser.parse(json);
          return parser.getJsonObject();
       }
