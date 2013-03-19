@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,28 +16,46 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.commons;
+package com.codenvy.ide.commons;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * String key/value pair.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @deprecated use JsonParseException instead
  */
-@SuppressWarnings("serial")
-public class ParsingResponseException extends Exception
+public final class Pair
 {
-   public ParsingResponseException(String message, Throwable cause)
+   private String name;
+   private String value;
+
+   public Pair(String name, String value)
    {
-      super(message, cause);
+      this.name = name;
+      this.value = value;
    }
 
-   public ParsingResponseException(String message)
+   public Pair()
    {
-      super(message);
    }
 
-   public ParsingResponseException(Throwable cause)
+   public String getName()
    {
-      super(cause);
+      return name;
+   }
+
+   public void setName(String name)
+   {
+      this.name = name;
+   }
+
+   public String getValue()
+   {
+      return value;
+   }
+
+   public void setValue(String value)
+   {
+      this.value = value;
    }
 }

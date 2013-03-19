@@ -16,32 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.commons;
+package org.exoplatform.ide.security.paas;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
- * @version $Id: CredentialStoreException.java Mar 1, 2013 vetal $
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: Credentials.java Mar 1, 2013 vetal $
  */
-@SuppressWarnings("serial")
-public final class CredentialStoreException extends Exception
+public class Credential
 {
-   /**
-    * @param message
-    *    the detail message
-    * @param cause
-    *    the cause
-    */
-   public CredentialStoreException(String message, Throwable cause)
+   private final Map<String, String> attributes;
+
+   public Credential()
    {
-      super(message, cause);
+      attributes = new HashMap<String, String>(2);
    }
 
-   /**
-    * @param message
-    *    the detail message
-    */
-   public CredentialStoreException(String message)
+   public Map<String, String> getAttributes()
    {
-      super(message);
+      return attributes;
+   }
+
+   public String getAttribute(String name)
+   {
+      return attributes.get(name);
+   }
+
+   public void setAttribute(String name, String value)
+   {
+      attributes.put(name, value);
    }
 }
+

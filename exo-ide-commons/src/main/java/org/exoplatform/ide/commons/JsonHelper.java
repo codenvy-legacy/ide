@@ -77,22 +77,22 @@ public class JsonHelper
    }
 
    @SuppressWarnings({"unchecked", "rawtypes"})
-   public static <O> O fromJson(String json, Class<O> klass, Type type) throws ParsingResponseException
+   public static <O> O fromJson(String json, Class<O> klass, Type type) throws JsonParseException
    {
       return fromJson(parseJson(json), klass, type);
    }
 
-   public static <O> O fromJson(InputStream json, Class<O> klass, Type type) throws ParsingResponseException
+   public static <O> O fromJson(InputStream json, Class<O> klass, Type type) throws JsonParseException
    {
       return fromJson(parseJson(json), klass, type);
    }
 
-   public static <O> O fromJson(Reader json, Class<O> klass, Type type) throws ParsingResponseException
+   public static <O> O fromJson(Reader json, Class<O> klass, Type type) throws JsonParseException
    {
       return fromJson(parseJson(json), klass, type);
    }
 
-   private static <O> O fromJson(JsonValue jsonValue, Class<O> klass, Type type) throws ParsingResponseException
+   private static <O> O fromJson(JsonValue jsonValue, Class<O> klass, Type type) throws JsonParseException
    {
       try
       {
@@ -119,21 +119,21 @@ public class JsonHelper
       }
       catch (JsonException jsone)
       {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
+         throw new JsonParseException(jsone.getMessage(), jsone);
       }
    }
 
-   public static JsonValue parseJson(String json) throws ParsingResponseException
+   public static JsonValue parseJson(String json) throws JsonParseException
    {
       return parseJson(new StringReader(json));
    }
 
-   public static JsonValue parseJson(InputStream json) throws ParsingResponseException
+   public static JsonValue parseJson(InputStream json) throws JsonParseException
    {
       return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")));
    }
 
-   public static JsonValue parseJson(Reader json) throws ParsingResponseException
+   public static JsonValue parseJson(Reader json) throws JsonParseException
    {
       try
       {
@@ -143,7 +143,7 @@ public class JsonHelper
       }
       catch (JsonException jsone)
       {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
+         throw new JsonParseException(jsone.getMessage(), jsone);
       }
    }
 }

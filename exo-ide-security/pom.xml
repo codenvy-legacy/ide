@@ -87,6 +87,11 @@
          </exclusions>
       </dependency>
 
+      <dependency>
+         <groupId>com.exoplatform.cloud-ide</groupId>
+         <artifactId>cloud-ide-user-db-client</artifactId>
+         <version>${project.version}</version>
+      </dependency>
    </dependencies>
 
    <build>

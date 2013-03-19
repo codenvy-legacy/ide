@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,24 +19,23 @@
 package org.exoplatform.ide.commons;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @deprecated use JsonParseException instead
  */
 @SuppressWarnings("serial")
-public class ParsingResponseException extends Exception
+public class JsonParseException extends ParsingResponseException // TODO : extends java.lang.Exception after removing ParsingResponseException
 {
-   public ParsingResponseException(String message, Throwable cause)
+   public JsonParseException(String message, Throwable cause)
    {
       super(message, cause);
    }
 
-   public ParsingResponseException(String message)
+   public JsonParseException(String message)
    {
       super(message);
    }
 
-   public ParsingResponseException(Throwable cause)
+   public JsonParseException(Throwable cause)
    {
       super(cause);
    }
