@@ -270,7 +270,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
       currentServer = servers.get(0);
       getApplicationList();
 
-      if (!view.isDisplayed())
+      if (!view.isShown())
       {
          view.showDialog();
       }

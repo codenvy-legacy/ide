@@ -52,9 +52,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
+ * Presenter for creating application on CloudFoundry.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: CreateApplicationPresenter.java Jul 8, 2011 11:57:36 AM vereshchaka $
  */
 @Singleton
 public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, ProjectBuiltHandler
@@ -148,8 +149,11 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       this.loginPresenter = loginPresenter;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public void doCreate()
+   public void onCreateClicked()
    {
       appData = getAppDataFromForm();
 
@@ -266,6 +270,11 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       return null;
    }
 
+   /**
+    * Validate action before building project
+    * 
+    * @param app
+    */
    private void validateData(final AppData app)
    {
       LoggedInHandler validateHandler = new LoggedInHandler()
@@ -318,6 +327,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
    }
 
+   /**
+    * Builds application.
+    */
    private void buildApplication()
    {
       // TODO IDEX-57
@@ -483,6 +495,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
    }
 
+   /**
+    * Returns application URLs as string.
+    * 
+    * @param application {@link CloudFoundryApplication Cloud Foundry application}
+    * @return application URLs
+    */
    private String getAppUrlsAsString(CloudFoundryApplication application)
    {
       String appUris = "";
@@ -506,7 +524,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void doCancel()
+   public void onCancelClicked()
    {
       view.close();
    }
@@ -519,8 +537,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    {
       boolean value = view.isAutodetectType();
 
-      view.enableTypeField(!value);
-      view.enableMemoryField(!value);
+      view.setEnableTypeField(!value);
+      view.setEnableMemoryField(!value);
 
       if (value)
       {
@@ -554,6 +572,11 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       return frameworkNames;
    }
 
+   /**
+    * Get the list of available frameworks for CloudFoundry.
+    * 
+    * @param server
+    */
    private void getFrameworks(final String server)
    {
       LoggedInHandler getFrameworksLoggedInHandler = new LoggedInHandler()
@@ -601,7 +624,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    {
       boolean value = view.isCustomUrl();
 
-      view.enableUrlField(value);
+      view.setEnableUrlField(value);
 
       if (value)
       {
@@ -622,6 +645,13 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       view.setUrl(url);
    }
 
+   /**
+    * Gets url by server and name.
+    * 
+    * @param serverUrl
+    * @param name
+    * @return
+    */
    private String getUrlByServerAndName(String serverUrl, String name)
    {
       int index = serverUrl.indexOf(".");
@@ -650,7 +680,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void serverChanged()
+   public void onServerChanged()
    {
       // if url set automatically, than try to create url using server and name
       if (!view.isCustomUrl())
@@ -671,9 +701,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          checkIsProject(selectedProject);
 
          // set the state of fields
-         this.view.enableTypeField(false);
-         this.view.enableUrlField(false);
-         this.view.enableMemoryField(false);
+         this.view.setEnableTypeField(false);
+         this.view.setEnableUrlField(false);
+         this.view.setEnableMemoryField(false);
          this.view.focusInNameField();
 
          // set default values to fields

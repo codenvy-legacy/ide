@@ -22,81 +22,243 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
 
 /**
- * 
+ * The view of {@link CreateApplicationPresenter}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface CreateApplicationView extends View<CreateApplicationView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into CreateApplication view.
+    */
    public interface ActionDelegate
    {
-      public void doCreate();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Create button.
+       */
+      public void onCreateClicked();
 
-      public void doCancel();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Cancel button.
+       */
+      public void onCancelClicked();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed auto detect application type value.
+       */
       public void onAutoDetectTypeChanged();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed custom url.
+       */
       public void onCustomUrlChanged();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed application name.
+       */
       public void onApplicationNameChanged();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed application type name.
+       */
       public void onTypeChanged();
 
-      public void serverChanged();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed server.
+       */
+      public void onServerChanged();
    }
 
+   /**
+    * Returns application type.
+    * 
+    * @return type name
+    */
    public String getType();
 
+   /**
+    * Returns whether need to auto detect type of project.
+    * 
+    * @return <code>true</code> if need to auto detect type of project, and 
+    * <code>false</code> otherwise
+    */
    public boolean isAutodetectType();
 
+   /**
+    * Sets whether need to auto detect project type.
+    * 
+    * @param autodetected <code>true</code> need to auto detect project type, <code>false</code>
+    * otherwise
+    */
    public void setAutodetectType(boolean autodetected);
 
+   /**
+    * Returns CloudFoundry application name.
+    * 
+    * @return application name
+    */
    public String getName();
 
+   /**
+    * Sets CloudFoundry application name.
+    * 
+    * @param name application name
+    */
    public void setName(String name);
 
+   /**
+    * Returns CloudFounry application url.
+    * 
+    * @return application url
+    */
    public String getUrl();
 
+   /**
+    * Sets CloudFoundry application url.
+    * 
+    * @param url application url
+    */
    public void setUrl(String url);
 
+   /**
+    * Returns whether use custom url.
+    * 
+    * @return <code>true</code> if need to use custom url, and 
+    * <code>false</code> otherwise
+    */
    public boolean isCustomUrl();
 
+   /**
+    * Returns amount of instances.
+    * 
+    * @return instances
+    */
    public String getInstances();
 
+   /**
+    * Sets amount of instances.
+    * 
+    * @param instances amount of instances
+    */
    public void setInstances(String instances);
 
+   /**
+    * Returns amount of memory.
+    * 
+    * @return memory.
+    */
    public String getMemory();
 
+   /**
+    * Sets amount of memory.
+    * 
+    * @param memory amount of memory
+    */
    public void setMemory(String memory);
 
+   /**
+    * Returns selected server.
+    * 
+    * @return server
+    */
    public String getServer();
 
+   /**
+    * Select new server.
+    * 
+    * @param server
+    */
    public void setServer(String server);
 
+   /**
+    * Returns whether need to start application after create. 
+    * 
+    * @return <code>true</code> if need to start application after create, and 
+    * <code>false</code> otherwise
+    */
    public boolean isStartAfterCreation();
 
+   /**
+    * Sets whether need to start application after create.
+    * 
+    * @param start <code>true</code> need to start, <code>false</code>
+    * otherwise
+    */
    public void setStartAfterCreation(boolean start);
 
-   public void enableCreateButton(boolean enable);
+   /**
+    * Sets whether Create button is enabled.
+    * 
+    * @param enable <code>true</code> to enable the button, <code>false</code>
+    * to disable it
+    */
+   public void setEnableCreateButton(boolean enable);
 
+   /**
+    * Sets focus in the name field.
+    */
    public void focusInNameField();
 
+   /**
+    * Sets available application types.
+    * 
+    * @param types available types.
+    */
    public void setTypeValues(JsonArray<String> types);
 
-   public void enableTypeField(boolean enable);
+   /**
+    * Sets whether Type field is enabled.
+    * 
+    * @param enable <code>true</code> to enable the field, <code>false</code>
+    * to disable it
+    */
+   public void setEnableTypeField(boolean enable);
 
-   public void enableUrlField(boolean enable);
+   /**
+    * Sets whether Url field is enabled.
+    * 
+    * @param enable <code>true</code> to enable the field, <code>false</code>
+    * to disable it
+    */
+   public void setEnableUrlField(boolean enable);
 
-   public void enableMemoryField(boolean enable);
+   /**
+    * Sets whether Memory field is enabled.
+    * 
+    * @param enable <code>true</code> to enable the field, <code>false</code>
+    * to disable it
+    */
+   public void setEnableMemoryField(boolean enable);
 
+   /**
+    * Sets selected item into the application type field with index.
+    * 
+    * @param index the index of the item to be selected
+    */
    public void setSelectedIndexForTypeSelectItem(int index);
 
+   /**
+    * Sets focus in the url field.
+    */
    public void focusInUrlField();
 
+   /**
+    * Sets whether Autodetect type checkitem is enabled.
+    * 
+    * @param enable <code>true</code> to enable the checkitem, <code>false</code>
+    * to disable it
+    */
    public void enableAutodetectTypeCheckItem(boolean enable);
 
    /**
-    * Set the list of servers to ServerSelectField.
+    * Sets the list of servers.
     * 
     * @param servers
     */

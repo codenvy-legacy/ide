@@ -34,12 +34,14 @@ import com.google.gwt.user.client.ui.SimpleCheckBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
- * 
+ * The implementation of {@link CreateApplicationView}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Singleton
 public class CreateApplicationViewImpl extends DialogBox implements CreateApplicationView
 {
    private static CreateApplicationViewImplUiBinder uiBinder = GWT.create(CreateApplicationViewImplUiBinder.class);
@@ -83,8 +85,11 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
    {
    }
 
+   /**
+    * Create view.
+    */
    @Inject
-   public CreateApplicationViewImpl()
+   protected CreateApplicationViewImpl()
    {
       Widget widget = uiBinder.createAndBindUi(this);
 
@@ -266,7 +271,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void enableCreateButton(boolean enable)
+   public void setEnableCreateButton(boolean enable)
    {
       btnCreate.setEnabled(enable);
    }
@@ -297,7 +302,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void enableTypeField(boolean enable)
+   public void setEnableTypeField(boolean enable)
    {
       type.setEnabled(enable);
    }
@@ -306,7 +311,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void enableUrlField(boolean enable)
+   public void setEnableUrlField(boolean enable)
    {
       url.setEnabled(enable);
    }
@@ -315,7 +320,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void enableMemoryField(boolean enable)
+   public void setEnableMemoryField(boolean enable)
    {
       memory.setEnabled(enable);
    }
@@ -382,19 +387,19 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
    @UiHandler("btnCancel")
    void onBtnCancelClick(ClickEvent event)
    {
-      delegate.doCancel();
+      delegate.onCancelClicked();
    }
 
    @UiHandler("btnCreate")
    void onBtnCreateClick(ClickEvent event)
    {
-      delegate.doCreate();
+      delegate.onCreateClicked();
    }
 
    @UiHandler("server")
    void onServerChange(ChangeEvent event)
    {
-      delegate.serverChanged();
+      delegate.onServerChanged();
    }
 
    @UiHandler("autodetectType")

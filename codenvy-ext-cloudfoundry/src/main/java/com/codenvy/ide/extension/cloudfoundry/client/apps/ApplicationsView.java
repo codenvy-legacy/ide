@@ -107,7 +107,13 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate>
     */
    public void setServers(JsonArray<String> servers);
 
-   public boolean isDisplayed();
+   /**
+    * Returns whether the view is shown.
+    * 
+    * @return <code>true</code> if the view is shown, and 
+    * <code>false</code> otherwise
+    */
+   public boolean isShown();
 
    /**
     * Close dialog.

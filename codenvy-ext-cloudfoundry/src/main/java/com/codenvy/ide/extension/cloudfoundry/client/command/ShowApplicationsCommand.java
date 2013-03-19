@@ -19,18 +19,15 @@
 package com.codenvy.ide.extension.cloudfoundry.client.command;
 
 import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.menu.ExtendedCommand;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
+import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
+import com.codenvy.ide.menu.ExtendedCommand;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
-
 /**
- * 
+ * Command for "PaaS/CloudFoudry/Applications" action.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
