@@ -18,8 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.deploy;
 
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationView;
-
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -33,8 +32,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.List;
 
 /**
  *
@@ -153,10 +150,9 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
     * {@inheritDoc}
     */
    @Override
-   public void setServerValues(List<String> servers)
+   public void setServerValues(JsonArray<String> servers)
    {
       targetField.clear();
-
       for (int i = 0; i < servers.size(); i++)
       {
          targetField.addItem(servers.get(i));

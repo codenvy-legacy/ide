@@ -18,9 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.login;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginView;
 
 /**
  * 
@@ -65,11 +64,11 @@ public interface LoginView extends View<LoginView.ActionDelegate>
    void focusInEmailField();
 
    /**
-    * Set the list of available targets.
+    * Set the list of available servers.
     * 
-    * @param targets
+    * @param servers
     */
-   void setServerValues(String[] servers);
+   void setServerValues(JsonArray<String> servers);
 
    /**
     * Close dialog.

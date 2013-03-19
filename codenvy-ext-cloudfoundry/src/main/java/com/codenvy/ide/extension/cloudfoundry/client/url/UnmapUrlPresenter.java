@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.url;
 
+import com.codenvy.ide.json.JsonCollections;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -28,6 +30,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationCon
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -36,8 +39,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.List;
 
 /**
  * 
@@ -49,7 +50,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 {
    private UnmapUrlView view;
 
-   private List<String> registeredUrls;
+   private JsonArray<String> registeredUrls;
 
    private String unregisterUrl;
 
@@ -108,18 +109,21 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
    public void onMapUrlClicked()
    {
       urlToMap = view.getMapUrl();
-      for (String url : registeredUrls)
+      for (int i = 0; i < registeredUrls.size(); i++)
       {
+         String url = registeredUrls.get(i);
          if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap))
          {
             Window.alert(constant.mapUrlAlredyRegistered());
             return;
          }
       }
+
       if (urlToMap.startsWith("http://"))
       {
          urlToMap = urlToMap.substring(7);
       }
+
       mapUrl(urlToMap);
    }
 
@@ -160,7 +164,11 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            resourceProvider.getVfsId(),
+            projectId,
+            null,
+            null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus, console,
                constant, loginPresenter)
             {
@@ -169,7 +177,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
                {
                   isBindingChanged = false;
 
-                  registeredUrls = result.getUris();
+                  registeredUrls = JsonCollections.createArray(result.getUris());
 
                   view.setEnableMapUrlButton(false);
                   view.setRegisteredUrls(registeredUrls);
@@ -204,8 +212,13 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
       try
       {
-         CloudFoundryClientService.getInstance().mapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
-               new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, console,
+         CloudFoundryClientService.getInstance().mapUrl(
+            resourceProvider.getVfsId(),
+            projectId,
+            null,
+            null,
+            url,
+            new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, console,
                constant, loginPresenter)
             {
                @Override
@@ -218,7 +231,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
                      registeredUrl = "http://" + url;
                   }
                   registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
-                     String msg = constant.mapUrlRegisteredSuccess(registeredUrl);
+                  String msg = constant.mapUrlRegisteredSuccess(registeredUrl);
                   console.print(msg);
                   registeredUrls.add(url);
                   view.setRegisteredUrls(registeredUrls);
@@ -256,7 +269,12 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       String projectId = resourceProvider.getActiveProject().getId();
       try
       {
-         CloudFoundryClientService.getInstance().unmapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
+         CloudFoundryClientService.getInstance().unmapUrl(
+            resourceProvider.getVfsId(),
+            projectId,
+            null,
+            null,
+            url,
             new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, console,
                constant, loginPresenter)
             {

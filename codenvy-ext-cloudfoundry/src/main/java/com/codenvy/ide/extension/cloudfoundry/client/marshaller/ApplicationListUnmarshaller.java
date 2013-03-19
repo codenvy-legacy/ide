@@ -21,6 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -29,15 +30,13 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
-import java.util.List;
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
  */
-public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFoundryApplication>>
+public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<CloudFoundryApplication>>
 {
-   private List<CloudFoundryApplication> apps;
+   private JsonArray<CloudFoundryApplication> apps;
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
@@ -45,7 +44,8 @@ public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFou
     * @param apps
     * @param autoBeanFactory
     */
-   public ApplicationListUnmarshaller(List<CloudFoundryApplication> apps, CloudFoundryAutoBeanFactory autoBeanFactory)
+   public ApplicationListUnmarshaller(JsonArray<CloudFoundryApplication> apps,
+      CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.apps = apps;
       this.autoBeanFactory = autoBeanFactory;
@@ -91,7 +91,7 @@ public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFou
     * {@inheritDoc}
     */
    @Override
-   public List<CloudFoundryApplication> getPayload()
+   public JsonArray<CloudFoundryApplication> getPayload()
    {
       return apps;
    }

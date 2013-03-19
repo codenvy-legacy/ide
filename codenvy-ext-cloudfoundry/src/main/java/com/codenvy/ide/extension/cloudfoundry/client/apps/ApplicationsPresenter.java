@@ -32,15 +32,14 @@ import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ApplicationListU
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The applications presenter manager CloudFounry application.
@@ -56,7 +55,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
 
    private String currentServer;
 
-   private List<String> servers = new ArrayList<String>();
+   private JsonArray<String> servers = JsonCollections.createArray();
 
    private EventBus eventBus;
 
@@ -144,8 +143,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
       {
          CloudFoundryClientService.getInstance().getApplicationList(
             currentServer,
-            new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
-               new ArrayList<CloudFoundryApplication>(), autoBeanFactory), new LoggedInHandler()
+            new CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
+               JsonCollections.<CloudFoundryApplication> createArray(), autoBeanFactory), new LoggedInHandler()
             {
                @Override
                public void onLoggedIn()
@@ -156,7 +155,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
             {
 
                @Override
-               protected void onSuccess(List<CloudFoundryApplication> result)
+               protected void onSuccess(JsonArray<CloudFoundryApplication> result)
                {
                   view.setApplications(result);
                   view.setServer(currentServer);
@@ -183,23 +182,25 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    {
       try
       {
-         CloudFoundryClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
+         CloudFoundryClientService.getInstance()
+            .getTargets(
+               new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+                  .<String> createArray()))
                {
-                  servers = result;
-                  view.setServers(servers);
-               }
+                  @Override
+                  protected void onSuccess(JsonArray<String> result)
+                  {
+                     servers = result;
+                     view.setServers(servers);
+                  }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  console.print(exception.getMessage());
-               }
-            });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                     console.print(exception.getMessage());
+                  }
+               });
       }
       catch (RequestException e)
       {
@@ -224,32 +225,33 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    {
       try
       {
-         CloudFoundryClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
+         CloudFoundryClientService.getInstance()
+            .getTargets(
+               new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+                  .<String> createArray()))
                {
-                  if (result.isEmpty())
+                  @Override
+                  protected void onSuccess(JsonArray<String> result)
                   {
-                     servers = new ArrayList<String>();
-                     servers.add(CloudFoundryExtension.DEFAULT_SERVER);
+                     if (result.isEmpty())
+                     {
+                        servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_SERVER);
+                     }
+                     else
+                     {
+                        servers = result;
+                     }
+                     // open view
+                     openView();
                   }
-                  else
-                  {
-                     servers = result;
-                  }
-                  // open view
-                  openView();
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  console.print(exception.getMessage());
-               }
-            });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                     console.print(exception.getMessage());
+                  }
+               });
       }
       catch (RequestException e)
       {

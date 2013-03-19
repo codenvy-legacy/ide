@@ -23,11 +23,10 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.google.gwt.http.client.RequestException;
-
-import java.util.List;
 
 /**
  * Client service for CloudFoundry.
@@ -54,7 +53,7 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
+   public abstract void getFrameworks(AsyncRequestCallback<JsonArray<Framework>> callback, String server)
       throws RequestException;
 
    /**
@@ -271,7 +270,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException;
 
    /**
     * Get Cloud Foundry system information.
@@ -286,7 +285,7 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException;
+   public abstract void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException;
 
    /**
     * @param callback callback, that client has to implement to handle response from server

@@ -21,6 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -29,21 +30,19 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
-import java.util.List;
-
 /**
  * Unmarshaller for frameworks list.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FrameworksUnmarshaller.java Jul 8, 2011 11:12:16 AM vereshchaka $
  */
-public class FrameworksUnmarshaller implements Unmarshallable<List<Framework>>
+public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framework>>
 {
-   private List<Framework> frameworks;
+   private JsonArray<Framework> frameworks;
    
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   public FrameworksUnmarshaller(List<Framework> frameworks, CloudFoundryAutoBeanFactory autoBeanFactory)
+   public FrameworksUnmarshaller(JsonArray<Framework> frameworks, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.frameworks = frameworks;
       this.autoBeanFactory = autoBeanFactory;
@@ -88,7 +87,7 @@ public class FrameworksUnmarshaller implements Unmarshallable<List<Framework>>
     * {@inheritDoc}
     */
    @Override
-   public List<Framework> getPayload()
+   public JsonArray<Framework> getPayload()
    {
       return frameworks;
    }

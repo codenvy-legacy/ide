@@ -18,11 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.url;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
-
-import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlView;
-
-import java.util.List;
 
 /**
  * 
@@ -46,7 +43,7 @@ public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate>
 
    public void setMapUrl(String url);
 
-   public void setRegisteredUrls(List<String> urls);
+   public void setRegisteredUrls(JsonArray<String> urls);
 
    public void setEnableMapUrlButton(boolean enable);
 

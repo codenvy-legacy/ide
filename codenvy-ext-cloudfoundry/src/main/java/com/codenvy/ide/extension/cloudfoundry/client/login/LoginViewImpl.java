@@ -19,6 +19,7 @@
 package com.codenvy.ide.extension.cloudfoundry.client.login;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -207,20 +208,12 @@ public class LoginViewImpl extends DialogBox implements LoginView
     * {@inheritDoc}
     */
    @Override
-   public void setServerValues(String[] servers)
+   public void setServerValues(JsonArray<String> servers)
    {
-      //      server.clear();
-      //
-      //      for (int i = 0; i < servers.size(); i++)
-      //      {
-      //         server.addItem(servers.get(i));
-      //      }
-
       server.clear();
-
-      for (int i = 0; i < servers.length; i++)
+      for (int i = 0; i < servers.size(); i++)
       {
-         server.addItem(servers[i]);
+         server.addItem(servers.get(i));
       }
    }
 

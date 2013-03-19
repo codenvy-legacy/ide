@@ -28,6 +28,8 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.rest.HTTPStatus;
@@ -37,9 +39,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -278,47 +277,49 @@ public class LoginPresenter implements LoginView.ActionDelegate
    {
       try
       {
-         CloudFoundryClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
+         CloudFoundryClientService.getInstance()
+            .getTargets(
+               new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+                  .<String> createArray()))
                {
-                  if (result.isEmpty())
+                  @Override
+                  protected void onSuccess(JsonArray<String> result)
                   {
-                     view.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
-                     if (server == null || server.isEmpty())
+                     if (result.isEmpty())
                      {
-                        view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                        JsonArray<String> servers = JsonCollections.createArray();
+                        servers.add(CloudFoundryExtension.DEFAULT_SERVER);
+                        view.setServerValues(servers);
+                        if (server == null || server.isEmpty())
+                        {
+                           view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                        }
+                        else
+                        {
+                           view.setServer(server);
+                        }
                      }
                      else
                      {
-                        view.setServer(server);
+                        view.setServerValues(result);
+                        if (server == null || server.isEmpty())
+                        {
+                           view.setServer(result.get(0));
+                        }
+                        else
+                        {
+                           view.setServer(server);
+                        }
                      }
                   }
-                  else
-                  {
-                     String[] targets = new String[result.size()];
-                     targets = result.toArray(targets);
-                     view.setServerValues(targets);
-                     if (server == null || server.isEmpty())
-                     {
-                        view.setServer(result.get(0));
-                     }
-                     else
-                     {
-                        view.setServer(server);
-                     }
-                  }
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  console.print(exception.getMessage());
-               }
-            });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                     console.print(exception.getMessage());
+                  }
+               });
       }
       catch (RequestException e)
       {

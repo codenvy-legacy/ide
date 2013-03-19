@@ -18,11 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.create;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
-
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;
-
-import java.util.List;
 
 /**
  * 
@@ -84,7 +81,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
 
    public void focusInNameField();
 
-   public void setTypeValues(List<String> types);
+   public void setTypeValues(JsonArray<String> types);
 
    public void enableTypeField(boolean enable);
 
@@ -103,7 +100,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
     * 
     * @param servers
     */
-   void setServerValues(List<String> servers);
+   void setServerValues(JsonArray<String> servers);
 
    /**
     * Close dialog.

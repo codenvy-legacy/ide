@@ -21,6 +21,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.apps;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.AbstractSafeHtmlCell;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -44,6 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -335,9 +337,15 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
     * {@inheritDoc}
     */
    @Override
-   public void setApplications(List<CloudFoundryApplication> apps)
+   public void setApplications(JsonArray<CloudFoundryApplication> apps)
    {
-      appsTable.setRowData(apps);
+      List<CloudFoundryApplication> appList = new ArrayList<CloudFoundryApplication>();
+      for (int i = 0; i < apps.size(); i++)
+      {
+         appList.add(apps.get(i));
+      }
+
+      appsTable.setRowData(appList);
    }
 
    /**
@@ -378,10 +386,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
     * {@inheritDoc}
     */
    @Override
-   public void setServers(List<String> servers)
+   public void setServers(JsonArray<String> servers)
    {
       server.clear();
-
       for (int i = 0; i < servers.size(); i++)
       {
          server.addItem(servers.get(i));

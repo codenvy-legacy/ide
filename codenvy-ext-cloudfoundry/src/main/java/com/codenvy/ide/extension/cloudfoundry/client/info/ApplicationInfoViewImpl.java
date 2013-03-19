@@ -234,12 +234,6 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
    private void setItemsIntoCellTable(List<String> items, CellTable<String> table)
    {
-      //      List<String> list = new ArrayList<String>();
-      //      for (int i = 0; i < items.size(); i++)
-      //      {
-      //         list.add(items.get(i));
-      //      }
-
       table.setRowData(items);
    }
 

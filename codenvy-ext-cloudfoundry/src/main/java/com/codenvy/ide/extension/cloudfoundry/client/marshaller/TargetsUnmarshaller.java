@@ -19,15 +19,12 @@
 package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.rest.Unmarshallable;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-
-
-import java.util.List;
 
 /**
  * Unmarshaller for the list of targets, received from server.
@@ -35,11 +32,11 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TargetsUnmarshaller.java Sep 21, 2011 5:34:51 PM vereshchaka $
  */
-public class TargetsUnmarshaller implements Unmarshallable<List<String>>
+public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>>
 {
-   private List<String> targets;
+   private JsonArray<String> targets;
 
-   public TargetsUnmarshaller(List<String> targets)
+   public TargetsUnmarshaller(JsonArray<String> targets)
    {
       this.targets = targets;
    }
@@ -66,7 +63,7 @@ public class TargetsUnmarshaller implements Unmarshallable<List<String>>
     * {@inheritDoc}
     */
    @Override
-   public List<String> getPayload()
+   public JsonArray<String> getPayload()
    {
       return targets;
    }

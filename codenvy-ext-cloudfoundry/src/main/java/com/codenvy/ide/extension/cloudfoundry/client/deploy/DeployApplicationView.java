@@ -18,13 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.deploy;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
-
 import com.google.gwt.user.client.ui.Composite;
-
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationView;
-
-import java.util.List;
 
 /**
  *
@@ -59,7 +55,7 @@ public interface DeployApplicationView extends View<DeployApplicationView.Action
     * 
     * @param servers
     */
-   void setServerValues(List<String> servers);
+   void setServerValues(JsonArray<String> servers);
 
    public Composite getView();
 }

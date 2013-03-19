@@ -25,6 +25,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -39,8 +40,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
-
-import java.util.List;
 
 /**
  * Implementation for {@link CloudFoundryClientService}.
@@ -302,7 +301,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * {@inheritDoc}
     */
    @Override
-   public void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
+   public void getFrameworks(AsyncRequestCallback<JsonArray<Framework>> callback, String server)
       throws RequestException
    {
       String url = restServiceContext + FRAMEWORKS;
@@ -548,7 +547,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException
    {
       String url = restServiceContext + APPS;
 
@@ -566,7 +565,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * {@inheritDoc}
     */
    @Override
-   public void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException
+   public void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException
    {
       String url = restServiceContext + TARGETS;
 

@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.url;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -40,6 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -159,9 +161,14 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
     * {@inheritDoc}
     */
    @Override
-   public void setRegisteredUrls(List<String> urls)
+   public void setRegisteredUrls(JsonArray<String> urls)
    {
-      urlsTable.setRowData(urls);
+      List<String> urlsList = new ArrayList<String>();
+      for (int i = 0; i < urls.size(); i++)
+      {
+         urlsList.add(urls.get(i));
+      }
+      urlsTable.setRowData(urlsList);
    }
 
    /**

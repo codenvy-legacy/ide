@@ -19,9 +19,8 @@
 package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
-
-import java.util.List;
 
 /**
  * The view of {@link ApplicationsPresenter}.
@@ -85,7 +84,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate>
     * 
     * @param apps list of available applications.
     */
-   public void setApplications(List<CloudFoundryApplication> apps);
+   public void setApplications(JsonArray<CloudFoundryApplication> apps);
 
    /**
     * Returns selected server name.
@@ -106,7 +105,7 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate>
     * 
     * @param servers
     */
-   public void setServers(List<String> servers);
+   public void setServers(JsonArray<String> servers);
 
    public boolean isDisplayed();
 

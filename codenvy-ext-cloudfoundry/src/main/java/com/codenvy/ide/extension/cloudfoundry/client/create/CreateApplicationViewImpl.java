@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.create;
 
+import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,8 +34,6 @@ import com.google.gwt.user.client.ui.SimpleCheckBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-
-import java.util.List;
 
 /**
  * 
@@ -285,10 +284,9 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void setTypeValues(List<String> types)
+   public void setTypeValues(JsonArray<String> types)
    {
       type.clear();
-
       for (int i = 0; i < types.size(); i++)
       {
          type.addItem(types.get(i));
@@ -353,10 +351,9 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void setServerValues(List<String> servers)
+   public void setServerValues(JsonArray<String> servers)
    {
       server.clear();
-
       for (int i = 0; i < servers.size(); i++)
       {
          server.addItem(servers.get(i));

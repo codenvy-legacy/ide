@@ -35,6 +35,7 @@ import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.DeployResultHandler;
 import com.codenvy.ide.paas.HasPaaSActions;
 import com.codenvy.ide.resources.model.Project;
@@ -48,9 +49,6 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -226,7 +224,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       {
          // Application will be started after creation (IDE-1618)
          boolean noStart = false;
-         CloudFoundryClientService.getInstance().create(server,
+         CloudFoundryClientService.getInstance().create(
+            server,
             name,
             null,
             url,
@@ -323,41 +322,43 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    {
       try
       {
-         CloudFoundryClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
+         CloudFoundryClientService.getInstance()
+            .getTargets(
+               new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+                  .<String> createArray()))
                {
-                  if (result.isEmpty())
+                  @Override
+                  protected void onSuccess(JsonArray<String> result)
                   {
-                     List<String> servers = new ArrayList<String>();
-                     servers.add(CloudFoundryExtension.DEFAULT_SERVER);
-                     view.setServerValues(servers);
-                     view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                     if (result.isEmpty())
+                     {
+                        JsonArray<String> servers = JsonCollections.createArray();
+                        servers.add(CloudFoundryExtension.DEFAULT_SERVER);
+                        view.setServerValues(servers);
+                        view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                     }
+                     else
+                     {
+                        view.setServerValues(result);
+                        view.setServer(result.get(0));
+                     }
+                     view.setName(projectName);
+                     // don't forget to init values, that are stored, when
+                     // values in form fields are changed.
+                     name = projectName;
+                     server = view.getServer();
+                     String urlSufix = server.substring(server.indexOf("."));
+                     view.setUrl(name + urlSufix);
+                     url = view.getUrl();
                   }
-                  else
-                  {
-                     view.setServerValues(result);
-                     view.setServer(result.get(0));
-                  }
-                  view.setName(projectName);
-                  // don't forget to init values, that are stored, when
-                  // values in form fields are changed.
-                  name = projectName;
-                  server = view.getServer();
-                  String urlSufix = server.substring(server.indexOf("."));
-                  view.setUrl(name + urlSufix);
-                  url = view.getUrl();
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  console.print(exception.getMessage());
-               }
-            });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                     console.print(exception.getMessage());
+                  }
+               });
       }
       catch (RequestException e)
       {
@@ -379,8 +380,17 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
       try
       {
-         CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url,
-            resourcesProvider.getVfsId(), null, 0, 0, true,
+         CloudFoundryClientService.getInstance().validateAction(
+            "create",
+            server,
+            name,
+            null,
+            url,
+            resourcesProvider.getVfsId(),
+            null,
+            0,
+            0,
+            true,
             new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, console,
                constant, loginPresenter)
             {
@@ -428,6 +438,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private void buildApplication()
    {
+      // TODO IDEX-57
+      // Replace EventBus Events with direct method calls and DI
       projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildProjectEvent(project));
    }

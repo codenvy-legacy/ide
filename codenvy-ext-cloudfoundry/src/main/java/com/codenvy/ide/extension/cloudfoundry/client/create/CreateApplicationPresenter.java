@@ -37,6 +37,7 @@ import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -49,9 +50,6 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 
@@ -91,7 +89,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private CreateApplicationView view;
 
-   private List<Framework> frameworks;
+   private JsonArray<Framework> frameworks;
 
    /**
     * Public url to war file of application.
@@ -138,7 +136,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
       CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
-      this.frameworks = new ArrayList<Framework>();
+      this.frameworks = JsonCollections.createArray();
 
       this.resourceProvider = resourceProvider;
       this.view = view;
@@ -322,6 +320,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private void buildApplication()
    {
+      // TODO IDEX-57
+      // Replace EventBus Events with direct method calls and DI
       projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildProjectEvent());
    }
@@ -524,12 +524,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       if (value)
       {
-         view.setTypeValues(new ArrayList<String>());
+         view.setTypeValues(JsonCollections.<String> createArray());
          view.setMemory("");
       }
       else
       {
-         final List<String> frameworkArray = getApplicationTypes(frameworks);
+         final JsonArray<String> frameworkArray = getApplicationTypes(frameworks);
          view.setTypeValues(frameworkArray);
          view.setSelectedIndexForTypeSelectItem(0);
          getFrameworks(view.getServer());
@@ -542,11 +542,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * @param frameworks - list of available frameworks
     * @return an array of types
     */
-   private List<String> getApplicationTypes(List<Framework> frameworks)
+   private JsonArray<String> getApplicationTypes(JsonArray<Framework> frameworks)
    {
-      List<String> frameworkNames = new ArrayList<String>();
-      for (Framework framework : frameworks)
+      JsonArray<String> frameworkNames = JsonCollections.createArray();
+      for (int i = 0; i < frameworks.size(); i++)
       {
+         Framework framework = frameworks.get(i);
          frameworkNames.add(framework.getDisplayName() != null ? framework.getDisplayName() : framework.getName());
       }
 
@@ -567,17 +568,17 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       try
       {
          CloudFoundryClientService.getInstance().getFrameworks(
-            new CloudFoundryAsyncRequestCallback<List<Framework>>(new FrameworksUnmarshaller(
-               new ArrayList<Framework>(), autoBeanFactory), getFrameworksLoggedInHandler, null, eventBus, console,
-               constant, loginPresenter)
+            new CloudFoundryAsyncRequestCallback<JsonArray<Framework>>(new FrameworksUnmarshaller(
+               JsonCollections.<Framework> createArray(), autoBeanFactory), getFrameworksLoggedInHandler, null,
+               eventBus, console, constant, loginPresenter)
             {
                @Override
-               protected void onSuccess(List<Framework> result)
+               protected void onSuccess(JsonArray<Framework> result)
                {
                   if (!result.isEmpty())
                   {
                      frameworks = result;
-                     List<String> fw = getApplicationTypes(result);
+                     JsonArray<String> fw = getApplicationTypes(result);
                      view.setTypeValues(fw);
                      Framework framework = findFrameworkByName(fw.get(0));
                      view.setMemory(String.valueOf(framework.getMemory()));
@@ -676,7 +677,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          this.view.focusInNameField();
 
          // set default values to fields
-         this.view.setTypeValues(new ArrayList<String>());
+         this.view.setTypeValues(JsonCollections.<String> createArray());
          this.view.setInstances("1");
          this.view.setAutodetectType(true);
 
@@ -701,36 +702,38 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    {
       try
       {
-         CloudFoundryClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
+         CloudFoundryClientService.getInstance()
+            .getTargets(
+               new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+                  .<String> createArray()))
                {
-                  if (result.isEmpty())
+                  @Override
+                  protected void onSuccess(JsonArray<String> result)
                   {
-                     List<String> list = new ArrayList<String>();
-                     list.add(CloudFoundryExtension.DEFAULT_SERVER);
-                     view.setServerValues(list);
-                     view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                     if (result.isEmpty())
+                     {
+                        JsonArray<String> list = JsonCollections.createArray();
+                        list.add(CloudFoundryExtension.DEFAULT_SERVER);
+                        view.setServerValues(list);
+                        view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                     }
+                     else
+                     {
+                        view.setServerValues(result);
+                        view.setServer(result.get(0));
+                        getFrameworks(result.get(0));
+                     }
+                     view.setName(resourceProvider.getActiveProject().getName());
+                     updateUrlField();
                   }
-                  else
-                  {
-                     view.setServerValues(result);
-                     view.setServer(result.get(0));
-                     getFrameworks(result.get(0));
-                  }
-                  view.setName(resourceProvider.getActiveProject().getName());
-                  updateUrlField();
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  console.print(exception.getMessage());
-               }
-            });
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                     console.print(exception.getMessage());
+                  }
+               });
       }
       catch (RequestException e)
       {
