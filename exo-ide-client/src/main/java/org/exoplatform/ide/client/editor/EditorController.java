@@ -48,6 +48,10 @@ import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
@@ -108,7 +112,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorContextMenuHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
    ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler,
-   EditorPasteTextHandler, EditorDeleteTextHandler
+   EditorPasteTextHandler, EditorDeleteTextHandler, EditorFoldingCollapseHandler, EditorFoldingExpandHandler
 {
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
@@ -166,6 +170,9 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ClosingViewEvent.TYPE, this);
       IDE.addHandler(EditorFocusReceivedEvent.TYPE, this);
+
+      IDE.addHandler(EditorFoldingCollapseEvent.TYPE, this);
+      IDE.addHandler(EditorFoldingExpandEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -881,6 +888,24 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    public void onEditorCutText(EditorCutTextEvent event)
    {
       getEditorFromView(activeFile.getId()).cut();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseHandler#onEditorCollapse(org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseEvent)
+    */
+   @Override
+   public void onEditorCollapse(EditorFoldingCollapseEvent event)
+   {
+      getEditorFromView(activeFile.getId()).collapse();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandHandler#onEditorExpand(org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEvent)
+    */
+   @Override
+   public void onEditorExpand(EditorFoldingExpandEvent event)
+   {
+      getEditorFromView(activeFile.getId()).expand();
    }
 
 }

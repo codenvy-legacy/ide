@@ -14,8 +14,6 @@
 
 package com.google.collide.client.editor.input;
 
-import com.google.collide.client.editor.selection.SelectionModel.SelectionListener;
-
 import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
@@ -37,7 +35,6 @@ import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.TextUtils;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 

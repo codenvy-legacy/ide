@@ -27,6 +27,7 @@ import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer.ContextMenuListener;
 import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.client.editor.FocusManager.FocusListener;
+import com.google.collide.client.editor.folding.FoldMarker;
 import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -115,9 +116,34 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
          fireEvent(new EditorContentChangedEvent(CollabEditor.this));
-         udateDocument();
+         try
+         {
+            for (TextChange textChange : textChanges.asIterable())
+            {
+               final int offset =
+                  CollabEditor.this.document.getLineOffset(textChange.getLineNumber()) + textChange.getColumn();
+               int length = 0;
+               String text = "";
+               switch (textChange.getType())
+               {
+                  case INSERT :
+                     text = textChange.getText();
+                     break;
+                  case DELETE :
+                     length = textChange.getText().length();
+                     break;
+                  default :
+                     throw new UnsupportedOperationException("Unknown change type: " + textChange.getType());
+               }
+               updateDocument(offset, length, text);
+            }
+         }
+         catch (BadLocationException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
       }
-
    }
 
    public CollabEditor(String mimeType)
@@ -154,13 +180,17 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
+    * Updates the specified document range with the given <code>text</code>.
     * 
+    * @param offset the document offset
+    * @param length the length of the specified range
+    * @param text the substitution text 
+    * @throws BadLocationException if the offset is invalid in this document
     */
-   private void udateDocument()
+   private void updateDocument(int offset, int length, String text) throws BadLocationException
    {
-      //TODO change document, not all content
       document.removeDocumentListener(documentAdaptor);
-      document.set(getText());
+      document.replace(offset, length, text);
       document.addDocumentListener(documentAdaptor);
    }
 
@@ -328,9 +358,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void setFocus()
    {
-
       editor.getFocusManager().focus();
-
    }
 
    /**
@@ -367,8 +395,8 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       int baseLineNumber = selection.getBaseLineNumber();
       while (rowsCountToDelete > 0)
       {
-         Line currentLine1 = editor.getDocument().getLineFinder().findLine(baseLineNumber).line();
-         editor.getEditorDocumentMutator().deleteText(currentLine1, 0, currentLine1.length());
+         Line currentLine = editor.getDocument().getLineFinder().findLine(baseLineNumber).line();
+         editor.getEditorDocumentMutator().deleteText(currentLine, 0, currentLine.length());
          rowsCountToDelete--;
       }
    }
@@ -552,6 +580,111 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapse()
+    */
+   @Override
+   public void collapse()
+   {
+      SelectionModel selectionModel = editor.getSelection();
+      int cursorLineNumber = selectionModel.getCursorLineNumber();
+      FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
+      if (foldMarker != null)
+      {
+         editor.getFoldingManager().collapse(foldMarker);
+      }
+
+      //      try
+      //      {
+      //         // TODO move this code to folding manager
+      //
+      //         SelectionModel selectionModel = editor.getSelection();
+      //         Line beginLine, endLine;
+      //         int beginLineNumber = 0;
+      //         int selectionOrder =
+      //            LineUtils.comparePositions(selectionModel.getBaseLineNumber(), 0, selectionModel.getCursorLineNumber(), 0);
+      //         if (selectionOrder < 0)
+      //         {
+      //            beginLine = selectionModel.getBaseLine();
+      //            endLine = selectionModel.getCursorLine();
+      //            beginLineNumber = selectionModel.getBaseLineNumber();
+      //
+      //            textOffset = document.getLineOffset(beginLineNumber);
+      //            textLength = LineUtils.getTextCount(beginLine, 0, endLine, endLine.getText().length() - 1);
+      //         }
+      //         else if (selectionOrder > 0)
+      //         {
+      //            beginLine = selectionModel.getCursorLine();
+      //            endLine = selectionModel.getBaseLine();
+      //            beginLineNumber = selectionModel.getCursorLineNumber();
+      //
+      //            textOffset = document.getLineOffset(beginLineNumber);
+      //            textLength = LineUtils.getTextCount(beginLine, 0, endLine, endLine.getText().length() - 1);
+      //         }
+      //         else
+      //         {
+      //            beginLine = selectionModel.getCursorLine();
+      //            endLine = beginLine;
+      //            beginLineNumber = selectionModel.getCursorLineNumber();
+      //
+      //            textOffset = document.getLineOffset(beginLineNumber);
+      //            textLength = beginLine.getText().length();
+      //         }
+      //
+      //         slaveDocument.removeMasterDocumentRange(textOffset, textLength);
+      //
+      //         // collapse on ProjectionDocumentEvent
+      //
+      //         foldingLines = JsonCollections.createArray();
+      //         foldingLines.add(beginLine);
+      //         Line nextLine = beginLine;
+      //         while (nextLine != endLine)
+      //         {
+      //            nextLine = nextLine.getNextLine();
+      //            foldingLines.add(nextLine);
+      //         }
+      //
+      //         foldingLineNumber = beginLineNumber;
+      //         editor.getFoldingManager().collapse(foldingLineNumber, foldingLines);
+      //      }
+      //      catch (BadLocationException e)
+      //      {
+      //         // TODO Auto-generated catch block
+      //         e.printStackTrace();
+      //      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expand()
+    */
+   @Override
+   public void expand()
+   {
+      SelectionModel selectionModel = editor.getSelection();
+      int cursorLineNumber = selectionModel.getCursorLineNumber();
+      FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
+      if (foldMarker != null)
+      {
+         editor.getFoldingManager().expand(foldMarker);
+      }
+
+      //      try
+      //      {
+      //         // TODO move this code to folding manager
+      //
+      //         slaveDocument.addMasterDocumentRange(textOffset, textLength);
+      //
+      //         // expand on ProjectionDocumentEvent
+      //
+      //         editor.getFoldingManager().expand(foldingLineNumber, foldingLines);
+      //      }
+      //      catch (BadLocationException e)
+      //      {
+      //         // TODO Auto-generated catch block
+      //         e.printStackTrace();
+      //      }
+   }
+
+   /**
     * @see org.exoplatform.ide.editor.client.api.Editor#getName()
     */
    @Override
@@ -624,7 +757,10 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       int scrollLeft = editor.getBuffer().getScrollLeft();
       Position position = editor.getSelection().getCursorPosition();
       int offsetLeft =
-         getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
+         getElement().getAbsoluteLeft()
+            + editor.getLeftGutter().getWidth()
+            // TODO folding gutter may be visible not for all editors
+            + editor.getFoldingGutter().getWidth()
             + editor.getLeftGutterNotificationManager().getLeftGutter().getWidth()
             + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
 

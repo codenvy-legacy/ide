@@ -19,7 +19,6 @@ import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.renderer.Renderer;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.util.BasicIncrementalScheduler;
-import com.google.collide.client.util.ClientStringUtils;
 import com.google.collide.client.util.IncrementalScheduler;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.DocumentMutator;

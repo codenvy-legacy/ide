@@ -58,10 +58,10 @@ class EditDocument implements IDocument
    // public void addPrenotifiedDocumentListener(IDocumentListener documentAdapter) {
    // throw new UnsupportedOperationException();
    // }
-   //
-   // public int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException {
-   // throw new UnsupportedOperationException();
-   // }
+
+   public int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException {
+      throw new UnsupportedOperationException();
+   }
 
    public int computeNumberOfLines(String text)
    {

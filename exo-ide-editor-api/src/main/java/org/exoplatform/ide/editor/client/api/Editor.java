@@ -272,6 +272,10 @@ public interface Editor extends IsWidget
     */
    int getCursorOffsetTop();
 
+   void collapse();
+
+   void expand();
+
    /**
     * @param handler
     * @return

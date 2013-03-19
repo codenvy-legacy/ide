@@ -306,7 +306,7 @@ public class SearchMatchManager {
    * length characters.
    */
   private void moveAndSelectMatch(LineInfo line, int column, int length) {
-    selection.setSelection(line, column + length, line, column);
+    selection.setSelection(line, column + length, line, column, true);
   }
 
   public void replaceAllMatches(final String replacement) {

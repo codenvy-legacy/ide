@@ -14,8 +14,18 @@
 
 package com.google.collide.client.editor.renderer;
 
+import com.google.gwt.dom.client.Style.Unit;
+
+import elemental.dom.Node;
+
+import com.google.gwt.user.client.ui.Image;
+
+import com.google.collide.client.Resources;
+
 import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
 import com.google.collide.client.editor.Buffer;
+import com.google.collide.client.editor.folding.FoldMarker;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.json.shared.JsonArray;
@@ -24,7 +34,6 @@ import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.SortedList;
 import com.google.collide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 import elemental.html.SpanElement;
@@ -84,9 +93,13 @@ class LineRendererController {
    */
   private final JsonArray<LineRenderer> lineRenderers;
   private final Buffer buffer;
+  private final FoldingManager foldingManager;
+  private final Resources resources;
 
-  LineRendererController(Buffer buffer) {
+  LineRendererController(Buffer buffer, FoldingManager foldingManager, Resources res) {
     this.buffer = buffer;
+    this.foldingManager = foldingManager;
+    this.resources = res;
     currentLineRendererTargets = new SortedList<LineRendererController.LineRendererTarget>(
         new LineRendererTarget.Comparator());
     lineRenderers = JsonCollections.createArray();
@@ -138,6 +151,7 @@ class LineRendererController {
 
       indexInLine += chunkSize;
     }
+
     targetElement.appendChild(contentElement);
 
     if (line.getText().endsWith("\n")) {
@@ -167,6 +181,71 @@ class LineRendererController {
         }
       }
     }
+
+    // TODO replace it to something more smarter
+    final FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
+    if (foldMarker != null)
+    {
+       if (!foldMarker.isCollapsed())
+       {
+          Element expandElement = line.getTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT);
+          if (expandElement != null)
+          {
+             expandElement.removeFromParent();
+             line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, null);
+          }
+       }
+       else
+       {
+          Element expandElement = renderFoldSignIfNeed(contentElement);
+          line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
+
+//          expandElement.addEventListener(Event.CLICK, new EventListener() {
+//             @Override
+//             public void handleEvent(Event evt) {
+//               foldingManager.expand(foldPoint);
+//             }
+//         }, false);
+       }
+    }
+
+//    if (foldPoint != null/* && point.isCollapsed()*/)
+//       renderFoldSignIfNeed(contentElement);
+
+    targetElement.appendChild(contentElement);
+
+  }
+
+  // TODO review and rewrite this method
+  Element renderFoldSignIfNeed(Element targetElement) {
+     SpanElement element = Elements.createSpanElement();
+     // TODO: file a Chrome bug, place link here
+     element.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);
+//     setTextContentSafely(element, "...");
+//     applyStyles(element);
+
+     // TODO move it to CSS-bundle
+     element.getStyle().setBorderStyle("solid");
+     element.getStyle().setBorderColor("gray");
+     element.getStyle().setBorderWidth("1px");
+     element.getStyle().setProperty("border-radius", "3px");
+//     element.getStyle().setCursor("pointer");
+     element.getStyle().setHeight("9px");
+     element.getStyle().setWidth("18px");
+     element.getStyle().setProperty("vertical-align", "middle");
+     element.getStyle().setMarginTop("-2px");
+     element.getStyle().setProperty("box-shadow", "0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset");
+
+     com.google.gwt.user.client.Element expandImageElement = new Image(resources.expandArrows()).getElement();
+     expandImageElement.getStyle().setWidth(16, Unit.PX);
+     expandImageElement.getStyle().setHeight(7, Unit.PX);
+     expandImageElement.getStyle().setMarginLeft(1, Unit.PX);
+     expandImageElement.getStyle().setMarginBottom(4, Unit.PX);
+     element.appendChild((Node)expandImageElement);
+
+     targetElement.appendChild(element);
+
+     return element;
   }
 
   private static Element createLastChunkElement(Element parent) {

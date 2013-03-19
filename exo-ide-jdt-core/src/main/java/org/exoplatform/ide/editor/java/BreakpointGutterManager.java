@@ -101,7 +101,7 @@ public class BreakpointGutterManager
 
          @Override
          public void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added,
-            JsonArray<Line> lines)
+            JsonArray<Line> lines, boolean folding)
          {
             //Nothing todo
          }

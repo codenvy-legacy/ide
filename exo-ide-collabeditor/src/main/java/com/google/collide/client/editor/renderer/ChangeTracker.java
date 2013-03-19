@@ -19,6 +19,7 @@ import com.google.collide.client.editor.FocusManager;
 import com.google.collide.client.editor.Spacer;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.ViewportModel.Edge;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.util.ScheduledCommandExecutor;
 import com.google.collide.client.util.logging.Log;
@@ -29,8 +30,8 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
-import com.google.collide.shared.document.util.PositionUtils;
 import com.google.collide.shared.document.util.LineUtils.LineVisitor;
+import com.google.collide.shared.document.util.PositionUtils;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar.Remover;
 
@@ -51,7 +52,8 @@ class ChangeTracker
       ViewportModel.Listener,
       SelectionModel.SelectionListener,
       Buffer.SpacerListener,
-      FocusManager.FocusListener {
+      FocusManager.FocusListener,
+      FoldingManager.FoldingListener {
 
   enum ChangeType {
     /** The viewport's top or bottom are now pointing to different lines */
@@ -63,7 +65,9 @@ class ChangeTracker
     /** The selection has changed */
     SELECTION,
     /** The viewport's top or bottom line numbers have changed */
-    VIEWPORT_LINE_NUMBER
+    VIEWPORT_LINE_NUMBER,
+    /** The viewport's fold marks have changed */
+    VIEWPORT_FOLD_MARK
   }
 
   private class RenderCommand extends ScheduledCommandExecutor {
@@ -129,7 +133,7 @@ class ChangeTracker
       .noneOf(ViewportModel.Edge.class);
   
   ChangeTracker(Renderer renderer, Buffer buffer, Document document, ViewportModel viewport,
-      SelectionModel selection, FocusManager focusManager) {
+      SelectionModel selection, FocusManager focusManager, FoldingManager foldingManager) {
     this.buffer = buffer;
     this.renderer = renderer;
     this.selection = selection;
@@ -139,7 +143,7 @@ class ChangeTracker
     this.dirtyLines = JsonCollections.createArray();
     this.viewport = viewport;
 
-    attach(buffer, document, viewport, selection, focusManager);
+    attach(buffer, document, viewport, selection, focusManager, foldingManager);
 
     clearChangeState();
   }
@@ -240,7 +244,7 @@ class ChangeTracker
 
   @Override
   public void onViewportContentChanged(ViewportModel viewport, int lineNumber,
-      boolean added, JsonArray<Line> lines) {
+      boolean added, JsonArray<Line> lines, boolean folding) {
     int relevantContentChangedLineNumber;
     if (!added && viewport.getTopLineNumber() == lineNumber - 1) {
       // TODO: rework this case is handled naturally
@@ -272,7 +276,7 @@ class ChangeTracker
      * TODO: actually implement the check for spacers in the viewport, not just
      * the document.
      */
-    handleContentChange(relevantContentChangedLineNumber, buffer.hasSpacers());
+    handleContentChange(relevantContentChangedLineNumber, buffer.hasSpacers() || folding);
   }
 
   @Override
@@ -301,6 +305,21 @@ class ChangeTracker
     }
   }
 
+  @Override
+  public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
+    // nothing to do
+  }
+
+  @Override
+  public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
+    // nothing to do
+  }
+
+  @Override
+  public void onFoldMarksStateChaged() {
+    scheduleRender(ChangeType.VIEWPORT_FOLD_MARK);
+  } 
+
   public void requestRenderLine(Line line) {
     if (dirtyLines.indexOf(line) == -1) {
       dirtyLines.add(line);
@@ -318,12 +337,16 @@ class ChangeTracker
   }
 
   private void attach(Buffer buffer, Document document, ViewportModel viewport,
-      SelectionModel selection, FocusManager focusManager) {
+      SelectionModel selection, FocusManager focusManager, FoldingManager foldingManager) {
     listenerRemovers.add(focusManager.getFocusListenerRegistrar().add(this));
     listenerRemovers.add(document.getTextListenerRegistrar().add(this));
     listenerRemovers.add(viewport.getListenerRegistrar().add(this));
     listenerRemovers.add(selection.getSelectionListenerRegistrar().add(this));
     listenerRemovers.add(buffer.getSpacerListenerRegistrar().add(this));
+    listenerRemovers.add(buffer.getSpacerListenerRegistrar().add(this));
+    if (foldingManager != null) {
+      listenerRemovers.add(foldingManager.getFoldingListenerRegistrar().add(this));
+    }
   }
 
   private void clearChangeState() {

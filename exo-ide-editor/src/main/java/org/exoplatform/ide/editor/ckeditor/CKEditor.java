@@ -759,6 +759,24 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapse()
+    */
+   @Override
+   public void collapse()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expand()
+    */
+   @Override
+   public void expand()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
     * @see org.exoplatform.ide.editor.client.api.Editor#getName()
     */
    @Override

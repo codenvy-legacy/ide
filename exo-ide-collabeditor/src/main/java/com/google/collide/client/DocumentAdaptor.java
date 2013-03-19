@@ -86,6 +86,15 @@ public class DocumentAdaptor implements IDocumentListener
    }
 
    /**
+    * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentAboutToBeChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
+    */
+   @Override
+   public void documentAboutToBeChanged(DocumentEvent event)
+   {
+      // TODO Auto-generated method stub
+   }
+
+   /**
     * @param editorDocument
     * @param editorDocumentMutator
     */

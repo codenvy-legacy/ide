@@ -111,7 +111,7 @@ public class LineNumberRenderer {
     String lineNumber();
 
     String activeLineNumber();
-    
+
     String activeline();
   }
 
@@ -203,6 +203,10 @@ public class LineNumberRenderer {
 
   private void fillOrUpdateLines(int beginLineNumber, int endLineNumber) {
     for (int i = beginLineNumber; i <= endLineNumber; i++) {
+      if (buffer.modelLine2VisibleLine(i) < 0) {
+        garbageCollectLines(i, i);
+        continue;
+      }
       Element lineElement = lineNumberToElementCache.get(i);
       if (lineElement != null) {
         updateElementPosition(lineElement, i);
@@ -233,13 +237,27 @@ public class LineNumberRenderer {
 
   private void garbageCollectLines(int beginLineNumber, int endLineNumber) {
     for (int i = beginLineNumber; i <= endLineNumber; i++) {
+//      int line = i;
+//      try {
+//        if (isProjectionMode()) {
+//          line = projectionMapping.toImageLine(i);
+//          if (line < 0) {
+//            continue; // line is collapsed
+//          }
+//        }
+//      }
+//      catch (BadLocationException e) {
+//        // TODO
+//         continue;
+//      }
       Element lineElement = lineNumberToElementCache.get(i);
       if (lineElement != null) {
         leftGutter.removeUnmanagedElement(lineElement);
         lineNumberToElementCache.erase(i);
       } else {
-        throw new IndexOutOfBoundsException(
-            "Tried to garbage collect line number " + i + " when it does not exist.");
+         continue;
+//        throw new IndexOutOfBoundsException(
+//            "Tried to garbage collect line number " + line + " when it does not exist.");
       }
     }
     if (beginLineNumber <= renderedActiveLineNumber && renderedActiveLineNumber <= endLineNumber) {

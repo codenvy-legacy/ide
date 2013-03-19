@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor;
 
+import com.google.collide.client.editor.folding.FoldingManager;
+
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
@@ -47,7 +49,8 @@ public class ViewportModel
       Buffer.ResizeListener,
       Document.LineListener,
       SelectionModel.CursorListener,
-      Buffer.SpacerListener {
+      Buffer.SpacerListener,
+      FoldingManager.FoldingListener {
 
   private static final AnchorType VIEWPORT_MODEL_ANCHOR_TYPE = AnchorType.create(
       ViewportModel.class, "viewport model");
@@ -68,7 +71,7 @@ public class ViewportModel
      *        {@link Document.LineListener})
      */
     void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added,
-        JsonArray<Line> lines);
+        JsonArray<Line> lines, boolean folding);
 
     /**
      * Called when the viewport is shifted, meaning at least one of its edges
@@ -113,8 +116,8 @@ public class ViewportModel
     }
   }
 
-  static ViewportModel create(Document document, SelectionModel selection, Buffer buffer) {
-    return new ViewportModel(document, selection, buffer);
+  static ViewportModel create(Document document, SelectionModel selection, Buffer buffer, FoldingManager foldingManager) {
+    return new ViewportModel(document, selection, buffer, foldingManager);
   }
 
   private final Anchor.ShiftListener anchorShiftedListener =
@@ -143,17 +146,19 @@ public class ViewportModel
   private final ChangeDispatcher changeDispatcher;
   private final ListenerManager<Listener> listenerManager;
   private final SelectionModel selection;
+  private final FoldingManager foldingManager;
   private Anchor topAnchor;
   private final ListenerRegistrar.RemoverManager removerManager =
       new ListenerRegistrar.RemoverManager();
 
-  private ViewportModel(Document document, SelectionModel selection, Buffer buffer) {
+  private ViewportModel(Document document, SelectionModel selection, Buffer buffer, FoldingManager foldingManager) {
     this.document = document;
     this.anchorManager = document.getAnchorManager();
     this.buffer = buffer;
     this.changeDispatcher = new ChangeDispatcher();
     this.listenerManager = ListenerManager.create();
     this.selection = selection;
+    this.foldingManager = foldingManager;
 
     attachHandlers();
   }
@@ -286,7 +291,7 @@ public class ViewportModel
       listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
         @Override
         public void dispatch(Listener listener) {
-          listener.onViewportContentChanged(ViewportModel.this, lineNumber, true, addedLines);
+          listener.onViewportContentChanged(ViewportModel.this, lineNumber, true, addedLines, false);
         }
       });
     }
@@ -300,7 +305,7 @@ public class ViewportModel
         @Override
         public void dispatch(Listener listener) {
           listener.onViewportContentChanged(ViewportModel.this, lineNumber, false,
-              removedLines);
+              removedLines, false);
         }
       });
     }
@@ -334,7 +339,8 @@ public class ViewportModel
   private boolean adjustViewportBoundsForLineAdditionOrRemoval(Document document, int lineNumber) {
     int bottomLineNumber = bottomAnchor.getLineNumber();
     int topLineNumber = topAnchor.getLineNumber();
-    int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines();
+//    int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines()
+    int lastVisibleLineNumber = buffer.getLastVisibleLineNumber(topLineNumber);
 
     /*
      * The "lastVisibleLineNumber != bottomLineNumber" catches the case where
@@ -363,6 +369,7 @@ public class ViewportModel
     removerManager.track(document.getLineListenerRegistrar().add(this));
     removerManager.track(selection.getCursorListenerRegistrar().add(this));
     removerManager.track(buffer.getSpacerListenerRegistrar().add(this));
+    removerManager.track(foldingManager.getFoldingListenerRegistrar().add(this));
   }
 
   private void detachHandlers() {
@@ -374,7 +381,9 @@ public class ViewportModel
 
     LineInfo newTop = lineFinder.findLine(getTop(), topLineNumber);
 
-    int targetBottomLineNumber = newTop.number() + numLinesToShow - 1;
+//    int targetBottomLineNumber = newTop.number() + numLinesToShow - 1;
+    int targetBottomLineNumber = buffer.getLastVisibleLineNumber(topLineNumber);
+
     LineInfo newBottom =
         lineFinder.findLine(getBottom(),
             Math.min(document.getLastLineNumber(), targetBottomLineNumber));
@@ -510,6 +519,41 @@ public class ViewportModel
         buffer.convertYToLineNumber(buffer.getScrollTop() + buffer.getHeight(), true);
     setRange(getTop(), document
         .getLineFinder().findLine(getBottom(), newBottomLineNumber));
+  }
+
+  @Override
+  public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
+    if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
+      listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
+        @Override
+        public void dispatch(Listener listener) {
+          listener.onViewportContentChanged(ViewportModel.this, lineNumber, false, linesToCollapse, true);
+        }
+      });
+    }
+  }
+
+  @Override
+  public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
+    if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
+      listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
+        @Override
+        public void dispatch(Listener listener) {
+          listener.onViewportContentChanged(ViewportModel.this, lineNumber, true, linesToExpand, true);
+        }
+      });
+    }
+    listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
+       @Override
+       public void dispatch(Listener listener) {
+          listener.onViewportLineNumberChanged(ViewportModel.this, Edge.BOTTOM);
+       }
+    });
+  }
+
+  @Override
+  public void onFoldMarksStateChaged() {
+    // nothing to do
   }
 
 }

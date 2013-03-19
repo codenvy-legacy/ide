@@ -150,9 +150,11 @@ public class NotificationManager implements DocumentListener
    private ErrorListener errorListener;
 
    /**
-    * @param buffer
+    * 
+    * @param editor
     * @param gutter
-    * @param overviewGutter 
+    * @param overviewGutter
+    * @param res
     */
    public NotificationManager(Editor editor, Gutter gutter, Gutter overviewGutter, Resources res)
    {

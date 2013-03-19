@@ -14,8 +14,6 @@
 
 package com.google.collide.client.editor.input;
 
-import com.google.collide.shared.document.Line;
-
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Spacer;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -29,8 +27,6 @@ import com.google.collide.shared.util.SortedList;
 import org.waveprotocol.wave.client.common.util.JsoIntMap;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 import org.waveprotocol.wave.client.common.util.UserAgent;
-
-import elemental.events.KeyboardEvent;
 
 import java.util.Random;
 
