@@ -26,22 +26,21 @@ import com.exoplatform.cloudide.userdb.exception.DaoException;
 import com.exoplatform.cloudide.userdb.exception.UserDBServiceException;
 import com.exoplatform.cloudide.userdb.exception.UserExistenceException;
 import com.exoplatform.cloudide.userdb.exception.WorkspaceExistenceException;
+
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * @author <a href="vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
@@ -58,36 +57,24 @@ public class JRebelProfilerService
    @Path("profile/send")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void sendProfileInfo(Map<String, String> values,
-                               @Context SecurityContext sctx)
-      throws JRebelProfilerException
+   public void sendProfileInfo(Map<String, String> values) throws JRebelProfilerException
    {
-      Principal principal = sctx.getUserPrincipal();
-
+      String userId = ConversationState.getCurrent().getIdentity().getUserId();
       try
       {
-         User user = userDBServiceClient.getUser(principal.getName());
-
-         //no need to send already filled profile to ZTA
-         if (user.getProfile().getAttribute("firstName") != null &&
-            user.getProfile().getAttribute("lastName") != null &&
-            user.getProfile().getAttribute("phone") != null)
+         User user = userDBServiceClient.getUser(userId);
+         if (user.getProfile().getAttribute("firstName") != null && user.getProfile().getAttribute("lastName") != null
+            && user.getProfile().getAttribute("phone") != null)
          {
-            return;
+            return; //no need to send already filled profile to ZTA
          }
-
          user.getProfile().setAttributes(values);
+         userDBServiceClient.updateUser(user);
 
          String formatted =
-            String.format(
-               "\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"",
-               principal.getName(),
-               values.get("firstName").replaceAll("\"", "'"),
-               values.get("lastName").replaceAll("\"", "'"),
-               values.get("phone")
-            );
-
-         userDBServiceClient.updateUser(user);
+            String.format("\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"", userId,
+               values.get("firstName").replaceAll("\"", "'"), values.get("lastName").replaceAll("\"", "'"),
+               values.get("phone"));
 
          LOG.error(formatted);
       }
@@ -122,16 +109,14 @@ public class JRebelProfilerService
       try
       {
          Profile profile = userDBServiceClient.getUser(userId).getProfile();
-         Map<String, String> jRebelProfileInfo = new HashMap<String, String>();
-         for (Map.Entry<String, String> entry : profile.getAttributes().entrySet())
-         {
-            if ("firstName".equals(entry.getKey()) || "lastName".equals(entry.getKey()) || "phone".equals(entry.getKey()))
-            {
-               jRebelProfileInfo.put(entry.getKey(), entry.getValue());
-            }
-         }
-
-         return jRebelProfileInfo;
+         Map<String, String> values = new HashMap<String, String>();
+         if (profile.getAttribute("firstName") != null)
+            values.put("firstName", profile.getAttribute("firstName"));
+         if (profile.getAttribute("lastName") != null)
+            values.put("lastName", profile.getAttribute("lastName"));
+         if (profile.getAttribute("phone") != null)
+            values.put("phone", profile.getAttribute("phone"));
+         return values;
       }
       catch (DaoException e)
       {
