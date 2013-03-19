@@ -42,7 +42,7 @@
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>7.0.32</tomcat.version>
       <gwt.test.skip>true</gwt.test.skip>
-      <jgit.version>1.2.0.201112221803-r</jgit.version>
+      <jgit.version>2.3.1.201302201838-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
       <appengine.version>1.7.2</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
