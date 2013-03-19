@@ -18,19 +18,22 @@
  */
 package org.exoplatform.ide.jrebel.server;
 
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+
 /**
  * @author <a href="vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
- * @version $Id: JRebelProfilerException.java 34027 19.12.12 17:06Z vzhukovskii $
+ * @version $Id: JRebelProfilerExceptionMapper.java 34027 19.12.12 17:01Z vzhukovskii $
  */
-public class JRebelProfilerException extends Exception
+public class JRebelConsumerExceptionMapper implements ExceptionMapper<JRebelConsumerException>
 {
-   public JRebelProfilerException(String message)
+   /**
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
+    */
+   @Override
+   public Response toResponse(JRebelConsumerException e)
    {
-      super(message);
-   }
-
-   public JRebelProfilerException(String message, Throwable cause)
-   {
-      super(message, cause);
+      return Response.status(500).entity(e.getMessage()).type(MediaType.TEXT_PLAIN_TYPE).build();
    }
 }

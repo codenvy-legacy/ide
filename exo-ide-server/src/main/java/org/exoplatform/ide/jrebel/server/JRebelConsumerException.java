@@ -18,42 +18,20 @@
  */
 package org.exoplatform.ide.jrebel.server;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.ws.rs.core.Application;
-
 /**
  * @author <a href="vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
- * @version $Id: JRebelProfilerApplication.java 34027 19.12.12 16:58Z vzhukovskii $
+ * @version $Id: JRebelProfilerException.java 34027 19.12.12 17:06Z vzhukovskii $
  */
-public class JRebelProfilerApplication extends Application
+@SuppressWarnings("serial")
+public class JRebelConsumerException extends Exception
 {
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
-
-   public JRebelProfilerApplication()
+   public JRebelConsumerException(String message)
    {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(JRebelProfilerService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new JRebelProfilerExceptionMapper());
+      super(message);
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
+   public JRebelConsumerException(String message, Throwable cause)
    {
-      return classes;
-   }
-
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
+      super(message, cause);
    }
 }
