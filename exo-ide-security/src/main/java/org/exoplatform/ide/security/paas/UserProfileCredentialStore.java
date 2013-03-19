@@ -21,13 +21,10 @@ package org.exoplatform.ide.security.paas;
 import com.codenvy.ide.commons.Pair;
 import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.SLRUCache;
-import com.exoplatform.cloudide.userdb.User;
-import com.exoplatform.cloudide.userdb.client.UserDBServiceClient;
-import com.exoplatform.cloudide.userdb.exception.AccountExistenceException;
-import com.exoplatform.cloudide.userdb.exception.DaoException;
-import com.exoplatform.cloudide.userdb.exception.UserDBServiceException;
-import com.exoplatform.cloudide.userdb.exception.UserExistenceException;
-import com.exoplatform.cloudide.userdb.exception.WorkspaceExistenceException;
+import com.codenvy.organization.client.UserManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.model.User;
+
 import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.ide.commons.JsonParseException;
 
@@ -41,17 +38,13 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class UserProfileCredentialStore implements CredentialStore
 {
-   private final UserDBServiceClient userDBServiceClient;
+   private final UserManager userDBServiceClient;
    // protected with r/w lock
    private final Cache<String, Pair[]> cache = new SLRUCache<String, Pair[]>(50, 100);
    private final Lock lock = new ReentrantLock();
 
-   public UserProfileCredentialStore() throws UserDBServiceException
-   {
-      this(new UserDBServiceClient());
-   }
 
-   public UserProfileCredentialStore(UserDBServiceClient userDBServiceClient)
+   public UserProfileCredentialStore(UserManager userDBServiceClient)
    {
       this.userDBServiceClient = userDBServiceClient;
    }
@@ -66,7 +59,7 @@ public class UserProfileCredentialStore implements CredentialStore
          Pair[] persistentCredential = cache.get(key);
          if (persistentCredential == null)
          {
-            final User myUser = userDBServiceClient.getUser(user);
+            final User myUser = userDBServiceClient.getUserByAlias(user);
             if (myUser == null)
             {
                return false;
@@ -86,12 +79,7 @@ public class UserProfileCredentialStore implements CredentialStore
          cache.put(key, persistentCredential);
          return true;
       }
-      catch (UserDBServiceException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to load credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (DaoException e)
+      catch (OrganizationServiceException e)
       {
          throw new CredentialStoreException(
             String.format("Failed to load credential for '%s' and target '%s'. ", user, target), e);
@@ -115,7 +103,7 @@ public class UserProfileCredentialStore implements CredentialStore
       {
          final String key = cacheKey(user, target);
          cache.remove(key);
-         final User myUser = userDBServiceClient.getUser(user);
+         final User myUser = userDBServiceClient.getUserByAlias(user);
          if (myUser == null)
          {
             throw new CredentialStoreException(
@@ -132,27 +120,7 @@ public class UserProfileCredentialStore implements CredentialStore
          userDBServiceClient.updateUser(myUser);
          cache.put(key, persistentCredential);
       }
-      catch (UserDBServiceException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to save credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (DaoException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to save credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (WorkspaceExistenceException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to save credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (UserExistenceException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to save credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (AccountExistenceException e)
+      catch (OrganizationServiceException e)
       {
          throw new CredentialStoreException(
             String.format("Failed to save credential for '%s' and target '%s'. ", user, target), e);
@@ -171,7 +139,7 @@ public class UserProfileCredentialStore implements CredentialStore
       {
          final String key = cacheKey(user, target);
          cache.remove(key);
-         final User myUser = userDBServiceClient.getUser(user);
+         final User myUser = userDBServiceClient.getUserByAlias(user);
          if (myUser == null)
          {
             // Ignore non existent users.
@@ -181,27 +149,7 @@ public class UserProfileCredentialStore implements CredentialStore
          userDBServiceClient.updateUser(myUser);
          return true;
       }
-      catch (UserDBServiceException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to delete credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (DaoException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to delete credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (WorkspaceExistenceException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to delete credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (UserExistenceException e)
-      {
-         throw new CredentialStoreException(
-            String.format("Failed to delete credential for '%s' and target '%s'. ", user, target), e);
-      }
-      catch (AccountExistenceException e)
+      catch (OrganizationServiceException e)
       {
          throw new CredentialStoreException(
             String.format("Failed to delete credential for '%s' and target '%s'. ", user, target), e);

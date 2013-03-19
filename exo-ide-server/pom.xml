@@ -14,10 +14,10 @@
 	<name>Codenvy IDE :: Server</name>
 
 	<dependencies>
-	   <dependency>
-         <groupId>com.codenvy.commons</groupId>
-         <artifactId>codenvy-commons-env</artifactId>
-      </dependency>
+		<dependency>
+			<groupId>com.codenvy.commons</groupId>
+			<artifactId>codenvy-commons-env</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-commons</artifactId>
@@ -25,7 +25,6 @@
 		<dependency>
 			<groupId>com.codenvy.commons</groupId>
 			<artifactId>codenvy-commons-mail-client</artifactId>
-			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
@@ -167,7 +166,7 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
 			<artifactId>exo.kernel.commons</artifactId>
@@ -233,7 +232,6 @@
 			<artifactId>everrest-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--dependency> <groupId>org.exoplatform.ide</groupId> <artifactId>exo-ide-vfs</artifactId> </dependency -->
 		<dependency>
 			<groupId>org.everrest</groupId>
 			<artifactId>everrest-groovy</artifactId>
@@ -318,16 +316,14 @@
 			<artifactId>gdata-contacts-3.0</artifactId>
 			<version>1.47.1</version>
 		</dependency>
-      <dependency>
-         <groupId>com.codenvy.organization</groupId>
-         <artifactId>codenvy-organization-api-java-client</artifactId>
-         <version>0.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-         <groupId>com.codenvy.organization</groupId>
-         <artifactId>codenvy-organization-api</artifactId>
-         <version>0.1-SNAPSHOT</version>
-      </dependency>
+		<dependency>
+			<groupId>com.codenvy.organization</groupId>
+			<artifactId>codenvy-organization-api-java-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.codenvy.organization</groupId>
+			<artifactId>codenvy-organization-api</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
