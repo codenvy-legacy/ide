@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.user;
 
-import com.exoplatform.cloudide.userdb.NewUser;
-import com.exoplatform.cloudide.userdb.client.UserDBServiceClient;
+import com.codenvy.organization.client.OrganizationServiceManager;
+import com.codenvy.organization.exception.OrganizationServiceException;
 import org.picocontainer.Startable;
 
 /**
@@ -44,13 +44,13 @@ public class DummyUser implements Startable
          {
             try
             {
-               UserDBServiceClient userDBServiceClient = new UserDBServiceClient();
-               userDBServiceClient.addUser(new NewUser("exo", "exo"));
-               userDBServiceClient.addUser(new NewUser("root", "root"));
+               OrganizationServiceManager organizationManager = new OrganizationServiceManager();
+               organizationManager.getUserManager().createUser("exo", "exo");
+               organizationManager.getUserManager().createUser("root", "root");
             }
-            catch (Exception e)
+            catch (OrganizationServiceException e)
             {
-               throw new IllegalStateException("Dummy user initialization failed", e.getCause());
+               throw new IllegalStateException("Dummy users initialization failed", e.getCause());
             }
          }
       }).start();

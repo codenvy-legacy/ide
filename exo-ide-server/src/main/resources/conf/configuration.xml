@@ -76,9 +76,9 @@
 		<type>org.exoplatform.ide.invite.IdeInviteService</type>
 	</component>
 
-	<!-- JRebel profiler service -->
+	<!-- JRebel consumer service -->
 	<component>
-		<type>org.exoplatform.ide.jrebel.server.JRebelProfilerApplication</type>
+		<type>org.exoplatform.ide.jrebel.server.JRebelConsumerApplication</type>
 	</component>
 
 </configuration>

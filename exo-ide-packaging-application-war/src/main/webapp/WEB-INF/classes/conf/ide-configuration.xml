@@ -618,11 +618,47 @@
     ***************************************************************************************
    -->
    <component>
-      <type>org.exoplatform.ide.user.LdapDummyUser</type>
+      <type>org.exoplatform.ide.user.DummyUser</type>
    </component>
 
    <component>
-      <type>com.exoplatform.cloudide.userdb.client.UserDBServiceClient</type>
+      <type>com.codenvy.organization.client.OrganizationServiceManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.OrganizationServiceRequestTemplate</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.UserManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.AccountManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.WorkspaceManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.InvitationManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.AccountServiceConnector</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.InvitationServiceConnector</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.UserServiceConnector</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.WorkspaceServiceConnector</type>
    </component>
 
 </configuration>

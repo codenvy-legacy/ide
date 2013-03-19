@@ -319,9 +319,14 @@
 			<version>1.47.1</version>
 		</dependency>
       <dependency>
-         <groupId>com.exoplatform.cloud-ide</groupId>
-         <artifactId>cloud-ide-user-db-client</artifactId>
-         <version>${project.version}</version>
+         <groupId>com.codenvy.organization</groupId>
+         <artifactId>codenvy-organization-api-java-client</artifactId>
+         <version>0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+         <groupId>com.codenvy.organization</groupId>
+         <artifactId>codenvy-organization-api</artifactId>
+         <version>0.1-SNAPSHOT</version>
       </dependency>
 	</dependencies>
 	<build>
