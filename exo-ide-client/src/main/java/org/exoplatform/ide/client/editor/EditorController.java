@@ -199,7 +199,7 @@ public class EditorController
          return;
       }
 
-      if (!(editor instanceof CollabEditor))
+      if (!(editor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(activeFile.getMimeType())))
       {
          activeFile.setContentChanged(true);
 
@@ -270,7 +270,7 @@ public class EditorController
          ignoreContentChangedList.remove(file.getId());
       }
 
-      if (editorView.getEditor() instanceof CollabEditor)
+      if (editorView.getEditor() instanceof CollabEditor && !MimeType.TEXT_HTML.equals(file.getMimeType()))
       {
          Document document = ((CollabEditor)editorView.getEditor()).getEditor().getDocument();
          CollabEditorExtension.get().getManager().garbageCollectDocument(document);

@@ -82,12 +82,12 @@ public class ChatExtension extends Extension
    @Override
    public void initialize()
    {
-      resources.chatCss().ensureInjected();
-      chatControl = new ShowChatControl(resources);
-      IDE.getInstance().addControl(chatControl);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+//      resources.chatCss().ensureInjected();
+//      chatControl = new ShowChatControl(resources);
+//      IDE.getInstance().addControl(chatControl);
+//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+//      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    private void createPresenter()

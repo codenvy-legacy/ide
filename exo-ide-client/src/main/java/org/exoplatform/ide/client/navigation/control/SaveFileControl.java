@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.navigation.control;
 
 import com.google.collide.client.CollabEditor;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -163,7 +164,7 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
    @Override
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
-      if(activeEditor instanceof CollabEditor)
+      if(activeEditor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(event.getFile().getMimeType()))
       {
          setEnabled(false);
          return;
