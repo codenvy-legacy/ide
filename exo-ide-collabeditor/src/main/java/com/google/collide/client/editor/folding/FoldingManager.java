@@ -198,7 +198,6 @@ public class FoldingManager implements Document.TextListener
    @Override
    public void onTextChange(Document document, JsonArray<TextChange> textChanges)
    {
-      // TODO For testing purposes
       updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument));
    }
 
@@ -498,31 +497,12 @@ public class FoldingManager implements Document.TextListener
    private void updateFoldingStructure(List<DefaultFoldRange> positions)
    {
       markerToPositionMap.clear();
-//      cleanupFoldMarkers();
       for (DefaultFoldRange position : positions)
       {
          markerToPositionMap.put(new FoldMarker(resources), position);
       }
       dispatchStateChaged();
    }
-
-   //   /**
-   //    * Removes all {@link FoldMarker}s from the manager
-   //    * whose associated positions have been deleted.
-   //    */
-   //   private void cleanupFoldMarkers()
-   //   {
-   //      Iterator<Entry<FoldMarker, DefaultFoldRange>> iterator = markerToPositionMap.entrySet().iterator();
-   //      while (iterator.hasNext())
-   //      {
-   //         Entry<FoldMarker, DefaultFoldRange> entry = iterator.next();
-   //         DefaultFoldRange foldRange = entry.getValue();
-   //         if (foldRange == null || foldRange.isDeleted())
-   //         {
-   //            iterator.remove();
-   //         }
-   //      }
-   //   }
 
    /**
     * Initializes the projection document from the master document based on
