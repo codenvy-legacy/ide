@@ -132,7 +132,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
 
    private CloudFoundryProjectView.ActionDelegate delegate;
 
-   private boolean isDisplayed;
+   private boolean isShown;
 
    /**
     * Create view.
@@ -342,7 +342,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
    @Override
    public void close()
    {
-      this.isDisplayed = false;
+      this.isShown = false;
       this.hide();
    }
 
@@ -352,7 +352,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
    @Override
    public void showDialog()
    {
-      this.isDisplayed = true;
+      this.isShown = true;
       this.center();
       this.show();
    }
@@ -363,7 +363,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
    @Override
    public boolean isShown()
    {
-      return isDisplayed;
+      return isShown;
    }
 
    @UiHandler("btnInfo")
