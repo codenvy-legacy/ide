@@ -26,6 +26,7 @@ import com.google.collide.client.editor.gutter.Gutter.Position;
 
 import org.eclipse.jdt.client.JavaContentAssistProcessor;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
 import org.exoplatform.ide.editor.shared.text.Document;
@@ -83,10 +84,20 @@ public class JavaEditor extends CollabEditor
    {
       super.setText(text);
       getHoverPresenter().addHover(Document.DEFAULT_CONTENT_TYPE, new JavaTypeHover(IDE.eventBus()));
+      editor.getFoldingManager().setFoldFinder(new JavaFoldOccurrencesFinder());
    }
-     
-    
-   
+
+
+   @Override
+   public boolean isCapable(EditorCapability capability)
+   {
+      if(capability == EditorCapability.CODE_FOLDING)
+      {
+         return true;
+      }
+      return super.isCapable(capability);
+   }
+
    /**
     * @see com.google.collide.client.CollabEditor#getCursorOffsetLeft()
     */
