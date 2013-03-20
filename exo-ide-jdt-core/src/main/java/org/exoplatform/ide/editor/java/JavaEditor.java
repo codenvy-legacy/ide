@@ -28,7 +28,6 @@ import org.eclipse.jdt.client.JavaContentAssistProcessor;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
-import org.exoplatform.ide.editor.java.folding.JavaFoldOccurrencesFinder;
 import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
 import org.exoplatform.ide.editor.shared.text.Document;
 import org.exoplatform.ide.editor.shared.text.IDocument;
@@ -60,12 +59,10 @@ public class JavaEditor extends CollabEditor
          {
             if (newDocument != null)
             {
-               final Gutter gutter =
-                  editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
-                     .workspaceEditorCss().leftGutterBase());
-               breakPointManager =
-                  new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(),
-                     JavaClientBundle.INSTANCE);
+               final Gutter gutter = editor.createGutter(false, Position.LEFT,
+                  CollabEditorExtension.get().getContext().getResources().workspaceEditorCss().leftGutterBase());
+               breakPointManager = new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(),
+                  JavaClientBundle.INSTANCE);
                breakPointManager.render();
             }
          }

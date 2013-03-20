@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.editor.java;
 
+import com.google.collide.client.editor.folding.DefaultFoldRange;
 import com.google.collide.client.editor.folding.FoldOccurrencesFinder;
-import com.google.collide.client.editor.folding.FoldRange;
 import com.google.collide.shared.util.TextUtils;
-import com.google.collide.shared.util.UnicodeUtils;
 
 import org.eclipse.jdt.client.core.ISourceRange;
 import org.eclipse.jdt.client.core.SourceRange;
@@ -30,9 +29,7 @@ import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
 import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.client.core.dom.BlockComment;
-import org.eclipse.jdt.client.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.client.core.dom.Comment;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.EnumDeclaration;
@@ -41,17 +38,12 @@ import org.eclipse.jdt.client.core.dom.Javadoc;
 import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.QualifiedName;
 import org.eclipse.jdt.client.core.dom.SimpleName;
-import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
-import org.eclipse.jdt.client.core.util.CharUtil;
-import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
-import org.exoplatform.ide.editor.shared.text.Position;
 import org.exoplatform.ide.editor.shared.text.Region;
-import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -68,7 +60,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
     * the region from after the '/**' to the beginning of the content, the other
     * from after the first content line until after the comment.
     */
-   private static final class CommentPosition extends FoldRange
+   private static final class CommentPosition extends DefaultFoldRange
    {
       CommentPosition(int offset, int length)
       {
@@ -166,7 +158,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
     * the lines before the one containing the simple name of the java element, one
     * folding away any lines after the caption.
     */
-   private static final class JavaElementPosition extends FoldRange
+   private static final class JavaElementPosition extends DefaultFoldRange
    {
 
       private SimpleName fMember;
@@ -267,7 +259,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
    private class FoldFinder extends ASTVisitor
    {
 
-      private List<FoldRange> folds = new ArrayList<FoldRange>();
+      private List<DefaultFoldRange> folds = new ArrayList<DefaultFoldRange>();
 
       private List<ImportDeclaration> imports = new ArrayList<ImportDeclaration>();
 
@@ -287,7 +279,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
          if (node.getJavadoc() != null)
          {
             int offset = node.getJavadoc().getStartPosition() + node.getJavadoc().getLength() + 1;
-            folds.add(new FoldRange(offset, node.getLength() - node.getJavadoc().getLength() - 1));
+            folds.add(new JavaElementPosition(offset, node.getLength() - node.getJavadoc().getLength() - 1, node.getName()));
          }
          else
          {
@@ -319,7 +311,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
       @Override
       public boolean visit(Javadoc node)
       {
-         folds.add(new CommentPosition(node.getStartPosition(), node.getLength()));
+         folds.add(new CommentPosition(node.getStartPosition(), node.getLength() +1));
          return false;
       }
 
@@ -354,7 +346,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
    private CompilationUnit unit;
 
    @Override
-   public List<FoldRange> computePositions(IDocument document)
+   public List<DefaultFoldRange> computePositions(IDocument document)
    {
       ASTParser parser = ASTParser.newParser(AST.JLS3);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -385,9 +377,48 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
 
          ImportDeclaration lastImport = imports.get(imports.size() - 1);
          finder.folds.add(new JavaElementPosition(importDeclaration.getStartPosition(),
-            lastImport.getStartPosition() + lastImport.getLength() - importDeclaration.getStartPosition() ,
+            lastImport.getStartPosition() + lastImport.getLength() - importDeclaration.getStartPosition() +1 ,
             ((QualifiedName)importDeclaration.getName()).getName()));
       }
       return finder.folds;
+   }
+
+   /**
+    * Aligns <code>region</code> to start and end at a line offset. The region's start is
+    * decreased to the next line offset, and the end offset increased to the next line start or the
+    * end of the document. <code>null</code> is returned if <code>region</code> is
+    * <code>null</code> itself or does not comprise at least one line delimiter, as a single line
+    * cannot be folded.
+    *
+    * @param region the region to align, may be <code>null</code>
+    * @return a region equal or greater than <code>region</code> that is aligned with line
+    *         offsets, <code>null</code> if the region is too small to be foldable (e.g. covers
+    *         only one line)
+    */
+   protected final IRegion alignRegion(IRegion region, IDocument document)
+   {
+      if (region == null)
+         return null;
+
+      try {
+
+         int start= document.getLineOfOffset(region.getOffset());
+         int end= document.getLineOfOffset(region.getOffset() + region.getLength());
+         if (start >= end)
+            return null;
+
+         int offset= document.getLineOffset(start);
+         int endOffset;
+         if (document.getNumberOfLines() > end + 1)
+            endOffset= document.getLineOffset(end + 1);
+         else
+            endOffset= document.getLineOffset(end) + document.getLineLength(end);
+
+         return new Region(offset, endOffset - offset);
+
+      } catch (BadLocationException x) {
+         // concurrent modification
+         return null;
+      }
    }
 }
