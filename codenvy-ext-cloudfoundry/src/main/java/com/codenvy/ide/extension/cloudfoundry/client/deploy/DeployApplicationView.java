@@ -54,28 +54,28 @@ public interface DeployApplicationView extends View<DeployApplicationView.Action
    }
 
    /**
-    * Returns application name.
+    * Returns application's name.
     * 
-    * @return application name
+    * @return application's name
     */
    public String getName();
 
    /**
-    * Sets application name.
+    * Sets application's name.
     * 
     * @param name
     */
    public void setName(String name);
 
    /**
-    * Returns url.
+    * Returns application's url.
     * 
     * @return url
     */
    public String getUrl();
 
    /**
-    * Sets url.
+    * Sets application's url.
     * 
     * @param url
     */

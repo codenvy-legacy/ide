@@ -234,6 +234,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
       int count = this.server.getItemCount();
       boolean isItemFound = false;
 
+      // Looks up entered server into available list of servers
       int i = 0;
       while (i < count && !isItemFound)
       {
@@ -243,6 +244,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
          i++;
       }
 
+      // If item was found then it will be shown otherwise do nothing
       if (isItemFound)
       {
          this.server.setSelectedIndex(i - 1);
@@ -347,7 +349,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void enableAutodetectTypeCheckItem(boolean enable)
+   public void setEnableAutodetectTypeCheckItem(boolean enable)
    {
       autodetectType.setEnabled(enable);
    }

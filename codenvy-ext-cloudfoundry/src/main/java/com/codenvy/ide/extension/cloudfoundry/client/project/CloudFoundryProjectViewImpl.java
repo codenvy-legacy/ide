@@ -148,6 +148,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
       this.setText("CloudFoundry Project");
       this.setWidget(widget);
 
+      // adds styles to graphic components
       this.addStyleName(resources.cloudFoundryCss().project());
       applicationLabel.addStyleName(resources.cloudFoundryCss().labelH());
       urlLabel.addStyleName(resources.cloudFoundryCss().labelH());
@@ -162,12 +163,14 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
       memory.addStyleName(resources.cloudFoundryCss().textinput());
       instances.addStyleName(resources.cloudFoundryCss().textinput());
 
+      // adds icon into buttons
       btnInfo.setHTML(new Image(resources.propertiesButton()).toString());
       btnEditMemory.setHTML(new Image(resources.editButton()).toString());
       btnEditInstances.setHTML(new Image(resources.editButton()).toString());
       btnStart.setHTML(new Image(resources.startApp()).toString());
       btnStop.setHTML(new Image(resources.stopApp()).toString());
       btnRestart.setHTML(new Image(resources.restartApp()).toString());
+      // adds text with icon into buttons
       btnClose.setHTML(new Image(resources.cancelButton()) + " " + constants.closeButton());
    }
 

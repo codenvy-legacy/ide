@@ -106,98 +106,98 @@ public interface CloudFoundryProjectView extends View<CloudFoundryProjectView.Ac
    }
 
    /**
-    * Returns application name.
+    * Returns application's name.
     * 
-    * @return application name
+    * @return application's name
     */
    public String getApplicationName();
 
    /**
-    * Sets application name
+    * Sets application's name
     * 
     * @param name
     */
    public void setApplicationName(String name);
 
    /**
-    * Returns application model.
+    * Returns application's model.
     * 
-    * @return application model
+    * @return application's model
     */
    public String getApplicationModel();
 
    /**
-    * Sets application model
+    * Sets application's model
     * 
     * @param model
     */
    public void setApplicationModel(String model);
 
    /**
-    * Returns application url.
+    * Returns application's url.
     * 
-    * @return application url
+    * @return application's url
     */
    public String getApplicationUrl();
 
    /**
-    * Sets application url.
+    * Sets application's url.
     * 
     * @param url
     */
    public void setApplicationUrl(String url);
 
    /**
-    * Returns application stack.
+    * Returns application's stack.
     * 
-    * @return application stack
+    * @return application's stack
     */
    public String getApplicationStack();
 
    /**
-    * Sets application stack.
+    * Sets application's stack.
     * 
     * @param stack
     */
    public void setApplicationStack(String stack);
 
    /**
-    * Returns application instances.
+    * Returns application's instances.
     * 
-    * @return application instances
+    * @return application's instances
     */
    public String getApplicationInstances();
 
    /**
-    * Sets application instances.
+    * Sets application's instances.
     * 
     * @param instances
     */
    public void setApplicationInstances(String instances);
 
    /**
-    * Returns application memory.
+    * Returns application's memory.
     * 
-    * @return application memory
+    * @return application's memory
     */
    public String getApplicationMemory();
 
    /**
-    * Sets application memory.
+    * Sets application's memory.
     * 
     * @param memory
     */
    public void setApplicationMemory(String memory);
 
    /**
-    * Returns application status.
+    * Returns application's status.
     * 
-    * @return application status
+    * @return application's status
     */
    public String getApplicationStatus();
 
    /**
-    * Sets application status.
+    * Sets application's status.
     * 
     * @param status
     */

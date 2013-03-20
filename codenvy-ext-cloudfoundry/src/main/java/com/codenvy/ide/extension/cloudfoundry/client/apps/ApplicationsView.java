@@ -87,14 +87,14 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate>
    public void setApplications(JsonArray<CloudFoundryApplication> apps);
 
    /**
-    * Returns selected server name.
+    * Returns selected server's name.
     * 
     * @return
     */
    public String getServer();
 
    /**
-    * Select new server name.
+    * Select new server's name.
     * 
     * @param server
     */

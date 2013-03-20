@@ -21,9 +21,9 @@ package com.codenvy.ide.extension.cloudfoundry.client;
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
 import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
+import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCloudFoundryProjectCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
-import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCloudFoundryProjectCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -77,7 +77,7 @@ public class CloudFoundryExtension
       JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
       paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, deployAppPresenter, null);
      
-      // TODO Need get service from DI
+      // TODO Need get service from DI?
       String restContext = "/rest/private";
       new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant, autoBeanFactory);
 

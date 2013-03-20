@@ -34,7 +34,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *The implementation of {@link DeployApplicationView}.
+ * The implementation of {@link DeployApplicationView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -134,6 +134,7 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
       int count = this.targetField.getItemCount();
       boolean isItemFound = false;
 
+      // Looks up entered server into available list of servers
       int i = 0;
       while (i < count && !isItemFound)
       {
@@ -143,6 +144,7 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
          i++;
       }
 
+      // If item was found then it will be shown otherwise do nothing
       if (isItemFound)
       {
          this.targetField.setSelectedIndex(i - 1);

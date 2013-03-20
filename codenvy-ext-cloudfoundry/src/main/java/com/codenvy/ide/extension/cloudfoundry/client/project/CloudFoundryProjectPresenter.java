@@ -153,7 +153,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    }
 
    /**
-    * Show dialog.
+    * Shows dialog.
     */
    public void showDialog()
    {
@@ -231,7 +231,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    }
 
    /**
-    * Get application properties.
+    * Gets application's properties.
     * 
     * @param project
     */
@@ -274,7 +274,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    }
 
    /**
-    * Displays application properties on the view.
+    * Displays application's properties on the view.
     * 
     * @param application current application
     */

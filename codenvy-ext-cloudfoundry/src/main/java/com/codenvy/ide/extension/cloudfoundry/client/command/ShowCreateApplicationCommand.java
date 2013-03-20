@@ -25,7 +25,6 @@ import com.codenvy.ide.menu.ExtendedCommand;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Command for "PaaS/CloudFoudry/Create Application" action.
@@ -39,8 +38,6 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
 
    private final CloudFoundryResources resources;
 
-   private final EventBus eventBus;
-
    /**
     * Create command.
     * 
@@ -48,12 +45,10 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
     * @param resources
     */
    @Inject
-   public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources,
-      EventBus eventBus)
+   public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources)
    {
       this.presenter = presenter;
       this.resources = resources;
-      this.eventBus = eventBus;
    }
 
    /**

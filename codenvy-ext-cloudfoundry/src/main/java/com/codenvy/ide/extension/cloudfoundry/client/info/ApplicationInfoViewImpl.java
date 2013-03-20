@@ -121,12 +121,14 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
       this.setText("Application Info");
       this.setWidget(widget);
 
+      // adds styles to graphic components
       this.addStyleName(resources.cloudFoundryCss().appInfo());
       statePanel.addStyleName(resources.cloudFoundryCss().event());
       versionPanel.addStyleName(resources.cloudFoundryCss().event());
       memoryPanel.addStyleName(resources.cloudFoundryCss().event());
       stackPanel.addStyleName(resources.cloudFoundryCss().event());
 
+      // adds text with icon into button
       btnOk.setHTML(new Image(resources.okButton()) + " " + constants.okButton());
    }
 

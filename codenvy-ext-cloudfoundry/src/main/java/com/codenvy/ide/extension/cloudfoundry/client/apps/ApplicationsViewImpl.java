@@ -56,6 +56,9 @@ import java.util.List;
 @Singleton
 public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
 {
+   /**
+    * Special cell for displaying links into CellTable.
+    */
    private class ListLink extends AbstractSafeHtmlCell<List<String>>
    {
       /**
@@ -76,6 +79,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
       }
    }
 
+   /**
+    * Renderer for displaying links into CellTable.
+    */
    private class SafeHtmlListRenderer implements SafeHtmlRenderer<List<String>>
    {
       /**
@@ -99,8 +105,10 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
       }
 
       /**
+       * Formats list of links to String.
+       * 
        * @param object
-       * @return
+       * @return links in String format
        */
       private String createLinks(List<String> object)
       {
@@ -233,6 +241,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
             }
          };
 
+      // Creates handler on button clicked
       startColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
          @Override
@@ -254,6 +263,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
             }
          };
 
+      // Creates handler on button clicked
       stopColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
          @Override
@@ -274,6 +284,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
             }
          };
 
+      // Creates handler on button clicked
       restartColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
          @Override
@@ -293,6 +304,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
             }
          };
 
+      // Creates handler on button clicked
       deleteColumn.setFieldUpdater(new FieldUpdater<CloudFoundryApplication, String>()
       {
          @Override
@@ -302,6 +314,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
          }
       });
 
+      // Adds headers and size of column
       appsTable.addColumn(nameColumn, "Application");
       appsTable.addColumn(instancesColumn, "#");
       appsTable.setColumnWidth(instancesColumn, "8px");
@@ -339,6 +352,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
    @Override
    public void setApplications(JsonArray<CloudFoundryApplication> apps)
    {
+      // Wraps JsonArray in java.util.List
       List<CloudFoundryApplication> appList = new ArrayList<CloudFoundryApplication>();
       for (int i = 0; i < apps.size(); i++)
       {
@@ -367,6 +381,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
       int count = this.server.getItemCount();
       boolean isItemFound = false;
 
+      // Looks up entered server into available list of servers
       int i = 0;
       while (i < count && !isItemFound)
       {
@@ -376,6 +391,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
          i++;
       }
 
+      // If item was found then it will be shown otherwise do nothing
       if (isItemFound)
       {
          this.server.setSelectedIndex(i - 1);

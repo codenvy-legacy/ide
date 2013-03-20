@@ -91,11 +91,13 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
       this.setWidget(widget);
       this.setText("Create service");
 
+      // adds styles to graphic components
       this.addStyleName(resources.cloudFoundryCss().createService());
       serviceTypeLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
       nameLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
       optionalLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
 
+      // adds text with icon into button
       btnCreate.setHTML(new Image(resources.okButton()) + " " + constant.createButton());
       btnCancel.setHTML(new Image(resources.cancelButton()) + " " + constant.cancelButton());
    }

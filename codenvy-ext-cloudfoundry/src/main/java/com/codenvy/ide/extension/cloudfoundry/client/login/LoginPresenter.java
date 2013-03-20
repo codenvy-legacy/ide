@@ -112,10 +112,6 @@ public class LoginPresenter implements LoginView.ActionDelegate
          CloudFoundryClientService.getInstance().login(enteredServer, email, password,
             new AsyncRequestCallback<String>()
             {
-
-               /**
-                * {@inheritDoc}
-                */
                @Override
                protected void onSuccess(String result)
                {
@@ -129,9 +125,6 @@ public class LoginPresenter implements LoginView.ActionDelegate
                   view.close();
                }
 
-               /**
-                * {@inheritDoc}
-                */
                @Override
                protected void onFailure(Throwable exception)
                {
@@ -290,7 +283,7 @@ public class LoginPresenter implements LoginView.ActionDelegate
    }
 
    /**
-    * Gets the list of available servers for user.
+    * Get the list of server and put them to field.
     */
    private void getServers()
    {

@@ -94,6 +94,7 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
       this.setText("Application URLs");
       this.setWidget(widget);
 
+      // adds text with icon into button
       btnMap.setHTML(new Image(resources.addButton()) + " " + constatns.mapButton());
       btnClose.setHTML(new Image(resources.cancelButton()) + " " + constatns.closeButton());
    }
@@ -140,6 +141,7 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
          }
       };
 
+      // Adds headers and size of column
       urlsTable.addColumn(valueColumn, constant.applicationUnmapUrlGridUrlField());
       urlsTable.setColumnWidth(valueColumn, "75%");
       urlsTable.addColumn(buttonColumn, constant.unmapUrlListGridColumnTitle());

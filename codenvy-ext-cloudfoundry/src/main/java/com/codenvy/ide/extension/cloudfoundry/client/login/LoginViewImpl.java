@@ -93,12 +93,14 @@ public class LoginViewImpl extends DialogBox implements LoginView
       this.setText("Login to CloudFoundry");
       this.setWidget(widget);
 
+      // adds styles to graphic components
       this.addStyleName(resources.cloudFoundryCss().login());
       serverLabel.addStyleName(resources.cloudFoundryCss().loginFont());
       emailLabel.addStyleName(resources.cloudFoundryCss().loginFont());
       passwordLabel.addStyleName(resources.cloudFoundryCss().loginFont());
       errorText.addStyleName(resources.cloudFoundryCss().loginErrorFont());
 
+      // adds text with icon into button
       btnLogIn.setHTML(new Image(resources.okButton()) + " Log In");
       btnCancel.setHTML(new Image(resources.cancelButton()) + " Cancel");
    }
@@ -166,8 +168,9 @@ public class LoginViewImpl extends DialogBox implements LoginView
    {
       int count = this.server.getItemCount();
       boolean isItemFound = false;
-      int i = 0;
 
+      // Looks up entered server into available list of servers
+      int i = 0;
       while (i < count && !isItemFound)
       {
          String item = this.server.getItemText(i);
@@ -176,6 +179,7 @@ public class LoginViewImpl extends DialogBox implements LoginView
          i++;
       }
 
+      // If item was found then it will be shown otherwise do nothing
       if (isItemFound)
       {
          this.server.setSelectedIndex(i - 1);

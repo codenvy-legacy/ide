@@ -101,10 +101,12 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
       this.setWidget(widget);
       this.setText("Manage CloudFoundry Services");
 
+      // adds styles to graphic components
       this.addStyleName(resources.cloudFoundryCss().manageService());
       boundServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
       provisionServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
 
+      // adds text with icon into button
       btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
       btnAdd.setHTML(new Image(resources.addButton()) + " " + constant.addButton());
       btnDelete.setHTML(new Image(resources.deleteButton()) + " " + constant.deleteButton());
@@ -133,6 +135,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
          }
       };
 
+      // Creates handler on button clicked
       unbindColumn.setFieldUpdater(new FieldUpdater<String, String>()
       {
          @Override
@@ -142,6 +145,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
          }
       });
 
+      // Adds headers and size of column
       boundedServices.addColumn(nameColumn);
       boundedServices.addColumn(unbindColumn);
       boundedServices.setColumnWidth(unbindColumn, "60px");
@@ -176,6 +180,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
          }
       };
 
+      // Creates handler on button clicked
       bindColumn.setFieldUpdater(new FieldUpdater<ProvisionedService, String>()
       {
          @Override
@@ -185,6 +190,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
          }
       });
 
+      // Adds headers and size of column
       services.addColumn(nameColumn);
       services.addColumn(bindColumn);
       services.setColumnWidth(bindColumn, "60px");
@@ -203,7 +209,6 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
             delegate.onSelectedService(service);
          }
       });
-
       services.setSelectionModel(selectionModel);
    }
 

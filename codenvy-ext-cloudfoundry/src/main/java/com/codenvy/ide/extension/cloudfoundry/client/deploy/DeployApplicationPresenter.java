@@ -42,7 +42,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -170,14 +169,16 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
             createApplication();
          }
       };
+
       // TODO Need to create some special service after this class
       // This class still doesn't have analog.
       //      JobManager.get().showJobSeparated();
-      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
-         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
       // TODO This code uses WebSocket but we have not ported it yet.
+      //      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
+      //      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
+      //         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
+      //
       //      try
       //      {
       //         // Application will be started after creation (IDE-1618)

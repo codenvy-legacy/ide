@@ -47,7 +47,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
 
       /**
        * Performs any actions appropriate in response to the user 
-       * having changed auto detect application type value.
+       * having changed auto detect application's type value.
        */
       public void onAutoDetectTypeChanged();
 
@@ -59,13 +59,13 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
 
       /**
        * Performs any actions appropriate in response to the user 
-       * having changed application name.
+       * having changed application's name.
        */
       public void onApplicationNameChanged();
 
       /**
        * Performs any actions appropriate in response to the user 
-       * having changed application type name.
+       * having changed application's type.
        */
       public void onTypeChanged();
 
@@ -77,9 +77,9 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
    }
 
    /**
-    * Returns application type.
+    * Returns application's type.
     * 
-    * @return type name
+    * @return type's name
     */
    public String getType();
 
@@ -100,30 +100,30 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
    public void setAutodetectType(boolean autodetected);
 
    /**
-    * Returns CloudFoundry application name.
+    * Returns CloudFoundry application's name.
     * 
     * @return application name
     */
    public String getName();
 
    /**
-    * Sets CloudFoundry application name.
+    * Sets CloudFoundry application's name.
     * 
-    * @param name application name
+    * @param name application's name
     */
    public void setName(String name);
 
    /**
-    * Returns CloudFounry application url.
+    * Returns CloudFounry application's url.
     * 
-    * @return application url
+    * @return application's url
     */
    public String getUrl();
 
    /**
-    * Sets CloudFoundry application url.
+    * Sets CloudFoundry application's url.
     * 
-    * @param url application url
+    * @param url application's url
     */
    public void setUrl(String url);
 
@@ -207,7 +207,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
    public void focusInNameField();
 
    /**
-    * Sets available application types.
+    * Sets available application's types.
     * 
     * @param types available types.
     */
@@ -250,12 +250,12 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
    public void focusInUrlField();
 
    /**
-    * Sets whether Autodetect type checkitem is enabled.
+    * Sets whether Auto detect type checkitem is enabled.
     * 
     * @param enable <code>true</code> to enable the checkitem, <code>false</code>
     * to disable it
     */
-   public void enableAutodetectTypeCheckItem(boolean enable);
+   public void setEnableAutodetectTypeCheckItem(boolean enable);
 
    /**
     * Sets the list of servers.

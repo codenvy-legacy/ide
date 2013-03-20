@@ -129,6 +129,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
    {
       this.serverName = serverName;
       this.appDeleteCallback = callback;
+
+      // If application name is absent then need to find it
       if (appName == null)
       {
          getApplicationInfo();
@@ -153,7 +155,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
    };
 
    /**
-    * Get the application's information.
+    * Get application's name and put it to the field.
     */
    private void getApplicationInfo()
    {
@@ -211,6 +213,9 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       String projectId = null;
 
       Project project = resourceProvider.getActiveProject();
+      // Checking does current project work with deleting CloudFoundry application.
+      // If project don't have the same CloudFoundry application name in properties
+      // then this property won't be cleaned.
       if (project != null && project.getPropertyValue("cloudfoundry-application") != null
          && appName.equals(project.getPropertyValue("cloudfoundry-application")))
       {

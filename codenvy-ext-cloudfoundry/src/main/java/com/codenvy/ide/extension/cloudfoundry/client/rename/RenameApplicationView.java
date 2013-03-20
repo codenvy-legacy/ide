@@ -64,14 +64,14 @@ public interface RenameApplicationView extends View<RenameApplicationView.Action
    public void setEnableRenameButton(boolean isEnabled);
 
    /**
-    * Returns application name.
+    * Returns application's name.
     * 
     * @return
     */
    public String getName();
 
    /**
-    * Sets application name.
+    * Sets application's name.
     * 
     * @param name
     */

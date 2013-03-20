@@ -319,7 +319,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
    }
 
    /**
-    * Get the application's information.
+    * Gets the list of services and put them to field.
     */
    private void getApplicationInfo()
    {

@@ -42,7 +42,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -60,6 +59,9 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 @Singleton
 public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, ProjectBuiltHandler
 {
+   /**
+    * Needs for contain information about application.
+    */
    private class AppData
    {
       String server;
@@ -76,6 +78,17 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       boolean nostart;
 
+      /**
+       * Create application data. 
+       * 
+       * @param server
+       * @param name
+       * @param type
+       * @param url
+       * @param instances
+       * @param memory
+       * @param nostart
+       */
       public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart)
       {
          this.server = server;
@@ -356,11 +369,11 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       final Project project = resourceProvider.getActiveProject();
 
-      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
-         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
-
       // TODO This code uses WebSocket but we have not ported it yet.
+      //      AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
+      //      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
+      //         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
+      //
       //      try
       //      {
       //         CloudFoundryClientService.getInstance().createWS(
@@ -686,7 +699,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       if (!view.isCustomUrl())
       {
          updateUrlField();
-         view.enableAutodetectTypeCheckItem(true);
+         view.setEnableAutodetectTypeCheckItem(true);
       }
    }
 
@@ -710,10 +723,10 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          this.view.setTypeValues(JsonCollections.<String> createArray());
          this.view.setInstances("1");
          this.view.setAutodetectType(true);
+         view.setStartAfterCreation(true);
 
          view.focusInNameField();
          getServers();
-         view.setStartAfterCreation(true);
 
          view.showDialog();
       }

@@ -42,79 +42,79 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
    }
 
    /**
-    * Sets application name.
+    * Sets application's name.
     * 
     * @param name
     */
    public void setName(String name);
 
    /**
-    * Sets application state.
+    * Sets application's state.
     * 
     * @param state
     */
    public void setState(String state);
 
    /**
-    * Sets application instances.
+    * Sets application's instances.
     * 
     * @param instances
     */
    public void setInstances(String instances);
 
    /**
-    * Sets application version.
+    * Sets application's version.
     * 
     * @param version
     */
    public void setVersion(String version);
 
    /**
-    * Sets application disk.
+    * Sets application's disk.
     * 
     * @param disk
     */
    public void setDisk(String disk);
 
    /**
-    * Sets application memory.
+    * Sets application's memory.
     * 
     * @param memory
     */
    public void setMemory(String memory);
 
    /**
-    * Sets application stack.
+    * Sets application's stack.
     * 
     * @param stack
     */
    public void setStack(String stack);
 
    /**
-    * Sets application model.
+    * Sets application's model.
     * 
     * @param model
     */
    public void setModel(String model);
 
    /**
-    * Sets application uris.
+    * Sets application's uris.
     * 
-    * @param applications aplication uris
+    * @param applications application's uris
     */
    public void setApplicationUris(List<String> applications);
 
    /**
-    * Sets application services.
+    * Sets application's services.
     * 
-    * @param services aplication services
+    * @param services application's services
     */
    public void setApplicationServices(List<String> services);
 
    /**
-    * Sets application environments.
+    * Sets application's environments.
     * 
-    * @param environments application enviroments.
+    * @param environments application's enviroments.
     */
    public void setApplicationEnvironments(List<String> environments);
 
