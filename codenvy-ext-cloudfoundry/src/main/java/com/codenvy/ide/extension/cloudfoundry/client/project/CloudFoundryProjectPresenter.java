@@ -48,9 +48,10 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for managing project, deployed on CloudFoundry.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Dec 2, 2011 5:54:50 PM anya $
  */
 @Singleton
 public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate
@@ -85,6 +86,9 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * The callback what execute when some application's information was changed. 
+    */
    private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>()
    {
       @Override
@@ -104,6 +108,24 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       }
    };
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param applicationInfoPresenter
+    * @param unmapUrlPresenter
+    * @param updateProperyPresenter
+    * @param manageServicesPresenter
+    * @param updateApplicationPresenter
+    * @param eventBus
+    * @param resourceProvider
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param startAppPresenter
+    * @param deleteAppPresenter
+    * @param loginPresenter
+    */
    @Inject
    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view,
       ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
@@ -165,6 +187,9 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       getLogs();
    }
 
+   /**
+    * Getting logs for CloudFoundry Application.
+    */
    protected void getLogs()
    {
       try
@@ -231,7 +256,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
-                  if (!view.isDisplayed())
+                  if (!view.isShown())
                   {
                      view.showDialog();
                   }
@@ -248,6 +273,11 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       }
    }
 
+   /**
+    * Displays application properties on the view.
+    * 
+    * @param application current application
+    */
    protected void displayApplicationProperties(CloudFoundryApplication application)
    {
       view.setApplicationName(application.getName());
@@ -268,8 +298,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
          view.setApplicationUrl(null);
       }
       boolean isStarted = ("STARTED".equals(application.getState()));
-      view.setStartButtonEnabled(!isStarted);
-      view.setStopButtonEnabled(isStarted);
+      view.setEnabledStartButton(!isStarted);
+      view.setEnabledStopButton(isStarted);
    }
 
    /**

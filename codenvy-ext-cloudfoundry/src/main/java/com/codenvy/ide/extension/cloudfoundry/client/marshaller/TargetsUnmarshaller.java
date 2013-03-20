@@ -36,6 +36,11 @@ public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>>
 {
    private JsonArray<String> targets;
 
+   /**
+    * Create unmarshaller.
+    * 
+    * @param targets
+    */
    public TargetsUnmarshaller(JsonArray<String> targets)
    {
       this.targets = targets;

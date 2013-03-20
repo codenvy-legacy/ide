@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client.rename;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -33,10 +32,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import com.codenvy.ide.extension.cloudfoundry.client.rename.RenameApplicationView;
-
 /**
- *
+ * The implementation of {@link RenameApplicationView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -60,6 +57,11 @@ public class RenameApplicationViewImpl extends DialogBox implements RenameApplic
 
    private ActionDelegate delegate;
 
+   /**
+    * Create view.
+    * 
+    * @param constants
+    */
    @Inject
    protected RenameApplicationViewImpl(CloudFoundryLocalizationConstant constants)
    {
@@ -91,7 +93,7 @@ public class RenameApplicationViewImpl extends DialogBox implements RenameApplic
     * {@inheritDoc}
     */
    @Override
-   public void enableRenameButton(boolean isEnabled)
+   public void setEnableRenameButton(boolean isEnabled)
    {
       btnRename.setEnabled(isEnabled);
    }

@@ -36,9 +36,10 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * Presenter for rename operation with application.
+ * 
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: RenameApplicationPresenter.java Jul 15, 2011 11:32:02 AM vereshchaka $
  */
 @Singleton
 public class RenameApplicationPresenter implements RenameApplicationView.ActionDelegate
@@ -62,6 +63,17 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param resourceProvider
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected RenameApplicationPresenter(RenameApplicationView view, EventBus eventBus,
       ResourceProvider resourceProvider, Console console, CloudFoundryLocalizationConstant constant,
@@ -85,7 +97,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
    {
       String newName = view.getName();
       boolean enable = !applicationName.equals(newName) && newName != null && !newName.isEmpty();
-      view.enableRenameButton(enable);
+      view.setEnableRenameButton(enable);
    }
 
    /**
@@ -97,6 +109,9 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       renameApplication();
    }
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -106,6 +121,9 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       }
    };
 
+   /**
+    * Renames application.
+    */
    private void renameApplication()
    {
       final String newName = view.getName();
@@ -143,6 +161,9 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       view.close();
    }
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -152,6 +173,9 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       }
    };
 
+   /**
+    * Get the application's information.
+    */
    private void getApplicationInfo()
    {
       String projectId = resourceProvider.getActiveProject().getId();
@@ -181,11 +205,14 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       }
    }
 
+   /**
+    * Shows dialog.
+    */
    public void showDialog()
    {
       view.setName(applicationName);
       view.selectValueInRenameField();
-      view.enableRenameButton(false);
+      view.setEnableRenameButton(false);
 
       getApplicationInfo();
 

@@ -26,5 +26,8 @@ package com.codenvy.ide.extension.cloudfoundry.client.login;
  */
 public interface LoggedInHandler
 {
+   /**
+    * Performs some actions when logged in.
+    */
    void onLoggedIn();
 }

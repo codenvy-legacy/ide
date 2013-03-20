@@ -38,9 +38,10 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * Presenter for delete application operation.
+ * 
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: DeleteApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
 @Singleton
 public class DeleteApplicationPresenter implements DeleteApplicationView.ActionDelegate
@@ -71,6 +72,17 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
    private AsyncCallback<String> appDeleteCallback;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param resourceProvider
+    * @param eventBus
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
       EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
@@ -107,7 +119,11 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
    }
 
    /**
-    *
+    * Deletes CloudFoundry application.
+    * 
+    * @param serverName
+    * @param appName
+    * @param callback
     */
    public void deleteApp(String serverName, String appName, AsyncCallback<String> callback)
    {
@@ -124,6 +140,9 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       }
    }
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -133,6 +152,9 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       }
    };
 
+   /**
+    * Get the application's information.
+    */
    private void getApplicationInfo()
    {
       String projectId = resourceProvider.getActiveProject().getId();
@@ -166,6 +188,9 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       }
    }
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -175,6 +200,11 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       }
    };
 
+   /**
+    * Deletes application.
+    * 
+    * @param callback
+    */
    private void deleteApplication(AsyncCallback<String> callback)
    {
       boolean isDeleteServices = view.isDeleteServices();
@@ -210,6 +240,11 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       }
    }
 
+   /**
+    * Shows dialog.
+    * 
+    * @param appName application name which need to delete
+    */
    public void showDialog(String appName)
    {
       view.setAskMessage(constant.deleteApplicationQuestion(appName));

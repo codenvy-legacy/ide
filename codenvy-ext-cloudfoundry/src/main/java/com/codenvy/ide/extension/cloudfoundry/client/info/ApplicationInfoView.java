@@ -20,45 +20,111 @@ package com.codenvy.ide.extension.cloudfoundry.client.info;
 
 import com.codenvy.ide.view.View;
 
-import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoView;
-
 import java.util.List;
 
 /**
- * 
+ * The implementation of {@link ApplicationInfoPresenter}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into CreateApplication view.
+    */
    public interface ActionDelegate
    {
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Ok button.
+       */
       public void onOKClicked();
    }
 
-   public void setName(String text);
+   /**
+    * Sets application name.
+    * 
+    * @param name
+    */
+   public void setName(String name);
 
-   public void setState(String text);
+   /**
+    * Sets application state.
+    * 
+    * @param state
+    */
+   public void setState(String state);
 
-   public void setInstances(String text);
+   /**
+    * Sets application instances.
+    * 
+    * @param instances
+    */
+   public void setInstances(String instances);
 
-   public void setVersion(String text);
+   /**
+    * Sets application version.
+    * 
+    * @param version
+    */
+   public void setVersion(String version);
 
-   public void setDisk(String text);
+   /**
+    * Sets application disk.
+    * 
+    * @param disk
+    */
+   public void setDisk(String disk);
 
-   public void setMemory(String text);
+   /**
+    * Sets application memory.
+    * 
+    * @param memory
+    */
+   public void setMemory(String memory);
 
-   public void setStack(String text);
+   /**
+    * Sets application stack.
+    * 
+    * @param stack
+    */
+   public void setStack(String stack);
 
-   public void setModel(String text);
+   /**
+    * Sets application model.
+    * 
+    * @param model
+    */
+   public void setModel(String model);
 
+   /**
+    * Sets application uris.
+    * 
+    * @param applications aplication uris
+    */
    public void setApplicationUris(List<String> applications);
 
+   /**
+    * Sets application services.
+    * 
+    * @param services aplication services
+    */
    public void setApplicationServices(List<String> services);
 
+   /**
+    * Sets application environments.
+    * 
+    * @param environments application enviroments.
+    */
    public void setApplicationEnvironments(List<String> environments);
 
+   /**
+    * Show dialog.
+    */
    public void showDialog();
 
+   /**
+    * Close dialog.
+    */
    public void close();
 }

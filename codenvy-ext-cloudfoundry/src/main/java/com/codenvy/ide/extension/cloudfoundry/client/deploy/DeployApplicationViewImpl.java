@@ -34,7 +34,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ *The implementation of {@link DeployApplicationView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -61,6 +61,9 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
 
    private ActionDelegate delegate;
 
+   /**
+    * Create view.
+    */
    @Inject
    protected DeployApplicationViewImpl()
    {
@@ -171,18 +174,18 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
    @UiHandler("targetField")
    void onTargetFieldChange(ChangeEvent event)
    {
-      delegate.onServerFieldChanged();
+      delegate.onServerChanged();
    }
 
    @UiHandler("nameField")
    void onNameFieldKeyUp(KeyUpEvent event)
    {
-      delegate.onNameFieldChanged();
+      delegate.onNameChanged();
    }
 
    @UiHandler("urlField")
    void onUrlFieldKeyUp(KeyUpEvent event)
    {
-      delegate.onUrlFieldChanged();
+      delegate.onUrlChanged();
    }
 }

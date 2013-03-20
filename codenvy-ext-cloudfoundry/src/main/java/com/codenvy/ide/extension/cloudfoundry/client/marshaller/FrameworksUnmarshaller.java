@@ -42,6 +42,12 @@ public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framewor
    
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   /**
+    * Create unmarshaller.
+    * 
+    * @param frameworks
+    * @param autoBeanFactory
+    */
    public FrameworksUnmarshaller(JsonArray<Framework> frameworks, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.frameworks = frameworks;

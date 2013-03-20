@@ -23,31 +23,76 @@ import com.codenvy.ide.view.View;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
- *
+ * The view of {@link DeployApplicationPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface DeployApplicationView extends View<DeployApplicationView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into DeployApplication view.
+    */
    public interface ActionDelegate
    {
-      public void onNameFieldChanged();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed application name.
+       */
+      public void onNameChanged();
 
-      public void onUrlFieldChanged();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed url.
+       */
+      public void onUrlChanged();
 
-      public void onServerFieldChanged();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed server.
+       */
+      public void onServerChanged();
    }
 
+   /**
+    * Returns application name.
+    * 
+    * @return application name
+    */
    public String getName();
 
+   /**
+    * Sets application name.
+    * 
+    * @param name
+    */
    public void setName(String name);
 
+   /**
+    * Returns url.
+    * 
+    * @return url
+    */
    public String getUrl();
 
+   /**
+    * Sets url.
+    * 
+    * @param url
+    */
    public void setUrl(String url);
 
+   /**
+    * Returns server.
+    * 
+    * @return server
+    */
    public String getServer();
 
+   /**
+    * Sets server.
+    *  
+    * @param server
+    */
    public void setServer(String server);
 
    /**
@@ -57,5 +102,10 @@ public interface DeployApplicationView extends View<DeployApplicationView.Action
     */
    void setServerValues(JsonArray<String> servers);
 
+   /**
+    * Returns view.
+    * 
+    * @return view
+    */
    public Composite getView();
 }

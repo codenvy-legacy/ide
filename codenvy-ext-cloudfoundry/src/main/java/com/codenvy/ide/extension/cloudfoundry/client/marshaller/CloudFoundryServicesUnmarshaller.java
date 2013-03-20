@@ -52,6 +52,11 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFou
       public static final String PROVISIONED = "provisioned";
    }
 
+   /**
+    * Create unmarshaller.
+    * 
+    * @param autoBeanFactory
+    */
    public CloudFoundryServicesUnmarshaller(CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.autoBeanFactory = autoBeanFactory;

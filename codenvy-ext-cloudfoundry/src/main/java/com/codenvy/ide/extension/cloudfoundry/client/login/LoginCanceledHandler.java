@@ -26,5 +26,8 @@ package com.codenvy.ide.extension.cloudfoundry.client.login;
  */
 public interface LoginCanceledHandler
 {
+   /**
+    * Performs some actions when logged canceled.
+    */
    void onLoginCanceled();
 }

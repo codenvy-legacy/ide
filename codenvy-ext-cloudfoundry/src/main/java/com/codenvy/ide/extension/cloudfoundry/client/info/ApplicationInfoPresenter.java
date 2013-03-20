@@ -36,9 +36,10 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for showing application info.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: ApplicationInfoPresenter.java Jun 30, 2011 5:02:31 PM vereshchaka $
  */
 @Singleton
 public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDelegate
@@ -57,6 +58,17 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param resourceProvider
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
       Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
@@ -89,6 +101,11 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
       showApplicationInfo(resourceProvider.getActiveProject().getId());
    }
 
+   /**
+    * Shows application info.
+    * 
+    * @param projectId
+    */
    private void showApplicationInfo(final String projectId)
    {
       try

@@ -35,7 +35,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * The implementation of {@link DeleteApplicationView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -62,6 +62,12 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
 
    private ActionDelegate delegate;
 
+   /**
+    * Create view.
+    * 
+    * @param constants
+    * @param resources
+    */
    @Inject
    protected DeleteApplicationViewImpl(CloudFoundryLocalizationConstant constants, CloudFoundryResources resources)
    {
@@ -107,7 +113,6 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
    @Override
    public void setAskMessage(String message)
    {
-      // TODO set HTML
       askLabel.setText(message);
    }
 
@@ -117,7 +122,6 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
    @Override
    public void setAskDeleteServices(String text)
    {
-      // TODO set HTML
       deleteServicesField.setText(text);
    }
 

@@ -71,6 +71,9 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * The callback what execute when some application's information was changed. 
+    */
    private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>()
    {
       @Override

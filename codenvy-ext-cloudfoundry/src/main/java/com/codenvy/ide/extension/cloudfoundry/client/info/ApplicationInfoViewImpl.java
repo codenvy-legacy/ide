@@ -40,7 +40,7 @@ import com.google.inject.Singleton;
 import java.util.List;
 
 /**
- * 
+ * The implementation of {@link ApplicationInfoView}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
@@ -103,6 +103,12 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
    private ApplicationInfoView.ActionDelegate delegate;
 
+   /**
+    * Create view.
+    * 
+    * @param constants
+    * @param resources
+    */
    @Inject
    protected ApplicationInfoViewImpl(CloudFoundryLocalizationConstant constants, CloudFoundryResources resources)
    {
@@ -124,6 +130,12 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
       btnOk.setHTML(new Image(resources.okButton()) + " " + constants.okButton());
    }
 
+   /**
+    * Creates table.
+    * 
+    * @param table
+    * @param header
+    */
    private void createCellTable(CellTable<String> table, String header)
    {
       Column<String, String> column = new Column<String, String>(new TextCell())
@@ -155,72 +167,72 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
     * {@inheritDoc}
     */
    @Override
-   public void setName(String text)
+   public void setName(String name)
    {
-      name.setText(text);
+      this.name.setText(name);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setState(String text)
+   public void setState(String state)
    {
-      state.setText(text);
+      this.state.setText(state);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setInstances(String text)
+   public void setInstances(String instances)
    {
-      instances.setText(text);
+      this.instances.setText(instances);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setVersion(String text)
+   public void setVersion(String version)
    {
-      version.setText(text);
+      this.version.setText(version);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setDisk(String text)
+   public void setDisk(String disk)
    {
-      resourceDisk.setText(text);
+      this.resourceDisk.setText(disk);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setMemory(String text)
+   public void setMemory(String memory)
    {
-      memory.setText(text);
+      this.memory.setText(memory);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setStack(String text)
+   public void setStack(String stack)
    {
-      stack.setText(text);
+      this.stack.setText(stack);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setModel(String text)
+   public void setModel(String model)
    {
-      model.setText(text);
+      this.model.setText(model);
    }
 
    /**
@@ -232,6 +244,12 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
       setItemsIntoCellTable(applications, urisTable);
    }
 
+   /**
+    * Sets items into selected table.
+    * 
+    * @param items
+    * @param table
+    */
    private void setItemsIntoCellTable(List<String> items, CellTable<String> table)
    {
       table.setRowData(items);

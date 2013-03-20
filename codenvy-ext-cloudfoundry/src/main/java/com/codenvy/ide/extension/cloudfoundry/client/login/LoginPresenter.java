@@ -41,9 +41,10 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for logging on CloudFoundry.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
+ * @version $Id: May 25, 2011 3:56:55 PM anya $
  */
 @Singleton
 public class LoginPresenter implements LoginView.ActionDelegate
@@ -67,6 +68,15 @@ public class LoginPresenter implements LoginView.ActionDelegate
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    */
    @Inject
    protected LoginPresenter(LoginView view, EventBus eventBus, Console console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
@@ -83,13 +93,13 @@ public class LoginPresenter implements LoginView.ActionDelegate
     * {@inheritDoc}
     */
    @Override
-   public void doLogIn()
+   public void onLogInClicked()
    {
       doLogin();
    }
 
    /**
-    * Perform log in OpenShift.
+    * Perform log in CloudFoundry.
     */
    protected void doLogin()
    {
@@ -159,7 +169,7 @@ public class LoginPresenter implements LoginView.ActionDelegate
     * {@inheritDoc}
     */
    @Override
-   public void doCancel()
+   public void onCancelClicked()
    {
       if (loginCanceled != null)
       {
@@ -178,6 +188,9 @@ public class LoginPresenter implements LoginView.ActionDelegate
       updateComponent();
    }
 
+   /**
+    * Updates component on the view.
+    */
    private void updateComponent()
    {
       view.enableLoginButton(isFieldsFullFilled());
@@ -223,6 +236,9 @@ public class LoginPresenter implements LoginView.ActionDelegate
       view.showDialog();
    }
 
+   /**
+    * Fills fields on the view.
+    */
    private void fillViewFields()
    {
       view.enableLoginButton(false);
@@ -273,6 +289,9 @@ public class LoginPresenter implements LoginView.ActionDelegate
       }
    }
 
+   /**
+    * Gets the list of available servers for user.
+    */
    private void getServers()
    {
       try

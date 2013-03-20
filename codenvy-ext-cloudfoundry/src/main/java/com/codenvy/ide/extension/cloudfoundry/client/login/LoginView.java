@@ -22,33 +22,83 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
 
 /**
- * 
+ * The view of {@link LoginPresenter}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface LoginView extends View<LoginView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into Login view.
+    */
    public interface ActionDelegate
    {
-      public void doLogIn();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the LogIn button.
+       */
+      public void onLogInClicked();
 
-      public void doCancel();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Cancel button.
+       */
+      public void onCancelClicked();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed something.
+       */
       public void onValueChanged();
    }
 
+   /**
+    * Returns email.
+    * 
+    * @return email.
+    */
    public String getEmail();
 
+   /**
+    * Sets email.
+    * 
+    * @param email
+    */
    public void setEmail(String email);
 
+   /**
+    * Returns password.
+    * 
+    * @return password
+    */
    public String getPassword();
 
+   /**
+    * Sets password.
+    * 
+    * @param password
+    */
    public void setPassword(String password);
 
+   /**
+    * Returns server.
+    * 
+    * @return server
+    */
    public String getServer();
 
+   /**
+    * Sets server.
+    * 
+    * @param server
+    */
    public void setServer(String server);
 
+   /**
+    * Sets error message.
+    * 
+    * @param message
+    */
    public void setError(String message);
 
    /**
@@ -64,7 +114,7 @@ public interface LoginView extends View<LoginView.ActionDelegate>
    void focusInEmailField();
 
    /**
-    * Set the list of available servers.
+    * Sets the list of available servers.
     * 
     * @param servers
     */

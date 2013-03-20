@@ -51,9 +51,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * Presenter for deploying application on CloudFoundry.
+ * 
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: DeployApplicationPresenter.java Dec 2, 2011 10:17:23 AM vereshchaka $
  */
 @Singleton
 public class DeployApplicationPresenter implements DeployApplicationView.ActionDelegate, HasPaaSActions,
@@ -92,6 +93,17 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param resourcesProvider
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected DeployApplicationPresenter(DeployApplicationView view, EventBus eventBus,
       ResourceProvider resourcesProvider, Console console, CloudFoundryLocalizationConstant constant,
@@ -111,7 +123,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void onNameFieldChanged()
+   public void onNameChanged()
    {
       name = view.getName();
    }
@@ -120,7 +132,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void onUrlFieldChanged()
+   public void onUrlChanged()
    {
       url = view.getUrl();
    }
@@ -129,7 +141,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void onServerFieldChanged()
+   public void onServerChanged()
    {
       server = view.getServer();
       // if url set automatically, than try to create url using server and name
@@ -365,6 +377,9 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       }
    }
 
+   /**
+    * Validate action before build project.
+    */
    public void performValidation()
    {
       LoggedInHandler validateHandler = new LoggedInHandler()
@@ -406,6 +421,9 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       }
    }
 
+   /**
+    * Check current project is maven project. 
+    */
    private void beforeDeploy()
    {
       JsonArray<Resource> children = project.getChildren();
@@ -434,6 +452,9 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       buildApplication();
    }
 
+   /**
+    * Builds application.
+    */
    private void buildApplication()
    {
       // TODO IDEX-57

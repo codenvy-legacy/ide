@@ -31,6 +31,8 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
+ * Unmarshaller for CloudFoundry application list.
+ * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
  */
@@ -41,6 +43,8 @@ public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<Clo
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
    /**
+    * Create unmarshaller.
+    * 
     * @param apps
     * @param autoBeanFactory
     */

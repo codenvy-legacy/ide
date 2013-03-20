@@ -38,7 +38,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * 
+ * The implementation of {@link LoginView}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
@@ -80,6 +80,11 @@ public class LoginViewImpl extends DialogBox implements LoginView
    {
    }
 
+   /**
+    * Create view.
+    * 
+    * @param resources
+    */
    @Inject
    protected LoginViewImpl(CloudFoundryResources resources)
    {
@@ -239,13 +244,13 @@ public class LoginViewImpl extends DialogBox implements LoginView
    @UiHandler("btnLogIn")
    void onBtnLogInClick(ClickEvent event)
    {
-      delegate.doLogIn();
+      delegate.onLogInClicked();
    }
 
    @UiHandler("btnCancel")
    void onBtnCancelClick(ClickEvent event)
    {
-      delegate.doCancel();
+      delegate.onCancelClicked();
    }
 
    @UiHandler("email")

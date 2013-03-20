@@ -20,21 +20,34 @@ package com.codenvy.ide.extension.cloudfoundry.client.rename;
 
 import com.codenvy.ide.view.View;
 
-import com.codenvy.ide.extension.cloudfoundry.client.rename.RenameApplicationView;
-
 /**
- *
+ * The view of {@link RenameApplicationPresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface RenameApplicationView extends View<RenameApplicationView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into RenameApplication view.
+    */
    public interface ActionDelegate
    {
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having changed application name.
+       */
       public void onNameChanged();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Rename button.
+       */
       public void onRenameClicked();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Cancel button.
+       */
       public void onCancelClicked();
    }
 
@@ -48,13 +61,29 @@ public interface RenameApplicationView extends View<RenameApplicationView.Action
     * 
     * @param isEnabled
     */
-   public void enableRenameButton(boolean isEnabled);
+   public void setEnableRenameButton(boolean isEnabled);
 
+   /**
+    * Returns application name.
+    * 
+    * @return
+    */
    public String getName();
 
+   /**
+    * Sets application name.
+    * 
+    * @param name
+    */
    public void setName(String name);
 
+   /**
+    * Show dialog.
+    */
    public void showDialog();
 
+   /**
+    * Close dialog.
+    */
    public void close();
 }

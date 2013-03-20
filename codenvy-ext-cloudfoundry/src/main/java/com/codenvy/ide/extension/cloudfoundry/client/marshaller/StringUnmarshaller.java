@@ -20,20 +20,21 @@ package com.codenvy.ide.extension.cloudfoundry.client.marshaller;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
-
 import com.google.gwt.http.client.Response;
 
 
 /**
- * Created by The eXo Platform SAS.
+ * Unmarshaller for String object.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
+ */
 public class StringUnmarshaller implements Unmarshallable<StringBuilder>
 {
    protected StringBuilder builder;
 
    /**
+    * Create unmarshaller.
+    * 
     * @param callback
     */
    public StringUnmarshaller(StringBuilder builder)

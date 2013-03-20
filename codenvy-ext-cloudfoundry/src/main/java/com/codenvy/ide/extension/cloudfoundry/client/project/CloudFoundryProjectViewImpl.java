@@ -36,7 +36,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * 
+ * The implementation of {@link CloudFoundryProjectView}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
@@ -134,8 +134,14 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
 
    private boolean isDisplayed;
 
+   /**
+    * Create view.
+    * 
+    * @param resources
+    * @param constants
+    */
    @Inject
-   public CloudFoundryProjectViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constants)
+   protected CloudFoundryProjectViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constants)
    {
       Widget widget = uiBinder.createAndBindUi(this);
 
@@ -286,7 +292,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
     * {@inheritDoc}
     */
    @Override
-   public void setStartButtonEnabled(boolean enabled)
+   public void setEnabledStartButton(boolean enabled)
    {
       btnStart.setEnabled(enabled);
    }
@@ -295,7 +301,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
     * {@inheritDoc}
     */
    @Override
-   public void setStopButtonEnabled(boolean enabled)
+   public void setEnabledStopButton(boolean enabled)
    {
       btnStop.setEnabled(enabled);
    }
@@ -304,7 +310,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
     * {@inheritDoc}
     */
    @Override
-   public void setRestartButtonEnabled(boolean enabled)
+   public void setEnabledRestartButton(boolean enabled)
    {
       btnRestart.setEnabled(enabled);
    }
@@ -352,7 +358,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
     * {@inheritDoc}
     */
    @Override
-   public boolean isDisplayed()
+   public boolean isShown()
    {
       return isDisplayed;
    }
