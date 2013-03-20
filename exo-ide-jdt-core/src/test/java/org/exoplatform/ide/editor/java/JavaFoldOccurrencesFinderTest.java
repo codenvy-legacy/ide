@@ -20,7 +20,7 @@ package org.exoplatform.ide.editor.java;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.collide.client.editor.folding.FoldRange;
+import com.google.collide.client.editor.folding.DefaultFoldRange;
 import com.googlecode.gwt.test.GwtTest;
 
 import org.exoplatform.ide.editor.shared.text.Document;
@@ -45,18 +45,18 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("/**\n");
       b.append("* Ho ho\n");
       b.append("**/\n");
-      b.append("public int getI(){\n");
+      b.append(" public int getI(){\n");
       b.append("return 0;\n");
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(2, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
-      assertEquals("public int getI(){\nreturn 0;\n}", document.get(foldRange1.getOffset(), foldRange1.getLength()));
-      FoldRange foldRange2 = foldRanges.get(1);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
+      assertEquals(" public int getI(){\nreturn 0;\n}\n", document.get(foldRange1.getOffset(), foldRange1.getLength()));
+      DefaultFoldRange foldRange2 = foldRanges.get(1);
 
-      assertEquals("/**\n* Ho ho\n**/", document.get(foldRange2.getOffset(), foldRange2.getLength()));
+      assertEquals("/**\n* Ho ho\n**/\n", document.get(foldRange2.getOffset(), foldRange2.getLength()));
    }
 
    @Test
@@ -69,9 +69,9 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(1, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("public int getI(){\nif(true){\nreturn 0 sdagsaf glfdskg ;lkdfsnlgk ndsfg \n}\n}",
          document.get(foldRange1.getOffset(), foldRange1.getLength()));
    }
@@ -88,13 +88,13 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(2, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
-      assertEquals("public int getI(){\nreturn 0;\n}", document.get(foldRange1.getOffset(), foldRange1.getLength()));
-      FoldRange foldRange2 = foldRanges.get(1);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
+      assertEquals("public int getI(){\nreturn 0;\n}\n", document.get(foldRange1.getOffset(), foldRange1.getLength()));
+      DefaultFoldRange foldRange2 = foldRanges.get(1);
 
-      assertEquals("/*\n* Ho ho\n*/", document.get(foldRange2.getOffset(), foldRange2.getLength()));
+      assertEquals("/*\n* Ho ho\n*/\n", document.get(foldRange2.getOffset(), foldRange2.getLength()));
    }
 
    @Test
@@ -112,15 +112,15 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(3, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("public int getI(){\n" +
          "       /*\n"+
          "* Ho ho\n"+
          "*/\n"+
          "return 0;\n" +
-         "}", document.get(foldRange1.getOffset(), foldRange1.getLength()));
+         "}\n", document.get(foldRange1.getOffset(), foldRange1.getLength()));
    }
 
    @Test
@@ -144,13 +144,13 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
          " * License along with this software; if not, write to the Free\n" +
          " * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA\n" +
          " * 02110-1301 USA, or see the FSF site: http://www.fsf.org.\n" +
-         " */");
+         " */\n");
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(1, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("/*\n" +
          " * Copyright (C) 2013 eXo Platform SAS.\n" +
          " *\n" +
@@ -168,7 +168,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
          " * License along with this software; if not, write to the Free\n" +
          " * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA\n" +
          " * 02110-1301 USA, or see the FSF site: http://www.fsf.org.\n" +
-         " */", document.get(foldRange1.getOffset(), foldRange1.getLength()));
+         " */\n", document.get(foldRange1.getOffset(), foldRange1.getLength()));
 
    }
 
@@ -180,11 +180,11 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(1, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("public class II{\n"
-         +"}",
+         +"}\n",
          document.get(foldRange1.getOffset(), foldRange1.getLength()));
    }
 
@@ -198,11 +198,11 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(1, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("import java.util.List;\n"
-         +"import java.util.Map;",
+         +"import java.util.Map;\n",
          document.get(foldRange1.getOffset(), foldRange1.getLength()));
    }
 
@@ -215,7 +215,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(0, foldRanges.size());
    }
 
@@ -230,12 +230,12 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<FoldRange> foldRanges = finder.computePositions(document);
+      List<DefaultFoldRange> foldRanges = finder.computePositions(document);
       assertEquals(1, foldRanges.size());
-      FoldRange foldRange1 = foldRanges.get(0);
+      DefaultFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("import static org.junit.Assert.assertEquals;\n"+
          "import java.util.List;\n"
-         +"import java.util.Map;",
+         +"import java.util.Map;\n",
          document.get(foldRange1.getOffset(), foldRange1.getLength()));
    }
 

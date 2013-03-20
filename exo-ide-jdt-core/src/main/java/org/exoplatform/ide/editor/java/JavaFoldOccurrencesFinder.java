@@ -263,12 +263,78 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
 
       private List<ImportDeclaration> imports = new ArrayList<ImportDeclaration>();
 
+      private IDocument document;
+
+      private FoldFinder(IDocument document)
+      {
+         this.document = document;
+      }
+
+      /**
+       * Aligns <code>region</code> to start and end at a line offset. The region's start is
+       * decreased to the next line offset, and the end offset increased to the next line start or the
+       * end of the document. <code>null</code> is returned if <code>region</code> is
+       * <code>null</code> itself or does not comprise at least one line delimiter, as a single line
+       * cannot be folded.
+       *
+       * @param region the region to align, may be <code>null</code>
+       * @return a region equal or greater than <code>region</code> that is aligned with line
+       *         offsets, <code>null</code> if the region is too small to be foldable (e.g. covers
+       *         only one line)
+       */
+      protected final IRegion alignRegion(IRegion region)
+      {
+         if (region == null)
+         {
+            return null;
+         }
+
+         try
+         {
+
+            int start = document.getLineOfOffset(region.getOffset());
+            int end = document.getLineOfOffset(region.getOffset() + region.getLength());
+            if (start >= end)
+            {
+               return null;
+            }
+
+            int offset = document.getLineOffset(start);
+            int endOffset;
+            if (document.getNumberOfLines() > end + 1)
+            {
+               endOffset = document.getLineOffset(end + 1);
+            }
+            else
+            {
+               endOffset = document.getLineOffset(end) + document.getLineLength(end);
+            }
+
+            return new Region(offset, endOffset - offset);
+
+         }
+         catch (BadLocationException x)
+         {
+            // concurrent modification
+            return null;
+         }
+      }
+
+      private void addNode(ASTNode node, SimpleName name)
+      {
+         IRegion iRegion = alignRegion(new Region(node.getStartPosition(), node.getLength()));
+         if (iRegion != null)
+         {
+            folds.add(new JavaElementPosition(iRegion.getOffset(), iRegion.getLength(), name));
+         }
+      }
+
       @Override
       public boolean visit(EnumDeclaration node)
       {
          if (node.getParent() != unit)
          {
-            folds.add(new JavaElementPosition(node.getStartPosition(), node.getLength(), node.getName()));
+            addNode(node, node.getName());
          }
          return super.visit(node);
       }
@@ -278,12 +344,16 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
       {
          if (node.getJavadoc() != null)
          {
-            int offset = node.getJavadoc().getStartPosition() + node.getJavadoc().getLength() + 1;
-            folds.add(new JavaElementPosition(offset, node.getLength() - node.getJavadoc().getLength() - 1, node.getName()));
+            int offset = node.getJavadoc().getStartPosition() + node.getJavadoc().getLength()+1;
+            IRegion iRegion = alignRegion(new Region(offset, node.getLength() - node.getJavadoc().getLength()-1));
+            if (iRegion != null)
+            {
+               folds.add(new JavaElementPosition(iRegion.getOffset(), iRegion.getLength(), node.getName()));
+            }
          }
          else
          {
-            folds.add(new JavaElementPosition(node.getStartPosition(), node.getLength(), node.getName()));
+            addNode(node, node.getName());
          }
          return true;
       }
@@ -293,7 +363,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
       {
          if (node.getParent() != unit)
          {
-            folds.add(new JavaElementPosition(node.getStartPosition(), node.getLength(), node.getName()));
+            addNode(node, node.getName());
          }
          return super.visit(node);
       }
@@ -303,7 +373,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
       {
          if (node.getParent() != unit)
          {
-            folds.add(new JavaElementPosition(node.getStartPosition(), node.getLength(), node.getName()));
+            addNode(node, node.getName());
          }
          return super.visit(node);
       }
@@ -311,14 +381,23 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
       @Override
       public boolean visit(Javadoc node)
       {
-         folds.add(new CommentPosition(node.getStartPosition(), node.getLength() +1));
+         addComment(node);
          return false;
+      }
+
+      private void addComment(Comment node)
+      {
+         IRegion iRegion = alignRegion(new Region(node.getStartPosition(), node.getLength()));
+         if (iRegion != null)
+         {
+            folds.add(new CommentPosition(iRegion.getOffset(), iRegion.getLength()));
+         }
       }
 
       @Override
       public boolean visit(BlockComment node)
       {
-         folds.add(new CommentPosition(node.getStartPosition(), node.getLength()));
+         addComment(node);
          return false;
       }
 
@@ -357,7 +436,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
       parser.setResolveBindings(false);
       ASTNode ast = parser.createAST(null);
       unit = (CompilationUnit)ast;
-      FoldFinder finder = new FoldFinder();
+      FoldFinder finder = new FoldFinder(document);
       unit.accept(finder);
 
       unit.getCommentList();
@@ -370,55 +449,16 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
          }
       }
       List<ImportDeclaration> imports = finder.imports;
-      if(imports.size() > 1)
+      if (imports.size() > 1)
       {
          ImportDeclaration importDeclaration = imports.get(0);
 
 
          ImportDeclaration lastImport = imports.get(imports.size() - 1);
          finder.folds.add(new JavaElementPosition(importDeclaration.getStartPosition(),
-            lastImport.getStartPosition() + lastImport.getLength() - importDeclaration.getStartPosition() +1 ,
+            lastImport.getStartPosition() + lastImport.getLength() - importDeclaration.getStartPosition() + 1,
             ((QualifiedName)importDeclaration.getName()).getName()));
       }
       return finder.folds;
-   }
-
-   /**
-    * Aligns <code>region</code> to start and end at a line offset. The region's start is
-    * decreased to the next line offset, and the end offset increased to the next line start or the
-    * end of the document. <code>null</code> is returned if <code>region</code> is
-    * <code>null</code> itself or does not comprise at least one line delimiter, as a single line
-    * cannot be folded.
-    *
-    * @param region the region to align, may be <code>null</code>
-    * @return a region equal or greater than <code>region</code> that is aligned with line
-    *         offsets, <code>null</code> if the region is too small to be foldable (e.g. covers
-    *         only one line)
-    */
-   protected final IRegion alignRegion(IRegion region, IDocument document)
-   {
-      if (region == null)
-         return null;
-
-      try {
-
-         int start= document.getLineOfOffset(region.getOffset());
-         int end= document.getLineOfOffset(region.getOffset() + region.getLength());
-         if (start >= end)
-            return null;
-
-         int offset= document.getLineOffset(start);
-         int endOffset;
-         if (document.getNumberOfLines() > end + 1)
-            endOffset= document.getLineOffset(end + 1);
-         else
-            endOffset= document.getLineOffset(end) + document.getLineLength(end);
-
-         return new Region(offset, endOffset - offset);
-
-      } catch (BadLocationException x) {
-         // concurrent modification
-         return null;
-      }
    }
 }
