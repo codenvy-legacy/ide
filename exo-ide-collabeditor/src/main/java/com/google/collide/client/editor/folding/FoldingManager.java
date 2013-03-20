@@ -276,7 +276,7 @@ public class FoldingManager implements Document.TextListener
     * Modifies the given <code>foldMarker</code> if the <code>foldMarker</code>
     * is managed by this {@link FoldingManager}.
     * 
-    * @param foldMarker
+    * @param foldMarker {@link FoldMarker} to modify
     */
    private void modifyFoldMarker(FoldMarker foldMarker)
    {
