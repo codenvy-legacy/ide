@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -35,9 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.marshaller.StatusResponse;
-import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
-import org.exoplatform.ide.git.shared.GitFile;
+import org.exoplatform.ide.git.shared.Status;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ import java.util.List;
  */
 public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandler
 {
-   
+
    interface Display extends IsView
    {
       /**
@@ -130,7 +129,6 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    {
       if (makeSelectionCheck())
       {
-//         getStatus(((ItemContext)selectedItems.get(0)).getProject().getId());
          getStatus(getSelectedProject().getId());
       }
    }
@@ -145,13 +143,14 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
       try
       {
          GitClientService.getInstance().status(vfs.getId(), projectId,
-            new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), false))
+            new AsyncRequestCallback<Status>(new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status()))
             {
 
                @Override
-               protected void onSuccess(StatusResponse result)
+               protected void onSuccess(Status result)
                {
-                  if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
+
+                  if (result.isClean())
                   {
                      Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
                      return;
@@ -162,7 +161,13 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                   bindDisplay(d);
 
                   List<IndexFile> values = new ArrayList<IndexFile>();
-                  for (GitFile file : result.getChangedNotCommited())
+                  List<String> valuesTmp = new ArrayList<String>();
+
+                  valuesTmp.addAll(result.getAdded());
+                  valuesTmp.addAll(result.getChanged());
+                  valuesTmp.addAll(result.getRemoved());
+
+                  for (String file : valuesTmp)
                   {
                      values.add(new IndexFile(file, true));
                   }
@@ -200,7 +205,6 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
          }
       }
 
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = getSelectedProject().getId();
       try
       {

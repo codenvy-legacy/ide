@@ -42,7 +42,7 @@ public class GitApplication extends Application
 
       singletons = new HashSet<Object>(7);
       singletons.add(new GitExceptionMapper());
-      singletons.add(new InfoPageWriter());
+      singletons.add(new StatusPageWriter());
       singletons.add(new BranchListWriter());
       singletons.add(new TagListWriter());
       singletons.add(new RemoteListWriter());

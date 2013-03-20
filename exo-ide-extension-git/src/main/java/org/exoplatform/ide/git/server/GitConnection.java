@@ -43,7 +43,7 @@ import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
@@ -320,13 +320,11 @@ public interface GitConnection
    /**
     * Get status of working tree.
     * 
-    * @param request status request
-    * @return status. It can be serialized to stream by using method
-    *         {@link DiffPage#writeTo(java.io.OutputStream)}
+    * @param boolean shortFormat
+    * @return status.
     * @throws GitException if any error occurs
-    * @see StatusRequest
     */
-   StatusPage status(StatusRequest request) throws GitException;
+   Status status(boolean shortFormat) throws GitException;
 
    /**
     * Create new tag.
@@ -364,7 +362,7 @@ public interface GitConnection
     * @return user associated with this connection
     */
    GitUser getUser();
-   
+
    /**
     * Gel list of commiters in current repository.   
     * @return

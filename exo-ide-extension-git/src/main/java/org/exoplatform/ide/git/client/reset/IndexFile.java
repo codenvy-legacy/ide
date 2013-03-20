@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.client.reset;
 
-import org.exoplatform.ide.git.shared.GitFile;
 
 /**
  * Git file in index. Used for work with index (remove, reset).
@@ -27,20 +26,22 @@ import org.exoplatform.ide.git.shared.GitFile;
  * @version $Id: Apr 13, 2011 11:57:38 AM anya $
  *
  */
-public class IndexFile extends GitFile
+public class IndexFile
 {
    /**
     * File is indexed by Git.
     */
    private boolean indexed;
 
+   private String path;
+
    /**
     * @param file git file
     * @param indexed if <code>true</code> file is in index
     */
-   public IndexFile(GitFile file, boolean indexed)
+   public IndexFile(String path, boolean indexed)
    {
-      super(file.getPath(), file.getStatus());
+      this.path = path;
       this.indexed = indexed;
    }
 
@@ -58,5 +59,10 @@ public class IndexFile extends GitFile
    public void setIndexed(boolean indexed)
    {
       this.indexed = indexed;
+   }
+
+   public String getPath()
+   {
+      return this.path;
    }
 }

@@ -23,6 +23,7 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
@@ -40,18 +41,17 @@ import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.marshaller.StatusResponse;
-import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
-import org.exoplatform.ide.git.shared.GitFile;
+import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Handler to process actions with displaying the status of the Git work tree.
@@ -59,14 +59,15 @@ import java.util.Map;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:58:20 PM anya $
  */
-public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler, ProjectOpenedHandler, ProjectClosedHandler, FolderOpenedHandler
+public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler,
+   ProjectOpenedHandler, ProjectClosedHandler, FolderOpenedHandler
 {
    /**
     * Store the status of the working tree (changed, untracked files).
     * Status will be checked once, only when expands project item in Project Explorer.
     */
-   private StatusResponse workingTreeStatus;
-   
+   private Status workingTreeStatus;
+
    private ProjectModel openedProject;
 
    public StatusCommandHandler()
@@ -94,44 +95,24 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     * @param item
     *    item in work tree
     */
+   @SuppressWarnings("unchecked")
    private void getStatusText(ProjectModel project, Item item)
    {
       if (project == null)
       {
          return;
       }
-      String[] fileFilter = null;
-      if (item instanceof Folder)
-      {
-         // Remove last "/" from path:
-         String path =
-            item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item.getPath();
-         path = URL.decodePathSegment(path);
-         // Check selected item in workspace tree is not the root of the Git repository tree:
-         if (!(item instanceof ProjectModel))
-         {
-            // Add filter to display status for the selected folder:
-            path = (path.startsWith("/")) ? path.replaceFirst("/", "") : "";
-            fileFilter = new String[]{path};
-         }
-      }
       try
       {
-         GitClientService.getInstance().statusText(vfs.getId(), project.getId(), false, fileFilter,
-            new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), true))
+         GitClientService.getInstance().statusText(vfs.getId(), project.getId(), false,
+            new AsyncRequestCallback(new StringUnmarshaller(new StringBuilder()))
             {
-
                @Override
-               protected void onSuccess(StatusResponse result)
+               protected void onSuccess(Object result)
                {
-                  if (result.getWorkTreeStatus() == null)
-                  {
-                     return;
-                  }
-                                    
-                  String status = result.getWorkTreeStatus();
-                  status = status.replace("\n", "<br>");
-                  IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.GIT));
+                  String output = result.toString();
+                  output = output.replace("\n", "</br>").replace(" ", "&nbsp;");
+                  IDE.fireEvent(new OutputEvent(output, OutputMessage.Type.GIT));
                }
 
                @Override
@@ -176,14 +157,14 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
          addItemsTreeIcons(folder, additionalItems);
          return;
       }
-      
+
       try
       {
          GitClientService.getInstance().status(vfs.getId(), openedProject.getId(),
-            new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), false))
+            new AsyncRequestCallback<Status>(new AutoBeanUnmarshaller<Status>(GitExtension.AUTO_BEAN_FACTORY.status()))
             {
                @Override
-               protected void onSuccess(StatusResponse result)
+               protected void onSuccess(Status result)
                {
                   workingTreeStatus = result;
                   addItemsTreeIcons(folder, additionalItems);
@@ -223,37 +204,52 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
       itemsToCheck.add(folder);
       itemsToCheck.addAll(folder.getChildren().getItems());
       itemsToCheck.addAll(additionalItems);
-      
+
       for (Item item : itemsToCheck)
       {
-         if (item instanceof FolderModel && ((FolderModel)item).getChildren().getItems().isEmpty())
-         {
-            continue;
-         }
-         
          String path = URL.decodePathSegment(item.getPath());
          String pattern = path.replaceFirst(openedProject.getPath(), "");
          pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
          Map<TreeIconPosition, ImageResource> map = new HashMap<TreeIconPosition, ImageResource>();
          if (pattern.length() == 0 || "/".equals(pattern))
          {
-            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.repositoryRoot());
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemRoot());
          }
-         else if (contains(workingTreeStatus.getChangedNotCommited(), pattern))
+         else if (contains(workingTreeStatus.getAdded(), pattern))
          {
-            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNotCommited());
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemAdded());
          }
-         else if (contains(workingTreeStatus.getChangedNotUpdated(), pattern))
+         else if (contains(workingTreeStatus.getChanged(), pattern))
          {
             map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemChanged());
          }
+         else if (contains(workingTreeStatus.getConflicting(), pattern))
+         {
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemConflicting());
+         }
+         else if (contains(workingTreeStatus.getMissing(), pattern))
+         {
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemMissing());
+         }
+         else if (contains(workingTreeStatus.getRemoved(), pattern))
+         {
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemRemoved());
+         }
+         else if (contains(workingTreeStatus.getModified(), pattern))
+         {
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemModified());
+         }
          else if (contains(workingTreeStatus.getUntracked(), pattern))
          {
-            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemNew());
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemUntracked());
+         }
+         else if (contains(workingTreeStatus.getUntrackedFolders(), pattern))
+         {
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemUntracked());
          }
          else
          {
-            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository());            
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepo());
          }
          treeNodesToUpdate.put(item, map);
       }
@@ -264,16 +260,16 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     * Check whether files from Git status contain the match with pointed pattern.
     *
     * @param files
-    *    files in status
+    *    file paths in status
     * @param pattern
     *    pattern to compare
     * @return pattern matchers one of the files in the list or not
     */
-   private boolean contains(List<GitFile> files, String pattern)
+   private boolean contains(Set<String> files, String pattern)
    {
-      for (GitFile file : files)
+      for (String file : files)
       {
-         if (pattern.equals(file.getPath()))
+         if (pattern.equals(file))
          {
             return true;
          }
@@ -299,5 +295,5 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    {
       openedProject = null;
    }
-   
+
 }

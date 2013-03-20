@@ -24,7 +24,6 @@ import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.InfoPage;
 import org.exoplatform.ide.git.server.LogPage;
-import org.exoplatform.ide.git.server.StatusPage;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
@@ -52,7 +51,7 @@ import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
@@ -179,8 +178,8 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-   public GenericEntity<List<Branch>> branchList(BranchListRequest request) throws GitException, LocalPathResolveException,
-      VirtualFileSystemException
+   public GenericEntity<List<Branch>> branchList(BranchListRequest request) throws GitException,
+      LocalPathResolveException, VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
@@ -199,8 +198,8 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
-      VirtualFileSystemException
+   public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException,
+      LocalPathResolveException, VirtualFileSystemException
    {
       long start = System.currentTimeMillis();
       LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir() + "' started");
@@ -242,8 +241,7 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public InfoPage diff(DiffRequest request) throws GitException, LocalPathResolveException,
-      VirtualFileSystemException
+   public InfoPage diff(DiffRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
@@ -275,7 +273,8 @@ public class GitService
    @Path("init")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void init(final InitRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
+   public void init(final InitRequest request) throws GitException, LocalPathResolveException,
+      VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
@@ -292,8 +291,7 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-   public LogPage log(LogRequest request) throws GitException, LocalPathResolveException,
-      VirtualFileSystemException
+   public LogPage log(LogRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
@@ -409,8 +407,8 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-   public GenericEntity<List<Remote>> remoteList(RemoteListRequest request) throws GitException, LocalPathResolveException,
-      VirtualFileSystemException
+   public GenericEntity<List<Remote>> remoteList(RemoteListRequest request) throws GitException,
+      LocalPathResolveException, VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
@@ -476,15 +474,14 @@ public class GitService
 
    @Path("status")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
-   public StatusPage status(StatusRequest request) throws GitException, LocalPathResolveException,
+   public Status status(@PathParam("short") boolean shortFormat) throws GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
       {
-         return gitConnection.status(request);
+         return gitConnection.status(shortFormat);
       }
       finally
       {
@@ -554,7 +551,7 @@ public class GitService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return gitUrlResolver.resolve(uriInfo, vfs, projectId);
    }
-   
+
    @GET
    @Path("commiters")
    public Commiters getCommiters(@Context UriInfo uriInfo) throws VirtualFileSystemException, GitException

@@ -56,8 +56,6 @@ import org.exoplatform.ide.git.client.marshaller.RemoteAddRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoteListRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.RemoveRequestMarshaller;
 import org.exoplatform.ide.git.client.marshaller.ResetRequestMarshaller;
-import org.exoplatform.ide.git.client.marshaller.StatusRequestMarshaller;
-import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.pull.PullRequestHandler;
 import org.exoplatform.ide.git.client.push.PushRequestHandler;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -86,7 +84,7 @@ import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -264,16 +262,13 @@ public class GitClientServiceImpl extends GitClientService
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void statusText(String vfsId, String projectid, boolean shortFormat, String[] fileFilter,
-      AsyncRequestCallback<StatusResponse> callback) throws RequestException
+   public void statusText(String vfsId, String projectid, boolean shortFormat, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restServiceContext + STATUS;
 
-      StatusRequest statusRequest = new StatusRequest(fileFilter, shortFormat);
-      StatusRequestMarshaller marshaller = new StatusRequestMarshaller(statusRequest);
-
-      String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+      String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&short=" + shortFormat;
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN)
          .send(callback);
    }
@@ -460,17 +455,12 @@ public class GitClientServiceImpl extends GitClientService
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void status(String vfsId, String projectid, AsyncRequestCallback<StatusResponse> callback)
-      throws RequestException
+   public void status(String vfsId, String projectid, AsyncRequestCallback<Status> callback) throws RequestException
    {
       String url = restServiceContext + STATUS;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&short=false";
 
-      StatusRequest statusRequest = new StatusRequest(null, true);
-      StatusRequestMarshaller marshaller = new StatusRequestMarshaller(statusRequest);
-
-      String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(emptyLoader).data(marshaller.marshal())
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(emptyLoader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }

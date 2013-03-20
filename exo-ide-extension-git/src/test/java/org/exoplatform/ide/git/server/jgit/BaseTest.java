@@ -43,6 +43,7 @@ import java.util.List;
 public abstract class BaseTest extends junit.framework.TestCase
 {
    protected static final String CONTENT = "GIT REPOSITORY\n";
+
    private static final String DEFAULT_REPO_NAME = "repository1";
 
    protected List<File> forClean = new ArrayList<File>();
@@ -142,6 +143,10 @@ public abstract class BaseTest extends junit.framework.TestCase
    protected File addFile(File parent, String name, String content) throws IOException
    {
       File file = new File(parent, name);
+      if (!file.getParentFile().exists())
+      {
+         file.getParentFile().mkdirs();
+      }
       FileWriter writer = null;
       try
       {
