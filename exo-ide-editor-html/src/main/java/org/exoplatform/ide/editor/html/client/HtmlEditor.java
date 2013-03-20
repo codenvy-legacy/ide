@@ -20,12 +20,10 @@ package org.exoplatform.ide.editor.html.client;
 
 import com.google.collide.client.CollabEditor;
 
-import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlContentAssistProcessor;
-import org.exoplatform.ide.editor.html.client.folding.HtmlFoldOccurrencesFinder;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
@@ -57,24 +55,5 @@ public class HtmlEditor extends CollabEditor
          IDocument.DEFAULT_CONTENT_TYPE,
          new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
             new JavaScriptContentAssistProcessor()));
-
-      getEditor().getFoldingManager().setFoldFinder(new HtmlFoldOccurrencesFinder());
    }
-
-   /**
-    * @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability)
-    */
-   @Override
-   public boolean isCapable(EditorCapability capability)
-   {
-      if (capability == EditorCapability.CODE_FOLDING)
-      {
-         return true;
-      }
-      else
-      {
-         return super.isCapable(capability);
-      }
-   }
-
 }
