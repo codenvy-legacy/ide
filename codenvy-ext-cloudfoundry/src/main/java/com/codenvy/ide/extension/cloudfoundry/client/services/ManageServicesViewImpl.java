@@ -44,7 +44,7 @@ import com.google.inject.Singleton;
 import java.util.List;
 
 /**
- *
+ * The implementation of {@link ManageServicesView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -82,6 +82,12 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
 
    private CloudFoundryLocalizationConstant constant;
 
+   /**
+    * Create view.
+    * 
+    * @param resources
+    * @param constant
+    */
    @Inject
    protected ManageServicesViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant)
    {
@@ -104,6 +110,9 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
       btnDelete.setHTML(new Image(resources.deleteButton()) + " " + constant.deleteButton());
    }
 
+   /**
+    * Creates BoundServices table.
+    */
    private void createBoundServicesTable()
    {
       Column<String, String> nameColumn = new Column<String, String>(new TextCell())
@@ -141,6 +150,9 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
       boundedServices.setLoadingIndicator(null);
    }
 
+   /**
+    * Creates ProvisionedService table.
+    */
    private void createServicesTable()
    {
       Column<ProvisionedService, String> nameColumn = new Column<ProvisionedService, String>(new TextCell())
@@ -208,7 +220,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
     * {@inheritDoc}
     */
    @Override
-   public void enableDeleteButton(boolean enabled)
+   public void setEnableDeleteButton(boolean enabled)
    {
       btnDelete.setEnabled(enabled);
    }
@@ -248,7 +260,6 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
    public void close()
    {
       this.hide();
-
    }
 
    @UiHandler("btnAdd")

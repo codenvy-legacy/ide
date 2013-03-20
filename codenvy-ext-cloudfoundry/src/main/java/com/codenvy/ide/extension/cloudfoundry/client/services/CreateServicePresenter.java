@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
-import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
-
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -28,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
@@ -44,9 +43,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.LinkedHashMap;
 
 /**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * Presenter for creating new service.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Jul 16, 2012 12:31:33 PM anya $
  */
 @Singleton
 public class CreateServicePresenter implements CreateServiceView.ActionDelegate
@@ -65,6 +65,9 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -74,6 +77,16 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate
       }
    };
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, Console console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
@@ -145,7 +158,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate
    }
 
    /**
-    * 
+    * Shows dialog.
     */
    public void showDialog(AsyncCallback<ProvisionedService> callback)
    {

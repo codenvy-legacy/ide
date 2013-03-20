@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.url;
 
-import com.codenvy.ide.json.JsonCollections;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -31,6 +29,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
@@ -41,9 +40,10 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter for unmaping (unregistering) URLs from application.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: UnmapUrlPresenter.java Jul 19, 2011 2:31:19 PM vereshchaka $
  */
 @Singleton
 public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
@@ -72,6 +72,17 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param resourceProvider
+    * @param eventBus
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus,
       Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
@@ -146,7 +157,9 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
    }
 
    /**
-    * Show dialog
+    * Shows dialog.
+    * 
+    * @param callback
     */
    public void showDialog(AsyncCallback<String> callback)
    {
@@ -154,6 +167,9 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       getAppRegisteredUrls();
    }
 
+   /**
+    * Gets registered urls.
+    */
    private void getAppRegisteredUrls()
    {
       String projectId = resourceProvider.getActiveProject().getId();
@@ -206,6 +222,11 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       }
    };
 
+   /**
+    * Maps url.
+    * 
+    * @param url
+    */
    private void mapUrl(final String url)
    {
       String projectId = resourceProvider.getActiveProject().getId();
@@ -246,6 +267,11 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       }
    }
 
+   /**
+    * Checking really need to unregister url before unregistre.
+    * 
+    * @param url
+    */
    private void askForUnmapUrl(final String url)
    {
       if (Window.confirm(constant.unmapUrlConfirmationDialogMessage()))
@@ -255,7 +281,10 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       }
    }
 
-   LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler()
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler()
    {
       @Override
       public void onLoggedIn()
@@ -264,6 +293,11 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       }
    };
 
+   /**
+    * Unregisters url.
+    * 
+    * @param url
+    */
    private void unregisterUrl(final String url)
    {
       String projectId = resourceProvider.getActiveProject().getId();

@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
-import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
-
 import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -28,6 +26,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.CloudFoundryServicesUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
@@ -44,9 +43,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import java.util.Arrays;
 
 /**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * Presenter for managing CloudFondry services.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Jul 13, 2012 10:53:33 AM anya $
  */
 @Singleton
 public class ManageServicesPresenter implements ManageServicesView.ActionDelegate
@@ -70,6 +70,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
    private CreateServicePresenter createServicePresenter;
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler deleteServiceLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -79,6 +82,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
    };
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler bindServiceLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -88,6 +94,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
    };
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler unBindServiceLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -97,6 +106,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
    };
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler getApplicationInfoLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -116,6 +128,17 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param console
+    * @param createServicePresenter
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, Console console,
       CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant,
@@ -295,6 +318,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
    }
 
+   /**
+    * Get the application's information.
+    */
    private void getApplicationInfo()
    {
       AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
@@ -340,7 +366,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
                protected void onSuccess(CloudFoundryServices result)
                {
                   view.setProvisionedServices(Arrays.asList(result.getProvisioned()));
-                  view.enableDeleteButton(false);
+                  view.setEnableDeleteButton(false);
                }
 
                @Override
@@ -357,11 +383,16 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
    }
 
+   /**
+    * Shows dialog.
+    * 
+    * @param application application where will manage services
+    */
    public void showDialog(CloudFoundryApplication application)
    {
       this.application = application;
 
-      view.enableDeleteButton(false);
+      view.setEnableDeleteButton(false);
       getApplicationInfo();
 
       view.showDialog();
@@ -378,8 +409,11 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       updateControls();
    }
 
+   /**
+    * Updates graphic components on the view.
+    */
    private void updateControls()
    {
-      view.enableDeleteButton(selectedService != null);
+      view.setEnableDeleteButton(selectedService != null);
    }
 }

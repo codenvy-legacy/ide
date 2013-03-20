@@ -70,6 +70,16 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * Create presenter.
+    * 
+    * @param eventBus
+    * @param resourceProvider
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
@@ -83,7 +93,10 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
       this.loginPresenter = loginPresenter;
    }
 
-   LoggedInHandler loggedInHandler = new LoggedInHandler()
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler loggedInHandler = new LoggedInHandler()
    {
       @Override
       public void onLoggedIn()
@@ -93,13 +106,16 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
    };
 
    /**
-    *
+    * Updates CloudFoundry application.
     */
    public void updateApp()
    {
       validateData();
    }
 
+   /**
+    * Updates application.
+    */
    private void updateApplication()
    {
       final String projectId = resourceProvider.getActiveProject().getId();
@@ -165,6 +181,9 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
       }
    }
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler validateHandler = new LoggedInHandler()
    {
       @Override
@@ -174,6 +193,9 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
       }
    };
 
+   /**
+    * Validate action before building project.
+    */
    private void validateData()
    {
       final String projectId = resourceProvider.getActiveProject().getId();
@@ -221,8 +243,13 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
       updateApplication();
    }
 
+   /**
+    * Builds application.
+    */
    private void buildApplication()
    {
+      // TODO IDEX-57
+      // Replace EventBus Events with direct method calls and DI
       projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildProjectEvent());
    }

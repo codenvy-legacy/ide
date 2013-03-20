@@ -41,7 +41,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- *
+ * The implementation of {@link CreateServiceView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
@@ -77,6 +77,12 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
 
    private ActionDelegate delegate;
 
+   /**
+    * Create view.
+    * 
+    * @param resources
+    * @param constant
+    */
    @Inject
    protected CreateServiceViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant)
    {

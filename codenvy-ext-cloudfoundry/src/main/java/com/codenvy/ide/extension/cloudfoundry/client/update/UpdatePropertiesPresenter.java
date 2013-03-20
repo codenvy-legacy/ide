@@ -39,9 +39,10 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
+ * Presenter updating memory and number of instances of application.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: MapUnmapUrlPresenter.java Jul 18, 2011 9:22:02 AM vereshchaka $
  */
 @Singleton
 public class UpdatePropertiesPresenter
@@ -64,6 +65,16 @@ public class UpdatePropertiesPresenter
 
    private LoginPresenter loginPresenter;
 
+   /**
+    * Create presenter.
+    * 
+    * @param eventBus
+    * @param resourceProvider
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    * @param loginPresenter
+    */
    @Inject
    protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
@@ -77,6 +88,11 @@ public class UpdatePropertiesPresenter
       this.loginPresenter = loginPresenter;
    }
 
+   /**
+    * Shows dialog for updating application's memory.
+    * 
+    * @param callback
+    */
    public void showUpdateMemoryDialog(AsyncCallback<String> callback)
    {
       this.updatePropertiesCallback = callback;
@@ -95,6 +111,9 @@ public class UpdatePropertiesPresenter
       }
    };
 
+   /**
+    * Gets old memory value.
+    */
    private void getOldMemoryValue()
    {
       String projectId = resourceProvider.getActiveProject().getId();
@@ -126,6 +145,11 @@ public class UpdatePropertiesPresenter
       }
    }
 
+   /**
+    * Shows dialog for changing memory.
+    * 
+    * @param oldMemoryValue
+    */
    private void askForNewMemoryValue(int oldMemoryValue)
    {
       String value = Window.prompt(constant.updateMemoryInvalidNumberMessage(), String.valueOf(oldMemoryValue));
@@ -158,6 +182,11 @@ public class UpdatePropertiesPresenter
       }
    };
 
+   /**
+    * Updates memory.
+    * 
+    * @param memory
+    */
    private void updateMemory(final int memory)
    {
       final String projectId = resourceProvider.getActiveProject().getId();
@@ -186,7 +215,9 @@ public class UpdatePropertiesPresenter
    }
 
    /**
-    *
+    * Shows dialog for updating application's instances.
+    * 
+    * @param callback
     */
    public void showUpdateInstancesDialog(AsyncCallback<String> callback)
    {
@@ -206,6 +237,9 @@ public class UpdatePropertiesPresenter
       }
    };
 
+   /**
+    * Gets old instances value.
+    */
    private void getOldInstancesValue()
    {
       String projectId = resourceProvider.getActiveProject().getId();
@@ -238,6 +272,11 @@ public class UpdatePropertiesPresenter
       }
    }
 
+   /**
+    * Shows dialog for changing instances.
+    * 
+    * @param oldInstancesValue
+    */
    private void askForInstancesNumber(int oldInstancesValue)
    {
       String value = Window.prompt(constant.updateInstancesDialogMessage(), String.valueOf(oldInstancesValue));
@@ -259,6 +298,9 @@ public class UpdatePropertiesPresenter
       }
    }
 
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
    private LoggedInHandler updateInstancesLoggedInHandler = new LoggedInHandler()
    {
       @Override

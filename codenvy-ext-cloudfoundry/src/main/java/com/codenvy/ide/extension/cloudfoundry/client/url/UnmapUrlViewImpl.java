@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * The implementation of {@link UnmapUrlView}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
@@ -74,6 +74,13 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
 
    private CloudFoundryLocalizationConstant constant;
 
+   /**
+    * Create view.
+    * 
+    * @param constatns
+    * @param resources
+    * @param constant
+    */
    @Inject
    protected UnmapUrlViewImpl(CloudFoundryLocalizationConstant constatns, CloudFoundryResources resources,
       CloudFoundryLocalizationConstant constant)
@@ -91,6 +98,9 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
       btnClose.setHTML(new Image(resources.cancelButton()) + " " + constatns.closeButton());
    }
 
+   /**
+    * Creates urls table.
+    */
    private void createUrlsTable()
    {
       Column<String, String> buttonColumn = new Column<String, String>(new ButtonCell())

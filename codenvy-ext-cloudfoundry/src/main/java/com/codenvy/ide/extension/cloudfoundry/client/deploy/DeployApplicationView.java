@@ -96,7 +96,7 @@ public interface DeployApplicationView extends View<DeployApplicationView.Action
    public void setServer(String server);
 
    /**
-    * Set the list of servers to ServerSelectField.
+    * Set the list of servers.
     * 
     * @param servers
     */

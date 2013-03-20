@@ -22,32 +22,80 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
 
 /**
- * 
+ * The view of {@link UnmapUrlPresenter}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into UnmapUrl view.
+    */
    public interface ActionDelegate
    {
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Close button.
+       */
       public void onCloseClicked();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Map url button.
+       */
       public void onMapUrlClicked();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Unmap url button.
+       * 
+       * @param url url what needs to unmap
+       */
       public void onUnMapUrlClicked(String url);
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Create button.
+       */
       public void onMapUrlChanged();
    }
 
+   /**
+    * Returns map url.
+    * 
+    * @return map url
+    */
    public String getMapUrl();
 
+   /**
+    * Sets map url.
+    * 
+    * @param url
+    */
    public void setMapUrl(String url);
 
+   /**
+    * Sets registered urls.
+    * 
+    * @param urls
+    */
    public void setRegisteredUrls(JsonArray<String> urls);
 
+   /**
+    * Sets whether Map url button is enabled.
+    * 
+    * @param enable <code>true</code> to enable the button, <code>false</code>
+    * to disable it
+    */
    public void setEnableMapUrlButton(boolean enable);
 
+   /**
+    * Show dialog.
+    */
    public void showDialog();
 
+   /**
+    * Close dialog.
+    */
    public void close();
 }

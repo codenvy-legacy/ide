@@ -20,33 +20,68 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.view.View;
 
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceView;
-
 import java.util.LinkedHashMap;
 
 /**
- *
+ * The view of {@link CreateServicePresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 public interface CreateServiceView extends View<CreateServiceView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into CreateService view.
+    */
    public interface ActionDelegate
    {
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Create button.
+       */
       public void onCreateClicked();
 
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Cancel button.
+       */
       public void onCancelClicked();
    }
 
+   /**
+    * Returns selected system's service.
+    * 
+    * @return system's service.
+    */
    public String getSystemServices();
 
-   public void setServices(LinkedHashMap<String, String> values);
+   /**
+    * Sets available services.
+    * 
+    * @param services available services
+    */
+   public void setServices(LinkedHashMap<String, String> services);
 
+   /**
+    * Returns service's name.
+    * 
+    * @return service's name
+    */
    public String getName();
 
+   /**
+    * Sets service's name.
+    * 
+    * @param name
+    */
    public void setName(String name);
 
+   /**
+    * Show dialog.
+    */
    public void showDialog();
 
+   /**
+    * Close dialog.
+    */
    public void close();
 }
