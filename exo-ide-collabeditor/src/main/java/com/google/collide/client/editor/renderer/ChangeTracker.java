@@ -344,9 +344,7 @@ class ChangeTracker
     listenerRemovers.add(selection.getSelectionListenerRegistrar().add(this));
     listenerRemovers.add(buffer.getSpacerListenerRegistrar().add(this));
     listenerRemovers.add(buffer.getSpacerListenerRegistrar().add(this));
-    if (foldingManager != null) {
-      listenerRemovers.add(foldingManager.getFoldingListenerRegistrar().add(this));
-    }
+    listenerRemovers.add(foldingManager.getFoldingListenerRegistrar().add(this));
   }
 
   private void clearChangeState() {

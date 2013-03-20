@@ -826,6 +826,9 @@ public class Buffer extends UiComponent<Buffer.View>
   public int convertYToLineNumber(int y, boolean inDocumentRange) {
     int lineNumber = coordinateMap.convertYToLineNumber(y);
     lineNumber = visibleLine2ModelLine(lineNumber);
+    if (lineNumber == -1) {
+      lineNumber = document.getLastLineNumber();
+    }
     return inDocumentRange ? LineUtils.getValidLineNumber(lineNumber, document) : lineNumber;
   }
 
@@ -1185,10 +1188,10 @@ public class Buffer extends UiComponent<Buffer.View>
   }
 
   /**
-   * Returns the master document's line that corresponds to the given line of the
-   * projection document or <code>-1</code> if there is no such line.
+   * Returns the projection document line that corresponds to the given line of the
+   * master document or <code>-1</code> if there is no such line.
    *
-   * @param masterLineNumber number of the master document's line
+   * @param masterLineNumber number of the master document line
    * @return the corresponding projection document's line or <code>-1</code>
    */
   public int modelLine2VisibleLine(int masterLineNumber) {
@@ -1205,8 +1208,8 @@ public class Buffer extends UiComponent<Buffer.View>
   }
 
   /**
-   * Returns the projection document's line that corresponds to the given line of the
-   * master document or <code>-1</code> if there is no such line.
+   * Returns the master document line that corresponds to the given line of the
+   * projection document or <code>-1</code> if there is no such line.
    *
    * @param visibleLine visible line
    * @return the corresponding model line or <code>-1</code>
@@ -1224,17 +1227,17 @@ public class Buffer extends UiComponent<Buffer.View>
   }
 
   /**
-   * Returns the line of the widget whose corresponding line in the viewer's document
-   * is closest to the given line in the viewer's document or <code>-1</code>.
+   * Returns the line of the projection document whose corresponding line in the master document
+   * is closest to the given line in the master document or <code>-1</code>.
    *
-   * @param modelLine the line in the viewer's document
-   * @return the line in the widget that corresponds best to the given line in the viewer's document or <code>-1</code>
+   * @param masterLineNumber the line in the master document
+   * @return the line in the projection document that corresponds best to the given line in the master document or <code>-1</code>
    */
-  protected int getClosestWidgetLineForModelLine(int modelLine) {
+  protected int getClosestWidgetLineForModelLine(int masterLineNumber) {
      if (!isFoldingModeEnabled())
-       return modelLine;
+       return masterLineNumber;
      try {
-       return foldingManager.getInformationMapping().toClosestImageLine(modelLine);
+       return foldingManager.getInformationMapping().toClosestImageLine(masterLineNumber);
      } catch (BadLocationException x) {
        // nothing to do
      }
