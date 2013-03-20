@@ -154,6 +154,7 @@ public class FoldMarkRenderer
          FoldMarker foldMarker = foldingManager.findFoldMarker(i, false);
          if (foldMarker == null)
          {
+            garbageCollectLines(i, i);
             continue;
          }
          if (!foldMarker.isCollapsed())
@@ -161,6 +162,7 @@ public class FoldMarkRenderer
             foldMarker = foldingManager.findFoldMarker(i, true);
             if (foldMarker == null)
             {
+               garbageCollectLines(i, i);
                continue;
             }
          }
