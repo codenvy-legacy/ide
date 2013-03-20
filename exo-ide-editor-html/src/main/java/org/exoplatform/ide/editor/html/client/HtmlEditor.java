@@ -25,7 +25,7 @@ import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleter;
 import org.exoplatform.ide.editor.html.client.contentassist.HtmlContentAssistProcessor;
-import org.exoplatform.ide.editor.html.client.folding.HtmlFoldFinder;
+import org.exoplatform.ide.editor.html.client.folding.HtmlFoldOccurrencesFinder;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
@@ -58,7 +58,7 @@ public class HtmlEditor extends CollabEditor
          new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
             new JavaScriptContentAssistProcessor()));
 
-      getEditor().getFoldingManager().setFoldFinder(new HtmlFoldFinder());
+      getEditor().getFoldingManager().setFoldFinder(new HtmlFoldOccurrencesFinder());
    }
 
    /**

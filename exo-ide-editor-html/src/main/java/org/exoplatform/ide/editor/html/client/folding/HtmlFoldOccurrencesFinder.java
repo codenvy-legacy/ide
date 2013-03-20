@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.editor.html.client.folding;
 
+import com.google.collide.client.editor.folding.DefaultFoldRange;
 import com.google.collide.client.editor.folding.FoldOccurrencesFinder;
-import com.google.collide.client.editor.folding.FoldRange;
 
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
@@ -28,29 +28,27 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: HtmlFoldFinder.java Mar 19, 2013 1:34:14 AM azatsarynnyy $
+ * @version $Id: HtmlFoldOccurrencesFinder.java Mar 19, 2013 1:34:14 AM azatsarynnyy $
  *
  */
-public class HtmlFoldFinder implements FoldOccurrencesFinder
+public class HtmlFoldOccurrencesFinder implements FoldOccurrencesFinder
 {
 
    /**
     * @see com.google.collide.client.editor.folding.FoldOccurrencesFinder#computePositions(org.exoplatform.ide.editor.shared.text.IDocument)
     */
    @Override
-   public List<FoldRange> computePositions(IDocument Document)
+   public List<DefaultFoldRange> computePositions(IDocument Document)
    {
 //    XmlReconcilingStrategy xmlReconcilingStrategy = new XmlReconcilingStrategy();
 //    xmlReconcilingStrategy.setDocument(iDoc);
 //    xmlReconcilingStrategy.initialReconcile();
 //    return xmlReconcilingStrategy.getfPositions();
 
-      List<FoldRange> positions = new ArrayList<FoldRange>();
-
-      // TODO parse document content & fill position list
-      positions.add(new FoldRange(0, 310)); // html
-      positions.add(new FoldRange(7, 274)); // head
-      positions.add(new FoldRange(281, 21)); // body
+      List<DefaultFoldRange> positions = new ArrayList<DefaultFoldRange>();
+      positions.add(new DefaultFoldRange(0, 310)); // html
+      positions.add(new DefaultFoldRange(7, 274)); // head
+      positions.add(new DefaultFoldRange(281, 21)); // body
       return positions;
    }
 

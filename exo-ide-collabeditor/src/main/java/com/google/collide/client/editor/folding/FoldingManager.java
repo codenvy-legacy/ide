@@ -26,6 +26,7 @@ import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
+import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.util.JsonCollections;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IDocumentInformationMapping;
 import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.editor.shared.text.ISlaveDocumentManager;
+import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 import org.exoplatform.ide.editor.shared.text.projection.ProjectionDocument;
 import org.exoplatform.ide.editor.shared.text.projection.ProjectionDocumentManager;
 
@@ -55,7 +57,7 @@ import java.util.Map.Entry;
  * @version $Id: FoldingManager.java Mar 2, 2013 6:39:46 PM azatsarynnyy $
  *
  */
-public class FoldingManager
+public class FoldingManager implements Document.TextListener
 {
    /**
     * A listener that is called when the user collapse or expand text block.
@@ -111,7 +113,7 @@ public class FoldingManager
     */
    private final Buffer buffer;
 
-   private Map<FoldMarker, FoldRange> markerToPositionMap = new HashMap<FoldMarker, FoldRange>();
+   private Map<FoldMarker, DefaultFoldRange> markerToPositionMap = new HashMap<FoldMarker, DefaultFoldRange>();
 
    private Document document;
 
@@ -191,12 +193,31 @@ public class FoldingManager
    }
 
    /**
+    * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, com.google.collide.json.shared.JsonArray)
+    */
+   @Override
+   public void onTextChange(Document document, JsonArray<TextChange> textChanges)
+   {
+      // TODO For testing purposes
+      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument));
+   }
+
+   /**
     * @param newDocument new {@link Document}
     */
    public void handleDocumentChanged(final Document newDocument)
    {
+      // TODO For testing purposes
+      if (document != null)
+      {
+         document.getTextListenerRegistrar().remove(this);
+      }
+
       document = newDocument;
       anchorManager = document.getAnchorManager();
+
+      // TODO For testing purposes
+      document.getTextListenerRegistrar().add(this);
 
       if (foldOccurrencesFinder == null)
       {
@@ -262,7 +283,7 @@ public class FoldingManager
    {
       try
       {
-         FoldRange position = markerToPositionMap.get(foldMarker);
+         IProjectionPosition position = markerToPositionMap.get(foldMarker);
          IRegion[] regions = position.computeProjectionRegions(masterDocument);
          for (int i = 0; i < regions.length; i++)
          {
@@ -321,11 +342,11 @@ public class FoldingManager
             anchorsInCollapsedRangeToShift, linesToCollapse.indexOf(line) == 0);
       }
 
-//      if (true)
-//      {
-//         anchorManager.handleTextDeletionLastLineLeftover(anchorsLeftoverFromLastLine, linesToCollapse.get(0),
-//            linesToCollapse.peek(), lastLineFirstUntouchedColumn);
-//      }
+      //      if (true)
+      //      {
+      //         anchorManager.handleTextDeletionLastLineLeftover(anchorsLeftoverFromLastLine, linesToCollapse.get(0),
+      //            linesToCollapse.peek(), lastLineFirstUntouchedColumn);
+      //      }
 
       anchorManager.handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
          anchorsLeftoverFromLastLine, linesToCollapse.get(0), lineNumber, 0, 0, linesToCollapse.peek().getText()
@@ -342,7 +363,7 @@ public class FoldingManager
       }
 
       // TODO manage anchors
-//      anchorManager.handleMultilineTextInsertion(line, lineNumber, column, newLine, newLineNumber, secondChunkColumnInNewLine);
+      //      anchorManager.handleMultilineTextInsertion(line, lineNumber, column, newLine, newLineNumber, secondChunkColumnInNewLine);
 
       dispatchExpand(lineNumber, linesToExpand);
    }
@@ -405,10 +426,10 @@ public class FoldingManager
       FoldMarker previousFoldMarker = null;
       int previousDistance = Integer.MAX_VALUE;
 
-      for (Entry<FoldMarker, FoldRange> entry : markerToPositionMap.entrySet())
+      for (Entry<FoldMarker, DefaultFoldRange> entry : markerToPositionMap.entrySet())
       {
          FoldMarker foldMarker = entry.getKey();
-         FoldRange position = entry.getValue();
+         DefaultFoldRange position = entry.getValue();
          if (position == null)
          {
             continue;
@@ -442,7 +463,7 @@ public class FoldingManager
     * @param line the line
     * @return <code>-1</code> if line is not contained, a position number otherwise
     */
-   private int getDistance(FoldMarker annotation, FoldRange position, IDocument document, int line)
+   private int getDistance(FoldMarker annotation, DefaultFoldRange position, IDocument document, int line)
    {
       if (position.getOffset() > -1 && position.getLength() > -1)
       {
@@ -474,24 +495,34 @@ public class FoldingManager
     * 
     * @param positions list of the positions that describes the folding structure
     */
-   private void updateFoldingStructure(List<FoldRange> positions)
+   private void updateFoldingStructure(List<DefaultFoldRange> positions)
    {
-      try
+      markerToPositionMap.clear();
+//      cleanupFoldMarkers();
+      for (DefaultFoldRange position : positions)
       {
-         for (FoldRange position : positions)
-         {
-            markerToPositionMap.put(new FoldMarker(resources), position);
-            masterDocument.addPosition(position);
-         }
+         markerToPositionMap.put(new FoldMarker(resources), position);
       }
-      catch (BadLocationException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-
       dispatchStateChaged();
    }
+
+   //   /**
+   //    * Removes all {@link FoldMarker}s from the manager
+   //    * whose associated positions have been deleted.
+   //    */
+   //   private void cleanupFoldMarkers()
+   //   {
+   //      Iterator<Entry<FoldMarker, DefaultFoldRange>> iterator = markerToPositionMap.entrySet().iterator();
+   //      while (iterator.hasNext())
+   //      {
+   //         Entry<FoldMarker, DefaultFoldRange> entry = iterator.next();
+   //         DefaultFoldRange foldRange = entry.getValue();
+   //         if (foldRange == null || foldRange.isDeleted())
+   //         {
+   //            iterator.remove();
+   //         }
+   //      }
+   //   }
 
    /**
     * Initializes the projection document from the master document based on
@@ -563,4 +594,5 @@ public class FoldingManager
    {
       this.foldOccurrencesFinder = foldOccurrencesFinder;
    }
+
 }
