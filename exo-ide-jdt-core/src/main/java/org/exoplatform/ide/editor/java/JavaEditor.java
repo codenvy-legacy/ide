@@ -59,12 +59,10 @@ public class JavaEditor extends CollabEditor
          {
             if (newDocument != null)
             {
-               final Gutter gutter =
-                  editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
-                     .workspaceEditorCss().leftGutterBase());
-               breakPointManager =
-                  new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(),
-                     JavaClientBundle.INSTANCE);
+               final Gutter gutter = editor.createGutter(false, Position.LEFT,
+                  CollabEditorExtension.get().getContext().getResources().workspaceEditorCss().leftGutterBase());
+               breakPointManager = new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(),
+                  JavaClientBundle.INSTANCE);
                breakPointManager.render();
             }
          }
