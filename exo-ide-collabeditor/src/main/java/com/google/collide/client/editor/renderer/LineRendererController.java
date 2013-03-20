@@ -151,7 +151,6 @@ class LineRendererController {
 
       indexInLine += chunkSize;
     }
-
     targetElement.appendChild(contentElement);
 
     if (line.getText().endsWith("\n")) {
@@ -182,7 +181,6 @@ class LineRendererController {
       }
     }
 
-    // TODO replace it to something more smarter
     final FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
     if (foldMarker != null)
     {
@@ -197,7 +195,7 @@ class LineRendererController {
        }
        else
        {
-          Element expandElement = renderFoldSignIfNeed(contentElement);
+          Element expandElement = renderFoldMarkAtTheEndOfLine(contentElement);
           line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
 
 //          expandElement.addEventListener(Event.CLICK, new EventListener() {
@@ -208,23 +206,15 @@ class LineRendererController {
 //         }, false);
        }
     }
-
-//    if (foldPoint != null/* && point.isCollapsed()*/)
-//       renderFoldSignIfNeed(contentElement);
-
-    targetElement.appendChild(contentElement);
-
   }
 
-  // TODO review and rewrite this method
-  Element renderFoldSignIfNeed(Element targetElement) {
+  Element renderFoldMarkAtTheEndOfLine(Element targetElement) {
      SpanElement element = Elements.createSpanElement();
      // TODO: file a Chrome bug, place link here
      element.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);
 //     setTextContentSafely(element, "...");
 //     applyStyles(element);
 
-     // TODO move it to CSS-bundle
      element.getStyle().setBorderStyle("solid");
      element.getStyle().setBorderColor("gray");
      element.getStyle().setBorderWidth("1px");

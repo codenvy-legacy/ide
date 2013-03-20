@@ -1971,6 +1971,24 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapseAll()
+    */
+   @Override
+   public void collapseAll()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expandAll()
+    */
+   @Override
+   public void expandAll()
+   {
+      throw new UnsupportedOperationException();
+   }
+
    private native void executeCommand(String command)
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;

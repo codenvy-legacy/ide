@@ -67,6 +67,8 @@ public class FoldMarkRenderer
       int topLineNumber = viewport.getTopLineNumber();
       int bottomLineNumber = viewport.getBottomLineNumber();
 
+      fillOrUpdateLines(topLineNumber, bottomLineNumber);
+
 //      if (previousBottomLineNumber == -1 || topLineNumber > previousBottomLineNumber
 //         || bottomLineNumber < previousTopLineNumber)
 //      {
@@ -75,8 +77,6 @@ public class FoldMarkRenderer
 //         {
 //            garbageCollectLines(previousTopLineNumber, previousBottomLineNumber);
 //         }
-//
-         fillOrUpdateLines(topLineNumber, bottomLineNumber);
 //
 //      }
 //      else

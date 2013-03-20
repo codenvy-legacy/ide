@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEven
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
+ * Control for expanding text block.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: FoldingExpandControl.java Feb 28, 2013 5:00:20 PM azatsarynnyy $
@@ -45,9 +46,9 @@ public class FoldingExpandControl extends SimpleControl implements IDEControl, E
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.deleteCurrentLine(), IDEImageBundle.INSTANCE.deleteCurrentLineDisabled());
+      setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
       setEvent(new EditorFoldingExpandEvent());
-      setHotKey("Ctrl+Shift+Numpad +");
+      setHotKey("Ctrl+Numpad +");
    }
 
    /**

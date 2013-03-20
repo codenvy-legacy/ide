@@ -28,27 +28,27 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseEv
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
- * Control for collapsing text block.
+ * Control for collapsing all expanded text blocks.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: FoldingCollapseControl.java Feb 28, 2013 5:00:20 PM azatsarynnyy $
+ * @version $Id: FoldingCollapseAllControl.java Feb 28, 2013 5:00:20 PM azatsarynnyy $
  *
  */
-public class FoldingCollapseControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class FoldingCollapseAllControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Edit/Folding/Collapse";
+   public static final String ID = "Edit/Folding/CollapseAll";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.foldingCollapseControlTitle();
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.foldingCollapseAllControlTitle();
 
-   public FoldingCollapseControl()
+   public FoldingCollapseAllControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
-      setEvent(new EditorFoldingCollapseEvent());
-      setHotKey("Ctrl+Numpad -");
+      setEvent(new EditorFoldingCollapseEvent(true));
+      setHotKey("Ctrl+Shift+Numpad -");
    }
 
    /**

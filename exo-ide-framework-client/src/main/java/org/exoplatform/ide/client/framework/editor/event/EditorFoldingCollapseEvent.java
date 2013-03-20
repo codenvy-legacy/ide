@@ -28,6 +28,18 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class EditorFoldingCollapseEvent extends GwtEvent<EditorFoldingCollapseHandler>
 {
+   private boolean collapseAll;
+
+   public EditorFoldingCollapseEvent()
+   {
+      super();
+   }
+
+   public EditorFoldingCollapseEvent(boolean collapseAll)
+   {
+      super();
+      this.collapseAll = collapseAll;
+   }
 
    public static final GwtEvent.Type<EditorFoldingCollapseHandler> TYPE =
       new GwtEvent.Type<EditorFoldingCollapseHandler>();
@@ -48,6 +60,11 @@ public class EditorFoldingCollapseEvent extends GwtEvent<EditorFoldingCollapseHa
    public com.google.gwt.event.shared.GwtEvent.Type<EditorFoldingCollapseHandler> getAssociatedType()
    {
       return TYPE;
+   }
+
+   public boolean isCollapseAll()
+   {
+      return collapseAll;
    }
 
 }

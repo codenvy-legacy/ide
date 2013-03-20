@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -98,8 +95,11 @@ import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -397,7 +397,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       View view = editorViewList.get(activeFile.getId());
       if (view != null)
       {
-         view.activate();         
+         view.activate();
       }
    }
 
@@ -429,8 +429,8 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       {
          Editor[] editors = IDE.getInstance().getFileTypeRegistry().getEditors(file.getMimeType());
          EditorView editorView = new EditorView(file, isReadOnly(file), editors, 0);
-         if(!MimeType.APPLICATION_JAVA.equals(file.getMimeType()))
-           ignoreContentChangedList.add(file.getId());
+         if (!MimeType.APPLICATION_JAVA.equals(file.getMimeType()))
+            ignoreContentChangedList.add(file.getId());
          openedFiles.put(file.getId(), file);
          editorViewList.put(file.getId(), editorView);
          waitForEditorInitialized = true;
@@ -572,48 +572,48 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       activeEditorView.getEditor().setCursorPosition(event.getLineNumber(), event.getColumnNumber());
    }
 
-//   /**
-//    * @see org.exoplatform.ide.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ide.client.editor.event.EditorFindTextEvent)
-//    */
-//   public void onEditorFindText(EditorFindTextEvent event)
-//   {
-//      boolean isFound =
-//         getEditorFromView(event.getFileId()).findAndSelect(event.getFindText(), event.isCaseSensitive());
-//      IDE.fireEvent(new EditorTextFoundEvent(isFound));
-//   }
+   //   /**
+   //    * @see org.exoplatform.ide.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ide.client.editor.event.EditorFindTextEvent)
+   //    */
+   //   public void onEditorFindText(EditorFindTextEvent event)
+   //   {
+   //      boolean isFound =
+   //         getEditorFromView(event.getFileId()).findAndSelect(event.getFindText(), event.isCaseSensitive());
+   //      IDE.fireEvent(new EditorTextFoundEvent(isFound));
+   //   }
 
-//   /**
-//    * @see org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent)
-//    */
-//   public void onEditorReplaceText(EditorReplaceTextEvent event)
-//   {
-//      Editor editor = getEditorFromView(event.getFileId());
-//      if (event.isReplaceAll())
-//      {
-//         while (editor.findAndSelect(event.getFindText(), event.isCaseSensitive()))
-//         {
-//            editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-//         }
-//         // display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(),
-//         // event.getPath());
-//      }
-//      else
-//      {
-//         editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-//         // display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
-//      }
-//   }
+   //   /**
+   //    * @see org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent)
+   //    */
+   //   public void onEditorReplaceText(EditorReplaceTextEvent event)
+   //   {
+   //      Editor editor = getEditorFromView(event.getFileId());
+   //      if (event.isReplaceAll())
+   //      {
+   //         while (editor.findAndSelect(event.getFindText(), event.isCaseSensitive()))
+   //         {
+   //            editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
+   //         }
+   //         // display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(),
+   //         // event.getPath());
+   //      }
+   //      else
+   //      {
+   //         editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
+   //         // display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
+   //      }
+   //   }
 
-//   /**
-//    * @see org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler#onEditorReplaceAndFindText(org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent)
-//    */
-//   public void onEditorReplaceAndFindText(EditorReplaceAndFindTextEvent event)
-//   {
-//      Editor editor = getEditorFromView(event.getFileId());
-//      editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-//      boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
-//      IDE.fireEvent(new EditorTextFoundEvent(isFound));
-//   }
+   //   /**
+   //    * @see org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler#onEditorReplaceAndFindText(org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent)
+   //    */
+   //   public void onEditorReplaceAndFindText(EditorReplaceAndFindTextEvent event)
+   //   {
+   //      Editor editor = getEditorFromView(event.getFileId());
+   //      editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
+   //      boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
+   //      IDE.fireEvent(new EditorTextFoundEvent(isFound));
+   //   }
 
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ide.client.editor.event.EditorSetFocusEvent)
@@ -896,7 +896,14 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    @Override
    public void onEditorCollapse(EditorFoldingCollapseEvent event)
    {
-      getEditorFromView(activeFile.getId()).collapse();
+      if (event.isCollapseAll())
+      {
+         getEditorFromView(activeFile.getId()).collapseAll();
+      }
+      else
+      {
+         getEditorFromView(activeFile.getId()).collapse();
+      }
    }
 
    /**
@@ -905,7 +912,14 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    @Override
    public void onEditorExpand(EditorFoldingExpandEvent event)
    {
-      getEditorFromView(activeFile.getId()).expand();
+      if (event.isExpandAll())
+      {
+         getEditorFromView(activeFile.getId()).expandAll();
+      }
+      else
+      {
+         getEditorFromView(activeFile.getId()).expand();
+      }
    }
 
 }

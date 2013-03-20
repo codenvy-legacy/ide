@@ -28,6 +28,18 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class EditorFoldingExpandEvent extends GwtEvent<EditorFoldingExpandHandler>
 {
+   private boolean expandAll;
+
+   public EditorFoldingExpandEvent()
+   {
+      super();
+   }
+
+   public EditorFoldingExpandEvent(boolean expandAll)
+   {
+      super();
+      this.expandAll = expandAll;
+   }
 
    public static final GwtEvent.Type<EditorFoldingExpandHandler> TYPE = new GwtEvent.Type<EditorFoldingExpandHandler>();
 
@@ -47,6 +59,11 @@ public class EditorFoldingExpandEvent extends GwtEvent<EditorFoldingExpandHandle
    public com.google.gwt.event.shared.GwtEvent.Type<EditorFoldingExpandHandler> getAssociatedType()
    {
       return TYPE;
+   }
+
+   public boolean isExpandAll()
+   {
+      return expandAll;
    }
 
 }

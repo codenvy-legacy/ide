@@ -427,7 +427,6 @@ public class ViewportRenderer {
       int createOffset) {
     int top = buffer.calculateLineTop(lineNumber);
     Element element = getLineElement(line);
-
     boolean isCreatingElement = element == null;
     if (isCreatingElement) {
       element = Elements.createDivElement();
@@ -454,7 +453,7 @@ public class ViewportRenderer {
              Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
              if (expandElement == null)
              {
-                expandElement = lineRendererController.renderFoldSignIfNeed(element);
+                expandElement = lineRendererController.renderFoldMarkAtTheEndOfLine(element);
                 line.putTag(LINE_TAG_EXPAND_ELEMENT, expandElement);
 
 //                expandElement.addEventListener(Event.CLICK, new EventListener() {

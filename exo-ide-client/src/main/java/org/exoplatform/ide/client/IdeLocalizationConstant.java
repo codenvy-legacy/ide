@@ -304,6 +304,12 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.folding.expand.title")
    String foldingExpandControlTitle();
 
+   @Key("control.folding.collapseAll.title")
+   String foldingCollapseAllControlTitle();
+
+   @Key("control.folding.expandAll.title")
+   String foldingExpandAllControlTitle();
+
    /*
     * DOWNLOAD CONTROL
     */
@@ -450,7 +456,6 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.projectExplorer.prompt")
    String projectExplorerControlPrompt();
-
 
    @Key("control.restServicesDiscovery")
    String restServicesDiscoveryControl();

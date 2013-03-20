@@ -18,6 +18,18 @@
  */
 package org.exoplatform.ide.editor.ckeditor;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Label;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.editor.client.api.Editor;
@@ -38,18 +50,6 @@ import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback;
 import org.exoplatform.ide.editor.shared.text.Document;
 import org.exoplatform.ide.editor.shared.text.IDocument;
-
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * Created by The eXo Platform SAS .
@@ -772,6 +772,24 @@ public class CKEditor extends AbsolutePanel implements Editor
     */
    @Override
    public void expand()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapseAll()
+    */
+   @Override
+   public void collapseAll()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expandAll()
+    */
+   @Override
+   public void expandAll()
    {
       throw new UnsupportedOperationException();
    }

@@ -153,12 +153,39 @@ public class FoldingManager implements Document.TextListener
       this.gutter = gutter;
       this.buffer = buffer;
       this.resources = resources;
-
       foldingListenerManager = ListenerManager.create();
-      if (gutter != null)
+      initializeGutter();
+   }
+
+   private void initializeGutter()
+   {
+      if (gutter == null)
       {
-         gutter.setWidth(11);
+         return;
       }
+
+      gutter.setWidth(11);
+      gutter.getClickListenerRegistrar().add(new ClickListener()
+      {
+         @Override
+         public void onClick(int y)
+         {
+            final int lineNumber = buffer.convertYToLineNumber(y, true);
+            FoldMarker foldMarker = findFoldMarker(lineNumber, false);
+            if (foldMarker != null)
+            {
+               if (!foldMarker.isCollapsed())
+               {
+                  foldMarker = findFoldMarker(lineNumber, true);
+                  if (foldMarker == null)
+                  {
+                     return;
+                  }
+               }
+               toggleExpansionState(foldMarker);
+            }
+         }
+      });
    }
 
    public ListenerRegistrar<FoldingListener> getFoldingListenerRegistrar()
@@ -176,6 +203,34 @@ public class FoldingManager implements Document.TextListener
       if (foldMarker.isCollapsed())
       {
          toggleExpansionState(foldMarker);
+      }
+   }
+
+   /**
+    * Collapse all expanded fold markers.
+    */
+   public void collapseAll()
+   {
+      for (FoldMarker marker : markerToPositionMap.keySet())
+      {
+         if (!marker.isCollapsed())
+         {
+            toggleExpansionState(marker);
+         }
+      }
+   }
+
+   /**
+    * Expand all collapsed fold markers.
+    */
+   public void expandAll()
+   {
+      for (FoldMarker marker : markerToPositionMap.keySet())
+      {
+         if (marker.isCollapsed())
+         {
+            toggleExpansionState(marker);
+         }
       }
    }
 
@@ -206,51 +261,24 @@ public class FoldingManager implements Document.TextListener
     */
    public void handleDocumentChanged(final Document newDocument)
    {
-      // TODO For testing purposes
-      if (document != null)
-      {
-         document.getTextListenerRegistrar().remove(this);
-      }
-
-      document = newDocument;
-      anchorManager = document.getAnchorManager();
-
-      // TODO For testing purposes
-      document.getTextListenerRegistrar().add(this);
-
       if (foldOccurrencesFinder == null)
       {
          return;
       }
+      markerToPositionMap.clear();
+      if (document != null)
+      {
+         document.getTextListenerRegistrar().remove(this);
+      }
+      document = newDocument;
+      anchorManager = document.getAnchorManager();
+      document.getTextListenerRegistrar().add(this);
 
       freeSlaveDocument(slaveDocument);
       masterDocument = document.<IDocument> getTag("IDocument");
       initializeProjection(masterDocument);
 
       updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument));
-
-      gutter.getClickListenerRegistrar().add(new ClickListener()
-      {
-
-         @Override
-         public void onClick(int y)
-         {
-            int lineNumber = buffer.convertYToLineNumber(y, true);
-
-            FoldMarker foldMarker = findFoldMarker(lineNumber, false);
-            if (foldMarker != null)
-            {
-               if (!foldMarker.isCollapsed())
-               {
-                  foldMarker = findFoldMarker(lineNumber, true);
-                  if (foldMarker == null)
-                     return;
-               }
-
-               toggleExpansionState(foldMarker);
-            }
-         }
-      });
    }
 
    /**

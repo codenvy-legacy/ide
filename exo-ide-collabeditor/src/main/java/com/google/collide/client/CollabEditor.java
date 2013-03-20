@@ -586,73 +586,14 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void collapse()
    {
       SelectionModel selectionModel = editor.getSelection();
-      int cursorLineNumber = selectionModel.getCursorLineNumber();
+      final int cursorLineNumber = selectionModel.getCursorLineNumber();
       FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
       if (foldMarker != null)
       {
          editor.getFoldingManager().collapse(foldMarker);
       }
-
-      //      try
-      //      {
-      //         // TODO move this code to folding manager
-      //
-      //         SelectionModel selectionModel = editor.getSelection();
-      //         Line beginLine, endLine;
-      //         int beginLineNumber = 0;
-      //         int selectionOrder =
-      //            LineUtils.comparePositions(selectionModel.getBaseLineNumber(), 0, selectionModel.getCursorLineNumber(), 0);
-      //         if (selectionOrder < 0)
-      //         {
-      //            beginLine = selectionModel.getBaseLine();
-      //            endLine = selectionModel.getCursorLine();
-      //            beginLineNumber = selectionModel.getBaseLineNumber();
-      //
-      //            textOffset = document.getLineOffset(beginLineNumber);
-      //            textLength = LineUtils.getTextCount(beginLine, 0, endLine, endLine.getText().length() - 1);
-      //         }
-      //         else if (selectionOrder > 0)
-      //         {
-      //            beginLine = selectionModel.getCursorLine();
-      //            endLine = selectionModel.getBaseLine();
-      //            beginLineNumber = selectionModel.getCursorLineNumber();
-      //
-      //            textOffset = document.getLineOffset(beginLineNumber);
-      //            textLength = LineUtils.getTextCount(beginLine, 0, endLine, endLine.getText().length() - 1);
-      //         }
-      //         else
-      //         {
-      //            beginLine = selectionModel.getCursorLine();
-      //            endLine = beginLine;
-      //            beginLineNumber = selectionModel.getCursorLineNumber();
-      //
-      //            textOffset = document.getLineOffset(beginLineNumber);
-      //            textLength = beginLine.getText().length();
-      //         }
-      //
-      //         slaveDocument.removeMasterDocumentRange(textOffset, textLength);
-      //
-      //         // collapse on ProjectionDocumentEvent
-      //
-      //         foldingLines = JsonCollections.createArray();
-      //         foldingLines.add(beginLine);
-      //         Line nextLine = beginLine;
-      //         while (nextLine != endLine)
-      //         {
-      //            nextLine = nextLine.getNextLine();
-      //            foldingLines.add(nextLine);
-      //         }
-      //
-      //         foldingLineNumber = beginLineNumber;
-      //         editor.getFoldingManager().collapse(foldingLineNumber, foldingLines);
-      //      }
-      //      catch (BadLocationException e)
-      //      {
-      //         // TODO Auto-generated catch block
-      //         e.printStackTrace();
-      //      }
    }
-
+   
    /**
     * @see org.exoplatform.ide.editor.client.api.Editor#expand()
     */
@@ -660,28 +601,30 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void expand()
    {
       SelectionModel selectionModel = editor.getSelection();
-      int cursorLineNumber = selectionModel.getCursorLineNumber();
+      final int cursorLineNumber = selectionModel.getCursorLineNumber();
       FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
       if (foldMarker != null)
       {
          editor.getFoldingManager().expand(foldMarker);
       }
+   }
 
-      //      try
-      //      {
-      //         // TODO move this code to folding manager
-      //
-      //         slaveDocument.addMasterDocumentRange(textOffset, textLength);
-      //
-      //         // expand on ProjectionDocumentEvent
-      //
-      //         editor.getFoldingManager().expand(foldingLineNumber, foldingLines);
-      //      }
-      //      catch (BadLocationException e)
-      //      {
-      //         // TODO Auto-generated catch block
-      //         e.printStackTrace();
-      //      }
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapseAll()
+    */
+   @Override
+   public void collapseAll()
+   {
+      editor.getFoldingManager().collapseAll();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expandAll()
+    */
+   @Override
+   public void expandAll()
+   {
+      editor.getFoldingManager().expandAll();
    }
 
    /**
