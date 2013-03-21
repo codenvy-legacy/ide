@@ -146,6 +146,7 @@ public class LoginPresenter implements LoginView.ActionDelegate
                      }
                      // otherwise will be called method from superclass.
                   }
+                  view.setError("");
                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
