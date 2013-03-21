@@ -85,48 +85,16 @@
                         <value>
                            <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
                               <field name="name">
-                                 <string>administrators</string>
+                                 <string>developer</string>
                               </field>
                               <field name="parentId">
                                  <string>/ide</string>
                               </field>
                               <field name="description">
-                                 <string>the /ide/administrators group</string>
+                                 <string>the /ide/developer group</string>
                               </field>
                               <field name="label">
-                                 <string>Administrators</string>
-                              </field>
-                           </object>
-                        </value>
-                        <value>
-                           <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
-                              <field name="name">
-                                 <string>users</string>
-                              </field>
-                              <field name="parentId">
-                                 <string>/ide</string>
-                              </field>
-                              <field name="description">
-                                 <string>the /ide/users group</string>
-                              </field>
-                              <field name="label">
-                                 <string>Users</string>
-                              </field>
-                           </object>
-                        </value>
-                        <value>
-                           <object type="org.exoplatform.services.organization.OrganizationConfig$Group">
-                              <field name="name">
-                                 <string>developers</string>
-                              </field>
-                              <field name="parentId">
-                                 <string>/ide</string>
-                              </field>
-                              <field name="description">
-                                 <string>the /ide/developers group</string>
-                              </field>
-                              <field name="label">
-                                 <string>Developers</string>
+                                 <string>Developer</string>
                               </field>
                            </object>
                         </value>
@@ -153,7 +121,7 @@
                                  <string>root@localhost</string>
                               </field>
                               <field name="groups">
-                                 <string>member:/ide/administrators,member:/ide/developers,member:/ide/users</string>
+                                 <string>member:/ide/developer</string>
                               </field>
                            </object>
                         </value>
@@ -175,7 +143,7 @@
                                  <string>john@localhost</string>
                               </field>
                               <field name="groups">
-                                 <string>member:/ide/developers,member:/ide/users</string>
+                                 <string>member:/ide/developer</string>
                               </field>
                            </object>
                         </value>
@@ -197,7 +165,7 @@
                                  <string>john@localhost</string>
                               </field>
                               <field name="groups">
-                                 <string>member:/ide/developers,member:/ide/users</string>
+                                 <string>member:/ide/developer</string>
                               </field>
                            </object>
                         </value>
