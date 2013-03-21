@@ -41,7 +41,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * 
  */
 
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class DeployNodeTypeControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ViewVisibilityChangedHandler
 {

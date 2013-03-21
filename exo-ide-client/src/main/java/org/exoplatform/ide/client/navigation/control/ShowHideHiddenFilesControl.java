@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @version $Id: ShowHiddenFilesControl.java Mar 30, 2012 11:50:01 AM azatsarynnyy $
  *
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowHideHiddenFilesControl extends SimpleControl implements IDEControl, ShowHideHiddenFilesHandler,
    ProjectOpenedHandler, ProjectClosedHandler
 {

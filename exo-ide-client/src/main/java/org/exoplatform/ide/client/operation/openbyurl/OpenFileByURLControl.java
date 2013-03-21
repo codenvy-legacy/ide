@@ -48,7 +48,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $
  */
 
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class OpenFileByURLControl extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
    ViewVisibilityChangedHandler
 {

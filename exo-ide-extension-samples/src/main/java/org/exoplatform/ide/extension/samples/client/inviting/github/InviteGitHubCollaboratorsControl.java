@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  *
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class InviteGitHubCollaboratorsControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
    ProjectClosedHandler, FolderRefreshedHandler
 {

@@ -45,7 +45,7 @@ import java.util.List;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class OpenFileByPathControl extends SimpleControl implements IDEControl, VfsChangedHandler,
    ItemsSelectedHandler, ViewVisibilityChangedHandler
 {

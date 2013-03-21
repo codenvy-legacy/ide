@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class SelectWorkspaceControl extends SimpleControl implements IDEControl, IsDiscoverableResultReceivedHandler
 {
 

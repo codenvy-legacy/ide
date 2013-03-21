@@ -45,7 +45,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CutItemsCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
    ViewActivatedHandler
 {
