@@ -14,8 +14,8 @@
 
 package com.google.collide.client.editor.renderer;
 
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.Resources;
-
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
@@ -24,26 +24,25 @@ import com.google.collide.client.editor.folding.FoldMarker;
 import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.renderer.Renderer.LineLifecycleListener;
 import com.google.collide.client.testing.DebugAttributeSetter;
-import com.codenvy.ide.client.util.Elements;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
+import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
-import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.util.LineUtils;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.Timer;
-
 import elemental.css.CSSStyleDeclaration;
+import elemental.events.Event;
+import elemental.events.EventListener;
 import elemental.html.Element;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import java.util.EnumSet;
-import java.util.TreeSet;
 
 /*
  * TODO: I need to do another pass at the rendering paths after
@@ -469,12 +468,12 @@ public class ViewportRenderer {
                 expandElement = lineRendererController.renderFoldMarkAtTheEndOfLine(element);
                 line.putTag(LINE_TAG_EXPAND_ELEMENT, expandElement);
 
-//                expandElement.addEventListener(Event.CLICK, new EventListener() {
-//                   @Override
-//                   public void handleEvent(Event evt) {
-//                     foldingManager.expand(foldPoint);
-//                   }
-//               }, false);
+                expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
+                   @Override
+                   public void handleEvent(Event evt) {
+                     foldingManager.expand(foldMarker);
+                   }
+               }, false);
              }
           }
        }

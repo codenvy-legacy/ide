@@ -14,30 +14,28 @@
 
 package com.google.collide.client.editor.renderer;
 
-import com.google.gwt.dom.client.Style.Unit;
-
-import elemental.dom.Node;
-
-import com.google.gwt.user.client.ui.Image;
-
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.Resources;
-
 import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.folding.FoldMarker;
 import com.google.collide.client.editor.folding.FoldingManager;
-import com.codenvy.ide.client.util.Elements;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Line;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.SortedList;
-import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.Image;
 import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Node;
+import elemental.events.Event;
+import elemental.events.EventListener;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.StringUtils;
 
 /**
  * A class to maintain the list of {@link LineRenderer LineRenderers} and render
@@ -199,12 +197,12 @@ class LineRendererController {
           Element expandElement = renderFoldMarkAtTheEndOfLine(contentElement);
           line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
 
-//          expandElement.addEventListener(Event.CLICK, new EventListener() {
-//             @Override
-//             public void handleEvent(Event evt) {
-//               foldingManager.expand(foldPoint);
-//             }
-//         }, false);
+          expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
+             @Override
+             public void handleEvent(Event evt) {
+               foldingManager.expand(foldMarker);
+             }
+         }, false);
        }
     }
   }
@@ -220,7 +218,7 @@ class LineRendererController {
      element.getStyle().setBorderColor("gray");
      element.getStyle().setBorderWidth("1px");
      element.getStyle().setProperty("border-radius", "3px");
-//     element.getStyle().setCursor("pointer");
+     element.getStyle().setCursor("pointer");
      element.getStyle().setHeight("9px");
      element.getStyle().setWidth("18px");
      element.getStyle().setProperty("vertical-align", "middle");
