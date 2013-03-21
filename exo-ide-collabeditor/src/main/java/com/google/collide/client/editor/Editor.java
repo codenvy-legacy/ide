@@ -358,6 +358,7 @@ public class Editor extends UiComponent<Editor.View> {
     if (isFoldingModeEnabled) {
       Gutter foldingGutter = createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutterBase());
       foldingManager = new FoldingManager(foldingGutter, buffer, appContext.getResources());
+      foldingManager.getFoldingListenerRegistrar().add(leftGutterNotificationManager);
     }
     else {
       foldingManager = new FoldingManager();

@@ -18,13 +18,12 @@
  */
 package com.google.collide.client.editor.gutter;
 
-import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
-
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.DocumentListener;
+import com.google.collide.client.editor.folding.FoldingManager.FoldingListener;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.collide.client.ui.menu.PositionController.HorizontalAlign;
 import com.google.collide.client.ui.menu.PositionController.Position;
@@ -32,6 +31,7 @@ import com.google.collide.client.ui.menu.PositionController.Positioner;
 import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.tooltip.Tooltip;
+import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.JsIntegerMap;
 import com.google.collide.dto.CodeError;
@@ -39,8 +39,11 @@ import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls.CodeErrorImpl;
 import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
 import com.google.collide.json.client.JsoArray;
+import com.google.collide.json.shared.JsonArray;
+import com.google.collide.json.shared.JsonIntegerMap.IterationCallback;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -55,6 +58,7 @@ import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -62,7 +66,7 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class NotificationManager implements DocumentListener
+public class NotificationManager implements DocumentListener, FoldingListener
 {
    /**
     * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -179,7 +183,9 @@ public class NotificationManager implements DocumentListener
    {
       int lineNumber = problem.getLineNumber() - 1;
       if (!markers.hasKey(lineNumber))
+      {
          markers.put(lineNumber, JsoArray.<Marker> create());
+      }
       markers.get(lineNumber).add(problem);
       StringBuilder message = new StringBuilder();
       JsoArray<Marker> problemList = markers.get(lineNumber);
@@ -311,9 +317,9 @@ public class NotificationManager implements DocumentListener
          double line = keys.get(i);
          markers.erase((int)line);
       }
-      errorListener.onErrorsChanged(JsoArray.<CodeError>create());
+      errorListener.onErrorsChanged(JsoArray.<CodeError> create());
       markers = JsIntegerMap.<JsoArray<Marker>> create();
-      errorListener.onErrorsChanged(JsoArray.<CodeError>create());
+      errorListener.onErrorsChanged(JsoArray.<CodeError> create());
       elements.clear();
       errors = 0;
       warnings = 0;
@@ -525,5 +531,59 @@ public class NotificationManager implements DocumentListener
    public void setErrorListener(ErrorListener errorListener)
    {
       this.errorListener = errorListener;
+   }
+
+   /**
+    * @see com.google.collide.client.editor.folding.FoldingManager.FoldingListener#onCollapse(int, com.google.collide.json.shared.JsonArray)
+    */
+   @Override
+   public void onCollapse(int lineNumber, JsonArray<Line> linesToCollapse)
+   {
+      redraw();
+   }
+
+   /**
+    * @see com.google.collide.client.editor.folding.FoldingManager.FoldingListener#onExpand(int, com.google.collide.json.shared.JsonArray)
+    */
+   @Override
+   public void onExpand(int lineNumber, JsonArray<Line> linesToExpand)
+   {
+      redraw();
+   }
+
+   /**
+    * @see com.google.collide.client.editor.folding.FoldingManager.FoldingListener#onFoldMarksStateChaged()
+    */
+   @Override
+   public void onFoldMarksStateChaged()
+   {
+   }
+
+   private void redraw()
+   {
+      final JsIntegerMap<JsoArray<Marker>> existMarkers = JsIntegerMap.<JsoArray<Marker>> create();
+      markers.iterate(new IterationCallback<JsoArray<Marker>>()
+      {
+         @Override
+         public void onIteration(int key, JsoArray<Marker> val)
+         {
+            existMarkers.put(key, val);
+         }
+      });
+
+      clear();
+
+      existMarkers.iterate(new IterationCallback<JsoArray<Marker>>()
+      {
+         @Override
+         public void onIteration(int key, JsoArray<Marker> val)
+         {
+            Iterator<Marker> iterator = val.asIterable().iterator();
+            while (iterator.hasNext())
+            {
+               addProblem(iterator.next());
+            }
+         }
+      });
    }
 }
