@@ -26,38 +26,23 @@ import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
-import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -86,7 +71,7 @@ public class IDEConfigurationService
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
    @RolesAllowed("users")
-   public Map<String, Object> inializationParameters(@Context UriInfo uriInfo)
+   public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request)
    {
       
       try
@@ -97,8 +82,9 @@ public class IDEConfigurationService
          if (curentState != null)
          {
             Identity identity = curentState.getIdentity();
-            IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
-            if (LOG.isDebugEnabled())
+            IdeUser user = new IdeUser(identity.getUserId(), identity.getRoles(), request.getSession().getId());
+
+
                LOG.info("Getting user identity: " + identity.getUserId());
             result.put("user", user);
             final Map<String, Object> userSettings = getUserSettings();

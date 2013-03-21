@@ -82,6 +82,11 @@
          <artifactId>codenvy-organization-api</artifactId>
          <version>${com.codenvy.organization.version}</version>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>codenvy-ide-collaboration</artifactId>
+         <version>${project.version}</version>
+       </dependency>
          <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
@@ -793,6 +798,8 @@
 
       <module>exo-ide-editor-api</module>
       <module>exo-ide-collabeditor</module>
+      
+      <module>codenvy-ide-collaboration</module>
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-javascript</module>
