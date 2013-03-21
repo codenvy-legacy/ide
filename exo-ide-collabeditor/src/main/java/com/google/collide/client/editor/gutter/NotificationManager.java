@@ -149,7 +149,6 @@ public class NotificationManager implements DocumentListener
    private ErrorListener errorListener;
 
    /**
-    * @param buffer
     * @param gutter
     * @param overviewGutter 
     */
@@ -185,6 +184,7 @@ public class NotificationManager implements DocumentListener
       NotificationMark m = new NotificationMark(message.toString(), res, leftPositioner, new HtmlTooltipRenderer());
       m.setTopPosition(buffer.calculateLineTop(lineNumber), "px");
       m.setStyleName(getStyleForLine(problemList, hasError));
+      m.getElement().setAttribute("data-line-number", String.valueOf(lineNumber));
       elements.add(m.getElement());
       leftGutter.addUnmanagedElement(m.getElement());
 
