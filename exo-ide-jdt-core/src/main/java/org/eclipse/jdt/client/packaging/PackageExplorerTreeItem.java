@@ -26,13 +26,23 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TreeItem;
 
 import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.packaging.model.next.Package;
+import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.ui.IconImageBundle;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -43,9 +53,13 @@ public class PackageExplorerTreeItem extends TreeItem
 {
 
    private static final String PREFIX_ID = "ide.package_explorer.item.";
+   
+   private Map<String, String> locktokens;
 
-   public PackageExplorerTreeItem(Item item)
+   public PackageExplorerTreeItem(Item item, Map<String, String> locktokens)
    {
+      this.locktokens = locktokens;
+      
       setUserObject(item);
       render();
    }
@@ -58,24 +72,24 @@ public class PackageExplorerTreeItem extends TreeItem
       {
          org.exoplatform.ide.vfs.shared.Project project = (org.exoplatform.ide.vfs.shared.Project)item;
          ImageResource imageResource = ProjectResolver.getImageForProject(project.getProjectType());
-         createWidget(imageResource, project.getName(), item);
+         createWidget(imageResource, getTitle(project), item);
       }
       else if (item instanceof org.eclipse.jdt.client.packaging.model.next.SourceDirectory)
       {
          org.eclipse.jdt.client.packaging.model.next.SourceDirectory sourceDirectory = (org.eclipse.jdt.client.packaging.model.next.SourceDirectory)item;
          ImageResource icon = JdtClientBundle.INSTANCE.resourceDirectory();
-         createWidget(icon, sourceDirectory.getSourceDirectoryName(), item);
+         createWidget(icon, getTitle(sourceDirectory), item);
       }
       else if (item instanceof org.eclipse.jdt.client.packaging.model.next.Package)
       {
          org.eclipse.jdt.client.packaging.model.next.Package _package = (org.eclipse.jdt.client.packaging.model.next.Package)item;
          if (_package.getFiles().isEmpty())
          {
-            createWidget(JdtClientBundle.INSTANCE.packageEmptyFolder(), _package.getPackageName(), item);
+            createWidget(JdtClientBundle.INSTANCE.packageEmptyFolder(), getTitle(_package), item);
          }
          else
          {
-            createWidget(JdtClientBundle.INSTANCE.packageFolder(), _package.getPackageName(), item);
+            createWidget(JdtClientBundle.INSTANCE.packageFolder(), getTitle(_package), item);
             if (!getState())
             {
                removeItems();
@@ -87,13 +101,17 @@ public class PackageExplorerTreeItem extends TreeItem
       {
          FolderModel folder = (FolderModel)item;
          ImageResource icon = ImageUtil.getIcon(folder.getMimeType());
-         createWidget(icon, folder.getName(), folder);
+         createWidget(icon, getTitle(item), folder);
       }
       else if (item instanceof FileModel)
       {
          FileModel file = (FileModel)item;
          ImageResource icon = ImageUtil.getIcon(file.getMimeType());
-         createWidget(icon, file.getName(), file);
+         if (icon == IconImageBundle.INSTANCE.defaultFile())
+         {
+            IDE.fireEvent(new OutputEvent("Can not find icon for " + file.getPath() + ".  Mime type is " + file.getMimeType(), Type.ERROR));
+         }
+         createWidget(icon, getTitle(item), file);
       }
    }
 
@@ -156,6 +174,49 @@ public class PackageExplorerTreeItem extends TreeItem
       }
       
       return null;
-   }   
+   }
+   
+   private String getTitle(Item item)
+   {
+      String itemName = null;
+      
+      if (item instanceof org.exoplatform.ide.vfs.shared.Project)
+      {
+         itemName = ((Project)item).getName();
+      }
+      else if (item instanceof org.eclipse.jdt.client.packaging.model.next.SourceDirectory)
+      {
+         itemName = ((SourceDirectory)item).getSourceDirectoryName();
+      }
+      else if (item instanceof org.eclipse.jdt.client.packaging.model.next.Package)
+      {
+         itemName = ((Package)item).getPackageName();
+      }
+      else
+      {
+         itemName = item.getName();
+      }
+      
+      if (itemName == null)
+      {
+         itemName = "/";
+      }
+      
+      if (locktokens == null)
+      {
+         return itemName;
+      }
+
+      if (item instanceof FileModel && ((FileModel)item).isLocked())
+      {
+         if (!locktokens.containsKey(item.getId()))
+         {
+            return "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-11px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
+                  + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;" + itemName;
+         }
+      }
+      
+      return itemName;
+   }
    
 }

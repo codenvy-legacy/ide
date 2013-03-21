@@ -35,6 +35,11 @@
 			<artifactId>exo-ide-editor-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-collabeditor</artifactId>
+         <scope>provided</scope>
+      </dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
@@ -47,7 +52,10 @@
 			<artifactId>exo-ide-vfs</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+		<dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>codenvy-ide-collaboration</artifactId>
+		</dependency>
 		<dependency>
 		  <groupId>org.exoplatform.ide</groupId>
 		  <artifactId>exo-ide-jdt-core</artifactId>

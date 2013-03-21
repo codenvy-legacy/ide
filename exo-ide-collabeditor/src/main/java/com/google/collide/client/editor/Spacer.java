@@ -14,11 +14,11 @@
 
 package com.google.collide.client.editor;
 
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
-import com.google.collide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.SortedList;
 
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;

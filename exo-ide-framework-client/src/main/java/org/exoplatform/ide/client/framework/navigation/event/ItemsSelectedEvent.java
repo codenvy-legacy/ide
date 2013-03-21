@@ -48,6 +48,13 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
       this.view = view;
    }
 
+   public ItemsSelectedEvent(Item item, View view)
+   {
+      selectedItems = new ArrayList<Item>();
+      selectedItems.add(item);
+      this.view = view;
+   }
+
    @Override
    protected void dispatch(ItemsSelectedHandler handler)
    {

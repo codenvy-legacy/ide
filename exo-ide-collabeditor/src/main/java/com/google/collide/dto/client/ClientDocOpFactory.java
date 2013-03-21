@@ -28,7 +28,8 @@ import com.google.collide.dto.client.DtoClientImpls.InsertImpl;
 import com.google.collide.dto.client.DtoClientImpls.RetainImpl;
 import com.google.collide.dto.client.DtoClientImpls.RetainLineImpl;
 import com.google.collide.dto.shared.DocOpFactory;
-import com.google.collide.json.client.JsoArray;
+
+import org.exoplatform.ide.json.client.JsoArray;
 
 // TODO: These should be moved to an Editor2-specific package
 /**

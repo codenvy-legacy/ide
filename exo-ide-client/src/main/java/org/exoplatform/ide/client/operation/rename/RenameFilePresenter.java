@@ -18,42 +18,11 @@
  */
 package org.exoplatform.ide.client.operation.rename;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.client.refactoring.rename.RefactoringRenameEvent;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.module.FileType;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.Language;
-import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.shared.Item;
-
+import com.codenvy.ide.collaboration.ResourceLockedPresenter;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.collaboration.CollaborationManager;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -65,7 +34,36 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.eclipse.jdt.client.refactoring.rename.RefactoringRenameEvent;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.module.FileType;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.Language;
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.operation.ItemsOperationPresenter;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Presenter for renaming file and changing mime-type of file.
@@ -74,8 +72,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * @version @version $Id: $
  */
 
-public class RenameFilePresenter implements RenameItemHander, ApplicationSettingsReceivedHandler, ItemsSelectedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
+public class RenameFilePresenter extends ItemsOperationPresenter
+   implements RenameItemHander, ItemsSelectedHandler, ViewClosedHandler
 {
 
    /**
@@ -120,19 +118,12 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
    private List<Item> selectedItems;
 
-   private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
-
-   private Map<String, String> lockTokens;
-
    private FileModel renamedFile;
 
    public RenameFilePresenter()
    {
       IDE.addHandler(RenameItemEvent.TYPE, this);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -324,7 +315,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    }
 
    /**
-    * @see org.exoplatform.ide.client.navigation.event.RenameItemHander#onRenameItem(org.exoplatform.ide.client.navigation.event.RenameItemEvent)
+    * {@inheritDoc}
     */
    @Override
    public void onRenameItem(RenameItemEvent event)
@@ -334,6 +325,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
          IDE.fireEvent(new ExceptionThrownEvent(SELECT_ITEM_TO_RENAME));
          return;
       }
+
 
       if (selectedItems.get(0) instanceof FileModel)
       {
@@ -347,17 +339,46 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
                return;
             }
          }
+         CollaborationManager collaborationManager = CollabEditorExtension.get().getCollaborationManager();
+         for(Item i : selectedItems)
+         {
+            if(openedEditors.containsKey(i.getId()))
+            {
+               if(openedEditors.get(i.getId()) instanceof CollabEditor)
+               {
+                  if(collaborationManager.isFileOpened(i.getPath()))
+                  {
+//                     Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
+                     new ResourceLockedPresenter(
+                        new SafeHtmlBuilder().appendHtmlConstant("Can't rename file <b>").appendEscaped(
+                           i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,i.getPath() ,
+                        Operation.RENAME );
+                     return;
+                  }
+               }
+            }
+            if(collaborationManager.isFileOpened(i.getPath()))
+            {
+//               Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
+               new ResourceLockedPresenter(
+                  new SafeHtmlBuilder().appendHtmlConstant("Can't rename file <b>").appendEscaped(
+                     i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,i.getPath() , Operation.RENAME);
+               return;
+            }
+            for(String path : collaborationManager.getOpenedFiles().asIterable())
+            {
+               if(path.startsWith(i.getPath()))
+               {
+                  Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This folder contains file(s) opened by other users.");
+                  new ResourceLockedPresenter(
+                     new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false,i.getPath() ,Operation.RENAME );
+                  return;
+               }
+            }
+         }
          openView();
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
-    */
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
    }
 
    /**
@@ -367,31 +388,6 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      ApplicationSettings applicationSettings = event.getApplicationSettings();
-
-      if (applicationSettings.getValueAsMap("lock-tokens") == null)
-      {
-         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
-
-      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
-    */
-   @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
    }
 
    private void openView()

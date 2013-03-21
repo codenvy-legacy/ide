@@ -32,8 +32,8 @@ import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.tooltip.Tooltip;
 import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.JsIntegerMap;
+import com.codenvy.ide.client.util.Elements;
+import org.exoplatform.ide.json.client.JsIntegerMap;
 import com.google.collide.dto.CodeError;
 import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls.CodeErrorImpl;
@@ -56,6 +56,7 @@ import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.json.client.JsoArray;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -194,6 +195,7 @@ public class NotificationManager implements DocumentListener, FoldingListener
       NotificationMark m = new NotificationMark(message.toString(), res, leftPositioner, new HtmlTooltipRenderer());
       m.setTopPosition(buffer.calculateLineTop(lineNumber), "px");
       m.setStyleName(getStyleForLine(problemList, hasError));
+      m.getElement().setAttribute("data-line-number", String.valueOf(lineNumber));
       elements.add(m.getElement());
       leftGutter.addUnmanagedElement(m.getElement());
 
@@ -317,9 +319,9 @@ public class NotificationManager implements DocumentListener, FoldingListener
          double line = keys.get(i);
          markers.erase((int)line);
       }
-      errorListener.onErrorsChanged(JsoArray.<CodeError> create());
+      errorListener.onErrorsChanged(JsoArray.<CodeError>create());
       markers = JsIntegerMap.<JsoArray<Marker>> create();
-      errorListener.onErrorsChanged(JsoArray.<CodeError> create());
+      errorListener.onErrorsChanged(JsoArray.<CodeError>create());
       elements.clear();
       errors = 0;
       warnings = 0;
@@ -495,7 +497,7 @@ public class NotificationManager implements DocumentListener, FoldingListener
             error.setMessage(m.getMessage());
             error.setErrorEnd(getFilePosition(m.getEnd()));
             error.setErrorStart(getFilePosition(m.getStart()));
-            error.setError(m.isError());
+            error.setIsError(m.isError());
             errors.add(error);
          }
          addProblem(m);

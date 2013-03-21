@@ -14,8 +14,8 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import com.google.collide.client.util.PathUtil;
-import com.google.collide.client.util.Utils;
+import com.codenvy.ide.client.util.PathUtil;
+import com.codenvy.ide.client.util.Utils;
 
 import java.util.Comparator;
 

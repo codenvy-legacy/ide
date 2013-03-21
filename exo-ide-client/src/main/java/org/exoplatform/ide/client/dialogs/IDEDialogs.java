@@ -125,7 +125,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
       textField.setHeight(22);
       textField.setWidth(width);
       textField.setValue(value);
-      textField.getElement().getStyle().setMarginTop(10.0, Style.Unit.PX);
+      textField.getElement().getStyle().setMarginLeft(-5.0, Style.Unit.PX);
       return textField;
    }
 

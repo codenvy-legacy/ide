@@ -16,7 +16,7 @@ package com.google.collide.client.document;
 
 import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.client.util.PathUtil;
+import com.codenvy.ide.client.util.PathUtil;
 import com.google.collide.dto.ConflictChunk;
 import com.google.collide.dto.FileContents;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
@@ -27,8 +27,8 @@ import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar;
+import com.google.collide.shared.util.ListenerManager.Dispatcher;
 
 /**
  * Manager for documents and editors.
@@ -92,10 +92,7 @@ public class DocumentManager {
 
   private static final int MAX_CACHED_DOCUMENTS = 4;
 
-//  private final FileTreeModel fileTreeModel;
-
-//  private final DocumentManagerNetworkController networkController;
-//  private final DocumentManagerFileTreeModelListener fileTreeModelListener;
+  private final DocumentManagerNetworkController networkController;
 
   /**
    * All of the documents, ordered by least-recently used documents (index 0 is
@@ -114,14 +111,11 @@ public class DocumentManager {
   private Editor editor;
 
   private DocumentManager(AppContext appContext) {
-//    this.fileTreeModel = fileTreeModel;
-//    networkController = new DocumentManagerNetworkController(this, appContext);
-//    fileTreeModelListener = new DocumentManagerFileTreeModelListener(this, fileTreeModel);
+    networkController = new DocumentManagerNetworkController(this, appContext);
   }
 
   public void cleanup() {
-//    fileTreeModelListener.teardown();
-//    networkController.teardown();
+    networkController.teardown();
 
     while (documents.size() > 0) {
       garbageCollectDocument(documents.get(0));
@@ -142,7 +136,20 @@ public class DocumentManager {
   public Document getDocumentByFileEditSessionKey(String fileEditSessionKey) {
     return documentsByFileEditSessionKey.get(fileEditSessionKey);
   }
-  
+
+   public Document getDocumentByFilePath(String filePath)
+   {
+      for (Document d: documents.asIterable())
+      {
+         if (filePath.equals(DocumentMetadata.getPath(d).getPathString()))
+         {
+            return d;
+         }
+      }
+      return null;
+   }
+
+
   public void attachToEditor(final Document document, final Editor editor) {
     final Document oldDocument = editor.getDocument();
     if (oldDocument != null) {
@@ -163,7 +170,7 @@ public class DocumentManager {
     });
   }
 
-  private void detachFromEditor(final Editor editor, final Document document) {
+  public void detachFromEditor(final Editor editor, final Document document) {
     lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
       @Override
       public void dispatch(LifecycleListener listener) {
@@ -182,7 +189,7 @@ public class DocumentManager {
     for (Line line = document.getFirstLine(); line != null; line = line.getNextLine()) {
       line.clearTags();
     }
-    
+
     // Column anchors exist on the line via a tag, so those get cleared above
     document.getAnchorManager().clearLineAnchors();
   }
@@ -200,10 +207,16 @@ public class DocumentManager {
 //        }
 //      }
 //    }
-//
-//    networkController.load(path, callback);
+
+    networkController.load(path, callback);
     // handleEditableFileReceived will be called async
   }
+
+  public void addDocument(Document document)
+  {
+     documents.add(document);
+  }
+
 
   void handleEditableFileReceived(
       FileContents fileContents, JsonArray<GetDocumentCallback> callbacks) {
@@ -214,16 +227,18 @@ public class DocumentManager {
      */
     Document document = documentsByFileEditSessionKey.get(fileContents.getFileEditSessionKey());
     if (document == null) {
+       documentsByFileEditSessionKey.remove(fileContents.getFileEditSessionKey());
+    }
       document = createDocument(fileContents.getContents(), new PathUtil(fileContents.getPath()),
           fileContents.getFileEditSessionKey(), fileContents.getCcRevision(),
           fileContents.getConflicts(), fileContents.getConflictHandle(), fileContents);
       tryGarbageCollect();
-    } else {
-      /*
-       * Ensure we have the latest path stashed in the metadata. One case where
-       * this matters is if a file is renamed, we will have had the old path --
-       * this logic will update its path.
-       */
+//    } else {
+//      /*
+//       * Ensure we have the latest path stashed in the metadata. One case where
+//       * this matters is if a file is renamed, we will have had the old path --
+//       * this logic will update its path.
+//       */
 //      DocumentMetadata.putPath(document, new PathUtil(fileContents.getPath()));
     }
 
@@ -249,13 +264,13 @@ public class DocumentManager {
       documentsByFileEditSessionKey.put(fileEditSessionKey, document);
     }
 
-//    DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
-//    DocumentMetadata.putPath(document, path);
-//    DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
-//    DocumentMetadata.putBeginCcRevision(document, ccRevision);
-//    DocumentMetadata.putConflicts(document, conflicts);
-//    DocumentMetadata.putConflictHandle(document, conflictHandle);
-    
+    DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
+    DocumentMetadata.putPath(document, path);
+    DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
+    DocumentMetadata.putBeginCcRevision(document, ccRevision);
+    DocumentMetadata.putConflicts(document, conflicts);
+    DocumentMetadata.putConflictHandle(document, conflictHandle);
+
     lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
       @Override
       public void dispatch(LifecycleListener listener) {
@@ -272,7 +287,7 @@ public class DocumentManager {
       });
     }
 
-//    // Save the fileEditSessionKey into the tree node.
+    // Save the fileEditSessionKey into the tree node.
 //    if (fileTreeModel.getWorkspaceRoot() != null) {
 //      FileTreeNode node = fileTreeModel.getWorkspaceRoot().findChildNode(path);
 //      if (node != null) {
@@ -284,11 +299,6 @@ public class DocumentManager {
   }
 
   private void markAsActive(Document document) {
-     if(documents.isEmpty())
-     {
-        documents.add(document);
-        return;
-     }
     if (documents.peek() != document) {
       // Ensure it is at the top
       documents.remove(document);
@@ -312,10 +322,10 @@ public class DocumentManager {
     }
   }
 
-  void garbageCollectDocument(final Document document) {
-//    if (DocumentMetadata.isLinkedToFile(document)) {
-//      unlinkFromFile(document);
-//    }
+  public void garbageCollectDocument(final Document document) {
+    if (DocumentMetadata.isLinkedToFile(document)) {
+      unlinkFromFile(document);
+    }
 
     documents.remove(document);
 
@@ -328,15 +338,15 @@ public class DocumentManager {
   }
 
   public void unlinkFromFile(final Document document) {
-    lifecycleListenerManager.dispatch(new Dispatcher<DocumentManager.LifecycleListener>() {
+    lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
       @Override
       public void dispatch(LifecycleListener listener) {
         listener.onDocumentUnlinkingFromFile(document);
       }
     });
 
-//    documentsByFileEditSessionKey.remove(DocumentMetadata.getFileEditSessionKey(document));
-//    DocumentMetadata.putLinkedToFile(document, false);
+    documentsByFileEditSessionKey.remove(DocumentMetadata.getFileEditSessionKey(document));
+    DocumentMetadata.putLinkedToFile(document, false);
   }
 
   Document getMostRecentlyActiveDocument() {

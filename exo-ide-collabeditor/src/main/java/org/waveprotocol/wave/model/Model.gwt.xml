@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
   <inherits name="com.google.gwt.user.User"/>
-  <inherits name="org.waveprotocol.wave.model.util.Util"/>
+  <inherits name="com.codenvy.ide.client.util.Util"/>
    
   <source path="adt"/>
    

@@ -30,11 +30,11 @@
       <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
    </component>
 
-   <!--
-   ***************************************************************************************
-   ********************** Codenvy Commons Components *************************************
-   ***************************************************************************************
-   -->
+<!-- 
+***************************************************************************************
+********************** eXo IDE Commons Components *************************************
+***************************************************************************************
+-->
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
@@ -85,7 +85,22 @@
       </init-params>
    </component>
 
-   <component>
+  <!-- component>
+     <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
+     <init-params>
+        <values-param>
+           <name>id</name>
+           <value>production</value>
+           <value>dev-monit</value>
+        </values-param>
+     </init-params>
+  </component>
+   
+  <component>
+     <type>org.exoplatform.ide.vfs.impl.fs.SimpleLocalFSMountStrategy</type>
+  </component-->
+
+  <component>
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
    
@@ -120,8 +135,24 @@
          </value-param>
       </init-params>
    </component>
-
+   
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcher</type>
+   </component>
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcherApplication</type>
+   </component>
    <!-- End VirtualFileSystem -->
+
+  <!-- Chat -->
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.ProjectUsers</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.ide.collaboration.chat.server.ChatApplication</type>
+   </component>
+   <!-- End Chat -->
 
    <!-- LogReader -->
    <component>
@@ -343,6 +374,35 @@
    ***************************************************************************************
    -->
 
+   <!-- Cloudbees -->
+   <component>
+      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
+   </component>
+   
+   <component>
+      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
+      <init-params>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+         <value-param>
+            <name>jenkins-user</name>
+            <value>vparfonov@codenvy.com</value>
+         </value-param>
+         <value-param>
+            <name>jenkins-password</name>
+            <value>1z4hWHxoIr</value>
+         </value-param>
+      </init-params>
+   </component>
+
+   <!-- End Cloudbees -->
 
    <!-- CloudFoundry -->
 
@@ -574,6 +634,25 @@
 
    <component>
       <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
+   </component>
+
+   <!-- End OAuth Support -->
+
+   <!--
+   ***************************************************************************************
+   ********************************** Collaboration Editor *************************************
+   ***************************************************************************************
+   -->
+   <component>
+      <type>com.google.collide.server.CollaborationEditorApplication</type>
+   </component>
+
+   <component>
+      <type>com.google.collide.server.participants.Participants</type>
+   </component>
+
+   <component>
+      <type>com.google.collide.server.documents.EditSessions</type>
    </component>
 
 </configuration>

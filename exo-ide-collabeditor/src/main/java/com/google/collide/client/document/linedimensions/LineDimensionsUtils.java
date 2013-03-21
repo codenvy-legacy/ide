@@ -16,10 +16,10 @@ package com.google.collide.client.document.linedimensions;
 
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.TextChange;
-import com.google.collide.shared.util.RegExpUtils;
-import com.google.collide.shared.util.SharedLogUtils;
-import com.google.collide.shared.util.StringUtils;
-import com.google.collide.shared.util.UnicodeUtils;
+import org.exoplatform.ide.shared.util.RegExpUtils;
+import org.exoplatform.ide.shared.util.SharedLogUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.UnicodeUtils;
 
 /**
  * Various utility functions used by the {@link LineDimensionsCalculator}.

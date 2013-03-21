@@ -18,14 +18,14 @@ import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.renderer.Renderer;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.BasicIncrementalScheduler;
-import com.google.collide.client.util.IncrementalScheduler;
+import com.codenvy.ide.client.util.BasicIncrementalScheduler;
+import com.codenvy.ide.client.util.IncrementalScheduler;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.RegExpUtils;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.RegExpUtils;
 import com.google.gwt.regexp.shared.RegExp;
 
 /**

@@ -18,8 +18,7 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.collide.json.shared.JsonStringSet;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestBuilder;
@@ -31,6 +30,7 @@ import com.google.gwt.user.client.Timer;
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.event.PackageCreatedEvent;
 import org.eclipse.jdt.client.event.PackageCreatedHandler;
+import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -43,11 +43,10 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,9 +127,13 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       ProjectModel project = event.getProject();
       requestCount = 0;
       ids = new ArrayList<String>();
-      if (project.getProjectType().equals(ProjectType.MultiModule.value()))
+      
+      if (project instanceof JavaProject &&
+          project.getProjectType().equals(ProjectType.MultiModule.value()))
       {
-         List<ProjectModel> children = project.getModules();
+         JavaProject javaProject = (JavaProject)project;
+         
+         List<ProjectModel> children = javaProject.getModules();
          for (ProjectModel item : children)
          {
             if (projectResolver.isProjectSupported(item.getProjectType()))
@@ -143,6 +146,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       {
          ids.add(project.getId());
       }
+      
       updatePackages(ids);
    }
 

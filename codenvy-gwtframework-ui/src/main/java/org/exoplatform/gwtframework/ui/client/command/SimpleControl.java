@@ -20,10 +20,12 @@
 package org.exoplatform.gwtframework.ui.client.command;
 
 import com.google.gwt.event.shared.GwtEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -42,7 +44,7 @@ public class SimpleControl extends Control<SimpleControl>
    private boolean selected;
 
    private String hotKey;
-   
+
    /**
     * If true, then this command will call by hotkey, 
     * even if it will be disabled.
@@ -50,8 +52,11 @@ public class SimpleControl extends Control<SimpleControl>
    private boolean ignoreDisable;
 
    private GwtEvent<?> event;
-   
+
    private String groupName;
+
+   //this attributes appends to popup menu item to allow append to item events e.g. onClick or other things
+   private Map<String, String> attributes;
 
    public SimpleControl(String id)
    {
@@ -155,7 +160,7 @@ public class SimpleControl extends Control<SimpleControl>
    public SimpleControl setHotKey(String hotKey)
    {
       this.hotKey = hotKey;
-      
+
       for (ControlStateListener listener : getStateListeners())
       {
          if (!(listener instanceof SimpleControlStateListener))
@@ -164,8 +169,8 @@ public class SimpleControl extends Control<SimpleControl>
          }
 
          ((SimpleControlStateListener)listener).updateControlHotKey(hotKey);
-      }      
-      
+      }
+
       return this;
    }
 
@@ -209,7 +214,7 @@ public class SimpleControl extends Control<SimpleControl>
 
    /**
     * Returns group name
-    * 
+    *
     * @return group name
     */
    public String getGroupName()
@@ -219,7 +224,7 @@ public class SimpleControl extends Control<SimpleControl>
 
    /**
     * Sets new group name
-    * 
+    *
     * @param groupName new group name
     */
    public SimpleControl setGroupName(String groupName)
@@ -227,5 +232,16 @@ public class SimpleControl extends Control<SimpleControl>
       this.groupName = groupName;
       return this;
    }
-   
+
+   public Map<String, String> getAttributes()
+   {
+      if (attributes == null)
+         attributes = new HashMap<String, String>();
+      return attributes;
+   }
+
+   public void setAttributes(Map<String, String> attributes)
+   {
+      this.attributes = attributes;
+   }
 }

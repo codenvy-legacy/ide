@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -95,11 +98,11 @@ import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.shared.document.Document;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -112,7 +115,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorContextMenuHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
    ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler,
-   EditorPasteTextHandler, EditorDeleteTextHandler, EditorFoldingCollapseHandler, EditorFoldingExpandHandler
+   EditorPasteTextHandler, EditorDeleteTextHandler
 {
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
@@ -210,10 +213,13 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
          return;
       }
 
-      activeFile.setContentChanged(true);
+      if (!(editor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(activeFile.getMimeType())))
+      {
+         activeFile.setContentChanged(true);
 
-      activeFile.setContent(editor.getText());
-      updateTabTitle(activeFile);
+         activeFile.setContent(editor.getText());
+         updateTabTitle(activeFile);
+      }
       IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
    }
 
@@ -276,6 +282,12 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       if (ignoreContentChangedList.contains(file.getId()))
       {
          ignoreContentChangedList.remove(file.getId());
+      }
+
+      if (editorView.getEditor() instanceof CollabEditor && !MimeType.TEXT_HTML.equals(file.getMimeType()))
+      {
+         Document document = ((CollabEditor)editorView.getEditor()).getEditor().getDocument();
+         CollabEditorExtension.get().getManager().garbageCollectDocument(document);
       }
 
       IDE.fireEvent(new EditorFileClosedEvent(file, openedFiles));
@@ -386,7 +398,9 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    public void onEditorChangeActiveFile(EditorChangeActiveFileEvent event)
    {
       if (activeFile == event.getFile())
+      {
          return;
+      }
 
       activeFile = event.getFile();
       if (activeFile == null)
@@ -430,7 +444,9 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
          Editor[] editors = IDE.getInstance().getFileTypeRegistry().getEditors(file.getMimeType());
          EditorView editorView = new EditorView(file, isReadOnly(file), editors, 0);
          if (!MimeType.APPLICATION_JAVA.equals(file.getMimeType()))
+         {
             ignoreContentChangedList.add(file.getId());
+         }
          openedFiles.put(file.getId(), file);
          editorViewList.put(file.getId(), editorView);
          waitForEditorInitialized = true;
@@ -468,7 +484,9 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
          return !(lockTokens.containsKey(file.getId()));
       }
       else
+      {
          return false;
+      }
    }
 
    public void onFileSaved(FileSavedEvent event)

@@ -96,8 +96,23 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
          {
             prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
          }
+         
+         String prjType = null;
 
-         cloneProject(giturl, prjName);
+         if (event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE) != null
+            && !event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE).isEmpty())
+         {
+            prjType = event.getParameterMap().get(CodeNowSpec10.PROJECT_TYPE).get(0);
+         }
+         else
+         {
+            prjType = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
+         }
+
+         
+         
+
+         cloneProject(giturl, prjName, prjType);
       }
 
    }
@@ -130,7 +145,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
       return true;
    }
 
-   private void cloneProject(final String giturl, final String prjName)
+   private void cloneProject(final String giturl, final String prjName, final String prjType)
    {
       try
       {
@@ -161,18 +176,18 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                   }
                   if (itemExist)
                   {
-                     doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE));
+                     doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE), prjType);
                   }
                   else
                   {
-                     doClone(giturl, "origin", prjName);
+                     doClone(giturl, "origin", prjName, prjType);
                   }
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  doClone(giturl, "origin", prjName);
+                  doClone(giturl, "origin", prjName, prjType);
                }
             });
       }
@@ -194,7 +209,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
     * @param remoteName - remote name (by default origin)
     * @param workDir - name of target folder 
     */
-   public void doClone(final String remoteUri, final String remoteName, final String workDir)
+   public void doClone(final String remoteUri, final String remoteName, final String workDir, final String prjType)
    {
       FolderModel folder = new FolderModel();
       folder.setName(workDir);
@@ -206,7 +221,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                @Override
                protected void onSuccess(FolderModel result)
                {
-                  cloneRepository(remoteUri, remoteName, result);
+                  cloneRepository(remoteUri, remoteName, prjType ,result);
                }
 
                @Override
@@ -236,7 +251,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
     * @param remoteName remote name instead of "origin"
     * @param folder folder (root of GIT repository)
     */
-   private void cloneRepository(final String remoteUri, final String remoteName, final FolderModel folder)
+   private void cloneRepository(final String remoteUri, final String remoteName, final String prjType, final FolderModel folder)
    {
       try
       {
@@ -247,7 +262,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, result);
+                  onCloneSuccess(folder, result, prjType);
                }
 
                @Override
@@ -259,14 +274,14 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
       }
       catch (WebSocketException e)
       {
-         cloneRepositoryREST(remoteUri, remoteName, folder);
+         cloneRepositoryREST(remoteUri, remoteName, prjType, folder);
       }
    }
 
    /**
     * Get the necessary parameters values and call the clone repository method (over HTTP).
     */
-   private void cloneRepositoryREST(final String remoteUri, String remoteName, final FolderModel folder)
+   private void cloneRepositoryREST(final String remoteUri, String remoteName, final String prjType, final FolderModel folder)
    {
       try
       {
@@ -276,7 +291,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, result);
+                  onCloneSuccess(folder, result, prjType);
                }
 
                @Override
@@ -297,7 +312,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
     *
     * @param folder {@link FolderModel} to clone
     */
-   private void onCloneSuccess(FolderModel folder, RepoInfo repoInfo)
+   private void onCloneSuccess(FolderModel folder, RepoInfo repoInfo, String prjType)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(repoInfo.getRemoteUri()), Type.GIT));
       //TODO: not good, comment temporary need found other way
@@ -306,8 +321,9 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
 
       List<Property> properties = new ArrayList<Property>();
       properties.add(new PropertyImpl("codenow", repoInfo.getRemoteUri()));
+      properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
 
-      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), properties));
+      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), prjType, properties));
    }
 
    private void handleError(Throwable e, String remoteUri)

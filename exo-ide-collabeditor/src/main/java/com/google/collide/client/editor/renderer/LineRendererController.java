@@ -26,17 +26,18 @@ import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.folding.FoldMarker;
 import com.google.collide.client.editor.folding.FoldingManager;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Line;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.SortedList;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 import elemental.html.SpanElement;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A class to maintain the list of {@link LineRenderer LineRenderers} and render

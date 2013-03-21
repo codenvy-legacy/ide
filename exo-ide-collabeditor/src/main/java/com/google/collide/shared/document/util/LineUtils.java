@@ -21,7 +21,7 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.PositionOutOfBoundsException;
 import com.google.collide.shared.document.anchor.Anchor;
-import com.google.collide.shared.util.TextUtils;
+import org.exoplatform.ide.shared.util.TextUtils;
 import com.google.common.base.Preconditions;
 
 /**

@@ -26,7 +26,6 @@ import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.HtmlErrorFormatter;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -43,6 +42,7 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryItemVisitor;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
+import org.exoplatform.ide.vfs.server.util.LinksHelper;
 import org.exoplatform.ide.vfs.server.util.MediaTypes;
 import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
 import org.exoplatform.ide.vfs.server.util.ZipContent;
@@ -57,8 +57,6 @@ import org.exoplatform.ide.vfs.shared.ItemListImpl;
 import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemNodeImpl;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.LinkImpl;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenImpl;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -80,7 +78,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,7 +98,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
 import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
 import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -153,7 +149,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return copy;
    }
@@ -192,7 +188,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return file;
    }
@@ -262,7 +258,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return folder;
    }
@@ -303,7 +299,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return project;
    }
@@ -381,7 +377,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, object.getId(), deletePath, object.getMediaType(), ChangeType.DELETED));
+            new ChangeEvent(this, object.getId(), deletePath, object.getMediaType(), ChangeType.DELETED, getCurrentUserId()));
       }
    }
 
@@ -561,65 +557,9 @@ public class MemoryFileSystem implements VirtualFileSystem
          vfsInfo =
             new VirtualFileSystemInfoImpl(this.vfsId, false, true, VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL,
                VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, VirtualFileSystemInfo.ACLCapability.MANAGE,
-               VirtualFileSystemInfo.QueryCapability.NONE, createUrlTemplates(), root);
+               VirtualFileSystemInfo.QueryCapability.NONE, LinksHelper.createUrlTemplates(baseUri, vfsId), root);
       }
       return vfsInfo;
-   }
-
-   private Map<String, Link> createUrlTemplates()
-   {
-      Map<String, Link> templates = new HashMap<String, Link>();
-
-      templates.put(Link.REL_ITEM, //
-         new LinkImpl(createURI("item", "[id]"), Link.REL_ITEM, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_ITEM_BY_PATH, //
-         new LinkImpl(createURI("itembypath", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_TREE, //
-         new LinkImpl(createURI("tree", "[id]"), Link.REL_TREE, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_CREATE_FILE, //
-         new LinkImpl(createURI("file", "[parentId]", "name", "[name]"), //
-            Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_CREATE_FOLDER, //
-         new LinkImpl(createURI("folder", "[parentId]", "name", "[name]"), //
-            Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_CREATE_PROJECT, //
-         new LinkImpl(createURI("project", "[parentId]", "name", "[name]", "type", "[type]"), //
-            Link.REL_CREATE_PROJECT, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_COPY, //
-         new LinkImpl(createURI("copy", "[id]", "parentId", "[parentId]"), //
-            Link.REL_COPY, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_MOVE, //
-         new LinkImpl(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]"), //
-            Link.REL_MOVE, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_LOCK, //
-         new LinkImpl(createURI("lock", "[id]"), //
-            Link.REL_LOCK, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_UNLOCK, //
-         new LinkImpl(createURI("unlock", "[id]", "lockToken", "[lockToken]"), //
-            Link.REL_UNLOCK, null));
-
-      templates.put(
-         Link.REL_SEARCH_FORM, //
-         new LinkImpl(createURI("search", null, "maxItems", "[maxItems]", "skipCount", "[skipCount]", "propertyFilter",
-            "[propertyFilter]"), //
-            Link.REL_SEARCH_FORM, MediaType.APPLICATION_JSON));
-
-      templates.put(
-         Link.REL_SEARCH, //
-         new LinkImpl(createURI("search", null, "statement", "[statement]", "maxItems", "[maxItems]", "skipCount",
-            "[skipCount]"), //
-            Link.REL_SEARCH, MediaType.APPLICATION_JSON));
-
-      return templates;
    }
 
    @Path("item/{id}")
@@ -811,7 +751,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED));
+            new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED, getCurrentUserId()));
       }
       return moved;
    }
@@ -870,8 +810,8 @@ public class MemoryFileSystem implements VirtualFileSystem
       Item renamed = fromMemoryItem(object, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED, getCurrentUserId()));
       }
       return renamed;
    }
@@ -969,8 +909,8 @@ public class MemoryFileSystem implements VirtualFileSystem
       object.setMediaType(mediaType == null ? null : mediaType.toString());
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, object.getId(), object.getPath(), object.getMediaType(), ChangeType.CONTENT_UPDATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, object.getId(), object.getPath(), object.getMediaType(), ChangeType.CONTENT_UPDATED, getCurrentUserId()));
       }
    }
 
@@ -995,8 +935,8 @@ public class MemoryFileSystem implements VirtualFileSystem
       Item updated = fromMemoryItem(object, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(),
-            ChangeType.PROPERTIES_UPDATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, updated.getId(), updated.getPath(), updated.getMimeType(), ChangeType.PROPERTIES_UPDATED, getCurrentUserId()));
       }
       return updated;
    }
@@ -1310,8 +1250,8 @@ public class MemoryFileSystem implements VirtualFileSystem
             context.putItem(file);
             if (listeners != null)
             {
-               listeners.notifyListeners(
-                  new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CREATED));
+               listeners.notifyListeners(new ChangeEvent(
+                  this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CREATED, getCurrentUserId()));
             }
          }
          catch (ItemAlreadyExistException e)
@@ -1331,8 +1271,8 @@ public class MemoryFileSystem implements VirtualFileSystem
             file.setContent(contentItem.getInputStream());
             if (listeners != null)
             {
-               listeners.notifyListeners(
-                  new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CONTENT_UPDATED));
+               listeners.notifyListeners(new ChangeEvent(
+                  this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CONTENT_UPDATED, getCurrentUserId()));
             }
          }
          return Response.ok("", MediaType.TEXT_HTML).build();
@@ -1426,12 +1366,11 @@ public class MemoryFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException("Item is not a project. ");
       }
-      if (!listeners.addEventListener(
+      if (listeners.addEventListener(
          ProjectUpdateEventFilter.newFilter(vfsId, (MemoryFolder)object), new ProjectUpdateListener(projectId)))
       {
-         throw new InvalidArgumentException("Project '" + object.getName() + "' is under watching already. ");
+         object.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:lastUpdateTime", "0")));
       }
-      object.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:lastUpdateTime", "0")));
    }
 
    @Path("watch/stop/{projectId}")
@@ -1472,7 +1411,7 @@ public class MemoryFileSystem implements VirtualFileSystem
 
    private boolean hasPermissions(MemoryItem object, String... permissions)
    {
-      return hasPermissions(object, getCurrentUser(), Arrays.asList(permissions));
+      return hasPermissions(object, getCurrentUserId(), Arrays.asList(permissions));
    }
 
    private boolean hasPermissions(MemoryItem object, String userId, Collection<String> checkPermissions)
@@ -1491,7 +1430,7 @@ public class MemoryFileSystem implements VirtualFileSystem
          || userPermissions.containsAll(checkPermissions));
    }
 
-   private String getCurrentUser()
+   private String getCurrentUserId()
    {
       ConversationState cs = ConversationState.getCurrent();
       if (cs != null)
@@ -1531,13 +1470,24 @@ public class MemoryFileSystem implements VirtualFileSystem
    private Item fromMemoryItem(MemoryItem object, PropertyFilter propertyFilter, boolean addLinks)
       throws VirtualFileSystemException
    {
-      String mediaType = object.getMediaType();
+      final String id = object.getId();
+      final String name = object.getName();
+      final String path = object.getPath();
+      final boolean isRoot = object.getParent() == null;
+      final String parentId = isRoot ? null : object.getParent().getId();
+      final String mediaType = object.getMediaType();
+      final long created = object.getCreationDate();
       if (object.isFile())
       {
          MemoryFile file = (MemoryFile)object;
-         return new FileImpl(file.getId(), file.getName(), file.getPath(), file.getParent().getId(), file.getCreationDate(),
-            file.getLastModificationDate(), file.getVersionId(), file.getMediaType(), file.getContent().getLength(),
-            file.isLocked(), file.getProperties(propertyFilter), addLinks ? createFileLinks(file) : null);
+         final String versionId = file.getVersionId();
+         final String latestVersionId = file.getLatestVersionId();
+         final boolean locked = file.isLocked();
+         final long length = file.getContent().getLength();
+         final long modified = file.getLastModificationDate();
+         return new FileImpl(id, name, path, parentId, created, modified, versionId, mediaType, length,
+            locked, file.getProperties(propertyFilter),
+            addLinks ? LinksHelper.createFileLinks(baseUri, vfsId, id, latestVersionId, path, mediaType, locked, parentId) : null);
       }
 
       MemoryFolder folder = (MemoryFolder)object;
@@ -1554,164 +1504,21 @@ public class MemoryFileSystem implements VirtualFileSystem
             }
          }
 
-         return new ProjectImpl(folder.getId(), folder.getName(), mediaType, folder.getPath(),
-            folder.getParent().getId(), folder.getCreationDate(), folder.getProperties(propertyFilter),
-            addLinks ? createProjectLinks(folder) : null, projectType);
+         return new ProjectImpl(id, name, mediaType, path, parentId, created, folder.getProperties(propertyFilter),
+            addLinks ? LinksHelper.createProjectLinks(baseUri, vfsId, id, parentId) : null, projectType);
       }
 
-      return new FolderImpl(object.getId(), object.getName(),
-         mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, object.getPath(),
-         object.getParent() == null ? null : object.getParent().getId(), object.getCreationDate(),
-         object.getProperties(propertyFilter), addLinks ? createFolderLinks((MemoryFolder)object) : null);
+      return new FolderImpl(id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path, parentId, created,
+         object.getProperties(propertyFilter),
+         addLinks ? LinksHelper.createFolderLinks(baseUri, vfsId, id, isRoot, parentId) : null);
    }
 
-   private Map<String, Link> createFileLinks(MemoryFile file) throws VirtualFileSystemException
+   @Override
+   public String toString()
    {
-      Map<String, Link> links = createBaseLinks(file);
-      String id = file.getId();
-
-      links.put(Link.REL_CONTENT, //
-         new LinkImpl(createURI("content", id), Link.REL_CONTENT, file.getMediaType()));
-
-      links.put(Link.REL_DOWNLOAD_FILE, //
-         new LinkImpl(createURI("downloadfile", id), Link.REL_DOWNLOAD_FILE, file.getMediaType()));
-
-      links.put(Link.REL_CONTENT_BY_PATH, //
-         new LinkImpl(createURI("contentbypath", file.getPath().substring(1)), Link.REL_CONTENT_BY_PATH, file.getMediaType()));
-
-      links.put(Link.REL_VERSION_HISTORY, //
-         new LinkImpl(createURI("version-history", id), Link.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CURRENT_VERSION, //
-         new LinkImpl(createURI("item", file.getLatestVersionId()), Link.REL_CURRENT_VERSION, MediaType.APPLICATION_JSON));
-
-      if (file.isLocked())
-      {
-         links.put(Link.REL_UNLOCK, //
-            new LinkImpl(createURI("unlock", id, "lockToken", "[lockToken]"), Link.REL_UNLOCK, null));
-      }
-      else
-      {
-         links.put(Link.REL_LOCK, //
-            new LinkImpl(createURI("lock", id), Link.REL_LOCK, MediaType.APPLICATION_JSON));
-      }
-
-      return links;
-   }
-
-   private Map<String, Link> createFolderLinks(MemoryFolder folder) throws VirtualFileSystemException
-   {
-      Map<String, Link> links = createBaseFolderLinks(folder);
-      String id = folder.getId();
-
-      links.put(Link.REL_CREATE_PROJECT, //
-         new LinkImpl(createURI("project", id, "name", "[name]", "type", "[type]"), Link.REL_CREATE_PROJECT,
-            MediaType.APPLICATION_JSON));
-
-      return links;
-   }
-
-   private Map<String, Link> createProjectLinks(MemoryFolder project) throws VirtualFileSystemException
-   {
-      return createBaseFolderLinks(project);
-   }
-
-   private Map<String, Link> createBaseFolderLinks(MemoryFolder folder) throws VirtualFileSystemException
-   {
-      Map<String, Link> links = createBaseLinks(folder);
-      String id = folder.getId();
-
-      links.put(Link.REL_CHILDREN, //
-         new LinkImpl(createURI("children", id), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_TREE, //
-         new LinkImpl(createURI("tree", id), Link.REL_TREE, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CREATE_FOLDER, //
-         new LinkImpl(createURI("folder", id, "name", "[name]"), Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CREATE_FILE, //
-         new LinkImpl(createURI("file", id, "name", "[name]"), Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_UPLOAD_FILE, //
-         new LinkImpl(createURI("uploadfile", id), Link.REL_UPLOAD_FILE, MediaType.TEXT_HTML));
-
-      links.put(Link.REL_EXPORT, //
-         new LinkImpl(createURI("export", id), Link.REL_EXPORT, "application/zip"));
-
-      links.put(Link.REL_IMPORT, //
-         new LinkImpl(createURI("import", id), Link.REL_IMPORT, "application/zip"));
-
-      links.put(Link.REL_DOWNLOAD_ZIP, //
-         new LinkImpl(createURI("downloadzip", id), Link.REL_DOWNLOAD_ZIP, "application/zip"));
-
-      links.put(Link.REL_UPLOAD_ZIP, //
-         new LinkImpl(createURI("uploadzip", id), Link.REL_UPLOAD_ZIP, MediaType.TEXT_HTML));
-
-      return links;
-   }
-
-   private Map<String, Link> createBaseLinks(MemoryItem object) throws VirtualFileSystemException
-   {
-      Map<String, Link> links = new HashMap<String, Link>();
-      String id = object.getId();
-
-      links.put(Link.REL_SELF, //
-         new LinkImpl(createURI("item", id), Link.REL_SELF, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_ACL, //
-         new LinkImpl(createURI("acl", id), Link.REL_ACL, MediaType.APPLICATION_JSON));
-
-      MemoryFolder parent = object.getParent();
-      // Root folder can't be moved copied and has not parent.
-      if (parent != null)
-      {
-         links.put(Link.REL_DELETE, //
-            new LinkImpl(object.isFile() && ((MemoryFile)object).isLocked()
-               ? createURI("delete", id, "lockToken", "[lockToken]") : createURI("delete", id),
-               Link.REL_DELETE, null));
-
-         links.put(Link.REL_COPY, //
-            new LinkImpl(createURI("copy", id, "parentId", "[parentId]"), Link.REL_COPY, MediaType.APPLICATION_JSON));
-
-         links.put(Link.REL_MOVE, //
-            new LinkImpl(object.isFile() && ((MemoryFile)object).isLocked()
-               ? createURI("move", id, "parentId", "[parentId]", "lockToken", "[lockToken]")
-               : createURI("move", id, "parentId", "[parentId]"),
-               Link.REL_MOVE, MediaType.APPLICATION_JSON));
-
-         links.put(Link.REL_PARENT, //
-            new LinkImpl(createURI("item", parent.getId()), Link.REL_PARENT, MediaType.APPLICATION_JSON));
-
-         links.put(
-            Link.REL_RENAME, //
-            new LinkImpl(createURI("rename", id, "newname", "[newname]", "mediaType", "[mediaType]", "lockToken",
-               "[lockToken]"), Link.REL_RENAME, MediaType.APPLICATION_JSON));
-      }
-      return links;
-   }
-
-   private String createURI(String rel, String id, String... query)
-   {
-      UriBuilder uriBuilder = UriBuilder.fromUri(baseUri);
-      uriBuilder.path(VirtualFileSystemFactory.class, "getFileSystem");
-      uriBuilder.path(rel);
-      if (id != null)
-      {
-         uriBuilder.path(id);
-      }
-      if (query != null && query.length > 0)
-      {
-         for (int i = 0; i < query.length; i++)
-         {
-            String name = query[i];
-            String value = i < query.length ? query[++i] : "";
-            uriBuilder.queryParam(name, value);
-         }
-      }
-
-      URI uri = uriBuilder.build(vfsId);
-
-      return uri.toString();
+      return "MemoryFileSystem{" +
+         "vfsId='" + vfsId + '\'' +
+         ", baseUri=" + baseUri +
+         '}';
    }
 }

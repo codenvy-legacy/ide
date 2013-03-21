@@ -14,18 +14,19 @@
 
 package com.google.collide.client.editor;
 
-import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
+import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
-import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
-import com.google.collide.shared.util.SortedList;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
-import com.google.collide.shared.util.SortedList.OneWayIntComparator;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.SortedList.OneWayIntComparator;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * This class takes care of mapping between the different coordinates used by

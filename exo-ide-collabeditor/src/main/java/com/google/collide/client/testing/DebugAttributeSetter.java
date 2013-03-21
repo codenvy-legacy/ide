@@ -14,11 +14,10 @@
 
 package com.google.collide.client.testing;
 
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 
 import elemental.html.Element;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

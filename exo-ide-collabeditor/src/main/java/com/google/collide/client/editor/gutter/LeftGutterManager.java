@@ -16,7 +16,7 @@ package com.google.collide.client.editor.gutter;
 
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.shared.document.Document;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 
 public class LeftGutterManager {

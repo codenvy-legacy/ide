@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import com.google.collide.client.CollabEditor;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -36,6 +39,7 @@ import org.exoplatform.ide.client.framework.event.SaveFileEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.LinkedHashMap;
@@ -71,6 +75,8 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
     * Lock tokens
     */
    private Map<String, String> lockTokens;
+
+   private Editor activeEditor;
 
    /**
     * Creates a new instance of this control
@@ -117,6 +123,7 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+      activeEditor = event.getEditor();
 
       if (activeFile == null)
       {
@@ -157,6 +164,12 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
    @Override
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
+      if(activeEditor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(event.getFile().getMimeType()))
+      {
+         setEnabled(false);
+         return;
+      }
+
       if (event.getFile().isLocked())
       {
          if (!lockTokens.containsKey(event.getFile().getId()))
@@ -175,8 +188,9 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
       }
    }
 
+
    /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
+    * {@inheritDoc}
     */
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)

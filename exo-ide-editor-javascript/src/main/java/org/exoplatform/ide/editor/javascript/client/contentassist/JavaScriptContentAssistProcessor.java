@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
-import com.google.collide.shared.util.JsonCollections;
-
-import com.google.collide.json.shared.JsonArray;
-
-import com.google.collide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
@@ -31,6 +27,8 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

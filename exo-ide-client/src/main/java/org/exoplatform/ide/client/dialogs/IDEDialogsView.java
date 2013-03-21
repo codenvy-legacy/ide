@@ -55,6 +55,7 @@ public class IDEDialogsView extends ViewImpl
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+      mainLayout.setSpacing(10);
       mainLayout.add(content);
 
       buttonsLayout = createButtonsLayout();

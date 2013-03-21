@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.framework.project.api;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 /**
@@ -33,17 +33,22 @@ public class TreeRefreshedEvent extends GwtEvent<TreeRefreshedHandler>
 
    public static final GwtEvent.Type<TreeRefreshedHandler> TYPE = new GwtEvent.Type<TreeRefreshedHandler>();
 
-   private Folder folder;
+   private FolderModel folder;
 
    private Item itemToSelect;
 
-   public TreeRefreshedEvent(Folder folder, Item itemToSelect)
+   public TreeRefreshedEvent(FolderModel folder)
+   {
+      this.folder = folder;
+   }
+
+   public TreeRefreshedEvent(FolderModel folder, Item itemToSelect)
    {
       this.folder = folder;
       this.itemToSelect = itemToSelect;
    }
 
-   public Folder getFolder()
+   public FolderModel getFolder()
    {
       return folder;
    }

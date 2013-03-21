@@ -19,7 +19,8 @@ import static com.google.collide.dto.DocOpComponent.Type.*;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
 import com.google.collide.dto.shared.DocOpFactory;
-import com.google.collide.json.shared.JsonArray;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Helper to create document operations via a method call for each component.

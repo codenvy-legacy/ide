@@ -15,19 +15,19 @@
 package com.google.collide.client.ui.menu;
 
 import com.google.collide.client.ui.tooltip.Tooltip;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.HoverController;
-import com.google.collide.client.util.HoverController.UnhoverListener;
-import com.google.collide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.HoverController;
+import com.codenvy.ide.client.util.HoverController.UnhoverListener;
 import com.google.collide.mvp.UiComponent;
-import com.google.collide.shared.util.JsonCollections;
-
+import org.exoplatform.ide.json.shared.JsonCollections;
 import elemental.dom.Node;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.EventRemover;
 import elemental.html.Element;
 import elemental.util.Timer;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Component that can automatically hide its View when the mouse is not over it.

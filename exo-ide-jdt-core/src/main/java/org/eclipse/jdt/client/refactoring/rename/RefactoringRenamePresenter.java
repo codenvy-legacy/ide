@@ -18,6 +18,10 @@
  */
 package org.eclipse.jdt.client.refactoring.rename;
 
+import com.codenvy.ide.collaboration.ResourceLockedPresenter;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.collaboration.CollaborationManager;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -30,6 +34,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasText;
 
 import org.eclipse.jdt.client.JdtExtension;
@@ -314,6 +319,16 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    public void onRename(RefactoringRenameEvent event)
    {
       fileToRenameFromPackageExplorer = event.getFile();
+
+      FileModel fileToRename = fileToRenameFromPackageExplorer == null? activeFile : fileToRenameFromPackageExplorer;
+      CollaborationManager collaborationManager = CollabEditorExtension.get().getCollaborationManager();
+      if(collaborationManager.isFileOpened(fileToRename.getPath()))
+      {
+         new ResourceLockedPresenter(
+            new SafeHtmlBuilder().appendHtmlConstant("Can't perform refactoring.").toSafeHtml(), collaborationManager, fileToRename.getPath(), true,fileToRename.getPath() ,
+            Operation.REFACTORING );
+         return;
+      }
 
       if (isUnsavedFilesExist())
       {

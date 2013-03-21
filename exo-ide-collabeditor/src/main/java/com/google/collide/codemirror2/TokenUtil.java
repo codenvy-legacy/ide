@@ -14,12 +14,13 @@
 
 package com.google.collide.codemirror2;
 
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.Pair;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.annotations.VisibleForTesting;
+
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

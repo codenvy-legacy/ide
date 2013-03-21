@@ -14,7 +14,7 @@
 
 package com.google.collide.client.util.dom;
 
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;

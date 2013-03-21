@@ -15,12 +15,11 @@
 package com.google.collide.client.ui.menu;
 
 import com.google.collide.client.AppContext;
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.RelativeClientRect;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.RelativeClientRect;
 import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.Window;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.css.CSSStyleDeclaration.Unit;
 import elemental.html.ClientRect;

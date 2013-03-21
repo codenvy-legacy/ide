@@ -44,6 +44,7 @@ import java.util.Map;
 
 public class FolderModel extends FolderImpl implements ItemContext
 {
+   
    protected ItemList<Item> children = new ItemListImpl<Item>();
 
    protected ProjectModel project;
@@ -80,9 +81,6 @@ public class FolderModel extends FolderImpl implements ItemContext
    {
       this(folder.getId(), folder.getName(), ItemType.FOLDER, FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
          .getCreationDate(), folder.getProperties(), folder.getLinks());
-//      super(folder.getId(), folder.getName(), FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
-//         .getCreationDate(), folder.getProperties(), folder.getLinks());
-//      this.persisted = true;
    }
    
    public FolderModel(String id, String name, ItemType itemType, String mimeType, String path, String parentId, long creationDate,

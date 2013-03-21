@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -106,7 +107,6 @@ public class IDEConfigurationService
          for (Iterator iterator = registeredProviders.iterator(); iterator.hasNext();)
          {
             VirtualFileSystemProvider virtualFileSystemProvider = (VirtualFileSystemProvider)iterator.next();
-            
          }
       }
       catch (VirtualFileSystemException e)
@@ -128,7 +128,7 @@ public class IDEConfigurationService
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
    @RolesAllowed("users")
-   public Map<String, Object> inializationParameters(@Context UriInfo uriInfo)
+   public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request)
    {
       try
       {
@@ -137,7 +137,8 @@ public class IDEConfigurationService
          if (curentState != null)
          {
             Identity identity = curentState.getIdentity();
-            IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
+            IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles(), request.getSession().getId());
+
             if (LOG.isDebugEnabled())
                LOG.info("Getting user identity: " + identity.getUserId());
             result.put("user", user);
@@ -156,6 +157,12 @@ public class IDEConfigurationService
       {
          throw new WebApplicationException(e);
       }
+   }
+
+   @GET
+   @Path("ping")
+   public void ping()
+   {
    }
 
    @GET

@@ -144,6 +144,7 @@ public class RevisionGrid extends ListGrid<Revision>
       if (value != null && value.size() > 0)
       {
          selectItem(value.get(0));
+         updateGrid();
       }
    }
 

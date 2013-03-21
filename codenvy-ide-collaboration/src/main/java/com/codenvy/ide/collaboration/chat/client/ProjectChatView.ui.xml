@@ -1,0 +1,60 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+   <ui:style>
+      .chatMessageInput{
+         font: 100% Arial,sans-serif;
+         height: 100%;
+         outline: 0;
+         overflow: auto;
+         resize: none;
+         width: 100%;
+         margin: 0; /* don't want to add to container size */
+         border: 0; /* don't want to add to container size */
+         background: #FFFFFF;
+         padding: 0;
+      }
+      .chatMessageInput:focus{
+         box-shadow: 1px 1px 6px #5ea1e3;
+      }
+      .messageInputContainer{
+         border: 1px solid #5ea0e3;
+         position: absolute;
+         bottom: 0;
+         top: 0;
+         left: 0;
+         right: 0;
+         outline: 0;
+         margin: 5px;
+      }
+      .background{
+         background: #eee;
+      }
+      .messagePanel{
+         margin: 2px;
+         padding-left: 5px;
+      }
+      .chatBorder{
+      }
+   </ui:style>
+
+	<g:SplitLayoutPanel>
+      <g:east size="225">
+			<g:ScrollPanel ui:field="participantsPanel" />
+		</g:east>
+      <g:center>
+         <g:DockLayoutPanel unit="PX" styleName="{style.chatBorder}">
+            <g:center>
+               <g:ScrollPanel ui:field="chatPanel" styleName="{style.messagePanel}" />
+            </g:center>
+            <g:south size="60">
+               <g:HTMLPanel styleName="{style.background}">
+                  <div class="{style.messageInputContainer}">
+                     <textarea ui:field="chatMessageInput" placeholder="Type here to chat" class="{style.chatMessageInput}" />
+                  </div>
+               </g:HTMLPanel>
+            </g:south>
+         </g:DockLayoutPanel>
+      </g:center>
+	</g:SplitLayoutPanel>
+</ui:UiBinder> 

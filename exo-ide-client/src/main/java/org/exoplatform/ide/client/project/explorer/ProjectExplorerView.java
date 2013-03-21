@@ -37,7 +37,6 @@ import org.exoplatform.ide.client.framework.ui.ProjectTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -127,15 +126,6 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#selectItem(java.lang.String)
-    */
-   @Override
-   public boolean selectItem(String id)
-   {
-      return treeGrid.selectItem(id);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#deselectItem(java.lang.String)
     */
    @Override
@@ -214,15 +204,6 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setUpdateTreeValue(boolean)
-    */
-   @Override
-   public void setUpdateTreeValue(boolean updateTreeValue)
-   {
-      treeGrid.setUpdateValue(updateTreeValue);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#getLinkWithEditorButton()
     */
    @Override
@@ -267,31 +248,34 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
       return projectsListGrid.getSelectedItems();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#changeFolderIcon(org.exoplatform.ide.vfs.shared.Folder, boolean)
-    */
-   @Override
-   public void changeFolderIcon(Folder folder, boolean isOpens)
-   {
-      treeGrid.changeFolderIcon(folder, isOpens);
-   }
-
    @Override
    public void navigateToItem(Item item)
    {
       treeGrid.navigateToItem(item);
    }
 
-//   @Override
-//   public void setProject(ProjectModel project)
-//   {
-//      treeGrid.setProject(project);
-//   }
-//
-//   @Override
-//   public void openFolder(Folder folder)
-//   {
-//      treeGrid.openFolder(folder);
-//   }
+   @Override
+   public void refreshTree()
+   {
+      treeGrid.refresh();
+   }
+
+   @Override
+   public boolean selectItem(Item item)
+   {
+      return treeGrid.selectItem(item);
+   }
+
+   @Override
+   public List<Item> getVisibleItems()
+   {
+      return treeGrid.getVisibleItems();
+   }
+
+   @Override
+   public void setProject(ProjectModel project)
+   {
+      treeGrid.setProject(project);
+   }
 
 }

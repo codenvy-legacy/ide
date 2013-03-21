@@ -21,9 +21,8 @@ import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.ViewportModel.Edge;
 import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.ScheduledCommandExecutor;
-import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.ScheduledCommandExecutor;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
@@ -32,8 +31,10 @@ import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.document.util.LineUtils.LineVisitor;
 import com.google.collide.shared.document.util.PositionUtils;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 import java.util.EnumSet;
 
@@ -342,7 +343,6 @@ class ChangeTracker
     listenerRemovers.add(document.getTextListenerRegistrar().add(this));
     listenerRemovers.add(viewport.getListenerRegistrar().add(this));
     listenerRemovers.add(selection.getSelectionListenerRegistrar().add(this));
-    listenerRemovers.add(buffer.getSpacerListenerRegistrar().add(this));
     listenerRemovers.add(buffer.getSpacerListenerRegistrar().add(this));
     listenerRemovers.add(foldingManager.getFoldingListenerRegistrar().add(this));
   }

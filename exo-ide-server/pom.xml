@@ -14,14 +14,18 @@
 	<name>Codenvy IDE :: Server</name>
 
 	<dependencies>
+	   <dependency>
+         <groupId>com.codenvy.commons</groupId>
+         <artifactId>codenvy-commons-env</artifactId>
+      </dependency>
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-commons</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.codenvy</groupId>
-			<artifactId>mail-client</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<groupId>com.codenvy.commons</groupId>
+			<artifactId>codenvy-commons-mail-client</artifactId>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
@@ -163,8 +167,7 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<version>${commons-fileupload.version}</version>
-		</dependency>
+			</dependency>
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
 			<artifactId>exo.kernel.commons</artifactId>
@@ -187,7 +190,6 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.6</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -206,7 +208,6 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

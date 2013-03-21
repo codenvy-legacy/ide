@@ -28,7 +28,6 @@ import com.google.collide.codemirror2.CodeMirror2;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.codemirror2.TokenType;
 import com.google.collide.codemirror2.TokenUtil;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.TaggableLine;
 import com.google.collide.shared.document.Line;
@@ -43,6 +42,7 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcesso
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A content assist processor proposes completions and

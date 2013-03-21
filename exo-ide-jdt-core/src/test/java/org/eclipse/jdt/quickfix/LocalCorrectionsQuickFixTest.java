@@ -38,7 +38,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-
+@Ignore
 public class LocalCorrectionsQuickFixTest extends QuickFixTest
 {
 
@@ -5530,7 +5530,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
    }
-
+   @Ignore
    @Test
    public void testRemoveDeadCodeIfThen() throws Exception
    {
@@ -5588,7 +5588,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
 
       assertEqualStringsIgnoreOrder(new String[]{preview1, preview2}, new String[]{expected1, expected2});
    }
-
+   @Ignore
    @Test
    public void testRemoveDeadCodeIfThen2() throws Exception
    {
@@ -5655,7 +5655,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
 
       assertEqualStringsIgnoreOrder(new String[]{preview1, preview2}, new String[]{expected1, expected2});
    }
-
+   @Ignore
    @Test
    public void testRemoveDeadCodeIfThen3() throws Exception
    {
@@ -5723,7 +5723,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
 
       assertEqualStringsIgnoreOrder(new String[]{preview1, preview2}, new String[]{expected1, expected2});
    }
-
+   @Ignore
    @Test
    public void testRemoveDeadCodeIfThen4() throws Exception
    {
@@ -5787,7 +5787,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
 
       assertEqualStringsIgnoreOrder(new String[]{preview1, preview2}, new String[]{expected1, expected2});
    }
-
+   @Ignore
    @Test
    public void testRemoveDeadCodeIfThen5() throws Exception
    {

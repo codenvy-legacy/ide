@@ -21,9 +21,9 @@ import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.renderer.Renderer;
 import com.google.collide.mvp.UiComponent;
 import com.google.collide.shared.document.anchor.Anchor;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import elemental.html.Element;
 

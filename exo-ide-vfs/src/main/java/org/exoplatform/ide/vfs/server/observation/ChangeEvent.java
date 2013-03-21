@@ -62,14 +62,16 @@ public class ChangeEvent
    private final String oldItemPath;
    private final String mimeType;
    private final ChangeType type;
+   private final String userId;
 
    public ChangeEvent(VirtualFileSystem vfs,
                       String itemId,
                       String itemPath,
                       String mimeType,
-                      ChangeType type)
+                      ChangeType type,
+                      String userId)
    {
-      this(vfs, itemId, itemPath, null, mimeType, type);
+      this(vfs, itemId, itemPath, null, mimeType, type, userId);
    }
 
    public ChangeEvent(VirtualFileSystem vfs,
@@ -77,7 +79,8 @@ public class ChangeEvent
                       String itemPath,
                       String oldItemPath,
                       String mimeType,
-                      ChangeType type)
+                      ChangeType type,
+                      String userId)
    {
       if (vfs == null)
       {
@@ -95,12 +98,17 @@ public class ChangeEvent
       {
          throw new IllegalArgumentException("Change type may not be null. ");
       }
+      if (userId == null)
+      {
+         throw new IllegalArgumentException("User may not be null. ");
+      }
       this.vfs = vfs;
       this.itemId = itemId;
       this.itemPath = itemPath;
       this.oldItemPath = oldItemPath;
       this.mimeType = mimeType;
       this.type = type;
+      this.userId = userId;
    }
 
    public VirtualFileSystem getVirtualFileSystem()
@@ -133,23 +141,22 @@ public class ChangeEvent
       return type;
    }
 
+   public String getUserId()
+   {
+      return userId;
+   }
+
    @Override
    public String toString()
    {
-      String vfsID = null;
-      try
-      {
-         vfsID = vfs.getInfo().getId();
-      }
-      catch (VirtualFileSystemException ignored)
-      {
-      }
       return "ChangeEvent{" +
-         "vfs='" + vfsID + '\''+
+         "vfs=" + vfs +
          ", itemId='" + itemId + '\'' +
          ", itemPath='" + itemPath + '\'' +
          ", oldItemPath='" + oldItemPath + '\'' +
+         ", mimeType='" + mimeType + '\'' +
          ", type=" + type +
+         ", userId='" + userId + '\'' +
          '}';
    }
 }

@@ -27,12 +27,16 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -46,10 +50,13 @@ public class ProjectTreeItem extends TreeItem
    
    private String prefixId;
    
-   public ProjectTreeItem(Item item, String prefixId)
+   private Map<String, String> locktokens;
+   
+   public ProjectTreeItem(Item item, String prefixId, Map<String, String> locktokens)
    {
       this.item = item;
       this.prefixId = prefixId;
+      this.locktokens = locktokens;
       setUserObject(item);
       render();      
    }
@@ -122,26 +129,38 @@ public class ProjectTreeItem extends TreeItem
    
    private String getTitle(Item item)
    {
-      return item.getName();
+      if (locktokens == null)
+      {
+         return (item.getName() == null || item.getName().isEmpty()) ? "/" : item.getName();
+      }
 
-//      if (locktokens == null)
-//      {
-//         return (item.getName() == null || item.getName().isEmpty()) ? "/" : item.getName();
-//      }
-//
-//      String title = "";
-//      if (item instanceof FileModel && ((FileModel)item).isLocked())
-//      {
-//         if (!locktokens.containsKey(item.getId()))
-//         {
-//            title +=
-//               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-11px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
-//                  + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;";
-//         }
-//      }
-//      title += item.getName().isEmpty() ? "/" : item.getName();
-//
-//      return title;
+      String title = "";
+      if (item instanceof FileModel && ((FileModel)item).isLocked())
+      {
+         if (!locktokens.containsKey(item.getId()))
+         {
+            title +=
+               "<img id=\"resourceLocked\" style=\"position:absolute; margin-left:-11px; margin-top:3px;\"  border=\"0\" suppress=\"TRUE\" src=\""
+                  + UIHelper.getGadgetImagesURL() + "navigation/lock.png" + "\" />&nbsp;&nbsp;";
+         }
+      }
+      title += item.getName().isEmpty() ? "/" : item.getName();
+
+      return title;
+   }
+
+   public ProjectTreeItem getChildByItemId(String itemId)
+   {
+      for (int i = 0; i < getChildCount(); i++)
+      {
+         ProjectTreeItem childItem = (ProjectTreeItem)getChild(i);
+         if (childItem.getUserObject() != null && ((Item)childItem.getUserObject()).getId().equals(itemId))
+         {
+            return childItem;
+         }
+      }
+      
+      return null;
    }
 
 }

@@ -29,6 +29,8 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -110,7 +112,37 @@ public class GitHubService
       @PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
-      return oauthTokenProvider.getToken("github", userId);
+      final String token = oauthTokenProvider.getToken("github", userId);
+
+      if (token == null || token.isEmpty())
+      {
+         return null;
+      }
+
+      //need to check if token which stored is valid for requests, then if valid - we send it to user
+      String tokenVerifyUrl = "https://api.github.com/?access_token=" + token;
+      HttpURLConnection http = null;
+      try
+      {
+         http = (HttpURLConnection)new URL(tokenVerifyUrl).openConnection();
+         http.setInstanceFollowRedirects(false);
+         http.setRequestMethod("GET");
+         http.setRequestProperty("Accept", "application/json");
+
+         if (http.getResponseCode() == 401)
+         {
+            return null;
+         }
+      }
+      finally
+      {
+         if (http != null)
+         {
+            http.disconnect();
+         }
+      }
+
+      return token;
    }
 
    @POST

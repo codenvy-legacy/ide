@@ -111,7 +111,7 @@ public class MountPoint
    static final String PROPERTIES_FILE_SUFFIX = "_props";
 
 
-   /* Hide .vfs directory. */
+   /** Hide .vfs directory. */
    private static final java.io.FilenameFilter SERVICE_DIR_FILTER = new java.io.FilenameFilter()
    {
       @Override
@@ -120,6 +120,10 @@ public class MountPoint
          return !(SERVICE_DIR.equals(name));
       }
    };
+
+   /** Hide .vfs and .git directories. */
+   private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER =
+      new OrFileNameFilter(SERVICE_DIR_FILTER, FileUtils.GIT_FILTER);
 
    private static class OrFileNameFilter implements java.io.FilenameFilter
    {
@@ -144,9 +148,6 @@ public class MountPoint
          return true;
       }
    }
-
-   private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER =
-      new OrFileNameFilter(SERVICE_DIR_FILTER, FileUtils.GIT_FILTER);
 
    // Add in cache if file is not locked to avoid multiple checking the same files.
    private static final String NO_LOCK = "no_lock";
@@ -258,6 +259,7 @@ public class MountPoint
    }
 
    private final java.io.File ioRoot;
+   private final SearcherProvider searcherProvider;
 
    /* NOTE -- This does not related to virtual file system locking in any kind. -- */
    private final FileLockFactory fileLockFactory;
@@ -282,9 +284,10 @@ public class MountPoint
     *    virtual file system API.
     */
    @SuppressWarnings("unchecked")
-   MountPoint(java.io.File ioRoot)
+   MountPoint(java.io.File ioRoot, SearcherProvider searcherProvider)
    {
       this.ioRoot = ioRoot;
+      this.searcherProvider = searcherProvider;
       root = new VirtualFile(ioRoot, Path.ROOT, this);
       fileLockFactory = new FileLockFactory(FILE_LOCK_MAX_THREADS);
 
@@ -344,7 +347,7 @@ public class MountPoint
    }
 
    /** Call after unmount this MountPoint. Clear all caches. */
-   void reset()
+   public void reset()
    {
       clearMetadataCache();
       clearAclCache();
@@ -472,6 +475,18 @@ public class MountPoint
          if (content != null)
          {
             doUpdateContent(newVirtualFile, mediaType, content);
+         }
+
+         if (searcherProvider != null)
+         {
+            try
+            {
+               searcherProvider.getSearcher(this).add(newVirtualFile);
+            }
+            catch (IOException e)
+            {
+               LOG.error(e.getMessage(), e);
+            }
          }
 
          return newVirtualFile;
@@ -613,6 +628,18 @@ public class MountPoint
          }
 
          FileUtils.nioCopy(source.getIoFile(), destination.getIoFile(), null);
+
+         if (searcherProvider != null)
+         {
+            try
+            {
+               searcherProvider.getSearcher(this).add(destination);
+            }
+            catch (IOException e)
+            {
+               LOG.error(e.getMessage(), e); // just log about i/o error in index
+            }
+         }
       }
       catch (IOException e)
       {
@@ -838,6 +865,18 @@ public class MountPoint
          }
 
          doUpdateContent(virtualFile, mediaType, content);
+
+         if (searcherProvider != null)
+         {
+            try
+            {
+               searcherProvider.getSearcher(this).update(virtualFile);
+            }
+            catch (IOException e)
+            {
+               LOG.error(e.getMessage(), e);
+            }
+         }
       }
       finally
       {
@@ -876,6 +915,10 @@ public class MountPoint
 
    void delete(VirtualFile virtualFile, String lockToken) throws VirtualFileSystemException
    {
+      if (virtualFile.isRoot())
+      {
+         throw new InvalidArgumentException("Unable delete root folder. ");
+      }
       final FileLockFactory.FileLock lock =
          fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
       try
@@ -946,10 +989,23 @@ public class MountPoint
       clearLockTokensCache();
       clearMetadataCache();
 
+      final String path = virtualFile.getPath();
       if (!FileUtils.deleteRecursive(virtualFile.getIoFile()))
       {
          LOG.error("Unable delete file {}", virtualFile.getIoFile());
          throw new VirtualFileSystemException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
+      }
+
+      if (searcherProvider != null)
+      {
+         try
+         {
+            searcherProvider.getSearcher(this).delete(path);
+         }
+         catch (IOException e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
       }
 
       // delete ACL file
@@ -1772,7 +1828,7 @@ public class MountPoint
 
    /* ============ HELPERS  ============ */
 
-   private String getCurrentUserId()
+   String getCurrentUserId()
    {
       final ConversationState cs = ConversationState.getCurrent();
       if (cs != null)
@@ -1807,7 +1863,6 @@ public class MountPoint
          }
          catch (IOException ignored)
          {
-            // ignore
          }
       }
    }

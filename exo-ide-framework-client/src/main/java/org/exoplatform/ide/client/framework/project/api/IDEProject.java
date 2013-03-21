@@ -22,6 +22,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -42,13 +43,25 @@ public class IDEProject extends ProjectModel
    {
       void onLoadComplete(Throwable error);
    }
+   
+   public interface FolderChangedHandler
+   {
+      void onFolderChanged(FolderModel folder);
+   }
 
+   private FolderChangedHandler folderChangedHandler;
+   
    public IDEProject(ProjectModel project)
    {
       super(project);
    }
+   
+   public void setFolderChangedHandler(FolderChangedHandler folderChangedHandler)
+   {
+      this.folderChangedHandler = folderChangedHandler;
+   }
 
-   public List<Item> getChildren(Folder parent) throws Exception
+   public List<Item> getChildren(Folder parent)
    {
       if (parent instanceof FolderModel)
       {
@@ -60,11 +73,11 @@ public class IDEProject extends ProjectModel
       }
       else
       {
-         throw new Exception("Item " + parent.getPath() + " is not a folder");
+         throw new IllegalArgumentException("Item " + parent.getPath() + " is not a folder");
       }
    }
 
-   public Item getChildByName(Folder parent, String name) throws Exception
+   public Item getChildByName(Folder parent, String name)
    {
       for (Item item : getChildren(parent))
       {
@@ -74,10 +87,10 @@ public class IDEProject extends ProjectModel
          }
       }
 
-      throw new Exception("Item " + name + " not found in folder " + parent.getPath());
+      throw new IllegalArgumentException("Item " + name + " not found in folder " + parent.getPath());
    }
 
-   public Item getResource(Folder parent, String path) throws Exception
+   public Item getResource(Folder parent, String path)
    {
       while (path.startsWith("/"))
       {
@@ -102,14 +115,14 @@ public class IDEProject extends ProjectModel
          }
       }
 
-      throw new Exception("Item " + name + " not found in folder " + parent.getPath());
+      throw new IllegalArgumentException("Item " + name + " not found in folder " + parent.getPath());
    }
 
-   public Item getResource(String absolutePath) throws Exception
+   public Item getResource(String absolutePath)
    {
       if (!absolutePath.startsWith(getPath()))
       {
-         throw new Exception("Item is out of the project's scope. Project : " + getName() + ", item path is : "
+         throw new IllegalArgumentException("Item is out of the project's scope. Project : " + getName() + ", item path is : "
             + absolutePath);
       }
 
@@ -126,7 +139,7 @@ public class IDEProject extends ProjectModel
          Item child = getResource(parent, parts[i]);
          if (i < parts.length - 1 && !(child instanceof Folder))
          {
-            throw new Exception("Item " + child.getPath() + " is not a folder");
+            throw new IllegalArgumentException("Item " + child.getPath() + " is not a folder");
          }
 
          if (i == parts.length - 1)
@@ -137,7 +150,62 @@ public class IDEProject extends ProjectModel
          parent = (Folder)child;
       }
 
-      throw new Exception("Item " + absolutePath + " not found");
+      throw new IllegalArgumentException("Item " + absolutePath + " not found");
+   }
+   
+   public void addItem(Item item)
+   {
+      if (!(item instanceof ItemContext))
+      {
+         throw new IllegalArgumentException("Item " + item.getPath() + " is not ItemContext");
+      }
+      
+      String path = item.getPath();
+      path = path.substring(0, path.lastIndexOf("/"));
+      
+      Item parent = getResource(path);
+      if (parent == null)
+      {
+         throw new IllegalArgumentException("Resource " + path + " not found");
+      }
+      
+      if (!(parent instanceof FolderModel))
+      {
+         throw new IllegalArgumentException("Resource " + path + " is not a folder");
+      }
+      
+      FolderModel folder = (FolderModel)parent;
+      ProjectModel project = folder instanceof ProjectModel ? (ProjectModel)folder : folder.getProject();
+      
+      folder.getChildren().getItems().add(item);
+      ((ItemContext)item).setParent(folder);
+      ((ItemContext)item).setProject(project);
+      
+      if (folderChangedHandler != null)
+      {
+         folderChangedHandler.onFolderChanged(folder);
+      }
+   }
+   
+   public void removeItem(String path)
+   {
+      Item item = getResource(path);
+      if (item == null)
+      {
+         throw new IllegalArgumentException("Item " + path + " not found");
+      }
+      
+      FolderModel parent = ((ItemContext)item).getParent();
+      if (parent == null)
+      {
+         throw new IllegalArgumentException("Can't remove Project " + path);
+      }
+
+      parent.getChildren().getItems().remove(item);
+      if (folderChangedHandler != null)
+      {
+         folderChangedHandler.onFolderChanged(parent);
+      }      
    }
 
    private void validateResource(Item item) throws Exception
@@ -163,6 +231,25 @@ public class IDEProject extends ProjectModel
       {
          throw new Exception("Item has no parent.  Project : " + getName() + ", item path is : " + item.getPath());
       }
+   }
+   
+   public void notifyFolderChanged(String path)
+   {
+      Item item = getResource(path);
+      if (item == null)
+      {
+         throw new IllegalArgumentException("Item " + path + " not found");
+      }
+
+      FolderModel parent = item instanceof FileModel ? ((ItemContext)item).getParent() : (FolderModel)item;
+      if (folderChangedHandler != null)
+      {
+         folderChangedHandler.onFolderChanged(parent);
+      }
+   }
+   
+   public void resourceChanged(Item resource)
+   {      
    }
 
    public void refresh(final FolderModel folder, final AsyncCallback<Folder> callback)

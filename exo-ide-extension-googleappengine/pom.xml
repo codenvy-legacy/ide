@@ -7,7 +7,6 @@
       <version>2.0.0-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-extension-googleappengine</artifactId>
-   <version>2.0.0-SNAPSHOT</version>
    <name>Codenvy IDE :: Extension :: GoogleAppengine</name>
 
    <dependencies>
@@ -24,7 +23,6 @@
       <dependency>
          <groupId>org.codehaus.jackson</groupId>
          <artifactId>jackson-core-asl</artifactId>
-         <version>1.9.4</version>
       </dependency>
 
       <dependency>

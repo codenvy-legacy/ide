@@ -66,6 +66,8 @@ import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -454,7 +456,9 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()),
          OutputMessage.Type.GIT));
-      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+      List<Property> properties = new ArrayList<Property>();
+      properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
+      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null, properties));
 
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {

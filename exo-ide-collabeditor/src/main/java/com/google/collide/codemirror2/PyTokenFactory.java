@@ -16,10 +16,11 @@ package com.google.collide.codemirror2;
 
 import static com.google.collide.codemirror2.Token.LITERAL_PERIOD;
 
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringSet;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.StringUtils;
+
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 
 /**
  * Token factory that splits some PY tokens to more canonical ones.

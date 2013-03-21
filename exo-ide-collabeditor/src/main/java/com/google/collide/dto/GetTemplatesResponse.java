@@ -14,9 +14,9 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.dtogen.shared.RoutingType;
-import com.google.collide.dtogen.shared.ServerToClientDto;
-import com.google.collide.json.shared.JsonStringMap;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Tells the client about templates. The template map is indexed by human name,
