@@ -21,12 +21,10 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.exoplatform.ide.git.server.GitHelper;
-import org.exoplatform.ide.git.server.StatusPage;
-import org.exoplatform.ide.git.shared.GitFile;
-import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.git.shared.Status;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -51,13 +49,12 @@ public class GitIgnoreTest extends BaseTest
       git.commit().setMessage("add .gitignore file").call();
       addFile(b, "ignored", "xxxxx");
    }
-   
+
    public void testStatusWithGitIgnore() throws Exception
    {
-      StatusPage statusPage = getDefaultConnection().status(new StatusRequest());
-      statusPage.writeTo(System.out);
+      Status statusPage = getDefaultConnection().status(false);
       assertEquals("master", statusPage.getBranchName());
-      List<GitFile> untracked = statusPage.getUntracked();
+      Set<String> untracked = statusPage.getUntracked();
       assertEquals(0, untracked.size());
    }
 }

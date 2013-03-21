@@ -38,7 +38,7 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @Produces(MediaType.TEXT_PLAIN)
-public final class InfoPageWriter implements MessageBodyWriter<InfoPage>
+public final class StatusPageWriter implements MessageBodyWriter<InfoPage>
 {
    /**
     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],

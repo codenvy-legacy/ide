@@ -69,7 +69,6 @@ import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
-import org.eclipse.jgit.transport.RemoteRefUpdate.Status;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -78,7 +77,7 @@ import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.LogPage;
-import org.exoplatform.ide.git.server.StatusPage;
+import org.exoplatform.ide.git.server.StatusImpl;
 import org.exoplatform.ide.git.server.jgit.jgit_copy.CheckoutCommand_Copy;
 import org.exoplatform.ide.git.server.jgit.jgit_copy.DirCacheCheckout_Copy;
 import org.exoplatform.ide.git.shared.AddRequest;
@@ -91,7 +90,6 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
-import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
@@ -108,16 +106,14 @@ import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
-import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -462,16 +458,10 @@ public class JGitConnection implements GitConnection
    {
       try
       {
-         // Check do we have something to commit.
-         StatusPage status = status(new StatusRequest());
-         // Changed and add to index files. If empty ot null then nothing to commit.
-         List<GitFile> toCommit = status.getChangedNotCommited();
-         if (!request.isAll() && (toCommit == null || toCommit.isEmpty()))
+         Status status = status(false);
+         if (status.isClean())
          {
-            // Nothing to commit.
-            OutputStream buff = new ByteArrayOutputStream();
-            status.writeTo(buff);
-            throw new GitException(buff.toString());
+            throw new GitException("Nothing to commit");
          }
 
          CommitCommand commitCommand =
@@ -837,7 +827,7 @@ public class JGitConnection implements GitConnection
             Collection<RemoteRefUpdate> refUpdates = pushResult.getRemoteUpdates();
             for (RemoteRefUpdate remoteRefUpdate : refUpdates)
             {
-               if (!remoteRefUpdate.getStatus().equals(Status.OK))
+               if (!remoteRefUpdate.getStatus().equals(org.eclipse.jgit.transport.RemoteRefUpdate.Status.OK))
                {
                   String message = "Failed to push some refs to ‘" + request.getRemote() + "’(rejected)";
                   throw new GitException(message);
@@ -1284,55 +1274,16 @@ public class JGitConnection implements GitConnection
 
    /** @see org.exoplatform.ide.git.server.GitConnection#status(org.exoplatform.ide.git.shared.StatusRequest) */
    @Override
-   public StatusPage status(StatusRequest request) throws GitException
+   public Status status(boolean shortFormat) throws GitException
    {
       try
       {
          Ref headRef = repository.getRef(Constants.HEAD);
-         if (headRef == null)
-         {
-            throw new GitException("HEAD reference not found. Seems working directory is not git repository. ");
-         }
-
          String currentBranch = Repository.shortenRefName(headRef.getLeaf().getName());
          org.eclipse.jgit.api.Status status = new Git(repository).status().call();
-
-         List<GitFile> changedNotUpdated = new ArrayList<GitFile>();
-         List<GitFile> changedNotCommited = new ArrayList<GitFile>();
-         List<GitFile> untracked = new ArrayList<GitFile>();
-
-         changedNotCommited.addAll(JGitConnection.filterAndConvertFiles(status.getAdded(), GitFile.FileStatus.NEW));
-         changedNotCommited.addAll(JGitConnection.filterAndConvertFiles(status.getChanged(),
-            GitFile.FileStatus.MODIFIED));
-         changedNotUpdated.addAll(JGitConnection.filterAndConvertFiles(status.getModified(),
-            GitFile.FileStatus.MODIFIED));
-         changedNotUpdated.addAll(JGitConnection.filterAndConvertFiles(status.getConflicting(),
-            GitFile.FileStatus.MODIFIED));
-         changedNotCommited
-            .addAll(JGitConnection.filterAndConvertFiles(status.getMissing(), GitFile.FileStatus.DELETED));
-         changedNotCommited
-            .addAll(JGitConnection.filterAndConvertFiles(status.getRemoved(), GitFile.FileStatus.DELETED));
-         untracked.addAll(JGitConnection.filterAndConvertFiles(status.getUntracked(), GitFile.FileStatus.UNTRACKED));
-
-         return new StatusPage(currentBranch, changedNotUpdated, changedNotCommited, untracked, request);
-      }
-      catch (MissingObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (IncorrectObjectTypeException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (CorruptObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
+         return new StatusImpl(currentBranch, shortFormat, status);
       }
       catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (NoWorkTreeException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -1474,24 +1425,6 @@ public class JGitConnection implements GitConnection
          }
       }
       return tags;
-   }
-
-   private static Set<GitFile> filterAndConvertFiles(Set<String> source, GitFile.FileStatus status)
-   {
-      Set<GitFile> filtered = new HashSet<GitFile>();
-      for (String path : source)
-      {
-         if (path.contains(".vfs/"))
-         {
-            continue;
-         }
-         else
-         {
-            filtered.add(new GitFile(path, status));
-         }
-      }
-      return filtered;
-
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#getUser() */
