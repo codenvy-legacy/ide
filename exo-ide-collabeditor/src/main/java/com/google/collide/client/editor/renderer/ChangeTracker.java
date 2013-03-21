@@ -54,7 +54,7 @@ class ChangeTracker
       SelectionModel.SelectionListener,
       Buffer.SpacerListener,
       FocusManager.FocusListener,
-      FoldingManager.FoldingListener {
+      FoldingManager.FoldMarksStateListener {
 
   enum ChangeType {
     /** The viewport's top or bottom are now pointing to different lines */
@@ -101,6 +101,8 @@ class ChangeTracker
    * existing following lines
    */
   private boolean hadContentChangeThatRepositionsFollowingLines;
+  /** Is content changed by reason of code folding */
+  private boolean byReasonOfFolding;
   /** List of lines that need to be re-rendered */
   private final JsonArray<Line> dirtyLines;
 
@@ -173,6 +175,10 @@ class ChangeTracker
    */
   public boolean hadContentChangeThatUpdatesFollowingLines() {
     return hadContentChangeThatRepositionsFollowingLines;
+  }
+
+  public boolean isByReasonOfFolding() {
+     return byReasonOfFolding;
   }
   
   public EnumSet<ViewportModel.Edge> getViewportLineNumberChangedEdges() {
@@ -278,6 +284,7 @@ class ChangeTracker
      * the document.
      */
     handleContentChange(relevantContentChangedLineNumber, buffer.hasSpacers() || folding);
+    byReasonOfFolding = folding;
   }
 
   @Override
@@ -304,16 +311,6 @@ class ChangeTracker
     if (selection.hasSelection()) {
       markVisibleLinesDirty(selection.getSelectionRange(true), getViewportRange());
     }
-  }
-
-  @Override
-  public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
-    // nothing to do
-  }
-
-  @Override
-  public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
-    // nothing to do
   }
 
   @Override
@@ -344,7 +341,7 @@ class ChangeTracker
     listenerRemovers.add(viewport.getListenerRegistrar().add(this));
     listenerRemovers.add(selection.getSelectionListenerRegistrar().add(this));
     listenerRemovers.add(buffer.getSpacerListenerRegistrar().add(this));
-    listenerRemovers.add(foldingManager.getFoldingListenerRegistrar().add(this));
+    listenerRemovers.add(foldingManager.getFoldMarksStateListenerRegistrar().add(this));
   }
 
   private void clearChangeState() {
@@ -353,6 +350,7 @@ class ChangeTracker
     dirtyLines.clear();
     topmostContentChangedLineNumber = Integer.MAX_VALUE;
     hadContentChangeThatRepositionsFollowingLines = false;
+    byReasonOfFolding = false;
     viewportLineNumberChangedEdges.clear();
   }
 

@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.shared.document.Document;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -98,11 +98,11 @@ import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.collide.client.CollabEditor;
-import com.google.collide.client.CollabEditorExtension;
-import com.google.collide.shared.document.Document;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -115,7 +115,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorContextMenuHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
    ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler,
-   EditorPasteTextHandler, EditorDeleteTextHandler
+   EditorPasteTextHandler, EditorDeleteTextHandler, EditorFoldingCollapseHandler, EditorFoldingExpandHandler
 {
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT

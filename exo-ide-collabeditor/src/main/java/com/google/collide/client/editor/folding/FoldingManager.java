@@ -23,25 +23,26 @@ import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
-import com.google.collide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IDocumentInformationMapping;
 import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.editor.shared.text.ISlaveDocumentManager;
+import org.exoplatform.ide.editor.shared.text.Region;
 import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 import org.exoplatform.ide.editor.shared.text.projection.ProjectionDocument;
 import org.exoplatform.ide.editor.shared.text.projection.ProjectionDocumentManager;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,7 @@ import java.util.Map.Entry;
 public class FoldingManager implements Document.TextListener
 {
    /**
-    * A listener that is called when the user collapse or expand text block.
+    * A listener that is called when a text block was collapsed or expanded.
     */
    public interface FoldingListener
    {
@@ -75,17 +76,19 @@ public class FoldingManager implements Document.TextListener
        * @param linesToExpand a contiguous list of lines that should be expanded
        */
       void onExpand(int lineNumber, JsonArray<Line> linesToExpand);
+   }
 
+   public interface FoldMarksStateListener
+   {
       /**
        * Called when any fold mark added/removed or it state changed (collapsed/expanded).
        */
       void onFoldMarksStateChaged();
    }
 
-   /**
-    * Manager for {@link FoldingListener}s.
-    */
    private final ListenerManager<FoldingListener> foldingListenerManager;
+
+   private final ListenerManager<FoldMarksStateListener> foldMarksStateListenerManager;
 
    /**
     * Manager for anchors within a document.
@@ -113,7 +116,7 @@ public class FoldingManager implements Document.TextListener
     */
    private final Buffer buffer;
 
-   private Map<FoldMarker, DefaultFoldRange> markerToPositionMap = new HashMap<FoldMarker, DefaultFoldRange>();
+   private Map<FoldMarker, AbstractFoldRange> markerToPositionMap = new HashMap<FoldMarker, AbstractFoldRange>();
 
    private Document document;
 
@@ -154,6 +157,7 @@ public class FoldingManager implements Document.TextListener
       this.buffer = buffer;
       this.resources = resources;
       foldingListenerManager = ListenerManager.create();
+      foldMarksStateListenerManager = ListenerManager.create();
       initializeGutter();
    }
 
@@ -191,6 +195,11 @@ public class FoldingManager implements Document.TextListener
    public ListenerRegistrar<FoldingListener> getFoldingListenerRegistrar()
    {
       return foldingListenerManager;
+   }
+
+   public ListenerRegistrar<FoldMarksStateListener> getFoldMarksStateListenerRegistrar()
+   {
+      return foldMarksStateListenerManager;
    }
 
    /**
@@ -253,7 +262,7 @@ public class FoldingManager implements Document.TextListener
    @Override
    public void onTextChange(Document document, JsonArray<TextChange> textChanges)
    {
-      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument));
+      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
    }
 
    /**
@@ -278,7 +287,7 @@ public class FoldingManager implements Document.TextListener
       masterDocument = document.<IDocument> getTag("IDocument");
       initializeProjection(masterDocument);
 
-      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument));
+      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), false);
    }
 
    /**
@@ -369,14 +378,9 @@ public class FoldingManager implements Document.TextListener
             anchorsInCollapsedRangeToShift, linesToCollapse.indexOf(line) == 0);
       }
 
-      //      if (true)
-      //      {
-      //         anchorManager.handleTextDeletionLastLineLeftover(anchorsLeftoverFromLastLine, linesToCollapse.get(0),
-      //            linesToCollapse.peek(), lastLineFirstUntouchedColumn);
-      //      }
-
+      // TODO bug: when text is selected after collapsed block, it still collapsed after collapsing
       anchorManager.handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
-         anchorsLeftoverFromLastLine, linesToCollapse.get(0), lineNumber, 0, 0, linesToCollapse.peek().getText()
+         anchorsLeftoverFromLastLine, linesToCollapse.get(0).getPreviousLine(), lineNumber, 0, 0, linesToCollapse.peek().getText()
             .length());
 
       dispatchCollapse(lineNumber, linesToCollapse);
@@ -397,7 +401,7 @@ public class FoldingManager implements Document.TextListener
 
    private void dispatchCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse)
    {
-      foldingListenerManager.dispatch(new Dispatcher<FoldingManager.FoldingListener>()
+      foldingListenerManager.dispatch(new Dispatcher<FoldingListener>()
       {
          @Override
          public void dispatch(FoldingListener listener)
@@ -409,7 +413,7 @@ public class FoldingManager implements Document.TextListener
 
    private void dispatchExpand(final int lineNumber, final JsonArray<Line> linesToExpand)
    {
-      foldingListenerManager.dispatch(new Dispatcher<FoldingManager.FoldingListener>()
+      foldingListenerManager.dispatch(new Dispatcher<FoldingListener>()
       {
          @Override
          public void dispatch(FoldingListener listener)
@@ -421,10 +425,10 @@ public class FoldingManager implements Document.TextListener
 
    private void dispatchStateChaged()
    {
-      foldingListenerManager.dispatch(new Dispatcher<FoldingManager.FoldingListener>()
+      foldMarksStateListenerManager.dispatch(new Dispatcher<FoldMarksStateListener>()
       {
          @Override
-         public void dispatch(FoldingListener listener)
+         public void dispatch(FoldMarksStateListener listener)
          {
             listener.onFoldMarksStateChaged();
          }
@@ -453,10 +457,10 @@ public class FoldingManager implements Document.TextListener
       FoldMarker previousFoldMarker = null;
       int previousDistance = Integer.MAX_VALUE;
 
-      for (Entry<FoldMarker, DefaultFoldRange> entry : markerToPositionMap.entrySet())
+      for (Entry<FoldMarker, AbstractFoldRange> entry : markerToPositionMap.entrySet())
       {
          FoldMarker foldMarker = entry.getKey();
-         DefaultFoldRange position = entry.getValue();
+         AbstractFoldRange position = entry.getValue();
          if (position == null)
          {
             continue;
@@ -490,7 +494,7 @@ public class FoldingManager implements Document.TextListener
     * @param line the line
     * @return <code>-1</code> if line is not contained, a position number otherwise
     */
-   private int getDistance(FoldMarker annotation, DefaultFoldRange position, IDocument document, int line)
+   private int getDistance(FoldMarker annotation, AbstractFoldRange position, IDocument document, int line)
    {
       if (position.getOffset() > -1 && position.getLength() > -1)
       {
@@ -521,15 +525,43 @@ public class FoldingManager implements Document.TextListener
     * Updates folding structure according to he given <code>positions</code>.
     * 
     * @param positions list of the positions that describes the folding structure
+    * @param restoreMarkersState
     */
-   private void updateFoldingStructure(List<DefaultFoldRange> positions)
+   private void updateFoldingStructure(List<AbstractFoldRange> positions, boolean restoreMarkersState)
    {
       markerToPositionMap.clear();
-      for (DefaultFoldRange position : positions)
+      for (AbstractFoldRange range : positions)
       {
-         markerToPositionMap.put(new FoldMarker(resources), position);
+         boolean isCollapsed = false;
+         if (restoreMarkersState)
+         {
+            isCollapsed = isFoldRangeCollapsed(range);
+         }
+         markerToPositionMap.put(new FoldMarker(isCollapsed, resources), range);
       }
       dispatchStateChaged();
+   }
+
+   /**
+    * Checks whether specified <code>range</code> is collapsed.
+    * 
+    * @param range the range to check
+    * @return <code>true</code> if <code>range</code> is collapsed or if not collapsed
+    */
+   private boolean isFoldRangeCollapsed(AbstractFoldRange range)
+   {
+      boolean collapsed = false;
+      try
+      {
+         IRegion originRegion = new Region(range.getOffset(), range.getLength());
+         IRegion imageRegion = informationMapping.toImageRegion(originRegion);
+         collapsed = originRegion.getLength() != imageRegion.getLength();
+      }
+      catch (BadLocationException e)
+      {
+         // nothing to do
+      }
+      return collapsed;
    }
 
    /**

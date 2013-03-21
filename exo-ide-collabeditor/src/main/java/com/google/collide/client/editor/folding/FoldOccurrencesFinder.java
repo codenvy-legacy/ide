@@ -29,5 +29,5 @@ import java.util.List;
  */
 public interface FoldOccurrencesFinder
 {
-   List<DefaultFoldRange> computePositions(IDocument Document);
+   List<AbstractFoldRange> computePositions(IDocument Document);
 }

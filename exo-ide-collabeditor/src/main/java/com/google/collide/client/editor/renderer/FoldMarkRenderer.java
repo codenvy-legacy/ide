@@ -18,17 +18,18 @@
  */
 package com.google.collide.client.editor.renderer;
 
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.folding.FoldMarker;
 import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.gutter.Gutter;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.JsIntegerMap;
 import elemental.css.CSSStyleDeclaration;
 import elemental.dom.Node;
 import elemental.dom.NodeList;
 import elemental.html.Element;
+
+import org.exoplatform.ide.json.client.JsIntegerMap;
 
 /**
  * A renderer for the fold markers in the left gutter.
@@ -66,9 +67,7 @@ public class FoldMarkRenderer
    {
       int topLineNumber = viewport.getTopLineNumber();
       int bottomLineNumber = viewport.getBottomLineNumber();
-
       fillOrUpdateLines(topLineNumber, bottomLineNumber);
-
 //      if (previousBottomLineNumber == -1 || topLineNumber > previousBottomLineNumber
 //         || bottomLineNumber < previousTopLineNumber)
 //      {
@@ -228,7 +227,6 @@ public class FoldMarkRenderer
          }
          else
          {
-// TODO
 //            throw new IndexOutOfBoundsException("Tried to garbage collect line number " + i
 //               + " when it does not exist.");
             continue;

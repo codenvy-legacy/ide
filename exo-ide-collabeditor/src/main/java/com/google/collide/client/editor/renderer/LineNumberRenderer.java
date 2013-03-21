@@ -237,19 +237,6 @@ public class LineNumberRenderer {
 
   private void garbageCollectLines(int beginLineNumber, int endLineNumber) {
     for (int i = beginLineNumber; i <= endLineNumber; i++) {
-//      int line = i;
-//      try {
-//        if (isProjectionMode()) {
-//          line = projectionMapping.toImageLine(i);
-//          if (line < 0) {
-//            continue; // line is collapsed
-//          }
-//        }
-//      }
-//      catch (BadLocationException e) {
-//        // TODO
-//         continue;
-//      }
       Element lineElement = lineNumberToElementCache.get(i);
       if (lineElement != null) {
         leftGutter.removeUnmanagedElement(lineElement);

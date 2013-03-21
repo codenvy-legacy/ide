@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.editor.java;
 
-import com.google.collide.client.editor.folding.DefaultFoldRange;
+import com.google.collide.client.editor.folding.AbstractFoldRange;
 import com.google.collide.client.editor.folding.FoldOccurrencesFinder;
-import com.google.collide.shared.util.TextUtils;
 
 import org.eclipse.jdt.client.core.ISourceRange;
 import org.eclipse.jdt.client.core.SourceRange;
@@ -44,6 +43,7 @@ import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.editor.shared.text.Region;
+import org.exoplatform.ide.shared.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,7 +60,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
     * the region from after the '/**' to the beginning of the content, the other
     * from after the first content line until after the comment.
     */
-   private static final class CommentPosition extends DefaultFoldRange
+   private static final class CommentPosition extends AbstractFoldRange
    {
       CommentPosition(int offset, int length)
       {
@@ -158,7 +158,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
     * the lines before the one containing the simple name of the java element, one
     * folding away any lines after the caption.
     */
-   private static final class JavaElementPosition extends DefaultFoldRange
+   private static final class JavaElementPosition extends AbstractFoldRange
    {
 
       private SimpleName fMember;
@@ -259,7 +259,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
    private class FoldFinder extends ASTVisitor
    {
 
-      private List<DefaultFoldRange> folds = new ArrayList<DefaultFoldRange>();
+      private List<AbstractFoldRange> folds = new ArrayList<AbstractFoldRange>();
 
       private List<ImportDeclaration> imports = new ArrayList<ImportDeclaration>();
 
@@ -425,7 +425,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
    private CompilationUnit unit;
 
    @Override
-   public List<DefaultFoldRange> computePositions(IDocument document)
+   public List<AbstractFoldRange> computePositions(IDocument document)
    {
       ASTParser parser = ASTParser.newParser(AST.JLS3);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);

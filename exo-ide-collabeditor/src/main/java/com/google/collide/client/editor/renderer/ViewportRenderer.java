@@ -252,14 +252,24 @@ public class ViewportRenderer {
   /**
    * Renders changes to the content of the viewport at a line level, for example
    * line removals or additions.
-   * 
+   *
+   * @param beginLineNumber
    * @param removedLines these lines were in the viewport at time of removal
+   * @param isByReasonOfFolding is content changed by reason of code folding
    */
-  void renderViewportContentChange(int beginLineNumber, JsonArray<Line> removedLines) {
+  void renderViewportContentChange(int beginLineNumber, JsonArray<Line> removedLines, boolean isByReasonOfFolding) {
 
     // Garbage collect the elements of removed lines
     for (int i = 0, n = removedLines.size(); i < n; i++) {
       Line line = removedLines.get(i);
+
+      if (!isByReasonOfFolding) {
+         FoldMarker foldMarker = foldingManager.findFoldMarker(beginLineNumber + i, false);
+         if (foldMarker != null && foldMarker.isCollapsed()) {
+            foldingManager.expand(foldMarker);
+         }
+      }
+
       garbageCollectLine(line);
     }
     /*

@@ -552,9 +552,4 @@ public class ViewportModel
     });
   }
 
-  @Override
-  public void onFoldMarksStateChaged() {
-    // nothing to do
-  }
-
 }

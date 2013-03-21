@@ -18,6 +18,7 @@
  */
 package com.google.collide.client.editor.gutter;
 
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
@@ -32,15 +33,10 @@ import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.tooltip.Tooltip;
 import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
-import com.codenvy.ide.client.util.Elements;
-import org.exoplatform.ide.json.client.JsIntegerMap;
 import com.google.collide.dto.CodeError;
 import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls.CodeErrorImpl;
 import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonIntegerMap.IterationCallback;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
@@ -56,7 +52,10 @@ import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.json.client.JsIntegerMap;
 import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap.IterationCallback;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -551,14 +550,6 @@ public class NotificationManager implements DocumentListener, FoldingListener
    public void onExpand(int lineNumber, JsonArray<Line> linesToExpand)
    {
       redraw();
-   }
-
-   /**
-    * @see com.google.collide.client.editor.folding.FoldingManager.FoldingListener#onFoldMarksStateChaged()
-    */
-   @Override
-   public void onFoldMarksStateChaged()
-   {
    }
 
    private void redraw()

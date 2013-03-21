@@ -19,26 +19,22 @@
 package com.google.collide.client.editor.folding;
 
 import org.exoplatform.ide.editor.shared.runtime.Assert;
-import org.exoplatform.ide.editor.shared.text.BadLocationException;
-import org.exoplatform.ide.editor.shared.text.IDocument;
-import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.editor.shared.text.Position;
-import org.exoplatform.ide.editor.shared.text.Region;
 import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 
 /**
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: DefaultFoldRange.java Mar 18, 2013 12:18:43 PM azatsarynnyy $
+ * @version $Id: AbstractFoldRange.java Mar 18, 2013 12:18:43 PM azatsarynnyy $
  *
  */
-public class DefaultFoldRange implements IProjectionPosition
+public abstract class AbstractFoldRange implements IProjectionPosition
 {
 
    /** The offset of the position */
-   public int offset;
+   protected int offset;
 
    /** The length of the position */
-   public int length;
+   protected int length;
 
    /**
     * Creates a new fold range with the given offset and length.
@@ -46,43 +42,12 @@ public class DefaultFoldRange implements IProjectionPosition
     * @param offset the position offset, must be >= 0
     * @param length the position length, must be >= 0
     */
-   public DefaultFoldRange(int offset, int length)
+   public AbstractFoldRange(int offset, int length)
    {
       Assert.isTrue(offset >= 0);
       Assert.isTrue(length >= 0);
       this.offset = offset;
       this.length = length;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition#computeProjectionRegions(org.exoplatform.ide.editor.shared.text.IDocument)
-    */
-   @Override
-   public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException
-   {
-      //      IRegion info1 = document.getLineInformation(1);
-      //      IRegion info2 = document.getLineInformation(2);
-      //      IRegion info4 = document.getLineInformation(4);
-      //      IRegion info5 = document.getLineInformation(5);
-      //      IRegion info6 = document.getLineInformation(6);
-      //      
-      //      Region region1 = new Region(info1.getOffset(), info1.getLength()+1 + info2.getLength()+1);
-      //      Region region2 = new Region(info4.getOffset(), info4.getLength()+1 + info5.getLength()+1 + +info6.getLength()+1);
-      //      
-      //      return new Region[]{region1, region2};
-
-      int firstProjectionLineLength = document.getLineLength(document.getLineOfOffset(offset));
-      return new Region[]{new Region(offset + firstProjectionLineLength, length - firstProjectionLineLength)};
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition#computeCaptionOffset(org.exoplatform.ide.editor.shared.text.IDocument)
-    */
-   @Override
-   public int computeCaptionOffset(IDocument document) throws BadLocationException
-   {
-      // TODO Auto-generated method stub
-      return 0;
    }
 
    /**

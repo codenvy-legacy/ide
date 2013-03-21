@@ -142,7 +142,9 @@ public class Renderer {
         Log.markTimeline(getClass(), " - lineNumberRenderer...");
       }
       
-      lineNumberRenderer.render();
+//      lineNumberRenderer.render();
+      // TODO workaround for situation when new line inserted before the collapsed text block
+      lineNumberRenderer.renderLineAndFollowing(0);
       foldMarkRenderer.render();
 
       if (ENABLE_PROFILING) {
@@ -159,7 +161,7 @@ public class Renderer {
       }
       
       viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedLine,
-          changeTracker.getViewportRemovedLines());
+          changeTracker.getViewportRemovedLines(), changeTracker.isByReasonOfFolding());
 
       if (changeTracker.hadContentChangeThatUpdatesFollowingLines()) {
         if (ENABLE_PROFILING) {
