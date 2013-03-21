@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.groovy.client.event.PreviewGroovyTemplateEv
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class PreviewGroovyTemplateControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

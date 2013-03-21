@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class NavigationMenuGroup extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

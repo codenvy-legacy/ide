@@ -39,7 +39,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators"})
+@RolesAllowed({"developer"})
 public class DeployGroovyCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ViewVisibilityChangedHandler
 {

@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class QuickTextSearchControl extends TextInputControl implements IDEControl
 {
 

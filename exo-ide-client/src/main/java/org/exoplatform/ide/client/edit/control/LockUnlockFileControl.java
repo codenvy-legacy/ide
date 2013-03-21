@@ -51,7 +51,7 @@ import java.util.Map;
  * @version $Id:
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class LockUnlockFileControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ApplicationSettingsReceivedHandler, ItemUnlockedHandler, ItemLockedHandler
 {

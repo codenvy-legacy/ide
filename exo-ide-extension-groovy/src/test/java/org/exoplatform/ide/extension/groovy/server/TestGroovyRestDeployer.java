@@ -60,8 +60,6 @@ public class TestGroovyRestDeployer extends Base
 {
    private File script;
 
-   private SimpleSecurityContext adminSecurityContext;
-
    private SimpleSecurityContext devSecurityContext;
 
    private ConcurrentPicoContainer restfulContainer;
@@ -75,12 +73,9 @@ public class TestGroovyRestDeployer extends Base
          virtualFileSystem.createFile(testRoot.getId(), "script1", new MediaType("application", "x-groovy"), source);
       source.close();
 
-      Set<String> adminRoles = new HashSet<String>();
-      adminRoles.add("administrators");
       Set<String> devRoles = new HashSet<String>();
-      devRoles.add("developers");
+      devRoles.add("developer");
 
-      adminSecurityContext = new SimpleSecurityContext(new MockPrincipal("root"), adminRoles, "BASIC", false);
       devSecurityContext = new SimpleSecurityContext(new MockPrincipal("dev"), devRoles, "BASIC", false);
 
       Provider provider = (Provider)container.getComponentInstance("RestfulContainerProvider");
@@ -99,10 +94,10 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
+      ctx.put(SecurityContext.class, devSecurityContext);
       ConversationState.setCurrent(new ConversationState(new Identity(
-         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
-         adminSecurityContext.getUserRoles())));
+         devSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         devSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
@@ -123,10 +118,10 @@ public class TestGroovyRestDeployer extends Base
       // Deploy resource.
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
+      ctx.put(SecurityContext.class, devSecurityContext);
       ConversationState.setCurrent(new ConversationState(new Identity(
-         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
-         adminSecurityContext.getUserRoles())));
+         devSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         devSecurityContext.getUserRoles())));
       String path = "/ide/groovy/deploy" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&id=" + script.getId() //
@@ -159,10 +154,10 @@ public class TestGroovyRestDeployer extends Base
    {
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
+      ctx.put(SecurityContext.class, devSecurityContext);
       ConversationState.setCurrent(new ConversationState(new Identity(
-         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
-         adminSecurityContext.getUserRoles())));
+         devSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
+         devSecurityContext.getUserRoles())));
       String path = "/ide/groovy/validate-script" //
          + "?vfsid=" + virtualFileSystem.getInfo().getId() //
          + "&name=" + script.getName() //
@@ -178,70 +173,8 @@ public class TestGroovyRestDeployer extends Base
       assertEquals(204, response.getStatus());
    }
 
-   @Test
-   public void undeployNotAdmin() throws Exception
-   {
-      // Deploy resource as admin.
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(new ConversationState(new Identity(
-         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
-         adminSecurityContext.getUserRoles())));
-      String path = "/ide/groovy/deploy" //
-         + "?vfsid=" + virtualFileSystem.getInfo().getId() //
-         + "&id=" + script.getId() //
-         + "&projectid=" + testRoot.getId();
-
-      int before = restfulContainer.getComponentAdapters().size();
-
-      ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      assertEquals(204, response.getStatus());
-
-      // Check is resource deployed or not.
-      int after = restfulContainer.getComponentAdapters().size();
-      assertEquals(before + 1, after);
-
-      before = after;
-
-      // Try 'undeploy' resource as user with lower permissions (not admin).
-      headers = new MultivaluedMapImpl();
-      ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, devSecurityContext);
-      ConversationState.setCurrent(new ConversationState(new Identity(devSecurityContext.getUserPrincipal().getName(),
-         Collections.<MembershipEntry> emptySet(), devSecurityContext.getUserRoles())));
-      path = "/ide/groovy/undeploy" //
-         + "?vfsid=" + virtualFileSystem.getInfo().getId() //
-         + "&id=" + script.getId();
-      response = launcher.service("POST", path, "", headers, null, null, ctx);
-      assertEquals(403, response.getStatus());
-
-      // Resources must be untouched.
-      after = restfulContainer.getComponentAdapters().size();
-      assertEquals(before, after);
-   }
-
-   @Test
-   public void deployNotAdmin() throws Exception
-   {
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, devSecurityContext);
-      ConversationState.setCurrent(new ConversationState(new Identity(devSecurityContext.getUserPrincipal().getName(),
-         Collections.<MembershipEntry> emptySet(), devSecurityContext.getUserRoles())));
-      String path = "/ide/groovy/deploy" //
-         + "?vfsid=" + virtualFileSystem.getInfo().getId() //
-         + "&id=" + script.getId() //
-         + "&projectid=" + testRoot.getId();
-
-      int before = restfulContainer.getComponentAdapters().size();
-
-      ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      assertEquals(403, response.getStatus());
-
-      int after = restfulContainer.getComponentAdapters().size();
-      assertEquals(before, after);
-   }
+  
+  
 
    @Test
    public void deploySandbox() throws Exception
@@ -290,34 +223,9 @@ public class TestGroovyRestDeployer extends Base
       response = launcher.service("GET", "/test-groovy/groovy1/developers", "", headers, null, null, ctx);
       assertEquals(200, response.getStatus());
       assertEquals("Hello from groovy to developers", response.getEntity());
-
-      // Check access resource as different user (not who deploys resource).
-      EnvironmentContext ctx1 = new EnvironmentContext();
-      ctx1.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(new ConversationState(new Identity(
-         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
-         adminSecurityContext.getUserRoles())));
-      response = launcher.service("GET", "/test-groovy/groovy1/root", "", headers, null, null, ctx1);
-      assertEquals(404, response.getStatus());
    }
 
-   @Test
-   public void deploySandboxNotDev() throws Exception
-   {
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, adminSecurityContext);
-      ConversationState.setCurrent(new ConversationState(new Identity(
-         adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
-         adminSecurityContext.getUserRoles())));
-      String path = "/ide/groovy/deploy-sandbox" //
-         + "?vfsid=" + virtualFileSystem.getInfo().getId() //
-         + "&id=" + script.getId() //
-         + "&projectid=" + testRoot.getId();
-      ContainerResponse response = launcher.service("POST", path, "", headers, null, null, ctx);
-      assertEquals(403, response.getStatus());
-   }
-
+   
    @Test
    public void resourceCleanerTest() throws Exception
    {

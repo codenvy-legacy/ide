@@ -33,7 +33,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @version $Id: $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class DeleteCurrentLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

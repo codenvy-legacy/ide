@@ -32,7 +32,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
  * @version $Id:
  *
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class QuickFixControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

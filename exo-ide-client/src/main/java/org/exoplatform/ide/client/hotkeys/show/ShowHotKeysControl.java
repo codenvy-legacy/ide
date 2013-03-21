@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $Id: ShowHotKeysControl.java May 10, 2012 10:17:30 AM azatsarynnyy $
  *
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowHotKeysControl extends SimpleControl implements IDEControl
 {
 

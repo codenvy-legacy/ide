@@ -35,7 +35,7 @@ import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CreateProjectControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 

@@ -33,7 +33,7 @@ import org.exoplatform.ide.extension.gatein.gadget.client.event.DeployGadgetEven
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-@RolesAllowed({"administrators"})
+@RolesAllowed({"developer"})
 public class DeployGadgetCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

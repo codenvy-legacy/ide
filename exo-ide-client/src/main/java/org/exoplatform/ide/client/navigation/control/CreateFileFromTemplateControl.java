@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.operation.createfile.NewFileControl;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CreateFileFromTemplateControl extends NewFileControl
 {
 

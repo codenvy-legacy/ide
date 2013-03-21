@@ -38,7 +38,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version $Id: $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CursorPositionControl extends StatusTextControl implements IDEControl, EditorCursorActivityHandler,
    EditorActiveFileChangedHandler
 {
