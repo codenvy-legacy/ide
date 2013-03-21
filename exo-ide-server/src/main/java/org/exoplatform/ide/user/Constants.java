@@ -36,16 +36,6 @@ public interface Constants
    /**
     * IDE Developers group.
     */
-   String IDE_DEVELOPERS_GROUP = "/ide/developers";
-
-   /**
-    * IDE Users group.
-    */
-   String IDE_USERS_GROUP = "/ide/users";
-
-   /**
-    * IDE Administrators group.
-    */
-   String IDE_ADMINISTRATORS_GROUP = "/ide/administrators";
+   String IDE_DEVELOPERS_GROUP = "/ide/developer";
 
 }

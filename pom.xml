@@ -819,13 +819,13 @@
 
       <module>exo-ide-jdt-core</module>
 
-      <module>exo-ide-extension-gadget-gatein</module>
+      <!--module>exo-ide-extension-gadget-gatein</module-->
       <module>exo-ide-extension-gadget</module>
-      <module>exo-ide-extension-groovy</module>
+      <!--module>exo-ide-extension-groovy</module-->
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
-      <module>exo-ide-extension-chromattic</module>
+      <!--module>exo-ide-extension-chromattic</module-->
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>
