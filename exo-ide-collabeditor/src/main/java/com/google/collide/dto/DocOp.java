@@ -14,7 +14,7 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 // TODO: These should be moved to an Editor2-specific package
 /**

@@ -21,6 +21,13 @@
 	<listener>
 		<listener-class>org.everrest.websockets.WSConnectionTracker</listener-class>
 	</listener>
+   <listener>
+      <listener-class>com.google.collide.server.FileEditSessionCleaner</listener-class>
+   </listener>
+      <listener>
+      <listener-class>com.codenvy.ide.collaboration.watcher.server.WatcherSessionCleaner</listener-class>
+   </listener>
+
 	<servlet>
 		<servlet-name>EverrestServlet</servlet-name>
 		<servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
@@ -42,6 +49,11 @@
 	<servlet-mapping>
 		<servlet-name>ExoIdeWebSocketServlet</servlet-name>
 		<url-pattern>/websocket</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ExoIdeWebSocketServlet</servlet-name>
+		<url-pattern>/collaboration</url-pattern>
 	</servlet-mapping>
 
 	<filter>
@@ -73,6 +85,11 @@
 		<filter-name>SetCurrentIdentityFilter</filter-name>
 		<url-pattern>/websocket</url-pattern>
 	</filter-mapping>
+
+   <filter-mapping>
+		<filter-name>SetCurrentIdentityFilter</filter-name>
+		<url-pattern>/collaboration</url-pattern>
+	</filter-mapping>
 	
 	<filter-mapping>
 		<filter-name>SetEnvironmentContextFilter</filter-name>
@@ -84,9 +101,16 @@
 		<url-pattern>/websocket</url-pattern>
 	</filter-mapping>
 
+   <filter-mapping>
+		<filter-name>SetEnvironmentContextFilter</filter-name>
+		<url-pattern>/collaboration</url-pattern>
+	</filter-mapping>
+
 	<filter-mapping>
 		<filter-name>StandaloneAuthenticationFilter</filter-name>
 		<url-pattern>/rest/private/*</url-pattern>
+      <url-pattern>/websocket</url-pattern>
+      <url-pattern>/collaboration</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>

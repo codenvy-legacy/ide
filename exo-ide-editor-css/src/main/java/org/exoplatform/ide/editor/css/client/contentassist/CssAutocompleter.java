@@ -29,14 +29,15 @@ import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.documentparser.ParseResult;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.codemirror2.CssState;
 import com.google.collide.codemirror2.CssToken;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.codemirror2.Token;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Autocompleter for CSS. Currently, this only supports CSS2.

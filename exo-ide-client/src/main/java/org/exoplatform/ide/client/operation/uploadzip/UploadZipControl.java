@@ -45,7 +45,7 @@ import java.util.List;
  * @version $Id: Dec 10, 2010 $
  *
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class UploadZipControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
    ViewVisibilityChangedHandler, VfsChangedHandler
 {

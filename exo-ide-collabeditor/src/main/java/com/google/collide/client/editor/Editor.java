@@ -34,28 +34,28 @@ import com.google.collide.client.editor.selection.LocalCursorController;
 import com.google.collide.client.editor.selection.SelectionLineRenderer;
 import com.google.collide.client.editor.selection.SelectionManager;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.util.dom.FontDimensionsCalculator;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.TextChange;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import elemental.events.Event;
 import elemental.html.Element;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * The presenter for the Collide editor.

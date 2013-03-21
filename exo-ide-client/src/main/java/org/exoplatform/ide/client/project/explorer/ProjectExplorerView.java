@@ -272,4 +272,10 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
       return treeGrid.getVisibleItems();
    }
 
+   @Override
+   public void setProject(ProjectModel project)
+   {
+      treeGrid.setProject(project);
+   }
+
 }

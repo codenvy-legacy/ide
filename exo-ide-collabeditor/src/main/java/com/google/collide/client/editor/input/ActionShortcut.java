@@ -14,7 +14,7 @@
 
 package com.google.collide.client.editor.input;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * Implementation that delegates execution to action executor.

@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * <p>Code graph structure which encapsulates a tree of code blocks,

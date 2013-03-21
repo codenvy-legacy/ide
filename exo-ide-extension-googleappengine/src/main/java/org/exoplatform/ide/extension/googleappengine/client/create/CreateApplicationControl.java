@@ -21,8 +21,6 @@ package org.exoplatform.ide.extension.googleappengine.client.create;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -38,7 +36,8 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * 
  */
 public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, ActiveProjectChangedHandler
+   ProjectClosedHandler
+//   , ActiveProjectChangedHandler
 {
    private static final String ID = "PaaS/Google App Engine/Create";
 
@@ -51,7 +50,7 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
       super(ID);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(),
@@ -85,12 +84,12 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
       }
    }
    
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      if (event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject()))
-      {
-         setEnabled(true);
-      }
-   }
+//   @Override
+//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+//   {
+//      if (event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject()))
+//      {
+//         setEnabled(true);
+//      }
+//   }
 }

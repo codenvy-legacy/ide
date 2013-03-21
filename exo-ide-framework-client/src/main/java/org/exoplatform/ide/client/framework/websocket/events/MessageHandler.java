@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.websocket.events;
 
-import org.exoplatform.ide.client.framework.websocket.Message;
-
 /**
  * Handler messages sent to you on the message bus by subscription.
  */
 public interface MessageHandler
 {
-   void onMessage(Message message);
+   void onMessage(String message);
 }

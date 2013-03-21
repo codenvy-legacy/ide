@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
  * @version $
  */
 
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowProjectExplorerControl extends SimpleControl implements IDEControl, ViewOpenedHandler,
    ViewClosedHandler
 {

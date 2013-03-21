@@ -18,17 +18,16 @@
  */
 package org.eclipse.jdt.client.packaging;
 
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.Grid;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.TreeItem;
 
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
@@ -37,7 +36,6 @@ import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
-import org.exoplatform.ide.client.framework.ui.ProjectTreeItem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -131,7 +129,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          return false;
       }
 
-      if (treeItem.getParentItem() == null)
+      if (treeItem.getParentItem() == null && !item.getId().equals(project.getId()))
       {
          updateHighlighter(null);
          return false;
@@ -156,22 +154,22 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    
    private void updateHighlighter(final TreeItem treeItem)
    {
-//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//      {
-//         @Override
-//         public void execute()
-//         {
-//            if (treeItem != null)
-//            {
-//               moveHighlight(treeItem);
-//            }
-//            else
-//            {
-//               hideHighlighter();
-//            }            
-//         }
-//      });      
-   }   
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            if (treeItem != null)
+            {
+               moveHighlight(treeItem);
+            }
+            else
+            {
+               hideHighlighter();
+            }            
+         }
+      });      
+   }
    
    private void refreshProject(JavaProject project, Item destinationItem)
    {

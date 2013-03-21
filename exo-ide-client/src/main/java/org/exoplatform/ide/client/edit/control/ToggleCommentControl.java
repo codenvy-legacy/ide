@@ -34,7 +34,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @version $Id:  Apr 13, 2012 1:43:52 PM anya $
  *
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ToggleCommentControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

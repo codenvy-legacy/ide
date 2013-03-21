@@ -104,6 +104,7 @@ public class RemoteGrid extends ListGrid<Remote>
       if (value != null && value.size() > 0)
       {
          selectItem(value.get(0));
+         updateGrid();
       }
    }
 

@@ -15,9 +15,10 @@
 package com.google.collide.client.code.lang;
 
 import com.google.collide.codemirror2.SyntaxType;
-import com.google.collide.json.shared.JsonStringMap;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Object thad holds instances of {@link LanguageHelper} and returns

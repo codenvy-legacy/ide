@@ -18,8 +18,6 @@
  */
 package com.google.collide.client.editor.gutter;
 
-import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
-
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
@@ -32,13 +30,13 @@ import com.google.collide.client.ui.menu.PositionController.Positioner;
 import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.tooltip.Tooltip;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.JsIntegerMap;
+import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
+import com.codenvy.ide.client.util.Elements;
+import org.exoplatform.ide.json.client.JsIntegerMap;
 import com.google.collide.dto.CodeError;
 import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls.CodeErrorImpl;
 import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
-import com.google.collide.json.client.JsoArray;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.LineInfo;
@@ -53,6 +51,7 @@ import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.json.client.JsoArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,7 +149,6 @@ public class NotificationManager implements DocumentListener
    private ErrorListener errorListener;
 
    /**
-    * @param buffer
     * @param gutter
     * @param overviewGutter 
     */
@@ -186,6 +184,7 @@ public class NotificationManager implements DocumentListener
       NotificationMark m = new NotificationMark(message.toString(), res, leftPositioner, new HtmlTooltipRenderer());
       m.setTopPosition(buffer.calculateLineTop(lineNumber), "px");
       m.setStyleName(getStyleForLine(problemList, hasError));
+      m.getElement().setAttribute("data-line-number", String.valueOf(lineNumber));
       elements.add(m.getElement());
       leftGutter.addUnmanagedElement(m.getElement());
 
@@ -487,7 +486,7 @@ public class NotificationManager implements DocumentListener
             error.setMessage(m.getMessage());
             error.setErrorEnd(getFilePosition(m.getEnd()));
             error.setErrorStart(getFilePosition(m.getStart()));
-            error.setError(m.isError());
+            error.setIsError(m.isError());
             errors.add(error);
          }
          addProblem(m);

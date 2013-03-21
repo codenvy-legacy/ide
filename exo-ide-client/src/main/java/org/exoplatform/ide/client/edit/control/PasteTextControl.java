@@ -38,7 +38,7 @@ import org.exoplatform.ide.editor.client.api.Editor;
  * @version $Id: May 3, 2012 12:35:53 PM anya $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class PasteTextControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
    ViewActivatedHandler, EditorActiveFileChangedHandler
 {

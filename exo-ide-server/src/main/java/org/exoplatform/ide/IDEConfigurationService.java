@@ -78,7 +78,9 @@ public class IDEConfigurationService
 {
    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
+
    private String config = "/ide-home/users/";
+
 
    @GET
    @Path("/init")

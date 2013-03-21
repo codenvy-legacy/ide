@@ -14,8 +14,8 @@
 
 package com.google.collide.dto.client;
 
-import com.google.collide.dtogen.shared.ServerToClientDto;
-import com.google.collide.json.client.Jso;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.json.client.Jso;
 
 
 /**

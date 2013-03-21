@@ -1,171 +1,171 @@
-/**
- * Copyright (C) 2012 eXo Platform SAS.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
+   /**
+    * Copyright (C) 2012 eXo Platform SAS.
+    *
+    * This is free software; you can redistribute it and/or modify it
+    * under the terms of the GNU Lesser General Public License as
+    * published by the Free Software Foundation; either version 2.1 of
+    * the License, or (at your option) any later version.
+    *
+    * This software is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    * Lesser General Public License for more details.
+    *
+    * You should have received a copy of the GNU Lesser General Public
+    * License along with this software; if not, write to the Free
+    * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+    */
 
-@sprite .welcomeHeader {
-	width: 100%;
-	height: 100px;
-	gwt-image: "welcomePageBgHeader";
-	background-repeat: repeat-x;
-}
+   @sprite .welcomeHeader {
+      width: 100%;
+      height: 75px;
+      gwt-image: "welcomePageBgHeader";
+      background-repeat: repeat-x;
+   }
 
-@sprite .inviteHeader {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	width:100%;
-	height:100%;
-	gwt-image: "invitePageHeaderBackground";
-	background-repeat: repeat-x;
-	background-color: #FFFFFF;
-	border: #999999 1px solid;
-	overflow: hidden;
-}
+   @sprite .inviteHeader {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      width: 100%;
+      height: 100%;
+      gwt-image: "invitePageHeaderBackground";
+      background-repeat: repeat-x;
+      background-color: #FFFFFF;
+      border: #999999 1px solid;
+      overflow: hidden;
+   }
 
-@sprite .inviteHeader48 {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	width:100%;
-	height:100%;
-	gwt-image: "invitePageHeaderBackground48";
-	background-repeat: repeat-x;
-	background-color: #FFFFFF;
-	border: #999999 1px solid;
-	overflow: hidden;
-}
+   @sprite .inviteHeader48 {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      width: 100%;
+      height: 100%;
+      gwt-image: "invitePageHeaderBackground48";
+      background-repeat: repeat-x;
+      background-color: #FFFFFF;
+      border: #999999 1px solid;
+      overflow: hidden;
+   }
 
-.welcomeHeaderLogo {
-	margin-top: 15px;
-   margin-left: 10px;
-	width: 110px;
-}
+   .welcomeHeaderLogo {
+      margin-top: 15px;
+      margin-left: 10px;
+      width: 110px;
+   }
 
-@sprite .welcomeHeaderText {
-	gwt-image: "welcomePageSpliter";
-	background-repeat: no-repeat;
-	background-position: left center;
-	font-family: Myriad Pro,arial,Verdana,Verdana,sans-serif;
-    font-size: 22px;
-    padding-top: 25px;
-    padding-left: 12px;
-    width: 100%;
-    height: 100%;
-    color: #FFFFFF;
-}
+   @sprite .welcomeHeaderText {
+      gwt-image: "welcomePageSpliter";
+      background-repeat: no-repeat;
+      background-position: left center;
+      font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
+      font-size: 22px;
+      padding-top: 25px;
+      padding-left: 12px;
+      height: 75px;
+      width: 100%;
+      color: #FFFFFF;
+   }
 
-@sprite .welcomeTopContainer {
-	width: 100%;
-	height: 100px;
-	gwt-image: "welcomePageBgTopContainer";
-	background-repeat: no-repeat;
-	background-position: center top;
-}
-	
-.table {
-	width: 100%;
-	height: 100%;
-	border-collapse: collapse;
-}
+   @sprite .welcomeTopContainer {
+      width: 100%;
+      height: 100%;
+      gwt-image: "welcomePageBgTopContainer";
+      background-repeat: no-repeat;
+      background-position: center top;
+   }
 
-.itemsTree {
-	z-index: 0;
-	width: 100%;
-	height: 100px;
-}
+   .table {
+      width: 100%;
+      height: 100%;
+      border-collapse: collapse;
+   }
 
-.labelTitle {
-	font-size: medium;
-	font-weight: bold;
-	vertical-align: middle;
-	padding-left: 10px;
-	padding-top: 10px;
-}
+   .itemsTree {
+      z-index: 0;
+      width: 100%;
+      height: 100px;
+   }
 
-.labelDescription {
-	font-style: italic;
-	vertical-align: middle;
-	padding-left: 10px;
-	padding-top: 5px;
-}
+   .labelTitle {
+      font-size: medium;
+      font-weight: bold;
+      vertical-align: middle;
+      padding-left: 10px;
+      padding-top: 10px;
+   }
 
-.wizard {
-	bottom: 0;
-	height: 100%;
-	left: 0;
-	position: relative;
-	right: 0;
-	top: 0;
-}
+   .labelDescription {
+      font-style: italic;
+      vertical-align: middle;
+      padding-left: 10px;
+      padding-top: 5px;
+   }
 
-.footer {
-	bottom: 10px;
-	position: absolute;
-}
+   .wizard {
+      bottom: 0;
+      height: 100%;
+      left: 0;
+      position: relative;
+      right: 0;
+      top: 0;
+   }
 
-/* style for top of the wizard (where the name and short description are displayed)*/
-.topBox {
-	background-color: #eef6ff;
-	vertical-align: middle;
-	border-bottom: 1px solid #A6ABAF;
-	width: 100%;
-	height: 60px;
-}
+   .footer {
+      bottom: 10px;
+      position: absolute;
+   }
 
-.labelValue {
-	font-weight: bold;
-}
+      /* style for top of the wizard (where the name and short description are displayed)*/
+   .topBox {
+      background-color: #eef6ff;
+      vertical-align: middle;
+      border-bottom: 1px solid #A6ABAF;
+      width: 100%;
+      height: 60px;
+   }
 
-.labelSubtitle {
-	font-weight: bold;
-	font-align: center;
-}
+   .labelValue {
+      font-weight: bold;
+   }
 
-.loginLable {
-	
-}
+   .labelSubtitle {
+      font-weight: bold;
+      font-align: center;
+   }
 
-/* Styles for positioning of elements in dialogs */
-.innerBox {
-	display: block;
-	margin: 0 8px;
-}
+   .loginLable {
 
-.leftFloat {
-	float: left;
-}
+   }
 
-.right {
-	position: absolute;
-	right: 0;
-}
+      /* Styles for positioning of elements in dialogs */
+   .innerBox {
+      display: block;
+      margin: 0 8px;
+   }
 
-.middle {
-	position: absolute;
-	right: 100px;
-}
+   .leftFloat {
+      float: left;
+   }
 
-.newFolderDivInput {
-	position: absolute;
-	right: 100px;
-	left: 100px;
-}
+   .right {
+      position: absolute;
+      right: 0;
+   }
+
+   .middle {
+      position: absolute;
+      right: 100px;
+   }
+
+   .newFolderDivInput {
+      position: absolute;
+      right: 100px;
+      left: 100px;
+   }

@@ -51,6 +51,8 @@ public interface ProjectExplorerDisplay extends IsView
     */
    TreeGridItem<Item> getBrowserTree();
    
+   void setProject(ProjectModel project);
+   
    void navigateToItem(Item item);
 
    /**

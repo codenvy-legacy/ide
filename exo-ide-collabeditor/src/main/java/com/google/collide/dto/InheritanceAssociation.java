@@ -14,7 +14,7 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 /**
  * Inheritance association between two code blocks. From the language

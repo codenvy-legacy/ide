@@ -14,7 +14,7 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Returns the user details of a project members.

@@ -18,7 +18,7 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
@@ -46,7 +46,6 @@ import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 

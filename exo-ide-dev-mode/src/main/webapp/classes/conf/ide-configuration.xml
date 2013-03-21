@@ -104,6 +104,12 @@
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcher</type>
+   </component>
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcherApplication</type>
+   </component>
    <!-- End VirtualFileSystem -->
 
    <!-- LogReader -->

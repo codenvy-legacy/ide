@@ -14,10 +14,10 @@
 
 package com.google.collide.client.editor.input;
 
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import org.exoplatform.ide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * Implementation of proxy that delegated execution to a list of executors.

@@ -15,7 +15,7 @@
 package com.google.collide.client.util.dom;
 
 import com.google.collide.client.util.dom.eventcapture.MouseCaptureListener;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 import com.google.gwt.user.client.Timer;
 
 import elemental.events.Event;

@@ -18,7 +18,7 @@ import com.google.collide.client.ui.menu.AutoHideComponent;
 import com.google.collide.client.ui.menu.AutoHideView;
 import com.google.collide.client.ui.menu.PositionController;
 import com.google.collide.client.ui.menu.PositionController.Positioner;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 import com.google.common.base.Preconditions;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;

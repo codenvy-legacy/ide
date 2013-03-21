@@ -613,6 +613,23 @@
    </component>
 
    <!--
+   ***************************************************************************************
+   ********************************** Collaboration Editor *************************************
+   ***************************************************************************************
+   -->
+   <component>
+      <type>com.google.collide.server.CollaborationEditorApplication</type>
+   </component>
+
+   <component>
+      <type>com.google.collide.server.participants.Participants</type>
+   </component>
+
+   <component>
+      <type>com.google.collide.server.documents.EditSessions</type>
+   </component>
+
+   <!--
     ***************************************************************************************
     ************************ Create dummy user at tomcat start ****************************
     ***************************************************************************************

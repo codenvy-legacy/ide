@@ -14,7 +14,7 @@
 
 package com.google.collide.client.util.collections;
 
-import com.google.collide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 import javax.annotation.Nonnull;
 

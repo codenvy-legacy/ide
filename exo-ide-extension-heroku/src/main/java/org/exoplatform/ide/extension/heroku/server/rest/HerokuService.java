@@ -134,7 +134,7 @@ public class HerokuService
       {
          Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
          LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
-            + "# PAAS#OpenShift#");
+            + "# PAAS#Heroku#");
       }
       return application;
    }

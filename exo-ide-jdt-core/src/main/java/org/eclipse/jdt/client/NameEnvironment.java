@@ -18,8 +18,6 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.collide.json.shared.JsonStringSet;
-import com.google.collide.json.shared.JsonStringSet.IterationCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -55,6 +53,8 @@ import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
+import org.exoplatform.ide.json.shared.JsonStringSet;
+import org.exoplatform.ide.json.shared.JsonStringSet.IterationCallback;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.HashSet;

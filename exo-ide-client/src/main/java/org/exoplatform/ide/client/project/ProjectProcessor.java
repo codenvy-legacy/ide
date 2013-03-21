@@ -116,7 +116,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
                {
                   IDE.fireEvent(new SelectItemEvent(openedProject));
                }
-            }.schedule(100);       
+            }.schedule(200);       
          }
       });
 
@@ -297,6 +297,11 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          @Override
          public void execute()
          {
+            if (openedProject == null)
+            {
+               return;
+            }
+            
             final IDEProject closedProject = openedProject;
             closedProject.setFolderChangedHandler(null);
             openedProject = null;

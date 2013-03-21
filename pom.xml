@@ -250,6 +250,11 @@
             <artifactId>exo-ide-collabeditor</artifactId>
             <version>${project.version}</version>
          </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+           <artifactId>codenvy-ide-collaboration</artifactId>
+           <version>${project.version}</version>
+        </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -521,8 +526,6 @@
             <version>1.0-M5</version>
          </dependency>
          
-         
-         
          <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -769,7 +772,7 @@
    <modules>
       <module>codenvy-gwtframework-commons</module>
       <module>codenvy-gwtframework-ui</module>
-      <!--module>exo-ide-dev-resources</module-->
+      <module>exo-ide-dev-resources</module>
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-fs</module>

@@ -24,8 +24,7 @@ import com.google.collide.client.code.popup.EditorPopupController.Remover;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.MouseHoverManager.MouseHoverListener;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
-import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.client.JsoStringMap;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.LineInfo;
 import elemental.html.Element;
 
@@ -33,6 +32,7 @@ import org.exoplatform.ide.editor.client.hover.TextHover;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.json.client.JsoStringMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

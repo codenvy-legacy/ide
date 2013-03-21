@@ -16,7 +16,7 @@
  */
 package org.waveprotocol.wave.model.undo;
 
-import org.waveprotocol.wave.model.util.Pair;
+import com.codenvy.ide.client.util.Pair;
 
 /**
  * An <code>UndoManager</code> that provides versions of the undo and redo

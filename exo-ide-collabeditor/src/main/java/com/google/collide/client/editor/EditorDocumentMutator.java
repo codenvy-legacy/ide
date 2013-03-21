@@ -22,9 +22,9 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 /**
  * A document mutator for the editor which will notify editor text listeners

@@ -15,20 +15,19 @@
 package com.google.collide.client.editor;
 
 import com.google.collide.client.common.Constants;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Timer;
-
-import org.waveprotocol.wave.client.common.util.SignalEvent;
-import org.waveprotocol.wave.client.common.util.UserAgent;
-
 import elemental.events.Event;
+
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringMap;
+import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.client.util.UserAgent;
 
 /**
  * Manages mouse hover events, optionally when a key modifier combination is

@@ -14,9 +14,10 @@
 
 package com.google.collide.shared.document;
 
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.TaggableLine;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
+
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /*
  * TODO: prevent leaks by forcing a clear on the tags when a line

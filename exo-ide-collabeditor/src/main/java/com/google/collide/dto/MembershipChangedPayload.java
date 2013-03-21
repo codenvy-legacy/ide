@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.dtogen.shared.RoutingType;
-import com.google.collide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 /**
  * A Tango payload indicating that the user was added/removed from a

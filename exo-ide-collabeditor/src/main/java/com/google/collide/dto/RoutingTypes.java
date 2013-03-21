@@ -115,7 +115,6 @@ public class RoutingTypes {
   public static final int RESOLVETREECONFLICTRESPONSE = 88;
   public static final int SEARCH = 89;
   public static final int SEARCHRESPONSE = 90;
-  public static final int SERVERERROR = 91;
   public static final int SERVERTOCLIENTDOCOP = 92;
   public static final int SERVERTOCLIENTDOCOPS = 93;
   public static final int SETACTIVEPROJECT = 94;
@@ -143,8 +142,17 @@ public class RoutingTypes {
   public static final int WORKSPACEINFO = 116;
   public static final int WORKSPACETREEUPDATE = 117;
   public static final int WORKSPACETREEUPDATEBROADCAST = 118;
-  public static final int INVALIDXSRFTOKENSERVERERROR = 119;
   public static final int ENDUPLOADSESSIONFINISHED = 120;
   public static final int RETRYALREADYTRANSFERREDUPLOAD = 121;
   public static final int GETWORKSPACEMETADATA = 122;
+  public static final int GETEDITSESSIONCOLLABORATORS = 123;
+  public static final int GETEDITSESSIONCOLLABORATORSRESPONSE = 124;
+  public static final int NEWFILECOLLABORATOR = 125;
+  public static final int CLOSEEDITOR = 126;
+  public static final int FILECOLLABORATORGONE = 127;
+  public static final int GETOPENEDFILESINWORKSPACE=128;
+  public static final int GETOPENEDFILESINWORKSPACERESPONSE=129;
+  public static final int FILEOPERATIONNOTIFICATION=130;
+  public static final int USERLOGIN =131;
+  public static final int USERLOGOUT =132;
 }

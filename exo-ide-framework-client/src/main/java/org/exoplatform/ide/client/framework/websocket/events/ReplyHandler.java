@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.websocket.events;
 
-import org.exoplatform.ide.client.framework.websocket.Message;
-
 /**
  * Handler for receiving replies to messages you sent on the message bus.
  */
 public interface ReplyHandler
 {
-   void onReply(Message message);
+   void onReply(String message);
 }
