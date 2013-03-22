@@ -26,28 +26,28 @@ import com.codenvy.ide.collaboration.dto.ChatParticipantAdd;
 import com.codenvy.ide.collaboration.dto.ChatParticipantRemove;
 import com.codenvy.ide.collaboration.dto.ParticipantInfo;
 import com.codenvy.ide.collaboration.dto.RoutingTypes;
-import com.codenvy.ide.collaboration.dto.UserDetails;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatMessageImpl;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
-import com.codenvy.ide.notification.Notification;
-import com.codenvy.ide.notification.Notification.NotificationType;
-import com.codenvy.ide.notification.NotificationManager;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.code.ParticipantModel.Listener;
+import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
 import com.google.collide.client.collaboration.DocumentCollaborationController;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.KeyboardEvent.KeyCode;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -55,14 +55,17 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.json.client.Jso;
-import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.client.JsoStringMap;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 import org.exoplatform.ide.shared.util.StringUtils;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Date;
 
@@ -89,15 +92,24 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
       void messageDelivered(String messageId);
 
-      void removeParticipant(String userId);
+      void removeParticipant(Participant participant);
 
       void addParticipant(Participant participant);
 
       void removeEditParticipant(String userId);
 
-      void addEditParticipant(String userId);
+      void addEditParticipant(String userId, String color);
 
       void clearEditParticipants();
+
+      void addNotificationMessage(String message);
+
+      void addNotificationMessage(String message, String link, MessageCallback callback);
+   }
+
+   public interface MessageCallback
+   {
+      void messageClicked();
    }
 
    private class MessagesTimer extends Timer
@@ -146,12 +158,81 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       }
    };
 
+   private ParticipantsListener participantsListener = new ParticipantsListener()
+   {
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void userOpenFile(final String path, com.google.collide.dto.UserDetails user)
+      {
+         if (isShow(path))
+         {
+            display.addNotificationMessage(user.getDisplayName() + " opened {0} file." ,getName(path), new MessageCallback()
+            {
+               @Override
+               public void messageClicked()
+               {
+                  openFile(path);
+                  if (viewClosed || !display.asView().isViewVisible())
+                  {
+                     control.startBlink();
+                  }
+               }
+            });
+         }
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void userCloseFile(final String path, com.google.collide.dto.UserDetails user)
+      {
+         if (isShow(path))
+         {
+            display.addNotificationMessage(user.getDisplayName() + " closed the " + getName(path) + " file.");
+            if (viewClosed || !display.asView().isViewVisible())
+            {
+               control.startBlink();
+            }
+         }
+      }
+
+
+      private boolean isShow(String path)
+      {
+         if (project == null)
+         {
+            return true;
+         }
+
+         path = path.substring(1);
+         path = path.substring(0, path.indexOf('/'));
+         if (path.equals(project.getName()))
+         {
+            return true;
+         }
+         return false;
+      }
+
+      private String getName(String path)
+      {
+        path = path.substring(path.lastIndexOf('/') + 1);
+         return path;
+      }
+   };
+
    private Listener listener = new Listener()
    {
       @Override
       public void participantAdded(com.google.collide.client.code.Participant participant)
       {
-         display.addEditParticipant(participant.getId());
+         display.addEditParticipant(participant.getId(), participant.getColor());
+         if (viewClosed || !display.asView().isViewVisible())
+         {
+            control.startBlink();
+         }
       }
 
       @Override
@@ -177,11 +258,11 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private String userId;
 
-   private String projectId;
-
    private boolean viewClosed = true;
 
    private ParticipantModel participantModel;
+
+   private ProjectModel project;
 
    public ProjectChatPresenter(ChatApi chatApi, MessageFilter messageFilter, IDE ide, ShowChatControl chatControl,
       final String userId, CollabEditorExtension collabExtension)
@@ -230,8 +311,17 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private void removeParticipant(String clientId)
    {
-      users.remove(clientId);
-      display.removeParticipant(clientId);
+      if (display != null)
+      {
+         Participant participant = users.remove(clientId);
+         display.removeParticipant(participant);
+         display.addNotificationMessage(participant.getDisplayName() + " left the " + project.getName() + " project.");
+         if (users.size() == 1)
+         {
+//                        control.setEnabled(false);
+            //            ide.closeView(Display.ID);
+         }
+      }
    }
 
    private void addParticipant(ParticipantInfo user)
@@ -239,14 +329,30 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       if (user.getClientId().equals(BootstrapSession.getBootstrapSession().getActiveClientId()))
       {
          ((UserDetailsImpl)user.getUserDetails()).setIsCurrentUser(true);
+         ((UserDetailsImpl)user.getUserDetails()).setDisplayName("me");
       }
       Participant participant = (Participant)user.getUserDetails();
+      if(participant.getDisplayName().contains("@"))
+      {
+         String name = participant.getDisplayName();
+         participant.setDisplayName(name.substring(0, name.indexOf('@')));
+      }
       participant.setClientId(user.getClientId());
       users.put(user.getClientId(), participant);
       if (display != null && !participant.isCurrentUser())
       {
          setParticipantColor(participant);
          display.addParticipant(participant);
+         display.addNotificationMessage(
+            user.getUserDetails().getDisplayName() + " has joined the " + project.getName() + " project.");
+         if (users.size() > 1)
+         {
+            control.setEnabled(true);
+         }
+         if (viewClosed || !display.asView().isViewVisible())
+         {
+            control.startBlink();
+         }
       }
    }
 
@@ -276,10 +382,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       display.addMessage(users.get(message.getClientId()), message.getMessage(), Long.valueOf(message.getDateTime()));
       if (viewClosed || !display.asView().isViewVisible())
       {
-         ChatNotificationWidget widget = new ChatNotificationWidget(users.get(message.getClientId()),
-            message.getMessage());
-         Notification chatNotification = new Notification(widget, NotificationType.MESSAGE, 10000);
-         NotificationManager.get().addNotification(chatNotification);
+         control.startBlink();
       }
    }
 
@@ -297,7 +400,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       }
       ChatMessageImpl chatMessage = ChatMessageImpl.make();
       chatMessage.setUserId(userId);
-      chatMessage.setProjectId(projectId);
+      chatMessage.setProjectId(project.getId());
       String clientId = BootstrapSession.getBootstrapSession().getActiveClientId();
       chatMessage.setClientId(clientId);
       Date d = new Date();
@@ -346,19 +449,14 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          {
             ide.openView(display.asView());
             viewClosed = false;
+            control.chatOpened(true);
+            control.stopBlink();
          }
       }
       else
       {
          ide.closeView(Display.ID);
       }
-   }
-
-   private void openChat()
-   {
-      ide.openView(display.asView());
-      viewClosed = false;
-      control.chatOpened(true);
    }
 
    void setChatParticipants(JsonArray<ParticipantInfo> chatParticipants)
@@ -368,15 +466,12 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       {
          addParticipant(info);
       }
-      if (users.size() > 1)
-      {
-         openChat();
-      }
    }
 
-   void setProjectId(String projectId)
+   void setProjectId(ProjectModel project)
    {
-      this.projectId = projectId;
+      collabExtension.getCollaborationManager().getParticipantsListenerManager().add(participantsListener);
+      this.project = project;
       display = GWT.create(Display.class);
       display.addListener(enterListener);
    }
@@ -395,6 +490,11 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    {
       if (event.getEditor() != null && event.getEditor() instanceof CollabEditor)
       {
+         if(event.getFile().getMimeType().equals(MimeType.TEXT_HTML))
+         {
+            display.clearEditParticipants();
+            return;
+         }
          CollabEditor editor = (CollabEditor)event.getEditor();
          DocumentCollaborationController controller = collabExtension.getCollaborationManager().getDocumentCollaborationController(
             editor.getEditor().getDocument().getId());
@@ -411,7 +511,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             @Override
             public void onIteration(String key, com.google.collide.client.code.Participant value)
             {
-              display.addEditParticipant(key);
+               display.addEditParticipant(key, value.getColor());
             }
          });
       }
@@ -420,4 +520,37 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          display.clearEditParticipants();
       }
    }
+
+   private void openFile(String path)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(path,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  if (result.getItem() != null && result.getItem() instanceof FileModel)
+                  {
+                     FileModel file = (FileModel)result.getItem();
+                     file.setProject(project);
+                     ide.eventBus().fireEvent(new OpenFileEvent(file));
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  Log.error(AsyncRequestCallback.class, exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         Log.error(AsyncRequestCallback.class, e);
+      }
+   }
+
+
 }

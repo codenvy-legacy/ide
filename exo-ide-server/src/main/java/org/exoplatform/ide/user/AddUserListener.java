@@ -124,7 +124,7 @@ public class AddUserListener extends UserEventListener
       userNode.addMixin("exo:privilegeable");
 
       ((NodeImpl)userNode).setPermission(userId, PermissionType.ALL);
-      ((NodeImpl)userNode).setPermission("*:" + Constants.IDE_ADMINISTRATORS_GROUP, PermissionType.ALL);
+      ((NodeImpl)userNode).setPermission("*:" + Constants.IDE_DEVELOPERS_GROUP, PermissionType.ALL);
       ((NodeImpl)userNode).removePermission("any");
 
       session.save();
@@ -172,7 +172,6 @@ public class AddUserListener extends UserEventListener
       try
       {
          addMember(user.getUserName(), Constants.IDE_DEVELOPERS_GROUP);
-         addMember(user.getUserName(), Constants.IDE_USERS_GROUP);
       }
       catch (Exception e)
       {

@@ -74,7 +74,7 @@ public class CreateUserDirectoryListener implements Action
       }
 
       node.setPermission(userId, PermissionType.ALL);
-      node.setPermission("*:" + Constants.IDE_ADMINISTRATORS_GROUP, PermissionType.ALL);
+      node.setPermission("*:" + Constants.IDE_DEVELOPERS_GROUP, PermissionType.ALL);
       node.removePermission("any");
 
       return false;

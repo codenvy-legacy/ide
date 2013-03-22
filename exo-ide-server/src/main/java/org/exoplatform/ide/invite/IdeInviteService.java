@@ -114,7 +114,7 @@ public class IdeInviteService
     */
    @POST
    @Path("{mailrecipient}")
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    @Consumes("text/*")
    public Response sendInvite(@PathParam("mailrecipient") String mailRecipient,
                               @QueryParam("mailsender") String mailSender, String mailBody) throws SendingIdeMailException, InviteException
