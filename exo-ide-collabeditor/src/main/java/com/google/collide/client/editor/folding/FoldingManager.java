@@ -263,6 +263,19 @@ public class FoldingManager implements Document.TextListener
    public void onTextChange(Document document, JsonArray<TextChange> textChanges)
    {
       updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
+
+      // if changes applied to text in folded block then expand this block
+      // FIXME: when cursor positioned on caption line of collapsed block and press Ctrl+D
+      for (TextChange textChange : textChanges.asIterable())
+      {
+         for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
+         {
+            FoldMarker foldMarker = findFoldMarker(i, false);
+            if (foldMarker != null && foldMarker.isCollapsed()) {
+               expand(foldMarker);
+            }
+         }
+      }
    }
 
    /**

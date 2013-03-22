@@ -262,13 +262,6 @@ public class ViewportRenderer {
     for (int i = 0, n = removedLines.size(); i < n; i++) {
       Line line = removedLines.get(i);
 
-      if (!isByReasonOfFolding) {
-         FoldMarker foldMarker = foldingManager.findFoldMarker(beginLineNumber + i, false);
-         if (foldMarker != null && foldMarker.isCollapsed()) {
-            foldingManager.expand(foldMarker);
-         }
-      }
-
       garbageCollectLine(line);
     }
     /*
