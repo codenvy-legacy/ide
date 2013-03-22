@@ -352,25 +352,25 @@ public class FoldingManager implements Document.TextListener
             }
 
             int firstLineNumber = masterDocument.getLineOfOffset(startOffset);
-            int lineCount = masterDocument.getNumberOfLines(startOffset, length); // length-1 for expand (???)
+            int lineCount = masterDocument.getNumberOfLines(startOffset, length); // length-1 for expand?
             Line beginLine = document.getLineFinder().findLine(firstLineNumber).line();
 
-            JsonArray<Line> linesToCollapse = JsonCollections.createArray();
+            JsonArray<Line> linesArray = JsonCollections.createArray();
             Line nextLine = beginLine;
-            linesToCollapse.add(nextLine);
+            linesArray.add(nextLine);
             for (int j = 0; j < lineCount - 2; j++)
             {
                nextLine = nextLine.getNextLine();
-               linesToCollapse.add(nextLine);
+               linesArray.add(nextLine);
             }
 
             if (foldMarker.isCollapsed())
             {
-               collapseInternally(firstLineNumber - 1, linesToCollapse);
+               collapseInternally(firstLineNumber - 1, linesArray);
             }
             else
             {
-               expandInternally(firstLineNumber - 1, linesToCollapse);
+               expandInternally(firstLineNumber - 1, linesArray);
             }
          }
       }
@@ -394,10 +394,13 @@ public class FoldingManager implements Document.TextListener
             anchorsInCollapsedRangeToShift, linesToCollapse.indexOf(line) == 0);
       }
 
-      // FIXME bug: when text is selected after collapsed block, it still collapsed after collapsing
+      Line firstLine = linesToCollapse.peek().getNextLine();
+      final int firstLineNumber = lineNumber + 1 + linesToCollapse.size();
+      final int numberOfLinesDeleted = 0; // pass '0' because there is no need to change the anchor's line number
+      final int lastLineFirstUntouchedColumn = linesToCollapse.peek().getText().length();
+
       anchorManager.handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
-         anchorsLeftoverFromLastLine, linesToCollapse.get(0).getPreviousLine(), lineNumber, 0, 0, linesToCollapse.peek().getText()
-            .length());
+         anchorsLeftoverFromLastLine, firstLine, firstLineNumber, 0, numberOfLinesDeleted, lastLineFirstUntouchedColumn);
 
       dispatchCollapse(lineNumber, linesToCollapse);
    }
@@ -408,10 +411,7 @@ public class FoldingManager implements Document.TextListener
       {
          return;
       }
-
-      // TODO manage anchors
-      //      anchorManager.handleMultilineTextInsertion(line, lineNumber, column, newLine, newLineNumber, secondChunkColumnInNewLine);
-
+      // there is no need to move the anchors using anchorManager.handleMultilineTextInsertion
       dispatchExpand(lineNumber, linesToExpand);
    }
 
@@ -584,7 +584,7 @@ public class FoldingManager implements Document.TextListener
     * Initializes the projection document from the master document based on
     * the master's fragments.
     * 
-    * @param masterDocument
+    * @param masterDocument original (master) document
     */
    private void initializeProjection(IDocument masterDocument)
    {
