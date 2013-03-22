@@ -147,11 +147,6 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-chromattic</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudbees</artifactId>
       </dependency>
 
