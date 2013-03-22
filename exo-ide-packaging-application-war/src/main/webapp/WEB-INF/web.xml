@@ -66,10 +66,6 @@
 		<filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
 	</filter>
 
-	<filter>
-		<filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-		<filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
-	</filter>
 
 	<filter>
 		<filter-name>StandaloneAuthenticationFilter</filter-name>
@@ -111,11 +107,6 @@
 		<url-pattern>/rest/private/*</url-pattern>
       <url-pattern>/websocket</url-pattern>
       <url-pattern>/collaboration</url-pattern>
-	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-		<url-pattern>/rest/*</url-pattern>
 	</filter-mapping>
 
 	<session-config>
