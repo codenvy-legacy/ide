@@ -19,7 +19,6 @@
 package com.codenvy.ide.collaboration.watcher.client;
 
 import com.codenvy.ide.notification.Notification;
-import com.codenvy.ide.notification.Notification.NotificationType;
 import com.codenvy.ide.notification.NotificationManager;
 import com.codenvy.ide.collaboration.dto.Item;
 import com.codenvy.ide.collaboration.dto.ItemCreatedDto;
@@ -87,8 +86,7 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
             ideProject.removeItem(message.oldPath());
             Item messageItem = message.movedItem();
             ideProject.addItem(convertDto2VfsItem(messageItem));
-            Notification notification = new Notification("User <b>" + message.getUserId() + "</b> move: " + message.oldPath() + " to " + messageItem.getPath(),
-               NotificationType.INFO, DURATION);
+            Notification notification = new Notification("User " + message.getUserId() + " move: " + message.oldPath() + " to " + messageItem.getPath(), DURATION);
             NotificationManager.get().addNotification(notification);
          }
       });
@@ -112,8 +110,8 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
             }
             resource.setMimeType(mimeType);
             ideProject.notifyFolderChanged(((ItemContext)resource).getParent().getPath());
-            Notification notification = new Notification("User <b>" + message.getUserId() + "</b> rename: " + message.oldPath() + " to " + messageItem.getName(),
-               NotificationType.INFO, DURATION);
+            Notification notification = new Notification("User " + message.getUserId() + " rename: " + message.oldPath() + " to " + messageItem.getName(),
+               DURATION);
             NotificationManager.get().addNotification(notification);
          }
       });
@@ -124,8 +122,8 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
          public void onMessageReceived(ItemCreatedDto message)
          {
             Item messageItem = message.getItem();
-            Notification notification = new Notification("User <b>" + message.getUserId() + "</b> created: " + message.getItem().getPath(),
-               NotificationType.INFO, DURATION);
+            Notification notification = new Notification("User " + message.getUserId() + " created: " + message.getItem().getPath(),
+              DURATION);
             NotificationManager.get().addNotification(notification);
             ((IDEProject)project).addItem(convertDto2VfsItem(messageItem));
          }
@@ -137,8 +135,8 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
          public void onMessageReceived(ItemDeletedDto message)
          {
             ((IDEProject)project).removeItem(message.getFilePath());
-            Notification notification = new Notification("User <b>" + message.getUserId() + "</b> deleted: " + message.getFilePath(),
-               NotificationType.INFO, DURATION);
+            Notification notification = new Notification("User " + message.getUserId() + " deleted: " + message.getFilePath(),
+              DURATION);
             NotificationManager.get().addNotification(notification);
          }
       });
