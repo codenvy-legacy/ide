@@ -32,15 +32,18 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  */
 public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
 {
-   public static final String ID = "View/Project Chat";
+   public static final String ID = "View/Collaboration";
+
+   private ChatResources resources;
 
 
    public ShowChatControl(ChatResources resources)
    {
       super(ID);
-      setTitle("Project Chat");
-      setPrompt("Project Chat");
-      setImages(resources.chat(), resources.chatDisabled());
+      this.resources = resources;
+      setTitle("Collaboration");
+      setPrompt("Collaboration");
+      setImages(resources.collaborators(), resources.collaboratorsDisabled());
       setEvent(new ShowHideChatEvent(true));
       setCanBeSelected(true);
       setVisible(true);
@@ -70,5 +73,15 @@ public class ShowChatControl extends SimpleControl implements IDEControl, Projec
    {
       setEvent(new ShowHideChatEvent(!opened));
       setSelected(opened);
+   }
+
+   public void startBlink()
+   {
+      setImages(resources.collaboratorsAnimation(), resources.collaboratorsDisabled());
+   }
+
+   public void stopBlink()
+   {
+      setImages(resources.collaborators(), resources.collaboratorsDisabled());
    }
 }
