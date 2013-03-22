@@ -18,13 +18,15 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.codenvy.organization.exception.OrganizationServiceException;
+
+import com.codenvy.organization.InvitationService;
+import com.codenvy.organization.exception.InvitationExistenceException;
+import com.codenvy.organization.model.Invitation;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.extensions.Email;
 import com.google.gdata.util.ServiceException;
 
-import org.exoplatform.ide.invite.Invite;
-import org.exoplatform.ide.invite.InviteException;
-import org.exoplatform.ide.invite.InviteService;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
@@ -58,7 +60,7 @@ public class GoogleContactsRestService
    private OAuthTokenProvider oauthTokenProvider;
 
    @Inject
-   private InviteService inviteService;
+   private InvitationService inviteService;
 
    /**
     * Fetch all user's contacts.
@@ -85,17 +87,24 @@ public class GoogleContactsRestService
 
          String currentId = ConversationState.getCurrent().getIdentity().getUserId();
 
-         for (Invite invite : inviteService.getInvites(false))
+         //TODO need rework
+         
+         Invitation invite = inviteService.get(null,null);
          {
-            if (invite.getFrom() != null && invite.getFrom().equals(currentId))
+            if (invite.getSender()!= null && invite.getSender().equals(currentId))
             {
-               filteredByCurrentUser.add(invite.getEmail());
+               filteredByCurrentUser.add(invite.getRecipient());
             }
          }
       }
-      catch (InviteException e)
+      catch (InvitationExistenceException e)
       {
          throw new ServiceException(e.getMessage(), e);
+      }
+      catch (OrganizationServiceException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
 
       //getting google contacts

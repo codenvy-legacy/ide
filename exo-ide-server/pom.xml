@@ -49,106 +49,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.exoplatform.jcr</groupId>
-			<artifactId>exo.jcr.component.core</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.exoplatform.tool</groupId>
-					<artifactId>exo.tool.framework.junit</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>xstream</artifactId>
-					<groupId>xstream</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.jcr</groupId>
-			<artifactId>exo.jcr.component.ext</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.tool</groupId>
-					<artifactId>exo.tool.framework.junit</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.rest.core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.rest.ext</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.commons</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.frameworks.json</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.jcr</groupId>
-			<artifactId>exo.jcr.component.webdav</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.rest.core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.rest.ext</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.jcr</groupId>
-			<artifactId>exo.jcr.framework.web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform</groupId>
-			<artifactId>exo-jcr-services</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.rest.core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>xstream</groupId>
-					<artifactId>xstream</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.codehaus.woodstox</groupId>
-					<artifactId>wstx-asl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.wikbook</groupId>
-					<artifactId>wikbook.docbkxstyle</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.commons</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.exoplatform.ws</groupId>
-					<artifactId>exo.ws.rest.ext</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.exoplatform.core</groupId>
 			<artifactId>exo.core.component.security.core</artifactId>
 			<exclusions>
@@ -172,6 +72,10 @@
 			<artifactId>commons-fileupload</artifactId>
 		</dependency>
 		<dependency>
+         <groupId>commons-codec</groupId>
+         <artifactId>commons-codec</artifactId>
+      </dependency>
+		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
 			<artifactId>exo.kernel.commons</artifactId>
 		</dependency>
@@ -194,10 +98,6 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.jcr</groupId>
-			<artifactId>jcr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
@@ -253,10 +153,6 @@
 			<artifactId>guava</artifactId>
 			<version>r09</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-vfs-jcr</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>

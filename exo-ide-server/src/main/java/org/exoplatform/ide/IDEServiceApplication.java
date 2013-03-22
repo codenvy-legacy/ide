@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide;
 
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
 import org.exoplatform.ide.project.ProjectPrepareExceptionMapper;
 import org.exoplatform.ide.project.ProjectPrepareService;

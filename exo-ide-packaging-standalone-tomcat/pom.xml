@@ -177,18 +177,6 @@
          <version>${crash.version}</version>
       </dependency>
       <dependency>
-         <groupId>org.crsh</groupId>
-         <artifactId>crsh.jcr</artifactId>
-         <version>${crash.version}</version>
-         <exclusions>
-            <exclusion>
-               <groupId>org.bouncycastle</groupId>
-               <artifactId>bcprov-jdk15</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-
-      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-gadget</artifactId>
          <exclusions>
@@ -609,7 +597,7 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-jcr</artifactId>
+         <artifactId>exo-ide-vfs-fs</artifactId>
       </dependency>
 
       <dependency>
@@ -651,112 +639,7 @@
          <groupId>com.jcraft</groupId>
          <artifactId>jsch</artifactId>
       </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.core</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>xstream</groupId>
-               <artifactId>xstream</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.codehaus.woodstox</groupId>
-               <artifactId>wstx-asl</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.xml.stream</groupId>
-               <artifactId>stax-api</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.portlet</groupId>
-               <artifactId>portlet-api</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.ow2.spec.ee</groupId>
-               <artifactId>ow2-jta-1.1-spec</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.faces</groupId>
-               <artifactId>jsf-api</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.ext</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.core</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.commons</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.frameworks.json</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.ext</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.webdav</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.core</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.commons</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.frameworks.json</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.ext</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.ext</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-
-      <!-- dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-server</artifactId>
-         <version>${shindig.version}</version>
-         <type>war</type>
-      </dependency-->
-
-      <dependency>
-         <groupId>org.hsqldb</groupId>
-         <artifactId>hsqldb</artifactId>
-      </dependency>
-
+     
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>ide-codeassistant-lucene-index</artifactId>

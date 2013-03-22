@@ -160,11 +160,6 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>eclipse-jdt-core</artifactId>
             </exclusion>
-
-            <exclusion>
-            	<artifactId>exo.ws.rest.ext</artifactId>
-            	<groupId>org.exoplatform.ws</groupId>
-            </exclusion>
 			</exclusions>
 		</dependency>
 
@@ -292,22 +287,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.ext</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-		
-		
-                <dependency>
-                 <groupId>org.exoplatform.ws</groupId>
-                 <artifactId>exo.ws.rest.ext</artifactId>
-             </dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>

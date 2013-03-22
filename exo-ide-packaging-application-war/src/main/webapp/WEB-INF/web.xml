@@ -124,7 +124,7 @@
 
 	<security-role>
 		<description>the user role</description>
-		<role-name>users</role-name>
+		<role-name>developer</role-name>
 	</security-role>
 
 </web-app>

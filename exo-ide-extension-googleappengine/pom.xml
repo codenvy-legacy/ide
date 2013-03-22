@@ -57,12 +57,6 @@
       </dependency>
       
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-jcr</artifactId>
-         <scope>test</scope>
-      </dependency>
-
-      <dependency>
          <groupId>com.google.appengine</groupId>
          <artifactId>appengine-java-sdk</artifactId>
          <type>zip</type>

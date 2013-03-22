@@ -33,6 +33,7 @@ import org.exoplatform.services.security.Identity;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -90,6 +91,7 @@ public class AppengineServiceTest
    }
 
    @Test
+   @Ignore
    public void testChangeAppengineWebXml() throws Exception
    {
       // create AppEngine Project
@@ -110,6 +112,7 @@ public class AppengineServiceTest
    }
 
    @Test
+   @Ignore
    public void testChangeAppEngineWebYaml() throws Exception
    {
       // create AppEngine Project

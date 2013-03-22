@@ -33,16 +33,14 @@
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
+   
+    <component>
+      <type>org.exoplatform.ide.vfs.server.impl.memory.MemoryFileSystemInitializer</type>
       <init-params>
-         <value-param>
-            <name>jcr-workspace</name>
-            <value>ws</value>
-         </value-param>
          <values-param>
-            <name>repository-ids</name>
-            <value>db1</value>
+            <name>id</name>
+            <value>dev-monit</value>
+            <value>ws</value>
          </values-param>
       </init-params>
    </component>

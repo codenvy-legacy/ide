@@ -68,8 +68,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry
-      </type>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
    </component>
 
     <component>

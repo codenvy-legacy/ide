@@ -34,7 +34,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-vfs-jcr</artifactId>
+			<artifactId>exo-ide-vfs-fs</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>

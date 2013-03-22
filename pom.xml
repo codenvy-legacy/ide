@@ -19,10 +19,8 @@
    </scm>
    <properties>
       <!-- eXo Modules -->
-      <org.exoplatform.jcr.version>1.14.9-GA</org.exoplatform.jcr.version>
       <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.2.9-GA</org.exoplatform.ws.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
 
@@ -54,7 +52,6 @@
       <javax.annotation.version>1.0</javax.annotation.version>
       <javax.ws.version>1.0</javax.ws.version>
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
-      <javax.jcr.version>1.0</javax.jcr.version>
       <javax.inject.version>1</javax.inject.version>
 
    </properties>
@@ -111,56 +108,6 @@
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.organization.api</artifactId>
             <version>${org.exoplatform.core.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.frameworks.servlet</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.rest.core</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.rest.ext</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.commons</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.testframework</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.component.core</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.component.ext</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.component.webdav</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.framework.web</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform</groupId>
-            <artifactId>exo-jcr-services</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -490,7 +437,7 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-jcr</artifactId>
+            <artifactId>exo-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -781,7 +728,7 @@
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-fs</module>
-      <module>exo-ide-vfs-jcr</module>
+      <!--module>exo-ide-vfs-jcr</module-->
 
       <module>exo-ide-security</module>
 
