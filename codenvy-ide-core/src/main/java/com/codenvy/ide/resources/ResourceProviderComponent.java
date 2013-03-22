@@ -20,6 +20,13 @@ import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
 import com.codenvy.ide.core.event.ProjectActionEvent;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.resources.marshal.ChildNamesUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
@@ -32,18 +39,9 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.ProjectNature;
 import com.codenvy.ide.resources.model.Property;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringSet;
-import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -61,7 +59,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ResourceProviderComponent implements ResourceProvider
+public class ResourceProviderComponent implements ResourceProvider, Component
 {
 
    /**

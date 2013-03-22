@@ -16,6 +16,8 @@
  */
 package com.codenvy.ide.menu;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.core.event.ExpressionsChangedEvent;
 import com.codenvy.ide.core.event.ExpressionsChangedHandler;

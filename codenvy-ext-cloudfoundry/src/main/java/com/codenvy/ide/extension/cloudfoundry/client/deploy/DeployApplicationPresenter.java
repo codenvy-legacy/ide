@@ -19,7 +19,9 @@
 package com.codenvy.ide.extension.cloudfoundry.client.deploy;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.ui.console.ConsolePart;
+import com.codenvy.ide.api.ui.paas.DeployResultHandler;
+import com.codenvy.ide.api.ui.paas.HasPaaSActions;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -36,8 +38,6 @@ import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.paas.DeployResultHandler;
-import com.codenvy.ide.paas.HasPaaSActions;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -82,7 +82,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private ResourceProvider resourcesProvider;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -105,7 +105,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
     */
    @Inject
    protected DeployApplicationPresenter(DeployApplicationView view, EventBus eventBus,
-      ResourceProvider resourcesProvider, Console console, CloudFoundryLocalizationConstant constant,
+      ResourceProvider resourcesProvider, ConsolePart console, CloudFoundryLocalizationConstant constant,
       CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.view = view;

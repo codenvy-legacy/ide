@@ -16,6 +16,7 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.api.projectExplorer.ProjectExplorerPart;
 import com.codenvy.ide.core.event.ProjectActionEvent;
 import com.codenvy.ide.core.event.ProjectActionHandler;
 import com.codenvy.ide.core.event.ResourceChangedEvent;
@@ -26,7 +27,6 @@ import com.codenvy.ide.resources.FileEvent.FileOperation;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.selection.Selection;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -40,7 +40,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class ProjectExplorerPartPresenter extends AbstractPartPresenter implements ProjectExplorerView.ActionDelegate
+public class ProjectExplorerPartPresenter extends AbstractPartPresenter implements ProjectExplorerView.ActionDelegate, ProjectExplorerPart
 {
    protected ProjectExplorerView view;
 

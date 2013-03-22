@@ -16,17 +16,14 @@
  */
 package com.codenvy.ide.extension.css;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.core.editor.EditorRegistry;
 import com.codenvy.ide.extension.Extension;
-import com.codenvy.ide.resources.FileType;
-import com.codenvy.ide.texteditor.TextEditorViewImpl;
-
 import com.codenvy.ide.extension.css.editor.CssEditorProvider;
 import com.codenvy.ide.extension.css.wizard.NewCSSFilePagePresenter;
-
+import com.codenvy.ide.resources.FileType;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -46,15 +43,11 @@ public class CssExtension
    /**
     * CSS Extension adds CSS Support to IDE Applicaiton. It provides syntax highlighting and code completion features 
     * for CSS files to IDE
-    * 
-    * @param resourceProvider
-    * @param cssEditorProvider
-    * @param editorRegistry
     */
    @Inject
    public CssExtension(ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider,
       EditorRegistry editorRegistry, WizardAgent wizardAgent, Provider<NewCSSFilePagePresenter> provider,
-      Resources resources)
+      CssExtensionResource resources)
    {
       // Create and register new File type
       FileType cssFile = new FileType(null, "text/css", "css");

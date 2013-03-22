@@ -18,6 +18,10 @@
  */
 package com.codenvy.ide.core;
 
+import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
+
+import com.codenvy.ide.core.expressions.ExpressionManager;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
@@ -31,8 +35,6 @@ import com.codenvy.ide.command.ShowNewResourceWizardCommand;
 import com.codenvy.ide.command.ShowOpenPerspectiveDialog;
 import com.codenvy.ide.command.ShowPreferenceCommand;
 import com.codenvy.ide.command.ToggleItemCommand;
-import com.codenvy.ide.core.expressions.ExpressionManager;
-import com.codenvy.ide.keybinding.KeyBuilder;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.toolbar.ToggleItemExpression;
 import com.codenvy.ide.wizard.WizardAgentImpl;

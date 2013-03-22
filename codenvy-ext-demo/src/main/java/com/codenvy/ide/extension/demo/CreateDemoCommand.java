@@ -17,25 +17,22 @@
 package com.codenvy.ide.extension.demo;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.command.NoProjectOpenedExpression;
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.menu.ExtendedCommand;
+import com.codenvy.ide.core.expressions.NoProjectOpenedExpression;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
-
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 
 import java.util.Date;
 

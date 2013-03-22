@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import com.codenvy.ide.core.editor.EditorAgent;
+
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.core.JavaConventions;
 import com.codenvy.ide.java.client.core.JavaCore;
@@ -28,7 +30,6 @@ import com.codenvy.ide.java.client.projectmodel.SourceFolder;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.core.editor.EditorAgent;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;

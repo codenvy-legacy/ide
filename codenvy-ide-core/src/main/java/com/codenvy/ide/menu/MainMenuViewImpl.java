@@ -16,6 +16,8 @@
  */
 package com.codenvy.ide.menu;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.menu.Item.ConteinerType;
 

@@ -25,10 +25,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.core.event.ExpressionsChangedEvent;
 import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.core.expressions.ToggleStateExpression;
-import com.codenvy.ide.menu.ExtendedCommand;
 import com.codenvy.ide.toolbar.ToggleCommand;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;

@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.core.expressions.AbstractExpression;
 import com.codenvy.ide.core.expressions.ExpressionManager;
+
+import com.codenvy.ide.core.expressions.AbstractExpression;
 import com.codenvy.ide.core.expressions.ToggleStateExpression;
 
 /**

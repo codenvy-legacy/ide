@@ -33,7 +33,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-public class EditorPartStackPresenter extends PartStackPresenter
+public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack
 {
 
    /**

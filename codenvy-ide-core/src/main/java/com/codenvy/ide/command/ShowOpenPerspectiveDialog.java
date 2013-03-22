@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.command;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.menu.ExtendedCommand;
 import com.codenvy.ide.perspective.OpenPerspectivePresenter;
 import com.codenvy.ide.perspective.WorkspacePresenter;
 

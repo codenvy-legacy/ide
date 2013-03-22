@@ -17,9 +17,11 @@
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.outline.OutlinePart;
+import com.codenvy.ide.api.projectExplorer.ProjectExplorerPart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
@@ -29,9 +31,11 @@ import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
-import com.codenvy.ide.core.editor.EditorRegistry;
+import com.codenvy.ide.core.editor.EditorAgent;
+import com.codenvy.ide.core.editor.EditorAgentImpl;
+import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.core.expressions.ExpressionManager;
+import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorProvider;
 import com.codenvy.ide.extension.ExtensionGinModule;
@@ -45,7 +49,10 @@ import com.codenvy.ide.menu.MainMenuViewImpl;
 import com.codenvy.ide.outline.OutlinePartPrenter;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
+import com.codenvy.ide.part.EditorPartStack;
+import com.codenvy.ide.part.EditorPartStackPresenter;
 import com.codenvy.ide.part.FocusManager;
+import com.codenvy.ide.part.PartStack;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
 import com.codenvy.ide.part.PartStackUIResources;
@@ -54,6 +61,7 @@ import com.codenvy.ide.part.PartStackViewImpl;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
+import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerView;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerViewImpl;
 import com.codenvy.ide.perspective.WorkspacePresenter;
@@ -77,7 +85,6 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-
 
 /**
  *
@@ -104,9 +111,24 @@ public class CoreGinModule extends AbstractGinModule
 
       resourcesAPIconfigure();
 
+      uiModelConfigure();
       uiAPIconfigure();
 
       editorAPIconfigure();
+   }
+
+   /**
+    * 
+    */
+   private void uiModelConfigure()
+   {
+      bind(PartStack.class).to(PartStackPresenter.class).in(Singleton.class);
+      bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
+
+      bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
+      bind(OutlinePart.class).to(OutlinePartPrenter.class).in(Singleton.class);
+      bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
+
    }
 
    /**
@@ -114,7 +136,9 @@ public class CoreGinModule extends AbstractGinModule
     */
    protected void editorAPIconfigure()
    {
-      bind(EditorRegistry.class).in(Singleton.class);
+      bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
+
+      bind(EditorRegistryImpl.class).in(Singleton.class);
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
       bind(UserActivityManager.class).in(Singleton.class);
@@ -140,7 +164,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
 
       // expression manager
-      bind(ExpressionManager.class).in(Singleton.class);
+      bind(ExpressionManagerImpl.class).in(Singleton.class);
 
       // main menu
       bind(MainMenuPresenter.class).in(Singleton.class);
@@ -163,7 +187,7 @@ public class CoreGinModule extends AbstractGinModule
 
       bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
 
-      bind(Console.class).to(ConsolePartPresenter.class).in(Singleton.class);
+      bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
       bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
    }
 

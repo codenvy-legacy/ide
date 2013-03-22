@@ -16,10 +16,11 @@
  */
 package com.codenvy.ide.java.client.perspective;
 
+import com.codenvy.ide.part.EditorPartStack;
+
 import com.codenvy.ide.java.client.stackview.StackViewPartPresenter;
 
 import com.codenvy.ide.outline.OutlinePartPrenter;
-import com.codenvy.ide.part.EditorPartStackPresenter;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
@@ -49,7 +50,7 @@ public class DebugPerspectivePresenter extends PerspectivePresenter
     * @param stackViewPartPresenter
     */
    @Inject
-   public DebugPerspectivePresenter(DebugPerspectiveView view, EditorPartStackPresenter editorPartStackPresenter,
+   public DebugPerspectivePresenter(DebugPerspectiveView view, EditorPartStack editorPartStackPresenter,
       Provider<PartStackPresenter> partStackProvider, OutlinePartPrenter outlinePresenter,
       ConsolePartPresenter consolePartPresenter, StackViewPartPresenter stackViewPartPresenter,
       ProjectExplorerPartPresenter projectExplorerPart)

@@ -18,13 +18,14 @@
  */
 package com.codenvy.ide.java.client.editor;
 
+import com.codenvy.ide.api.outline.OutlineModel;
+
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.editor.outline.JavaNodeRenderer;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.outline.OutlineImpl;
-import com.codenvy.ide.outline.OutlineModel;
 import com.codenvy.ide.outline.OutlinePresenter;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
 

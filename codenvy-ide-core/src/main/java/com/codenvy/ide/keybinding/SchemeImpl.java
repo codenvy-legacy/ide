@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.keybinding;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.api.ui.keybinding.Scheme;
-import com.codenvy.ide.menu.ExtendedCommand;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

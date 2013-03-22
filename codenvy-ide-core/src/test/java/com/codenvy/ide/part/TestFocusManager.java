@@ -66,7 +66,7 @@ public class TestFocusManager
    PartStackView view;
 
    @InjectMocks
-   PartStackPresenter stack;
+   PartStack stack;
 
    @Before
    public void disarm()
@@ -122,7 +122,7 @@ public class TestFocusManager
       // create Part Agent
       agent = new FocusManager(eventBus);
 
-      PartStackPresenter partStack = mock(PartStackPresenter.class);
+      PartStack partStack = mock(PartStackPresenter.class);
       agent.setActivePartStack(partStack); // focus requested
 
       // verify New Event generated

@@ -16,10 +16,11 @@
  */
 package com.codenvy.ide.command;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.menu.ExtendedCommand;
 import com.codenvy.ide.openproject.OpenProjectPresenter;
 
 import com.codenvy.ide.json.JsonArray;

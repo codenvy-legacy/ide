@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.login;
 
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
@@ -51,7 +51,7 @@ public class LoginPresenter implements LoginView.ActionDelegate
 {
    private LoginView view;
 
-   private Console console;
+   private ConsolePart console;
 
    /**
     * The last server, that user logged in.
@@ -78,7 +78,7 @@ public class LoginPresenter implements LoginView.ActionDelegate
     * @param autoBeanFactory
     */
    @Inject
-   protected LoginPresenter(LoginView view, EventBus eventBus, Console console,
+   protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.view = view;

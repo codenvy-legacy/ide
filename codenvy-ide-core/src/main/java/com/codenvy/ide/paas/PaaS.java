@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.paas;
 
+import com.codenvy.ide.api.ui.paas.HasPaaSActions;
+
 import com.codenvy.ide.json.JsonArray;
 
 import com.google.gwt.resources.client.ImageResource;

@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.outline;
 
+import com.codenvy.ide.api.outline.CodeBlock;
+
 import com.codenvy.ide.tree.NodeDataAdapter;
 import com.codenvy.ide.tree.TreeNodeElement;
 

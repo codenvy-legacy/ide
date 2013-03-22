@@ -16,7 +16,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
   <!-- Other module inherits                                      -->
-  <inherits name='com.codenvy.ide.Core' />
+  <inherits name='com.codenvy.ide.Api' />
   <inherits name='com.codenvy.ide.java.Java' />
   <inherits name='com.codenvy.ide.extension.demo.Demo' />
   <inherits name='com.codenvy.ide.extension.css.Css' />

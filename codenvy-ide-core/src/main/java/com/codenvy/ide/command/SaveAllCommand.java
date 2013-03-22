@@ -18,11 +18,15 @@
  */
 package com.codenvy.ide.command;
 
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.core.expressions.EditorsDirtyExpression;
+
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.core.editor.EditorAgent;
+
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.editor.EditorPartPresenter;
-import com.codenvy.ide.menu.ExtendedCommand;
 
 import com.codenvy.ide.json.JsonStringMap;
 

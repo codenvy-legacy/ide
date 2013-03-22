@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.part.console;
 
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.part.AbstractPartPresenter;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -31,7 +31,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class ConsolePartPresenter extends AbstractPartPresenter implements ConsolePartView.ActionDelegate, Console
+public class ConsolePartPresenter extends AbstractPartPresenter implements ConsolePartView.ActionDelegate, ConsolePart
 {
    private static final String TITLE = "Console";
 

@@ -47,7 +47,7 @@ import com.google.web.bindery.event.shared.EventBus;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate
+public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack
 {
    /** list of parts */
    private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
@@ -67,7 +67,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
       void onActivePartChanged(PartPresenter part);
 
       /** PartStack is being clicked and requests Focus */
-      void onRequestFocus(PartStackPresenter partStack);
+      void onRequestFocus(PartStack partStack);
    }
 
    private PropertyListener propertyListener = new PropertyListener()
@@ -119,7 +119,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
       view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
    }
 
-   /**
+    /**
     * {@inheritDoc}
     */
    @Override
@@ -132,22 +132,19 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
       }
    }
 
-   /**
-    * Change the focused state of the PartStack to desired value 
-    * 
-    * @param focused
+    /**
+    * {@inheritDoc}
     */
+   @Override
    public void setFocus(boolean focused)
    {
       view.setFocus(focused);
    }
 
-   /**
-    * Add part to the PartStack. Newly added part will be activated. If the Part
-    * has already been added to this PartStack, then it will be activated only. 
-    * 
-    * @param part
+    /**
+    * {@inheritDoc}
     */
+   @Override
    public void addPart(PartPresenter part)
    {
       if (parts.contains(part))
@@ -171,43 +168,37 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
       onRequestFocus();
    }
 
-   /**
-    * Ask if PartStack contains given Part. 
-    * 
-    * @param part
-    * @return
+    /**
+    * {@inheritDoc}
     */
+   @Override
    public boolean containsPart(PartPresenter part)
    {
       return parts.contains(part);
    }
 
-   /**
-    * Number of parts in the PartStack
-    * 
-    * @return
+    /**
+    * {@inheritDoc}
     */
+   @Override
    public int getNumberOfParts()
    {
       return parts.size();
    }
 
-   /**
-    * Get active Part. Active is the part that is currently displayed on the screen
-    * 
-    * @return
+    /**
+    * {@inheritDoc}
     */
+   @Override
    public PartPresenter getActivePart()
    {
       return activePart;
    }
 
-   /**
-    * Activate given part (force show it on the screen). If part wasn't previously added
-    * to the PartStack or has been removed, that method has no effect.
-    * 
-    * @param part
+    /**
+    * {@inheritDoc}
     */
+   @Override
    public void setActivePart(PartPresenter part)
    {
       if (activePart == part)

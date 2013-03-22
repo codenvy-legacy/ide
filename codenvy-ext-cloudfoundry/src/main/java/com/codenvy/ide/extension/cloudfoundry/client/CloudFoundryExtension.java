@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
+import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
 import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
@@ -28,7 +29,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationPre
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.menu.MainMenuPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -65,7 +65,7 @@ public class CloudFoundryExtension
     * @param autoBeanFactory
     */
    @Inject
-   public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuPresenter menu,
+   public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuAgent menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
       ShowApplicationsCommand showApplicationsCommand, ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
       EventBus eventBus, DeployApplicationPresenter deployAppPresenter, CloudFoundryLocalizationConstant constant,

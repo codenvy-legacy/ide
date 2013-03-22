@@ -16,14 +16,14 @@
  */
 package com.codenvy.ide.extension.demo;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.command.ProjectOpenedExpression;
 import com.codenvy.ide.core.editor.EditorAgent;
 import com.codenvy.ide.core.expressions.Expression;
+import com.codenvy.ide.core.expressions.ProjectOpenedExpression;
 import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectivePresenter;
-import com.codenvy.ide.menu.ExtendedCommand;
-import com.codenvy.ide.menu.MainMenuPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -47,7 +47,7 @@ public class DemoExtension
 
    @Inject
    public DemoExtension(final WorkspaceAgent workspace,
-      Provider<ExtendedPerspectivePresenter> extendedPerspectivePresenter, MainMenuPresenter menu,
+      Provider<ExtendedPerspectivePresenter> extendedPerspectivePresenter, MainMenuAgent menu,
       EditorAgent editorAgent, final ProjectOpenedExpression projectOpenedExpression,
       CreateDemoCommand createDemoCommand)
    {

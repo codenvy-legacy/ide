@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.menu.ExtendedCommand;
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.menu.Item;
 import com.codenvy.ide.menu.MenuPath;
 import com.codenvy.ide.menu.MenuResources;

@@ -5,7 +5,7 @@
    <inherits name="com.google.gwt.http.HTTP" />
    <inherits name="com.google.gwt.i18n.I18N"/>
    <inherits name="com.google.gwt.json.JSON" />
-   <inherits name='com.codenvy.ide.Core' />
+   <inherits name='com.codenvy.ide.Api' />
    <inherits name="com.google.gwt.inject.Inject"/>
    <inherits name='com.google.web.bindery.autobean.AutoBean'/>
    

@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.menu.ExtendedCommand;
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.view.View;
 
 import com.google.gwt.resources.client.ImageResource;

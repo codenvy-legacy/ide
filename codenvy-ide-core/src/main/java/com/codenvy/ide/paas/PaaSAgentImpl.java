@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.paas;
 
+import com.codenvy.ide.api.ui.paas.HasPaaSActions;
+
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;

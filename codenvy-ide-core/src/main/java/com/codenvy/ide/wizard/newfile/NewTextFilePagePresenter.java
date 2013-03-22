@@ -22,10 +22,8 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.resources.model.File;
-
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;

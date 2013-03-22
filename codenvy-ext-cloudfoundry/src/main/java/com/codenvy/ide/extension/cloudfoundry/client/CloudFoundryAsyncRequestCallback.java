@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
@@ -49,7 +49,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
 
    private EventBus eventBus;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -69,7 +69,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
     * @param loginPresenter
     */
    public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, EventBus eventBus, Console console,
+      LoginCanceledHandler loginCanceled, EventBus eventBus, ConsolePart console,
       CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter)
    {
       this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant, loginPresenter);
@@ -88,7 +88,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
     * @param loginPresenter
     */
    public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus, Console console,
+      LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus, ConsolePart console,
       CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter)
    {
       super(unmarshaller);
