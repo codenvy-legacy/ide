@@ -45,7 +45,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CopyItemsCommand extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewActivatedHandler,
    VfsChangedHandler
 {

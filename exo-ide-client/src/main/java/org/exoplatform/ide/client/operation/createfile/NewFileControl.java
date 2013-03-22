@@ -44,7 +44,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class NewFileControl extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
    VfsChangedHandler, ItemsSelectedHandler
 {

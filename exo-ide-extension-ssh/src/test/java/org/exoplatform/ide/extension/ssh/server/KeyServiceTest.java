@@ -74,10 +74,6 @@ public class KeyServiceTest
       String validUser =
          authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
       Identity id = authr.createIdentity(validUser);
-      Set<String> roles = new HashSet<String>();
-      roles.add("users");
-      roles.add("administrators");
-      id.setRoles(roles);
       ConversationState s = new ConversationState(id);
       ConversationState.setCurrent(s);
    }
@@ -100,7 +96,7 @@ public class KeyServiceTest
 
       EnvironmentContext ctx = new EnvironmentContext();
       Set<String> userRoles = new HashSet<String>();
-      userRoles.add("users");
+      userRoles.add("developer");
       SimpleSecurityContext securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       ctx.put(SecurityContext.class, securityContext);
       HttpServletRequest httpRequest =

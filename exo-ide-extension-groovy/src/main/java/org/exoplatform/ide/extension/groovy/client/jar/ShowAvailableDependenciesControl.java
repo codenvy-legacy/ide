@@ -30,7 +30,7 @@ import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
  * @version $
  */
 
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowAvailableDependenciesControl extends SimpleControl implements IDEControl
 {
 

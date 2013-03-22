@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.gatein.gadget.client.event.UndeployGadgetEv
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators"})
+@RolesAllowed({"developer"})
 public class UndeployGadgetCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.job.Job;
  * @version $Id: Sep 16, 2011 evgen $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ProgressNotificationControl extends StatusTextControl implements IDEControl
 {
 

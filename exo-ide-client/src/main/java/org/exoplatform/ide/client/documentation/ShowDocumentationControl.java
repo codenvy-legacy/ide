@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $Id: ShowDocumentationControl Jan 21, 2011 11:10:08 AM evgen $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowDocumentationControl extends SimpleControl implements IDEControl
 {
 

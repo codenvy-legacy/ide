@@ -1057,7 +1057,7 @@ public class GroovyScript2RestLoader extends BaseGroovyScriptManager implements 
     */
    @POST
    @Path("load/{repository}/{workspace}/{path:.*}")
-   @RolesAllowed({"administrators"})
+   @RolesAllowed({"developer"})
    public Response load(@PathParam("repository") String repository, @PathParam("workspace") String workspace,
       @PathParam("path") String path, @DefaultValue("true") @QueryParam("state") boolean state,
       @QueryParam("sources") List<String> sources, @QueryParam("file") List<String> files,
