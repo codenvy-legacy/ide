@@ -137,6 +137,10 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
    @Override
    public void onRefreshBrowser(RefreshBrowserEvent event)
    {
+      if(openedProject == null)
+      {
+         return;
+      }
       foldersToBeRefreshed.clear();
       for (Folder f : event.getFolders())
       {
