@@ -127,7 +127,7 @@ public class IDEConfigurationService
    @GET
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed("developer")
    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request)
    {
       try
@@ -167,7 +167,7 @@ public class IDEConfigurationService
 
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    public String getConfiguration()
    {
       try
@@ -183,7 +183,7 @@ public class IDEConfigurationService
 
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    public void setConfiguration(String body) throws IOException
    {
       writeSettings(body);
