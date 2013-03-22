@@ -23,6 +23,7 @@ import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipan
 import com.google.collide.client.CollabEditorExtension;
 import com.google.gwt.core.client.GWT;
 
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -82,12 +83,12 @@ public class ChatExtension extends Extension
    @Override
    public void initialize()
    {
-//      resources.chatCss().ensureInjected();
-//      chatControl = new ShowChatControl(resources);
-//      IDE.getInstance().addControl(chatControl);
-//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-//      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      resources.chatCss().ensureInjected();
+      chatControl = new ShowChatControl(resources);
+      IDE.getInstance().addControl(chatControl, Docking.TOOLBAR_RIGHT);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    private void createPresenter()
@@ -140,7 +141,7 @@ public class ChatExtension extends Extension
          @Override
          public void onMessageReceived(GetChatParticipantsResponse message)
          {
-            chatPresenter.setProjectId(projectId);
+            chatPresenter.setProjectId(currentProject);
             chatPresenter.setChatParticipants(message.getParticipants());
          }
       });

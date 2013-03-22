@@ -22,8 +22,10 @@ package com.codenvy.ide.notification;
 import com.codenvy.ide.client.util.AnimationController;
 import com.codenvy.ide.client.util.AnimationController.AnimationStateListener;
 import com.codenvy.ide.client.util.AnimationController.State;
-import com.codenvy.ide.notification.Notification.NotificationType;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Cursor;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -41,11 +43,13 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
+import elemental.dom.Node;
+import elemental.events.Event;
+import elemental.events.EventListener;
 import elemental.html.Element;
 
 import java.util.LinkedList;
@@ -65,19 +69,18 @@ public class NotificationManager
 
    public interface Css extends CssResource
    {
-      @ClassName("notification-info")
-      String notificationInfo();
 
-      @ClassName("notification-message")
-      String notificationMessage();
+      String message();
+
+      String notif();
    }
 
    public interface Resources extends ClientBundle
    {
-      @Source("com/codenvy/ide/notification/Notification.css")
+      @Source("Notification.css")
       Css styles();
 
-      @Source("com/codenvy/ide/notification/fancy_closebox.png")
+      @Source("fancy_closebox.png")
       ImageResource closeImage();
    }
 
@@ -85,10 +88,6 @@ public class NotificationManager
    private class NotificationPanel extends PopupPanel
    {
       private final Image close = new Image(resources.closeImage());
-
-      private final FocusPanel focus = new FocusPanel();
-
-      private final AbsolutePanel panel = new AbsolutePanel();
 
       private int duration;
 
@@ -106,50 +105,55 @@ public class NotificationManager
 
       ;
 
-      public NotificationPanel(final Widget widget, int duration)
+      public NotificationPanel(final Element element, int duration)
       {
          super(false, false);
          this.duration = duration;
-         add(focus);
-         focus.setWidget(panel);
-         widget.getElement().getStyle().setPaddingTop(20, Unit.PX);
-         panel.add(widget);
+         getElement().appendChild((com.google.gwt.dom.client.Element)element);
 
-         close.addClickHandler(new ClickHandler()
+         Element e = (Element)close.getElement();
+         e.addEventListener(Event.CLICK, new EventListener()
          {
             @Override
-            public void onClick(final ClickEvent event)
+            public void handleEvent(Event evt)
             {
                animationController.hide((Element)getElement());
             }
-         });
-         focus.addMouseOverHandler(new MouseOverHandler()
+         }, true);
+
+         close.getElement().getStyle().setFloat(Style.Float.RIGHT);
+         close.getElement().getStyle().setTop(0, Unit.PX);
+         close.getElement().getStyle().setRight(0, Unit.PX);
+         close.getElement().getStyle().setZIndex(20);
+         close.getElement().getStyle().setCursor(Cursor.POINTER);
+         close.getElement().getStyle().setPosition(Position.RELATIVE);
+         addDomHandler(new MouseOverHandler()
          {
 
             @Override
             public void onMouseOver(final MouseOverEvent event)
             {
-               panel.add(close, panel.getOffsetWidth() - 20, 0);
+               add(close);
                timer.cancel();
             }
-         });
-         focus.addMouseOutHandler(new MouseOutHandler()
+         }, MouseOverEvent.getType());
+         addDomHandler(new MouseOutHandler()
          {
             @Override
             public void onMouseOut(final MouseOutEvent event)
             {
-               panel.remove(close);
+               remove(close);
                scheduleCloseTimer();
             }
-         });
+         }, MouseOutEvent.getType());
 
       }
 
       public void scheduleCloseTimer()
       {
-         if(duration>0)
+         if (duration > 0)
          {
-           timer.schedule(duration);
+            timer.schedule(duration);
          }
       }
    }
@@ -158,7 +162,7 @@ public class NotificationManager
 
    private static final int SPACING = 6;
 
-   private static final Resources resources = GWT.create(Resources.class);
+   static final Resources resources = GWT.create(Resources.class);
 
    private static NotificationManager instance;
 
@@ -199,7 +203,7 @@ public class NotificationManager
 
    public static NotificationManager get()
    {
-      if(instance == null)
+      if (instance == null)
       {
          instance = new NotificationManager(new InitialPositionCallback()
          {
@@ -222,8 +226,8 @@ public class NotificationManager
    public void addNotification(final Notification notification)
    {
       //      final PopupPanel pop = new PopupPanel(false, false);
-      final NotificationPanel panel = new NotificationPanel(notification, notification.getDuration());
-      panel.setStyleName(computeStyle(notification.getType()));
+      final NotificationPanel panel = new NotificationPanel(notification.getElement(), notification.getDuration());
+      panel.setStyleName(resources.styles().notif());
       panel.setAnimationEnabled(false);
       panel.addCloseHandler(new CloseHandler<PopupPanel>()
       {
@@ -249,18 +253,6 @@ public class NotificationManager
 
          notifications.add(notification);
          popups.add(panel);
-      }
-   }
-
-   private String computeStyle(NotificationType type)
-   {
-      switch (type)
-      {
-         case MESSAGE:
-            return resources.styles().notificationMessage();
-         case INFO:
-         default:
-            return resources.styles().notificationInfo();
       }
    }
 
