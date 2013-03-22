@@ -36,7 +36,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class NewProjectMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 

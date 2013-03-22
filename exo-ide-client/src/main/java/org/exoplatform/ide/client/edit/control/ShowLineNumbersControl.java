@@ -40,7 +40,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowLineNumbersControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ApplicationSettingsSavedHandler, ApplicationSettingsReceivedHandler
 {

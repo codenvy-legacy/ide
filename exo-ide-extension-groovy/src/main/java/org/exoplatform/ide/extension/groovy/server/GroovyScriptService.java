@@ -83,7 +83,7 @@ public class GroovyScriptService
     */
    @POST
    @Path("/deploy")
-   @RolesAllowed({"administrators"})
+   @RolesAllowed({"developer"})
    public void deploy( //
                        @QueryParam("id") String fileId, //
                        @QueryParam("vfsid") String vfsId, //
@@ -104,7 +104,7 @@ public class GroovyScriptService
     */
    @POST
    @Path("/undeploy")
-   @RolesAllowed({"administrators"})
+   @RolesAllowed({"developer"})
    public void undeploy( //
                          @QueryParam("id") String fileId, //
                          @QueryParam("vfsid") String vfsId //
@@ -138,7 +138,7 @@ public class GroovyScriptService
     */
    @POST
    @Path("/deploy-sandbox")
-   @RolesAllowed({"developers"})
+   @RolesAllowed({"developer"})
    public void deployInSandbox( //
                                 @QueryParam("id") String fileId, //
                                 @QueryParam("vfsid") String vfsId, //
@@ -164,7 +164,7 @@ public class GroovyScriptService
     */
    @POST
    @Path("/undeploy-sandbox")
-   @RolesAllowed({"developers"})
+   @RolesAllowed({"developer"})
    public void undeployFromSandbox( //
                                     @QueryParam("id") String fileId, //
                                     @QueryParam("vfsid") String vfsId //

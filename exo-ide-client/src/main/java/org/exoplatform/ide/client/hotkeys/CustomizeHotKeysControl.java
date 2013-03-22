@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CustomizeHotKeysControl extends SimpleControl implements IDEControl
 {
 

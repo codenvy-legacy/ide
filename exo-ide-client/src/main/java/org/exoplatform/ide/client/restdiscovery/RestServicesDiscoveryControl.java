@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $Id: Dec 21, 2010 5:50:35 PM evgen $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class RestServicesDiscoveryControl extends SimpleControl implements IDEControl
 {
    public static final String ID = "Help/REST Services Discovery";

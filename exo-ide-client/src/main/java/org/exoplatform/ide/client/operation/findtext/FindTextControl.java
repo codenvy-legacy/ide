@@ -38,7 +38,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @version $Id: ${date} ${time}
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class FindTextControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ViewOpenedHandler, ViewClosedHandler
 {
