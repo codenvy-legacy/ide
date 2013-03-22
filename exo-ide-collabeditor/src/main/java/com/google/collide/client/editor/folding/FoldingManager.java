@@ -291,6 +291,22 @@ public class FoldingManager implements Document.TextListener
    }
 
    /**
+    * Get range covered by the specified <code>marker</code>.
+    * 
+    * @param marker
+    * @return covered {@link AbstractFoldRange}
+    */
+   public AbstractFoldRange getFoldRangeOfMarker(FoldMarker marker)
+   {
+      if (marker == null)
+      {
+         return null;
+      }
+
+      return markerToPositionMap.get(marker);
+   }
+
+   /**
     * Toggles the expansion state of the given fold marker.
     * 
     * @param foldMarker the fold marker 
@@ -378,7 +394,7 @@ public class FoldingManager implements Document.TextListener
             anchorsInCollapsedRangeToShift, linesToCollapse.indexOf(line) == 0);
       }
 
-      // TODO bug: when text is selected after collapsed block, it still collapsed after collapsing
+      // FIXME bug: when text is selected after collapsed block, it still collapsed after collapsing
       anchorManager.handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
          anchorsLeftoverFromLastLine, linesToCollapse.get(0).getPreviousLine(), lineNumber, 0, 0, linesToCollapse.peek().getText()
             .length());
@@ -488,13 +504,13 @@ public class FoldingManager implements Document.TextListener
     * Returns the distance of the given line to the start line of the given position in the given document. The distance is
     * <code>-1</code> when the line is not included in the given position.
     *
-    * @param annotation the annotation
+    * @param foldMarker the fold marker
     * @param position the position
     * @param document the document
     * @param line the line
     * @return <code>-1</code> if line is not contained, a position number otherwise
     */
-   private int getDistance(FoldMarker annotation, AbstractFoldRange position, IDocument document, int line)
+   private int getDistance(FoldMarker foldMarker, AbstractFoldRange position, IDocument document, int line)
    {
       if (position.getOffset() > -1 && position.getLength() > -1)
       {
@@ -504,7 +520,7 @@ public class FoldingManager implements Document.TextListener
             int endLine = document.getLineOfOffset(position.getOffset() + position.getLength());
             if (startLine <= line && line < endLine)
             {
-               if (annotation.isCollapsed())
+               if (foldMarker.isCollapsed())
                {
                   int captionOffset = position.computeCaptionOffset(document);
                   int captionLine = document.getLineOfOffset(position.getOffset() + captionOffset);

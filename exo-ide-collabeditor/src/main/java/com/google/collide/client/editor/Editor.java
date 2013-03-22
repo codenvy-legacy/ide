@@ -336,6 +336,7 @@ public class Editor extends UiComponent<Editor.View> {
   private CurrentLineHighlighter currentLineHighlighter;
   private NotificationManager leftGutterNotificationManager;
   private FoldingManager foldingManager;
+  private boolean isFoldingMode;
 
   private Editor(AppContext appContext, View view, Buffer buffer, InputController input,
       FocusManager focusManager, FontDimensionsCalculator editorFontDimensionsCalculator,
@@ -363,6 +364,7 @@ public class Editor extends UiComponent<Editor.View> {
     else {
       foldingManager = new FoldingManager();
     }
+    isFoldingMode = isFoldingModeEnabled;
     editorDocumentMutator = new EditorDocumentMutator(this);
     mouseHoverManager = new MouseHoverManager(this);
 
@@ -526,12 +528,16 @@ public class Editor extends UiComponent<Editor.View> {
     return documentListenerManager;
   }
   
-  public NotificationManager getLeftGutterNotificationManager(){
+  public NotificationManager getLeftGutterNotificationManager() {
      return leftGutterNotificationManager;
   }
 
-  public FoldingManager getFoldingManager(){
+  public FoldingManager getFoldingManager() {
      return foldingManager;
+  }
+
+  public boolean isFoldingMode() {
+     return isFoldingMode;
   }
 
   // TODO: need a public interface and impl

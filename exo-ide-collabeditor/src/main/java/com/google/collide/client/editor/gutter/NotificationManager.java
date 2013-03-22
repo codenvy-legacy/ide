@@ -24,6 +24,9 @@ import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.DocumentListener;
+import com.google.collide.client.editor.folding.AbstractFoldRange;
+import com.google.collide.client.editor.folding.FoldMarker;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.folding.FoldingManager.FoldingListener;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.collide.client.ui.menu.PositionController.HorizontalAlign;
@@ -181,7 +184,8 @@ public class NotificationManager implements DocumentListener, FoldingListener
     */
    public void addProblem(Marker problem)
    {
-      int lineNumber = problem.getLineNumber() - 1;
+      int lineNumber = getVisibleLineNumber(problem.getLineNumber() - 1);
+
       if (!markers.hasKey(lineNumber))
       {
          markers.put(lineNumber, JsoArray.<Marker> create());
@@ -199,7 +203,6 @@ public class NotificationManager implements DocumentListener, FoldingListener
       leftGutter.addUnmanagedElement(m.getElement());
 
       addOverviewMark(problem, message.toString());
-
    }
 
    /**
@@ -208,9 +211,20 @@ public class NotificationManager implements DocumentListener, FoldingListener
     */
    private void addOverviewMark(Marker problem, String string)
    {
+      final int linenNumber = getVisibleLineNumber(problem.getLineNumber());
+      int numberOfLines = 0;
+      if (editor.isFoldingMode())
+      {
+         numberOfLines = editor.getFoldingManager().getSlaveDocument().getNumberOfLines();
+      }
+      else
+      {
+         numberOfLines = document.getNumberOfLines();
+      }
+
       NotificationMark mark =
          new NotificationMark(problem, string, res, editor, rightPositioner, new HtmlTooltipRenderer());
-      mark.setTopPosition((100 * problem.getLineNumber()) / document.getNumberOfLines(), "%");
+      mark.setTopPosition((100 * linenNumber) / numberOfLines, "%");
       overviewGutter.addUnmanagedElement(mark.getElement());
       overviewMarks.add(mark);
       if (problem.isError())
@@ -578,5 +592,30 @@ public class NotificationManager implements DocumentListener, FoldingListener
             }
          }
       });
+   }
+
+   private int getVisibleLineNumber(int lineNumber)
+   {
+      try
+      {
+         if (editor.isFoldingMode())
+         {
+            FoldingManager foldingManager = editor.getFoldingManager();
+            FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
+            if (foldMarker != null && foldMarker.isCollapsed())
+            {
+               AbstractFoldRange coveredRange = foldingManager.getFoldRangeOfMarker(foldMarker);
+               if (coveredRange != null)
+               {
+                  final int firstContentOffset = coveredRange.getOffset() + coveredRange.computeCaptionOffset(document);
+                  return document.getLineOfOffset(firstContentOffset);
+               }
+            }
+         }
+      }
+      catch (BadLocationException e) {
+         // TODO: handle exception
+      }
+      return lineNumber;
    }
 }
