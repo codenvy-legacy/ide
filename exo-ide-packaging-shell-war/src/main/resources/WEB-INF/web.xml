@@ -72,7 +72,7 @@
          <url-pattern>/Shell.html</url-pattern>
       </web-resource-collection>
       <auth-constraint>
-         <role-name>users</role-name>
+         <role-name>developer</role-name>
       </auth-constraint>
       <user-data-constraint>
          <transport-guarantee>NONE</transport-guarantee>
@@ -86,6 +86,6 @@
 
    <security-role>
       <description>the user role</description>
-      <role-name>users</role-name>
+      <role-name>developer</role-name>
    </security-role>
 </web-app>

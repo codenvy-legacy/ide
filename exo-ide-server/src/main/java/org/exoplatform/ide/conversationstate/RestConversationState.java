@@ -51,7 +51,7 @@ public class RestConversationState
    @POST
    @Path("/whoami")
    @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    public IdeUser whoami( @Context HttpServletRequest request)
    {
       ConversationState currentState = ConversationState.getCurrent();
