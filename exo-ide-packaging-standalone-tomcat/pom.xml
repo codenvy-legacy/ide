@@ -305,24 +305,6 @@
          </exclusions>
       </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-chromattic</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>org.hsqldb</groupId>
-               <artifactId>hsqldb</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-commons</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -343,53 +325,7 @@
          </exclusions>
       </dependency>
 
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.apt</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.api</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.spi</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.core</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.ext</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.dataobject</artifactId>
-         <version>${chromattic.version}</version>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.cglib</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.groovy</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
+       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-git</artifactId>
          <exclusions>

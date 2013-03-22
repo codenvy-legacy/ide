@@ -20,6 +20,14 @@ package org.exoplatform.ide.git.server.github;
 
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
+import com.codenvy.organization.exception.OrganizationServiceException;
+
+import com.codenvy.organization.exception.InvitationExistenceException;
+
+import com.codenvy.organization.model.Invitation;
+
+import com.codenvy.organization.InvitationService;
+
 import org.everrest.core.impl.provider.json.ArrayValue;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonValue;
@@ -28,16 +36,13 @@ import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
 import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.invite.Invite;
-import org.exoplatform.ide.invite.InviteException;
-import org.exoplatform.ide.invite.InviteService;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -70,12 +75,12 @@ public class GitHub
 
    private final OAuthTokenProvider oauthTokenProvider;
 
-   private final InviteService inviteService;
+   private final InvitationService inviteService;
 
    public GitHub(InitParams initParams,
                  GitHubAuthenticator authenticator,
                  OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService,
+                 InvitationService inviteService,
                  SshKeyProvider sshKeyProvider)
    {
       this(readValueParam(initParams, "github-user"), authenticator, oauthTokenProvider, inviteService, sshKeyProvider);
@@ -84,7 +89,7 @@ public class GitHub
    public GitHub(String userName,
                  GitHubAuthenticator authenticator,
                  OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService,
+                 InvitationService inviteService,
                  SshKeyProvider sshKeyProvider)
    {
       this.userName = userName;
@@ -118,7 +123,7 @@ public class GitHub
     * @throws InvalidArgumentException
     */
    public GitHubRepository[] listRepositories(String user) throws IOException, GitHubException,
-      ParsingResponseException, InvalidArgumentException
+      JsonParseException, InvalidArgumentException
    {
       user = (user == null || user.isEmpty()) ? userName : user;
       if (user == null)
@@ -143,11 +148,11 @@ public class GitHub
       }
       catch (JsonException jsone)
       {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
+         throw new JsonParseException(jsone.getMessage(), jsone);
       }
    }
 
-   public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException,
+   public Collaborators getCollaborators(String user, String repository) throws IOException, JsonParseException,
       GitHubException
    {
       String url = "https://api.github.com/repos/" + user + "/" + repository + "/collaborators";
@@ -181,7 +186,7 @@ public class GitHub
       }
       catch (JsonException jsone)
       {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
+         throw new JsonParseException(jsone.getMessage(), jsone);
       }
    }
 
@@ -196,16 +201,18 @@ public class GitHub
 
          String currentId = ConversationState.getCurrent().getIdentity().getUserId();
 
-         for (Invite invite : inviteService.getInvites(false))
-         {
-            if (invite.getFrom() != null && invite.getFrom().equals(currentId) && invite.getEmail().equals(collaborator))
+         Invitation invite = inviteService.get(null, null);//TODO
+         if (invite.getSender() != null && invite.getSender().equals(currentId) && invite.getRecipient().equals(collaborator))
             {
                return true;
             }
-         }
          return false;
       }
-      catch (InviteException e)
+      catch (InvitationExistenceException e)
+      {
+         throw new GitHubException(500, e.getMessage(), "text/plain");
+      }
+      catch (OrganizationServiceException e)
       {
          throw new GitHubException(500, e.getMessage(), "text/plain");
       }
@@ -253,7 +260,7 @@ public class GitHub
     * @throws ParsingResponseException
     * @throws VirtualFileSystemException
     */
-   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
+   public GitHubRepository[] listRepositories() throws IOException, GitHubException, JsonParseException,
       VirtualFileSystemException
    {
       String oauthToken = oauthTokenProvider.getToken("github", getUserId());
@@ -275,7 +282,7 @@ public class GitHub
     * @throws GitHubException
     */
    private GitHubRepository[] getRepositories(GitHubCredentials credentials, String oauthToken)
-      throws ParsingResponseException, IOException, GitHubException
+      throws JsonParseException, IOException, GitHubException
    {
       String url = "https://api.github.com/user/repos";
       url += (oauthToken != null) ? "?access_token=" + oauthToken : "";
@@ -294,12 +301,12 @@ public class GitHub
       }
       catch (JsonException jsone)
       {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
+         throw new JsonParseException(jsone.getMessage(), jsone);
       }
 
    }
 
-   public void generateGitHubSshKey() throws IOException, VirtualFileSystemException, GitHubException, ParsingResponseException
+   public void generateGitHubSshKey() throws IOException, VirtualFileSystemException, GitHubException, JsonParseException
    {
       String oauthToken = oauthTokenProvider.getToken("github", getUserId());
       GitHubCredentials credentials = authenticator.readCredentials();
@@ -313,7 +320,7 @@ public class GitHub
    }
 
    private void generateGitHubSshKey(GitHubCredentials credentials, String oauthToken)
-      throws IOException, VirtualFileSystemException, GitHubException, ParsingResponseException
+      throws IOException, VirtualFileSystemException, GitHubException, JsonParseException
    {
       String url = "https://api.github.com/user/keys";
       url += (oauthToken != null) ? "?access_token=" + oauthToken : "";

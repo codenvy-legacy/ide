@@ -24,17 +24,13 @@ import org.everrest.core.RequestHandler;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
-import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.core.tools.ResourceLauncher;
+import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockHttpServletRequest;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.PasswordCredential;
-import org.exoplatform.services.security.UsernameCredential;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,10 +66,10 @@ public class KeyServiceTest
       }
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
-      Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
-      String validUser =
-         authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
-      Identity id = authr.createIdentity(validUser);
+//      Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
+//      String validUser =
+//         authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
+      Identity id = new Identity("root");
       ConversationState s = new ConversationState(id);
       ConversationState.setCurrent(s);
    }

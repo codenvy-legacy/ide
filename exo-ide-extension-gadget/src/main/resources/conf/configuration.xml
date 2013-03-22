@@ -25,6 +25,6 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
    
    <component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtensionApplication</type>
    </component>   
 </configuration>

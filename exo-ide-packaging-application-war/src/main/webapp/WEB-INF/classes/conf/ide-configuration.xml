@@ -523,19 +523,6 @@
       <type>com.google.collide.server.documents.EditSessions</type>
    </component>
 
-   <!--
-    ***************************************************************************************
-    ************************ Create dummy user at tomcat start ****************************
-    ***************************************************************************************
-   -->
-   <component>
-      <type>org.exoplatform.ide.user.DummyUser</type>
-   </component>
-
-   <component>
-      <type>com.codenvy.organization.client.OrganizationServiceManager</type>
-   </component>
-
    <component>
       <type>com.codenvy.organization.client.http.OrganizationServiceRequestTemplate</type>
    </component>

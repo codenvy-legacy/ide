@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.security.login;
 
+import com.codenvy.organization.client.UserManager;
+
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.security.Credential;
@@ -73,6 +75,7 @@ public class TomcatLoginModule implements LoginModule
    private Object realmName;
 
    private Identity identity;
+   
 
    /**
     * {@inheritDoc}
@@ -147,6 +150,14 @@ public class TomcatLoginModule implements LoginModule
          if (username == null || password == null)
             return false;
 
+         
+         
+         ExoContainer container = ExoContainerContext.getCurrentContainer();
+         UserManager userManager = (UserManager)container.getComponentInstanceOfType(UserManager.class);
+         if (!userManager.authenticateUser(username, password))
+            return false;
+         
+         
          Credential[] credentials =
             new Credential[]{new UsernameCredential(username), new PasswordCredential(password)};
 

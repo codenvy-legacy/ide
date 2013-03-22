@@ -70,10 +70,6 @@
       <type>org.everrest.exoplatform.ExoDependencySupplier</type>
    </component>
      
-   <component>
-      <type>org.exoplatform.users.UserServiceApplication</type>
-   </component>   
-  
   <component>
       <type>org.everrest.services.RestServicesList</type>
    </component>
