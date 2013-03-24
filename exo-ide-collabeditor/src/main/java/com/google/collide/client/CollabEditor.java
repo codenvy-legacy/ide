@@ -18,6 +18,7 @@
  */
 package com.google.collide.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -35,7 +36,6 @@ import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.Line;
@@ -43,8 +43,7 @@ import com.google.collide.shared.document.LineFinder;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
+import com.google.collide.shared.document.util.LineUtils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -79,6 +78,8 @@ import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.TextUtils;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -397,14 +398,13 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void deleteCurrentLine()
    {
       SelectionModel selection = editor.getSelection();
-      int rowsCountToDelete = selection.getCursorLineNumber() - selection.getBaseLineNumber() + 1;
-      int baseLineNumber = selection.getBaseLineNumber();
-      while (rowsCountToDelete > 0)
-      {
-         Line currentLine = editor.getDocument().getLineFinder().findLine(baseLineNumber).line();
-         editor.getEditorDocumentMutator().deleteText(currentLine, 0, currentLine.length());
-         rowsCountToDelete--;
-      }
+      final int selectionBeginLineNumber = selection.getSelectionBeginLineNumber();
+      Line selectionBeginLine = editor.getDocument().getLineFinder().findLine(selectionBeginLineNumber).line();
+      final int selectionEndLineNumber = selection.getSelectionEndLineNumber();
+      Line selectionEndLine = editor.getDocument().getLineFinder().findLine(selectionEndLineNumber).line();
+      final int deleteCount =
+         LineUtils.getTextCount(selectionBeginLine, 0, selectionEndLine, selectionEndLine.getText().length() - 1);
+      editor.getEditorDocumentMutator().deleteText(selectionBeginLine, 0, deleteCount);
    }
 
    /**
@@ -599,7 +599,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          editor.getFoldingManager().collapse(foldMarker);
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.client.api.Editor#expand()
     */
@@ -705,11 +705,9 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       int scrollLeft = editor.getBuffer().getScrollLeft();
       Position position = editor.getSelection().getCursorPosition();
-      final int foldingGutterWidth = editor.getFoldingGutter() == null ? 0: editor.getFoldingGutter().getWidth();
+      final int foldingGutterWidth = editor.getFoldingGutter() == null ? 0 : editor.getFoldingGutter().getWidth();
       int offsetLeft =
-         getElement().getAbsoluteLeft()
-            + editor.getLeftGutter().getWidth()
-            + foldingGutterWidth
+         getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth() + foldingGutterWidth
             + editor.getLeftGutterNotificationManager().getLeftGutter().getWidth()
             + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
 
