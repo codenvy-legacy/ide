@@ -14,7 +14,7 @@
 
 package com.google.collide.client.editor.input;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * Abstract Shortcut class. Override event function to implement a callback.

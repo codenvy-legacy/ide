@@ -14,18 +14,16 @@
 
 package com.google.collide.shared.document;
 
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringMap;
-import com.google.collide.shared.document.Document.LineCountListener;
-import com.google.collide.shared.document.Document.LineListener;
-import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.StringUtils;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.StringUtils;
+
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 // TODO: need the preferred newline characters for the doc
 /**

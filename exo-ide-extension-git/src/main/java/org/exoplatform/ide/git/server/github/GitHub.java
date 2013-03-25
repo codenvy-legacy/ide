@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.server.github;
 
+import com.codenvy.organization.InvitationService;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.commons.JsonHelper;
@@ -29,9 +30,6 @@ import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.invite.Invite;
-import org.exoplatform.ide.invite.InviteException;
-import org.exoplatform.ide.invite.InviteService;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
@@ -57,25 +55,25 @@ public class GitHub
 
    private final SshKeyStore sshKeyStore;
    private final OAuthTokenProvider oauthTokenProvider;
-   private final InviteService inviteService;
+   private final InvitationService invitationService;
 
    public GitHub(InitParams initParams,
                  OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService,
+                 InvitationService invitationService,
                  SshKeyStore sshKeyStore)
    {
-      this(ContainerUtils.readValueParam(initParams, "github-user"), oauthTokenProvider, inviteService, sshKeyStore);
+      this(ContainerUtils.readValueParam(initParams, "github-user"), oauthTokenProvider, invitationService, sshKeyStore);
    }
 
    public GitHub(String myGitHubUser,
                  OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService,
+                 InvitationService invitationService,
                  SshKeyStore sshKeyStore)
    {
       this.myGitHubUser = myGitHubUser;
       this.oauthTokenProvider = oauthTokenProvider;
       this.sshKeyStore = sshKeyStore;
-      this.inviteService = inviteService;
+      this.invitationService = invitationService;
    }
 
    /**
@@ -131,7 +129,7 @@ public class GitHub
 
    private boolean isAlreadyInvited(String collaborator) throws GitHubException
    {
-      try
+      /*try
       {
          String currentId = getUserId();
          for (Invite invite : inviteService.getInvites(false))
@@ -146,7 +144,9 @@ public class GitHub
       catch (InviteException e)
       {
          throw new GitHubException(500, e.getMessage(), "text/plain");
-      }
+      }*/
+      // TODO : temporary, just to be able compile. Re-work it after update invitation mechanism.
+      return false;
    }
 
    /**

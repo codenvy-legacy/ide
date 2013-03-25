@@ -401,7 +401,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
                         ((ItemContext)i).setProject(((ItemContext)folder).getProject());
                      }
                   }
-                  folderContentReceived(folder);
+                  folderContentReceived((FolderModel)folder);
                }
             });
       }
@@ -410,7 +410,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       }
    }
 
-   private void folderContentReceived(Folder folder)
+   private void folderContentReceived(FolderModel folder)
    {
       IDE.fireEvent(new FolderRefreshedEvent(folder));
       foldersToRefresh.remove(folder);

@@ -19,7 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;

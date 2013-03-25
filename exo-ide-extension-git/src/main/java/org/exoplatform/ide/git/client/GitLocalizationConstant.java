@@ -79,6 +79,10 @@ public interface GitLocalizationConstant extends Messages
    String buttonMerge();
 
    // MESSAGES
+
+   @Key("messages.nothing_changed")
+   String nothingChanged();
+
    @Key("messages.not_git_repository")
    String notGitRepository();
 

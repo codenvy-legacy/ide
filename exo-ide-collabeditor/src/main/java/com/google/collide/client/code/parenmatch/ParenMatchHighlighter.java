@@ -24,24 +24,25 @@ import com.google.collide.client.editor.search.SearchTask;
 import com.google.collide.client.editor.search.SearchTask.SearchDirection;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
-import com.google.collide.client.util.BasicIncrementalScheduler;
-import com.google.collide.client.util.IncrementalScheduler;
-import com.google.collide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.BasicIncrementalScheduler;
+import com.codenvy.ide.client.util.IncrementalScheduler;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.RegExpUtils;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.RegExpUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.Timer;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /*
  * TODO : Make this language specific and utilize code

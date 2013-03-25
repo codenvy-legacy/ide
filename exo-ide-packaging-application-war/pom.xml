@@ -98,6 +98,11 @@
 
       <!-- EXTENSIONS -->
 
+     <dependency>
+        <groupId>org.exoplatform.ide</groupId>
+        <artifactId>codenvy-ide-collaboration</artifactId>
+        <version>${project.version}</version>
+     </dependency>
 
       <dependency>
 			<groupId>org.exoplatform.ide</groupId>
@@ -155,11 +160,6 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>eclipse-jdt-core</artifactId>
             </exclusion>
-
-            <exclusion>
-            	<artifactId>exo.ws.rest.ext</artifactId>
-            	<groupId>org.exoplatform.ws</groupId>
-            </exclusion>
 			</exclusions>
 		</dependency>
 
@@ -181,18 +181,7 @@
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-extension-chromattic</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-cloudbees</artifactId>
-         <!--exclusions>
-            <exclusion>
-               <artifactId>xstream</artifactId>
-               <groupId>com.thoughtworks.xstream</groupId>
-            </exclusion>
-         </exclusions-->
 		</dependency>
 
 		<dependency>
@@ -287,22 +276,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.ext</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-		
-		
-                <dependency>
-                 <groupId>org.exoplatform.ws</groupId>
-                 <artifactId>exo.ws.rest.ext</artifactId>
-             </dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
@@ -514,7 +487,6 @@
 								**/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
 								**/preloadIDE.js,
 								**/lib/exo-ide-client*,
-								**/lib/exo-ide-collabeditor*,
 								**/lib/exo-ide-editor-chromattic*,
 								**/lib/exo-ide-editor-codemirror2*,
 								**/lib/exo-ide-editor-css*,
@@ -562,7 +534,8 @@
                         **/lib/activation*,
                         **/lib/annotations-api*,
                         **/lib/sjsxp*,
-                        **/lib/gwt*,
+                        **/lib/gwt-user*,
+                        **/lib/gwt-dev*,
                         **/lib/postgresql*,
                         **/lib/tools.jar,
                         **/lib/guice-2.0.jar,

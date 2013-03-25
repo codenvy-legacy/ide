@@ -14,10 +14,10 @@
 
 package com.google.collide.client.document.linedimensions;
 
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.util.dom.FontDimensionsCalculator;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
 
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;

@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @version $
  *
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class InviteGoogleDevelopersControl extends SimpleControl implements IDEControl
 {
 

@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-vfs-fs</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Virtual File System :: FS</name>
+   <name>Codenvy IDE :: Virtual File System :: FS</name>
    <dependencies>
       <dependency>
          <groupId>com.codenvy.commons</groupId>

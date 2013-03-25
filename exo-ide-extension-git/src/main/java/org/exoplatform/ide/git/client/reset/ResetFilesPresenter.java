@@ -152,7 +152,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
 
                   if (result.isClean())
                   {
-                     Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
+                     Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingChanged());
                      return;
                   }
 

@@ -1,0 +1,42 @@
+.chatName {
+   font-weight: bold;
+   float: left;
+   color: #000;
+}
+
+.chatMessage, .chatNotification {
+   word-wrap: break-word;
+   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
+}
+
+.chatTime {
+   margin-left: -5px;
+   float: left;
+   color: rgb(128, 128, 128);
+}
+
+ .chatNotification{
+   color: rgb(128, 128, 128);
+}
+
+.chatNotificationName{
+   font-weight: bold;
+   font-size: 15;
+   float: left;
+}
+.chatNotificationMessage{
+   text-overflow: ellipsis;
+   width: 200px;
+   overflow: hidden;
+   white-space: nowrap;
+   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
+}
+
+@sprite .messageNotDelivered{
+   gwt-image: 'notDelivered';
+   float: left;
+}
+
+.link{
+   color: rgb(128, 128, 128);
+}

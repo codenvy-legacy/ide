@@ -36,7 +36,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CreateModuleControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
 

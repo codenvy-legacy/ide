@@ -9,7 +9,7 @@
    </parent>
    <artifactId>eclipse-jdt-core</artifactId>
    <packaging>jar</packaging>
-   <name>Eclipse :: JDT :: Core</name>
+   <name>Codenvy IDE :: Eclipse JDT :: Core</name>
    <dependencies>
       <dependency>
          <groupId>com.google.gwt</groupId>

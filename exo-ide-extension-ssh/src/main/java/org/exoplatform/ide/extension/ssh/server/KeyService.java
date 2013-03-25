@@ -64,7 +64,7 @@ public class KeyService
     */
    @POST
    @Path("gen")
-   @RolesAllowed({"users"})
+   @RolesAllowed({"developer"})
    @Consumes({MediaType.APPLICATION_JSON})
    public Response genKeyPair(GenKeyRequest request)
    {
@@ -88,7 +88,7 @@ public class KeyService
    @POST
    @Path("add")
    @Consumes({MediaType.MULTIPART_FORM_DATA})
-   @RolesAllowed({"users"})
+   @RolesAllowed({"developer"})
    public Response addPrivateKey(@Context SecurityContext security, @QueryParam("host") String host,
       Iterator<FileItem> iterator)
    {
@@ -134,7 +134,7 @@ public class KeyService
     * @see {@link SshKeyStore#getPublicKey(String)}
     */
    @GET
-   @RolesAllowed({"users"})
+   @RolesAllowed({"developer"})
    @Produces({MediaType.APPLICATION_JSON})
    public Response getPublicKey(@Context SecurityContext security, @QueryParam("host") String host)
    {
@@ -173,7 +173,7 @@ public class KeyService
     */
    @GET
    @Path("remove")
-   @RolesAllowed({"users"})
+   @RolesAllowed({"developer"})
    public String removeKeys(@QueryParam("host") String host, @QueryParam("callback") String calback)
    {
       try
@@ -192,7 +192,7 @@ public class KeyService
 
    @GET
    @Path("all")
-   @RolesAllowed({"users"})
+   @RolesAllowed({"developer"})
    @Produces({MediaType.APPLICATION_JSON})
    public Response getKeys(@Context UriInfo uriInfo)
    {

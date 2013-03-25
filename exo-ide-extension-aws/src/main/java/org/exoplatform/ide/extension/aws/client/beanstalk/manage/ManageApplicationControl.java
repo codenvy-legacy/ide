@@ -23,8 +23,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -41,7 +39,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * 
  */
 public class ManageApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, FolderRefreshedHandler, ActiveProjectChangedHandler
+   ProjectClosedHandler
+   , FolderRefreshedHandler
+//   , ActiveProjectChangedHandler
 {
    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.manageApplicationControlId();
 
@@ -67,7 +67,7 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
 
       setVisible(true);
    }
@@ -90,18 +90,38 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
       setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
    }
    
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
-   }
+//   @Override
+//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+//   {
+//      setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
+//   }
 
    @Override
    public void onFolderRefreshed(FolderRefreshedEvent event)
    {
-      if (event.getFolder() != null && event.getFolder() instanceof ProjectModel)
+      ProjectModel project = null;
+      if (event.getFolder() instanceof ProjectModel)
       {
-         setEnabled(AWSExtension.isAWSApplication((ProjectModel)event.getFolder()));
+         project = (ProjectModel)event.getFolder();
       }
+      else
+      {
+         project = event.getFolder().getProject();
+      }
+      
+      if (project == null)
+      {
+         setEnabled(false);
+      }
+      else
+      {         
+         setEnabled(AWSExtension.isAWSApplication(project));
+      }
+      
+//      if (event.getFolder() != null && event.getFolder() instanceof ProjectModel)
+//      {
+//         setEnabled(AWSExtension.isAWSApplication((ProjectModel)event.getFolder()));
+//      }
    }
+   
 }

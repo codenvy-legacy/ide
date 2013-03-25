@@ -38,7 +38,7 @@ public class ShowWorkTreeStatusEvent extends GwtEvent<ShowWorkTreeStatusHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowWorkTreeStatusHandler> getAssociatedType()
+   public Type<ShowWorkTreeStatusHandler> getAssociatedType()
    {
       return TYPE;
    }

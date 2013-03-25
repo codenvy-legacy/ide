@@ -17,7 +17,7 @@ package com.google.collide.client.code;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.PathUtil;
+import com.codenvy.ide.client.util.PathUtil;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.LineFinder;
 import com.google.collide.shared.document.LineInfo;

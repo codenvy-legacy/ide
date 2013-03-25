@@ -21,12 +21,13 @@ package com.google.collide.client.editor.renderer;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Buffer.Resources;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.Elements;
-import com.google.collide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 import elemental.html.Element;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

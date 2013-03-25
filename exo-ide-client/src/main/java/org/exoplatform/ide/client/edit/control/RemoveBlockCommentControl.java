@@ -34,7 +34,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  * @version $Id: Apr 6, 2012 10:56:42 AM anya $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class RemoveBlockCommentControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

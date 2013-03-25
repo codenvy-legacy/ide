@@ -41,7 +41,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowPackageExplorerControl extends SimpleControl implements IDEControl, VfsChangedHandler,
    ViewOpenedHandler, ViewClosedHandler, ProjectClosedHandler,  ProjectOpenedHandler
 {

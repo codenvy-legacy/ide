@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
-import com.google.collide.json.client.JsoArray;
-
 import com.google.gwt.core.client.JavaScriptObject;
+
+import org.exoplatform.ide.json.client.JsoArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

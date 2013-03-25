@@ -20,7 +20,6 @@
    <artifactId>codenvy-gwtframework-ui</artifactId>
    <packaging>jar</packaging>
    <name>eXo GWT Framework :: UI</name>
-
    <properties>
       <!-- Repositories URLs -->
       <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
@@ -40,8 +39,33 @@
       </dependency>
 
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-commons</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-elemental</artifactId>
+         <version>collide</version>
+      </dependency>
+
+      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava</artifactId>
+         <version>12.0.1</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava-gwt</artifactId>
+         <version>12.0.1</version>
          <scope>provided</scope>
       </dependency>
 

@@ -103,7 +103,7 @@ public class CloudBeesService
          VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
          Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
          LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
-            + "# PAAS#CloudFoundry#");
+            + "# PAAS#CloudBees#");
       }
       return app;
    }

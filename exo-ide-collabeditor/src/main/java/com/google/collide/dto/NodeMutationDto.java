@@ -14,8 +14,8 @@
 
 package com.google.collide.dto;
 
-import com.google.collide.dtogen.shared.RoutingType;
-import com.google.collide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 /**
  * A DTO for the roll up of a single changed to a file or directory. The file or

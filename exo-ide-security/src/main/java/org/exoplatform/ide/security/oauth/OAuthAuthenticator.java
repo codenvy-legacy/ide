@@ -277,7 +277,7 @@ public abstract class OAuthAuthenticator
     * @throws IOException
     * @see OAuthTokenProvider#getToken(String, String)
     */
-   public final String getToken(String userId) throws IOException
+   public String getToken(String userId) throws IOException
    {
       Credential credential = flow.loadCredential(userId);
       if (credential != null)

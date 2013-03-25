@@ -34,7 +34,7 @@ import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowGadgetPreviewControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 

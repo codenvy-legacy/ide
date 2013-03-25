@@ -14,17 +14,17 @@
 
 package com.google.collide.client.util.dom;
 
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.shared.util.JsonCollections;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A class that computes the height and width of a character.

@@ -30,6 +30,10 @@ import org.eclipse.jdt.client.packaging.model.next.Package;
 import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.ui.IconImageBundle;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.framework.util.Utils;
@@ -103,6 +107,10 @@ public class PackageExplorerTreeItem extends TreeItem
       {
          FileModel file = (FileModel)item;
          ImageResource icon = ImageUtil.getIcon(file.getMimeType());
+         if (icon == IconImageBundle.INSTANCE.defaultFile())
+         {
+            IDE.fireEvent(new OutputEvent("Can not find icon for " + file.getPath() + ".  Mime type is " + file.getMimeType(), Type.ERROR));
+         }
          createWidget(icon, getTitle(item), file);
       }
    }

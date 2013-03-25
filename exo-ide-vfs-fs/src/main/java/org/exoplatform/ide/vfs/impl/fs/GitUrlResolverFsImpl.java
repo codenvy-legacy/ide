@@ -50,6 +50,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
    @Override
    public String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String id) throws GitUrlResolveException
    {
+
       try
       {
          if (vfs == null)

@@ -19,10 +19,8 @@
    </scm>
    <properties>
       <!-- eXo Modules -->
-      <org.exoplatform.jcr.version>1.14.9-GA</org.exoplatform.jcr.version>
       <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.2.9-GA</org.exoplatform.ws.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
 
@@ -54,7 +52,6 @@
       <javax.annotation.version>1.0</javax.annotation.version>
       <javax.ws.version>1.0</javax.ws.version>
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
-      <javax.jcr.version>1.0</javax.jcr.version>
       <javax.inject.version>1</javax.inject.version>
 
    </properties>
@@ -82,6 +79,11 @@
          <artifactId>codenvy-organization-api</artifactId>
          <version>${com.codenvy.organization.version}</version>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>codenvy-ide-collaboration</artifactId>
+         <version>${project.version}</version>
+       </dependency>
          <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
@@ -106,56 +108,6 @@
             <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.organization.api</artifactId>
             <version>${org.exoplatform.core.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.frameworks.servlet</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.rest.core</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.rest.ext</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.commons</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ws</groupId>
-            <artifactId>exo.ws.testframework</artifactId>
-            <version>${org.exoplatform.ws.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.component.core</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.component.ext</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.component.webdav</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.jcr</groupId>
-            <artifactId>exo.jcr.framework.web</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform</groupId>
-            <artifactId>exo-jcr-services</artifactId>
-            <version>${org.exoplatform.jcr.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.gwt</groupId>
@@ -250,6 +202,11 @@
             <artifactId>exo-ide-collabeditor</artifactId>
             <version>${project.version}</version>
          </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+           <artifactId>codenvy-ide-collaboration</artifactId>
+           <version>${project.version}</version>
+        </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -339,12 +296,6 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-html</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-chromattic</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -480,7 +431,7 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs-jcr</artifactId>
+            <artifactId>exo-ide-vfs-fs</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -520,8 +471,6 @@
             <artifactId>log-reader-service</artifactId>
             <version>1.0-M5</version>
          </dependency>
-         
-         
          
          <dependency>
             <groupId>com.google.gwt</groupId>
@@ -769,11 +718,11 @@
    <modules>
       <module>codenvy-gwtframework-commons</module>
       <module>codenvy-gwtframework-ui</module>
-      <!--module>exo-ide-dev-resources</module-->
+      <module>exo-ide-dev-resources</module>
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-fs</module>
-      <module>exo-ide-vfs-jcr</module>
+      <!--module>exo-ide-vfs-jcr</module-->
 
       <module>exo-ide-security</module>
 
@@ -790,6 +739,8 @@
 
       <module>exo-ide-editor-api</module>
       <module>exo-ide-collabeditor</module>
+      
+      <module>codenvy-ide-collaboration</module>
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-javascript</module>
@@ -809,13 +760,13 @@
 
       <module>exo-ide-jdt-core</module>
 
-      <module>exo-ide-extension-gadget-gatein</module>
+      <!--module>exo-ide-extension-gadget-gatein</module-->
       <module>exo-ide-extension-gadget</module>
-      <module>exo-ide-extension-groovy</module>
+      <!--module>exo-ide-extension-groovy</module-->
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
-      <module>exo-ide-extension-chromattic</module>
+      <!--module>exo-ide-extension-chromattic</module-->
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
       <module>exo-ide-extension-heroku</module>

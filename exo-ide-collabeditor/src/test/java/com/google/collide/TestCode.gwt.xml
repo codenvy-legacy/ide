@@ -1,4 +1,0 @@
-<module>
-  <source path=""/>
-  <inherits  name="com.google.collide.Collide"/>
-</module>

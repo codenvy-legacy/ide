@@ -30,7 +30,7 @@ import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
 
-import org.apache.ws.commons.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
@@ -86,7 +86,7 @@ public class GoogleContactsClient
       byte[] photo = getPhoto(contact);
       if (photo != null)
       {
-         return Base64.encode(photo);
+         return Base64.encodeBase64String(photo);
       }
       return null;
    }

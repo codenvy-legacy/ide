@@ -1291,7 +1291,6 @@ public class JGitConnection implements GitConnection
       {
          throw new GitException(e.getMessage(), e);
       }
-
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#tagCreate(org.exoplatform.ide.git.shared.TagCreateRequest) */

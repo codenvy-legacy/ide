@@ -42,7 +42,7 @@ import java.util.List;
  * @version $Id: $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowOutlineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ViewClosedHandler, ViewOpenedHandler
 {

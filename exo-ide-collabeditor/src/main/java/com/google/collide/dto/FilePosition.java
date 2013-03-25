@@ -13,11 +13,11 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-import com.google.collide.dtogen.shared.ClientToServerDto;
-import com.google.collide.dtogen.shared.CompactJsonDto;
-import com.google.collide.dtogen.shared.RoutingType;
-import com.google.collide.dtogen.shared.SerializationIndex;
-import com.google.collide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
+import org.exoplatform.ide.dtogen.shared.CompactJsonDto;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.SerializationIndex;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 /**
  * Represents character position in a single file.
