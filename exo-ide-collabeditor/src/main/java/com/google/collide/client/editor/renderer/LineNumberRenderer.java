@@ -203,7 +203,7 @@ public class LineNumberRenderer {
 
   private void fillOrUpdateLines(int beginLineNumber, int endLineNumber) {
     for (int i = beginLineNumber; i <= endLineNumber; i++) {
-      if (buffer.modelLine2VisibleLine(i) < 0) {
+      if (buffer.modelLine2VisibleLine(i) == -1) {
         garbageCollectLines(i, i);
         continue;
       }
@@ -242,7 +242,8 @@ public class LineNumberRenderer {
         leftGutter.removeUnmanagedElement(lineElement);
         lineNumberToElementCache.erase(i);
       } else {
-         continue;
+        // don't throws exception because line may be folded in this case
+        continue;
 //        throw new IndexOutOfBoundsException(
 //            "Tried to garbage collect line number " + line + " when it does not exist.");
       }

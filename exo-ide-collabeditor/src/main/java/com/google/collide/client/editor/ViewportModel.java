@@ -340,8 +340,8 @@ public class ViewportModel
   private boolean adjustViewportBoundsForLineAdditionOrRemoval(Document document, int lineNumber) {
     int bottomLineNumber = bottomAnchor.getLineNumber();
     int topLineNumber = topAnchor.getLineNumber();
-//    int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines()
-    int lastVisibleLineNumber = buffer.getLastVisibleLineNumber(topLineNumber);
+//    int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines();
+    int lastVisibleLineNumber = buffer.getLastVisibleLineNumberFromTop(topLineNumber);
 
     /*
      * The "lastVisibleLineNumber != bottomLineNumber" catches the case where
@@ -383,7 +383,7 @@ public class ViewportModel
     LineInfo newTop = lineFinder.findLine(getTop(), topLineNumber);
 
 //    int targetBottomLineNumber = newTop.number() + numLinesToShow - 1;
-    int targetBottomLineNumber = buffer.getLastVisibleLineNumber(topLineNumber);
+    int targetBottomLineNumber = buffer.getLastVisibleLineNumberFromTop(topLineNumber);
 
     LineInfo newBottom =
         lineFinder.findLine(getBottom(),
@@ -544,12 +544,12 @@ public class ViewportModel
         }
       });
     }
-    listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
-       @Override
-       public void dispatch(Listener listener) {
-          listener.onViewportLineNumberChanged(ViewportModel.this, Edge.BOTTOM);
-       }
-    });
+//    listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
+//       @Override
+//       public void dispatch(Listener listener) {
+//          listener.onViewportLineNumberChanged(ViewportModel.this, Edge.BOTTOM);
+//       }
+//    });
   }
 
 }

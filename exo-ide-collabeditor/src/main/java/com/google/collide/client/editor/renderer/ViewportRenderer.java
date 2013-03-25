@@ -106,7 +106,7 @@ public class ViewportRenderer {
   /** Key for a {@link Line#getTag} that stores the rendered DOM element */
   public static final String LINE_TAG_LINE_ELEMENT = "ViewportRenderer.element";
 
-  /** Key for a {@link Line#getTag} that stores the rendered DOM element for expanding collapsed text block*/
+  /** Key for a {@link Line#getTag} that stores the rendered DOM element for expanding folded text block */
   public static final String LINE_TAG_EXPAND_ELEMENT = "ViewportRenderer.foldingExpandElement";
 
   /**
@@ -261,7 +261,6 @@ public class ViewportRenderer {
     // Garbage collect the elements of removed lines
     for (int i = 0, n = removedLines.size(); i < n; i++) {
       Line line = removedLines.get(i);
-
       garbageCollectLine(line);
     }
     /*
@@ -390,13 +389,12 @@ public class ViewportRenderer {
     if (element != null && buffer.hasLineElement(element)) {
       element.removeFromParent();
       line.putTag(LINE_TAG_LINE_ELEMENT, null);
+    }
 
-      Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
-      if (expandElement != null)
-      {
-        expandElement.removeFromParent();
-        line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
-      }
+    Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+    if (expandElement != null && buffer.hasLineElement(expandElement)) {
+      expandElement.removeFromParent();
+      line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
     }
 
     handleLineLeftViewport(line);
@@ -421,7 +419,7 @@ public class ViewportRenderer {
 
     Line curLine = beginLine;
     for (int curNumber = beginNumber; curNumber <= endNumber && curLine != null; curNumber++) {
-      if (buffer.modelLine2VisibleLine(curNumber) >= 0) {
+      if (buffer.modelLine2VisibleLine(curNumber) > -1) {
         garbageCollectLine(curLine);
       }
       curLine = curLine.getNextLine();

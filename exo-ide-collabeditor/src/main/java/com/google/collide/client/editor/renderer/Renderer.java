@@ -127,7 +127,7 @@ public class Renderer {
     if (ENABLE_PROFILING) {
       Log.markTimeline(getClass(), "Rendering changes...");
     }
-    
+
     EnumSet<ChangeType> changes = changeTracker.getChanges();
 
     int viewportTopmostContentChangedLine =
@@ -141,7 +141,7 @@ public class Renderer {
       if (ENABLE_PROFILING) {
         Log.markTimeline(getClass(), " - lineNumberRenderer...");
       }
-      
+
 //      lineNumberRenderer.render();
       // TODO workaround for situation when new line inserted before the collapsed text block
       lineNumberRenderer.renderLineAndFollowing(0);
@@ -150,7 +150,7 @@ public class Renderer {
       if (ENABLE_PROFILING) {
         Log.markTimeline(getClass(), " - renderViewportLineNumbersChanged...");
       }
-      
+
       viewportRenderer.renderViewportLineNumbersChanged(changeTracker
           .getViewportLineNumberChangedEdges());
     }
@@ -159,7 +159,7 @@ public class Renderer {
       if (ENABLE_PROFILING) {
         Log.markTimeline(getClass(), " - renderViewportContentChange...");
       }
-      
+
       viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedLine,
           changeTracker.getViewportRemovedLines(), changeTracker.isByReasonOfFolding());
 
@@ -167,7 +167,7 @@ public class Renderer {
         if (ENABLE_PROFILING) {
           Log.markTimeline(getClass(), " - renderLineAndFollowing...");
         }
-        
+
         lineNumberRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
         foldMarkRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
       }

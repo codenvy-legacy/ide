@@ -825,10 +825,7 @@ public class Buffer extends UiComponent<Buffer.View>
    */
   public int convertYToLineNumber(int y, boolean inDocumentRange) {
     int lineNumber = coordinateMap.convertYToLineNumber(y);
-    lineNumber = visibleLine2ModelLine(lineNumber);
-    if (lineNumber == -1) {
-      lineNumber = document.getLastLineNumber();
-    }
+    lineNumber += getFoldedLinesCountAboveLineNumber(lineNumber);
     return inDocumentRange ? LineUtils.getValidLineNumber(lineNumber, document) : lineNumber;
   }
 
@@ -927,21 +924,19 @@ public class Buffer extends UiComponent<Buffer.View>
      */
 //    return convertYToLineNumber(getScrollTop() + getHeight(), false)
 //        - convertYToLineNumber(getScrollTop(), false);
-
     return coordinateMap.convertYToLineNumber(getScrollTop() + getHeight()) - coordinateMap.convertYToLineNumber(getScrollTop());
   }
 
   /**
+   * Returns last visible (not collapsed) in viewport line number.
    * 
-   * @param topLineNumber
-   * @return
+   * @param topLineNumber top line number
+   * @return last visible line number
    */
-  public int getLastVisibleLineNumber(int topLineNumber) {
-    int lastPhysicalLineNumber = topLineNumber + getFlooredHeightInLines();
-    int lastVisibleLineNumber = modelLine2VisibleLine(lastPhysicalLineNumber);
-    int unvisibleLinesCount = lastPhysicalLineNumber - lastVisibleLineNumber;
-    lastPhysicalLineNumber += unvisibleLinesCount;
-    return lastPhysicalLineNumber;
+  public int getLastVisibleLineNumberFromTop(int topLineNumber) {
+    final int topLineY = convertLineNumberToY(topLineNumber);
+    final int bottomLineY = topLineY + getHeight();
+    return convertYToLineNumber(bottomLineY, false);
   }
 
   public int getHeight() {
@@ -1044,13 +1039,31 @@ public class Buffer extends UiComponent<Buffer.View>
   }
 
   @Override
-  public void onCollapse(int lineNumber, JsonArray<Line> linesToCollapse) {
-    updateBufferHeight();
+  public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
+   renderTimeExecutor.execute(new Runnable() {
+     @Override
+     public void run() {
+       /*
+        * Since the collapsed line(s) no longer exist, we need to make sure to
+        * clamp them
+        */
+       int safeLineNumber =
+           Math.min(document.getLastLineNumber(), lineNumber);
+       updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(safeLineNumber),
+           -linesToCollapse.size() * getEditorLineHeight());
+     }
+   });
   }
 
   @Override
-  public void onExpand(int lineNumber, JsonArray<Line> linesToExpand) {
-    updateBufferHeight();
+  public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
+   renderTimeExecutor.execute(new Runnable() {
+     @Override
+     public void run() {
+       updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(lineNumber), linesToExpand.size()
+           * getEditorLineHeight());
+     }
+   });
   }
 
   public void setMaxLineLength(int maxLineLength) {
@@ -1180,6 +1193,21 @@ public class Buffer extends UiComponent<Buffer.View>
    */
   public void synchronizeScrollTop() {
     getView().setScrollTop(getView().scrollTopFromPreviousDispatch, true);
+  }
+
+  /**
+   * Computes count of folded lines above the specified line number.
+   * 
+   * @param lineNumber
+   * @return count of folded lines above the <code>lineNumber</code>
+   */
+  public int getFoldedLinesCountAboveLineNumber(int lineNumber) {
+    if (!isFoldingModeEnabled()) {
+      return 0;
+    }
+    final int visibleLinesCount = foldingManager.getSlaveDocument().getNumberOfLines();
+    final int lastLineNumber = Math.min(lineNumber, visibleLinesCount-1);
+    return visibleLine2ModelLine(lastLineNumber) - lastLineNumber;
   }
 
   /**

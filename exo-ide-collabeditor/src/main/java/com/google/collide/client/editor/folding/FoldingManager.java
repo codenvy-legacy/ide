@@ -46,7 +46,6 @@ import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -116,7 +115,7 @@ public class FoldingManager implements Document.TextListener
     */
    private final Buffer buffer;
 
-   private Map<FoldMarker, AbstractFoldRange> markerToPositionMap = new HashMap<FoldMarker, AbstractFoldRange>();
+   private HashMap<FoldMarker, AbstractFoldRange> markerToPositionMap = new HashMap<FoldMarker, AbstractFoldRange>();
 
    private Document document;
 
@@ -262,20 +261,28 @@ public class FoldingManager implements Document.TextListener
    @Override
    public void onTextChange(Document document, JsonArray<TextChange> textChanges)
    {
-      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
-
       // if changes applied to text in folded block then expand this block
       // FIXME: when cursor positioned on caption line of collapsed block and press Ctrl+D
-      for (TextChange textChange : textChanges.asIterable())
-      {
-         for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
-         {
-            FoldMarker foldMarker = findFoldMarker(i, false);
-            if (foldMarker != null && foldMarker.isCollapsed()) {
-               expand(foldMarker);
-            }
-         }
-      }
+//      for (TextChange textChange : textChanges.asIterable())
+//      {
+//         for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
+//         {
+//            FoldMarker foldMarker = findFoldMarker(i, false);
+//            if (foldMarker != null && foldMarker.isCollapsed())
+//            {
+//               expand(foldMarker);
+//            }
+//         }
+//      }
+
+//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//      {
+//         @Override
+//         public void execute()
+//         {
+            updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
+//         }
+//      });
    }
 
    /**
@@ -365,7 +372,7 @@ public class FoldingManager implements Document.TextListener
             }
 
             int firstLineNumber = masterDocument.getLineOfOffset(startOffset);
-            int lineCount = masterDocument.getNumberOfLines(startOffset, length); // length-1 for expand?
+            int lineCount = masterDocument.getNumberOfLines(startOffset, length);
             Line beginLine = document.getLineFinder().findLine(firstLineNumber).line();
 
             JsonArray<Line> linesArray = JsonCollections.createArray();
@@ -403,17 +410,22 @@ public class FoldingManager implements Document.TextListener
 
       for (Line line : linesToCollapse.asIterable())
       {
-         anchorManager.handleTextPredeletionForLine(line, 0, line.getText().length(), anchorsInCollapsedRangeToRemove,
-            anchorsInCollapsedRangeToShift, linesToCollapse.indexOf(line) == 0);
+         final int deleteCountForLine = line.getText().length();
+         boolean isFirstLine = linesToCollapse.indexOf(line) == 0;
+         anchorManager.handleTextPredeletionForLine(line, 0, deleteCountForLine, anchorsInCollapsedRangeToRemove,
+            anchorsInCollapsedRangeToShift, isFirstLine);
       }
 
+      // manage the anchors in the collapsed range
       Line firstLine = linesToCollapse.peek().getNextLine();
       final int firstLineNumber = lineNumber + 1 + linesToCollapse.size();
       final int numberOfLinesDeleted = 0; // pass '0' because there is no need to change the anchor's line number
       final int lastLineFirstUntouchedColumn = linesToCollapse.peek().getText().length();
 
-      anchorManager.handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
-         anchorsLeftoverFromLastLine, firstLine, firstLineNumber, 0, numberOfLinesDeleted, lastLineFirstUntouchedColumn);
+      anchorManager
+         .handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
+            anchorsLeftoverFromLastLine, firstLine, firstLineNumber, 0, numberOfLinesDeleted,
+            lastLineFirstUntouchedColumn);
 
       dispatchCollapse(lineNumber, linesToCollapse);
    }
