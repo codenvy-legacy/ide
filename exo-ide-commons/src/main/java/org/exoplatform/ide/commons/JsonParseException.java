@@ -23,7 +23,7 @@ package org.exoplatform.ide.commons;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class JsonParseException extends ParsingResponseException // TODO : extends java.lang.Exception after removing ParsingResponseException
+public class JsonParseException extends Exception
 {
    public JsonParseException(String message, Throwable cause)
    {

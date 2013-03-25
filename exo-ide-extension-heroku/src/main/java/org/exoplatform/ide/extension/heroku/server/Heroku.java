@@ -18,17 +18,15 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
-
 import org.eclipse.jgit.transport.URIish;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
-import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -76,6 +74,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -105,12 +105,12 @@ public class Heroku
 
    private final HerokuAuthenticator authenticator;
 
-   private final SshKeyProvider keyProvider;
+   private final SshKeyStore sshKeyStore;
 
-   public Heroku(HerokuAuthenticator authenticator, SshKeyProvider keyProvider)
+   public Heroku(HerokuAuthenticator authenticator, SshKeyStore sshKeyStore)
    {
       this.authenticator = authenticator;
-      this.keyProvider = keyProvider;
+      this.sshKeyStore = sshKeyStore;
    }
 
    /**
@@ -141,14 +141,13 @@ public class Heroku
    }
 
    /**
-    * Add SSH key for current user. Uppload SSH key to heroku.com. {@link SshKeyProvider} must have registered public key for
-    * host' heroku.com', see method {@link SshKeyProvider#getPublicKey(String)}
+    * Add SSH key for current user. Upload SSH key to heroku.com. {@link SshKeyStore} must have registered public key
+    * for host' heroku.com', see method {@link SshKeyStore#getPublicKey(String)}
     * 
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public void addSshKey() throws HerokuException, IOException, VirtualFileSystemException
+   public void addSshKey() throws HerokuException, IOException, SshKeyStoreException, VirtualFileSystemException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -159,14 +158,14 @@ public class Heroku
    }
 
    private void addSshKey(HerokuCredentials herokuCredentials) throws HerokuException, IOException,
-      VirtualFileSystemException
+      SshKeyStoreException
    {
       final String host = "heroku.com";
-      SshKey publicKey = keyProvider.getPublicKey(host);
+      SshKey publicKey = sshKeyStore.getPublicKey(host);
       if (publicKey == null)
       {
-         keyProvider.genKeyPair(host, null, null);
-         publicKey = keyProvider.getPublicKey(host);
+         sshKeyStore.genKeyPair(host, null, null);
+         publicKey = sshKeyStore.getPublicKey(host);
       }
       HttpURLConnection http = null;
       try
@@ -883,7 +882,7 @@ public class Heroku
             boolean requested =
                Boolean.valueOf((String)xpath.evaluate("requested", stackElement, XPathConstants.STRING));
             boolean beta = Boolean.valueOf((String)xpath.evaluate("beta", stackElement, XPathConstants.STRING));
-            stacks.add(new StackBean(stackName, current, beta, requested));
+            stacks.add(new StackImpl(stackName, current, beta, requested));
          }
       }
       catch (ParserConfigurationException pce)
@@ -1108,7 +1107,7 @@ public class Heroku
    }
 
    private byte[] run(HerokuCredentials herokuCredentials, String name, File workDir, String command)
-      throws HerokuException, IOException, ParsingResponseException, GeneralSecurityException
+      throws HerokuException, ParsingResponseException, IOException
    {
       if (command == null || command.isEmpty())
       {
@@ -1168,13 +1167,13 @@ public class Heroku
          }
 
          InputStream input = http.getInputStream();
-         String rendezvousUrl = null;
+         String rendezvousUrl;
 
          if (http.getHeaderField("Content-Type").contains("application/json"))
          {
             JsonParser jsonParser = new JsonParser();
-            JsonElement jsonElement = jsonParser.parse(new JsonReader(new InputStreamReader(input, "UTF-8")));
-            rendezvousUrl = jsonElement.getAsJsonObject().get("rendezvous_url").getAsString();
+            jsonParser.parse(input);
+            rendezvousUrl = jsonParser.getJsonObject().getElement("rendezvous_url").getStringValue();
          }
          else
          {
@@ -1207,6 +1206,10 @@ public class Heroku
       {
          throw new ParsingResponseException(xpe.getMessage(), xpe);
       }
+      catch (JsonException jse)
+      {
+         throw new ParsingResponseException(jse.getMessage(), jse);
+      }
       finally
       {
          if (http != null)
@@ -1216,17 +1219,8 @@ public class Heroku
       }
    }
 
-   /**
-    * Access to stdin/stdout using rendezvous.
-    * 
-    * @param rendezvousLocation
-    * @return
-    * @throws IOException
-    * @throws java.security.GeneralSecurityException
-    * @throws HerokuException
-    */
-   private byte[] accessStdInOut(String rendezvousLocation) throws IOException, java.security.GeneralSecurityException,
-      HerokuException
+   /** Access to stdin/stdout using rendezvous. */
+   private byte[] accessStdInOut(String rendezvousLocation) throws IOException
    {
       rendezvousLocation = rendezvousLocation.replace("rendezvous://", "http://");
       URL rendezvousUrl = new URL(rendezvousLocation);

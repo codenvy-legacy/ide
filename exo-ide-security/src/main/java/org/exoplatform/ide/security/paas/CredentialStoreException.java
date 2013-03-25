@@ -19,8 +19,11 @@
 package org.exoplatform.ide.security.paas;
 
 /**
+ * Thrown if error occurs when try to access CredentialStore.
+ *
  * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
  * @version $Id: CredentialStoreException.java Mar 1, 2013 vetal $
+ * @see CredentialStore
  */
 @SuppressWarnings("serial")
 public final class CredentialStoreException extends Exception

@@ -23,6 +23,7 @@ import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -174,7 +175,7 @@ public class HerokuAuthenticator
     *
     * @see #login(String, String)
     */
-   public final void logout() throws VirtualFileSystemException, IOException
+   public final void logout() throws VirtualFileSystemException
    {
       removeCredentials();
    }
@@ -213,7 +214,7 @@ public class HerokuAuthenticator
       return null;
    }
 
-   public void writeCredentials(HerokuCredentials credentials) throws VirtualFileSystemException, IOException
+   public void writeCredentials(HerokuCredentials credentials) throws VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder heroku = getConfigParent(vfs);

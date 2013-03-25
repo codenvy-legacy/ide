@@ -18,58 +18,30 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class Auth extends BaseCloudfoundryAuthenticator
+class Auth extends CloudfoundryAuthenticator
 {
-   private CloudfoundryCredentials credentials;
    private String target;
-
    private String username;
    private String password;
 
    @Override
-   public String getTarget() throws VirtualFileSystemException, IOException
+   public String getTarget()
    {
       return target;
    }
 
    @Override
-   public CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException
-   {
-      return credentials;
-   }
-
-   @Override
-   public void writeTarget(String target) throws VirtualFileSystemException, IOException
-   {
-      this.target = target;
-   }
-
-   @Override
-   public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
-   {
-      this.credentials = new CloudfoundryCredentials();
-      for (String t : credentials.getTargets())
-      {
-         this.credentials.addToken(t, credentials.getToken(t));
-      }
-   }
-
-   @Override
-   public String getUsername() throws VirtualFileSystemException, IOException
+   public String getUsername()
    {
       return username;
    }
 
    @Override
-   public String getPassword() throws VirtualFileSystemException, IOException
+   public String getPassword()
    {
       return password;
    }
@@ -86,8 +58,8 @@ class Auth extends BaseCloudfoundryAuthenticator
       this.password = password;
    }
 
-   public void setCredentials(CloudfoundryCredentials credentials)
+   public void setTarget(String target)
    {
-      this.credentials = credentials;
+      this.target = target;
    }
 }

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.server;
 
+import org.exoplatform.ide.commons.ParsingResponseException;
+
 import java.io.IOException;
 import java.io.InputStream;
 

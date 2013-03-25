@@ -19,19 +19,16 @@
 package org.exoplatform.ide.git.server.rest;
 
 import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
-import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
-import java.util.Map;
+
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -68,27 +65,15 @@ public class GitHubService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public GitHubRepository[] listRepositoriesByUser(
-      @QueryParam("username") String userName) throws IOException, GitHubException, ParsingResponseException,
-      InvalidArgumentException
+      @QueryParam("username") String userName) throws IOException, GitHubException, ParsingResponseException
    {
       return github.listRepositories(userName);
-   }
-
-   @Path("login")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void login(
-      Map<String, String> credentials) throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
-   {
-      github.login(new GitHubCredentials(credentials.get("login"), credentials.get("password")));
    }
 
    @Path("list")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
+   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException
    {
       return github.listRepositories();
    }
@@ -98,7 +83,7 @@ public class GitHubService
    @Produces(MediaType.APPLICATION_JSON)
    public Collaborators collaborators(@PathParam("user") String user,
                                       @PathParam("repository") String repository) throws IOException,
-      GitHubException, ParsingResponseException, VirtualFileSystemException
+      GitHubException, ParsingResponseException
    {
       return github.getCollaborators(user, repository);
    }
@@ -106,16 +91,14 @@ public class GitHubService
    @GET
    @Path("token/{userid}")
    @Produces(MediaType.TEXT_PLAIN)
-   public String getToken(
-      @PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
+   public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException
    {
       return oauthTokenProvider.getToken("github", userId);
    }
 
    @POST
    @Path("ssh/generate")
-   public void updateSSHKey() throws VirtualFileSystemException, IOException, GitHubException, ParsingResponseException
+   public void updateSSHKey() throws SshKeyStoreException, IOException, GitHubException, ParsingResponseException
    {
       github.generateGitHubSshKey();
    }

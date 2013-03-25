@@ -21,13 +21,12 @@ package org.exoplatform.ide.extension.openshift.server;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.JsonWriter;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 import java.io.InputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;

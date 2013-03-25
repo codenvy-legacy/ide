@@ -42,6 +42,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -447,7 +448,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                      APPLICATION_TYPE type,
                                                      DebugMode debug,
                                                      Map<String, String> params)
-      throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException
+      throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException
    {
       if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == type)
       {

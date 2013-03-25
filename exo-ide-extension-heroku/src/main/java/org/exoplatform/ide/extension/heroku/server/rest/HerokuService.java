@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -108,7 +108,7 @@ public class HerokuService
 
    @Path("keys/add")
    @POST
-   public void keysAdd() throws HerokuException, IOException, VirtualFileSystemException
+   public void keysAdd() throws HerokuException, IOException, VirtualFileSystemException, SshKeyStoreException
    {
       heroku.addSshKey();
    }
@@ -118,7 +118,7 @@ public class HerokuService
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> appsCreate(
       @QueryParam("remote") final String remote) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
+      ParsingResponseException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Map<String, String> application =
@@ -141,7 +141,7 @@ public class HerokuService
 
    @Path("apps/destroy")
    @POST
-   public void appsDestroy() throws HerokuException, IOException, LocalPathResolveException, VirtualFileSystemException
+   public void appsDestroy() throws HerokuException, IOException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       heroku.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
@@ -161,7 +161,7 @@ public class HerokuService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> appsInfo(@QueryParam("raw") boolean inRawFormat) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
+      ParsingResponseException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.applicationInfo(appName, inRawFormat,
@@ -181,7 +181,7 @@ public class HerokuService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> appsRename(@QueryParam("newname") String newname) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
+      ParsingResponseException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Map<String, String> application =
@@ -204,7 +204,7 @@ public class HerokuService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public List<Stack> appsStack() throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolveException, VirtualFileSystemException
+      VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku
@@ -215,7 +215,7 @@ public class HerokuService
    @POST
    @Produces(MediaType.TEXT_PLAIN)
    public byte[] stackMigrate(@QueryParam("stack") String stack) throws HerokuException, IOException,
-      ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
+      ParsingResponseException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.stackMigrate(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
@@ -226,7 +226,7 @@ public class HerokuService
    @GET
    @Produces(MediaType.TEXT_PLAIN)
    public byte[] logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolveException, VirtualFileSystemException, Exception
+      VirtualFileSystemException, java.security.GeneralSecurityException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.logs(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
@@ -238,7 +238,7 @@ public class HerokuService
    @Consumes(MediaType.TEXT_PLAIN)
    @Produces(MediaType.TEXT_PLAIN)
    public byte[] run(final String command) throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolveException, VirtualFileSystemException, GeneralSecurityException, InterruptedException
+      VirtualFileSystemException, GeneralSecurityException, InterruptedException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,

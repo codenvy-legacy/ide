@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.openshift.server;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
+import org.exoplatform.ide.commons.ParsingResponseException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

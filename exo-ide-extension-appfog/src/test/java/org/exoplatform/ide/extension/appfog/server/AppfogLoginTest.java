@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.appfog.server;
 
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.DummyCredentialStore;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,13 +36,16 @@ public class AppfogLoginTest
 {
    private Auth authenticator;
    private Appfog appfog;
+   private DummyCredentialStore credentialStore;
+   private final String userId = "andrew";
 
    @Before
    public void setUp() throws Exception
    {
       authenticator = new Auth();
-      authenticator.setCredentials(new AppfogCredentials());
-      appfog = new Appfog(authenticator);
+      credentialStore = new DummyCredentialStore();
+      appfog = new Appfog(authenticator, credentialStore);
+      ConversationState.setCurrent(new ConversationState(new Identity(userId)));
    }
 
    @Ignore
@@ -47,10 +54,12 @@ public class AppfogLoginTest
    {
       authenticator.setUsername(LoginInfo.email);
       authenticator.setPassword(LoginInfo.password);
-      authenticator.writeTarget(LoginInfo.target);
+      authenticator.setTarget(LoginInfo.target);
       // Login with username and password provided by authenticator.
       appfog.login();
-      assertNotNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      Credential credential = new Credential();
+      assertTrue(credentialStore.load(userId, "appfog", credential));
+      assertNotNull(credential.getAttribute(LoginInfo.target));
    }
 
    @Ignore
@@ -58,7 +67,9 @@ public class AppfogLoginTest
    public void testLogin() throws Exception
    {
       appfog.login(LoginInfo.target, LoginInfo.email, LoginInfo.password);
-      assertNotNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      Credential credential = new Credential();
+      assertTrue(credentialStore.load(userId, "appfog", credential));
+      assertNotNull(credential.getAttribute(LoginInfo.target));
    }
 
    @Ignore
@@ -77,7 +88,9 @@ public class AppfogLoginTest
          assertEquals("Operation not permitted", e.getMessage());
          assertEquals("text/plain", e.getContentType());
       }
-      assertNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      Credential credential = new Credential();
+      assertFalse(credentialStore.load(userId, "appfog", credential));
+      assertNull(credential.getAttribute(LoginInfo.target));
    }
 
    @Ignore
@@ -85,8 +98,13 @@ public class AppfogLoginTest
    public void testLogout() throws Exception
    {
       appfog.login(LoginInfo.target, LoginInfo.email, LoginInfo.password);
-      assertNotNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      Credential credential = new Credential();
+      assertTrue(credentialStore.load(userId, "appfog", credential));
+      assertNotNull(credential.getAttribute(LoginInfo.target));
+
       appfog.logout(LoginInfo.target);
-      assertNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      credential = new Credential();
+      credentialStore.load(userId, "appfog", credential);
+      assertNull(credential.getAttribute(LoginInfo.target));
    }
 }

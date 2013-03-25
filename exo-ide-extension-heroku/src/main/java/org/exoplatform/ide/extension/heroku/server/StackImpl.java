@@ -27,7 +27,7 @@ import org.exoplatform.ide.extension.heroku.shared.Stack;
  * @version $Id:  Jul 28, 2011 4:09:51 PM anya $
  *
  */
-public class StackBean implements Stack
+public class StackImpl implements Stack
 {
    /**
     * Stack's name.
@@ -52,7 +52,7 @@ public class StackBean implements Stack
    /**
     * Default constructor.
     */
-   public StackBean()
+   public StackImpl()
    {
       
    }
@@ -63,7 +63,7 @@ public class StackBean implements Stack
     * @param beta if <code>true</code> the stack version is beta
     * @param requested f <code>true</code> the stack version is requested
     */
-   public StackBean(String name, boolean current, boolean beta, boolean requested)
+   public StackImpl(String name, boolean current, boolean beta, boolean requested)
    {
       this.name = name;
       this.beta = beta;

@@ -19,9 +19,10 @@
 package org.exoplatform.ide.commons;
 
 /**
+ * Base class for error that occurs when try to parse response from any resources we try to access.
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * @deprecated use JsonParseException instead
  */
 @SuppressWarnings("serial")
 public class ParsingResponseException extends Exception

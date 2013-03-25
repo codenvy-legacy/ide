@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.heroku.server;
+package org.exoplatform.ide.extension.ssh.server;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class ParsingResponseException extends Exception
+public final class SshKeyStoreException extends Exception
 {
-   public ParsingResponseException(String message, Throwable cause)
+   /**
+    * @param message
+    *    the detail message
+    * @param cause
+    *    the cause
+    */
+   public SshKeyStoreException(String message, Throwable cause)
    {
       super(message, cause);
    }
 
-   public ParsingResponseException(String message)
+   /**
+    * @param message
+    *    the detail message
+    */
+   public SshKeyStoreException(String message)
    {
       super(message);
-   }
-
-   public ParsingResponseException(Throwable cause)
-   {
-      super(cause);
    }
 }

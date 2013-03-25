@@ -46,7 +46,19 @@ public class Credential
 
    public void setAttribute(String name, String value)
    {
-      attributes.put(name, value);
+      if (value == null)
+      {
+         attributes.remove(name);
+      }
+      else
+      {
+         attributes.put(name, value);
+      }
+   }
+
+   public void removeAttribute(String name)
+   {
+      attributes.remove(name);
    }
 }
 

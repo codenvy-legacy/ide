@@ -23,6 +23,7 @@ import com.codenvy.ide.commons.cache.Cache;
 import com.codenvy.ide.commons.cache.SLRUCache;
 import com.codenvy.organization.client.UserManager;
 import com.codenvy.organization.exception.OrganizationServiceException;
+import com.codenvy.organization.exception.UserExistenceException;
 import com.codenvy.organization.model.User;
 
 import org.exoplatform.ide.commons.JsonHelper;
@@ -38,15 +39,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class UserProfileCredentialStore implements CredentialStore
 {
-   private final UserManager userDBServiceClient;
-   // protected with r/w lock
+   private final UserManager userManager;
+   // protected with lock
    private final Cache<String, Pair[]> cache = new SLRUCache<String, Pair[]>(50, 100);
    private final Lock lock = new ReentrantLock();
 
-
-   public UserProfileCredentialStore(UserManager userDBServiceClient)
+   public UserProfileCredentialStore(UserManager userManager)
    {
-      this.userDBServiceClient = userDBServiceClient;
+      this.userManager = userManager;
    }
 
    @Override
@@ -59,9 +59,14 @@ public class UserProfileCredentialStore implements CredentialStore
          Pair[] persistentCredential = cache.get(key);
          if (persistentCredential == null)
          {
-            final User myUser = userDBServiceClient.getUserByAlias(user);
-            if (myUser == null)
+            final User myUser;
+            try
             {
+               myUser = userManager.getUserByAlias(user);
+            }
+            catch (UserExistenceException e)
+            {
+               // user not found
                return false;
             }
             final String credentialAttribute = myUser.getProfile().getAttribute(credentialAttributeName(target));
@@ -70,13 +75,13 @@ public class UserProfileCredentialStore implements CredentialStore
                return false;
             }
             persistentCredential = JsonHelper.fromJson(credentialAttribute, Pair[].class, null);
+            cache.put(key, persistentCredential);
          }
          for (Pair attribute : persistentCredential)
          {
             credential.setAttribute(attribute.getName(), attribute.getValue());
          }
 
-         cache.put(key, persistentCredential);
          return true;
       }
       catch (OrganizationServiceException e)
@@ -103,21 +108,24 @@ public class UserProfileCredentialStore implements CredentialStore
       {
          final String key = cacheKey(user, target);
          cache.remove(key);
-         final User myUser = userDBServiceClient.getUserByAlias(user);
-         if (myUser == null)
+         final User myUser;
+         try
          {
-            throw new CredentialStoreException(
-               String.format("Unknown user '%s'. ", user));
+            myUser = userManager.getUserByAlias(user);
+         }
+         catch (UserExistenceException e)
+         {
+            throw new CredentialStoreException(String.format("Unknown user '%s'. ", user));
          }
          final Map<String, String> attributes = credential.getAttributes();
          Pair[] persistentCredential = new Pair[attributes.size()];
          int i = 0;
          for (Map.Entry<String, String> e : attributes.entrySet())
          {
-            persistentCredential[i] = new Pair(e.getKey(), e.getValue());
+            persistentCredential[i++] = new Pair(e.getKey(), e.getValue());
          }
          myUser.getProfile().setAttribute(credentialAttributeName(target), JsonHelper.toJson(persistentCredential));
-         userDBServiceClient.updateUser(myUser);
+         userManager.updateUser(myUser);
          cache.put(key, persistentCredential);
       }
       catch (OrganizationServiceException e)
@@ -139,14 +147,18 @@ public class UserProfileCredentialStore implements CredentialStore
       {
          final String key = cacheKey(user, target);
          cache.remove(key);
-         final User myUser = userDBServiceClient.getUserByAlias(user);
-         if (myUser == null)
+         final User myUser;
+         try
+         {
+            myUser = userManager.getUserByAlias(user);
+         }
+         catch (UserExistenceException e)
          {
             // Ignore non existent users.
             return false;
          }
-         myUser.getProfile().setAttribute(credentialAttributeName(target), null);
-         userDBServiceClient.updateUser(myUser);
+         myUser.getProfile().removeAttribute(credentialAttributeName(target));
+         userManager.updateUser(myUser);
          return true;
       }
       catch (OrganizationServiceException e)

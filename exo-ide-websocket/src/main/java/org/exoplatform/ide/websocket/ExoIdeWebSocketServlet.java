@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.websocket;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import org.apache.catalina.websocket.StreamInbound;
 import org.everrest.core.DependencySupplier;
 import org.everrest.core.ResourceBinder;
@@ -46,6 +47,7 @@ import javax.ws.rs.ext.ContextResolver;
 public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet
 {
    static final String CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME = "ide.websocket." + ConversationState.class.getName();
+   static final String ENVIRONMENT_SESSION_ATTRIBUTE_NAME = "ide.websocket." + EnvironmentContext.class.getName();
 
    @Override
    protected EverrestProcessor getEverrestProcessor()
@@ -87,6 +89,8 @@ public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet
       WSConnectionImpl wsConnection = (WSConnectionImpl)super.createWebSocketInbound(s, req);
       ConversationState conversationState = ConversationState.getCurrent();
       wsConnection.getHttpSession().setAttribute(CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME, conversationState);
+      EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
+      wsConnection.getHttpSession().setAttribute(ENVIRONMENT_SESSION_ATTRIBUTE_NAME, environmentContext);
       return wsConnection;
    }
 }

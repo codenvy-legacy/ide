@@ -24,7 +24,7 @@ package org.exoplatform.ide.git.shared;
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 28, 2012 9:42:33 AM anya $
- * 
+ * @deprecated not need it any more, we use oauth for GItHub
  */
 public class GitHubCredentials implements Credentials
 {

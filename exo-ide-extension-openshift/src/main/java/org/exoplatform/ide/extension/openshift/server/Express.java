@@ -28,10 +28,12 @@ import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.Cartridge;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
-import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -86,24 +88,24 @@ public class Express
 
    private final VirtualFileSystemRegistry vfsRegistry;
 
-   private final SshKeyProvider keyProvider;
+   private final SshKeyStore sshKeyStore;
    private final String workspace;
    private String config = "/ide-home/users/";
 
    private static final String OPENSHIFT_URL = "https://openshift.redhat.com";
 
-   public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, InitParams initParams)
+   public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyStore sshKeyStore, InitParams initParams)
    {
       this(vfsRegistry, //
-         keyProvider, //
+         sshKeyStore, //
          ContainerUtils.readValueParam(initParams, "workspace"), //
          ContainerUtils.readValueParam(initParams, "user-config"));
    }
 
-   public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, String workspace, String config)
+   public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyStore sshKeyStore, String workspace, String config)
    {
       this.vfsRegistry = vfsRegistry;
-      this.keyProvider = keyProvider;
+      this.sshKeyStore = sshKeyStore;
       this.workspace = workspace;
       if (config != null)
       {
@@ -144,14 +146,14 @@ public class Express
    }
 
    public void createDomain(String namespace, boolean alter) throws ExpressException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+      ParsingResponseException, SshKeyStoreException, VirtualFileSystemException
    {
       IOpenShiftConnection connection = getOpenShiftConnection();
       createDomain(connection, namespace, alter);
    }
 
    private void createDomain(IOpenShiftConnection connection, String namespace, boolean alter)
-      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
+      throws ExpressException, IOException, ParsingResponseException, SshKeyStoreException
    {
       final String host = "rhcloud.com";
 
@@ -159,17 +161,17 @@ public class Express
       if (alter)
       {
          // Update SSH keys.
-         keyProvider.removeKeys(host);
-         keyProvider.genKeyPair(host, null, null);
-         publicKey = keyProvider.getPublicKey(host);
+         sshKeyStore.removeKeys(host);
+         sshKeyStore.genKeyPair(host, null, null);
+         publicKey = sshKeyStore.getPublicKey(host);
       }
       else
       {
-         publicKey = keyProvider.getPublicKey(host);
+         publicKey = sshKeyStore.getPublicKey(host);
          if (publicKey == null)
          {
-            keyProvider.genKeyPair(host, null, null);
-            publicKey = keyProvider.getPublicKey(host);
+            sshKeyStore.genKeyPair(host, null, null);
+            publicKey = sshKeyStore.getPublicKey(host);
          }
       }
 

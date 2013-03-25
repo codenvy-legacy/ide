@@ -20,11 +20,11 @@ package org.exoplatform.ide.extension.cloudfoundry.server.ext;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.SimpleAuthenticator;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
+import org.exoplatform.ide.security.paas.DummyCredentialStore;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +44,7 @@ public class CloudfoundryPool
 
    private final CopyOnWriteArrayList<CloudfoundryServerConfiguration> configs;
    private final ReentrantLock lock = new ReentrantLock();
+   private final CredentialStore credentialStore = new DummyCredentialStore();
 
    public CloudfoundryPool(InitParams initParams)
    {
@@ -84,11 +85,7 @@ public class CloudfoundryPool
          {
             t = cf.getTarget();
          }
-         catch (VirtualFileSystemException ignored)
-         {
-            // Never happen since we do not read target value from anywhere.
-         }
-         catch (IOException ignored)
+         catch (CredentialStoreException ignored)
          {
             // Never happen since we do not read target value from anywhere.
          }
@@ -130,7 +127,9 @@ public class CloudfoundryPool
          List<Cloudfoundry> list = new ArrayList<Cloudfoundry>(configs.size());
          for (CloudfoundryServerConfiguration config : configs)
          {
-            list.add(new Cloudfoundry(new SimpleAuthenticator(config.getTarget(), config.getUser(), config.getPassword())));
+            list.add(
+               new Cloudfoundry(new SimpleAuthenticator(config.getTarget(), config.getUser(), config.getPassword()), credentialStore)
+            );
          }
          balancer = new Balancer(list);
       }

@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.extension.openshift.server.rest;
 
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.server.Express;
 import org.exoplatform.ide.extension.openshift.server.ExpressException;
-import org.exoplatform.ide.extension.openshift.server.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -97,7 +98,7 @@ public class ExpressService
    @POST
    @Path("domain/create")
    public void createDomain(@QueryParam("namespace") String namespace, @QueryParam("alter") boolean alter)
-      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
+      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException, SshKeyStoreException
    {
       express.createDomain(namespace, alter);
    }

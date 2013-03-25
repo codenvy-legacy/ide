@@ -29,6 +29,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
@@ -58,6 +59,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -230,7 +232,7 @@ public class CloudBees extends JenkinsClient
       {
          throw new AccountAlreadyExistsException(account);
       }
-      final CloudBeesUser user = JsonHelper.fromJson(response.body, CloudBeesUser.class, null);
+      final CloudBeesUser user = parseJsonResponse(response.body, CloudBeesUser.class, null);
       for (CloudBeesAccount _account : user.getAccounts())
       {
          if (_account.getName().equals(account.getName()))
@@ -276,7 +278,7 @@ public class CloudBees extends JenkinsClient
       validateUser(user, existingUser);
       AccountAPIResponse response = makeRequest(
          accountProvisioningAPIEndpoint + "/accounts/" + account + "/users", "POST", JsonHelper.toJson(user));
-      return JsonHelper.fromJson(response.body, CloudBeesUser.class, null);
+      return parseJsonResponse(response.body, CloudBeesUser.class, null);
    }
 
    /** Prevent creation partial user. */
@@ -405,7 +407,7 @@ public class CloudBees extends JenkinsClient
       }
    }
 
-   private static String readBody(InputStream input, int contentLength) throws IOException
+   private String readBody(InputStream input, int contentLength) throws IOException
    {
       String body = null;
       if (contentLength > 0)
@@ -430,6 +432,18 @@ public class CloudBees extends JenkinsClient
          body = bout.toString();
       }
       return body;
+   }
+
+   private <O> O parseJsonResponse(String json, Class<O> clazz, Type type) throws ParsingResponseException
+   {
+      try
+      {
+         return JsonHelper.fromJson(json, clazz, type);
+      }
+      catch (JsonParseException e)
+      {
+         throw new ParsingResponseException(e.getMessage(), e);
+      }
    }
 
    /*================================*/
@@ -486,7 +500,7 @@ public class CloudBees extends JenkinsClient
       }
       java.io.File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
-      beesClient.applicationDeployWar(appId, null, message, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
+      beesClient.applicationDeployWar(appId, null, message, warFile.getAbsoluteFile(), null, false, UPLOAD_PROGRESS);
       ApplicationInfo appInfo = beesClient.applicationInfo(appId);
       Map<String, String> info = toMap(appInfo);
       if (vfs != null && projectId != null)
@@ -684,7 +698,7 @@ public class CloudBees extends JenkinsClient
       if (vfs != null && projectId != null)
       {
          Item project = vfs.getItem(projectId, PropertyFilter.valueOf("cloudbees-application"));
-         app = (String)project.getPropertyValue("cloudbees-application");
+         app = project.getPropertyValue("cloudbees-application");
       }
       if (failIfCannotDetect && (app == null || app.isEmpty()))
       {

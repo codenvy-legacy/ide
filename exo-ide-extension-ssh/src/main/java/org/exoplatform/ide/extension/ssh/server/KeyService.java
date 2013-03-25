@@ -22,9 +22,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 import org.exoplatform.ide.extension.ssh.shared.PublicKey;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -54,11 +52,11 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/ssh-keys")
 public class KeyService
 {
-   private SshKeyProvider keyProvider;
+   private final SshKeyStore keyStore;
 
-   public KeyService(SshKeyProvider keyProvider)
+   public KeyService(SshKeyStore keyStore)
    {
-      this.keyProvider = keyProvider;
+      this.keyStore = keyStore;
    }
 
    /**
@@ -72,16 +70,9 @@ public class KeyService
    {
       try
       {
-         keyProvider.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
+         keyStore.genKeyPair(request.getHost(), request.getComment(), request.getPassphrase());
       }
-      catch (IOException e)
-      {
-         throw new WebApplicationException(Response.serverError() //
-            .entity(e.getMessage()) //
-            .type(MediaType.TEXT_PLAIN) //
-            .build());
-      }
-      catch (VirtualFileSystemException e)
+      catch (SshKeyStoreException e)
       {
          throw new WebApplicationException(Response.serverError() //
             .entity(e.getMessage()) //
@@ -126,9 +117,9 @@ public class KeyService
 
       try
       {
-         keyProvider.addPrivateKey(host, key);
+         keyStore.addPrivateKey(host, key);
       }
-      catch (VirtualFileSystemException e)
+      catch (SshKeyStoreException e)
       {
          throw new WebApplicationException(Response.ok("<pre>" + e.getMessage() + "</pre>", MediaType.TEXT_HTML)
             .build());
@@ -139,8 +130,8 @@ public class KeyService
    /**
     * Get public key.
     * 
-    * @see {@link SshKeyProvider#genKeyPair(String, String, String)}
-    * @see {@link SshKeyProvider#getPublicKey(String)}
+    * @see {@link SshKeyStore#genKeyPair(String, String, String)}
+    * @see {@link SshKeyStore#getPublicKey(String)}
     */
    @GET
    @RolesAllowed({"users"})
@@ -155,19 +146,12 @@ public class KeyService
                   .entity("Secure connection required to be able generate key. ").type(MediaType.TEXT_PLAIN).build());
             }
       */
-      SshKey publicKey = null;
+      SshKey publicKey;
       try
       {
-         publicKey = keyProvider.getPublicKey(host);
+         publicKey = keyStore.getPublicKey(host);
       }
-      catch (IOException e)
-      {
-         throw new WebApplicationException(Response.serverError() //
-            .entity(e.getMessage()) //
-            .type(MediaType.TEXT_PLAIN) //
-            .build());
-      }
-      catch (VirtualFileSystemException e)
+      catch (SshKeyStoreException e)
       {
          throw new WebApplicationException(Response.serverError() //
             .entity(e.getMessage()) //
@@ -194,9 +178,9 @@ public class KeyService
    {
       try
       {
-         keyProvider.removeKeys(host);
+         keyStore.removeKeys(host);
       }
-      catch (VirtualFileSystemException e)
+      catch (SshKeyStoreException e)
       {
          throw new WebApplicationException(Response.serverError() //
             .entity(e.getMessage()) //
@@ -214,14 +198,13 @@ public class KeyService
    {
       try
       {
-         Set<String> all = keyProvider.getAll();
+         Set<String> all = keyStore.getAll();
          if (all.size() > 0)
          {
             List<KeyItem> result = new ArrayList<KeyItem>(all.size());
             for (String host : all)
             {
-               boolean publicKeyExists = false;
-               publicKeyExists = keyProvider.getPublicKey(host) != null;
+               boolean publicKeyExists = keyStore.getPublicKey(host) != null;
                String getPublicKeyUrl = null;
                if (publicKeyExists)
                {
@@ -238,14 +221,7 @@ public class KeyService
          }
          return Response.ok(Collections.emptyList(), MediaType.APPLICATION_JSON).build();
       }
-      catch (IOException e)
-      {
-         throw new WebApplicationException(Response.serverError() //
-            .entity(e.getMessage()) //
-            .type(MediaType.TEXT_PLAIN) //
-            .build());
-      }
-      catch (VirtualFileSystemException e)
+      catch (SshKeyStoreException e)
       {
          throw new WebApplicationException(Response.serverError() //
             .entity(e.getMessage()) //
