@@ -115,6 +115,7 @@ public class PreferencesPresenter implements ShowPreferencesHandler, ViewClosedH
          IDE.getInstance().openView(display.asView());
          bindDisplay();
       }
+      
       display.setValue(Preferences.get().getPreferences());
       if (Preferences.get().getPreferences().size() > 0)
       {

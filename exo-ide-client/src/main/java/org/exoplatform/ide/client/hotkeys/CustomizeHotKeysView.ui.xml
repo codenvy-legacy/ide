@@ -19,8 +19,12 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:hk="urn:import:org.exoplatform.ide.client.hotkeys">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	xmlns:hk="urn:import:org.exoplatform.ide.client.hotkeys">
+	
    <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
    <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="idePrefs"></ui:with>
 
