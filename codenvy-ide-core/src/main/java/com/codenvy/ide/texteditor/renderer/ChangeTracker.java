@@ -28,6 +28,7 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.Spacer;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.ViewportModel.Edge;
+import com.codenvy.ide.texteditor.api.FocusManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.executor.ScheduledCommandExecutor;
@@ -120,7 +121,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
 
    private final Renderer renderer;
 
-   private final com.codenvy.ide.texteditor.api.SelectionModel selection;
+   private final SelectionModel selection;
 
    private final ViewportModel viewport;
 
@@ -139,7 +140,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
    private final EnumSet<ViewportModel.Edge> viewportLineNumberChangedEdges = EnumSet.noneOf(ViewportModel.Edge.class);
 
    ChangeTracker(Renderer renderer, Buffer buffer, DocumentModel document, ViewportModel viewport, SelectionModel selection,
-      com.codenvy.ide.texteditor.api.FocusManager focusManager)
+      FocusManager focusManager)
    {
       this.buffer = buffer;
       this.renderer = renderer;

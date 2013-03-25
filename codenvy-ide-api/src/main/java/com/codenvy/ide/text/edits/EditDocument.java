@@ -188,6 +188,16 @@ class EditDocument implements Document
     * {@inheritDoc}
     */
    @Override
+   public Position[] getPositions(String category, int offset, int length, boolean canStartBefore,
+      boolean canEndAfter) throws BadPositionCategoryException
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public Region getLineInformation(int line) throws BadLocationException
    {
       throw new UnsupportedOperationException();

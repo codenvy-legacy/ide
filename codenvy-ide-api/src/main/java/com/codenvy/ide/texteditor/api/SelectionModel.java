@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.texteditor.api;
 
-import com.codenvy.ide.text.store.Position;
+import com.codenvy.ide.text.Position;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -31,8 +31,6 @@ public interface SelectionModel
    int getCursorColumn();
 
    int getCursorLineNumber();
-
-   Position[] getSelectionRange(boolean inclusiveEnd);
 
    boolean hasSelection();
 

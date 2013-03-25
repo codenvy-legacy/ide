@@ -707,4 +707,19 @@ public interface Document
     */
    String getLineDelimiter(int line) throws BadLocationException;
 
+   /**
+    * Returns all positions of the given category that are inside the given region.
+    *
+    * @param category the position category
+    * @param offset the start position of the region, must be >= 0
+    * @param length the length of the region, must be >= 0
+    * @param canStartBefore if <code>true</code> then positions are included which start before the region if they end at or after
+    *           the regions start
+    * @param canEndAfter if <code>true</code> then positions are included which end after the region if they start at or before
+    *           the regions end
+    * @return all positions inside the region of the given category
+    * @throws BadPositionCategoryException if category is undefined in this document
+    */
+   Position[] getPositions(String category, int offset, int length, boolean canStartBefore, boolean canEndAfter)
+      throws BadPositionCategoryException;
 }

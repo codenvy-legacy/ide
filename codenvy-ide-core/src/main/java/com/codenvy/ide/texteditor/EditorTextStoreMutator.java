@@ -30,6 +30,7 @@ import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.api.UndoManager;
+import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
@@ -121,7 +122,7 @@ public class EditorTextStoreMutator implements TextStoreMutator
          return null;
       }
       TextChange textChange = null;
-      com.codenvy.ide.texteditor.api.SelectionModel selection = editor.getSelection();
+      SelectionModel selection = editor.getSelection();
       if (canReplaceSelection && selection.hasSelection())
       {
          Position[] selectionRange = selection.getSelectionRange(true);

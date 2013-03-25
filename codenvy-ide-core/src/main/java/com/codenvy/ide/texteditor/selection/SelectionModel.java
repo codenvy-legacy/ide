@@ -374,7 +374,6 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       return selectionListenerManager;
    }
 
-   // TODO: I think we should introduce SelectionRange bean.
    /**
     * Returns the selection range where position[0] is always the logical start
     * of selection and position[1] is always the logical end.
@@ -384,7 +383,6 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
     *        character after the last character in the selection. If true there
     *        must currently be a selection.
     */
-   @Override
    public Position[] getSelectionRange(boolean inclusiveEnd)
    {
       Assert.isLegal(hasSelection() || !inclusiveEnd, "There must be a selection if inclusiveEnd is requested.");
@@ -913,9 +911,10 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       return cursorAnchor;
    }
 
-   public Position getCursorPosition()
+   public com.codenvy.ide.text.Position getCursorPosition()
    {
-      return new Position(cursorAnchor.getLineInfo(), cursorAnchor.getColumn());
+      int offset = TextUtilities.getOffset(doc, cursorAnchor.getLineInfo().number(), getBaseColumn());
+      return new com.codenvy.ide.text.Position(offset);
    }
 
    private void dispatchCursorChange(final boolean isExplicitChange)

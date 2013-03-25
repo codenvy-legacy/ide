@@ -31,7 +31,6 @@ import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -47,7 +46,7 @@ import com.google.inject.Inject;
 public class TextEditorPresenter extends AbstractTextEditorPresenter
 {
 
-   protected TextEditorPartView editor;
+   protected TextEditorViewImpl editor;
 
    private final TextListener textListener = new TextListener()
    {

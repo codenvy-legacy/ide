@@ -60,9 +60,6 @@ import java.util.Map;
  * This implementation is not intended to be subclassed.
  * </p>
  * 
- * @see com.codenvy.ide.texteditor.api.historymanager.core.commands.operations.IOperationHistory
- * @see org.eclipse.core.commands.operations.IOperationApprover
- * 
  */
 public final class DefaultOperationHistory implements IOperationHistory
 {
@@ -242,8 +239,6 @@ public final class DefaultOperationHistory implements IOperationHistory
     * @param listener
     *            the IOperationHistoryListener to be added as a listener.
     * 
-    * @see com.codenvy.ide.texteditor.api.historymanager.core.commands.operations.IOperationHistoryListener
-    * @see com.codenvy.ide.texteditor.api.historymanager.core.commands.operations.OperationHistoryEvent
     */
    @Override
    public void addOperationHistoryListener(IOperationHistoryListener listener)
@@ -360,7 +355,6 @@ public final class DefaultOperationHistory implements IOperationHistory
    /**
     * Perform the redo. All validity checks have already occurred.
     * 
-    * @param monitor
     * @param operation
     */
    private IStatus doRedo(IUndoableOperation operation) throws ExecutionException
@@ -428,7 +422,6 @@ public final class DefaultOperationHistory implements IOperationHistory
    /**
     * Perform the undo. All validity checks have already occurred.
     * 
-    * @param monitor
     * @param operation
     */
    private IStatus doUndo(IUndoableOperation operation) throws ExecutionException

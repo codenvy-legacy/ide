@@ -396,10 +396,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       getView().setAnimationEnabled(enabled);
    }
 
-   /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#getBeforeTextListenerRegistrar()
-    */
-   @Override
    public ListenerRegistrar<BeforeTextListener> getBeforeTextListenerRegistrar()
    {
       return editorDocumentMutator.getBeforeTextListenerRegistrar();
@@ -426,10 +422,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       return textStore;
    }
 
-   /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#getEditorDocumentMutator()
-    */
-   @Override
    public TextStoreMutator getEditorDocumentMutator()
    {
       return editorDocumentMutator;
@@ -491,7 +483,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       return localCursorController;
    }
 
-   @Override
    public ListenerRegistrar<TextListener> getTextListenerRegistrar()
    {
       return editorDocumentMutator.getTextListenerRegistrar();
@@ -508,14 +499,15 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       renderer.removeLineRenderer(lineRenderer);
    }
 
+
    /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#setDocument(com.codenvy.ide.text.DocumentImpl)
+    * {@inheritDoc}
     */
    @Override
-   public void setDocument(final DocumentImpl document)
+   public void setDocument(final Document document)
    {
       this.document = document;
-      textStore = document.getTextStore();
+      textStore = ((DocumentImpl)document).getTextStore();
 
       /*
        * TODO: dig into each component, figure out dependencies,
@@ -839,7 +831,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     * {@inheritDoc}
     */
    @Override
-   public void setDocument(DocumentImpl document, AnnotationModel annotationModel)
+   public void setDocument(Document document, AnnotationModel annotationModel)
    {
       setDocument(document);
       if (annotationModel != null)

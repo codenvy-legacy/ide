@@ -18,24 +18,20 @@
  */
 package com.codenvy.ide.text.annotation;
 
-import com.codenvy.ide.text.AbstractDocument;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.BadPositionCategoryException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentEvent;
 import com.codenvy.ide.text.DocumentListener;
 import com.codenvy.ide.text.Position;
-
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -424,10 +420,6 @@ public class AnnotationModelImpl implements AnnotationModel
    @Override
    public Iterator<Annotation> getAnnotationIterator(int offset, int length, boolean canStartBefore, boolean canEndAfter)
    {
-      if (!(document instanceof AbstractDocument))
-         return new RegionIterator(getAnnotationIterator(), this, offset, length, canStartBefore, canEndAfter);
-
-      AbstractDocument document = (AbstractDocument)this.document;
       cleanup(true, true);
 
       try

@@ -19,9 +19,7 @@
 package com.codenvy.ide.texteditor.api;
 
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
-import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.google.gwt.user.client.Element;
 
@@ -74,7 +72,7 @@ public interface TextEditorPartView
     * presentation accordingly.
     * @param document
     */
-   void setDocument(DocumentImpl document);
+   void setDocument(Document document);
    
    /**
     * Sets the given document as this displayr's text model and the
@@ -84,7 +82,7 @@ public interface TextEditorPartView
     * @param document the display's new input document
     * @param annotationModel the model for the display's visual annotations
     */
-   void setDocument(DocumentImpl document, AnnotationModel annotationModel);
+   void setDocument(Document document, AnnotationModel annotationModel);
 
    /**
     * Returns the text display input document.
@@ -106,14 +104,6 @@ public interface TextEditorPartView
     * @return the viewer's readOnly state
     */
    boolean isReadOnly();
-
-   ListenerRegistrar<BeforeTextListener> getBeforeTextListenerRegistrar();
-
-   /**
-    * Returns a document mutator that will also notify editor text listeners.
-    */
-   TextStoreMutator getEditorDocumentMutator();
-   
 
    /**
     * Returns whether the operation specified by the given operation code
@@ -155,7 +145,5 @@ public interface TextEditorPartView
    ListenerRegistrar<KeyListener> getKeyListenerRegistrar();
 
    SelectionModel getSelection();
-   
-   public ListenerRegistrar<TextListener> getTextListenerRegistrar();
 
 }
