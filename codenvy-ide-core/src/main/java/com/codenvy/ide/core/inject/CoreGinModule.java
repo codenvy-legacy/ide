@@ -40,6 +40,7 @@ import com.codenvy.ide.core.editor.EditorAgentImpl;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
+import com.codenvy.ide.editor.CodenvyTextEditor;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorProvider;
 import com.codenvy.ide.extension.ExtensionGinModule;
@@ -77,6 +78,7 @@ import com.codenvy.ide.resources.model.GenericModelProvider;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
+import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
@@ -146,6 +148,7 @@ public class CoreGinModule extends AbstractGinModule
    {
 
       bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
+      bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
       bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
       bind(EditorRegistryImpl.class).in(Singleton.class);
