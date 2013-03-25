@@ -30,18 +30,8 @@ e?(A.tagName=v,c(m,b(A.startOfLine))):"closeTag"==e?(e=!1,(e=A.context?A.context
 b)return A.context&&(A.context=A.context.prev),c();B="error";return c(arguments.callee)}}function m(e){if("word"==e)return B="attribute",c(s,m);if("endTag"==e||"selfcloseTag"==e)return q();B="error";return c(m)}function s(e){if("equals"==e)return c(h,m);o.allowMissing||(B="error");return"endTag"==e||"selfcloseTag"==e?q():c()}function h(e){if("string"==e)return c(k);if("word"==e&&o.allowUnquoted)return B="string",c();B="error";return"endTag"==e||"selfCloseTag"==e?q():c()}function k(e){return"string"==
 e?c(k):q()}var i=n.indentUnit,o=j.htmlMode?{autoSelfClosers:{area:!0,base:!0,br:!0,col:!0,command:!0,embed:!0,frame:!0,hr:!0,img:!0,input:!0,keygen:!0,link:!0,meta:!0,param:!0,source:!0,track:!0,wbr:!0},doNotIndent:{pre:!0},allowUnquoted:!0,allowMissing:!1}:{autoSelfClosers:{},doNotIndent:{},allowUnquoted:!1,allowMissing:!1},p=j.alignCDATA,v,D,A,B;return{startState:function(){return{tokenize:g,cc:[],indented:0,startOfLine:!0,tagName:null,context:null}},token:function(e,b){e.sol()&&(b.startOfLine=
 !0,b.indented=e.indentation());if(e.eatSpace())return null;B=D=v=null;var c=b.tokenize(e,b);b.type=D;if((c||D)&&"comment"!=c)for(A=b;;){var d=b.cc.pop()||a;if(d(D||c))break}b.startOfLine=!1;return B||c},indent:function(e,b,a){var c=e.context;if(e.tokenize!=d&&e.tokenize!=g||c&&c.noIndent)return a?a.match(/^(\s*)/)[0].length:0;if(p&&/<!\[CDATA\[/.test(b))return 0;c&&/^<\//.test(b)&&(c=c.prev);for(;c&&!c.startOfLine;)c=c.prev;return c?c.indent+i:0},compareStates:function(e,b){if(e.indented!=b.indented||
-e.tokenize!=b.tokenize)return!1;for(var a=e.context,c=b.context;;a=a.prev,c=c.prev){if(!a||!c)return a==c;if(a.tagName!=c.tagName)return!1}},electricChars:"/"}});CodeMirror.defineMIME("application/xml","xml");CodeMirror.mimeModes.hasOwnProperty("text/html")||CodeMirror.defineMIME("text/html",{name:"xml",htmlMode:!0});/*
-
- Copyright (c) 2011 Marijn Haverbeke
-
- Licensed under the MIT license:
- http://opensource.org/licenses/mit-license
-*/
-CodeMirror.defineMode("css",function(n){function j(c,a){q=a;return c}function g(c,a){var b=c.next();if("@"==b)return c.eatWhile(/[\w\\\-]/),j("meta",c.current());if("/"==b&&c.eat("*"))return a.tokenize=d,d(c,a);if("<"==b&&c.eat("!"))return a.tokenize=t,t(c,a);if("="==b)j(null,"compare");else{if(("~"==b||"|"==b)&&c.eat("="))return j(null,"compare");if('"'==b||"'"==b)return a.tokenize=u(b),a.tokenize(c,a);if("#"==b)return c.eatWhile(/[\w\\\-]/),j("atom","hash");if("!"==b)return c.match(/^\s*\w*/),j("keyword",
-"important");if(/\d/.test(b))return c.eatWhile(/[\w.%]/),j("number","unit");if(/[,.+>*\/]/.test(b))return j(null,"select-op");if(/[;{}:\[\]]/.test(b))return j(null,b);c.eatWhile(/[\w\\\-]/);return j("variable","variable")}}function d(c,a){for(var b=!1,d;null!=(d=c.next());){if(b&&"/"==d){a.tokenize=g;break}b="*"==d}return j("comment","comment")}function t(c,a){for(var b=0,d;null!=(d=c.next());){if(2<=b&&">"==d){a.tokenize=g;break}b="-"==d?b+1:0}return j("comment","comment")}function u(c){return function(a,
-b){for(var d=!1,m;null!=(m=a.next())&&(m!=c||d);)d=!d&&"\\"==m;d||(b.tokenize=g);return j("string","string")}}var r=n.indentUnit,q;return{startState:function(c){return{tokenize:g,baseIndent:c||0,stack:[]}},token:function(c,a){if(c.eatSpace())return null;var b=a.tokenize(c,a),d=a.stack[a.stack.length-1];if("hash"==q&&"rule"!=d)b="string-2";else if("variable"==b)if("rule"==d)b="number";else if(!d||"@media{"==d)b="tag";"rule"==d&&/^[\{\};]$/.test(q)&&a.stack.pop();"{"==q?"@media"==d?a.stack[a.stack.length-
-1]="@media{":a.stack.push("{"):"}"==q?a.stack.pop():"@media"==q?a.stack.push("@media"):"{"==d&&"comment"!=q&&a.stack.push("rule");return b},indent:function(c,a){var b=c.stack.length;/^\}/.test(a)&&(b-="rule"==c.stack[c.stack.length-1]?2:1);return c.baseIndent+b*r},electricChars:"}"}});CodeMirror.defineMIME("text/css","css");/*
-
+e.tokenize!=b.tokenize)return!1;for(var a=e.context,c=b.context;;a=a.prev,c=c.prev){if(!a||!c)return a==c;if(a.tagName!=c.tagName)return!1}},electricChars:"/"}});CodeMirror.defineMIME("application/xml","xml");CodeMirror.mimeModes.hasOwnProperty("text/html")||CodeMirror.defineMIME("text/html",{name:"xml",htmlMode:!0});
+/*
  Copyright (c) 2012 Marijn Haverbeke
 
  Licensed under the MIT license:
@@ -72,7 +62,7 @@ a){var c=q(b,a);a.lastToken={style:c,content:b.current()};b.eol()&&b.lambda&&(a.
  Licensed under the MIT license:
  http://opensource.org/licenses/mit-license
 */
-CodeMirror.defineMode("null",function(){return{token:function(n){n.skipToEnd();return null}}});CodeMirror.defineMIME("text/plain","null");/*
+/*
 
  Copyright (c) 2011 Marijn Haverbeke
 

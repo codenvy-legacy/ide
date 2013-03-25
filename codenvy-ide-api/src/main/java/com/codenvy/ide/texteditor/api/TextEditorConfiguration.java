@@ -19,10 +19,11 @@
 package com.codenvy.ide.texteditor.api;
 
 import com.codenvy.ide.api.outline.OutlineModel;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.Parser;
-import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
+import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
 
 /**
@@ -91,13 +92,13 @@ public class TextEditorConfiguration
    }
 
    /**
-    * Returns the content assistant ready to be used with the given source viewer.
+    * Returns the content assistant processors ready to be used with the given source viewer.
     * This implementation always returns <code>null</code>.
     *
     * @param view the source viewer to be configured by this configuration
     * @return a content assistant or <code>null</code> if content assist should not be supported
     */
-   public CodeAssistant getContentAssistant(TextEditorPartView view)
+   public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view)
    {
       return null;
    }
@@ -110,7 +111,7 @@ public class TextEditorConfiguration
     * @param view that ext view to be configured by this configuration
     * @return a quick assist assistant or <code>null</code> if quick assist should not be supported
     */
-   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartView view)
+   public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view)
    {
       return null;
    }

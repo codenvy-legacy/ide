@@ -19,18 +19,19 @@
 package com.codenvy.ide.java.client.editor;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.editor.CodenvyTextEditor;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.editor.EditorProvider;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @Singleton
 public class JavaEditorProvider implements EditorProvider
@@ -42,16 +43,20 @@ public class JavaEditorProvider implements EditorProvider
 
    private final UserActivityManager activityManager;
 
+   private Provider<CodenvyTextEditor> editorProvider;
+
    /**
     * @param resources
     * @param activityManager
     */
    @Inject
-   public JavaEditorProvider(Resources resources, UserActivityManager activityManager)
+   public JavaEditorProvider(Resources resources, UserActivityManager activityManager,
+      Provider<CodenvyTextEditor> editorProvider)
    {
       super();
       this.resources = resources;
       this.activityManager = activityManager;
+      this.editorProvider = editorProvider;
       this.documentProvider = new CompilationUnitDocumentProvider(resources.workspaceEditorCss());
    }
 
@@ -61,7 +66,10 @@ public class JavaEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new JavaEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE));
+      CodenvyTextEditor textEditor = editorProvider.get();
+      textEditor.initialize(new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE, textEditor),
+         documentProvider);
+      return textEditor;
    }
 
 }

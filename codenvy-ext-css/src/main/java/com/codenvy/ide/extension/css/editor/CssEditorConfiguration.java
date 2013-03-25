@@ -18,14 +18,14 @@
  */
 package com.codenvy.ide.extension.css.editor;
 
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.Parser;
-import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
 import com.codenvy.ide.texteditor.parser.CmParser;
-import com.codenvy.ide.texteditor.parser.CodeMirror2;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -46,25 +46,31 @@ public class CssEditorConfiguration extends TextEditorConfiguration
       this.resourcess = resourcess;
    }
 
+   private static native CmParser getParserForMime(String mime) /*-{
+      conf = $wnd.CodeMirror.defaults;
+      return $wnd.CodeMirror.getMode(conf, mime);
+   }-*/;
+
+
    /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorConfiguration#getParser()
+    * {@inheritDoc}
     */
    @Override
    public Parser getParser(TextEditorPartView view)
    {
-      CmParser parser = CodeMirror2.getParserForMime("text/css");
+      CmParser parser = getParserForMime("text/css");
       parser.setNameAndFactory("css", new CssTokenFactory());
       return parser;
    }
 
    /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorConfiguration#getContentAssistant(com.codenvy.ide.texteditor.api.TextEditorPartView)
+    * @see com.codenvy.ide.texteditor.api.TextEditorConfiguration#getContentAssistantProcessors(com.codenvy.ide.texteditor.api.TextEditorPartView)
     */
    @Override
-   public CodeAssistant getContentAssistant(TextEditorPartView view)
+   public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view)
    {
-      CodeAssistantImpl codeAssistant = new CodeAssistantImpl();
-      codeAssistant.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resourcess));
-      return codeAssistant;
+      JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+      map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resourcess));
+      return map;
    }
 }

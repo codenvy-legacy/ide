@@ -23,14 +23,17 @@ import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.css.editor.CssEditorProvider;
 import com.codenvy.ide.extension.css.wizard.NewCSSFilePagePresenter;
 import com.codenvy.ide.resources.FileType;
-import com.codenvy.ide.texteditor.TextEditorViewImpl;
+import com.codenvy.ide.util.dom.Elements;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
  * Extension add CSS support to the IDE Application.
- * It porivdes configured {@link TextEditorViewImpl} with {@link CssEditorProvider} with syntax coloring and
+ * It porivdes configured {@link com.codenvy.ide.editor.TextEditorPartPresenter} with {@link CssEditorProvider} with syntax coloring and
  * autocomplete.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
@@ -39,6 +42,11 @@ import com.google.inject.Singleton;
 @Extension(title = "Css Support : syntax highlighting and autocomplete.", version = "3.0.0")
 public class CssExtension
 {
+   private interface ParserResource extends ClientBundle
+   {
+      @Source("css_parser.js")
+      TextResource cssParser();
+   }
 
    /**
     * CSS Extension adds CSS Support to IDE Applicaiton. It provides syntax highlighting and code completion features 
@@ -56,5 +64,7 @@ public class CssExtension
 
       // register Editor Provider
       editorRegistry.register(cssFile, cssEditorProvider);
+      ParserResource res = GWT.create(ParserResource.class);
+      Elements.injectJs(res.cssParser().getText());
    }
 }
