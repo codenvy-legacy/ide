@@ -19,8 +19,9 @@
 package com.codenvy.ide.core.expressions;
 
 
+import com.codenvy.ide.api.ui.part.PartPresenter;
+
 import com.codenvy.ide.editor.EditorPartPresenter;
-import com.codenvy.ide.part.PartPresenter;
 
 import com.google.inject.Inject;
 

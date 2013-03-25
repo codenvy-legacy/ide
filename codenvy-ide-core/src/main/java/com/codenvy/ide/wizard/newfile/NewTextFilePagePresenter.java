@@ -58,7 +58,7 @@ public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter
     * @param view
     * @param resourceProvider
     */
-   protected NewTextFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider,
+   protected NewTextFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider,
       SelectionAgent selectionAgent)
    {
       super("Create a new empty text file", image, view, "txt", resourceProvider, selectionAgent);

@@ -18,28 +18,22 @@
  */
 package com.codenvy.ide.extension.css.wizard;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
-import com.codenvy.ide.wizard.newfile.NewGenericFileView;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-
-import com.codenvy.ide.extension.css.wizard.NewCSSFilePagePresenter;
-
+import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
 import com.google.gwt.junit.GWTMockUtilities;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.After;
@@ -62,7 +56,7 @@ public class TestNewCSSFilePagePresenter
 
    private NewCSSFilePagePresenter presenter;
 
-   private NewGenericFileView view;
+   private NewGenericFilePageView view;
 
    private Project project;
 
@@ -84,8 +78,8 @@ public class TestNewCSSFilePagePresenter
       project = mock(Project.class);
       when(resourceProvider.getActiveProject()).thenReturn(project);
       
-      view = mock(NewGenericFileView.class);
-      presenter = new NewCSSFilePagePresenter(null, view, resourceProvider, mock(SelectionAgent.class));
+      view = mock(NewGenericFilePageView.class);
+      presenter = new NewCSSFilePagePresenter((ImageResource)null, view, resourceProvider, mock(SelectionAgent.class));
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
    }
 

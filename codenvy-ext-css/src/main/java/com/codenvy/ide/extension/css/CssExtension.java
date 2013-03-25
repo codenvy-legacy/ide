@@ -23,14 +23,13 @@ import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.css.editor.CssEditorProvider;
 import com.codenvy.ide.extension.css.wizard.NewCSSFilePagePresenter;
 import com.codenvy.ide.resources.FileType;
-import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
  * Extension add CSS support to the IDE Application.
- * It porivdes configured {@link TextEditorViewImpl} with {@link CssEditorProvider} with syntax coloring and
+ * It porivdes configured TextEditorView with {@link CssEditorProvider} with syntax coloring and
  * autocomplete.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 

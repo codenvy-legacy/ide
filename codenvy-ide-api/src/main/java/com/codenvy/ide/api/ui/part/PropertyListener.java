@@ -16,39 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.wizard.newfile;
-
-import com.codenvy.ide.view.View;
+package com.codenvy.ide.api.ui.part;
 
 /**
- * Interface of NewGenericFile view
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * Interface for listening for property changes on an {@link PartPresenter}
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public interface NewGenericFileView extends View<NewGenericFileView.ActionDelegate>
+public interface PropertyListener
 {
-   /**
-    * Returns file name.
-    * 
-    * @return
-    */
-   String getFileName();
 
    /**
-    * Sets file name.
-    * 
-    * @param fileName
+    * Indicates that a property has changed.
+    *
+    * @param source the object whose property has changed
+    * @param propId the id of the property which has changed; property ids
+    *   are generally defined as constants on the source class
     */
-   void setFileName(String fileName);
-
-   /**
-    * Needs for delegate some function into NewGenericFile view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Checks entered information(file name and etc).
-       */
-      void onValueChanged();
-   }
+   public void propertyChanged(PartPresenter source, int propId);
 }

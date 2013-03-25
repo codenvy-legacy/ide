@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.api.ui.workspace;
+package com.codenvy.ide.api.ui.perspective;
 
+
+import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
 import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.part.PartPresenter;
-import com.codenvy.ide.perspective.PerspectivePresenter;
-import com.codenvy.ide.perspective.PerspectivePresenter.PartStackType;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 

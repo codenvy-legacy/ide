@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.java.client;
 
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+
 import com.codenvy.ide.core.editor.EditorRegistry;
 
 import com.codenvy.ide.java.client.codeassistant.ContentAssistHistory;
@@ -52,7 +54,6 @@ import com.codenvy.ide.java.client.wizard.NewPackagePagePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.resources.FileType;
 

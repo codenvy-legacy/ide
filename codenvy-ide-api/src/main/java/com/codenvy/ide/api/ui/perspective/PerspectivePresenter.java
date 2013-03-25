@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.perspective;
+package com.codenvy.ide.api.ui.perspective;
 
+import com.codenvy.ide.api.ui.part.EditorPartStack;
+import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.part.PartStack;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.part.EditorPartStack;
-import com.codenvy.ide.part.PartPresenter;
-import com.codenvy.ide.part.PartStack;
 import com.codenvy.ide.presenter.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Provider;

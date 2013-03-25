@@ -25,7 +25,7 @@ import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.wizard.WizardPagePresenter;
-import com.codenvy.ide.wizard.newfile.NewGenericFileView.ActionDelegate;
+import com.codenvy.ide.wizard.newfile.NewGenericFilePageView.ActionDelegate;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.util.StringUtils;
@@ -49,7 +49,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
 
    private boolean hasSameFile;
 
-   protected NewGenericFileView view;
+   protected NewGenericFilePageView view;
 
    private String fileExtension;
 
@@ -64,7 +64,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
     * @param fileExtension
     * @param resourceProvider
     */
-   public AbstractNewFilePagePresenter(String caption, ImageResource image, NewGenericFileView view,
+   public AbstractNewFilePagePresenter(String caption, ImageResource image, NewGenericFilePageView view,
       String fileExtension, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
       super(caption, image);

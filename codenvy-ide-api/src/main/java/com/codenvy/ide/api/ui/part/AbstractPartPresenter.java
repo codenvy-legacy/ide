@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.part;
+package com.codenvy.ide.api.ui.part;
 
 import com.codenvy.ide.selection.Selection;
 
@@ -46,7 +46,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    }
 
    /**
-   * @see com.codenvy.ide.part.PartPresenter#onClose()
+   * @see com.codenvy.ide.api.ui.part.PartPresenter#onClose()
    */
    @Override
    public boolean onClose()
@@ -55,7 +55,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#onOpen()
+    * @see com.codenvy.ide.api.ui.part.PartPresenter#onOpen()
     */
    @Override
    public void onOpen()
@@ -63,7 +63,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#addPropertyListener(com.codenvy.ide.part.PropertyListener)
+    * @see com.codenvy.ide.api.ui.part.PartPresenter#addPropertyListener(com.codenvy.ide.api.ui.part.PropertyListener)
     */
    @Override
    public void addPropertyListener(PropertyListener listener)
@@ -72,7 +72,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#removePropertyListener(com.codenvy.ide.part.PropertyListener)
+    * @see com.codenvy.ide.api.ui.part.PartPresenter#removePropertyListener(com.codenvy.ide.api.ui.part.PropertyListener)
     */
    @Override
    public void removePropertyListener(PropertyListener listener)

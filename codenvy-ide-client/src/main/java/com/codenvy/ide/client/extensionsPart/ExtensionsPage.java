@@ -16,13 +16,14 @@
  */
 package com.codenvy.ide.client.extensionsPart;
 
+import com.codenvy.ide.api.ui.part.AbstractPartPresenter;
+
 import com.codenvy.ide.client.ExtensionInitializer;
 import com.codenvy.ide.client.PageResources;
 import com.codenvy.ide.extension.DependencyDescription;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
-import com.codenvy.ide.part.AbstractPartPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;

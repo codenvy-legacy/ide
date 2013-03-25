@@ -14,13 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.part;
+package com.codenvy.ide.api.ui.welcome;
+
+import com.codenvy.ide.api.ui.part.PartPresenter;
 
 /**
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public interface EditorPartStack extends PartStack
+public interface WelcomePart extends PartPresenter
 {
 
 }

@@ -16,12 +16,13 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.api.ui.part.AbstractPartPresenter;
+
 import com.codenvy.ide.api.projectExplorer.ProjectExplorerPart;
 import com.codenvy.ide.core.event.ProjectActionEvent;
 import com.codenvy.ide.core.event.ProjectActionHandler;
 import com.codenvy.ide.core.event.ResourceChangedEvent;
 import com.codenvy.ide.core.event.ResourceChangedHandler;
-import com.codenvy.ide.part.AbstractPartPresenter;
 import com.codenvy.ide.resources.FileEvent;
 import com.codenvy.ide.resources.FileEvent.FileOperation;
 import com.codenvy.ide.resources.model.File;

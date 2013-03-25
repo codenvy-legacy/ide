@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.api.ui.console;
 
+import com.codenvy.ide.api.ui.part.PartPresenter;
+
 import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.part.PartPresenter;
 
 /**
  * Provides output messages on console.

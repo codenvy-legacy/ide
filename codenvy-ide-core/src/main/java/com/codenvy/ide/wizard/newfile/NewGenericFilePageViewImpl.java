@@ -32,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericFilePageViewImpl extends Composite implements NewGenericFileView
+public class NewGenericFilePageViewImpl extends Composite implements NewGenericFilePageView
 {
    private static NewGenericFilePageViewImplUiBinder uiBinder = GWT.create(NewGenericFilePageViewImplUiBinder.class);
 

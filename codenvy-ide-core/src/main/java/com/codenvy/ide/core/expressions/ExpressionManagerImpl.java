@@ -16,6 +16,8 @@
  */
 package com.codenvy.ide.core.expressions;
 
+import com.codenvy.ide.api.ui.part.PartPresenter;
+
 import com.codenvy.ide.core.event.ActivePartChangedEvent;
 import com.codenvy.ide.core.event.ActivePartChangedHandler;
 import com.codenvy.ide.core.event.ChangeToggleItemStateEvent;
@@ -26,7 +28,6 @@ import com.codenvy.ide.core.event.ExpressionsChangedEvent;
 import com.codenvy.ide.core.event.ProjectActionEvent;
 import com.codenvy.ide.core.event.ProjectActionHandler;
 import com.codenvy.ide.editor.EditorPartPresenter;
-import com.codenvy.ide.part.PartPresenter;
 import com.codenvy.ide.resources.model.Project;
 
 import com.codenvy.ide.json.JsonCollections;

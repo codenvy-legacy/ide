@@ -16,6 +16,10 @@
  */
 package com.codenvy.ide.part;
 
+import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.part.PartStack;
+import com.codenvy.ide.api.ui.part.PropertyListener;
+
 import com.codenvy.ide.core.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.part.PartStackView.TabItem;

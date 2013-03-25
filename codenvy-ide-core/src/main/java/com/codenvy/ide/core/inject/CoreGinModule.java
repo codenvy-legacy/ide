@@ -16,6 +16,8 @@
  */
 package com.codenvy.ide.core.inject;
 
+import com.codenvy.ide.api.ui.welcome.WelcomePart;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.outline.OutlinePart;
 import com.codenvy.ide.api.projectExplorer.ProjectExplorerPart;
@@ -25,10 +27,12 @@ import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
+import com.codenvy.ide.api.ui.part.EditorPartStack;
+import com.codenvy.ide.api.ui.part.PartStack;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.toolbar.ToolbarAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgent;
@@ -49,10 +53,8 @@ import com.codenvy.ide.menu.MainMenuViewImpl;
 import com.codenvy.ide.outline.OutlinePartPrenter;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.part.EditorPartStack;
 import com.codenvy.ide.part.EditorPartStackPresenter;
 import com.codenvy.ide.part.FocusManager;
-import com.codenvy.ide.part.PartStack;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
 import com.codenvy.ide.part.PartStackUIResources;
@@ -77,7 +79,10 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
+import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
+import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
+import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -126,7 +131,9 @@ public class CoreGinModule extends AbstractGinModule
       bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
 
       bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
+      bind(WelcomePart.class).to(WelcomePartPresenter.class).in(Singleton.class);
       bind(OutlinePart.class).to(OutlinePartPrenter.class).in(Singleton.class);
+      bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
       bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
 
    }
@@ -158,6 +165,9 @@ public class CoreGinModule extends AbstractGinModule
    protected void uiAPIconfigure()
    {
       bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
+      bind(NewGenericFilePageView.class).to(NewGenericFilePageViewImpl.class).in(Singleton.class);
+      
+      
       bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
 
       bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);

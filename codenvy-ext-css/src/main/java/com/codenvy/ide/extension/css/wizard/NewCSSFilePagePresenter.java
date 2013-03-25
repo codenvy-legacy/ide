@@ -18,17 +18,14 @@
  */
 package com.codenvy.ide.extension.css.wizard;
 
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.extension.css.CssExtensionResource;
 import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.wizard.newfile.AbstractNewFilePagePresenter;
-import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
-import com.codenvy.ide.wizard.newfile.NewGenericFileView;
-
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
-
+import com.codenvy.ide.wizard.newfile.AbstractNewFilePagePresenter;
+import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -44,13 +41,14 @@ public class NewCSSFilePagePresenter extends AbstractNewFilePagePresenter
    /**
     * Create presenter.
     * 
-    * @param resources
+    * @param view generic NewFileView
     * @param resourceProvider
+    * @param selectionAgent
     */
    @Inject
-   public NewCSSFilePagePresenter(Resources resources, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
+   public NewCSSFilePagePresenter(CssExtensionResource resources, NewGenericFilePageView view, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
-      this(resources.newResourceIcon(), new NewGenericFilePageViewImpl(), resourceProvider, selectionAgent);
+      this(resources.file(), view, resourceProvider, selectionAgent);
    }
 
    /**
@@ -62,7 +60,7 @@ public class NewCSSFilePagePresenter extends AbstractNewFilePagePresenter
     * @param view
     * @param resourceProvider
     */
-   protected NewCSSFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
+   protected NewCSSFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
       super("Create a new CSS file", image, view, "css", resourceProvider, selectionAgent);
    }

@@ -32,7 +32,7 @@ import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
-import com.codenvy.ide.wizard.newfile.NewGenericFileView;
+import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 
 import com.codenvy.ide.json.JsonArray;
@@ -61,7 +61,7 @@ public class TestNewTextFilePagePresenter
    private static final boolean IS_FILE = true;
 
    @Mock
-   private NewGenericFileView view;
+   private NewGenericFilePageView view;
 
    @Mock
    private Project project;

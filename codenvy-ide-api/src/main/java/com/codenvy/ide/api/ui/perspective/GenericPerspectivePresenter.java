@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.perspective;
+package com.codenvy.ide.api.ui.perspective;
 
 import com.codenvy.ide.api.outline.OutlinePart;
 import com.codenvy.ide.api.projectExplorer.ProjectExplorerPart;
 import com.codenvy.ide.api.ui.console.ConsolePart;
-import com.codenvy.ide.part.EditorPartStack;
-import com.codenvy.ide.part.PartStack;
-import com.codenvy.ide.welcome.WelcomePartPresenter;
+import com.codenvy.ide.api.ui.part.EditorPartStack;
+import com.codenvy.ide.api.ui.part.PartStack;
+import com.codenvy.ide.api.ui.welcome.WelcomePart;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -52,7 +52,7 @@ public class GenericPerspectivePresenter extends PerspectivePresenter
    @Inject
    public GenericPerspectivePresenter(GenericPerspectiveView view, EditorPartStack editorPartStackPresenter,
       Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
-      ProjectExplorerPart projectExplorerPart, WelcomePartPresenter welcomePart)
+      ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart)
    {
       super(view, editorPartStackPresenter, partStackProvider);
       // show required parts

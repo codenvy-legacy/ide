@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.java.client.perspective;
 
-import com.codenvy.ide.perspective.PerspectiveView;
+import com.codenvy.ide.api.ui.perspective.PerspectiveView;
 
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 

@@ -16,10 +16,15 @@
  */
 package com.codenvy.ide.perspective;
 
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+
+import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
+
+import com.codenvy.ide.api.ui.part.PartPresenter;
+
 import com.codenvy.ide.menu.MainMenuPresenter;
-import com.codenvy.ide.part.PartPresenter;
-import com.codenvy.ide.perspective.PerspectivePresenter.PartStackType;
 import com.codenvy.ide.presenter.Presenter;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 

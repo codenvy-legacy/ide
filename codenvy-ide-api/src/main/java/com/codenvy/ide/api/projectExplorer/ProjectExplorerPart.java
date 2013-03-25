@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.api.projectExplorer;
 
-import com.codenvy.ide.part.PartPresenter;
+import com.codenvy.ide.api.ui.part.PartPresenter;
 
 /**
  *

@@ -20,11 +20,13 @@ import static junit.framework.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import com.codenvy.ide.api.ui.part.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.part.PartPresenter;
+
+
 import com.codenvy.ide.core.event.ActivePartChangedEvent;
 import com.codenvy.ide.core.event.SelectionChangedEvent;
 import com.codenvy.ide.core.event.SelectionChangedHandler;
-import com.codenvy.ide.part.AbstractPartPresenter;
-import com.codenvy.ide.part.PartPresenter;
 import com.codenvy.ide.selection.Selection;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 
