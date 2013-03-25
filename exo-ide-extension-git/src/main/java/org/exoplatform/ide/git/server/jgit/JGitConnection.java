@@ -31,24 +31,16 @@ import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.api.TagCommand;
 import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
-import org.eclipse.jgit.api.errors.InvalidTagNameException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.api.errors.NotMergedException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.NullProgressMonitor;
@@ -458,38 +450,62 @@ public class JGitConnection implements GitConnection
    {
       try
       {
-         Status status = status(false);
-         if (status.isClean())
+         if (!repository.getRepositoryState().canCommit())
          {
-            throw new GitException("Nothing to commit");
+            Revision rev = new Revision();
+            rev.setMessage("Commit is not possible because repository state is '"
+               + repository.getRepositoryState().getDescription() + "'");
+            return rev;
          }
 
-         CommitCommand commitCommand =
-            new Git(repository).commit().setMessage(request.getMessage()).setAll(request.isAll());
+         if (request.isAmend() && !repository.getRepositoryState().canAmend())
+         {
+            Revision rev = new Revision();
+            rev.setMessage("Amend is not possible because repository state is '"
+               + repository.getRepositoryState().getDescription() + "'");
+            return rev;
+         }
+
+         Status stat = status(false);
+         if (stat.getAdded().isEmpty() && stat.getChanged().isEmpty() && stat.getRemoved().isEmpty())
+         {
+            if (request.isAll())
+            {
+               if (stat.getMissing().isEmpty() && stat.getModified().isEmpty())
+               {
+                  Revision rev = new Revision();
+                  rev.setMessage("# On branch " + getCurrentBranch() + "\nnothing to commit, working directory clean");
+                  return rev;
+               }
+            }
+            else
+            {
+               Revision rev = new Revision();
+               rev.setMessage("# On branch " + getCurrentBranch() + "\nnothing to commit, working directory clean");
+               return rev;
+            }
+         }
+
+         CommitCommand commitCommand = new Git(repository).commit();
 
          String configName = repository.getConfig().getString("user", null, "name");
          String configEmail = repository.getConfig().getString("user", null, "email");
 
-         GitUser committer = getUser();
-         if (configName != null || configEmail != null || committer != null)
-         {
-            commitCommand.setCommitter((configName != null) ? configName : committer.getName(), (configEmail != null)
-               ? configEmail : committer.getEmail());
-         }
+         String gitName = getUser().getName();
+         String gitEmail = getUser().getEmail();
 
-         RevCommit commit = commitCommand.call();
+         String comitterName = configName != null ? configName : gitName;
+         String comitterEmail = configEmail != null ? configEmail : gitEmail;
 
-         PersonIdent committerIdentity = commit.getCommitterIdent();
+         commitCommand.setCommitter(comitterName, comitterEmail);
+         commitCommand.setMessage(request.getMessage());
+         commitCommand.setAll(request.isAll());
+         commitCommand.setAmend(request.isAmend());
 
-         String branch = Repository.shortenRefName(repository.getRef(Constants.HEAD).getLeaf().getName());
+         RevCommit result = commitCommand.call();
 
-         return new Revision(branch, commit.getId().getName(), commit.getFullMessage(),
-            (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(),
-               committerIdentity.getEmailAddress()));
-      }
-      catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
+         return new Revision(getCurrentBranch(), result.getId().getName(), result.getFullMessage(),
+            (long)result.getCommitTime() * 1000, new GitUser(comitterName, comitterEmail));
       }
       catch (GitAPIException e)
       {
@@ -1192,7 +1208,6 @@ public class JGitConnection implements GitConnection
          }
          else if (resetType == ResetType.HARD)
          {
-            //DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, revCommit.getTree());
             DirCacheCheckout_Copy dirCacheCheckout =
                new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
@@ -1208,26 +1223,6 @@ public class JGitConnection implements GitConnection
                throw new GitException("Can't update HEAD to " + commit);
             }
          }
-      }
-      catch (AmbiguousObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (MissingObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (IncorrectObjectTypeException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (NoWorkTreeException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (CorruptObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
       catch (IOException e)
       {
@@ -1278,14 +1273,9 @@ public class JGitConnection implements GitConnection
    {
       try
       {
-         Ref headRef = repository.getRef(Constants.HEAD);
-         String currentBranch = Repository.shortenRefName(headRef.getLeaf().getName());
+         String currentBranch = getCurrentBranch();
          org.eclipse.jgit.api.Status status = new Git(repository).status().call();
          return new StatusImpl(currentBranch, shortFormat, status);
-      }
-      catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
       catch (GitAPIException e)
       {
@@ -1330,23 +1320,7 @@ public class JGitConnection implements GitConnection
          RevTag revTag = revWalk.parseTag(revTagRef.getLeaf().getObjectId());
          return new Tag(revTag.getTagName());
       }
-      catch (InvalidTagNameException e)
-      {
-         throw new IllegalArgumentException(e.getMessage(), e);
-      }
-      catch (AmbiguousObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
       catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (ConcurrentRefUpdateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (NoHeadException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -1443,5 +1417,19 @@ public class JGitConnection implements GitConnection
    public Repository getRepository()
    {
       return repository;
+   }
+
+   public String getCurrentBranch() throws GitException
+   {
+      try
+      {
+         Ref headRef;
+         headRef = repository.getRef(Constants.HEAD);
+         return Repository.shortenRefName(headRef.getLeaf().getName());
+      }
+      catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
    }
 }

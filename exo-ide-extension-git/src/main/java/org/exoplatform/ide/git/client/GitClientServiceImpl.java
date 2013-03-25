@@ -321,12 +321,12 @@ public class GitClientServiceImpl extends GitClientService
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void commit(String vfsId, ProjectModel project, String message, boolean all,
+   public void commit(String vfsId, ProjectModel project, String message, boolean all, boolean amend,
       AsyncRequestCallback<Revision> callback) throws RequestException
    {
       String url = restServiceContext + COMMIT;
 
-      CommitRequest commitRequest = new CommitRequest(message, all);
+      CommitRequest commitRequest = new CommitRequest(message, all, amend);
       CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
       String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
@@ -342,10 +342,10 @@ public class GitClientServiceImpl extends GitClientService
     *      org.exoplatform.ide.client.framework.websocket.rest.RequestCallback)
     */
    @Override
-   public void commitWS(String vfsId, ProjectModel project, String message, boolean all,
+   public void commitWS(String vfsId, ProjectModel project, String message, boolean all, boolean amend,
       RequestCallback<Revision> callback) throws WebSocketException
    {
-      CommitRequest commitRequest = new CommitRequest(message, all);
+      CommitRequest commitRequest = new CommitRequest(message, all, amend);
       CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();

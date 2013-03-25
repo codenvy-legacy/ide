@@ -205,10 +205,9 @@ public interface GitLocalizationConstant extends Messages
 
    @Key("messages.delete_success")
    String deleteGitRepositorySuccess();
-   
+
    @Key("messages.use.ssh.protocol")
    String useSshProtocol();
-   
 
    // Unmarshaller Errors
    @Key("merge.unmarshal.failed")
@@ -324,12 +323,12 @@ public interface GitLocalizationConstant extends Messages
    @Key("view.clone.remote_uri_field_title")
    String cloneRemoteUriFieldTitle();
 
-
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();
 
    @Key("view.clone.select_project_type_title")
    String cloneProjectType();
+
    // Commit
 
    @Key("view.commit.commit_message")
@@ -346,6 +345,9 @@ public interface GitLocalizationConstant extends Messages
 
    @Key("view.commit.all_field_title")
    String commitAllFieldTitle();
+
+   @Key("view.commit.amend_field_title")
+   String commitAmendFieldTitle();
 
    @Key("view.commit.grid.date")
    String commitGridDate();

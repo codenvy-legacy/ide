@@ -57,7 +57,7 @@ import java.util.Date;
  */
 public class CommitPresenter extends GitPresenter implements CommitHandler
 {
-   
+
    public interface Display extends IsView
    {
       /**
@@ -99,6 +99,13 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
        * @return {@link HasValue}
        */
       HasValue<Boolean> getAllField();
+
+      /**
+       * Get amend field.
+       * 
+       * @return {@link HasValue}
+       */
+      HasValue<Boolean> getAmendField();
    }
 
    /**
@@ -176,20 +183,28 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
     */
    private void doCommit()
    {
-      //ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       ProjectModel project = getSelectedProject();
       String message = display.getMessage().getValue();
       boolean all = display.getAllField().getValue();
+      boolean amend = display.getAmendField().getValue();
 
       try
       {
-         GitClientService.getInstance().commitWS(vfs.getId(), project, message, all,
+         GitClientService.getInstance().commitWS(vfs.getId(), project, message, all, amend,
             new RequestCallback<Revision>(new RevisionUnmarshallerWS(new Revision(null, message, 0, null)))
             {
                @Override
                protected void onSuccess(Revision result)
                {
-                  onCommitSuccess(result);
+                  if (!result.isFake())
+                  {
+                     onCommitSuccess(result);
+                  }
+                  else
+                  {
+                     IDE.fireEvent(new OutputEvent(result.getMessage().replace("\n", "<br />").replace(" ", "&nbsp;"),
+                        Type.GIT));
+                  }
                }
 
                @Override
@@ -202,18 +217,18 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
       }
       catch (WebSocketException e)
       {
-         doCommitREST(project, message, all);
+         doCommitREST(project, message, all, amend);
       }
    }
 
    /**
     * Perform the commit to repository and process the response (sends request over HTTP).
     */
-   private void doCommitREST(ProjectModel project, String message, boolean all)
+   private void doCommitREST(ProjectModel project, String message, boolean all, boolean amend)
    {
       try
       {
-         GitClientService.getInstance().commit(vfs.getId(), project, message, all,
+         GitClientService.getInstance().commit(vfs.getId(), project, message, all, amend,
             new AsyncRequestCallback<Revision>(new RevisionUnmarshaller(new Revision(null, message, 0, null)))
             {
                @Override

@@ -381,10 +381,11 @@ public abstract class GitClientService
     * @param project project (root of GIT repository)
     * @param message commit log message
     * @param all automatically stage files that have been modified and deleted
+    * @param amend indicates that previous commit must be overwritten
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void commit(String vfsId, ProjectModel project, String message, boolean all,
+   public abstract void commit(String vfsId, ProjectModel project, String message, boolean all, boolean amend,
       AsyncRequestCallback<Revision> callback) throws RequestException;
 
    /**
@@ -395,10 +396,11 @@ public abstract class GitClientService
     * @param project project (root of GIT repository)
     * @param message commit log message
     * @param all automatically stage files that have been modified and deleted
+    * @param amend indicates that previous commit must be overwritten
     * @param callback callback
     * @throws WebSocketException
     */
-   public abstract void commitWS(String vfsId, ProjectModel project, String message, boolean all,
+   public abstract void commitWS(String vfsId, ProjectModel project, String message, boolean all, boolean amend,
       RequestCallback<Revision> callback) throws WebSocketException;
 
    /**

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.shared;
 
-
 /**
  * Describe single commit.
  *
@@ -28,6 +27,8 @@ package org.exoplatform.ide.git.shared;
 public class Revision
 {
    private String branch;
+
+   private Boolean fake;
 
    /** Id of commit. */
    private String id;
@@ -50,6 +51,7 @@ public class Revision
     */
    public Revision(String branch, String id, String message, long commitTime, GitUser committer)
    {
+      this.fake = false;
       this.branch = branch;
       this.id = id;
       this.message = message;
@@ -65,6 +67,7 @@ public class Revision
     */
    public Revision(String id, String message, long commitTime, GitUser committer)
    {
+      this.fake = false;
       this.id = id;
       this.message = message;
       this.commitTime = commitTime;
@@ -73,6 +76,21 @@ public class Revision
 
    public Revision()
    {
+      this.fake = true;
+   }
+
+   /**
+    * Parameter which shows that this revision is a fake revision (i.e. TO for Exception)
+    * @return
+    */
+   public Boolean isFake()
+   {
+      return fake;
+   }
+
+   public void setFake(Boolean fake)
+   {
+      this.fake = fake;
    }
 
    /** @return branch name */
