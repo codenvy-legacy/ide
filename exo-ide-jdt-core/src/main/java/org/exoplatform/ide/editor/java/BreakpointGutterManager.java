@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.java;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;

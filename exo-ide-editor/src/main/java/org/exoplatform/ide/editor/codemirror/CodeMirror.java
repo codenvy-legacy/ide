@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
+import com.google.gwt.dom.client.Node;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -228,9 +230,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       createFrame();
    }
 
+   private Frame frame;
+   
    private void createFrame()
    {
-      final Frame frame = new Frame(CodeMirrorConfiguration.CODEMIRROR_START_PAGE);
+      frame = new Frame(CodeMirrorConfiguration.CODEMIRROR_START_PAGE);
       add(frame);
       frame.getElement().getStyle().setPosition(Position.ABSOLUTE);
       frame.setSize("100%", "100%");
@@ -243,17 +247,119 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          public void onLoad(LoadEvent event)
          {
             frameElement = frame.getElement().cast();
-            
+                        
             Scheduler.get().scheduleDeferred(new ScheduledCommand()
             {
                @Override
                public void execute()
                {
+                  injectCssToFrameElement();
                   buildEditor();
                }
             });
          }
       });
+   }
+   
+   public FrameElement getFrameElement()
+   {
+      return frameElement;
+   }
+   
+   private com.google.gwt.dom.client.Node getChildByName(com.google.gwt.dom.client.Node node, String childName)
+   {
+      for (int i = 0; i < node.getChildCount(); i++)
+      {
+         com.google.gwt.dom.client.Node child = node.getChild(i);
+         if (childName.equalsIgnoreCase(node.getNodeName()) &&
+                  Node.ELEMENT_NODE == node.getNodeType())
+         {
+            return child;
+         }
+      }
+      
+      return null;
+   }
+   
+   private void injectCssToFrameElement()
+   {
+      if (frameElement == null)
+      {
+         return;
+      }
+      
+      addCssNative(injectCss);
+   }
+   
+   protected JavaScriptObject cssLinkElement;
+   
+   protected JavaScriptObject cssLinkElement2;
+   
+   private native void addCssNative(String cssStyleName) /*-{
+      var frameElement = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::frameElement;
+      var frameDocument = frameElement.contentWindow.document;
+      
+      var head = frameDocument.getElementsByTagName('head')[0];
+      //alert (head.innerHTML);
+
+      var cssLinkElement = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cssLinkElement;
+      if (cssLinkElement != null) {
+         head.removeChild(cssLinkElement);
+         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cssLinkElement = null;
+      }
+         
+      //alert('cssStyleName > ' + cssStyleName);
+            
+      if (cssStyleName != null) {
+         var link = frameDocument.createElement( 'link' );
+         link.rel = 'stylesheet';
+         link.type = 'text/css';
+         link.href = cssStyleName;
+         head.appendChild(  link );
+         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cssLinkElement = link;
+      }
+
+      var editorFrameElement = frameDocument.getElementsByTagName('iframe')[0];
+      //alert('editor frame > ' + editorFrameElement);
+      
+      if (editorFrameElement != undefined && editorFrameElement != null) {
+         var editorFrameDocument = editorFrameElement.contentWindow.document;
+         //alert('editor frame document > ' + editorFrameDocument);
+         
+         var editorHead = editorFrameDocument.getElementsByTagName('head')[0];
+         //alert('editor head > ' + editorHead);
+         
+         var cssLinkElement2 = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cssLinkElement2;
+         if (cssLinkElement2 != null) {
+            //alert('remove existed css link element...........');
+            editorHead.removeChild(cssLinkElement2);
+            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cssLinkElement2 = null;
+         }
+         
+         if (cssStyleName != null) {
+            //alert('creating link element...');
+            
+            var link = editorFrameDocument.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = cssStyleName;
+            editorHead.appendChild(  link );
+            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cssLinkElement2 = link;
+         }
+      }
+      
+   }-*/;
+   
+   private String injectCss;
+   
+   public void injectStyle(String injectCss)
+   {
+      this.injectCss = injectCss;
+      
+      if (frameElement != null)
+      {
+         addCssNative(injectCss);
+      }
    }
    
    private class FrameBodyWidget extends AbsolutePanel
@@ -302,6 +408,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
                initCodeMirror(id, "", "100%", readOnly, configuration.getContinuousScanning(),
                   configuration.isTextWrapping(), showLineNumbers, configuration.getCodeStyles(),
                   configuration.getCodeParsers(), configuration.getJsDirectory(), configuration.getTabMode().toString());
+            injectCssToFrameElement();
          }
       });
    }

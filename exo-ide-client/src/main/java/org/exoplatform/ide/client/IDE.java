@@ -72,6 +72,7 @@ import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
+import org.exoplatform.ide.client.theme.ThemeManager;
 import org.exoplatform.ide.client.websocket.WebSocketHandler;
 import java.util.ArrayList;
 import java.util.List;
@@ -186,6 +187,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new IDEDebug();
       new ProjectPreparePresenter();
+      
+      new ThemeManager();
 
       // initialize extensions
       for (Extension ext : getExtensions())

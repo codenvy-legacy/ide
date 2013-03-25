@@ -1,0 +1,36 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+	xmlns:p="urn:import:org.exoplatform.ide.client.theme"
+	>
+	
+	<ui:style>
+		.floatRight {
+			float:right;
+		}
+	</ui:style>
+	
+	<g:LayoutPanel>
+      <g:layer bottom ="50px" top="0px">
+         <c:Border margin="5">
+         	<c:layer width="100%" height="100%">
+				<p:ThemesListGrid ui:field="themesListGrid" width="100%" height="100%" listGridId="ideThemesListGrid"></p:ThemesListGrid>
+            </c:layer>
+         </c:Border>
+      </g:layer>
+
+	<g:layer height="50px" bottom ="0px">
+		<c:Border margin="5" borderColor="transparent" >
+			<c:layer width="100%" height="50px">
+	        	<g:HTMLPanel height="50px">
+	         		<c:ImageButton text="Apply" imageName="ok" ui:field="applyButton" buttonId="ideApplyThemeButton" addStyleNames="{style.floatRight}"></c:ImageButton>
+	         	</g:HTMLPanel>
+         	</c:layer>
+		</c:Border>
+	</g:layer>
+
+   </g:LayoutPanel>
+
+</ui:UiBinder>

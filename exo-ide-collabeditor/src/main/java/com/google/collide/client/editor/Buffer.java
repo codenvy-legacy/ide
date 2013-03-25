@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.AppContext;
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.common.Constants;
@@ -263,11 +265,12 @@ public class Buffer extends UiComponent<Buffer.View>
       rootElement.appendChild(scrollbarElement);
       setElement(rootElement);
     }
-
+    
     private Element createScrollbarElement(BaseResources.Css baseCss) {
       final DivElement scrollbarElement = Elements.createDivElement(css.scrollbar());
       scrollbarElement.addClassName(baseCss.documentScrollable());
-
+      scrollbarElement.addClassName(ThemeConstants.SCROLLBAR);
+      
       scrollbarElement.addEventListener(Event.SCROLL, new EventListener() {
         @Override
         public void handleEvent(Event evt) {
@@ -292,6 +295,7 @@ public class Buffer extends UiComponent<Buffer.View>
     private Element createScrollableElement(BaseResources.Css baseCss) {
       final DivElement scrollableElement = Elements.createDivElement(css.scrollable());
       scrollableElement.addClassName(baseCss.documentScrollable());
+      scrollableElement.addClassName(ThemeConstants.SCROLLABLE);      
 
       scrollableElement.addEventListener(Event.SCROLL, new EventListener() {
         @Override

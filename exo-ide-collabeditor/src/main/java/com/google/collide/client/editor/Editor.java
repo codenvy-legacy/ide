@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.parenmatch.ParenMatchHighlighter;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator;
@@ -260,6 +262,7 @@ public class Editor extends UiComponent<Editor.View> {
       this.css = res.workspaceEditorCss();
 
       Element rootElement = Elements.createDivElement(css.root());
+      rootElement.addClassName(ThemeConstants.ROOT);
       rootElement.appendChild(bufferElement);
       rootElement.appendChild(inputElement);
       setElement(rootElement);

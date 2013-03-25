@@ -73,6 +73,7 @@ This can be used to make labels for "native" accelerators, etc. -->
       <when-type-is class="com.codenvy.ide.client.util.BrowserUtils" />
       <when-property-is name="user.agent" value="safari" />
    </replace-with>
+   
    <replace-with class="com.codenvy.ide.client.util.BrowserUtils.Firefox">
       <when-type-is class="com.codenvy.ide.client.util.BrowserUtils" />
       <when-property-is name="user.agent" value="gecko1_8" />
@@ -82,14 +83,14 @@ This can be used to make labels for "native" accelerators, etc. -->
    <replace-with class="com.google.collide.client.ClientOsOther">
       <when-type-is class="com.google.collide.client.ClientOs" />
    </replace-with>
+   
    <replace-with class="com.google.collide.client.ClientOsMacintosh">
       <when-type-is class="com.google.collide.client.ClientOs" />
       <when-property-is name="webide.clientOs" value="macintosh" />
    </replace-with>
-     <replace-with
-     class="com.codenvy.ide.client.util.logging.LogConfig.Enabled">
-    <when-type-is
-       class="com.codenvy.ide.client.util.logging.LogConfig"/>
-  </replace-with>
+   
+   <replace-with class="com.codenvy.ide.client.util.logging.LogConfig.Enabled">
+      <when-type-is class="com.codenvy.ide.client.util.logging.LogConfig"/>
+   </replace-with>
    
 </module>

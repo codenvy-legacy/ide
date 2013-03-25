@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.renderer;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
@@ -87,6 +89,7 @@ public class LineNumberRenderer {
       Element renderedActiveLine = lineNumberToElementCache.get(renderedActiveLineNumber);
       if (renderedActiveLine != null) {
         renderedActiveLine.removeClassName(css.activeLineNumber());
+        renderedActiveLine.removeClassName(ThemeConstants.ACTIVE_LINE_NUMBER);
         renderedActiveLineNumber = NONE;
       }
     }
@@ -94,6 +97,7 @@ public class LineNumberRenderer {
     // Add class if it's in the viewport.
     if (newActiveLine != null) {
       newActiveLine.addClassName(css.activeLineNumber());
+      newActiveLine.addClassName(ThemeConstants.ACTIVE_LINE_NUMBER);
       renderedActiveLineNumber = lineNumber;
     }
   }
@@ -226,6 +230,7 @@ public class LineNumberRenderer {
     element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
     if (lineNumber == activeLineNumber) {
       element.addClassName(css.activeLineNumber());
+      element.addClassName(ThemeConstants.ACTIVE_LINE_NUMBER);
       renderedActiveLineNumber = activeLineNumber;
     }
     return element;
