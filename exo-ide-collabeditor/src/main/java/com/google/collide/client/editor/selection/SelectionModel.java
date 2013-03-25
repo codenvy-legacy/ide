@@ -494,7 +494,10 @@ public class SelectionModel implements Buffer.MouseDragListener {
 
       case PAGE_UP:
         for (int i = buffer.getFlooredHeightInLines(); i > 0; i--) {
-          lineInfo.moveToPrevious();
+          do {
+            lineInfo.moveToPrevious();
+          }
+          while (buffer.modelLine2VisibleLine(lineInfo.number()) == -1);
         }
         column = rubberbandColumn(lineInfo.line(), preferredCursorColumn);
         shouldUpdatePreferredColumn = false;
@@ -502,7 +505,10 @@ public class SelectionModel implements Buffer.MouseDragListener {
 
       case PAGE_DOWN:
         for (int i = buffer.getFlooredHeightInLines(); i > 0; i--) {
-          lineInfo.moveToNext();
+          do {
+            lineInfo.moveToNext();
+          }
+          while (buffer.modelLine2VisibleLine(lineInfo.number()) == -1);
         }
         column = rubberbandColumn(lineInfo.line(), preferredCursorColumn);
         shouldUpdatePreferredColumn = false;
