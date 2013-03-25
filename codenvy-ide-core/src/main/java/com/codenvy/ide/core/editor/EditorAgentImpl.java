@@ -18,8 +18,11 @@
  */
 package com.codenvy.ide.core.editor;
 
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.core.event.ActivePartChangedEvent;
 import com.codenvy.ide.core.event.ActivePartChangedHandler;
 import com.codenvy.ide.editor.EditorInitException;
@@ -27,7 +30,6 @@ import com.codenvy.ide.editor.EditorInput;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.editor.EditorProvider;
 import com.codenvy.ide.editor.EditorPartPresenter.EditorPartCloseHandler;
-import com.codenvy.ide.perspective.PerspectivePresenter.PartStackType;
 import com.codenvy.ide.resources.FileEvent;
 import com.codenvy.ide.resources.FileEventHandler;
 import com.codenvy.ide.resources.FileType;

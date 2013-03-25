@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.wizard.newfile;
 
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericFilePageViewImpl extends Composite implements NewGenericFileView
+public class NewGenericFilePageViewImpl extends Composite implements NewGenericFilePageView
 {
    private static NewGenericFilePageViewImplUiBinder uiBinder = GWT.create(NewGenericFilePageViewImplUiBinder.class);
 

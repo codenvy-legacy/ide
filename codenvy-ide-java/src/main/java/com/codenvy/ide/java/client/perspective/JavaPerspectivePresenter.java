@@ -16,13 +16,17 @@
  */
 package com.codenvy.ide.java.client.perspective;
 
-import com.codenvy.ide.part.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartStack;
 
-import com.codenvy.ide.outline.OutlinePartPrenter;
-import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.part.console.ConsolePartPresenter;
-import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
-import com.codenvy.ide.perspective.PerspectivePresenter;
+import com.codenvy.ide.api.parts.OutlinePart;
+
+import com.codenvy.ide.api.parts.ConsolePart;
+
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
+
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -49,8 +53,8 @@ public class JavaPerspectivePresenter extends PerspectivePresenter
     */
    @Inject
    public JavaPerspectivePresenter(JavaPerspectiveView view, EditorPartStack editorPartStackPresenter,
-      Provider<PartStackPresenter> partStackProvider, OutlinePartPrenter outlinePart, ConsolePartPresenter consolePart,
-      ProjectExplorerPartPresenter projectExplorerPart)
+      Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
+      ProjectExplorerPart projectExplorerPart)
    {
       super(view, editorPartStackPresenter, partStackProvider);
       openPart(projectExplorerPart, PartStackType.NAVIGATION);

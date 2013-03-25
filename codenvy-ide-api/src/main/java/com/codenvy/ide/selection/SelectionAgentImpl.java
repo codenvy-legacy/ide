@@ -16,12 +16,13 @@
  */
 package com.codenvy.ide.selection;
 
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PropertyListener;
+
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.core.event.ActivePartChangedEvent;
 import com.codenvy.ide.core.event.ActivePartChangedHandler;
 import com.codenvy.ide.core.event.SelectionChangedEvent;
-import com.codenvy.ide.part.PartPresenter;
-import com.codenvy.ide.part.PropertyListener;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

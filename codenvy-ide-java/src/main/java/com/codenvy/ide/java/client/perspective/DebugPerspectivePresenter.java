@@ -16,16 +16,19 @@
  */
 package com.codenvy.ide.java.client.perspective;
 
-import com.codenvy.ide.part.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+
+import com.codenvy.ide.api.parts.OutlinePart;
+
+import com.codenvy.ide.api.parts.ConsolePart;
+
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
+
 
 import com.codenvy.ide.java.client.stackview.StackViewPartPresenter;
-
-import com.codenvy.ide.outline.OutlinePartPrenter;
-import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.part.console.ConsolePartPresenter;
-import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
-import com.codenvy.ide.perspective.PerspectivePresenter;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -51,9 +54,9 @@ public class DebugPerspectivePresenter extends PerspectivePresenter
     */
    @Inject
    public DebugPerspectivePresenter(DebugPerspectiveView view, EditorPartStack editorPartStackPresenter,
-      Provider<PartStackPresenter> partStackProvider, OutlinePartPrenter outlinePresenter,
-      ConsolePartPresenter consolePartPresenter, StackViewPartPresenter stackViewPartPresenter,
-      ProjectExplorerPartPresenter projectExplorerPart)
+      Provider<PartStack> partStackProvider, OutlinePart outlinePresenter,
+      ConsolePart consolePartPresenter, StackViewPartPresenter stackViewPartPresenter,
+      ProjectExplorerPart projectExplorerPart)
    {
       super(view, editorPartStackPresenter, partStackProvider);
       // add Parts

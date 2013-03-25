@@ -33,7 +33,7 @@ import com.google.inject.Singleton;
 
 /**
  * Extension add CSS support to the IDE Application.
- * It porivdes configured {@link com.codenvy.ide.editor.TextEditorPartPresenter} with {@link CssEditorProvider} with syntax coloring and
+ * It porivdes configured TextEditorView with {@link CssEditorProvider} with syntax coloring and
  * autocomplete.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 

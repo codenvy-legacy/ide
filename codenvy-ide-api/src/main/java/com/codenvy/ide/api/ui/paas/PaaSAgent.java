@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.api.ui.paas;
 
+import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+
 import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.preferences.PreferencesPagePresenter;
 
 import com.codenvy.ide.json.JsonArray;
 

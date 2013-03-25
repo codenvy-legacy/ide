@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.extension.demo.perspective;
 
-import com.codenvy.ide.perspective.PerspectiveView;
+import com.codenvy.ide.api.ui.perspective.PerspectiveView;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

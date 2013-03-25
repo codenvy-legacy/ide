@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.editor;
 
-import com.codenvy.ide.part.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -97,7 +97,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#onClose()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose()
     */
    @Override
    public boolean onClose()

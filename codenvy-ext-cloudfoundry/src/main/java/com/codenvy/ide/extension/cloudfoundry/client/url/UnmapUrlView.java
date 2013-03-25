@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.url;
 
+import com.codenvy.ide.mvp.View;
+
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.view.View;
 
 /**
  * The view of {@link UnmapUrlPresenter}.

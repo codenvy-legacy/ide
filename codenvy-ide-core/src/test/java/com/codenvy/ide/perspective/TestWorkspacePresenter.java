@@ -24,12 +24,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import com.codenvy.ide.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+
+import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
+
+
+
 import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.perspective.GenericPerspectivePresenter;
 import com.codenvy.ide.perspective.WorkspacePresenter;
 import com.codenvy.ide.perspective.WorkspaceView;
-import com.codenvy.ide.perspective.PerspectivePresenter.PartStackType;
 
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;

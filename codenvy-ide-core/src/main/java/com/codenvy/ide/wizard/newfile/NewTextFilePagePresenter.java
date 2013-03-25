@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.wizard.newfile;
 
+import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -58,7 +61,7 @@ public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter
     * @param view
     * @param resourceProvider
     */
-   protected NewTextFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider,
+   protected NewTextFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider,
       SelectionAgent selectionAgent)
    {
       super("Create a new empty text file", image, view, "txt", resourceProvider, selectionAgent);

@@ -18,12 +18,13 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.paas.HasPaaS;
 import com.codenvy.ide.paas.PaaS;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 
 import com.codenvy.ide.json.JsonArray;
 

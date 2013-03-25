@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.editor;
 
-import com.codenvy.ide.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 /**
  * An editor is a visual component.

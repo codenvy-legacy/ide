@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.core.event;
 
-import com.codenvy.ide.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 import com.google.gwt.event.shared.GwtEvent;
 

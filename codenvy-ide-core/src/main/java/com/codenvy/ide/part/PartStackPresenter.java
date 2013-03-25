@@ -16,10 +16,15 @@
  */
 package com.codenvy.ide.part;
 
+import com.codenvy.ide.mvp.Presenter;
+
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.perspective.PropertyListener;
+
 import com.codenvy.ide.core.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.part.PartStackView.TabItem;
-import com.codenvy.ide.presenter.Presenter;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

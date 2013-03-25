@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.java.client.BaseTest;
 
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
@@ -25,7 +27,6 @@ import com.codenvy.ide.java.client.projectmodel.SourceFolder;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 
 import com.codenvy.ide.json.JsonCollections;
 

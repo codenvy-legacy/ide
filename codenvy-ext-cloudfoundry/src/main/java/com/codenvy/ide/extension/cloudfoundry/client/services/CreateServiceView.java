@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.mvp.View;
 
 import java.util.LinkedHashMap;
 

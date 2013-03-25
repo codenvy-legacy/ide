@@ -19,7 +19,6 @@
 package com.codenvy.ide.api.ui.preferences;
 
 import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.preferences.PreferencesPagePresenter;
 
 
 /**

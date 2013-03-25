@@ -18,14 +18,15 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.paas.HasPaaS;
 import com.codenvy.ide.paas.PaaS;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView.ActionDelegate;
 
 import com.codenvy.ide.json.JsonArray;

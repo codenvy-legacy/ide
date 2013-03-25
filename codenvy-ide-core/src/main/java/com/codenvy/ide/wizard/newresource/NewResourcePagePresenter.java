@@ -18,10 +18,11 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 import com.codenvy.ide.wizard.newresource.NewResourcePageView.ActionDelegate;
 
 import com.google.gwt.resources.client.ImageResource;

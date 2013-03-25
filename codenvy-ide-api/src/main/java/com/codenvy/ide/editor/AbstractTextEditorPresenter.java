@@ -60,7 +60,7 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#getTitleImage()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage()
     */
    @Override
    public ImageResource getTitleImage()
@@ -69,7 +69,7 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#getTitle()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle()
     */
    @Override
    public String getTitle()

@@ -18,11 +18,14 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.api.outline.OutlinePart;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+
+import com.codenvy.ide.api.parts.OutlinePart;
+
+
 import com.codenvy.ide.core.event.ActivePartChangedEvent;
 import com.codenvy.ide.core.event.ActivePartChangedHandler;
 import com.codenvy.ide.editor.TextEditorPartPresenter;
-import com.codenvy.ide.part.AbstractPartPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;

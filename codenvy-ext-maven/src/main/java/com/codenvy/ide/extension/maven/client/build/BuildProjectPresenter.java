@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.extension.maven.client.build;
 
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.extension.maven.client.BuilderClientService;
 import com.codenvy.ide.extension.maven.client.BuilderExtension;

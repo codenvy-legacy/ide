@@ -16,9 +16,10 @@
  */
 package com.codenvy.ide.extension.demo;
 
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
 import com.codenvy.ide.core.editor.EditorAgent;
 import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.core.expressions.ProjectOpenedExpression;

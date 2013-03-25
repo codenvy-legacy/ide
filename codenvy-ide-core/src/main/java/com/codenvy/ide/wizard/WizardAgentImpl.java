@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.wizard.newproject.NewProjectWizardData;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardData;

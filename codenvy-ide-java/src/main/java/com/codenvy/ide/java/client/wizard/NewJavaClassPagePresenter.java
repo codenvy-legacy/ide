@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.core.editor.EditorAgent;
 
 import com.codenvy.ide.java.client.JavaClientBundle;
@@ -34,8 +37,6 @@ import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.runtime.IStatus;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

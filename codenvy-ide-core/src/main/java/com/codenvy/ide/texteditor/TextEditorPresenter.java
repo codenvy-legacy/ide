@@ -170,7 +170,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#getTitleToolTip()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip()
     */
    @Override
    public String getTitleToolTip()
