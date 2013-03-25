@@ -1,4 +1,3 @@
-
 // Copyright 2012 Google Inc. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,24 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.texteditor.api.parser.CmState;
+package com.codenvy.ide.texteditor.api.parser;
 
+import com.google.gwt.core.client.JavaScriptObject;
 
 /**
- * Object that represents css-parser state.
- *
+ * Native CodeMirror {@link Stream} wrapper.
  */
-public class CssState extends CmState
+public class CmStream extends JavaScriptObject implements Stream
 {
 
-   protected CssState()
+   protected CmStream()
    {
    }
 
-   final native JsonArray<String> getStack() /*-{
-		return this.stack;
+   @Override
+   public final native boolean isEnd() /*-{
+		return this.eol();
    }-*/;
 }

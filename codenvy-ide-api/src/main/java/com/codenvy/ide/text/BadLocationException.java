@@ -34,7 +34,6 @@ public class BadLocationException extends Exception
     * Note: This class is not intended to be serialized.
     * </p>
     * 
-    * @since 3.1
     */
    private static final long serialVersionUID = 3257281452776370224L;
 

@@ -25,7 +25,7 @@ package com.codenvy.ide.text;
  * <p>
  * Position updaters are of primary importance for the definition of the semantics of positions.
  * <p>
- * Clients may implement this interface or use the standard implementation {@link org.eclipse.jface.text.DefaultPositionUpdater}.
+ * Clients may implement this interface or use the standard implementation {@link DefaultPositionUpdater}.
  * </p>
  * 
  */

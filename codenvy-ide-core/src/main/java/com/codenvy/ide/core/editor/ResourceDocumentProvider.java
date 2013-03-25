@@ -22,12 +22,11 @@ import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorInput;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
+import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.annotation.AnnotationModel;
-
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 
 
 /**
@@ -38,6 +37,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class ResourceDocumentProvider implements DocumentProvider
 {
+
+   private DocumentFactory documentFactory;
+
+   @Inject
+   public ResourceDocumentProvider(DocumentFactory documentFactory)
+   {
+      this.documentFactory = documentFactory;
+   }
 
    /**
     * {@inheritDoc}
@@ -81,7 +88,7 @@ public class ResourceDocumentProvider implements DocumentProvider
     */
    private void contentReceived(String content, DocumentCallback callback)
    {
-      callback.onDocument(new DocumentImpl(content));
+      callback.onDocument(documentFactory.get(content));
    }
 
 

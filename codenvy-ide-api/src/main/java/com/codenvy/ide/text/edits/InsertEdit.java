@@ -27,7 +27,6 @@ import com.codenvy.ide.text.Document;
  * An insert edit is equivalent to <code>ReplaceEdit(offset, 0, text)
  * </code>
  * 
- * @since 3.0
  */
 public final class InsertEdit extends TextEdit
 {

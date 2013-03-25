@@ -30,8 +30,6 @@ import java.util.List;
  * Clients are allowed to implement subclasses of a multi-text edit.Subclasses must implement <code>doCopy()</code> to ensure the
  * a copy of the right type is created. Not implementing <code>doCopy()</code> in subclasses will result in an assertion failure
  * during copying.
- * 
- * @since 3.0
  */
 public class MultiTextEdit extends TextEdit
 {

@@ -20,17 +20,14 @@ package com.codenvy.ide.core.editor;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.editor.EditorInput;
 import com.codenvy.ide.editor.DocumentProvider.DocumentCallback;
+import com.codenvy.ide.editor.EditorInput;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.text.Document;
-
+import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
@@ -74,7 +71,7 @@ public class ResourceDocumentProviderTest
    @Test
    public void shuldCallProjectGetContent()
    {
-      ResourceDocumentProvider provider = new ResourceDocumentProvider();
+      ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
       provider.getDocument(input, callback);
       verify(project).getContent(eq(file), Mockito.<AsyncCallback<File>> any());
    }
@@ -83,7 +80,7 @@ public class ResourceDocumentProviderTest
    @Test
    public void shuldCallCallback()
    {
-      ResourceDocumentProvider provider = new ResourceDocumentProvider();
+      ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
       doAnswer(createServerResponse()).when(project).getContent((File)any(), (AsyncCallback<File>)any());
       provider.getDocument(input, callback);
       verify(callback).onDocument((Document)any());

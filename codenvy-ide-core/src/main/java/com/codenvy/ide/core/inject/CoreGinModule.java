@@ -16,31 +16,23 @@
  */
 package com.codenvy.ide.core.inject;
 
-import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
-
-import com.codenvy.ide.api.ui.menu.ToolbarAgent;
-
-import com.codenvy.ide.api.ui.perspective.EditorPartStack;
-import com.codenvy.ide.api.ui.perspective.PartStack;
-
-import com.codenvy.ide.api.parts.OutlinePart;
-
-import com.codenvy.ide.api.parts.WelcomePart;
-
-import com.codenvy.ide.api.parts.ConsolePart;
-
-import com.codenvy.ide.api.parts.ProjectExplorerPart;
-
-
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.OutlinePart;
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.WelcomePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.api.ui.menu.ToolbarAgent;
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartStack;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgent;
@@ -83,6 +75,8 @@ import com.codenvy.ide.resources.ModelProvider;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
 import com.codenvy.ide.selection.SelectionAgentImpl;
+import com.codenvy.ide.text.DocumentFactory;
+import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
@@ -150,6 +144,8 @@ public class CoreGinModule extends AbstractGinModule
     */
    protected void editorAPIconfigure()
    {
+
+      bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
       bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
       bind(EditorRegistryImpl.class).in(Singleton.class);

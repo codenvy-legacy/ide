@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,36 +19,28 @@
 package com.codenvy.ide.text;
 
 /**
- * Represents the attempt to refer to a non-existing document partitioning.
- * <p>
- * This class is not intended to be serialized.
- * </p>
- * 
- * @see Document
+ * Default implementation of the DocumentFactory.
+ * Use {@link DocumentImpl} as implementation of Document interface
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public class BadPartitioningException extends Exception
+public class DocumentFactoryImpl implements DocumentFactory
 {
-
    /**
-    * Serial version UID for this class.
-    * <p>
-    * Note: This class is not intended to be serialized.
-    * </p>
+    * {@inheritDoc}
     */
-   private static final long serialVersionUID = 3256439205327876408L;
-
-   /** Creates a new bad partitioning exception. */
-   public BadPartitioningException()
+   @Override
+   public Document get()
    {
+      return new DocumentImpl();
    }
 
    /**
-    * Creates a new bad partitioning exception.
-    * 
-    * @param message message describing the exception
+    * {@inheritDoc}
     */
-   public BadPartitioningException(String message)
+   @Override
+   public Document get(String initialContent)
    {
-      super(message);
+      return new DocumentImpl(initialContent);
    }
 }

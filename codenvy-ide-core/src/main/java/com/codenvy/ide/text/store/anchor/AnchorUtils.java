@@ -13,14 +13,14 @@
 // limitations under the License.
 
 package com.codenvy.ide.text.store.anchor;
+
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.text.store.util.PositionUtils;
-
-import com.codenvy.ide.runtime.Assert;
 
 
 /**

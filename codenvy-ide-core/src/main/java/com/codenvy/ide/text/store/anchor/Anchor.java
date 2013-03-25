@@ -14,13 +14,12 @@
 
 package com.codenvy.ide.text.store.anchor;
 
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
-
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.ListenerManager;
-import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.codenvy.ide.util.ListenerRegistrar;
 
 
 

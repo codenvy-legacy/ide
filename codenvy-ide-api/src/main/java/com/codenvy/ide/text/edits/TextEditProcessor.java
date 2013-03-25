@@ -31,9 +31,8 @@ import java.util.List;
  * This class isn't intended to be subclassed.
  * </p>
  * 
- * @see org.eclipse.text.edits.TextEdit#apply(Document)
+ * @see TextEdit#apply(Document)
  * 
- * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class TextEditProcessor

@@ -28,7 +28,6 @@ package com.codenvy.ide.text.edits;
  * @see TextEdit#addChild(TextEdit)
  * @see TextEdit#addChildren(TextEdit[])
  * 
- * @since 3.0
  */
 public class MalformedTreeException extends RuntimeException
 {

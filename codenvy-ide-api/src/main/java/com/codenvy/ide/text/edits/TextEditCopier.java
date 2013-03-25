@@ -28,7 +28,6 @@ import java.util.Map;
  * Copies a tree of text edits. A text edit copier keeps a map between original and new text edits. It can be used to map a copy
  * back to its original edit.
  * 
- * @since 3.0
  */
 public final class TextEditCopier
 {

@@ -27,7 +27,6 @@ class UndoCollector
 
    private int fLength;
 
-   /** @since 3.1 */
    private String fLastCurrentText;
 
    public UndoCollector(TextEdit root)

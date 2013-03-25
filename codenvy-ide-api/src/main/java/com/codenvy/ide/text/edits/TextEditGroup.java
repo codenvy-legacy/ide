@@ -31,7 +31,6 @@ import java.util.List;
  * Clients may extend this class to add extra information to a text edit group.
  * </p>
  * 
- * @since 3.0
  */
 public class TextEditGroup
 {

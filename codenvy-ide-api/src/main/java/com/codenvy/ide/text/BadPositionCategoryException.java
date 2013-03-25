@@ -24,7 +24,7 @@ package com.codenvy.ide.text;
  * This class is not intended to be serialized.
  * </p>
  * 
- * @see org.eclipse.Document.text.IDocument
+ * @see Document
  */
 public class BadPositionCategoryException extends Exception
 {
@@ -35,7 +35,6 @@ public class BadPositionCategoryException extends Exception
     * Note: This class is not intended to be serialized.
     * </p>
     * 
-    * @since 3.1
     */
    private static final long serialVersionUID = 3761405300745713206L;
 

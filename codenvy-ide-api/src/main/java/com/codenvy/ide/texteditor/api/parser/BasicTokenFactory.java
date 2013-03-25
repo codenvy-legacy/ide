@@ -12,23 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.texteditor.parser;
+package com.codenvy.ide.texteditor.api.parser;
 
-import com.codenvy.ide.texteditor.api.parser.Stream;
-import com.google.gwt.core.client.JavaScriptObject;
+import com.codenvy.ide.json.JsonArray;
+
 
 /**
- * Native CodeMirror {@link Stream} wrapper.
+ * Token factory that do not use information from {@link State}.
  */
-public class CmStream extends JavaScriptObject implements Stream
+public class BasicTokenFactory implements TokenFactory<State>
 {
 
-   protected CmStream()
-   {
-   }
-
    @Override
-   public final native boolean isEnd() /*-{
-		return this.eol();
-   }-*/;
+   public void push(String stylePrefix, State state, String tokenType, String tokenValue, JsonArray<Token> tokens)
+   {
+      tokens.add(new Token(stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue));
+   }
 }

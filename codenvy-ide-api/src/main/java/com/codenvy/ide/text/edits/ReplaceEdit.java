@@ -23,8 +23,6 @@ import com.codenvy.ide.text.Document;
 
 /**
  * Text edit to replace a range in a document with a different string.
- * 
- * @since 3.0
  */
 public final class ReplaceEdit extends TextEdit
 {

@@ -24,8 +24,8 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
-import com.codenvy.ide.texteditor.parser.CmParser;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

@@ -480,7 +480,7 @@ public interface Document
     * Returns the set of legal content types of document partitions. This set can be empty. The set can contain more content types
     * than contained by the result of <code>getPartitioning(0, getLength())</code>.
     * <p>
-    * Use {@link DocumentExtension3#getLegalContentTypes(String)} when the document supports multiple partitionings. In that case
+    * Use {@link #getLegalContentTypes(String)} when the document supports multiple partitionings. In that case
     * this method is equivalent to:
     * 
     * <pre>
@@ -496,7 +496,7 @@ public interface Document
     * Returns the type of the document partition containing the given offset. This is a convenience method for
     * <code>getPartition(offset).getType()</code>.
     * <p>
-    * Use {@link DocumentExtension3#getContentType(String, int, boolean)} when the document supports multiple partitionings. In
+    * Use {@link #getContentType(String, int, boolean)} when the document supports multiple partitionings. In
     * that case this method is equivalent to:
     * 
     * <pre>
@@ -513,7 +513,7 @@ public interface Document
     /**
     * Returns the document partition in which the position is located.
     * <p>
-    * Use {@link DocumentExtension3#getPartition(String, int, boolean)} when
+    * Use {@link #getPartition(String, int, boolean)} when
     * the document supports multiple partitionings. In that case this method is
     * equivalent:
     * <pre>
@@ -531,7 +531,7 @@ public interface Document
     * Computes the partitioning of the given document range using the
     * document's partitioner.
     * <p>
-    * Use {@link DocumentExtension3#computePartitioning(String, int, int, boolean)} when
+    * Use {@link #computePartitioning(String, int, int, boolean)} when
     * the document supports multiple partitionings. In that case this method is
     * equivalent:
     * <pre>
@@ -583,7 +583,7 @@ public interface Document
     * connect the new partitioner to the document. Informs all document partitioning
     * listeners about this change.
     * <p>
-    * Use {@link DocumentExtension3#setDocumentPartitioner(String, DocumentPartitioner)} when
+    * Use {@link #setDocumentPartitioner(String, DocumentPartitioner)} when
     * the document supports multiple partitionings. In that case this method is equivalent to:
     * <pre>
     * DocumentExtension3 extension= (DocumentExtension3) document;
@@ -599,7 +599,7 @@ public interface Document
     /**
     * Returns this document's partitioner.
     * <p>
-    * Use {@link DocumentExtension3#getDocumentPartitioner(String)} when
+    * Use {@link #getDocumentPartitioner(String)} when
     * the document supports multiple partitionings. In that case this method is
     * equivalent to:
     * <pre>

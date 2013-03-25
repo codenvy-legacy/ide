@@ -21,8 +21,6 @@ package com.codenvy.ide.text.edits;
 /**
  * A source modifier can be used to modify the source of a move or copy edit before it gets inserted at the target position. This
  * is useful if the text to be copied has to be modified before it is inserted without changing the original source.
- * 
- * @since 3.0
  */
 public interface SourceModifier
 {

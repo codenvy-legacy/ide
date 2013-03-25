@@ -19,10 +19,8 @@
 package com.codenvy.ide.text;
 
 import com.codenvy.ide.runtime.Assert;
-
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-
 
 import java.util.regex.PatternSyntaxException;
 

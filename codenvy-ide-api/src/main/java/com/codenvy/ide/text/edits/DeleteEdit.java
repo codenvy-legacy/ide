@@ -27,7 +27,6 @@ import com.codenvy.ide.text.Document;
  * A delete edit is equivalent to <code>ReplaceEdit(
  * offset, length, "")</code>.
  * 
- * @since 3.0
  */
 public final class DeleteEdit extends TextEdit
 {

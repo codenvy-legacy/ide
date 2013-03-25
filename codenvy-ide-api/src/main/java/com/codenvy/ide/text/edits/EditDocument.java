@@ -25,7 +25,6 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentListener;
 import com.codenvy.ide.text.DocumentPartitioner;
 import com.codenvy.ide.text.DocumentPartitioningListener;
-import com.codenvy.ide.text.FindReplaceDocumentAdapter;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.PositionUpdater;
 import com.codenvy.ide.text.Region;
@@ -41,214 +40,306 @@ class EditDocument implements Document
       fBuffer = new StringBuffer(content);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void addPosition(Position position) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public void addPosition(String category, Position position) throws BadLocationException,
-      BadPositionCategoryException
+   public void addPosition(String category, Position position) throws BadLocationException, BadPositionCategoryException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void addPositionUpdater(PositionUpdater updater)
    {
       throw new UnsupportedOperationException();
    }
 
-   //
-   // public void addPrenotifiedDocumentListener(IDocumentListener documentAdapter) {
-   // throw new UnsupportedOperationException();
-   // }
-   //
-   // public int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException {
-   // throw new UnsupportedOperationException();
-   // }
-
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int computeNumberOfLines(String text)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public TypedRegion[] computePartitioning(int offset, int length) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public boolean containsPosition(String category, int offset, int length)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public boolean containsPositionCategory(String category)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String get()
    {
       return fBuffer.toString();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String get(int offset, int length) throws BadLocationException
    {
       return fBuffer.substring(offset, offset + length);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public char getChar(int offset) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String getContentType(int offset) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public DocumentPartitioner getDocumentPartitioner()
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String[] getLegalContentTypes()
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String[] getLegalLineDelimiters()
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getLength()
    {
       return fBuffer.length();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String getLineDelimiter(int line) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Region getLineInformation(int line) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Region getLineInformationOfOffset(int offset) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getLineLength(int line) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getLineOffset(int line) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getLineOfOffset(int offset) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getNumberOfLines()
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getNumberOfLines(int offset, int length) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public TypedRegion getPartition(int offset) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String[] getPositionCategories()
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Position[] getPositions(String category) throws BadPositionCategoryException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public PositionUpdater[] getPositionUpdaters()
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void insertPositionUpdater(PositionUpdater updater, int index)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void removeDocumentListener(DocumentListener listener)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void removeDocumentPartitioningListener(DocumentPartitioningListener listener)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void removePosition(Position position)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void removePosition(String category, Position position) throws BadPositionCategoryException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void removePositionCategory(String category) throws BadPositionCategoryException
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void removePositionUpdater(PositionUpdater updater)
    {
@@ -260,6 +351,9 @@ class EditDocument implements Document
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void replace(int offset, int length, String text) throws BadLocationException
    {
@@ -268,8 +362,6 @@ class EditDocument implements Document
 
    /**
     * {@inheritDoc}
-    * 
-    * @deprecated As of 3.0 search is provided by {@link FindReplaceDocumentAdapter}
     */
    @Deprecated
    public int search(int startOffset, String findString, boolean forwardSearch, boolean caseSensitive, boolean wholeWord)
@@ -278,27 +370,36 @@ class EditDocument implements Document
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void set(String text)
    {
       throw new UnsupportedOperationException();
    }
 
-   /** @see com.codenvy.ide.editor.Document.IDocument#addPositionCategory(java.lang.String) */
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void addPositionCategory(String category)
    {
       throw new UnsupportedOperationException();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void setDocumentPartitioner(DocumentPartitioner partitioner)
    {
       throw new UnsupportedOperationException();
    }
 
+
    /**
-    * @see com.codenvy.ide.editor.Document.IDocument#addDocumentListener(com.codenvy.ide.editor.DocumentListener.IDocumentListener)
+    * {@inheritDoc}
     */
    @Override
    public void addDocumentListener(DocumentListener listener)
@@ -306,8 +407,9 @@ class EditDocument implements Document
       throw new UnsupportedOperationException();
    }
 
+
    /**
-    * @see com.codenvy.ide.editor.Document.IDocument#addDocumentPartitioningListener(com.codenvy.ide.editor.text.IDocumentPartitioningListener)
+    * {@inheritDoc}
     */
    @Override
    public void addDocumentPartitioningListener(DocumentPartitioningListener listener)

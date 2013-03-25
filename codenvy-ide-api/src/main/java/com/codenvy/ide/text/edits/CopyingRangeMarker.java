@@ -25,7 +25,6 @@ import com.codenvy.ide.text.Document;
  * A <code>CopyingRangeMarker</code> can be used to track positions when executing text edits. Additionally a copying range marker
  * stores a local copy of the text it captures when it gets executed.
  * 
- * @since 3.0
  */
 public final class CopyingRangeMarker extends TextEdit
 {

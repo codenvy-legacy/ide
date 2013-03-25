@@ -12,14 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.codenvy.ide.texteditor.parser;
+package com.codenvy.ide.texteditor.api.parser;
 
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.texteditor.api.parser.Parser;
-import com.codenvy.ide.texteditor.api.parser.State;
-import com.codenvy.ide.texteditor.api.parser.Stream;
-import com.codenvy.ide.texteditor.api.parser.Token;
-import com.codenvy.ide.texteditor.api.parser.TokenFactory;
 import com.google.gwt.core.client.JavaScriptObject;
 
 

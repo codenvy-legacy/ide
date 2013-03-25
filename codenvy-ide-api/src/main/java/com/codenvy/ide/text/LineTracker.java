@@ -24,16 +24,10 @@ package com.codenvy.ide.text;
  * the underlying text allowing for incremental updates of the mapping information. It is the client's responsibility to actively
  * inform the line tacker about text changes. For example, when using a line tracker in combination with a document the document
  * controls the line tracker.
- * <p>
- * In order to provide backward compatibility for clients of <code>ILineTracker</code>, extension interfaces are used to provide a
- * means of evolution. The following extension interfaces exist:
- * <ul>
- * <li> {@link org.eclipse.jface.text.ILineTrackerExtension} since version 3.1 introducing the concept of rewrite sessions.</li>
- * </ul>
- * <p>
+
  * Clients may implement this interface or use the standard implementation
  * </p>
- * {@link org.eclipse.jface.text.DefaultLineTracker}or {@link org.eclipse.jface.text.ConfigurableLineTracker}.
+ * {DefaultLineTracker} or {ConfigurableLineTracker}.
  */
 public interface LineTracker
 {

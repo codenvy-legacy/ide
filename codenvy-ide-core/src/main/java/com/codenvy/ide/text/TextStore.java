@@ -24,8 +24,8 @@ package com.codenvy.ide.text;
  * Provides access to the stored text and allows to manipulate it.
  * </p>
  * <p>
- * Clients may implement this interface or use {@link org.eclipse.jface.text.GapTextStore} or
- * {@link org.eclipse.jface.text.CopyOnWriteTextStore}.
+ * Clients may implement this interface or use {@link GapTextStore} or
+ * {@link CopyOnWriteTextStore}.
  * </p>
  */
 public interface TextStore

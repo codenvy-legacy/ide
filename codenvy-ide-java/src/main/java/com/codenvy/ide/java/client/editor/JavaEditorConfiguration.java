@@ -30,12 +30,12 @@ import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
+import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
 import com.codenvy.ide.texteditor.api.reconciler.ReconcilerImpl;
-import com.codenvy.ide.texteditor.parser.BasicTokenFactory;
-import com.codenvy.ide.texteditor.parser.CmParser;
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.codenvy.ide.util.executor.UserActivityManager;
 

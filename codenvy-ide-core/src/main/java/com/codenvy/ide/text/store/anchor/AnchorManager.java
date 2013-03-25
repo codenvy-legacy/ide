@@ -15,12 +15,11 @@
 package com.codenvy.ide.text.store.anchor;
 
 
-import com.codenvy.ide.text.store.Line;
-import com.codenvy.ide.text.store.anchor.InsertionPlacementStrategy.Placement;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.text.store.Line;
+import com.codenvy.ide.text.store.anchor.InsertionPlacementStrategy.Placement;
 import com.codenvy.ide.util.SortedList;
 
 

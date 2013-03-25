@@ -26,7 +26,7 @@ package com.codenvy.ide.text;
  * Clients may implement this interface.
  * </p>
  * 
- * @see org.eclipse.Document.text.IDocument
+ * @see Document
  */
 public interface DocumentListener
 {

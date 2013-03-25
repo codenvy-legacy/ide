@@ -19,7 +19,7 @@
 package com.codenvy.ide.text;
 
 /**
- * Default implementation of {@link org.eclipse.TypedRegion.text.ITypedRegion}. A <code>TypedRegion</code> is a value object.
+ * Default implementation of {@link TypedRegion}. A <code>TypedRegion</code> is a value object.
  */
 public class TypedRegionImpl extends RegionImpl implements TypedRegion
 {
