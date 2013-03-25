@@ -16,9 +16,10 @@
  */
 package com.codenvy.ide.welcome;
 
-import com.codenvy.ide.api.ui.welcome.WelcomePart;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 
-import com.codenvy.ide.api.ui.part.AbstractPartPresenter;
+import com.codenvy.ide.api.parts.WelcomePart;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ImageResource;
@@ -66,7 +67,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
    }
 
    /**
-    * @see com.codenvy.ide.api.ui.part.PartPresenter#getTitle()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle()
     */
    @Override
    public String getTitle()
@@ -75,7 +76,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
    }
 
    /**
-    * @see com.codenvy.ide.api.ui.part.PartPresenter#getTitleImage()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage()
     */
    @Override
    public ImageResource getTitleImage()
@@ -84,7 +85,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter implements Welco
    }
 
    /**
-    * @see com.codenvy.ide.api.ui.part.PartPresenter#getTitleToolTip()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip()
     */
    @Override
    public String getTitleToolTip()

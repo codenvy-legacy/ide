@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.wizard.newfile;
 
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;

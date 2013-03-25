@@ -18,12 +18,13 @@
  */
 package com.codenvy.ide.paas;
 
+import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+
 import com.codenvy.ide.api.ui.paas.HasPaaSActions;
 
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.preferences.PreferencesPagePresenter;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

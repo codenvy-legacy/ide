@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,19 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.view;
+package com.codenvy.ide.api.ui.menu;
 
-import com.google.gwt.user.client.ui.IsWidget;
+
+import com.codenvy.ide.core.expressions.ToggleStateExpression;
 
 /**
- * Common interface for Views
+ * The command's interface include toggle state expression.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface View<T> extends IsWidget
+public interface ToggleCommand extends ExtendedCommand
 {
    /**
-    * Sets the delegate to receive events from this view.
+    * @return a Expression, it's result will be used
+    *         to determine item state. In UI this expression 
+    *         used for show selected/unselected item.
     */
-   public void setDelegate(T delegate);
+   public ToggleStateExpression getState();
 }

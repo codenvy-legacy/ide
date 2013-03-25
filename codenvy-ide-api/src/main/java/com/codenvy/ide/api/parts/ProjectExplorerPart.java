@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.api.outline;
+package com.codenvy.ide.api.parts;
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 /**
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public interface OutlinePart extends PartPresenter
+public interface ProjectExplorerPart extends PartPresenter
 {
 
 }

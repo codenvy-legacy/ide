@@ -18,9 +18,11 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.api.ui.part.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 
-import com.codenvy.ide.api.outline.OutlinePart;
+import com.codenvy.ide.api.parts.OutlinePart;
+
+
 import com.codenvy.ide.core.event.ActivePartChangedEvent;
 import com.codenvy.ide.core.event.ActivePartChangedHandler;
 import com.codenvy.ide.editor.TextEditorPartPresenter;

@@ -25,14 +25,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
-import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 
 import com.codenvy.ide.json.JsonArray;

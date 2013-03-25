@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
-import com.codenvy.ide.api.ui.part.PropertyListener;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PropertyListener;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.outline.CodeBlock;

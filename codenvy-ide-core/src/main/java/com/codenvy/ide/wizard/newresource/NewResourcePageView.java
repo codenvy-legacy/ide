@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.mvp.View;
 
 /**
  * Interface of new resource view.

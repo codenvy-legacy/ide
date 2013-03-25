@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2012 eXo Platform SAS.
+ * Copyright (C) 2003-2013 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,24 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.presenter;
+package com.codenvy.ide.api.parts;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 /**
- * Common interface for Presenters that are responsible for driving the UI
- * 
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 24, 2012  
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public interface Presenter
+public interface WelcomePart extends PartPresenter
 {
-   /**
-    * Allows presenter to expose it's view to the container.
-    * 
-    * @param container
-    */
-   void go(final AcceptsOneWidget container);
+
 }

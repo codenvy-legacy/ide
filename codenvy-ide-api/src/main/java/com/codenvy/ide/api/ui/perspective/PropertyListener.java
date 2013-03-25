@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,23 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.toolbar;
-
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
-import com.codenvy.ide.core.expressions.ToggleStateExpression;
+package com.codenvy.ide.api.ui.perspective;
 
 /**
- * The command's interface include toggle state expression.
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * Interface for listening for property changes on an {@link PartPresenter}
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public interface ToggleCommand extends ExtendedCommand
+public interface PropertyListener
 {
+
    /**
-    * @return a Expression, it's result will be used
-    *         to determine item state. In UI this expression 
-    *         used for show selected/unselected item.
+    * Indicates that a property has changed.
+    *
+    * @param source the object whose property has changed
+    * @param propId the id of the property which has changed; property ids
+    *   are generally defined as constants on the source class
     */
-   public ToggleStateExpression getState();
+   public void propertyChanged(PartPresenter source, int propId);
 }

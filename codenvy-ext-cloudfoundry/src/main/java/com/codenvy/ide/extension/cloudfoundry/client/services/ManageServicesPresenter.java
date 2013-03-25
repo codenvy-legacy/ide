@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
-import com.codenvy.ide.api.ui.console.ConsolePart;
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;

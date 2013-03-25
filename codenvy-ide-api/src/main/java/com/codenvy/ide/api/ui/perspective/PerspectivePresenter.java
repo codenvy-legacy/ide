@@ -16,12 +16,10 @@
  */
 package com.codenvy.ide.api.ui.perspective;
 
-import com.codenvy.ide.api.ui.part.EditorPartStack;
-import com.codenvy.ide.api.ui.part.PartPresenter;
-import com.codenvy.ide.api.ui.part.PartStack;
+import com.codenvy.ide.mvp.Presenter;
+
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.presenter.Presenter;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Provider;
 

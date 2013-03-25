@@ -22,10 +22,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
+
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.WizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
 import com.codenvy.ide.wizard.newproject.NewProjectPageView;

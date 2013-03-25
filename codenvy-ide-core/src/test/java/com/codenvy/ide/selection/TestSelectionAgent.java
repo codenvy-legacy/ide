@@ -20,8 +20,9 @@ import static junit.framework.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import com.codenvy.ide.api.ui.part.AbstractPartPresenter;
-import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+
 
 
 import com.codenvy.ide.core.event.ActivePartChangedEvent;

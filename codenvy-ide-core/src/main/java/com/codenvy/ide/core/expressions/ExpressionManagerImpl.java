@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.core.expressions;
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 import com.codenvy.ide.core.event.ActivePartChangedEvent;
 import com.codenvy.ide.core.event.ActivePartChangedHandler;

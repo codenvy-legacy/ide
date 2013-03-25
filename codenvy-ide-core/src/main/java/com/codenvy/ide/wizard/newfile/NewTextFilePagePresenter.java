@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.wizard.newfile;
 
+import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;

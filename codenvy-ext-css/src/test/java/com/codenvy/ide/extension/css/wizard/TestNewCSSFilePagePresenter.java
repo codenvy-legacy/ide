@@ -22,6 +22,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.json.JsonArray;
@@ -30,8 +34,6 @@ import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
-import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;

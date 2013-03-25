@@ -16,16 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.wizard.newfile;
+package com.codenvy.ide.api.ui.wizard.newfile;
+
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView.ActionDelegate;
+
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter;
-import com.codenvy.ide.wizard.newfile.NewGenericFilePageView.ActionDelegate;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.util.StringUtils;

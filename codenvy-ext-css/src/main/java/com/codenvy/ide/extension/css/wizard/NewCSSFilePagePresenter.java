@@ -18,14 +18,15 @@
  */
 package com.codenvy.ide.extension.css.wizard;
 
+import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.extension.css.CssExtensionResource;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.newfile.AbstractNewFilePagePresenter;
-import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;

@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.outline;
 
-import com.codenvy.ide.presenter.Presenter;
+import com.codenvy.ide.mvp.Presenter;
 
 /**
  * Marker interface for Outline

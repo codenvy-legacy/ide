@@ -16,8 +16,8 @@
  */
 package com.codenvy.ide.selection;
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
-import com.codenvy.ide.api.ui.part.PropertyListener;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PropertyListener;
 
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.core.event.ActivePartChangedEvent;

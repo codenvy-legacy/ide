@@ -16,22 +16,30 @@
  */
 package com.codenvy.ide.core.inject;
 
-import com.codenvy.ide.api.ui.welcome.WelcomePart;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
+import com.codenvy.ide.api.ui.menu.ToolbarAgent;
+
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+
+import com.codenvy.ide.api.parts.OutlinePart;
+
+import com.codenvy.ide.api.parts.WelcomePart;
+
+import com.codenvy.ide.api.parts.ConsolePart;
+
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.outline.OutlinePart;
-import com.codenvy.ide.api.projectExplorer.ProjectExplorerPart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.part.EditorPartStack;
-import com.codenvy.ide.api.ui.part.PartStack;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
-import com.codenvy.ide.api.ui.toolbar.ToolbarAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
@@ -81,7 +89,6 @@ import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Provides;

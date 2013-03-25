@@ -19,7 +19,7 @@
 package com.codenvy.ide.core.expressions;
 
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 import com.codenvy.ide.editor.EditorPartPresenter;
 

@@ -16,9 +16,11 @@
  */
 package com.codenvy.ide.part.console;
 
-import com.codenvy.ide.api.ui.part.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 
-import com.codenvy.ide.api.ui.console.ConsolePart;
+import com.codenvy.ide.api.parts.ConsolePart;
+
+
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

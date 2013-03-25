@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package com.codenvy.ide.api.ui.part;
+package com.codenvy.ide.api.ui.perspective;
 
-import com.codenvy.ide.presenter.Presenter;
+import com.codenvy.ide.mvp.Presenter;
+
 import com.codenvy.ide.selection.Selection;
 
 import com.google.gwt.resources.client.ImageResource;

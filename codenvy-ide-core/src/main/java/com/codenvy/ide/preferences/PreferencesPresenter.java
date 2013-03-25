@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.preferences;
 
+import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+
 import com.codenvy.ide.Resources;
 
 import com.codenvy.ide.json.JsonArray;

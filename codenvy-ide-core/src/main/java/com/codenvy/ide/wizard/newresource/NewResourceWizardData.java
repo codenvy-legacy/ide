@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
-import com.codenvy.ide.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;

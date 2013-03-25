@@ -24,7 +24,8 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+
 
 
 import com.codenvy.ide.part.PartStackPresenter;

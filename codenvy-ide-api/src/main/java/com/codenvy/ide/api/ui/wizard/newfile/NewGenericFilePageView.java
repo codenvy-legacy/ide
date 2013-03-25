@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,24 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.console;
+package com.codenvy.ide.api.ui.wizard.newfile;
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
-
-import com.codenvy.ide.extension.SDK;
+import com.codenvy.ide.mvp.View;
 
 /**
- * Provides output messages on console.
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * Interface of NewGenericFile view
+ * 
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@SDK(title = "ide.api.ui.console")
-public interface ConsolePart extends PartPresenter
+public interface NewGenericFilePageView extends View<NewGenericFilePageView.ActionDelegate>
 {
    /**
-    * Print message on console.
+    * Returns file name.
     * 
-    * @param message
+    * @return
     */
-   public void print(String message);
+   String getFileName();
+
+   /**
+    * Sets file name.
+    * 
+    * @param fileName
+    */
+   void setFileName(String fileName);
+
+   /**
+    * Needs for delegate some function into NewGenericFile view.
+    */
+   public interface ActionDelegate
+   {
+      /**
+       * Checks entered information(file name and etc).
+       */
+      void onValueChanged();
+   }
 }

@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
@@ -31,8 +34,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

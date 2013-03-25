@@ -18,14 +18,18 @@
  */
 package com.codenvy.ide.toolbar;
 
+import com.codenvy.ide.mvp.Presenter;
+
+import com.codenvy.ide.api.ui.menu.ToolbarAgent;
+
+import com.codenvy.ide.api.ui.menu.ToggleCommand;
+
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 
-import com.codenvy.ide.api.ui.toolbar.ToolbarAgent;
 import com.codenvy.ide.core.event.ExpressionsChangedEvent;
 import com.codenvy.ide.core.event.ExpressionsChangedHandler;
 import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.core.expressions.ToggleStateExpression;
-import com.codenvy.ide.presenter.Presenter;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

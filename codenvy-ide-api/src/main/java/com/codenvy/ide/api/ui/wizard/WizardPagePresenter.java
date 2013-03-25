@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.wizard;
+package com.codenvy.ide.api.ui.wizard;
 
-import com.codenvy.ide.presenter.Presenter;
+import com.codenvy.ide.mvp.Presenter;
 
 import com.google.gwt.resources.client.ImageResource;
 

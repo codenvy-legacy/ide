@@ -16,23 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.part;
+package com.codenvy.ide.mvp;
+
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * Interface for listening for property changes on an {@link PartPresenter}
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- *
+ * Common interface for Views
+ * 
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface PropertyListener
+public interface View<T> extends IsWidget
 {
-
    /**
-    * Indicates that a property has changed.
-    *
-    * @param source the object whose property has changed
-    * @param propId the id of the property which has changed; property ids
-    *   are generally defined as constants on the source class
+    * Sets the delegate to receive events from this view.
     */
-   public void propertyChanged(PartPresenter source, int propId);
+   public void setDelegate(T delegate);
 }

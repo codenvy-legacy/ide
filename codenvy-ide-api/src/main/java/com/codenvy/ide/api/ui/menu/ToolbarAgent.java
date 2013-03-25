@@ -16,13 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.toolbar;
+package com.codenvy.ide.api.ui.menu;
 
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 
 import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.toolbar.ToggleCommand;
 
 import com.google.gwt.resources.client.ImageResource;
 

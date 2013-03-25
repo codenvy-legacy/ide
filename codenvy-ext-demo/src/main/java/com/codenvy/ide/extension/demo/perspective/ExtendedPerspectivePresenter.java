@@ -16,14 +16,18 @@
  */
 package com.codenvy.ide.extension.demo.perspective;
 
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+
+import com.codenvy.ide.api.parts.OutlinePart;
+
+import com.codenvy.ide.api.parts.ConsolePart;
+
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+
 import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
 
-import com.codenvy.ide.api.ui.part.EditorPartStack;
-import com.codenvy.ide.api.ui.part.PartStack;
 
-import com.codenvy.ide.api.outline.OutlinePart;
-import com.codenvy.ide.api.projectExplorer.ProjectExplorerPart;
-import com.codenvy.ide.api.ui.console.ConsolePart;
 import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectiveView.ExtendedPerspectiveActionDelegate;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;

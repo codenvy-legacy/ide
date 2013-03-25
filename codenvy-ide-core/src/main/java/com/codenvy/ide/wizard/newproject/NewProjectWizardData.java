@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 
 import com.codenvy.ide.json.JsonArray;
 

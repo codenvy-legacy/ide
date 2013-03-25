@@ -24,10 +24,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+
 import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
 import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
 
-import com.codenvy.ide.api.ui.part.PartPresenter;
 
 
 import com.codenvy.ide.part.PartStackPresenter;
