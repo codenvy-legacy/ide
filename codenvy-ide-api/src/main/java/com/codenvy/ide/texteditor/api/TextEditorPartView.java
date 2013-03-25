@@ -140,10 +140,22 @@ public interface TextEditorPartView
     */
    void removeTextInputListener(TextInputListener listener);
 
+   /**
+    * Get FocusManager used this text editor view.
+    * @return the focus manager
+    */
    FocusManager getFocusManager();
 
+   /**
+    * Get ListenerRegistrar for editor key listeners.
+    * @return the key listener registrar.
+    */
    ListenerRegistrar<KeyListener> getKeyListenerRegistrar();
 
+   /**
+    * Get selection model used this editor view.
+    * @return the selection model
+    */
    SelectionModel getSelection();
 
 }

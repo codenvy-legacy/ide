@@ -19,6 +19,7 @@ import com.codenvy.ide.text.undo.DocumentUndoManagerRegistry;
 import com.codenvy.ide.texteditor.api.historymanager.ExecutionException;
 import com.codenvy.ide.texteditor.api.historymanager.IUndoContext;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.event.dom.client.KeyCodes;
 
 
@@ -85,50 +86,13 @@ public class UndoManager
          if (((eventType & DocumentUndoEvent.ABOUT_TO_UNDO) != 0)
             || ((eventType & DocumentUndoEvent.ABOUT_TO_REDO) != 0))
          {
-            //            if (event.isCompound())
-            //            {
-            //               ITextViewerExtension extension = null;
-            //               if (fTextViewer instanceof ITextViewerExtension)
-            //                  extension = (ITextViewerExtension)fTextViewer;
-            //
-            //               if (extension != null)
-            //                  extension.setRedraw(false);
-            //            }
-            //            fTextViewer.getTextWidget().getDisplay().syncExec(new Runnable()
-            //            {
-            //               public void run()
-            //               {
-            //                  if (fTextViewer instanceof TextViewer)
-            //                     ((TextViewer)fTextViewer).ignoreAutoEditStrategies(true);
-            //               }
-            //            });
-            //
          }
          else if (((eventType & DocumentUndoEvent.UNDONE) != 0) || ((eventType & DocumentUndoEvent.REDONE) != 0))
          {
-            //            fTextViewer.getTextWidget().getDisplay().syncExec(new Runnable()
-            //            {
-            //               public void run()
-            //               {
-            //                  if (fTextViewer instanceof TextViewer)
-            //                     ((TextViewer)fTextViewer).ignoreAutoEditStrategies(false);
-            //               }
-            //            });
-            //            if (event.isCompound())
-            //            {
-            //               ITextViewerExtension extension = null;
-            //               if (fTextViewer instanceof ITextViewerExtension)
-            //                  extension = (ITextViewerExtension)fTextViewer;
-            //
-            //               if (extension != null)
-            //                  extension.setRedraw(true);
-            //            }
-            //
-            //            // Reveal the change if this manager's viewer has the focus.
+
+           // Reveal the change if this manager's viewer has the focus.
             if (textViewer != null)
             {
-               //               StyledText widget = fTextViewer.getTextWidget();
-               //               if (widget != null && !widget.isDisposed() && (widget.isFocusControl()))// || fTextViewer.getTextWidget() == control))
                selectAndReveal(event.getOffset(), event.getText() == null ? 0 : event.getText().length());
             }
          }
@@ -220,32 +184,8 @@ public class UndoManager
     */
    private void openErrorDialog(final String title, final Exception ex)
    {
-      //      Shell shell = null;
-      //      if (isConnected())
-      //      {
-      //         StyledText st = fTextViewer.getTextWidget();
-      //         if (st != null && !st.isDisposed())
-      //            shell = st.getShell();
-      //      }
-      //      if (Display.getCurrent() != null)
-      //         MessageDialog.openError(shell, title, ex.getLocalizedMessage());
-      //      else
-      //      {
-      //         Display display;
-      //         final Shell finalShell = shell;
-      //         if (finalShell != null)
-      //            display = finalShell.getDisplay();
-      //         else
-      //            display = Display.getDefault();
-      //         display.syncExec(new Runnable()
-      //         {
-      //            public void run()
-      //            {
-      //               MessageDialog.openError(finalShell, title, ex.getLocalizedMessage());
-      //            }
-      //         });
-      //      }
-      ex.printStackTrace();
+      //TODO use notification (error dialog)
+      Log.error(UndoManager.class, title, ex);
    }
 
    /*

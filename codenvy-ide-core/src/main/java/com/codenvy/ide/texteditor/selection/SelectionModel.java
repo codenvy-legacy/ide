@@ -319,6 +319,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
          selectionRange[0].getColumn(), deleteCount);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void deselect()
    {
@@ -347,6 +350,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       return baseAnchor.getLineNumber();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getCursorColumn()
    {
@@ -358,6 +364,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       return cursorAnchor.getLine();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public int getCursorLineNumber()
    {
@@ -417,12 +426,18 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       return isCursorAtEndOfSelection() ? cursorAnchor.getLineNumber() : baseAnchor.getLineNumber();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public boolean hasSelection()
    {
       return AnchorUtils.compare(cursorAnchor, baseAnchor) != 0;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String getSelectedText()
    {
@@ -599,6 +614,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       moveCursor(lineInfo, column, shouldUpdatePreferredColumn, isShiftHeld, getSelectionRangeForCallback());
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld)
    {
@@ -659,6 +677,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void onMouseDrag(Buffer buffer, int x, int y)
    {
@@ -852,6 +873,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void onMouseDragRelease(Buffer buffer, int x, int y)
    {
@@ -887,6 +911,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       moveCursor(lineInfo, column, true, hasSelection(), getSelectionRangeForCallback());
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void selectAll()
    {
@@ -911,6 +938,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       return cursorAnchor;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public com.codenvy.ide.text.Position getCursorPosition()
    {
       int offset = TextUtilities.getOffset(doc, cursorAnchor.getLineInfo().number(), getBaseColumn());
@@ -1116,6 +1146,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       return isCursorAtEndOfSelection() ? cursorAnchor : baseAnchor;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public com.codenvy.ide.text.Position getSelectedRange()
    {
@@ -1159,6 +1192,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void setCursorPosition(int offset)
    {

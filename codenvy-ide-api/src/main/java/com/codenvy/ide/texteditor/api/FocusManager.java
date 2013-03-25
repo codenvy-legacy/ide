@@ -21,6 +21,7 @@ package com.codenvy.ide.texteditor.api;
 import com.codenvy.ide.util.ListenerRegistrar;
 
 /**
+ * Tracks the focus state of the editor.
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
@@ -34,9 +35,20 @@ public interface FocusManager
       void onFocusChange(boolean hasFocus);
    }
 
+   /**
+    * Listener registrar for focus listeners.
+    * @return the focus listener registrar
+    */
    ListenerRegistrar<FocusListener> getFocusListenerRegistrar();
 
+   /**
+    * True if editor has focus
+    * @return true if editor has focus.
+    */
    boolean hasFocus();
 
+   /**
+    * Set focus to editor.
+    */
    void focus();
 }

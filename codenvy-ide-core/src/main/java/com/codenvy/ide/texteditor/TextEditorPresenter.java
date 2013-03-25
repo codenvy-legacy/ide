@@ -27,7 +27,6 @@ import com.codenvy.ide.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.editor.SelectionProvider;
 import com.codenvy.ide.outline.OutlineImpl;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
@@ -87,7 +86,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
          {
             TextEditorPresenter.this.document = document;
             AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
-            editor.setDocument((DocumentImpl)document, annotationModel);
+            editor.setDocument(document, annotationModel);
             firePropertyChange(PROP_INPUT);
          }
       });

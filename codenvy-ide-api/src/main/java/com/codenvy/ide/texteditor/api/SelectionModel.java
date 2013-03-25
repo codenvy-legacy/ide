@@ -21,28 +21,49 @@ package com.codenvy.ide.texteditor.api;
 import com.codenvy.ide.text.Position;
 
 /**
+ * A interface that models the user's selection.
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
 public interface SelectionModel
 {
+   /**
+    * Clear selection
+    */
    void deselect();
 
-   int getCursorColumn();
-
-   int getCursorLineNumber();
-
+   /**
+    * @return true if editor has selection
+    */
    boolean hasSelection();
 
-   String getSelectedText();
-
+   /**
+    * Select all test in editor.
+    */
    void selectAll();
 
-   com.codenvy.ide.text.Position getSelectedRange();
+   /**
+    * Get selected range
+    * @return the selected range
+    */
+   Position getSelectedRange();
 
+   /**
+    * Move cursor to offset.
+    * @param offset the offset
+    */
    void setCursorPosition(int offset);
 
+   /**
+    * Select and reveal text in editor
+    * @param offset the offset, start selection
+    * @param length the length of the selection
+    */
    void selectAndReveal(int offset, int length);
 
+   /**
+    * Get cursor position
+    * @return the position of cursor.
+    */
    Position getCursorPosition();
 }
