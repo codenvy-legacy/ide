@@ -45,4 +45,6 @@ public interface SelectionModel
    void setCursorPosition(int offset);
 
    void selectAndReveal(int offset, int length);
+
+   Position getCursorPosition();
 }

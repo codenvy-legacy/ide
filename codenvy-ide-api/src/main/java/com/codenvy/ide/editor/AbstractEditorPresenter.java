@@ -19,10 +19,8 @@
 package com.codenvy.ide.editor;
 
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
 import com.google.gwt.user.client.Window;
 
 /**
