@@ -133,6 +133,7 @@ class LineRendererController {
     }
 
     Element contentElement = Elements.createSpanElement();
+    // TODO: file a Chrome bug, place link here
     contentElement.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);
     for (int indexInLine = 0, lineSize = line.getText().length();
         indexInLine < lineSize && ensureAllRenderersHaveARenderedNextChunk();) {
@@ -224,6 +225,7 @@ class LineRendererController {
      element.getStyle().setProperty("vertical-align", "middle");
      element.getStyle().setMarginTop("-2px");
      element.getStyle().setProperty("box-shadow", "0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset");
+     element.setId("expandMarker");
 
      com.google.gwt.user.client.Element expandImageElement = new Image(resources.expandArrows()).getElement();
      expandImageElement.getStyle().setWidth(16, Unit.PX);

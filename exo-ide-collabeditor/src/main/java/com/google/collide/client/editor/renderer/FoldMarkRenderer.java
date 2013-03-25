@@ -194,6 +194,7 @@ public class FoldMarkRenderer
       {
          foldMarkElement.removeChild(childNodes.item(i));
       }
+      setId(foldMarkElement, lineNumber, foldMarker);
 
       foldMarkElement.appendChild((Node)foldMarker.getImage().getElement());
    }
@@ -212,6 +213,8 @@ public class FoldMarkRenderer
       final int freeSpaceAbove = (lineHeight - elementHeight) / 2;
 
       element.getStyle().setTop(buffer.calculateLineTop(lineNumber) + freeSpaceAbove, "px");
+
+      setId(element, lineNumber, foldMarker);
 
       return element;
    }
@@ -233,6 +236,18 @@ public class FoldMarkRenderer
             //            throw new IndexOutOfBoundsException("Tried to garbage collect line number " + i
             //               + " when it does not exist.");
          }
+      }
+   }
+
+   private void setId(Element foldMarkElement, int lineNumber, FoldMarker foldMarker)
+   {
+      if (foldMarker.isCollapsed())
+      {
+         foldMarkElement.setId("foldGutterExpandMarker_line:" + (lineNumber + 1));
+      }
+      else
+      {
+         foldMarkElement.setId("foldGutterCollapseMarker_line:" + (lineNumber + 1));
       }
    }
 
