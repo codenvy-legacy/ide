@@ -38,18 +38,19 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 28, 2011 3:07:14 PM evgen $
- * 
  */
 public class JavaDocBuilderVfs extends JavaDocBuilder
 {
    /**
-    * 
+    *
     */
    private static final long serialVersionUID = 2801488236934185900L;
 
    private VirtualFileSystem vfs;
 
-   /** Logger. */
+   /**
+    * Logger.
+    */
    private static final Log LOG = ExoLogger.getLogger(JavaDocBuilderVfs.class);
 
    /**
@@ -67,16 +68,25 @@ public class JavaDocBuilderVfs extends JavaDocBuilder
       InputStream sourceFile = ((VfsClassLibrary)getClassLibrary()).getSourceFileContent(name);
       if (sourceFile != null)
       {
-         JavaSource source = addSource(new InputStreamReader(sourceFile), name);
-         for (int index = 0; index < source.getClasses().length; index++)
+         try
          {
-            JavaClass clazz = source.getClasses()[index];
-            if (name.equals(clazz.getFullyQualifiedName()))
+
+
+            JavaSource source = addSource(new InputStreamReader(sourceFile), name);
+            for (int index = 0; index < source.getClasses().length; index++)
             {
-               return clazz;
+               JavaClass clazz = source.getClasses()[index];
+               if (name.equals(clazz.getFullyQualifiedName()))
+               {
+                  return clazz;
+               }
             }
+            return source.getNestedClassByName(name);
          }
-         return source.getNestedClassByName(name);
+         catch (IndexOutOfBoundsException e)
+         {
+            LOG.error(e);
+         }
       }
       return null;
    }
@@ -95,7 +105,9 @@ public class JavaDocBuilderVfs extends JavaDocBuilder
          catch (VirtualFileSystemException e)
          {
             if (LOG.isDebugEnabled())
+            {
                LOG.debug(e);
+            }
          }
       }
    }
@@ -109,7 +121,9 @@ public class JavaDocBuilderVfs extends JavaDocBuilder
       for (JavaClass clazz : getClasses())
       {
          if (clazz.getFullyQualifiedName().equals(name))
+         {
             return clazz;
+         }
       }
       return null;
    }
