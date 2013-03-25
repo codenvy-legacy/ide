@@ -113,7 +113,7 @@ public class ShellConfigurationService
    @GET
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo)
    {
       try
@@ -146,7 +146,7 @@ public class ShellConfigurationService
 
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    public String getConfiguration()
    {
       try
@@ -162,7 +162,7 @@ public class ShellConfigurationService
 
    @PUT
    @Consumes(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    public void setConfiguration(String body) throws IOException
    {
       writeSettings(body);

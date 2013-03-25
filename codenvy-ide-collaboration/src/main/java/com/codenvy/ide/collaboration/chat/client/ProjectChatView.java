@@ -21,8 +21,10 @@ package com.codenvy.ide.collaboration.chat.client;
 import com.codenvy.ide.client.util.AnimationController;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.chat.client.ChatResources.ChatCss;
+import com.codenvy.ide.collaboration.chat.client.ParticipantList.View;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display;
-import com.codenvy.ide.collaboration.dto.UserDetails;
+import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.MessageCallback;
+import com.codenvy.ide.notification.NotificationManager;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
@@ -30,21 +32,20 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.ui.Widget;
+import elemental.events.Event;
 import elemental.events.EventListener;
+import elemental.html.AnchorElement;
 import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.ImageElement;
+import elemental.html.ParagraphElement;
 import elemental.html.SpanElement;
-import elemental.html.TableCellElement;
-import elemental.html.TableElement;
-import elemental.html.TableRowElement;
 import elemental.html.TextAreaElement;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
@@ -56,7 +57,7 @@ import java.util.Date;
  */
 public class ProjectChatView extends ViewImpl implements Display
 {
-   interface ProjectChatViewUiBinder extends UiBinder<SplitLayoutPanel, ProjectChatView>
+   interface ProjectChatViewUiBinder extends UiBinder<Widget, ProjectChatView>
    {
    }
 
@@ -81,25 +82,16 @@ public class ProjectChatView extends ViewImpl implements Display
 
    private JsonStringMap<Element> currentUserMessages = JsonCollections.createMap();
 
-   private JsonStringMap<Element> participants = JsonCollections.createMap();
-
-   private JsonStringMap<Element> editParticipants = JsonCollections.createMap();
-
-   AnimationController animationController = AnimationController.FADE_ANIMATION_CONTROLLER;
-
-   private com.google.gwt.user.client.Element editHeader;
-
-   private com.google.gwt.user.client.Element editFooter;
+   private final ParticipantList participantList;
 
    public ProjectChatView()
    {
-      super(ID, ViewType.OPERATION, "Project Chat", new Image(ChatExtension.resources.chat()));
+      super(ID, ViewType.INFORMATION, "Collaboration", new Image(ChatExtension.resources.collaborators()));
       add(ourUiBinder.createAndBindUi(this));
       css = ChatExtension.resources.chatCss();
-      editHeader = createEditHeader("Current file Collaborators", 145);
-      participantsPanel.getElement().appendChild((Node)editHeader);
-      editFooter = createEditHeader("Current project Collaborators", 167);
-      participantsPanel.getElement().appendChild(editFooter);
+      View view = new View();
+      participantList = ParticipantList.create(view);
+      participantsPanel.getElement().appendChild((Node)view.getElement());
    }
 
    /**
@@ -143,10 +135,10 @@ public class ProjectChatView extends ViewImpl implements Display
    {
       DivElement messageElement = Elements.createDivElement();
       DivElement timeElement = Elements.createDivElement(css.chatTime());
-      timeElement.setInnerHTML("[" + timeFormat.format(d) + "]");
+      timeElement.setInnerHTML("[" + timeFormat.format(d) + "]&nbsp;");
       messageElement.appendChild(timeElement);
 
-      SpanElement nameElement = Elements.createSpanElement(isCurrentUser ? css.chatCurrentName() : css.chatName());
+      SpanElement nameElement = Elements.createSpanElement(css.chatName());
       nameElement.setInnerHTML(name);
       messageElement.appendChild(nameElement);
 
@@ -200,13 +192,9 @@ public class ProjectChatView extends ViewImpl implements Display
     * {@inheritDoc}
     */
    @Override
-   public void removeParticipant(String clientId)
+   public void removeParticipant(Participant participant)
    {
-      if (participants.containsKey(clientId))
-      {
-         Element element = participants.remove(clientId);
-         element.removeFromParent();
-      }
+     participantList.participantRemoved(participant);
    }
 
    /**
@@ -215,37 +203,7 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void addParticipant(Participant participant)
    {
-      Element element = getParticipantElement(participant);
-      participants.put(participant.getClientId(), element);
-      participantsPanel.getElement().insertAfter((Node)element, editFooter);
-      animationController.show(element);
-   }
-
-   private com.google.gwt.user.client.Element createEditHeader(String message, int width)
-   {
-      DivElement divElement = Elements.createDivElement(css.chatHeader());
-      TableElement element = Elements.createTableElement();
-      element.setCellPadding("0");
-      element.setCellSpacing("0");
-      element.setWidth("100%");
-      element.setBorder("0");
-      TableRowElement trElement = Elements.createTRElement();
-      element.appendChild(trElement);
-
-      TableCellElement tdElementLeft = Elements.createTDElement();
-      tdElementLeft.appendChild(Elements.createHrElement());
-      trElement.appendChild(tdElementLeft);
-
-      TableCellElement tdElementMiddle = Elements.createTDElement(css.chatHeaderText());
-      tdElementMiddle.setWidth(width + "px");
-      tdElementMiddle.setInnerHTML(message);
-      trElement.appendChild(tdElementMiddle);
-
-      TableCellElement tdElementRight = Elements.createTDElement();
-      tdElementRight.appendChild(Elements.createHrElement());
-      trElement.appendChild(tdElementRight);
-      divElement.appendChild(element);
-      return (com.google.gwt.user.client.Element)divElement;
+      participantList.participantAdded(participant);
    }
 
    /**
@@ -254,29 +212,16 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void removeEditParticipant(String clientId)
    {
-      if (editParticipants.containsKey(clientId))
-      {
-         Element element = editParticipants.remove(clientId);
-         element.removeFromParent();
-         participantsPanel.getElement().appendChild((com.google.gwt.user.client.Element)element);
-         animationController.show(element);
-      }
+     participantList.removeEditParticipant(clientId);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void addEditParticipant(String clientId)
+   public void addEditParticipant(String clientId, String color)
    {
-      if (participants.containsKey(clientId))
-      {
-         Element element = participants.get(clientId);
-         element.removeFromParent();
-         participantsPanel.getElement().insertBefore((Node)element, editFooter);
-         animationController.show(element);
-         editParticipants.put(clientId, element);
-      }
+      participantList.setEditParticipant(clientId, color);
    }
 
    /**
@@ -285,30 +230,52 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void clearEditParticipants()
    {
-      JsonArray<String> keys = editParticipants.getKeys();
-      for (String key : keys.asIterable())
-      {
-         removeEditParticipant(key);
-      }
+     participantList.clearEditParticipants();
    }
 
-   private Element getParticipantElement(Participant userDetails)
+   @Override
+   public void addNotificationMessage(String message)
    {
-      DivElement element = Elements.createDivElement(css.chatParticipant());
+      DivElement messageElement = Elements.createDivElement(css.chatNotification());
+      messageElement.appendChild(Elements.createTextNode(message));
+      chatPanel.getElement().appendChild((Node)messageElement);
+      lastClientId = "";
+      chatPanel.scrollToBottom();
+   }
 
-      ImageElement imageElement = Elements.createImageElement(css.chatParticipantImage());
-      imageElement.setSrc(userDetails.getPortraitUrl());
-      element.appendChild(imageElement);
+   @Override
+   public void addNotificationMessage(String message, String link, MessageCallback callback)
+   {
+      String[] split = message.split("\\{0\\}");
+      DivElement messageElement = Elements.createDivElement(css.chatNotification());
+      messageElement.appendChild(Elements.createTextNode(split[0]));
+      messageElement.appendChild(createAnchorElement(link, callback));
+      if(split.length >1)
+      {
+         messageElement.appendChild(Elements.createTextNode(split[1]));
+      }
+      lastClientId = "";
+      chatPanel.getElement().appendChild((Node) messageElement);
+      chatPanel.scrollToBottom();
+   }
 
-      DivElement nameElement = Elements.createDivElement(css.chatParticipantName());
-      nameElement.setInnerHTML(userDetails.getDisplayName());
-      nameElement.getStyle().setBackgroundColor(userDetails.getColor());
-      element.appendChild(nameElement);
-
-      DivElement emailElement = Elements.createDivElement(css.chatParticipantEmail());
-      emailElement.setInnerHTML(userDetails.getDisplayEmail());
-      element.appendChild(emailElement);
-      return element;
+   private AnchorElement createAnchorElement(final String message, final MessageCallback callback)
+   {
+      AnchorElement anchorElement = Elements.createAnchorElement(css.link());
+      anchorElement.setHref("javascript:;");
+      anchorElement.setTextContent(message);
+      if (callback != null)
+      {
+         anchorElement.addEventListener(Event.CLICK, new EventListener()
+         {
+            @Override
+            public void handleEvent(Event event)
+            {
+               callback.messageClicked();
+            }
+         }, false);
+      }
+      return anchorElement;
    }
 
    /**

@@ -140,11 +140,6 @@ public class ProjectUsers
       UserDetailsImpl userDetails = UserDetailsImpl.make();
       userDetails.setUserId(userId);
       String name = userId;
-      if (name.contains("@"))
-      {
-         name = name.substring(0, name.indexOf('@'));
-         name = StringUtils.capitalizeFirstLetter(name);
-      }
       userDetails.setDisplayName(name);
       userDetails.setDisplayEmail(userId);
       userDetails.setPortraitUrl(gravatarUrl + MD5Util.md5Hex(userId) + "?s=24&d=mm");

@@ -1,10 +1,10 @@
 .chatName {
    font-weight: bold;
    float: left;
-   color: #0a8ddd;
+   color: #000;
 }
 
-.chatMessage {
+.chatMessage, .chatNotification {
    word-wrap: break-word;
    font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
 }
@@ -12,44 +12,12 @@
 .chatTime {
    margin-left: -5px;
    float: left;
-   color: #8282a2;
+   color: rgb(128, 128, 128);
 }
 
-.chatParticipant {
-   margin: 3px;
-   border-radius: 4px 4px 4px 4px;
-   min-height: 25px;
-   padding: 5px;
-   /*background-color: #53ade0;*/
-   background-color: #7a8891;
-   color: #FFFFFF;
-   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
-}
-
-.chatParticipantImage {
-   float: left;
-}
-
-.chatParticipantName {
-   font-weight: bold;
-   left: 40px;
-   position: absolute;
-   border-radius: 3px;
-   padding-left: 3px;
-   padding-right: 3px;
-}
-
-.chatParticipantEmail {
-   left: 8px;
-   position: relative;
-   top: 14px;
-   color: #52ade0;
-}
-
-.chatCurrentName {
-   color: #0163cb;
-   font-weight: bold;
-   float: left;
+ .chatNotification{
+   color: rgb(128, 128, 128);
+   margin-left: -5px;
 }
 
 .chatNotificationName{
@@ -70,22 +38,6 @@
    float: left;
 }
 
-.chatHeader{
-   margin: 3px;
-   border-radius: 4px 4px 4px 4px;
-   padding: 5px;
-   /*background-color: #53ade0;*/
-   background-color: #7a8891;
-   color: #FFFFFF;
-   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
-}
-
-.chatHeader table tr td hr{
-   padding: 0;
-   margin: 0;
-}
-
-.chatHeaderText{
-   color: #FFFFFF;
-   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
+.link{
+   color: rgb(128, 128, 128);
 }

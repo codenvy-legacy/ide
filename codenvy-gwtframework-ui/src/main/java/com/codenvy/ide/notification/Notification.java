@@ -18,38 +18,43 @@
  */
 package com.codenvy.ide.notification;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
+import com.codenvy.ide.client.util.Elements;
+import elemental.events.Event;
+import elemental.events.EventListener;
+import elemental.html.AnchorElement;
+import elemental.html.DivElement;
+import elemental.html.Element;
+import elemental.html.ParagraphElement;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class Notification extends Composite
+public class Notification
 {
 
-   public enum NotificationType
+   public interface ClickCallback
    {
-      INFO, MESSAGE, ERROR
+      void onClick(Notification notification);
    }
 
+   private ClickCallback callback;
 
    private final int duration;
 
-   private NotificationType type;
+   private final Element element;
 
-   public Notification(final String message, NotificationType type, final int duration)
+
+   public Notification(final String message, final int duration)
    {
-      this(new HTML(message, true), type, duration);
-
+      this(message, null, duration);
    }
 
-   public Notification(final Widget widget, NotificationType type, final int duration)
+   public Notification(String message, ClickCallback callback, final int duration)
    {
+      this.callback = callback;
       this.duration = duration;
-      super.initWidget(widget);
-      this.type = type;
+      element = createAnchorElement(message);
    }
 
    /**
@@ -60,8 +65,31 @@ public class Notification extends Composite
       return duration;
    }
 
-   public NotificationType getType()
+   public Element getElement()
    {
-      return type;
+      return element;
+   }
+
+   private AnchorElement createAnchorElement(final String message)
+   {
+      AnchorElement anchorElement = Elements.createAnchorElement(/*css.anchor()*/);
+      anchorElement.setHref("javascript:;");
+      DivElement messageDiv = Elements.createDivElement(NotificationManager.resources.styles().message());
+      ParagraphElement paragraphElement = Elements.createParagraphElement();
+      paragraphElement.appendChild(Elements.createTextNode(message));
+      messageDiv.appendChild(paragraphElement);
+      anchorElement.appendChild(messageDiv);
+      if (callback != null)
+      {
+         anchorElement.addEventListener(Event.CLICK, new EventListener()
+         {
+            @Override
+            public void handleEvent(Event event)
+            {
+               callback.onClick(Notification.this);
+            }
+         }, false);
+      }
+      return anchorElement;
    }
 }

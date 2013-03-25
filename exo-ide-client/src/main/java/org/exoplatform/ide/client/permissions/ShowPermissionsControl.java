@@ -36,7 +36,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
  * 
  */
 
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowPermissionsControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
    public static final String ID = "View/Permissions";

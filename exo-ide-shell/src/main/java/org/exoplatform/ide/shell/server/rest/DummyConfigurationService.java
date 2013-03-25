@@ -44,7 +44,7 @@ public class DummyConfigurationService
    @GET
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("users")
+   @RolesAllowed({"developer"})
    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request)
    {
 

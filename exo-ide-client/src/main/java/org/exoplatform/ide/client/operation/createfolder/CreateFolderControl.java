@@ -45,7 +45,7 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
    ViewActivatedHandler, VfsChangedHandler
 {

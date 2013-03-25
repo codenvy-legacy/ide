@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $Id: Sep 20, 2011 evgen $
  * 
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class ShowProgressControl extends SimpleControl implements IDEControl
 {
 

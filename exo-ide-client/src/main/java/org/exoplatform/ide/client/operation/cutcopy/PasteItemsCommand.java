@@ -43,7 +43,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class PasteItemsCommand extends SimpleControl implements IDEControl, ItemsToPasteSelectedHandler,
    PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler
 {

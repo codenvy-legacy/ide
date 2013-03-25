@@ -38,7 +38,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators"})
+@RolesAllowed({"developer"})
 public class LaunchRestServiceCommand extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
    ViewVisibilityChangedHandler
 {

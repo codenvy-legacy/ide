@@ -41,7 +41,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHa
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler,
    ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
 {

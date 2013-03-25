@@ -41,7 +41,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
    ViewVisibilityChangedHandler
 {

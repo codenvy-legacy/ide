@@ -31,7 +31,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
-@RolesAllowed({"administrators", "developers"})
+@RolesAllowed({"developer"})
 public class NewItemControl extends SimpleControl implements IDEControl
 {
 
