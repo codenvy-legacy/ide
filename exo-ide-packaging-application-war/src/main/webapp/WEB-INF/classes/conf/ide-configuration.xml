@@ -111,21 +111,12 @@
    <component>
       <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
    </component>
-
+   
    <component>
-      <key>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</key>
-      <type>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>key-store</name>
-            <value>/ssh-keys</value>
-         </value-param>
-      </init-params>
+      <key>org.exoplatform.ide.extension.ssh.server.SshKeyStore</key>
+      <type>org.exoplatform.ide.extension.ssh.server.UserProfileSshKeyStore</type>
    </component>
+
 
    <!-- End SSH Keys -->
 
@@ -197,16 +188,6 @@
          <value-param>
             <name>github-user</name>
             <value>eXoIDE</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.git.server.github.GitHubAuthenticator</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
          </value-param>
       </init-params>
    </component>
