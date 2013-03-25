@@ -769,6 +769,8 @@ public class Project extends Folder
                   currentProperties.clear();
                   currentProperties.addAll(properties);
 
+                  eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(project));
+
                   callback.onSuccess(Project.this);
                }
 

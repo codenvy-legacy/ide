@@ -212,7 +212,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       boolean isDeleteServices = view.isDeleteServices();
       String projectId = null;
 
-      Project project = resourceProvider.getActiveProject();
+      final Project project = resourceProvider.getActiveProject();
       // Checking does current project work with deleting CloudFoundry application.
       // If project don't have the same CloudFoundry application name in properties
       // then this property won't be cleaned.
@@ -224,17 +224,33 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
       try
       {
-         CloudFoundryClientService.getInstance().deleteApplication(resourceProvider.getVfsId(), projectId, appName,
-            serverName, isDeleteServices,
+         CloudFoundryClientService.getInstance().deleteApplication(
+            resourceProvider.getVfsId(),
+            projectId,
+            appName,
+            serverName,
+            isDeleteServices,
             new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
                constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
                {
-                  view.close();
-                  console.print(constant.applicationDeletedMsg(appName));
-                  appDeleteCallback.onSuccess(appName);
+                  project.refreshProperties(new AsyncCallback<Project>()
+                  {
+                     @Override
+                     public void onSuccess(Project result)
+                     {
+                        view.close();
+                        console.print(constant.applicationDeletedMsg(appName));
+                        appDeleteCallback.onSuccess(appName);
+                     }
+
+                     @Override
+                     public void onFailure(Throwable caught)
+                     {
+                     }
+                  });
                }
             });
       }

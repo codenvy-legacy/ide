@@ -39,6 +39,8 @@ public class ShowCloudFoundryProjectCommand implements ExtendedCommand
 
    private final CloudFoundryResources resources;
 
+   private final CloudFoundryProjectOpenedExpression expression;
+
    /**
     * Create command.
     * 
@@ -46,10 +48,12 @@ public class ShowCloudFoundryProjectCommand implements ExtendedCommand
     * @param resources
     */
    @Inject
-   public ShowCloudFoundryProjectCommand(CloudFoundryProjectPresenter presenter, CloudFoundryResources resources)
+   public ShowCloudFoundryProjectCommand(CloudFoundryProjectPresenter presenter, CloudFoundryResources resources,
+      CloudFoundryProjectOpenedExpression expression)
    {
       this.presenter = presenter;
       this.resources = resources;
+      this.expression = expression;
    }
 
    /**
@@ -85,8 +89,7 @@ public class ShowCloudFoundryProjectCommand implements ExtendedCommand
    @Override
    public Expression inContext()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return expression;
    }
 
    /**
@@ -95,7 +98,6 @@ public class ShowCloudFoundryProjectCommand implements ExtendedCommand
    @Override
    public Expression canExecute()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 }

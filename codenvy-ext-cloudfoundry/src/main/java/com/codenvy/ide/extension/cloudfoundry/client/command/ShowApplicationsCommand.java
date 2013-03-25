@@ -84,7 +84,6 @@ public class ShowApplicationsCommand implements ExtendedCommand
    @Override
    public Expression inContext()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -94,7 +93,6 @@ public class ShowApplicationsCommand implements ExtendedCommand
    @Override
    public Expression canExecute()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 }

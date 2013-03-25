@@ -38,6 +38,8 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
 
    private final CloudFoundryResources resources;
 
+   private final CloudFoundryProjectOpenedExpression expression;
+
    /**
     * Create command.
     * 
@@ -45,10 +47,12 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
     * @param resources
     */
    @Inject
-   public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources)
+   public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources,
+      CloudFoundryProjectOpenedExpression expression)
    {
       this.presenter = presenter;
       this.resources = resources;
+      this.expression = expression;
    }
 
    /**
@@ -84,7 +88,6 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
    @Override
    public Expression inContext()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -94,7 +97,8 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
    @Override
    public Expression canExecute()
    {
-      // TODO Auto-generated method stub
+      // TODO needs to change it after improve New project wizard
+      //      return expression;
       return null;
    }
 }
