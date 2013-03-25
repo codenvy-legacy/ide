@@ -168,18 +168,19 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       {
          if (isShow(path))
          {
-            display.addNotificationMessage(user.getDisplayName() + " opened {0} file." ,getName(path), new MessageCallback()
-            {
-               @Override
-               public void messageClicked()
+            display.addNotificationMessage(user.getDisplayName() + " opened {0} file.", getName(path),
+               new MessageCallback()
                {
-                  openFile(path);
-                  if (viewClosed || !display.asView().isViewVisible())
+                  @Override
+                  public void messageClicked()
                   {
-                     control.startBlink();
+                     openFile(path);
+                     if (viewClosed || !display.asView().isViewVisible())
+                     {
+                        control.startBlink();
+                     }
                   }
-               }
-            });
+               });
          }
       }
 
@@ -218,7 +219,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
       private String getName(String path)
       {
-        path = path.substring(path.lastIndexOf('/') + 1);
+         path = path.substring(path.lastIndexOf('/') + 1);
          return path;
       }
    };
@@ -318,7 +319,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          display.addNotificationMessage(participant.getDisplayName() + " left the " + project.getName() + " project.");
          if (users.size() == 1)
          {
-//                        control.setEnabled(false);
+            //                        control.setEnabled(false);
             //            ide.closeView(Display.ID);
          }
       }
@@ -332,7 +333,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          ((UserDetailsImpl)user.getUserDetails()).setDisplayName("me");
       }
       Participant participant = (Participant)user.getUserDetails();
-      if(participant.getDisplayName().contains("@"))
+      if (participant.getDisplayName().contains("@"))
       {
          String name = participant.getDisplayName();
          participant.setDisplayName(name.substring(0, name.indexOf('@')));
@@ -490,7 +491,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    {
       if (event.getEditor() != null && event.getEditor() instanceof CollabEditor)
       {
-         if(event.getFile().getMimeType().equals(MimeType.TEXT_HTML))
+         if (event.getFile().getMimeType().equals(MimeType.TEXT_HTML))
          {
             display.clearEditParticipants();
             return;

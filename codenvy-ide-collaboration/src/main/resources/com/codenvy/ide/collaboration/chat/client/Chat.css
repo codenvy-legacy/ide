@@ -17,6 +17,7 @@
 
  .chatNotification{
    color: rgb(128, 128, 128);
+   margin-left: -5px;
 }
 
 .chatNotificationName{

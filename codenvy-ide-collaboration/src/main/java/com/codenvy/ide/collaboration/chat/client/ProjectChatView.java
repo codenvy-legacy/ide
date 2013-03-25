@@ -135,7 +135,7 @@ public class ProjectChatView extends ViewImpl implements Display
    {
       DivElement messageElement = Elements.createDivElement();
       DivElement timeElement = Elements.createDivElement(css.chatTime());
-      timeElement.setInnerHTML("[" + timeFormat.format(d) + "]");
+      timeElement.setInnerHTML("[" + timeFormat.format(d) + "]&nbsp;");
       messageElement.appendChild(timeElement);
 
       SpanElement nameElement = Elements.createSpanElement(css.chatName());
@@ -263,7 +263,7 @@ public class ProjectChatView extends ViewImpl implements Display
    {
       AnchorElement anchorElement = Elements.createAnchorElement(css.link());
       anchorElement.setHref("javascript:;");
-      anchorElement.setText(message);
+      anchorElement.setTextContent(message);
       if (callback != null)
       {
          anchorElement.addEventListener(Event.CLICK, new EventListener()
