@@ -23,11 +23,19 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 import java.util.List;
 
 /**
+ * Interface used to implement in classes that may find fold range occurrences.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: FoldOccurrencesFinder.java Mar 19, 2013 1:28:56 AM azatsarynnyy $
  *
  */
 public interface FoldOccurrencesFinder
 {
+   /**
+    * Get list of text ranges that may be folded.
+    * 
+    * @param Document document to find fold ranges
+    * @return list of text ranges to fold
+    */
    List<AbstractFoldRange> computePositions(IDocument Document);
 }
