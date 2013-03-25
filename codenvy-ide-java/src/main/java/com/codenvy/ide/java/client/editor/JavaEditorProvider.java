@@ -22,9 +22,8 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.editor.EditorProvider;
-
+import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.util.executor.UserActivityManager;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -62,7 +61,7 @@ public class JavaEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new JavaEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration(activityManager));
+      return new JavaEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE));
    }
 
 }

@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.texteditor.api;
 
+import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.texteditor.UndoManager;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
@@ -177,6 +177,18 @@ public class TextEditorConfiguration
     * @return a reconciler or <code>null</code> if reconciling should not be supported
     */
    public Reconciler getReconciler(TextEditorPartView view) 
+   {
+      return null;
+   }
+
+   /**
+    * Return the outline model.
+    * This implementation always returns <code>null</code>.
+    *
+    * @param view the source view to be configured by this configuration.
+    * @return a model that used to build outline tree.
+    */
+   public OutlineModel getOutline(TextEditorPartView view)
    {
       return null;
    }

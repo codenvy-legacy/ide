@@ -19,9 +19,10 @@
 package com.codenvy.ide.java.client.editor;
 
 import com.codenvy.ide.api.outline.OutlineModel;
-
+import com.codenvy.ide.editor.TextEditorPartPresenter;
+import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.java.client.editor.outline.JavaNodeRenderer;
 import com.codenvy.ide.java.client.editor.outline.OutlineModelUpdater;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
@@ -34,7 +35,6 @@ import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
 import com.codenvy.ide.texteditor.parser.BasicTokenFactory;
 import com.codenvy.ide.texteditor.parser.CmParser;
 import com.codenvy.ide.texteditor.parser.CodeMirror2;
-
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.codenvy.ide.util.executor.UserActivityManager;
 
@@ -49,7 +49,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
 
    private UserActivityManager manager;
 
-   private JavaEditor javaEditor;
+   private TextEditorPartPresenter javaEditor;
 
    private JavaCodeAssistProcessor codeAssistProcessor;
 
@@ -57,15 +57,14 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
 
    private OutlineModel outlineModel;
 
-   /**
-    * @param manager
-    * @param activrProjectId 
-    */
-   public JavaEditorConfiguration(UserActivityManager manager)
+
+   public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor)
    {
       super();
       this.manager = manager;
-      outlineModel = new OutlineModel();
+      this.javaEditor = javaEditor;
+      outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
+      reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
    }
 
    /**
@@ -91,14 +90,6 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
       return reconciler;
    }
 
-   /**
-    * @param javaEditor
-    */
-   public void setEditor(JavaEditor javaEditor)
-   {
-      reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
-      this.javaEditor = javaEditor;
-   }
 
    private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor()
    {
@@ -117,6 +108,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    @Override
    public CodeAssistant getContentAssistant(TextEditorPartView view)
    {
+
       CodeAssistantImpl impl = new CodeAssistantImpl();
       impl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
       return impl;
@@ -131,7 +123,11 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
       return new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
    }
 
-   public OutlineModel getOutlineModel()
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public OutlineModel getOutline(TextEditorPartView view)
    {
       new OutlineModelUpdater(outlineModel, reconcilerStrategy);
       return outlineModel;

@@ -18,16 +18,13 @@
  */
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.editor.CodenvyTextEditor;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.editor.EditorProvider;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-
-import com.codenvy.ide.util.executor.UserActivityManager;
-
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 
 /**
@@ -40,20 +37,16 @@ public class DefaultEditorProvider implements EditorProvider
 
    private final DocumentProvider documentProvider;
 
+   private Provider<CodenvyTextEditor> editorProvider;
+
    private final TextEditorConfiguration configuration = new TextEditorConfiguration();
 
-   private final Resources resources;
-
-   private final UserActivityManager activityManager;
-
    @Inject
-   public DefaultEditorProvider(Resources resources, UserActivityManager activityManager,
-      DocumentProvider documentProvider)
+   public DefaultEditorProvider(DocumentProvider documentProvider, Provider<CodenvyTextEditor> editorProvider)
    {
       super();
-      this.resources = resources;
-      this.activityManager = activityManager;
       this.documentProvider = documentProvider;
+      this.editorProvider = editorProvider;
    }
 
    /**
@@ -62,7 +55,9 @@ public class DefaultEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new TextEditorPresenter(resources, activityManager, documentProvider, configuration);
+      CodenvyTextEditor editor = editorProvider.get();
+      editor.initialize(configuration, documentProvider);
+      return editor;
    }
 
 }

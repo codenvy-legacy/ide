@@ -22,15 +22,7 @@ import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.TextStoreMutator;
-import com.codenvy.ide.texteditor.Buffer;
-import com.codenvy.ide.texteditor.FocusManager;
-import com.codenvy.ide.texteditor.UndoManager;
-import com.codenvy.ide.texteditor.renderer.LineRenderer;
-import com.codenvy.ide.texteditor.renderer.Renderer;
-import com.codenvy.ide.texteditor.selection.SelectionModel;
-
 import com.codenvy.ide.util.ListenerRegistrar;
-
 import com.google.gwt.user.client.Element;
 
 
@@ -91,8 +83,6 @@ public interface TextEditorPartView
     *
     * @param document the display's new input document
     * @param annotationModel the model for the display's visual annotations
-    *
-    * @see #setDocument(Document)
     */
    void setDocument(DocumentImpl document, AnnotationModel annotationModel);
 
@@ -101,11 +91,6 @@ public interface TextEditorPartView
     * @return the document
     */
    public Document getDocument();
-   
-   /**
-    * @param lineRenderer
-    */
-   void addLineRenderer(LineRenderer lineRenderer);
    
    /**
     * Sets the editable state.
@@ -165,17 +150,12 @@ public interface TextEditorPartView
     */
    void removeTextInputListener(TextInputListener listener);
 
-   //TODO create interfaces for this functions
    FocusManager getFocusManager();
 
    ListenerRegistrar<KeyListener> getKeyListenerRegistrar();
 
-   Renderer getRenderer();
-
    SelectionModel getSelection();
    
-   Buffer getBuffer();
-
    public ListenerRegistrar<TextListener> getTextListenerRegistrar();
 
 }

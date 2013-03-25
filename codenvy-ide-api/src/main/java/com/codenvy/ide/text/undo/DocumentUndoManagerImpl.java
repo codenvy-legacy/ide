@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.text.undo;
 
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 import com.codenvy.ide.text.BadLocationException;
@@ -18,19 +19,16 @@ import com.codenvy.ide.text.DocumentEvent;
 import com.codenvy.ide.text.DocumentListener;
 import com.codenvy.ide.text.ListenerList;
 import com.codenvy.ide.text.TextUtilities;
-import com.codenvy.ide.texteditor.historymanager.AbstractOperation;
-import com.codenvy.ide.texteditor.historymanager.ExecutionException;
-import com.codenvy.ide.texteditor.historymanager.IContextReplacingOperation;
-import com.codenvy.ide.texteditor.historymanager.IOperationHistory;
-import com.codenvy.ide.texteditor.historymanager.IOperationHistoryListener;
-import com.codenvy.ide.texteditor.historymanager.IUndoContext;
-import com.codenvy.ide.texteditor.historymanager.IUndoableOperation;
-import com.codenvy.ide.texteditor.historymanager.ObjectUndoContext;
-import com.codenvy.ide.texteditor.historymanager.OperationHistoryEvent;
-import com.codenvy.ide.texteditor.historymanager.OperationHistoryFactory;
-
-import com.codenvy.ide.runtime.Assert;
-
+import com.codenvy.ide.texteditor.api.historymanager.AbstractOperation;
+import com.codenvy.ide.texteditor.api.historymanager.ExecutionException;
+import com.codenvy.ide.texteditor.api.historymanager.IContextReplacingOperation;
+import com.codenvy.ide.texteditor.api.historymanager.IOperationHistory;
+import com.codenvy.ide.texteditor.api.historymanager.IOperationHistoryListener;
+import com.codenvy.ide.texteditor.api.historymanager.IUndoContext;
+import com.codenvy.ide.texteditor.api.historymanager.IUndoableOperation;
+import com.codenvy.ide.texteditor.api.historymanager.ObjectUndoContext;
+import com.codenvy.ide.texteditor.api.historymanager.OperationHistoryEvent;
+import com.codenvy.ide.texteditor.api.historymanager.OperationHistoryFactory;
 
 import java.util.ArrayList;
 import java.util.List;

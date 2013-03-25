@@ -18,26 +18,23 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.api.outline.OutlinePresenter;
-
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.outline.CodeBlock;
 import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.api.outline.OutlineModel.OutlineModelListener;
-
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.outline.OutlinePresenter;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.editor.TextEditorPartPresenter;
 import com.codenvy.ide.part.PartPresenter;
 import com.codenvy.ide.part.PropertyListener;
 import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.store.LineInfo;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.selection.SelectionModel.CursorListener;
-import com.codenvy.ide.tree.NodeRenderer;
-import com.codenvy.ide.tree.Tree;
-import com.codenvy.ide.tree.TreeNodeElement;
-import com.codenvy.ide.tree.Tree.Listener;
-
+import com.codenvy.ide.ui.tree.Tree;
+import com.codenvy.ide.ui.tree.Tree.Listener;
+import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental.html.DragEvent;
@@ -65,7 +62,7 @@ public class OutlineImpl implements OutlinePresenter
 
    private OutlineView view;
 
-   private TextEditorPartView editor;
+   private TextEditorViewImpl editor;
 
    private final OutlineModel model;
 
@@ -78,13 +75,13 @@ public class OutlineImpl implements OutlinePresenter
    /**
     * 
     */
-   public OutlineImpl(Resources resources, OutlineModel model, NodeRenderer<CodeBlock> renderer,
+   public OutlineImpl(Resources resources, OutlineModel model,
       TextEditorPartView editor, TextEditorPartPresenter editorPresenter)
    {
       this.model = model;
-      this.editor = editor;
+      this.editor = (TextEditorViewImpl)editor;
       dataAdapter = new CodeBlockDataAdapter();
-      view = new OutlineViewImpl(resources, dataAdapter, renderer);
+      view = new OutlineViewImpl(resources, dataAdapter, model.getRenderer());
       editorPresenter.addPropertyListener(new PropertyListener()
       {
 
@@ -185,7 +182,7 @@ public class OutlineImpl implements OutlinePresenter
             int number = lineInfo.number();
             final int offset = TextUtilities.getOffset(editor.getDocument(), number, column);
             blockToSync = null;
-            Tree.iterateDfs(model.getRoot(), dataAdapter, new com.codenvy.ide.tree.Tree.Visitor<CodeBlock>()
+            Tree.iterateDfs(model.getRoot(), dataAdapter, new Tree.Visitor<CodeBlock>()
             {
 
                @Override

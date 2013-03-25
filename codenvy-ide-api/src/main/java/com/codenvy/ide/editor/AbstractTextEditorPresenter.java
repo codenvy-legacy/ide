@@ -18,12 +18,9 @@
  */
 package com.codenvy.ide.editor;
 
-import com.codenvy.ide.api.outline.OutlinePresenter;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -33,24 +30,24 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @version $Id:
  *
  */
-public abstract class AbstractTextEditorPresenter extends AbstractEditorPresenter implements TextEditorPartPresenter
+public abstract class AbstractTextEditorPresenter extends AbstractEditorPresenter implements CodenvyTextEditor
 {
 
    protected TextEditorConfiguration configuration;
 
-   protected final DocumentProvider documentProvider;
+   protected DocumentProvider documentProvider;
 
    protected Document document;
 
+
    /**
-    * @param documentProvider 
-    * @param configuration 
-    * 
+    * {@inheritDoc}
     */
-   public AbstractTextEditorPresenter(TextEditorConfiguration configuration, DocumentProvider documentProvider)
+   @Override
+   public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider)
    {
-      this.documentProvider = documentProvider;
       this.configuration = configuration;
+      this.documentProvider = documentProvider;
    }
 
    /**
@@ -60,15 +57,6 @@ public abstract class AbstractTextEditorPresenter extends AbstractEditorPresente
    public DocumentProvider getDocumentProvider()
    {
       return documentProvider;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public OutlinePresenter getOutline()
-   {
-      return null;
    }
 
    /**

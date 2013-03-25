@@ -20,6 +20,7 @@ package com.codenvy.ide.api.outline;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.ui.tree.NodeRenderer;
 
 /**
  * Model object that holds essential navigation structure data data and sends
@@ -43,6 +44,13 @@ public class OutlineModel
    private OutlineModelListener listener;
 
    private CodeBlock root;
+
+   private NodeRenderer<CodeBlock> renderer;
+
+   public OutlineModel(NodeRenderer<CodeBlock> renderer)
+   {
+      this.renderer = renderer;
+   }
 
    public CodeBlock getRoot()
    {
@@ -86,6 +94,11 @@ public class OutlineModel
       {
          listener.rootChanged(root);
       }
+   }
+
+   public NodeRenderer<CodeBlock> getRenderer()
+   {
+      return  renderer;
    }
 
 }

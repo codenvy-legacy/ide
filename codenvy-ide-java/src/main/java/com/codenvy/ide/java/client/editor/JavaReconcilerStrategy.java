@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.java.client.editor;
 
+import com.codenvy.ide.editor.TextEditorPartPresenter;
 import com.codenvy.ide.java.client.JavaAutoBeanFactory;
 import com.codenvy.ide.java.client.NameEnvironment;
 import com.codenvy.ide.java.client.TypeInfoStorage;
@@ -28,25 +29,19 @@ import com.codenvy.ide.java.client.core.dom.ASTNode;
 import com.codenvy.ide.java.client.core.dom.ASTParser;
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment;
-
-import com.codenvy.ide.editor.TextEditorPartPresenter;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.texteditor.api.reconciler.DirtyRegion;
 import com.codenvy.ide.texteditor.api.reconciler.ReconcilingStrategy;
-
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
-
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 import com.google.gwt.core.client.Scheduler;
-
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 
 
@@ -76,8 +71,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider
    }
 
    /**
-    * @param activeFile 
-    * @param editor 
+    * @param editor
     * 
     */
    public JavaReconcilerStrategy(TextEditorPartPresenter editor)

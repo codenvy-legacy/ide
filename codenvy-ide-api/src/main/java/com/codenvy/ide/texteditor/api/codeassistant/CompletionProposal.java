@@ -20,7 +20,6 @@ package com.codenvy.ide.texteditor.api.codeassistant;
 
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
-
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -70,8 +69,6 @@ public interface CompletionProposal
     * Returns the string to be displayed in the list of completion proposals.
     * 
     * @return the string to be displayed
-    * 
-    * @see ICompletionProposalExtension6#getStyledDisplayString()
     */
    String getDisplayString();
 

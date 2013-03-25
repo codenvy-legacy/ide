@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.text.undo;
 
-import com.codenvy.ide.texteditor.historymanager.ExecutionException;
-import com.codenvy.ide.texteditor.historymanager.IUndoContext;
+import com.codenvy.ide.texteditor.api.historymanager.ExecutionException;
+import com.codenvy.ide.texteditor.api.historymanager.IUndoContext;
 
 /**
  * Interface for a document undo manager. Tracks changes in a document and

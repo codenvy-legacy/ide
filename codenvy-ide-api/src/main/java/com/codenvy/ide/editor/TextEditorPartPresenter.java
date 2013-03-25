@@ -74,8 +74,9 @@ public interface TextEditorPartPresenter extends EditorPartPresenter
    SelectionProvider getSelectionProvider();
    
    /**
-    * Return Outline presenter. If editor not support Outline return <code>null</code>
-    * @return
+    * Return Outline presenter.
+    * If editor not support Outline return <code>null</code>
+    * @return the outline presenter.
     */
    OutlinePresenter getOutline();
 }

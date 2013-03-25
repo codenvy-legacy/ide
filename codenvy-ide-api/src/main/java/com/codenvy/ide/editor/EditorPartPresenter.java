@@ -52,7 +52,7 @@ public interface EditorPartPresenter extends PartPresenter
    public static final int PROP_INPUT = 0x102;
 
    /**
-    * Initializes this editor with the given editor site and input.
+    * Initializes this editor with the given input.
     * <p>
     * This method is automatically called shortly after the part is instantiated.
     * It marks the start of the part's lifecycle. 

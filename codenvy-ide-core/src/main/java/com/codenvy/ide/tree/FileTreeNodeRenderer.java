@@ -17,10 +17,12 @@ package com.codenvy.ide.tree;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
-
+import com.codenvy.ide.ui.tree.NodeRenderer;
+import com.codenvy.ide.ui.tree.Tree;
+import com.codenvy.ide.ui.tree.TreeNodeElement;
+import com.codenvy.ide.ui.tree.TreeNodeMutator;
 import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.resources.client.ImageResource;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -142,8 +144,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource>
 
             if (parent != null)
             {
-               @SuppressWarnings({"unchecked", "unused"})
-               TreeNodeElement<Resource> fileNode = (TreeNodeElement<Resource>)parent;
+               @SuppressWarnings({"unchecked", "unused"}) TreeNodeElement<Resource> fileNode = (TreeNodeElement<Resource>)parent;
                // TODO ????
                //          anchor.setHref(
                //              WorkspaceUtils.createDeepLinkToFile(fileNode.getData().getNodePath()));

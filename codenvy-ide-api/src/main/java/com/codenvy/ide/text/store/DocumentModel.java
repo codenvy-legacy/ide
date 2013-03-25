@@ -14,17 +14,16 @@
 
 package com.codenvy.ide.text.store;
 
-import com.codenvy.ide.text.store.anchor.Anchor;
-import com.codenvy.ide.text.store.anchor.AnchorManager;
-import com.codenvy.ide.texteditor.UndoManager;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.text.store.anchor.Anchor;
+import com.codenvy.ide.text.store.anchor.AnchorManager;
+import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.util.ListenerManager;
+import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.StringUtils;
-import com.codenvy.ide.util.ListenerManager.Dispatcher;
 
 
 /**

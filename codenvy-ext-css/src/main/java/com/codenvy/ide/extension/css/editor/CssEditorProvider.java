@@ -18,15 +18,12 @@
  */
 package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.editor.CodenvyTextEditor;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.editor.EditorProvider;
-import com.codenvy.ide.texteditor.TextEditorPresenter;
-
-import com.codenvy.ide.util.executor.UserActivityManager;
-
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 
 /**
@@ -40,26 +37,20 @@ public class CssEditorProvider implements EditorProvider
 
    private final DocumentProvider documentProvider;
 
-   private final Resources resources;
-
-   private final UserActivityManager activityManager;
+   private Provider<CodenvyTextEditor> editorProvider;
 
    private final CssResources cssRes;
 
    /**
     * @param documentProvider
-    * @param resources
-    * @param activityManager
     */
    @Inject
-   public CssEditorProvider(DocumentProvider documentProvider, Resources resources, CssResources cssRes,
-      UserActivityManager activityManager)
+   public CssEditorProvider(DocumentProvider documentProvider, CssResources cssRes, Provider<CodenvyTextEditor> editorProvider)
    {
       super();
       this.documentProvider = documentProvider;
-      this.resources = resources;
+      this.editorProvider = editorProvider;
       this.cssRes = cssRes;
-      this.activityManager = activityManager;
    }
 
    /**
@@ -68,7 +59,9 @@ public class CssEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new TextEditorPresenter(resources, activityManager, documentProvider, new CssEditorConfiguration(cssRes));
+      CodenvyTextEditor textEditor = editorProvider.get();
+      textEditor.initialize(new CssEditorConfiguration(cssRes), documentProvider);
+      return textEditor;
    }
 
 }
