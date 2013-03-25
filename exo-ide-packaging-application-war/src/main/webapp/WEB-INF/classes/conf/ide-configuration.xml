@@ -132,29 +132,6 @@
    <!-- End Python Support -->
 
 
-   <!--
-   ***************************************************************************************
-   ********************** Version Control System Supporting ******************************
-   ***************************************************************************************
-   -->
-
-   <!-- GitHub support -->
-   <component>
-      <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.git.server.github.GitHub</type>
-      <init-params>
-         <value-param>
-            <name>github-user</name>
-            <value>eXoIDE</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End GitHub Support-->
-
 
    <!--
    ***************************************************************************************
@@ -216,20 +193,7 @@
 
    <!-- End Cloudbees -->
 
-   <!-- CloudFoundry -->
-
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
-   </component>
-   
+     
    <component>
 
 <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
@@ -289,50 +253,7 @@
       <type>org.exoplatform.ide.vfs.impl.fs.GitUrlResolverFsImpl</type>
    </component>
 
-   <!-- Heroku -->
-
-   <component>
-      <type>org.exoplatform.ide.extension.heroku.server.Heroku</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End Heroku -->
-
-   <!-- OpenShift -->
-
-   <component>
-      <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.openshift.server.Express</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>express-config</name>
-            <value>/express-config</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End OpenShift -->
-
+ 
    <!-- Google AppEngine  -->
    <component>
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
