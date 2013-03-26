@@ -20,7 +20,6 @@ package org.exoplatform.ide.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -36,6 +35,9 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/public/images/logo/codenvy-welcome.png")
    ImageResource ideLogo();
+
+   @Source("org/exoplatform/ide/public/images/blank.png")
+   ImageResource blankImage();
 
    /*
     * BUTTONS

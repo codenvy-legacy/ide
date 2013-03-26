@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.selection;
 
+import com.google.collide.client.editor.folding.FoldingManager;
+
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.FocusManager;
@@ -30,8 +32,8 @@ import com.google.collide.shared.document.Document;
 public class SelectionManager {
 
   public static SelectionManager create(Document document, Buffer buffer,
-      FocusManager focusManager, Resources resources) {
-    SelectionModel selectionModel = SelectionModel.create(document, buffer);
+      FocusManager focusManager, FoldingManager foldingManager, Resources resources) {
+    SelectionModel selectionModel = SelectionModel.create(document, buffer, foldingManager);
     SelectionLineRenderer selectionLineRenderer =
         new SelectionLineRenderer(selectionModel, focusManager, resources);
 

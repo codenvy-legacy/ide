@@ -695,68 +695,68 @@ public abstract class AbstractDocument implements IDocument, IDocumentExtension,
       }
    }
 
-//   /**
-//    * Fires the given document event to all registers document listeners informing them about the forthcoming document
-//    * manipulation. Uses a robust iterator.
-//    * 
-//    * @param event the event to be sent out
-//    */
-//   protected void fireDocumentAboutToBeChanged(DocumentEvent event)
-//   {
-//
-//      // IDocumentExtension
-//      if (fReentranceCount == 0)
-//         flushPostNotificationChanges();
-//
-//      if (fDocumentPartitioners != null)
-//      {
-//         Iterator e = fDocumentPartitioners.values().iterator();
-//         while (e.hasNext())
-//         {
-//            IDocumentPartitioner p = (IDocumentPartitioner)e.next();
-//            // if (p instanceof IDocumentPartitionerExtension3) {
-//            // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) p;
-//            // if (extension.getActiveRewriteSession() != null)
-//            // continue;
-//            // }
-//            try
-//            {
-//               p.documentAboutToBeChanged(event);
-//            }
-//            catch (Exception ex)
-//            {
-//               log(ex);
-//            }
-//         }
-//      }
-//
-//      Object[] listeners = fPrenotifiedDocumentListeners.getListeners();
-//      for (int i = 0; i < listeners.length; i++)
-//      {
-//         try
-//         {
-//            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
-//         }
-//         catch (Exception ex)
-//         {
-//            log(ex);
-//         }
-//      }
-//
-//      listeners = fDocumentListeners.getListeners();
-//      for (int i = 0; i < listeners.length; i++)
-//      {
-//         try
-//         {
-//            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
-//         }
-//         catch (Exception ex)
-//         {
-//            log(ex);
-//         }
-//      }
-//
-//   }
+   /**
+    * Fires the given document event to all registers document listeners informing them about the forthcoming document
+    * manipulation. Uses a robust iterator.
+    * 
+    * @param event the event to be sent out
+    */
+   protected void fireDocumentAboutToBeChanged(DocumentEvent event)
+   {
+
+      // IDocumentExtension
+      if (fReentranceCount == 0)
+         flushPostNotificationChanges();
+
+      if (fDocumentPartitioners != null)
+      {
+         Iterator e = fDocumentPartitioners.values().iterator();
+         while (e.hasNext())
+         {
+            IDocumentPartitioner p = (IDocumentPartitioner)e.next();
+            // if (p instanceof IDocumentPartitionerExtension3) {
+            // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) p;
+            // if (extension.getActiveRewriteSession() != null)
+            // continue;
+            // }
+            try
+            {
+               p.documentAboutToBeChanged(event);
+            }
+            catch (Exception ex)
+            {
+               log(ex);
+            }
+         }
+      }
+
+      Object[] listeners = fPrenotifiedDocumentListeners.getListeners();
+      for (int i = 0; i < listeners.length; i++)
+      {
+         try
+         {
+            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
+         }
+         catch (Exception ex)
+         {
+            log(ex);
+         }
+      }
+
+      listeners = fDocumentListeners.getListeners();
+      for (int i = 0; i < listeners.length; i++)
+      {
+         try
+         {
+            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
+         }
+         catch (Exception ex)
+         {
+            log(ex);
+         }
+      }
+
+   }
 
    /**
     * Updates document partitioning and document positions according to the specification given by the document event.
@@ -1311,7 +1311,7 @@ public abstract class AbstractDocument implements IDocument, IDocumentExtension,
          throw new BadLocationException();
 
       DocumentEvent e = new DocumentEvent(this, pos, length, text);
-//      fireDocumentAboutToBeChanged(e);
+      fireDocumentAboutToBeChanged(e);
 
       getStore().replace(pos, length, text);
       getTracker().replace(pos, length, text);
@@ -1357,7 +1357,7 @@ public abstract class AbstractDocument implements IDocument, IDocumentExtension,
       int length = getStore().getLength();
 
       DocumentEvent e = new DocumentEvent(this, 0, length, text);
-//      fireDocumentAboutToBeChanged(e);
+      fireDocumentAboutToBeChanged(e);
 
       getStore().set(text);
       getTracker().set(text);

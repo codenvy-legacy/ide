@@ -21,6 +21,7 @@ import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.common.Constants;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator.RoundingStrategy;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.renderer.Renderer;
 import com.codenvy.ide.client.util.CssUtils;
 import com.codenvy.ide.client.util.Elements;
@@ -53,6 +54,7 @@ import elemental.html.ClientRect;
 import elemental.html.DivElement;
 import elemental.html.Element;
 
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.json.shared.JsonArray;
 
 /*
@@ -66,7 +68,7 @@ import org.exoplatform.ide.json.shared.JsonArray;
  * The lifecycle of this class is tied to the {@link Editor} that owns it.
  */
 public class Buffer extends UiComponent<Buffer.View>
-    implements LineListener, LineCountListener, CoordinateMap.DocumentSizeProvider {
+    implements LineListener, LineCountListener, CoordinateMap.DocumentSizeProvider, FoldingManager.FoldingListener {
 
   private static final int MARKER_COLUMN = 100;
 
@@ -265,7 +267,7 @@ public class Buffer extends UiComponent<Buffer.View>
       rootElement.appendChild(scrollbarElement);
       setElement(rootElement);
     }
-    
+
     private Element createScrollbarElement(BaseResources.Css baseCss) {
       final DivElement scrollbarElement = Elements.createDivElement(css.scrollbar());
       scrollbarElement.addClassName(baseCss.documentScrollable());
@@ -597,6 +599,7 @@ public class Buffer extends UiComponent<Buffer.View>
   private final LineDimensionsCalculator lineDimensions;
   private final RemoverManager documentChangedRemoverManager = new RemoverManager();
   private final Executor renderTimeExecutor;
+  private FoldingManager foldingManager;
 
   private Buffer(View view, FontDimensions fontDimensions, LineDimensionsCalculator lineDimensions,
       Executor renderTimeExecutor) {
@@ -815,7 +818,9 @@ public class Buffer extends UiComponent<Buffer.View>
   }
 
   public int calculateSpacerTop(Spacer spacer) {
-    return coordinateMap.convertLineNumberToY(spacer.getLineNumber()) - spacer.getHeight();
+    int lineNumber = spacer.getLineNumber();
+    lineNumber = modelLine2VisibleLine(lineNumber);
+    return coordinateMap.convertLineNumberToY(lineNumber) - spacer.getHeight();
   }
 
   /**
@@ -824,6 +829,7 @@ public class Buffer extends UiComponent<Buffer.View>
    */
   public int convertYToLineNumber(int y, boolean inDocumentRange) {
     int lineNumber = coordinateMap.convertYToLineNumber(y);
+    lineNumber += getFoldedLinesCountAboveLineNumber(lineNumber);
     return inDocumentRange ? LineUtils.getValidLineNumber(lineNumber, document) : lineNumber;
   }
 
@@ -846,6 +852,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * simple document, 0 will be returned.
    */
   public int convertLineNumberToY(int lineNumber) {
+    lineNumber = modelLine2VisibleLine(lineNumber);
     return coordinateMap.convertLineNumberToY(lineNumber);
   }
 
@@ -919,8 +926,21 @@ public class Buffer extends UiComponent<Buffer.View>
      * "true", convertYToLineNumber(0+20) would bound on the document size and
      * return 1 instead of the 2 that we need.
      */
-    return convertYToLineNumber(getScrollTop() + getHeight(), false)
-        - convertYToLineNumber(getScrollTop(), false);
+//    return convertYToLineNumber(getScrollTop() + getHeight(), false)
+//        - convertYToLineNumber(getScrollTop(), false);
+    return coordinateMap.convertYToLineNumber(getScrollTop() + getHeight()) - coordinateMap.convertYToLineNumber(getScrollTop());
+  }
+
+  /**
+   * Returns last visible (not collapsed) in viewport line number.
+   * 
+   * @param topLineNumber top line number
+   * @return last visible line number
+   */
+  public int getLastVisibleLineNumberFromTop(int topLineNumber) {
+    final int topLineY = convertLineNumberToY(topLineNumber);
+    final int bottomLineY = topLineY + getHeight();
+    return convertYToLineNumber(bottomLineY, false);
   }
 
   public int getHeight() {
@@ -972,16 +992,18 @@ public class Buffer extends UiComponent<Buffer.View>
     return getView().getWidth();
   }
 
-  public void handleDocumentChanged(Document newDocument) {
+  public void handleDocumentChanged(Document newDocument, FoldingManager foldingManager) {
     documentChangedRemoverManager.remove();
 
     document = newDocument;
+    this.foldingManager = foldingManager;
     coordinateMap.handleDocumentChange(newDocument);
     lineDimensions.handleDocumentChange(newDocument);
 
     getView().reset();
 
     documentChangedRemoverManager.track(newDocument.getLineListenerRegistrar().add(this));
+    documentChangedRemoverManager.track(foldingManager.getFoldingListenerRegistrar().add(this));
     updateBufferHeight();
   }
 
@@ -1018,6 +1040,34 @@ public class Buffer extends UiComponent<Buffer.View>
   @Override
   public void onLineCountChanged(Document document, int lineCount) {
     updateBufferHeight();
+  }
+
+  @Override
+  public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
+   renderTimeExecutor.execute(new Runnable() {
+     @Override
+     public void run() {
+       /*
+        * Since the collapsed line(s) no longer exist, we need to make sure to
+        * clamp them
+        */
+       int safeLineNumber =
+           Math.min(document.getLastLineNumber(), lineNumber);
+       updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(safeLineNumber),
+           -linesToCollapse.size() * getEditorLineHeight());
+     }
+   });
+  }
+
+  @Override
+  public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
+   renderTimeExecutor.execute(new Runnable() {
+     @Override
+     public void run() {
+       updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(lineNumber), linesToExpand.size()
+           * getEditorLineHeight());
+     }
+   });
   }
 
   public void setMaxLineLength(int maxLineLength) {
@@ -1057,8 +1107,14 @@ public class Buffer extends UiComponent<Buffer.View>
    * {@link #updateBufferHeightAndMaybeScrollTop(int, int)}.
    */
   private void updateBufferHeight() {
-    final int totalBufferHeight =
-        coordinateMap.getTotalSpacerHeight() + document.getLineCount() * editorLineHeight;
+    int lineCount = 0;
+    if (isFoldingModeEnabled()) {
+      lineCount = foldingManager.getSlaveDocument().getNumberOfLines();
+    }
+    else {
+      lineCount = document.getLineCount();
+    }
+    final int totalBufferHeight = coordinateMap.getTotalSpacerHeight() + lineCount * editorLineHeight;
     getView().setBufferHeight(totalBufferHeight);
     updateColumnMarkerHeight();
     updateVerticalScrollbarDisplayVisibility();
@@ -1142,4 +1198,81 @@ public class Buffer extends UiComponent<Buffer.View>
   public void synchronizeScrollTop() {
     getView().setScrollTop(getView().scrollTopFromPreviousDispatch, true);
   }
+
+  /**
+   * Computes count of folded lines above the specified line number.
+   * 
+   * @param lineNumber
+   * @return count of folded lines above the <code>lineNumber</code>
+   */
+  public int getFoldedLinesCountAboveLineNumber(int lineNumber) {
+    if (!isFoldingModeEnabled()) {
+      return 0;
+    }
+    final int visibleLinesCount = foldingManager.getSlaveDocument().getNumberOfLines();
+    final int lastLineNumber = Math.min(lineNumber, visibleLinesCount-1);
+    return visibleLine2ModelLine(lastLineNumber) - lastLineNumber;
+  }
+
+  /**
+   * Returns the projection document line that corresponds to the given line of the
+   * master document or <code>-1</code> if there is no such line.
+   *
+   * @param masterLineNumber number of the master document line
+   * @return the corresponding projection document's line or <code>-1</code>
+   */
+  public int modelLine2VisibleLine(int masterLineNumber) {
+    if (!isFoldingModeEnabled()) {
+      return masterLineNumber;
+    }
+    try {
+      return foldingManager.getInformationMapping().toImageLine(masterLineNumber);
+    }
+    catch (BadLocationException x) {
+      // nothing to do
+    }
+    return -1;
+  }
+
+  /**
+   * Returns the master document line that corresponds to the given line of the
+   * projection document or <code>-1</code> if there is no such line.
+   *
+   * @param visibleLine visible line
+   * @return the corresponding model line or <code>-1</code>
+   */
+  public int visibleLine2ModelLine(int visibleLine) {
+    if (!isFoldingModeEnabled()) {
+      return visibleLine;
+    }
+    try {
+      return foldingManager.getInformationMapping().toOriginLine(visibleLine);
+    } catch (BadLocationException x) {
+      // nothing to do
+    }
+    return -1;
+  }
+
+  /**
+   * Returns the line of the projection document whose corresponding line in the master document
+   * is closest to the given line in the master document or <code>-1</code>.
+   *
+   * @param masterLineNumber the line in the master document
+   * @return the line in the projection document that corresponds best to the given line in the master document or <code>-1</code>
+   */
+  protected int getClosestWidgetLineForModelLine(int masterLineNumber) {
+     if (!isFoldingModeEnabled())
+       return masterLineNumber;
+     try {
+       return foldingManager.getInformationMapping().toClosestImageLine(masterLineNumber);
+     } catch (BadLocationException x) {
+       // nothing to do
+     }
+     return -1;
+  }
+
+  private boolean isFoldingModeEnabled() {
+    return foldingManager.getInformationMapping() != null;
+  }
+
 }

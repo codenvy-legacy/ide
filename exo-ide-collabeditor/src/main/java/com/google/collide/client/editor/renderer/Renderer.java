@@ -14,6 +14,7 @@
 
 package com.google.collide.client.editor.renderer;
 
+
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -40,9 +41,9 @@ import java.util.EnumSet;
 public class Renderer {
 
   public static Renderer create(Document document, ViewportModel viewport,
-      Buffer buffer, Gutter leftGutter, SelectionModel selection, FocusManager focusManager,
+      Buffer buffer, Gutter leftGutter, Gutter foldMarkGutter, SelectionModel selection, FocusManager focusManager,
       Editor editor, Resources res, RenderTimeExecutor renderTimeExecutor) {
-    return new Renderer(document, viewport, buffer, leftGutter, selection, focusManager, 
+    return new Renderer(document, viewport, buffer, leftGutter, foldMarkGutter, selection, focusManager, 
       editor, res, renderTimeExecutor);
   }
 
@@ -70,6 +71,7 @@ public class Renderer {
 
   private final ListenerManager<LineLifecycleListener> lineLifecycleListenerManager;
   private final LineNumberRenderer lineNumberRenderer;
+  private final FoldMarkRenderer foldMarkRenderer;
 
   private final ListenerManager.Dispatcher<CompletionListener> renderCompletedDispatcher =
       new ListenerManager.Dispatcher<CompletionListener>() {
@@ -84,19 +86,19 @@ public class Renderer {
   private final RenderTimeExecutor renderTimeExecutor;
   
   private Renderer(Document document, ViewportModel viewport, Buffer buffer,
-      Gutter leftGutter, SelectionModel selection, FocusManager focusManager, 
+      Gutter leftGutter, Gutter foldMarkGutter, SelectionModel selection, FocusManager focusManager, 
       Editor editor, Resources res, RenderTimeExecutor renderTimeExecutor) {
     this.viewport = viewport;
     this.renderTimeExecutor = renderTimeExecutor;
     this.completionListenerManager = ListenerManager.create();
     this.lineLifecycleListenerManager = ListenerManager.create();
     this.changeTracker =
-        new ChangeTracker(this, buffer, document, viewport, selection, focusManager);
+        new ChangeTracker(this, buffer, document, viewport, selection, focusManager, editor.getFoldingManager());
     this.viewportRenderer = new ViewportRenderer(
-            document, buffer, viewport, editor.getView(), lineLifecycleListenerManager);
+            document, buffer, viewport, editor.getView(), lineLifecycleListenerManager, editor.getFoldingManager(), res);
     this.lineNumberRenderer = new LineNumberRenderer(buffer, res, leftGutter, viewport, selection,
         editor);
-    
+    this.foldMarkRenderer = new FoldMarkRenderer(buffer, foldMarkGutter, viewport, editor.getFoldingManager());
   }
 
   public void addLineRenderer(LineRenderer lineRenderer) {
@@ -125,23 +127,30 @@ public class Renderer {
     if (ENABLE_PROFILING) {
       Log.markTimeline(getClass(), "Rendering changes...");
     }
-    
+
     EnumSet<ChangeType> changes = changeTracker.getChanges();
 
     int viewportTopmostContentChangedLine =
         Math.max(viewport.getTopLineNumber(), changeTracker.getTopmostContentChangedLineNumber());
 
+    if (changes.contains(ChangeType.VIEWPORT_FOLD_MARK)) {
+      foldMarkRenderer.renderLineAndFollowing(0);
+    }
+
     if (changes.contains(ChangeType.VIEWPORT_LINE_NUMBER)) {
       if (ENABLE_PROFILING) {
         Log.markTimeline(getClass(), " - lineNumberRenderer...");
       }
-      
-      lineNumberRenderer.render();
+
+//      lineNumberRenderer.render();
+      // TODO workaround for situation when new line inserted before the collapsed text block
+      lineNumberRenderer.renderLineAndFollowing(0);
+      foldMarkRenderer.render();
 
       if (ENABLE_PROFILING) {
         Log.markTimeline(getClass(), " - renderViewportLineNumbersChanged...");
       }
-      
+
       viewportRenderer.renderViewportLineNumbersChanged(changeTracker
           .getViewportLineNumberChangedEdges());
     }
@@ -150,16 +159,17 @@ public class Renderer {
       if (ENABLE_PROFILING) {
         Log.markTimeline(getClass(), " - renderViewportContentChange...");
       }
-      
+
       viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedLine,
-          changeTracker.getViewportRemovedLines());
+          changeTracker.getViewportRemovedLines(), changeTracker.isByReasonOfFolding());
 
       if (changeTracker.hadContentChangeThatUpdatesFollowingLines()) {
         if (ENABLE_PROFILING) {
           Log.markTimeline(getClass(), " - renderLineAndFollowing...");
         }
-        
+
         lineNumberRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
+        foldMarkRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
       }
     }
 
@@ -170,6 +180,7 @@ public class Renderer {
       
       viewportRenderer.renderViewportShift(false);
       lineNumberRenderer.render();
+      foldMarkRenderer.render();
     }
     
     if (changes.contains(ChangeType.DIRTY_LINE)) {
@@ -202,5 +213,6 @@ public class Renderer {
     changeTracker.teardown();
     viewportRenderer.teardown();
     lineNumberRenderer.teardown();
+    foldMarkRenderer.teardown();
   }
 }
