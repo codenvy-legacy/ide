@@ -24,6 +24,7 @@ import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorPartPresenter;
 import com.codenvy.ide.editor.EditorProvider;
 import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -51,13 +52,13 @@ public class JavaEditorProvider implements EditorProvider
     */
    @Inject
    public JavaEditorProvider(Resources resources, UserActivityManager activityManager,
-      Provider<CodenvyTextEditor> editorProvider)
+      Provider<CodenvyTextEditor> editorProvider, DocumentFactory documentFactory)
    {
       super();
       this.resources = resources;
       this.activityManager = activityManager;
       this.editorProvider = editorProvider;
-      this.documentProvider = new CompilationUnitDocumentProvider(resources.workspaceEditorCss());
+      this.documentProvider = new CompilationUnitDocumentProvider(resources.workspaceEditorCss(), documentFactory);
    }
 
    /**

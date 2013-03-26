@@ -18,15 +18,18 @@
  */
 package com.codenvy.ide.java.client.editor;
 
+import com.codenvy.ide.core.editor.ResourceDocumentProvider;
+import com.codenvy.ide.editor.EditorInput;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.core.IProblemRequestor;
 import com.codenvy.ide.java.client.core.compiler.CategorizedProblem;
 import com.codenvy.ide.java.client.core.compiler.IProblem;
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
-
-import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.editor.EditorInput;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.annotation.Annotation;
 import com.codenvy.ide.text.annotation.AnnotationModel;
@@ -34,13 +37,7 @@ import com.codenvy.ide.text.annotation.AnnotationModelImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.Css;
 import com.codenvy.ide.texteditor.api.quickassist.QuickFixableAnnotation;
-
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.runtime.Assert;
-
 import com.google.gwt.resources.client.ImageResource;
-
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -483,9 +480,11 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider
 
    /**
     * @param css
+    * @param documentFactory
     */
-   public CompilationUnitDocumentProvider(Css css)
+   public CompilationUnitDocumentProvider(Css css, DocumentFactory documentFactory)
    {
+      super(documentFactory);
       this.css = css;
    }
 
