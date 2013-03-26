@@ -61,6 +61,7 @@ public class DocumentAdaptor implements IDocumentListener
       try
       {
          collabEditor.asWidget().fireEvent(new EditorContentChangedEvent(collabEditor));
+
          // Remove textListener to prevent updating an appropriate IDocument instance
          editorDocument.getTextListenerRegistrar().remove(textListener);
 

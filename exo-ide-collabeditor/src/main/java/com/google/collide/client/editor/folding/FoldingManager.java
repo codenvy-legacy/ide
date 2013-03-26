@@ -126,11 +126,20 @@ public class FoldingManager implements Document.TextListener
 
    private HashMap<FoldMarker, AbstractFoldRange> markerToPositionMap = new HashMap<FoldMarker, AbstractFoldRange>();
 
+   /**
+    * CollabEditor's document.
+    */
    private Document document;
 
-   protected IDocument masterDocument;
+   /**
+    * Master document (API).
+    */
+   private IDocument masterDocument;
 
-   protected ProjectionDocument slaveDocument;
+   /**
+    * Slave document (API).
+    */
+   private ProjectionDocument slaveDocument;
 
    /**
     * The slave document manager.
@@ -271,9 +280,9 @@ public class FoldingManager implements Document.TextListener
    public void onTextChange(Document document, final JsonArray<TextChange> textChanges)
    {
       // TODO
-      // Use deferred invocation to allow wait while updating master document
+      // Use deferred invocation to wait while master document will updated
       // because 'CollabEditor.TextListenerImpl' may be not first listener
-      // of all CollabEditor's document listener.
+      // of all CollabEditor's document listeners.
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
