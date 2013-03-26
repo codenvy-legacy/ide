@@ -65,7 +65,8 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
       try
       {
          int line = document.getLineOfOffset(cursor.offset);
-         int column = cursor.getOffset() - line;
+         Region region = document.getLineInformation(line);
+         int column = cursor.getOffset() - region.getOffset();
          int lineWithCursor = line;
 
          boolean parsingLineWithCursor = true;
@@ -84,7 +85,8 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
             String text;
             if (parsingLineWithCursor)
             {
-               text = document.get(line, line + column);
+               Region information = document.getLineInformation(line);
+               text = document.get(information.getOffset(), column);
                parsingLineWithCursor = false;
             }
             else
@@ -94,7 +96,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
              * autocompletion.
              */
                Region information = document.getLineInformation(line);
-               text = document.get(information.getOffset(), information.getLength() - 1);//.trim();
+               text = document.get(information.getOffset(), information.getLength());//.trim();
             }
 
             textBefore = text + textBefore;
