@@ -75,7 +75,7 @@ public class FakeLoginModule extends TomcatLoginModule
             Set<MembershipEntry> entries = new HashSet<MembershipEntry>(1);
             entries.add(new MembershipEntry(username));
             Set<String> roles = new HashSet<String>(1);
-            roles.add("users");
+            roles.add("developer");
             identity = new Identity(username, entries, roles);
             sharedState.put("javax.security.auth.login.name", username);
             subject.getPrivateCredentials().add(new PasswordCredential(password));
