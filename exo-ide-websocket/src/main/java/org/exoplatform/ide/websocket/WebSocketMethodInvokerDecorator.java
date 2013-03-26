@@ -63,7 +63,7 @@ public class WebSocketMethodInvokerDecorator extends MethodInvokerDecorator
          finally
          {
             ConversationState.setCurrent(null);
-            com.codenvy.commons.env.EnvironmentContext.setCurrent(null);
+            com.codenvy.commons.env.EnvironmentContext.reset();
          }
       }
       return super.invokeMethod(resource, genericMethodResource, context);
