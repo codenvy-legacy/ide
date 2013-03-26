@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.api.ui.perspective;
 
-import com.codenvy.ide.mvp.Presenter;
+import com.codenvy.ide.api.mvp.Presenter;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 

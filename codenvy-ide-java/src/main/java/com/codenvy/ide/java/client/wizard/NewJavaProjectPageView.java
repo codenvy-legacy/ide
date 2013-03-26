@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import com.codenvy.ide.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 
 /**
  * View for new Java project wizard.

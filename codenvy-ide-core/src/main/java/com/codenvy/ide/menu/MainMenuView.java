@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.menu;
 
-import com.codenvy.ide.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 

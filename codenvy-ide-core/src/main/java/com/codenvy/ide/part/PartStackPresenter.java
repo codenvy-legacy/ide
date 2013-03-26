@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.part;
 
-import com.codenvy.ide.mvp.Presenter;
+import com.codenvy.ide.api.mvp.Presenter;
 
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;

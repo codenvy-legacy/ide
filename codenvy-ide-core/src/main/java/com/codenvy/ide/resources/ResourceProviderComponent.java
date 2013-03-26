@@ -16,6 +16,8 @@
  */
 package com.codenvy.ide.resources;
 
+import com.google.inject.Singleton;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
@@ -59,6 +61,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
+@Singleton      
 public class ResourceProviderComponent implements ResourceProvider, Component
 {
 

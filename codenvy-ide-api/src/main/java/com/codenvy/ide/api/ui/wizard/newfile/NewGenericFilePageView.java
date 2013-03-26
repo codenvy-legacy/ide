@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.ui.wizard.newfile;
 
-import com.codenvy.ide.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of NewGenericFile view

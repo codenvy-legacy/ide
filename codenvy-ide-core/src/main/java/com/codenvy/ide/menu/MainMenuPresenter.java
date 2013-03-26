@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.menu;
 
-import com.codenvy.ide.mvp.Presenter;
+import com.codenvy.ide.api.mvp.Presenter;
 
 import com.codenvy.ide.api.ui.menu.ToggleCommand;
 

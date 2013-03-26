@@ -19,6 +19,7 @@ package com.codenvy.ide.api.parts;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 /**
+ * Part with Project Explorer view
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
