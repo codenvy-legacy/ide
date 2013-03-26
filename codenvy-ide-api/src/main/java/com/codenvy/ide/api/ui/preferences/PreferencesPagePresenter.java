@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.ui.preferences;
 
-import com.codenvy.ide.mvp.Presenter;
+import com.codenvy.ide.api.mvp.Presenter;
 
 import com.google.gwt.resources.client.ImageResource;
 

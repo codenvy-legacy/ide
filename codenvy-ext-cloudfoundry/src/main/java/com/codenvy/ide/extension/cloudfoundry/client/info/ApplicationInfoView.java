@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.info;
 
-import com.codenvy.ide.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 
 import java.util.List;
 

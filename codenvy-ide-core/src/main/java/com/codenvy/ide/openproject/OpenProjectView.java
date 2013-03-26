@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.openproject;
 
-import com.codenvy.ide.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 
 /**
  * The view of {@link OpenProjectPresenter}.

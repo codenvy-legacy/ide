@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
-import com.codenvy.ide.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.json.JsonArray;

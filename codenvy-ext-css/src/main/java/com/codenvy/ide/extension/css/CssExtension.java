@@ -24,7 +24,6 @@ import com.codenvy.ide.extension.css.editor.CssEditorProvider;
 import com.codenvy.ide.extension.css.wizard.NewCSSFilePagePresenter;
 import com.codenvy.ide.resources.FileType;
 import com.codenvy.ide.util.dom.Elements;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 import com.google.inject.Inject;
@@ -42,9 +41,9 @@ import com.google.inject.Singleton;
 @Extension(title = "Css Support : syntax highlighting and autocomplete.", version = "3.0.0")
 public class CssExtension
 {
-   private interface ParserResource extends ClientBundle
+   public interface ParserResource extends ClientBundle
    {
-      @Source("css_parser.js")
+      @Source("com/codenvy/ide/extension/css/css_parser.js")
       TextResource cssParser();
    }
 
@@ -55,7 +54,7 @@ public class CssExtension
    @Inject
    public CssExtension(ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider,
       EditorRegistry editorRegistry, WizardAgent wizardAgent, Provider<NewCSSFilePagePresenter> provider,
-      CssExtensionResource resources)
+      CssExtensionResource resources, ParserResource res)
    {
       // Create and register new File type
       FileType cssFile = new FileType(null, "text/css", "css");
@@ -64,7 +63,6 @@ public class CssExtension
 
       // register Editor Provider
       editorRegistry.register(cssFile, cssEditorProvider);
-      ParserResource res = GWT.create(ParserResource.class);
       Elements.injectJs(res.cssParser().getText());
    }
 }

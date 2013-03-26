@@ -47,11 +47,19 @@ public class OutlineModel
 
    private NodeRenderer<CodeBlock> renderer;
 
+   /**
+    * Instantiate Outline Model
+    * 
+    * @param renderer
+    */
    public OutlineModel(NodeRenderer<CodeBlock> renderer)
    {
       this.renderer = renderer;
    }
 
+   /**
+    * @return Root Block
+    */
    public CodeBlock getRoot()
    {
       return root;
@@ -96,9 +104,14 @@ public class OutlineModel
       }
    }
 
+   /**
+    * Provides CodeBlock Node Renderer
+    * 
+    * @return Renderer for code blocks
+    */
    public NodeRenderer<CodeBlock> getRenderer()
    {
-      return  renderer;
+      return renderer;
    }
 
 }

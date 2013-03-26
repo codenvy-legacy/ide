@@ -37,8 +37,10 @@ import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
 import com.codenvy.ide.core.editor.EditorAgent;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
+import com.codenvy.ide.core.editor.EditorRegistry;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
+import com.codenvy.ide.core.expressions.ExpressionManager;
 import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
 import com.codenvy.ide.editor.CodenvyTextEditor;
 import com.codenvy.ide.editor.DocumentProvider;
@@ -130,13 +132,12 @@ public class CoreGinModule extends AbstractGinModule
     */
    private void uiModelConfigure()
    {
-      bind(PartStack.class).to(PartStackPresenter.class).in(Singleton.class);
+      bind(PartStack.class).to(PartStackPresenter.class);
       bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
 
       bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
       bind(WelcomePart.class).to(WelcomePartPresenter.class).in(Singleton.class);
       bind(OutlinePart.class).to(OutlinePartPrenter.class).in(Singleton.class);
-      bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
       bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
 
    }
@@ -151,7 +152,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
       bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
-      bind(EditorRegistryImpl.class).in(Singleton.class);
+      bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
       bind(UserActivityManager.class).in(Singleton.class);
@@ -172,15 +173,14 @@ public class CoreGinModule extends AbstractGinModule
    {
       bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
       bind(NewGenericFilePageView.class).to(NewGenericFilePageViewImpl.class).in(Singleton.class);
-      
-      
+
       bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
 
       bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
       bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
 
       // expression manager
-      bind(ExpressionManagerImpl.class).in(Singleton.class);
+      bind(ExpressionManager.class).to(ExpressionManagerImpl.class).in(Singleton.class);
 
       // main menu
       bind(MainMenuPresenter.class).in(Singleton.class);
@@ -193,7 +193,6 @@ public class CoreGinModule extends AbstractGinModule
 
       // part agent
       bind(PartStackView.class).to(PartStackViewImpl.class);
-      bind(PartStackPresenter.class); // no need to bind here
 
       // resources: images and css
       bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
@@ -203,7 +202,6 @@ public class CoreGinModule extends AbstractGinModule
 
       bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
 
-      bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
       bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
    }
 

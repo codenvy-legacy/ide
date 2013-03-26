@@ -353,7 +353,6 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
    /**
     * {@inheritDoc}
     */
-   @Override
    public int getCursorColumn()
    {
       return cursorAnchor.getColumn();
@@ -367,7 +366,6 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
    /**
     * {@inheritDoc}
     */
-   @Override
    public int getCursorLineNumber()
    {
       return cursorAnchor.getLineNumber();
@@ -438,7 +436,6 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
    /**
     * {@inheritDoc}
     */
-   @Override
    public String getSelectedText()
    {
       if (!hasSelection())
@@ -941,6 +938,7 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
    /**
     * {@inheritDoc}
     */
+   @Override
    public com.codenvy.ide.text.Position getCursorPosition()
    {
       int offset = TextUtilities.getOffset(doc, cursorAnchor.getLineInfo().number(), getBaseColumn());
@@ -1114,7 +1112,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
       Line line = selectionRange[0].getLine();
       UndoManager undoManager = documentMutator.getUndoManager();
       if (undoManager != null)
+      {
          undoManager.beginCompoundChange();
+      }
       while (line != terminator)
       {
          if (indent)
@@ -1133,7 +1133,9 @@ public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide
          line = line.getNextLine();
       }
       if (undoManager != null)
+      {
          undoManager.endCompoundChange();
+      }
    }
 
    private Anchor getEarlierSelectionAnchor()

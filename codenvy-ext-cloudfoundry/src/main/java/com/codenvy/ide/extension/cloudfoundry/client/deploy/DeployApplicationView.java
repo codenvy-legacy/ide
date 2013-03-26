@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.deploy;
 
-import com.codenvy.ide.mvp.View;
+import com.codenvy.ide.api.mvp.View;
 
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.user.client.ui.Composite;

@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.preferences;
 
+import com.codenvy.ide.api.mvp.View;
+
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 
-import com.codenvy.ide.mvp.View;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
