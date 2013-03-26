@@ -271,8 +271,9 @@ public class FoldingManager implements Document.TextListener
    public void onTextChange(Document document, final JsonArray<TextChange> textChanges)
    {
       // TODO
-      // Use deferred invocation to allow master document ...
-      // 
+      // Use deferred invocation to allow wait while updating master document
+      // because 'CollabEditor.TextListenerImpl' may be not first listener
+      // of all CollabEditor's document listener.
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override

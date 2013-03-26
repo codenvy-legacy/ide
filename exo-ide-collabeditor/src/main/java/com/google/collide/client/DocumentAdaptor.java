@@ -26,6 +26,7 @@ import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.DocumentEvent;
 import org.exoplatform.ide.editor.shared.text.IDocument;
@@ -48,6 +49,8 @@ public class DocumentAdaptor implements IDocumentListener
     */
    private TextListenerImpl textListener;
 
+   private CollabEditor collabEditor;
+
    /**
     * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
     */
@@ -57,6 +60,7 @@ public class DocumentAdaptor implements IDocumentListener
 //      mutator.insertText(editorDocument.getFirstLine(), 0, 0, "it's alive");
       try
       {
+         collabEditor.asWidget().fireEvent(new EditorContentChangedEvent(collabEditor));
          // Remove textListener to prevent updating an appropriate IDocument instance
          editorDocument.getTextListenerRegistrar().remove(textListener);
 
@@ -112,11 +116,12 @@ public class DocumentAdaptor implements IDocumentListener
     * @param textListener textListener for updating an appropriate IDocument instance
     */
    public void setDocument(Document editorDocument, EditorDocumentMutator editorDocumentMutator,
-      TextListenerImpl textListener)
+      TextListenerImpl textListener, CollabEditor editor)
    {
       this.editorDocument = editorDocument;
       mutator = editorDocumentMutator;
       this.textListener = textListener;
+      this.collabEditor = editor;
    }
 
 }

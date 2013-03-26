@@ -258,7 +258,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             editorDocument.getTextListenerRegistrar().add(textListener);
             CollabEditorExtension.get().getManager().addDocument(editorDocument);
             editorBundle.setDocument(editorDocument, mimeType, "");
-            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator(), textListener);
+            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator(), textListener, CollabEditor.this);
 
             // IMPORTANT!
             // Add 'documentAdaptor' as listener for the 'CollabEditor.this.document' there, because
@@ -982,7 +982,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             TextListenerImpl textListener = new TextListenerImpl();
             document.getTextListenerRegistrar().add(textListener);
             editorBundle.setDocument(document, mimeType, DocumentMetadata.getFileEditSessionKey(document));
-            documentAdaptor.setDocument(document, editor.getEditorDocumentMutator(), textListener);
+            documentAdaptor.setDocument(document, editor.getEditorDocumentMutator(), textListener, CollabEditor.this);
 
             // IMPORTANT!
             // Add 'documentAdaptor' as listener for the 'CollabEditor.this.document' there, because
