@@ -195,7 +195,7 @@ class LineRendererController {
        }
        else
        {
-          Element expandElement = renderFoldMarkAtTheEndOfLine(contentElement);
+          Element expandElement = createExpandMarkerElement(contentElement);
           line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
 
           expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
@@ -208,7 +208,7 @@ class LineRendererController {
     }
   }
 
-  Element renderFoldMarkAtTheEndOfLine(Element targetElement) {
+  Element createExpandMarkerElement(Element targetElement) {
      SpanElement element = Elements.createSpanElement();
      // TODO: file a Chrome bug, place link here
      element.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);
@@ -223,6 +223,7 @@ class LineRendererController {
      element.getStyle().setHeight("9px");
      element.getStyle().setWidth("18px");
      element.getStyle().setProperty("vertical-align", "middle");
+     element.getStyle().setMarginLeft("1px");
      element.getStyle().setMarginTop("-2px");
      element.getStyle().setProperty("box-shadow", "0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset");
      element.setId("expandMarker");

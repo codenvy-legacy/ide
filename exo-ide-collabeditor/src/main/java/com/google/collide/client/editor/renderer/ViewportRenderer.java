@@ -456,7 +456,7 @@ public class ViewportRenderer {
              Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
              if (expandElement == null)
              {
-                expandElement = lineRendererController.renderFoldMarkAtTheEndOfLine(element);
+                expandElement = lineRendererController.createExpandMarkerElement(element);
                 line.putTag(LINE_TAG_EXPAND_ELEMENT, expandElement);
 
                 expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {

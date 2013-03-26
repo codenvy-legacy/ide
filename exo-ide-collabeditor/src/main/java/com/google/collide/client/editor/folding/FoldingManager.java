@@ -77,6 +77,9 @@ public class FoldingManager implements Document.TextListener
       void onExpand(int lineNumber, JsonArray<Line> linesToExpand);
    }
 
+   /**
+    * A listener that is called when a fold marker's state was changed.
+    */
    public interface FoldMarksStateListener
    {
       /**
@@ -261,10 +264,13 @@ public class FoldingManager implements Document.TextListener
    @Override
    public void onTextChange(Document document, JsonArray<TextChange> textChanges)
    {
+      // TODO: when cursor positioned on the caption line of the collapsed text block and Ctrl+D were pressed
+      //       then remove all folded block
+
+
       updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
 
-      // if changes applied to text in folded block then expand this block
-      // FIXME: when cursor positioned on caption line of collapsed block and press Ctrl+D
+      // if changes applied to the text into the folded block then expand this block
       for (TextChange textChange : textChanges.asIterable())
       {
          for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
@@ -279,6 +285,8 @@ public class FoldingManager implements Document.TextListener
    }
 
    /**
+    * Handle changing editor's document.
+    * 
     * @param newDocument new {@link Document}
     */
    public void handleDocumentChanged(final Document newDocument)

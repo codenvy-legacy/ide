@@ -23,6 +23,8 @@ import org.exoplatform.ide.editor.shared.text.Position;
 import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 
 /**
+ * A base implementation of a {@link IProjectionPosition}.
+ * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: AbstractFoldRange.java Mar 18, 2013 12:18:43 PM azatsarynnyy $
  *
