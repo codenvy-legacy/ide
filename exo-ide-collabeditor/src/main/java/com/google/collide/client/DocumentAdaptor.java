@@ -44,7 +44,7 @@ public class DocumentAdaptor implements IDocumentListener
    private Document editorDocument;
 
    /**
-    * Listener for updating appropriate IDocument.
+    * Listener for updating an appropriate IDocument instance.
     */
    private TextListenerImpl textListener;
 
@@ -57,7 +57,7 @@ public class DocumentAdaptor implements IDocumentListener
 //      mutator.insertText(editorDocument.getFirstLine(), 0, 0, "it's alive");
       try
       {
-         // Remove textListener to prevent updating appropriate IDocument
+         // Remove textListener to prevent updating an appropriate IDocument instance
          editorDocument.getTextListenerRegistrar().remove(textListener);
 
          IDocument document = event.getDocument();
@@ -109,7 +109,7 @@ public class DocumentAdaptor implements IDocumentListener
    /**
     * @param editorDocument
     * @param editorDocumentMutator
-    * @param textListener textListener for updating appropriate IDocument
+    * @param textListener textListener for updating an appropriate IDocument instance
     */
    public void setDocument(Document editorDocument, EditorDocumentMutator editorDocumentMutator,
       TextListenerImpl textListener)

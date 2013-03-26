@@ -18,6 +18,10 @@
  */
 package com.google.collide.client.editor.folding;
 
+import com.google.gwt.core.client.Scheduler;
+
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
 import com.codenvy.ide.client.util.logging.Log;
 
 import com.google.collide.client.Resources;
@@ -264,22 +268,32 @@ public class FoldingManager implements Document.TextListener
     * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, com.google.collide.json.shared.JsonArray)
     */
    @Override
-   public void onTextChange(Document document, JsonArray<TextChange> textChanges)
+   public void onTextChange(Document document, final JsonArray<TextChange> textChanges)
    {
-      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
-
-      // if changes applied to the text into the folded block then expand this block
-      for (TextChange textChange : textChanges.asIterable())
+      // TODO
+      // Use deferred invocation to allow master document ...
+      // 
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
+         @Override
+         public void execute()
          {
-            FoldMarker foldMarker = findFoldMarker(i, false);
-            if (foldMarker != null && foldMarker.isCollapsed())
+            updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
+
+            // if changes applied to the text into the folded block then expand this block
+            for (TextChange textChange : textChanges.asIterable())
             {
-               expand(foldMarker);
+               for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
+               {
+                  FoldMarker foldMarker = findFoldMarker(i, false);
+                  if (foldMarker != null && foldMarker.isCollapsed())
+                  {
+                     expand(foldMarker);
+                  }
+               }
             }
          }
-      }
+      });
    }
 
    /**
