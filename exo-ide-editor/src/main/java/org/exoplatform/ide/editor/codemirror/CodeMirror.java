@@ -1574,7 +1574,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     * 
     * Marking Support
     * 
-    * public class {@link CodeMirror} implements Makable
+    * public class {@link CodeMirror} implements Markable
     * 
     ********************************************************************************/
 
@@ -1922,6 +1922,15 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
+    * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentAboutToBeChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
+    */
+   @Override
+   public void documentAboutToBeChanged(DocumentEvent event)
+   {
+      // TODO Auto-generated method stub
+   }
+
+   /**
     * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
     */
    @Override
@@ -2049,6 +2058,42 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    public void delete()
    {
       executeCommand("delete");
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapse()
+    */
+   @Override
+   public void collapse()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expand()
+    */
+   @Override
+   public void expand()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapseAll()
+    */
+   @Override
+   public void collapseAll()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expandAll()
+    */
+   @Override
+   public void expandAll()
+   {
+      throw new UnsupportedOperationException();
    }
 
    private native void executeCommand(String command)

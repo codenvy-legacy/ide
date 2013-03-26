@@ -22,6 +22,10 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.control.AddBlockCommentControl;
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.edit.control.DeleteTextControl;
+import org.exoplatform.ide.client.edit.control.FoldingCollapseAllControl;
+import org.exoplatform.ide.client.edit.control.FoldingCollapseControl;
+import org.exoplatform.ide.client.edit.control.FoldingExpandAllControl;
+import org.exoplatform.ide.client.edit.control.FoldingExpandControl;
 import org.exoplatform.ide.client.edit.control.FormatSourceControl;
 import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.edit.control.RedoTypingControl;
@@ -75,8 +79,11 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       new FindTextPresenter();
 
       IDE.getInstance().addControl(new ShowLineNumbersControl());
-
       IDE.getInstance().addControl(new DeleteCurrentLineControl());
+//      IDE.getInstance().addControl(new FoldingCollapseControl());
+//      IDE.getInstance().addControl(new FoldingExpandControl());
+//      IDE.getInstance().addControl(new FoldingCollapseAllControl());
+//      IDE.getInstance().addControl(new FoldingExpandAllControl());
 
       new GoToLinePresenter();
 

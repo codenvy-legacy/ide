@@ -14,6 +14,8 @@
 
 package com.google.collide.client.code;
 
+import org.exoplatform.ide.editor.client.api.EditorCapability;
+
 import com.google.collide.client.AppContext;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.autoindenter.Autoindenter;
@@ -59,7 +61,7 @@ public class EditorBundle implements Content {
 //      FileTreeModel fileTreeModel,
       ErrorReceiver errorReceiver, CollabEditor collEditor) {
 
-    final Editor editor = Editor.create(appContext);
+    final Editor editor = Editor.create(appContext, collEditor.isCapable(EditorCapability.CODE_FOLDING));
 
     EditorErrorListener editorErrorListener = new EditorErrorListener(
         editor, errorReceiver, new ErrorRenderer(appContext.getResources()));
@@ -253,7 +255,7 @@ public class EditorBundle implements Content {
   /**
    * Replaces the document for the editor and related components.
    */
-  public void setDocument(Document document,String mimeType, String fileEditSessionKey) {
+  public void setDocument(Document document, String mimeType, String fileEditSessionKey) {
 //    selectionRestorer.onBeforeDocumentChanged();
 
     reset();

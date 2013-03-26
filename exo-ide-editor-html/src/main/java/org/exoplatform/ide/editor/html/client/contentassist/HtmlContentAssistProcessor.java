@@ -93,11 +93,6 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
    static final AnchorType MODE_ANCHOR_TYPE = AnchorType.create(HtmlAutocompleter.class, "mode");
 
    /**
-    * Autocompleter for HTML.
-    */
-   private HtmlAutocompleter htmlAutocompleter;
-
-   /**
     * A {@link ContentAssistProcessor} for CSS.
     */
    private CssContentAssistProcessor cssProcessor;
@@ -110,14 +105,12 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
    /**
     * Constructs new {@link HtmlContentAssistProcessor} instance.
     * 
-    * @param htmlAutocompleter {@link HtmlAutocompleter}
     * @param cssProcessor {@link CssContentAssistProcessor}
     * @param jsProcessor {@link JavaScriptContentAssistProcessor}
     */
-   public HtmlContentAssistProcessor(HtmlAutocompleter htmlAutocompleter, CssContentAssistProcessor cssProcessor,
+   public HtmlContentAssistProcessor(CssContentAssistProcessor cssProcessor,
       JavaScriptContentAssistProcessor jsProcessor)
    {
-      this.htmlAutocompleter = htmlAutocompleter;
       this.cssProcessor = cssProcessor;
       this.jsProcessor = jsProcessor;
    }
@@ -126,15 +119,16 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
     * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeCompletionProposals(org.exoplatform.ide.editor.client.api.Editor, int)
     */
    @Override
-   public CompletionProposal[] computeCompletionProposals(Editor viewer, int offset)
+   public CompletionProposal[] computeCompletionProposals(Editor editor, int offset)
    {
-      SelectionModel selection = ((CollabEditor)viewer).getEditor().getSelection();
+      CollabEditor collabEditor = (CollabEditor)editor;
+      SelectionModel selection = collabEditor.getEditor().getSelection();
+      DocumentParser parser = collabEditor.getEditorBundle().getParser();
 
       Position cursor = selection.getCursorPosition();
       final Line line = cursor.getLine();
       final int column = cursor.getColumn();
 
-      DocumentParser parser = htmlAutocompleter.getParser();
       JsonArray<Token> tokens = parser.parseLineSync(line);
       if (tokens == null)
       {
@@ -155,11 +149,11 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
 
       if (cssProcessor != null && CodeMirror2.CSS.equals(mode))
       {
-         return cssProcessor.computeCompletionProposals(viewer, offset);
+         return cssProcessor.computeCompletionProposals(editor, offset);
       }
       else if (jsProcessor != null && CodeMirror2.JAVASCRIPT.equals(mode))
       {
-         return jsProcessor.computeCompletionProposals(viewer, offset);
+         return jsProcessor.computeCompletionProposals(editor, offset);
       }
 
       if (selection.hasSelection())

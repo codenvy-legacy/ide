@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.shared.document.Document;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -48,6 +48,10 @@ import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
@@ -94,21 +98,28 @@ import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.collide.client.CollabEditor;
-import com.google.collide.client.CollabEditorExtension;
-import com.google.collide.shared.document.Document;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditorController Mar 21, 2011 5:22:10 PM evgen $
+ * 
  */
-public class EditorController
-   implements EditorContentChangedHandler, EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler, ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorContextMenuHandler, EditorSetFocusHandler, ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler, ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler, EditorPasteTextHandler, EditorDeleteTextHandler
+public class EditorController implements EditorContentChangedHandler, EditorActiveFileChangedHandler,
+   EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler, ShowLineNumbersHandler,
+   EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
+   EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorContextMenuHandler, EditorSetFocusHandler,
+   ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
+   ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler,
+   EditorPasteTextHandler, EditorDeleteTextHandler, EditorFoldingCollapseHandler, EditorFoldingExpandHandler
 {
 
-   private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerAskCloseFile();
+   private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
+      .editorControllerAskCloseFile();
 
    private ArrayList<String> ignoreContentChangedList = new ArrayList<String>();
 
@@ -162,6 +173,9 @@ public class EditorController
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ClosingViewEvent.TYPE, this);
       IDE.addHandler(EditorFocusReceivedEvent.TYPE, this);
+
+      IDE.addHandler(EditorFoldingCollapseEvent.TYPE, this);
+      IDE.addHandler(EditorFoldingExpandEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -312,16 +326,15 @@ public class EditorController
       if (!file.isPersisted())
       {
          closeFileAfterSaving = true;
-         IDE.fireEvent(
-            new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.EXTENDED, new EditorCloseFileEvent(file, true),
-               null));
+         IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.EXTENDED, new EditorCloseFileEvent(
+            file, true), null));
       }
       else
       {
          closeFileAfterSaving = true;
          final String fileName = Utils.unescape(file.getName());
-         String message = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.editorDoYouWantToSaveFileBeforeClosing(
-            fileName);
+         String message =
+            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.editorDoYouWantToSaveFileBeforeClosing(fileName);
          Dialogs.getInstance().ask(CLOSE_FILE, message, new BooleanValueReceivedHandler()
          {
             public void booleanValueReceived(Boolean value)
@@ -398,7 +411,7 @@ public class EditorController
       View view = editorViewList.get(activeFile.getId());
       if (view != null)
       {
-         view.activate();         
+         view.activate();
       }
    }
 
@@ -456,7 +469,7 @@ public class EditorController
 
    /**
     * Check is file locked
-    *
+    * 
     * @param file
     * @return true if file is locked and client not have lock token, else return false
     */
@@ -893,6 +906,38 @@ public class EditorController
    public void onEditorCutText(EditorCutTextEvent event)
    {
       getEditorFromView(activeFile.getId()).cut();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseHandler#onEditorCollapse(org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseEvent)
+    */
+   @Override
+   public void onEditorCollapse(EditorFoldingCollapseEvent event)
+   {
+      if (event.isCollapseAll())
+      {
+         getEditorFromView(activeFile.getId()).collapseAll();
+      }
+      else
+      {
+         getEditorFromView(activeFile.getId()).collapse();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandHandler#onEditorExpand(org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEvent)
+    */
+   @Override
+   public void onEditorExpand(EditorFoldingExpandEvent event)
+   {
+      if (event.isExpandAll())
+      {
+         getEditorFromView(activeFile.getId()).expandAll();
+      }
+      else
+      {
+         getEditorFromView(activeFile.getId()).expand();
+      }
    }
 
 }

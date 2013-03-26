@@ -53,8 +53,7 @@ public class HtmlEditor extends CollabEditor
 
       editorBundle.getAutocompleter().addContentAssitProcessor(
          IDocument.DEFAULT_CONTENT_TYPE,
-         new HtmlContentAssistProcessor(htmlAutocompleter, new CssContentAssistProcessor(cssAutocompleter),
+         new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
             new JavaScriptContentAssistProcessor()));
    }
-
 }
