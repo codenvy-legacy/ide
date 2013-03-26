@@ -41,12 +41,12 @@ public class CloudBeesAuthenticator
 
    public void login(BeesClient beesClient, Credential credential) throws Exception
    {
-      login(beesClient, getDomain(), getUsername(), getPassword(), credential);
+      login(beesClient, getDomain(), getEmail(), getPassword(), credential);
    }
 
    // For test.
 
-   public String getUsername()
+   public String getEmail()
    {
       return null;
    }
