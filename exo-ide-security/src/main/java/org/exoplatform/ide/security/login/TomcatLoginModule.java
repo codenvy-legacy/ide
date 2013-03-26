@@ -133,7 +133,7 @@ public class TomcatLoginModule implements LoginModule
    public boolean login() throws LoginException
    {
       if (LOG.isDebugEnabled())
-         LOG.debug("In login of DefaultLoginModule.");
+         LOG.debug("In login of TomcatLoginModule.");
 
       try
       {
@@ -171,11 +171,7 @@ public class TomcatLoginModule implements LoginModule
       }
       catch (final Exception e)
       {
-         if (LOG.isDebugEnabled())
-         {
-            LOG.debug(e.getMessage());
-         }
-
+         LOG.error(e.getMessage(), e);
          throw new LoginException(e.getMessage());
       }
    }
@@ -186,7 +182,7 @@ public class TomcatLoginModule implements LoginModule
    public boolean abort() throws LoginException
    {
       if (LOG.isDebugEnabled())
-         LOG.debug("In abort of DefaultLoginModule.");
+         LOG.debug("In abort of TomcatLoginModule.");
       return true;
    }
 
@@ -196,7 +192,7 @@ public class TomcatLoginModule implements LoginModule
    public boolean logout() throws LoginException
    {
       if (LOG.isDebugEnabled())
-         LOG.debug("In logout of DefaultLoginModule.");
+         LOG.debug("In logout of TomcatLoginModule.");
 
       return true;
    }
