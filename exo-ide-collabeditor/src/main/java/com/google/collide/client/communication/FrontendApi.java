@@ -80,7 +80,7 @@ public class FrontendApi {
         public void onReply(String message) {
           Jso jso = Jso.deserialize(message);
 
-          Log.info(getClass(), message);
+//          Log.info(getClass(), message);
 
           if (RoutableDto.SERVER_ERROR == jso.getIntField(RoutableDto.TYPE_FIELD)) {
             ServerErrorImpl serverError = (ServerErrorImpl) jso;
