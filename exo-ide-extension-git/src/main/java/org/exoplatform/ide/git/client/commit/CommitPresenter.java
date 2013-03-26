@@ -202,8 +202,7 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
                   }
                   else
                   {
-                     IDE.fireEvent(new OutputEvent(result.getMessage().replace("\n", "<br />").replace(" ", "&nbsp;"),
-                        Type.GIT));
+                     IDE.fireEvent(new OutputEvent(result.getMessage(), Type.GIT));
                   }
                }
 
@@ -234,7 +233,14 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
                @Override
                protected void onSuccess(Revision result)
                {
-                  onCommitSuccess(result);
+                  if (!result.isFake())
+                  {
+                     onCommitSuccess(result);
+                  }
+                  else
+                  {
+                     IDE.fireEvent(new OutputEvent(result.getMessage(), Type.GIT));
+                  }
                }
 
                @Override

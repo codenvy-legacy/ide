@@ -20,6 +20,7 @@ package org.exoplatform.ide.git.server;
 
 import org.exoplatform.ide.git.shared.Status;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -258,6 +259,24 @@ public class StatusImpl implements Status, InfoPage
    public void setConflicting(Set<String> conflicting)
    {
       this.conflicting = conflicting;
+   }
+
+   public String createString(Boolean shortFormat) throws IOException
+   {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      PrintWriter writer = new PrintWriter(out);
+
+      if (getShortFormat())
+      {
+         writeShort(writer);
+      }
+      else
+      {
+         writeLong(writer);
+      }
+
+      writer.flush();
+      return out.toString("UTF-8");
    }
 
    /**
