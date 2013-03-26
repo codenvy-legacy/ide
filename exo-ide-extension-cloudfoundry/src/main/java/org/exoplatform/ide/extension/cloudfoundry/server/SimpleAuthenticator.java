@@ -36,7 +36,7 @@ public final class SimpleAuthenticator extends CloudfoundryAuthenticator
    }
 
    @Override
-   public String getUsername()
+   public String getEmail()
    {
       return cfUser;
    }

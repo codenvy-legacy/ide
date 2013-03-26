@@ -119,12 +119,12 @@ public class CloudfoundryAuthenticator
 
    public final void login(Credential credential) throws CloudfoundryException, ParsingResponseException, IOException
    {
-      login(getTarget(), getUsername(), getPassword(), credential);
+      login(getTarget(), getEmail(), getPassword(), credential);
    }
 
    // For test
 
-   public String getUsername()
+   public String getEmail()
    {
       return null;
    }

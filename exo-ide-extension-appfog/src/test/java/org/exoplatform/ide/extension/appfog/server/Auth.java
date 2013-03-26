@@ -35,7 +35,7 @@ class Auth extends AppfogAuthenticator
    }
 
    @Override
-   public String getUsername()
+   public String getEmail()
    {
       return username;
    }
