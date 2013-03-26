@@ -103,7 +103,7 @@ public class CloudBees extends JenkinsClient
       this(vfsRegistry,//
          ContainerUtils.readValueParam(initParams, "workspace"), //
          ContainerUtils.readValueParam(initParams, "user-config"),//
-         ContainerUtils.readValueParam(initParams, "jenkins-base-url", "https://codenvy.ci.cloudbees.com"), //
+         ContainerUtils.readValueParam(initParams, "jenkins-base-url", "https://exoplatform.ci.cloudbees.com"), //
          ContainerUtils.readValueParam(initParams, "jenkins-user"), //
          ContainerUtils.readValueParam(initParams, "jenkins-password"),
          ContainerUtils.readValueParam(initParams, "api-url"), //
