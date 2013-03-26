@@ -53,6 +53,7 @@ import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -105,6 +106,8 @@ public class EditSessions implements Startable
 
    private final VirtualFileSystemRegistry vfsRegistry;
 
+   private EventListenerList listenerList;
+
    private final ScheduledExecutorService saveScheduler = Executors.newSingleThreadScheduledExecutor();
 
    /**
@@ -119,10 +122,11 @@ public class EditSessions implements Startable
 
    private WSConnectionListener listener = new WSConnectionListener();
 
-   public EditSessions(Participants participants, VirtualFileSystemRegistry vfsRegistry)
+   public EditSessions(Participants participants, VirtualFileSystemRegistry vfsRegistry, EventListenerList listenerList)
    {
       this.participants = participants;
       this.vfsRegistry = vfsRegistry;
+      this.listenerList = listenerList;
    }
 
    private class SaveTask implements Runnable
@@ -184,7 +188,7 @@ public class EditSessions implements Startable
 
       try
       {
-         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, listenerList);
          org.exoplatform.ide.vfs.shared.File file = (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(path, null,
             PropertyFilter.NONE_FILTER);
          resourceId = file.getId();
