@@ -393,11 +393,11 @@
          </value-param>
          <value-param>
             <name>jenkins-user</name>
-            <value>vparfonov@codenvy.com</value>
+            <value>support@cloud-ide.com</value>
          </value-param>
          <value-param>
             <name>jenkins-password</name>
-            <value>1z4hWHxoIr</value>
+            <value>9zpkuZ3X</value>
          </value-param>
       </init-params>
    </component>

@@ -18,6 +18,12 @@
  */
 package com.google.collide.client.editor.folding;
 
+import com.google.gwt.core.client.Scheduler;
+
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
+import com.codenvy.ide.client.util.logging.Log;
+
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -262,26 +268,32 @@ public class FoldingManager implements Document.TextListener
     * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, com.google.collide.json.shared.JsonArray)
     */
    @Override
-   public void onTextChange(Document document, JsonArray<TextChange> textChanges)
+   public void onTextChange(Document document, final JsonArray<TextChange> textChanges)
    {
-      // TODO: when cursor positioned on the caption line of the collapsed text block and Ctrl+D were pressed
-      //       then remove all folded block
-
-
-      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
-
-      // if changes applied to the text into the folded block then expand this block
-      for (TextChange textChange : textChanges.asIterable())
+      // TODO
+      // Use deferred invocation to allow master document ...
+      // 
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
+         @Override
+         public void execute()
          {
-            FoldMarker foldMarker = findFoldMarker(i, false);
-            if (foldMarker != null && foldMarker.isCollapsed())
+            updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
+
+            // if changes applied to the text into the folded block then expand this block
+            for (TextChange textChange : textChanges.asIterable())
             {
-               expand(foldMarker);
+               for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
+               {
+                  FoldMarker foldMarker = findFoldMarker(i, false);
+                  if (foldMarker != null && foldMarker.isCollapsed())
+                  {
+                     expand(foldMarker);
+                  }
+               }
             }
          }
-      }
+      });
    }
 
    /**
@@ -397,8 +409,7 @@ public class FoldingManager implements Document.TextListener
       }
       catch (BadLocationException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         Log.error(getClass(), e);
       }
    }
 
@@ -601,7 +612,7 @@ public class FoldingManager implements Document.TextListener
       }
       catch (BadLocationException e)
       {
-         // nothing to do
+         Log.error(getClass(), e);
       }
       return collapsed;
    }
@@ -622,8 +633,7 @@ public class FoldingManager implements Document.TextListener
       }
       catch (BadLocationException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         Log.error(getClass(), e);
       }
    }
 

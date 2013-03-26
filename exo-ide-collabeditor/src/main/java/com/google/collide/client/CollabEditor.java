@@ -113,7 +113,10 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
    private boolean caseSensitive;
 
-   private final class TextListenerImpl implements TextListener
+   /**
+    * Listener that updates an appropriate IDocument instance.
+    */
+   final class TextListenerImpl implements TextListener
    {
       /**
        * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, org.exoplatform.ide.json.shared.JsonArray)
@@ -139,15 +142,14 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                      length = textChange.getText().length();
                      break;
                   default :
-                     throw new UnsupportedOperationException("Unknown change type: " + textChange.getType());
+                     throw new UnsupportedOperationException("Unknown type of text change: " + textChange.getType());
                }
                updateDocument(offset, length, text);
             }
          }
          catch (BadLocationException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(getClass(), e);
          }
       }
    }
@@ -162,7 +164,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             EditorErrorListener.NOOP_ERROR_RECEIVER, this);
       contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
-      //editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
          new EditableContentArea.View(CollabEditorExtension.get().getContext().getResources());
       EditableContentArea contentArea =
@@ -244,24 +245,29 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void setText(final String text)
    {
       document = new org.exoplatform.ide.editor.shared.text.Document(text);
-      document.addDocumentListener(documentAdaptor);
       hoverPresenter = new HoverPresenter(this, editor, document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-
          @Override
          public void execute()
          {
             initialized = true;
             Document editorDocument = Document.createFromString(text);
             editorDocument.putTag("IDocument", document);
-            editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
+            TextListenerImpl textListener = new TextListenerImpl();
+            editorDocument.getTextListenerRegistrar().add(textListener);
             CollabEditorExtension.get().getManager().addDocument(editorDocument);
             editorBundle.setDocument(editorDocument, mimeType, "");
-            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
+            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator(), textListener);
+
+            // IMPORTANT!
+            // Add 'documentAdaptor' as listener for the 'CollabEditor.this.document' there, because
+            // 'ProjectionDocument' must be the first listener for the 'CollabEditor.this.document'.
+            // 'ProjectionDocument' added as listener for the 'CollabEditor.this.document' in 'Editor.setDocument(Document)'.
+            CollabEditor.this.document.addDocumentListener(documentAdaptor);
+
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
-
                @Override
                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
                {
@@ -270,7 +276,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             });
             editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
             {
-
                @Override
                public void onContextMenu(int x, int y)
                {
@@ -966,22 +971,27 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void setDocument(final Document document)
    {
       this.document = new org.exoplatform.ide.editor.shared.text.Document(document.asText());
-      this.document.addDocumentListener(documentAdaptor);
       hoverPresenter = new HoverPresenter(this, editor, this.document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-
          @Override
          public void execute()
          {
             initialized = true;
             document.putTag("IDocument", CollabEditor.this.document);
-            document.getTextListenerRegistrar().add(new TextListenerImpl());
+            TextListenerImpl textListener = new TextListenerImpl();
+            document.getTextListenerRegistrar().add(textListener);
             editorBundle.setDocument(document, mimeType, DocumentMetadata.getFileEditSessionKey(document));
-            documentAdaptor.setDocument(document, editor.getEditorDocumentMutator());
+            documentAdaptor.setDocument(document, editor.getEditorDocumentMutator(), textListener);
+
+            // IMPORTANT!
+            // Add 'documentAdaptor' as listener for the 'CollabEditor.this.document' there, because
+            // 'ProjectionDocument' must be the first listener for the 'CollabEditor.this.document'.
+            // 'ProjectionDocument' added as listener for the 'CollabEditor.this.document' in 'Editor.setDocument(Document)'.
+            CollabEditor.this.document.addDocumentListener(documentAdaptor);
+
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
-
                @Override
                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
                {
@@ -990,14 +1000,12 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             });
             editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
             {
-
                @Override
                public void onContextMenu(int x, int y)
                {
                   fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
                }
             });
-
          }
       });
    }
