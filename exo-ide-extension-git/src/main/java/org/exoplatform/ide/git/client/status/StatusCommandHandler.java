@@ -111,7 +111,6 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                protected void onSuccess(Object result)
                {
                   String output = result.toString();
-                  output = output.replace("\n", "</br>").replace(" ", "&nbsp;");
                   IDE.fireEvent(new OutputEvent(output, OutputMessage.Type.GIT));
                }
 

@@ -106,6 +106,7 @@ import org.exoplatform.ide.git.shared.TagListRequest;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -466,7 +467,7 @@ public class JGitConnection implements GitConnection
             return rev;
          }
 
-         Status stat = status(false);
+         StatusImpl stat = (StatusImpl)status(false);
          if (stat.getAdded().isEmpty() && stat.getChanged().isEmpty() && stat.getRemoved().isEmpty())
          {
             if (request.isAll())
@@ -474,15 +475,24 @@ public class JGitConnection implements GitConnection
                if (stat.getMissing().isEmpty() && stat.getModified().isEmpty())
                {
                   Revision rev = new Revision();
-                  rev.setMessage("# On branch " + getCurrentBranch() + "\nnothing to commit, working directory clean");
+                  rev.setMessage(stat.createString(false));
                   return rev;
                }
             }
             else
             {
-               Revision rev = new Revision();
-               rev.setMessage("# On branch " + getCurrentBranch() + "\nnothing to commit, working directory clean");
-               return rev;
+               if (stat.getMissing().isEmpty() && stat.getModified().isEmpty())
+               {
+                  Revision rev = new Revision();
+                  rev.setMessage(stat.createString(false));
+                  return rev;
+               }
+               else
+               {
+                  Revision rev = new Revision();
+                  rev.setMessage(stat.createString(false));
+                  return rev;
+               }
             }
          }
 
@@ -508,6 +518,14 @@ public class JGitConnection implements GitConnection
             (long)result.getCommitTime() * 1000, new GitUser(comitterName, comitterEmail));
       }
       catch (GitAPIException e)
+      {
+         throw new GitException(e);
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         throw new GitException(e);
+      }
+      catch (IOException e)
       {
          throw new GitException(e);
       }
