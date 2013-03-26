@@ -258,7 +258,8 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             editorDocument.getTextListenerRegistrar().add(textListener);
             CollabEditorExtension.get().getManager().addDocument(editorDocument);
             editorBundle.setDocument(editorDocument, mimeType, "");
-            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator(), textListener, CollabEditor.this);
+            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator(), textListener,
+               CollabEditor.this);
 
             // IMPORTANT!
             // Add 'documentAdaptor' as listener for the 'CollabEditor.this.document' there, because
@@ -407,6 +408,16 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       Line selectionBeginLine = editor.getDocument().getLineFinder().findLine(selectionBeginLineNumber).line();
       final int selectionEndLineNumber = selection.getSelectionEndLineNumber();
       Line selectionEndLine = editor.getDocument().getLineFinder().findLine(selectionEndLineNumber).line();
+
+      for (int i = selectionBeginLineNumber; i <= selectionEndLineNumber; i++)
+      {
+         FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(i, false);
+         if (foldMarker != null && foldMarker.isCollapsed())
+         {
+            editor.getFoldingManager().expand(foldMarker);
+         }
+      }
+
       final int deleteCount =
          LineUtils.getTextCount(selectionBeginLine, 0, selectionEndLine, selectionEndLine.getText().length() - 1);
       editor.getEditorDocumentMutator().deleteText(selectionBeginLine, 0, deleteCount);
