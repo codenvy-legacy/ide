@@ -18,6 +18,8 @@
  */
 package com.google.collide.client.editor.folding;
 
+import com.codenvy.ide.client.util.logging.Log;
+
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -264,10 +266,6 @@ public class FoldingManager implements Document.TextListener
    @Override
    public void onTextChange(Document document, JsonArray<TextChange> textChanges)
    {
-      // TODO: when cursor positioned on the caption line of the collapsed text block and Ctrl+D were pressed
-      //       then remove all folded block
-
-
       updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
 
       // if changes applied to the text into the folded block then expand this block
@@ -397,8 +395,7 @@ public class FoldingManager implements Document.TextListener
       }
       catch (BadLocationException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         Log.error(getClass(), e);
       }
    }
 
@@ -601,7 +598,7 @@ public class FoldingManager implements Document.TextListener
       }
       catch (BadLocationException e)
       {
-         // nothing to do
+         Log.error(getClass(), e);
       }
       return collapsed;
    }
@@ -622,8 +619,7 @@ public class FoldingManager implements Document.TextListener
       }
       catch (BadLocationException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         Log.error(getClass(), e);
       }
    }
 

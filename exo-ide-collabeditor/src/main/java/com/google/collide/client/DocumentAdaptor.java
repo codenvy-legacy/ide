@@ -18,13 +18,13 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.shared.document.Line;
-
-import com.google.collide.shared.document.LineInfo;
-
+import com.codenvy.ide.client.util.logging.Log;
+import com.google.collide.client.CollabEditor.TextListenerImpl;
 import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.DocumentMutator;
+import com.google.collide.shared.document.Line;
+import com.google.collide.shared.document.LineInfo;
 
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.DocumentEvent;
@@ -44,25 +44,33 @@ public class DocumentAdaptor implements IDocumentListener
    private Document editorDocument;
 
    /**
+    * Listener for updating appropriate IDocument.
+    */
+   private TextListenerImpl textListener;
+
+   /**
     * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
     */
    @Override
-   public void documentChanged(DocumentEvent event)
+   public void documentChanged(final DocumentEvent event)
    {
 //      mutator.insertText(editorDocument.getFirstLine(), 0, 0, "it's alive");
       try
       {
+         // Remove textListener to prevent updating appropriate IDocument
+         editorDocument.getTextListenerRegistrar().remove(textListener);
+
          IDocument document = event.getDocument();
          int lineNumber = document.getLineOfOffset(event.getOffset());
          int col = event.getOffset() - document.getLineOffset(lineNumber);
-         
+
          LineInfo lineInfo = editorDocument.getLineFinder().findLine(lineNumber);
          Line line = lineInfo.line();
          mutator.deleteText(line, col, event.fLength);
 //         StringBuilder b = new StringBuilder(line.getText());
 //         int length = col + event.getLength();
 //         int nextLine = lineNumber + 1;
-         
+
 //         while (length > b.length())
 //         {
 //            line = editorDocument.getLineFinder().findLine(nextLine).line();
@@ -73,7 +81,7 @@ public class DocumentAdaptor implements IDocumentListener
 //            length--;
 //         }
 //         b.replace(col, length, event.getText());
-         
+
 //         LineInfo lineIn = editorDocument.getLineFinder().findLine(lineNumber);
 //         mutator.deleteText(lineIn.line(), 0, lineIn.line().length());
          mutator.insertText(line, lineInfo.number(), col, event.fText, false);
@@ -81,7 +89,11 @@ public class DocumentAdaptor implements IDocumentListener
       }
       catch (BadLocationException e)
       {
-         e.printStackTrace();
+         Log.error(getClass(), e);
+      }
+      finally
+      {
+         editorDocument.getTextListenerRegistrar().add(textListener);
       }
    }
 
@@ -97,11 +109,14 @@ public class DocumentAdaptor implements IDocumentListener
    /**
     * @param editorDocument
     * @param editorDocumentMutator
+    * @param textListener textListener for updating appropriate IDocument
     */
-   public void setDocument(Document editorDocument, EditorDocumentMutator editorDocumentMutator)
+   public void setDocument(Document editorDocument, EditorDocumentMutator editorDocumentMutator,
+      TextListenerImpl textListener)
    {
       this.editorDocument = editorDocument;
       mutator = editorDocumentMutator;
+      this.textListener = textListener;
    }
 
 }

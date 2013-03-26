@@ -14,18 +14,18 @@
 
 package com.google.collide.client.editor;
 
-import com.google.collide.client.common.ThemeConstants;
-
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.Executor;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.common.Constants;
+import com.google.collide.client.common.ThemeConstants;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.renderer.Renderer;
-import com.codenvy.ide.client.util.CssUtils;
-import com.codenvy.ide.client.util.Elements;
-import com.codenvy.ide.client.util.Executor;
 import com.google.collide.client.util.dom.DomUtils;
 import com.google.collide.client.util.dom.DomUtils.Offset;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
@@ -39,11 +39,6 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
-import org.exoplatform.ide.shared.util.TextUtils;
 import elemental.client.Browser;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
@@ -56,6 +51,11 @@ import elemental.html.Element;
 
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
+import org.exoplatform.ide.shared.util.TextUtils;
 
 /*
  * TODO: Buffer has turned into an EditorSurface, but is still
@@ -1228,8 +1228,8 @@ public class Buffer extends UiComponent<Buffer.View>
     try {
       return foldingManager.getInformationMapping().toImageLine(masterLineNumber);
     }
-    catch (BadLocationException x) {
-      // nothing to do
+    catch (BadLocationException e) {
+       Log.error(getClass(), e);
     }
     return -1;
   }
@@ -1247,8 +1247,8 @@ public class Buffer extends UiComponent<Buffer.View>
     }
     try {
       return foldingManager.getInformationMapping().toOriginLine(visibleLine);
-    } catch (BadLocationException x) {
-      // nothing to do
+    } catch (BadLocationException e) {
+      Log.error(getClass(), e);
     }
     return -1;
   }
@@ -1265,8 +1265,8 @@ public class Buffer extends UiComponent<Buffer.View>
        return masterLineNumber;
      try {
        return foldingManager.getInformationMapping().toClosestImageLine(masterLineNumber);
-     } catch (BadLocationException x) {
-       // nothing to do
+     } catch (BadLocationException e) {
+       Log.error(getClass(), e);
      }
      return -1;
   }
