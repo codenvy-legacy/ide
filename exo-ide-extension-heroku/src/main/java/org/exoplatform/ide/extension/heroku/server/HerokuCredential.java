@@ -18,15 +18,19 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
-class HerokuCredentials
+public class HerokuCredential
 {
-   private final String email;
-   private final String apiKey;
+   private String email;
+   private String apiKey;
 
-   public HerokuCredentials(String email, String apiKey)
+   public HerokuCredential(String email, String apiKey)
    {
       this.email = email;
       this.apiKey = apiKey;
+   }
+
+   public HerokuCredential()
+   {
    }
 
    public String getEmail()
@@ -34,8 +38,18 @@ class HerokuCredentials
       return email;
    }
 
+   public void setEmail(String email)
+   {
+      this.email = email;
+   }
+
    public String getApiKey()
    {
       return apiKey;
+   }
+
+   public void setApiKey(String apiKey)
+   {
+      this.apiKey = apiKey;
    }
 }

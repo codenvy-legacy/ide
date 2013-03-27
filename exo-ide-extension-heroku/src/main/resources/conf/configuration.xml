@@ -34,12 +34,6 @@
 
    <component>
       <type>org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-      </init-params>
    </component>
   
    
