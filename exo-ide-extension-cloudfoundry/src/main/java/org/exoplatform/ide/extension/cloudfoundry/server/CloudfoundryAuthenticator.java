@@ -49,6 +49,8 @@ public class CloudfoundryAuthenticator
     *    email address that used when signup to cloudfoundry.com
     * @param password
     *    password
+    * @param credential
+    *    use it to sore credential after successful authentication.
     * @throws CloudfoundryException
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
