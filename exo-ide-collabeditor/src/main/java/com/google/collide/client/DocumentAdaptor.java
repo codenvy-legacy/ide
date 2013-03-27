@@ -60,8 +60,6 @@ public class DocumentAdaptor implements IDocumentListener
 //      mutator.insertText(editorDocument.getFirstLine(), 0, 0, "it's alive");
       try
       {
-         collabEditor.asWidget().fireEvent(new EditorContentChangedEvent(collabEditor));
-
          // Remove textListener to prevent updating an appropriate IDocument instance
          editorDocument.getTextListenerRegistrar().remove(textListener);
 
@@ -91,6 +89,8 @@ public class DocumentAdaptor implements IDocumentListener
 //         mutator.deleteText(lineIn.line(), 0, lineIn.line().length());
          mutator.insertText(line, lineInfo.number(), col, event.fText, false);
 //         setLineText(lineNumber, b.toString());
+
+         collabEditor.asWidget().fireEvent(new EditorContentChangedEvent(collabEditor));
       }
       catch (BadLocationException e)
       {
