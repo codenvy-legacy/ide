@@ -216,10 +216,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       if (!(editor instanceof CollabEditor && !MimeType.TEXT_HTML.equals(activeFile.getMimeType())))
       {
          activeFile.setContentChanged(true);
-
-         activeFile.setContent(editor.getText());
          updateTabTitle(activeFile);
       }
+      activeFile.setContent(editor.getText());
+
       IDE.fireEvent(new EditorFileContentChangedEvent(activeFile, editor.hasUndoChanges(), editor.hasRedoChanges()));
    }
 
