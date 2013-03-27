@@ -16,14 +16,17 @@
  */
 package com.codenvy.ide.extension.demo;
 
+import com.codenvy.ide.api.editor.EditorAgent;
+
+import com.codenvy.ide.api.expressions.Expression;
+import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
+
+import com.codenvy.ide.api.extension.Extension;
+
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.core.editor.EditorAgent;
-import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.core.expressions.ProjectOpenedExpression;
-import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectivePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;

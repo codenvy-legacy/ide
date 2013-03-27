@@ -16,8 +16,9 @@
  */
 package com.codenvy.ide.resources.marshal;
 
+import com.codenvy.ide.api.resources.ModelProvider;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.resources.ModelProvider;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;

@@ -18,13 +18,15 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.deploy;
 
+import com.codenvy.ide.api.paas.DeployResultHandler;
+import com.codenvy.ide.api.paas.HasPaaSActions;
+
+import com.codenvy.ide.api.event.RefreshBrowserEvent;
+
 import com.codenvy.ide.api.parts.ConsolePart;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.paas.DeployResultHandler;
-import com.codenvy.ide.api.ui.paas.HasPaaSActions;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;

@@ -17,8 +17,9 @@
 package com.codenvy.ide.api.ui.perspective;
 
 
+import com.codenvy.ide.api.extension.SDK;
+
 import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
-import com.codenvy.ide.extension.SDK;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 

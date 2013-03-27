@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.resources.ModelProvider;
+import com.codenvy.ide.api.resources.ModelProvider;
 
 import com.google.inject.Inject;
 

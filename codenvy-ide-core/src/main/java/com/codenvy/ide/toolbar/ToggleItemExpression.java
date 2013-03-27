@@ -18,10 +18,10 @@
  */
 package com.codenvy.ide.toolbar;
 
-import com.codenvy.ide.core.expressions.ExpressionManager;
+import com.codenvy.ide.api.expressions.AbstractExpression;
+import com.codenvy.ide.api.expressions.ExpressionManager;
+import com.codenvy.ide.api.expressions.ToggleStateExpression;
 
-import com.codenvy.ide.core.expressions.AbstractExpression;
-import com.codenvy.ide.core.expressions.ToggleStateExpression;
 
 /**
  * The implementation of {@link ToggleStateExpression}.

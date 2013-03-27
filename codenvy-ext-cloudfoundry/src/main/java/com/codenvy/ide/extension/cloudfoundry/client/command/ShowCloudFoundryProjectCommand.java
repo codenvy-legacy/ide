@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.command;
 
+import com.codenvy.ide.api.expressions.Expression;
+
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 
-import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter;
 import com.google.gwt.resources.client.ImageResource;

@@ -16,13 +16,13 @@
  */
 package com.codenvy.ide.resources.model;
 
-import com.codenvy.ide.core.event.ProjectActionEvent;
-import com.codenvy.ide.core.event.ResourceChangedEvent;
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.event.ResourceChangedEvent;
+
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.loader.Loader;
-import com.codenvy.ide.resources.VirtualFileSystemInfo;
 import com.codenvy.ide.resources.marshal.FileContentUnmarshaller;
 import com.codenvy.ide.resources.marshal.FileUnmarshaller;
 import com.codenvy.ide.resources.marshal.FolderTreeUnmarshaller;

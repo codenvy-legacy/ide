@@ -16,10 +16,11 @@
  */
 package com.codenvy.ide.extension.demo;
 
+import com.codenvy.ide.api.expressions.Expression;
+import com.codenvy.ide.api.expressions.NoProjectOpenedExpression;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.core.expressions.NoProjectOpenedExpression;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;

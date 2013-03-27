@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
-import com.codenvy.ide.extension.SDK;
+import com.codenvy.ide.api.extension.SDK;
 
 import com.codenvy.ide.json.JsonArray;
 

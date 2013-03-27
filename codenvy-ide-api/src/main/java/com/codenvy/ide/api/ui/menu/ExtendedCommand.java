@@ -16,13 +16,15 @@
  */
 package com.codenvy.ide.api.ui.menu;
 
-import com.codenvy.ide.core.expressions.Expression;
+import com.codenvy.ide.api.expressions.Expression;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 
-
 /**
+ * Extended command is a derivative from Command, that also provides a Tooltip, 
+ * Icon and Expressions controling the visibility and 'canExecute' flag. 
+ * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface ExtendedCommand extends Command

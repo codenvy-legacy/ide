@@ -16,6 +16,9 @@
  */
 package com.codenvy.ide.extension;
 
+import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.extension.SDK;
+
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;

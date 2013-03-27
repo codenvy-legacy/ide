@@ -16,12 +16,18 @@
  */
 package com.codenvy.ide.resources;
 
+import com.codenvy.ide.api.event.ProjectActionEvent;
+
+import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ModelProvider;
+
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
+
 import com.google.inject.Singleton;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
-import com.codenvy.ide.core.event.ProjectActionEvent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;

@@ -17,12 +17,10 @@
 package com.codenvy.ide.api.ui.perspective;
 
 import com.codenvy.ide.api.mvp.View;
-
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
-
 /**
- * 
+ * Perspective View contains abstract containers for PartStack 
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */

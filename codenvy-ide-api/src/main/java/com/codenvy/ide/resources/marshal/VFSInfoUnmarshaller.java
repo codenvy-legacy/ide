@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.resources.marshal;
 
-import com.codenvy.ide.resources.VirtualFileSystemInfo;
-import com.codenvy.ide.resources.VirtualFileSystemInfo.ACLCapability;
-import com.codenvy.ide.resources.VirtualFileSystemInfo.QueryCapability;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo.ACLCapability;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo.QueryCapability;
+
 import com.codenvy.ide.resources.model.Folder;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;

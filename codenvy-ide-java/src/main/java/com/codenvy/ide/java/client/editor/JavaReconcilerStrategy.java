@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.java.client.editor;
 
-import com.codenvy.ide.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+
 import com.codenvy.ide.java.client.JavaAutoBeanFactory;
 import com.codenvy.ide.java.client.NameEnvironment;
 import com.codenvy.ide.java.client.TypeInfoStorage;

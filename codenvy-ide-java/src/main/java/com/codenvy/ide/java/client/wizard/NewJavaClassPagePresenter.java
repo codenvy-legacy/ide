@@ -18,10 +18,11 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import com.codenvy.ide.api.editor.EditorAgent;
+
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 
-import com.codenvy.ide.core.editor.EditorAgent;
 
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.core.JavaConventions;

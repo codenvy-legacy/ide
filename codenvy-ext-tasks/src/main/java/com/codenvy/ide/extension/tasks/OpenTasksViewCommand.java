@@ -16,13 +16,14 @@
  */
 package com.codenvy.ide.extension.tasks;
 
+import com.codenvy.ide.api.expressions.Expression;
+
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 
 import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
 
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 
-import com.codenvy.ide.core.expressions.Expression;
 
 import com.codenvy.ide.extension.tasks.part.TasksPartPresenter;
 

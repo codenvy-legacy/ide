@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.api.parts;
 
+import com.codenvy.ide.api.extension.SDK;
+
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
-import com.codenvy.ide.extension.SDK;
 
 /**
  * Provides output messages on console.

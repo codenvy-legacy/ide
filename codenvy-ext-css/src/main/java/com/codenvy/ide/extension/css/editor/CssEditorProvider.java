@@ -18,10 +18,11 @@
  */
 package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.editor.CodenvyTextEditor;
-import com.codenvy.ide.editor.DocumentProvider;
-import com.codenvy.ide.editor.EditorPartPresenter;
-import com.codenvy.ide.editor.EditorProvider;
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.EditorProvider;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -54,7 +55,7 @@ public class CssEditorProvider implements EditorProvider
    }
 
    /**
-    * @see com.codenvy.ide.editor.EditorProvider#getEditor()
+    * @see com.codenvy.ide.api.editor.EditorProvider#getEditor()
     */
    @Override
    public EditorPartPresenter getEditor()

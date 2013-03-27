@@ -18,9 +18,14 @@
  */
 package com.codenvy.ide.java.client;
 
+import com.codenvy.ide.api.editor.EditorRegistry;
+
+import com.codenvy.ide.api.extension.Extension;
+
+import com.codenvy.ide.api.resources.FileType;
+
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 
-import com.codenvy.ide.core.editor.EditorRegistry;
 
 import com.codenvy.ide.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.java.client.core.JavaCore;
@@ -54,8 +59,6 @@ import com.codenvy.ide.java.client.wizard.NewPackagePagePresenter;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.extension.Extension;
-import com.codenvy.ide.resources.FileType;
 
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.MimeType;

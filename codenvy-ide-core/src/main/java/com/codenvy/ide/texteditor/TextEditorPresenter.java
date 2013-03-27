@@ -18,13 +18,14 @@
  */
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.SelectionProvider;
+import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.api.outline.OutlinePresenter;
-import com.codenvy.ide.editor.AbstractTextEditorPresenter;
-import com.codenvy.ide.editor.DocumentProvider;
-import com.codenvy.ide.editor.DocumentProvider.DocumentCallback;
-import com.codenvy.ide.editor.SelectionProvider;
 import com.codenvy.ide.outline.OutlineImpl;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.annotation.AnnotationModel;
@@ -93,7 +94,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#close(boolean)
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean)
     */
    @Override
    public void close(boolean save)
@@ -103,7 +104,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#isEditable()
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#isEditable()
     */
    @Override
    public boolean isEditable()
@@ -113,7 +114,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#doRevertToSaved()
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#doRevertToSaved()
     */
    @Override
    public void doRevertToSaved()
@@ -123,7 +124,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#getSelectionProvider()
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getSelectionProvider()
     */
    @Override
    public SelectionProvider getSelectionProvider()

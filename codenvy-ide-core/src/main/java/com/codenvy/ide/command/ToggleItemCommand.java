@@ -18,11 +18,13 @@
  */
 package com.codenvy.ide.command;
 
+import com.codenvy.ide.api.event.ChangeToggleItemStateEvent;
+
+import com.codenvy.ide.api.expressions.Expression;
+
 import com.codenvy.ide.api.ui.menu.ToggleCommand;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.core.event.ChangeToggleItemStateEvent;
-import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.toolbar.ToggleItemExpression;
 
 import com.google.gwt.resources.client.ImageResource;

@@ -16,10 +16,11 @@
  */
 package com.codenvy.ide.part;
 
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+
 import com.codenvy.ide.api.ui.perspective.EditorPartStack;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
-import com.codenvy.ide.editor.EditorPartPresenter;
 
 import com.codenvy.ide.util.loging.Log;
 

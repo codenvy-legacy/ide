@@ -18,13 +18,11 @@
  */
 package com.codenvy.ide.api.ui.menu;
 
+import com.codenvy.ide.api.expressions.Expression;
 
-
-import com.codenvy.ide.core.expressions.Expression;
-import com.codenvy.ide.extension.SDK;
+import com.codenvy.ide.api.extension.SDK;
 
 import com.google.gwt.resources.client.ImageResource;
-
 
 /**
  * Public interface of the Toolbar is represented by {@link ToolbarAgent}. It allows 3rd party code

@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.api.ui.menu;
 
-import com.codenvy.ide.extension.SDK;
+import com.codenvy.ide.api.extension.SDK;
 
 /**
  * Public interface of the Main Menu is represented by {@link MainMenuAgent}. It allows 3rd party code

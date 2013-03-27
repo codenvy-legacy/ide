@@ -16,13 +16,16 @@
  */
 package com.codenvy.ide.extension.css;
 
+import com.codenvy.ide.api.editor.EditorRegistry;
+
+import com.codenvy.ide.api.extension.Extension;
+
+import com.codenvy.ide.api.resources.FileType;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.core.editor.EditorRegistry;
-import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.css.editor.CssEditorProvider;
 import com.codenvy.ide.extension.css.wizard.NewCSSFilePagePresenter;
-import com.codenvy.ide.resources.FileType;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;

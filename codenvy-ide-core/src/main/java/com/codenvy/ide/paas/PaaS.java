@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.paas;
 
-import com.codenvy.ide.api.ui.paas.HasPaaSActions;
+import com.codenvy.ide.api.paas.HasPaaSActions;
 
 import com.codenvy.ide.json.JsonArray;
 

@@ -18,9 +18,13 @@
  */
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.ide.editor.EditorProvider;
-import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.resources.FileType;
+import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.editor.EditorRegistry;
+
+import com.codenvy.ide.api.extension.SDK;
+
+import com.codenvy.ide.api.resources.FileType;
+
 
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;

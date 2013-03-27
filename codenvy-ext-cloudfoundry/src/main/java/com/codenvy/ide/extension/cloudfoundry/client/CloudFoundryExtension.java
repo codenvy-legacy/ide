@@ -18,9 +18,11 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
+import com.codenvy.ide.api.paas.PaaSAgent;
+
+import com.codenvy.ide.api.extension.Extension;
+
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.paas.PaaSAgent;
-import com.codenvy.ide.extension.Extension;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCloudFoundryProjectCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;

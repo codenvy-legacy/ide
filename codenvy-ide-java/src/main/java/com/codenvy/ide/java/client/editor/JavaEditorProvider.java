@@ -18,11 +18,12 @@
  */
 package com.codenvy.ide.java.client.editor;
 
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.EditorProvider;
+
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.editor.CodenvyTextEditor;
-import com.codenvy.ide.editor.DocumentProvider;
-import com.codenvy.ide.editor.EditorPartPresenter;
-import com.codenvy.ide.editor.EditorProvider;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.util.executor.UserActivityManager;
@@ -62,7 +63,7 @@ public class JavaEditorProvider implements EditorProvider
    }
 
    /**
-    * @see com.codenvy.ide.editor.EditorProvider#getEditor()
+    * @see com.codenvy.ide.api.editor.EditorProvider#getEditor()
     */
    @Override
    public EditorPartPresenter getEditor()

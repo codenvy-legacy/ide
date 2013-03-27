@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.java.client.editor;
 
-import com.codenvy.ide.editor.TextEditorPartPresenter;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+
 import com.codenvy.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;

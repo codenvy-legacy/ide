@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.ui.perspective;
 
-import com.codenvy.ide.selection.Selection;
+import com.codenvy.ide.api.selection.Selection;
 
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;

@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.core.editor;
 
-import com.codenvy.ide.editor.DocumentProvider;
-import com.codenvy.ide.editor.EditorInput;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorInput;
+
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
@@ -118,7 +119,7 @@ public class ResourceDocumentProvider implements DocumentProvider
    }
 
    /**
-    * @see com.codenvy.ide.editor.DocumentProvider#saveDocumentAs(com.codenvy.ide.editor.EditorInput, com.codenvy.ide.text.Document, boolean)
+    * @see com.codenvy.ide.api.editor.DocumentProvider#saveDocumentAs(com.codenvy.ide.api.editor.EditorInput, com.codenvy.ide.text.Document, boolean)
     */
    @Override
    public void saveDocumentAs(EditorInput input, Document document, boolean overwrite)

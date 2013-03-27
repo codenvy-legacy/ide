@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.java.client.editor;
 
+import com.codenvy.ide.api.editor.EditorInput;
+
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.editor.EditorInput;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.core.IProblemRequestor;
 import com.codenvy.ide.java.client.core.compiler.CategorizedProblem;

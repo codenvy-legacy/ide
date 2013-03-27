@@ -18,14 +18,15 @@
  */
 package com.codenvy.ide.command;
 
-import com.codenvy.ide.core.expressions.EditorDirtyExpression;
+import com.codenvy.ide.api.editor.EditorAgent;
+
+import com.codenvy.ide.api.expressions.EditorDirtyExpression;
+import com.codenvy.ide.api.expressions.Expression;
 
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 
-import com.codenvy.ide.core.editor.EditorAgent;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.core.expressions.Expression;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;

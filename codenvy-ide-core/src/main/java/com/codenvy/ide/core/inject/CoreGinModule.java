@@ -16,6 +16,24 @@
  */
 package com.codenvy.ide.core.inject;
 
+import com.codenvy.ide.extension.ExtensionRegistry;
+
+import com.codenvy.ide.api.editor.CodenvyTextEditor;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorProvider;
+import com.codenvy.ide.api.editor.EditorRegistry;
+
+import com.codenvy.ide.api.paas.PaaSAgent;
+
+
+import com.codenvy.ide.api.expressions.ExpressionManager;
+
+import com.codenvy.ide.api.extension.ExtensionGinModule;
+
+import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ModelProvider;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.OutlinePart;
@@ -26,7 +44,6 @@ import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.api.ui.menu.ToolbarAgent;
-import com.codenvy.ide.api.ui.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.perspective.EditorPartStack;
 import com.codenvy.ide.api.ui.perspective.PartStack;
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
@@ -35,18 +52,10 @@ import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.core.StandardComponentInitializer;
 import com.codenvy.ide.core.editor.DefaultEditorProvider;
-import com.codenvy.ide.core.editor.EditorAgent;
 import com.codenvy.ide.core.editor.EditorAgentImpl;
-import com.codenvy.ide.core.editor.EditorRegistry;
 import com.codenvy.ide.core.editor.EditorRegistryImpl;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
-import com.codenvy.ide.core.expressions.ExpressionManager;
 import com.codenvy.ide.core.expressions.ExpressionManagerImpl;
-import com.codenvy.ide.editor.CodenvyTextEditor;
-import com.codenvy.ide.editor.DocumentProvider;
-import com.codenvy.ide.editor.EditorProvider;
-import com.codenvy.ide.extension.ExtensionGinModule;
-import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
 import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.loader.Loader;
@@ -73,8 +82,6 @@ import com.codenvy.ide.perspective.WorkspacePresenter;
 import com.codenvy.ide.perspective.WorkspaceView;
 import com.codenvy.ide.perspective.WorkspaceViewImpl;
 import com.codenvy.ide.preferences.PreferencesAgentImpl;
-import com.codenvy.ide.resources.FileType;
-import com.codenvy.ide.resources.ModelProvider;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
 import com.codenvy.ide.selection.SelectionAgentImpl;

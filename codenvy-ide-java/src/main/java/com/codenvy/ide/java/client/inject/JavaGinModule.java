@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.java.client.inject;
 
-import com.codenvy.ide.extension.ExtensionGinModule;
+import com.codenvy.ide.api.extension.ExtensionGinModule;
+
 import com.codenvy.ide.java.client.wizard.NewJavaClassPageView;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPageViewImpl;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPageView;

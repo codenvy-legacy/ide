@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.java.client.projectmodel;
 
-import com.codenvy.ide.resources.ModelProvider;
+import com.codenvy.ide.api.resources.ModelProvider;
+
 import com.codenvy.ide.resources.model.Project;
 
 import com.google.web.bindery.event.shared.EventBus;

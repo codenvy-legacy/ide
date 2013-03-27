@@ -16,10 +16,11 @@
  */
 package com.codenvy.ide.java.client.projectmodel;
 
+import com.codenvy.ide.api.event.ResourceChangedEvent;
+
 import com.codenvy.ide.java.client.core.JavaConventions;
 import com.codenvy.ide.java.client.core.JavaCore;
 
-import com.codenvy.ide.core.event.ResourceChangedEvent;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Link;

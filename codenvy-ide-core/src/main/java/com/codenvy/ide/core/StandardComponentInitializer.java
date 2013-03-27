@@ -18,15 +18,17 @@
  */
 package com.codenvy.ide.core;
 
+import com.codenvy.ide.api.paas.PaaSAgent;
+
+import com.codenvy.ide.api.expressions.ExpressionManager;
+
 import com.codenvy.ide.api.ui.menu.ToolbarAgent;
 
 import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 
-import com.codenvy.ide.core.expressions.ExpressionManager;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.api.ui.paas.PaaSAgent;
 import com.codenvy.ide.command.OpenProjectCommand;
 import com.codenvy.ide.command.SaveAllCommand;
 import com.codenvy.ide.command.SaveCommand;

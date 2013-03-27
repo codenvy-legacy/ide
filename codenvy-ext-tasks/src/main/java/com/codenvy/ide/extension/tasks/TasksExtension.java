@@ -16,10 +16,11 @@
  */
 package com.codenvy.ide.extension.tasks;
 
+import com.codenvy.ide.api.extension.Extension;
+
 import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.extension.Extension;
 
 import com.codenvy.ide.extension.tasks.part.TasksPartPresenter;
 

@@ -18,8 +18,7 @@
  */
 package com.codenvy.ide.api.ui.menu;
 
-
-import com.codenvy.ide.core.expressions.ToggleStateExpression;
+import com.codenvy.ide.api.expressions.ToggleStateExpression;
 
 /**
  * The command's interface include toggle state expression.

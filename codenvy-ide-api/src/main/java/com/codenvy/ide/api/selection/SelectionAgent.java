@@ -16,9 +16,10 @@
  */
 package com.codenvy.ide.api.selection;
 
-import com.codenvy.ide.core.event.SelectionChangedEvent;
-import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.selection.Selection;
+import com.codenvy.ide.api.event.SelectionChangedEvent;
+
+import com.codenvy.ide.api.extension.SDK;
+
 
 import com.google.web.bindery.event.shared.EventBus;
 

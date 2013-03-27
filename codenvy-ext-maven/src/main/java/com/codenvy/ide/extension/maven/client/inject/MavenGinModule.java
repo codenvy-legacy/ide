@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.extension.maven.client.inject;
 
-import com.codenvy.ide.extension.ExtensionGinModule;
+import com.codenvy.ide.api.extension.ExtensionGinModule;
+
 import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;

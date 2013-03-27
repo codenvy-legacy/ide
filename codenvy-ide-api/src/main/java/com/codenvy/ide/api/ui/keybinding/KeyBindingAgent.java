@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.api.ui.keybinding;
 
-import com.codenvy.ide.extension.SDK;
+import com.codenvy.ide.api.extension.SDK;
 
 /**
  * Public interface of the key binding management.

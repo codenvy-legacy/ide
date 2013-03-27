@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import com.codenvy.ide.core.editor.EditorAgent;
+import com.codenvy.ide.api.editor.EditorAgent;
 
 import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;

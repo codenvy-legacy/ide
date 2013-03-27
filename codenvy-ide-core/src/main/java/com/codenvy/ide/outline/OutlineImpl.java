@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.outline;
 
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PropertyListener;
 
@@ -26,8 +29,6 @@ import com.codenvy.ide.api.outline.CodeBlock;
 import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.api.outline.OutlineModel.OutlineModelListener;
 import com.codenvy.ide.api.outline.OutlinePresenter;
-import com.codenvy.ide.editor.EditorPartPresenter;
-import com.codenvy.ide.editor.TextEditorPartPresenter;
 import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
