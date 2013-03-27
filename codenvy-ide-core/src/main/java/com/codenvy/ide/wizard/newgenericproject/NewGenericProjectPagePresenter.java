@@ -40,10 +40,9 @@ import com.google.inject.Inject;
  */
 public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate
 {
-   // TODO changed for New war project, change it if it is not needed for New war project wizard page
-   protected NewGenericProjectPageView view;
+   private NewGenericProjectPageView view;
 
-   protected ResourceProvider resourceProvider;
+   private ResourceProvider resourceProvider;
 
    private boolean hasIncorrectSymbol;
 

@@ -44,7 +44,6 @@ import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
 import com.codenvy.ide.wizard.newgenericproject.CreateGenericProjectPresenter;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 import com.codenvy.ide.wizard.warproject.CreateWarProjectPresenter;
-import com.codenvy.ide.wizard.warproject.NewWarProjectPagePresenter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -72,13 +71,12 @@ public class StandardComponentInitializer
       Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,
       OpenProjectCommand openProjectCommand, ToolbarAgent toolbar, ExpressionManager expressionManager,
       EventBus eventBus, ShowOpenPerspectiveDialog openPerspectiveCommand, PaaSAgent paasAgent,
-      Provider<NewWarProjectPagePresenter> warProjectProvider, CreateGenericProjectPresenter createGenericProject,
-      CreateWarProjectPresenter createWarProject)
+      CreateGenericProjectPresenter createGenericProject, CreateWarProjectPresenter createWarProject)
    {
       wizard.registerNewProjectWizard("Generic Project", "Create generic project", "", resources.genericProjectIcon(),
          genericProjectProvider, createGenericProject, JsonCollections.<String> createArray());
       wizard.registerNewProjectWizard("Java Web Application (WAR)", "Create web application", "War",
-         resources.genericProjectIcon(), warProjectProvider, createWarProject,
+         resources.genericProjectIcon(), genericProjectProvider, createWarProject,
          JsonCollections.<String> createArray("java", "War"));
 
       // TODO change icon
