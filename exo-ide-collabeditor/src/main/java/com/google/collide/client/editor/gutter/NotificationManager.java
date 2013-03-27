@@ -211,7 +211,7 @@ public class NotificationManager implements DocumentListener, FoldingListener
     */
    private void addOverviewMark(Marker problem, String string)
    {
-      final int linenNumber = getVisibleLineNumber(problem.getLineNumber());
+      final int lineNumber = getVisibleLineNumber(problem.getLineNumber() - 1);
       int numberOfLines = 0;
       if (editor.isFoldingMode())
       {
@@ -224,7 +224,8 @@ public class NotificationManager implements DocumentListener, FoldingListener
 
       NotificationMark mark =
          new NotificationMark(problem, string, res, editor, rightPositioner, new HtmlTooltipRenderer());
-      mark.setTopPosition((100 * linenNumber) / numberOfLines, "%");
+      mark.setTopPosition((100 * lineNumber) / numberOfLines, "%");
+      mark.getElement().setAttribute("data-line-number", String.valueOf(lineNumber));
       overviewGutter.addUnmanagedElement(mark.getElement());
       overviewMarks.add(mark);
       if (problem.isError())
