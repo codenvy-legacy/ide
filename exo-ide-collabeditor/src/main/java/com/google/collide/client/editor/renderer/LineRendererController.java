@@ -233,7 +233,7 @@ class LineRendererController {
      element.getStyle().setMarginLeft("1px");
      element.getStyle().setMarginTop("-2px");
      element.getStyle().setProperty("box-shadow", "0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset");
-     element.setId("expandMarker_line:" + lineNumber);
+     element.setId("expandMarker_line:" + (lineNumber+1));
 
      com.google.gwt.user.client.Element expandImageElement = new Image(resources.expandArrows()).getElement();
      expandImageElement.getStyle().setWidth(16, Unit.PX);
