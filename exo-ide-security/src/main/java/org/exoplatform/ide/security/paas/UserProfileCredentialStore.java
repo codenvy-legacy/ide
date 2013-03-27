@@ -39,6 +39,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class UserProfileCredentialStore implements CredentialStore
 {
+   /** Prefix for attribute of user profile that store PaaS credential. */
+   private static final String PaaS_CREDENTIAL_ATTRIBUTE_PREFIX = "paas.credential.";
    private final UserManager userManager;
    // protected with lock
    private final Cache<String, Pair[]> cache = new SLRUCache<String, Pair[]>(50, 100);
@@ -174,11 +176,11 @@ public class UserProfileCredentialStore implements CredentialStore
 
    private String cacheKey(String user, String target)
    {
-      return user + target;
+      return user + ':' + target;
    }
 
    private String credentialAttributeName(String target)
    {
-      return "paas.credential." + target;
+      return PaaS_CREDENTIAL_ATTRIBUTE_PREFIX + target;
    }
 }
