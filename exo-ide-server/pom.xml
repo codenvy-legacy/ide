@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>com.codenvy.commons</groupId>
 			<artifactId>codenvy-commons-mail-client</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>${com.codenvy.commons.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
