@@ -19,16 +19,15 @@
 package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.wizard.newproject.NewProjectWizardData;
-import com.codenvy.ide.wizard.newresource.NewResourceWizardData;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
+import com.codenvy.ide.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
+import com.codenvy.ide.wizard.newproject.NewProjectWizardData;
+import com.codenvy.ide.wizard.newresource.NewResourceWizardData;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
 
 import javax.inject.Singleton;
 
@@ -57,11 +56,13 @@ public class WizardAgentImpl implements WizardAgent
    /**
     * {@inheritDoc}
     */
+   @Override
    public void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
-                              Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures)
+      Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
+      JsonArray<String> natures)
    {
       NewProjectWizardData newProjectWizardData =
-         new NewProjectWizardData(title, description, primaryNature, icon, wizardPage, natures);
+         new NewProjectWizardData(title, description, primaryNature, icon, wizardPage, createProjectHandler, natures);
       newProjectWizardDatas.add(newProjectWizardData);
    }
 
@@ -78,6 +79,7 @@ public class WizardAgentImpl implements WizardAgent
    /**
     * {@inheritDoc}
     */
+   @Override
    public void registerNewResourceWizard(String category, String title, ImageResource icon,
       Provider<? extends WizardPagePresenter> wizardPage)
    {

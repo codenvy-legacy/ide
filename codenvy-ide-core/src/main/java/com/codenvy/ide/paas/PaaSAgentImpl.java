@@ -19,13 +19,9 @@
 package com.codenvy.ide.paas;
 
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
-import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.preferences.PreferencesPagePresenter;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
+import com.codenvy.ide.preferences.PreferencesPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -41,22 +37,12 @@ public class PaaSAgentImpl implements PaaSAgent
 {
    private final JsonArray<PaaS> registeredPaaS;
 
-   private final WizardAgent wizardAgent;
-
-   private final PreferencesAgent preferencesAgent;
-
    /**
     * Create agent.
-    * 
-    * @param wizardAgent
-    * @param preferencesAgent
     */
    @Inject
-   public PaaSAgentImpl(WizardAgent wizardAgent, PreferencesAgent preferencesAgent)
+   public PaaSAgentImpl()
    {
-      this.preferencesAgent = preferencesAgent;
-      this.wizardAgent = wizardAgent;
-
       this.registeredPaaS = JsonCollections.createArray();
    }
 
@@ -65,12 +51,13 @@ public class PaaSAgentImpl implements PaaSAgent
     */
    @Override
    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredTypes, HasPaaSActions paaSActions, PreferencesPagePresenter preferencePage)
+      JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
+      PreferencesPagePresenter preferencePage)
    {
-      PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes, paaSActions);
+      PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes, wizardPage);
       registeredPaaS.add(paas);
 
-      // TODO preference page and wizard page
+      // TODO preference page
    }
 
    /**

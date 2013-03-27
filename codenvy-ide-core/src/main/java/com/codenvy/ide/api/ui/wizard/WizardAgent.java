@@ -19,10 +19,10 @@
 package com.codenvy.ide.api.ui.wizard;
 
 import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.wizard.WizardPagePresenter;
-
 import com.codenvy.ide.json.JsonArray;
-
+import com.codenvy.ide.wizard.WizardPagePresenter;
+import com.codenvy.ide.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
@@ -31,7 +31,6 @@ import com.google.inject.Provider;
  * Provides register wizards for creating new project and new resource.
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 @SDK(title = "ide.api.ui.wizard.newresource")
 public interface WizardAgent
@@ -44,10 +43,12 @@ public interface WizardAgent
     * @param primaryNature the type of technology what associate with this wizard
     * @param icon the icon what will be showed on wizard page
     * @param wizardPage first wizard page
+    * @param createProjectHandler handler what create project
     * @param natures additional option for technology (example: available PaaS or etc)
     */
    void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
-      Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures);
+      Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
+      JsonArray<String> natures);
 
    /**
     * Registers new wizard for creating new resource.

@@ -19,7 +19,6 @@
 package com.codenvy.ide.paas;
 
 import com.codenvy.ide.json.JsonArray;
-
 import com.google.gwt.resources.client.ImageResource;
 
 
@@ -55,17 +54,35 @@ public class PaaS
     */
    private JsonArray<String> requiredProjectTypes;
 
-   private HasPaaSActions paaSActions;
+   private AbstractPaasWizardPagePresenter wizardPage;
 
+   /**
+    * Create PaaS.
+    * 
+    * @param id
+    * @param title
+    * @param image
+    * @param providesTemplate
+    * @param requiredProjectTypes
+    * @param wizardPage
+    */
    public PaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredProjectTypes, HasPaaSActions paaSActions)
+      JsonArray<String> requiredProjectTypes, AbstractPaasWizardPagePresenter wizardPage)
    {
       this.id = id;
       this.title = title;
       this.image = image;
       this.providesTemplate = providesTemplate;
       this.requiredProjectTypes = requiredProjectTypes;
-      this.paaSActions = paaSActions;
+      this.wizardPage = wizardPage;
+   }
+
+   /**
+    * @return the wizardPage
+    */
+   public AbstractPaasWizardPagePresenter getWizardPage()
+   {
+      return wizardPage;
    }
 
    /**
@@ -106,13 +123,5 @@ public class PaaS
    public JsonArray<String> getRequiredProjectTypes()
    {
       return requiredProjectTypes;
-   }
-
-   /**
-    * @return the paaSActions
-    */
-   public HasPaaSActions getPaaSActions()
-   {
-      return paaSActions;
    }
 }

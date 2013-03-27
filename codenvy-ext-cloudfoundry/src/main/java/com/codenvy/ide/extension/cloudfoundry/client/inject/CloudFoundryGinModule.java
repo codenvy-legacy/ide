@@ -25,8 +25,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationVie
 import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationView;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationViewImpl;
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationView;
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoView;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginView;
@@ -39,6 +37,8 @@ import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesView
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlView;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPageView;
+import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
@@ -61,8 +61,8 @@ public class CloudFoundryGinModule extends AbstractGinModule
       bind(DeleteApplicationView.class).to(DeleteApplicationViewImpl.class).in(Singleton.class);
       bind(ManageServicesView.class).to(ManageServicesViewImpl.class).in(Singleton.class);
       bind(CreateServiceView.class).to(CreateServiceViewImpl.class).in(Singleton.class);
-      bind(DeployApplicationView.class).to(DeployApplicationViewImpl.class).in(Singleton.class);
       bind(ApplicationInfoView.class).to(ApplicationInfoViewImpl.class).in(Singleton.class);
       bind(UnmapUrlView.class).to(UnmapUrlViewImpl.class).in(Singleton.class);
+      bind(CloudFoundryPageView.class).to(CloudFoundryPageViewImpl.class).in(Singleton.class);
    }
 }

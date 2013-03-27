@@ -16,21 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.deploy;
+package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.view.View;
-import com.google.gwt.user.client.ui.Composite;
 
 /**
- * The view of {@link DeployApplicationPresenter}.
+ * The view of {@link CloudFoundryPagePresenter}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface DeployApplicationView extends View<DeployApplicationView.ActionDelegate>
+public interface CloudFoundryPageView extends View<CloudFoundryPageView.ActionDelegate>
 {
    /**
-    * Needs for delegate some function into DeployApplication view.
+    * Needs for delegate some function into CloudFoundryPage view.
     */
    public interface ActionDelegate
    {
@@ -101,11 +100,4 @@ public interface DeployApplicationView extends View<DeployApplicationView.Action
     * @param servers
     */
    void setServerValues(JsonArray<String> servers);
-
-   /**
-    * Returns view.
-    * 
-    * @return view
-    */
-   public Composite getView();
 }

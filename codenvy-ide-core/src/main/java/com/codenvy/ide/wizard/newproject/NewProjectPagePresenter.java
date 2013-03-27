@@ -18,15 +18,12 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.paas.HasPaaS;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.PaaS;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.WizardPagePresenter;
-
-import com.codenvy.ide.json.JsonArray;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
@@ -38,7 +35,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  */
 public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate
 {
-   private WizardPagePresenter next;
+   private AbstractNewProjectWizardPage next;
 
    private NewProjectPageView view;
 
@@ -88,7 +85,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    {
       next.setPrevious(this);
       next.setUpdateDelegate(delegate);
-      ((HasPaaS)next).setPaaS(selectedPaaS);
+      next.setPaaSWizardPage(selectedPaaS.getWizardPage());
       return next;
    }
 

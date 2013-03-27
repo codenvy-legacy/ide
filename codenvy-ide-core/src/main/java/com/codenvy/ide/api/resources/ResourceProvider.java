@@ -18,15 +18,13 @@ package com.codenvy.ide.api.resources;
 
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.extension.SDK;
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.FileType;
 import com.codenvy.ide.resources.ModelProvider;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectNature;
 import com.codenvy.ide.resources.model.Property;
-
-import com.codenvy.ide.json.JsonArray;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
@@ -136,8 +134,16 @@ public interface ResourceProvider extends Component
    public FileType getFileType(File file);
    
    /**
+    * Returns vfs id.
     * 
     * @return
     */
    public String getVfsId();
+
+   /**
+    * Returns root folder's id.
+    * 
+    * @return
+    */
+   public String getRootId();
 }

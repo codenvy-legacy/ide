@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.deploy;
+package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
@@ -27,6 +27,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
@@ -36,13 +37,15 @@ import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.paas.DeployResultHandler;
-import com.codenvy.ide.paas.HasPaaSActions;
+import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.wizard.WizardPagePresenter;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -50,16 +53,15 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
- * Presenter for deploying application on CloudFoundry.
- * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: DeployApplicationPresenter.java Dec 2, 2011 10:17:23 AM vereshchaka $
+ * Presenter for creating application on CloudFoundry from New project wizard.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class DeployApplicationPresenter implements DeployApplicationView.ActionDelegate, HasPaaSActions,
-   ProjectBuiltHandler
+public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter implements
+   CloudFoundryPageView.ActionDelegate, ProjectBuiltHandler
 {
-   private DeployApplicationView view;
+   private CloudFoundryPageView view;
 
    private EventBus eventBus;
 
@@ -77,8 +79,6 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    private String projectName;
 
    private Project project;
-
-   private DeployResultHandler deployResultHandler;
 
    private ResourceProvider resourcesProvider;
 
@@ -98,16 +98,20 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
     * @param view
     * @param eventBus
     * @param resourcesProvider
+    * @param resources
     * @param console
     * @param constant
     * @param autoBeanFactory
     * @param loginPresenter
     */
    @Inject
-   protected DeployApplicationPresenter(DeployApplicationView view, EventBus eventBus,
-      ResourceProvider resourcesProvider, Console console, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
+   protected CloudFoundryPagePresenter(CloudFoundryPageView view, EventBus eventBus,
+      ResourceProvider resourcesProvider, CloudFoundryResources resources,
+      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      LoginPresenter loginPresenter)
    {
+      super("Deploy project to Cloud Foundry", resources.cloudFoundry48());
+
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
@@ -125,6 +129,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    public void onNameChanged()
    {
       name = view.getName();
+
+      delegate.updateControls();
    }
 
    /**
@@ -134,6 +140,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    public void onUrlChanged()
    {
       url = view.getUrl();
+
+      delegate.updateControls();
    }
 
    /**
@@ -154,6 +162,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       }
       String url = prefix + sufix;
       view.setUrl(url);
+
+      delegate.updateControls();
    }
 
    /**
@@ -250,16 +260,27 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
                eventBus, console, constant, loginPresenter)
             {
                @Override
-               protected void onSuccess(CloudFoundryApplication result)
+               protected void onSuccess(final CloudFoundryApplication result)
                {
-                  onAppCreatedSuccess(result);
+                  project.refreshProperties(new AsyncCallback<Project>()
+                  {
+                     @Override
+                     public void onSuccess(Project project)
+                     {
+                        onAppCreatedSuccess(result);
+                     }
+                     
+                     @Override
+                     public void onFailure(Throwable caught)
+                     {
+                        // do nothing
+                     }
+                  });
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  deployResultHandler.onDeployFinished(false);
                   console.print(constant.applicationCreationFailed());
                   super.onFailure(exception);
                }
@@ -267,8 +288,6 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         // TODO
-         //         deployResultHandler.onDeployFinished(false);
          eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
@@ -294,8 +313,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
             msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
          }
       }
-      // TODO
-      //      deployResultHandler.onDeployFinished(true);
+
       console.print(msg);
       eventBus.fireEvent(new RefreshBrowserEvent(project));
    }
@@ -325,7 +343,6 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       return appUris;
    }
 
-   // TODO This method will use when shows view
    /**
     * Get the list of server and put them to select field.
     */
@@ -361,6 +378,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
                      String urlSufix = server.substring(server.indexOf("."));
                      view.setUrl(name + urlSufix);
                      url = view.getUrl();
+
+                     delegate.updateControls();
                   }
 
                   @Override
@@ -443,13 +462,11 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    }
 
    /**
-    * {@inheritDoc}
+    * Deploy project to CloudFoundry.
     */
-   @Override
-   public void deploy(Project project, DeployResultHandler deployResultHandler)
+   private void deploy(Project project)
    {
       this.project = project;
-      this.deployResultHandler = deployResultHandler;
       buildApplication();
    }
 
@@ -465,9 +482,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    }
 
    /**
-    * {@inheritDoc}
+    * Checking entered information on view.
     */
-   @Override
    public boolean validate()
    {
       return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty();
@@ -485,5 +501,92 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
          warUrl = event.getBuildStatus().getDownloadUrl();
          createApplication();
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public WizardPagePresenter flipToNext()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean canFinish()
+   {
+      return validate();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean hasNext()
+   {
+      return false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isCompleted()
+   {
+      return validate();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getNotice()
+   {
+      if (view.getName().isEmpty())
+      {
+         return "Please, enter a application's name.";
+      }
+      else if (view.getUrl().isEmpty())
+      {
+         return "Please, enter application's url.";
+      }
+
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void go(AcceptsOneWidget container)
+   {
+      projectName = getCreateProjectHandler().getProjectName();
+      getServers();
+      container.setWidget(view);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void doFinish()
+   {
+      getCreateProjectHandler().create(new AsyncCallback<Project>()
+      {
+         @Override
+         public void onSuccess(Project result)
+         {
+            deploy(result);
+         }
+         
+         @Override
+         public void onFailure(Throwable caught)
+         {
+            // do nothing
+         }
+      });
    }
 }

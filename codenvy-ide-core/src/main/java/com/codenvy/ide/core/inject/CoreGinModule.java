@@ -70,6 +70,8 @@ import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.wizard.WizardAgentImpl;
+import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView;
+import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -165,6 +167,8 @@ public class CoreGinModule extends AbstractGinModule
 
       bind(Console.class).to(ConsolePartPresenter.class).in(Singleton.class);
       bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
+
+      bind(NewGenericProjectPageView.class).to(NewGenericProjectPageViewImpl.class);
    }
 
    @Provides

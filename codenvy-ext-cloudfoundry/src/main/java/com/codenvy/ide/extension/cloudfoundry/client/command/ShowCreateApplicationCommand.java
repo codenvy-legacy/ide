@@ -97,8 +97,6 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
    @Override
    public Expression canExecute()
    {
-      // TODO needs to change it after improve New project wizard
-      //      return expression;
-      return null;
+      return expression;
    }
 }

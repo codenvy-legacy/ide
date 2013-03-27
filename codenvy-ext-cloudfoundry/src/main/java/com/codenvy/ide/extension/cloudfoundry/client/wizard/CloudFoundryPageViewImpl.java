@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.deploy;
+package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.core.client.GWT;
@@ -26,7 +26,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,17 +33,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * The implementation of {@link DeployApplicationView}.
+ * The implementation of {@link CloudFoundryPageView}.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class DeployApplicationViewImpl extends Composite implements DeployApplicationView
+public class CloudFoundryPageViewImpl extends Composite implements CloudFoundryPageView
 {
-   private static DeployApplicationViewImplUiBinder uiBinder = GWT.create(DeployApplicationViewImplUiBinder.class);
-
-   @UiField
-   DockLayoutPanel cloudFoundryPanel;
+   private static CloudFoundryPageViewImplUiBinder uiBinder = GWT.create(CloudFoundryPageViewImplUiBinder.class);
 
    @UiField
    ListBox targetField;
@@ -55,7 +51,7 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
    @UiField
    TextBox urlField;
 
-   interface DeployApplicationViewImplUiBinder extends UiBinder<Widget, DeployApplicationViewImpl>
+   interface CloudFoundryPageViewImplUiBinder extends UiBinder<Widget, CloudFoundryPageViewImpl>
    {
    }
 
@@ -65,7 +61,7 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
     * Create view.
     */
    @Inject
-   protected DeployApplicationViewImpl()
+   protected CloudFoundryPageViewImpl()
    {
       initWidget(uiBinder.createAndBindUi(this));
    }
@@ -164,19 +160,10 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
       }
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Composite getView()
+   @UiHandler("urlField")
+   void onUrlFieldKeyUp(KeyUpEvent event)
    {
-      return this;
-   }
-
-   @UiHandler("targetField")
-   void onTargetFieldChange(ChangeEvent event)
-   {
-      delegate.onServerChanged();
+      delegate.onUrlChanged();
    }
 
    @UiHandler("nameField")
@@ -185,9 +172,9 @@ public class DeployApplicationViewImpl extends Composite implements DeployApplic
       delegate.onNameChanged();
    }
 
-   @UiHandler("urlField")
-   void onUrlFieldKeyUp(KeyUpEvent event)
+   @UiHandler("targetField")
+   void onTargetFieldChange(ChangeEvent event)
    {
-      delegate.onUrlChanged();
+      delegate.onServerChanged();
    }
 }

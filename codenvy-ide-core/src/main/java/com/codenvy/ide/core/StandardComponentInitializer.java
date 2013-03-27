@@ -32,17 +32,19 @@ import com.codenvy.ide.command.ShowOpenPerspectiveDialog;
 import com.codenvy.ide.command.ShowPreferenceCommand;
 import com.codenvy.ide.command.ToggleItemCommand;
 import com.codenvy.ide.core.expressions.ExpressionManager;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.keybinding.KeyBuilder;
+import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.menu.MainMenuPresenter;
+import com.codenvy.ide.template.TemplateServiceImpl;
 import com.codenvy.ide.toolbar.ToggleItemExpression;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
+import com.codenvy.ide.wizard.newgenericproject.CreateGenericProjectPresenter;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
+import com.codenvy.ide.wizard.warproject.CreateWarProjectPresenter;
 import com.codenvy.ide.wizard.warproject.NewWarProjectPagePresenter;
-
-import com.codenvy.ide.json.JsonCollections;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -70,12 +72,14 @@ public class StandardComponentInitializer
       Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,
       OpenProjectCommand openProjectCommand, ToolbarAgent toolbar, ExpressionManager expressionManager,
       EventBus eventBus, ShowOpenPerspectiveDialog openPerspectiveCommand, PaaSAgent paasAgent,
-      Provider<NewWarProjectPagePresenter> warProjectProvider)
+      Provider<NewWarProjectPagePresenter> warProjectProvider, CreateGenericProjectPresenter createGenericProject,
+      CreateWarProjectPresenter createWarProject)
    {
       wizard.registerNewProjectWizard("Generic Project", "Create generic project", "", resources.genericProjectIcon(),
-         genericProjectProvider, JsonCollections.<String> createArray());
+         genericProjectProvider, createGenericProject, JsonCollections.<String> createArray());
       wizard.registerNewProjectWizard("Java Web Application (WAR)", "Create web application", "War",
-         resources.genericProjectIcon(), warProjectProvider, JsonCollections.<String> createArray("java", "War"));
+         resources.genericProjectIcon(), warProjectProvider, createWarProject,
+         JsonCollections.<String> createArray("java", "War"));
 
       // TODO change icon
       wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
@@ -113,8 +117,11 @@ public class StandardComponentInitializer
       toolbar.addDropDownItem("Test/New", resources.file(), "Test item");
       toolbar.addToggleItem("Test/New/Checked item", command);
 
-      // TODO 
       paasAgent.registerPaaS("None", "None", null, false, JsonCollections.<String> createArray("", "java", "War"),
          null, null);
+
+      // TODO needs to get from DI?
+      new TemplateServiceImpl(new EmptyLoader(), "/rest/private/registry/repository/exo:applications/IDE",
+         "rest/private");
    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,35 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.api.ui.paas;
+package com.codenvy.ide.template;
 
-import com.codenvy.ide.extension.SDK;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
-import com.codenvy.ide.preferences.PreferencesPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 
+import java.util.List;
 
 /**
- * Provides register new PaaS.
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Jul 26, 2012 12:51:08 PM anya $
  * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@SDK(title = "ide.api.ui.paas")
-public interface PaaSAgent
+public interface FolderTemplate extends Template
 {
+
    /**
-    * Registers new PaaS.
-    * 
-    * @param id
-    * @param title
-    * @param image
-    * @param providesTemplate
-    * @param requiredTypes
-    * @param wizardPage
-    * @param preferencePage
+    * @return children on template
     */
-   public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
-      PreferencesPagePresenter preferencePage);
+   List<AbstractTemplate> getChildren();
+
+   void setChildren(List<AbstractTemplate> children);
+
+   /**
+    * {@inheritDoc}
+    */
+   ImageResource getIcon();
+
 }

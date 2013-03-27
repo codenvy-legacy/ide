@@ -33,7 +33,7 @@
 ********************** eXo IDE Commons Components *************************************
 ***************************************************************************************
 -->
-   <!--component>
+   <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
          <value-param>
@@ -57,7 +57,7 @@
             <value>/ide-home/templates</value>
          </value-param>
       </init-params>
-   </component-->
+   </component>
 
 <!-- VirtualFileSystem -->
    <component>
