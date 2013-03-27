@@ -20,24 +20,18 @@ package com.codenvy.ide.wizard.newgenericproject;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
+import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.After;
@@ -64,6 +58,12 @@ public class TestNewGenericProjectPagePresenter
 
    @Mock
    private ResourceProvider resourceProvider;
+
+   @Mock
+   private NewGenericProjectWizardResource resources;
+
+   @Mock
+   private CreateProjectHandler createProjecthandler;
 
    private NewGenericProjectPagePresenter presenter;
 
@@ -120,8 +120,9 @@ public class TestNewGenericProjectPagePresenter
          }
       }).when(resourceProvider).listProjects((AsyncCallback<JsonArray<String>>)any());
 
-      presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
+      presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
+      presenter.setCreateProjectHandler(createProjecthandler);
    }
 
    /**
@@ -190,7 +191,8 @@ public class TestNewGenericProjectPagePresenter
       String projectName = "Test";
 
       // create presenter
-      presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
+      presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
+      presenter.setCreateProjectHandler(createProjecthandler);
 
       when(view.getProjectName()).thenReturn(projectName);
 
@@ -206,10 +208,11 @@ public class TestNewGenericProjectPagePresenter
    public void shouldBeCallCreateProject()
    {
       // create presenter
-      presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
+      presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
+      presenter.setCreateProjectHandler(createProjecthandler);
 
       presenter.doFinish();
 
-      verify(resourceProvider).createProject(anyString(), (JsonArray<Property>)any(), (AsyncCallback<Project>)any());
+      verify(createProjecthandler).create((AsyncCallback<Project>)any());
    }
 }
