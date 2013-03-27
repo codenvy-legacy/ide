@@ -151,7 +151,7 @@ public class EditSessions implements Startable
                }
                catch (Exception e)
                {
-                  LOG.error(e.getMessage(), e);
+                  LOG.debug(e.getMessage(), e);
                }
             }
          }
@@ -416,7 +416,7 @@ public class EditSessions implements Startable
       }
       catch (VersionedDocument.DocumentOperationException e)
       {
-         LOG.error(e.getMessage(), e);
+         LOG.debug(e.getMessage(), e);
       }
       return broadcastedDocOps;
    }
