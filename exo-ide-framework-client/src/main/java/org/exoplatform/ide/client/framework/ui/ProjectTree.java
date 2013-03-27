@@ -275,7 +275,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
                items.add(child);
             }
          }
-         
+
          for (Item i : items)
          {
             refresh(i, true);
@@ -472,9 +472,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
          return;
       }
       
-      treeItem.setUserObject(item);
-      treeItem.render();
-      
+      treeItem.setItem(item);
+
       if (!(item instanceof FolderModel))
       {
          return;
@@ -484,7 +483,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       {
          return;
       }
-      
+
       Collections.sort(((FolderModel)item).getChildren().getItems(), comparator);
       List<Item> filteredItems = DirectoryFilter.get().filter(((FolderModel)item).getChildren().getItems());
       
