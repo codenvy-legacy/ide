@@ -63,13 +63,13 @@ public class NotificationController
 
    private void showFileOperationNotification(FileOperationNotification notification)
    {
-      Participant user = usersModel.getUserById(notification.getUserId());
-      String targetPaht = notification.getTarget();
-      targetPaht = targetPaht.substring(targetPaht.lastIndexOf('/') + 1, targetPaht.length());
+      Participant user = usersModel.getParticipant(usersModel.getUserIdByClientId(notification.getUserId()));
+      String targetPath = notification.getTarget();
+      targetPath = targetPath.substring(targetPath.lastIndexOf('/') + 1, targetPath.length());
       String fileName = notification.getFilePath();
       fileName = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
       manager.addNotification(new Notification("User " + user.getDisplayName() + " wants to " + getOperationName(
-         notification.getOperation()) + " " + targetPaht + " and ask you to close file " + fileName, -1));
+         notification.getOperation()) + " " + targetPath + " and ask you to close file " + fileName, -1));
    }
 
    private String getOperationName(Operation operation)
