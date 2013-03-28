@@ -109,8 +109,11 @@ public class SelectThemePresenter implements PreferencePerformer, ViewClosedHand
    
    private void applyTheme()
    {
-      IDE.fireEvent(new ChangeThemeEvent(selectedTheme.getName()));
+      ThemeManager.getInstance().changeTheme(selectedTheme.getName());
       display.setApplyButtonEnabled(false);
+      
+      display.getThemesListGrid().setValue(ThemeManager.getInstance().getThemes());
+      display.getThemesListGrid().selectItem(selectedTheme);
    }
    
    private void themeSelected()
