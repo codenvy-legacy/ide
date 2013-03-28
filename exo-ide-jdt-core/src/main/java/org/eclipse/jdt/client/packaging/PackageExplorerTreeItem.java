@@ -117,14 +117,12 @@ public class PackageExplorerTreeItem extends TreeItem
 
    protected void createWidget(ImageResource icon, String text, Item item)
    {
-      TreeIcon treeNodeIcon = new TreeIcon(icon);
 
       Grid grid = new Grid(1, 2);
       grid.setWidth("100%");
 
-      // Image i = new Image(icon);
-      //TreeIcon i = new TreeIcon(icon);
-      treeNodeIcon.setWidth("16px");
+      TreeIcon treeNodeIcon = new TreeIcon(icon);
+      //treeNodeIcon.setWidth("16px");
       treeNodeIcon.setHeight("16px");
       grid.setWidget(0, 0, treeNodeIcon);
       // Label l = new Label(text, false);
@@ -142,25 +140,6 @@ public class PackageExplorerTreeItem extends TreeItem
 
       getElement().setId(PREFIX_ID + Utils.md5(item.getPath()));
    }
-
-   //      else if (item instanceof Dependencies)
-   //      {
-   //         Dependencies dependencyListItem = (Dependencies)item;
-   //         nodeIcon = new TreeIcon(JdtClientBundle.INSTANCE.jarReferences());
-   //         nodeName = dependencyListItem.getName();
-   //      }
-   //      else if (item instanceof Dependency)
-   //      {
-   //         Dependency dependencyItem = (Dependency)item;
-   //         nodeIcon = new TreeIcon(JdtClientBundle.INSTANCE.jarReference());
-   //         nodeName = dependencyItem.getName();
-   //      }
-
-   //      else
-   //      {
-   //         nodeIcon = new TreeIcon(JdtClientBundle.INSTANCE.packageExplorer());
-   //         nodeName = "undefined";
-   //      }
    
    public PackageExplorerTreeItem getChildByItemId(String itemId)
    {

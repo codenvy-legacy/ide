@@ -30,7 +30,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ShowChatControl extends SimpleControl implements IDEControl
+public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
 {
    public static final String ID = "View/Collaboration";
 
@@ -53,6 +53,20 @@ public class ShowChatControl extends SimpleControl implements IDEControl
    @Override
    public void initialize()
    {
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      setEnabled(false);
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      setEnabled(true);
    }
 
    public void chatOpened(boolean opened)

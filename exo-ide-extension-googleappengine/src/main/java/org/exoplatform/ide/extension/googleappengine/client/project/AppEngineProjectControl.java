@@ -128,6 +128,7 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
       }
       
       setEnabled(isDeployed(project));
+      setVisible(isDeployed(project));
    }
 
 }
