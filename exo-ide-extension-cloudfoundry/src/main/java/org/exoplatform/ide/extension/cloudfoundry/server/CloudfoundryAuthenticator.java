@@ -49,6 +49,8 @@ public class CloudfoundryAuthenticator
     *    email address that used when signup to cloudfoundry.com
     * @param password
     *    password
+    * @param credential
+    *    use it to sore credential after successful authentication.
     * @throws CloudfoundryException
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
@@ -119,12 +121,12 @@ public class CloudfoundryAuthenticator
 
    public final void login(Credential credential) throws CloudfoundryException, ParsingResponseException, IOException
    {
-      login(getTarget(), getUsername(), getPassword(), credential);
+      login(getTarget(), getEmail(), getPassword(), credential);
    }
 
    // For test
 
-   public String getUsername()
+   public String getEmail()
    {
       return null;
    }

@@ -30,6 +30,7 @@ import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -43,10 +44,11 @@ public class UserProfileSshKeyStore implements SshKeyStore
 {
    private static final int PRIVATE = 0;
    private static final int PUBLIC = 1;
+   private static final String KEY_ATTRIBUTE_PREFIX = "ssh.key.";
    /** Prefix for attribute of user profile that store private SSH key. */
-   private static final String PRIVATE_KEY_ATTRIBUTE_PREFIX = "ssh.key.private.";
+   private static final String PRIVATE_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "private.";
    /** Prefix for attribute of user profile that store public SSH key. */
-   private static final String PUBLIC_KEY_ATTRIBUTE_PREFIX = "ssh.key.public.";
+   private static final String PUBLIC_KEY_ATTRIBUTE_PREFIX = KEY_ATTRIBUTE_PREFIX + "public.";
 
    private final UserManager userManager;
    // protected with lock
@@ -113,13 +115,34 @@ public class UserProfileSshKeyStore implements SshKeyStore
          if (key == null)
          {
             final User myUser = userManager.getUserByAlias(userId);
-            final String keyAsString = myUser.getProfile().getAttribute(sshKeyAttributeName(host, i));
+            String keyAsString = myUser.getProfile().getAttribute(sshKeyAttributeName(host, i));
+            if (keyAsString == null)
+            {
+               // Try to find key for parent domain. This is required for openshift integration but may be useful for others also.
+               final String attributePrefix = i == PRIVATE ? PRIVATE_KEY_ATTRIBUTE_PREFIX : PUBLIC_KEY_ATTRIBUTE_PREFIX;
+               for (Iterator<Map.Entry<String, String>> iterator = myUser.getProfile().getAttributes().entrySet().iterator();
+                    iterator.hasNext() && keyAsString == null; )
+               {
+                  Map.Entry<String, String> entry = iterator.next();
+                  String attributeName = entry.getKey();
+                  if (attributeName.startsWith(attributePrefix))
+                  {
+                     // Lets say we found attribute 'ssh.key.private.codenvy.com'
+                     // and we are looking for key for host 'my-site.codenvy.com'.
+                     // 1. Get domain name - remove prefix 'ssh.key.private.'
+                     // 2. We found the key if host name ends with name we got above.
+                     if (host.endsWith(attributeName.substring(attributePrefix.length())))
+                     {
+                        keyAsString = entry.getValue();
+                     }
+                  }
+               }
+            }
             if (keyAsString != null)
             {
                key = new SshKey(cacheKey, keyAsString.getBytes());
                cache.put(cacheKey, key);
             }
-            // TODO : key for parent domains
          }
          return key;
       }

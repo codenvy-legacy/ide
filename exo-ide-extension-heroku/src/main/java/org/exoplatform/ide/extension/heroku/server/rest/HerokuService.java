@@ -24,6 +24,7 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -35,9 +36,7 @@ import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import java.io.File;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +53,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * REST interface to {@link Heroku}.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -84,15 +83,15 @@ public class HerokuService
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws HerokuException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public void login(Map<String, String> credentials)
+      throws HerokuException, IOException, ParsingResponseException, CredentialStoreException
    {
       heroku.login(credentials.get("email"), credentials.get("password"));
    }
 
    @Path("logout")
    @POST
-   public void logout() throws IOException, VirtualFileSystemException
+   public void logout() throws CredentialStoreException
    {
       heroku.logout();
    }
@@ -100,15 +99,15 @@ public class HerokuService
    @Path("keys")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<HerokuKey> keysList(@QueryParam("long") boolean inLongFormat) throws HerokuException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public List<HerokuKey> keysList(@QueryParam("long") boolean inLongFormat)
+      throws HerokuException, IOException, ParsingResponseException, CredentialStoreException
    {
       return heroku.listSshKeys(inLongFormat);
    }
 
    @Path("keys/add")
    @POST
-   public void keysAdd() throws HerokuException, IOException, VirtualFileSystemException, SshKeyStoreException
+   public void keysAdd() throws HerokuException, IOException, SshKeyStoreException, CredentialStoreException
    {
       heroku.addSshKey();
    }
@@ -116,14 +115,14 @@ public class HerokuService
    @Path("apps/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> appsCreate(
-      @QueryParam("remote") final String remote) throws HerokuException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public Map<String, String> appsCreate(@QueryParam("remote") final String remote)
+      throws HerokuException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      Map<String, String> application =
-         heroku.createApplication(appName, remote,
-            (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      Map<String, String> application = heroku.createApplication(appName,
+         remote,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null
+      );
 
       // Update VFS properties. Need it to uniform client.
       Property p = new PropertyImpl("heroku-application", application.get("name"));
@@ -132,8 +131,8 @@ public class HerokuService
       vfs.updateItem(projectId, properties, null);
       if (projectId != null)
       {
-         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-         LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+         Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
             + "# PAAS#Heroku#");
       }
       return application;
@@ -141,16 +140,17 @@ public class HerokuService
 
    @Path("apps/destroy")
    @POST
-   public void appsDestroy() throws HerokuException, IOException, VirtualFileSystemException
+   public void appsDestroy() throws HerokuException, IOException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      heroku.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
-         : null);
+      heroku.destroyApplication(appName,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null
+      );
 
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         Property p = new PropertyImpl("heroku-application", Collections.<String> emptyList());
+         Property p = new PropertyImpl("heroku-application", Collections.<String>emptyList());
          List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);
@@ -160,19 +160,21 @@ public class HerokuService
    @Path("apps/info")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> appsInfo(@QueryParam("raw") boolean inRawFormat) throws HerokuException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public Map<String, String> appsInfo(@QueryParam("raw") boolean inRawFormat)
+      throws HerokuException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      return heroku.applicationInfo(appName, inRawFormat,
-         (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      return heroku.applicationInfo(appName,
+         inRawFormat,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null
+      );
    }
 
    @Path("apps")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public List<String> appsList() throws HerokuException, ParsingResponseException, IOException,
-      VirtualFileSystemException
+      CredentialStoreException
    {
       return heroku.listApplications();
    }
@@ -180,13 +182,14 @@ public class HerokuService
    @Path("apps/rename")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> appsRename(@QueryParam("newname") String newname) throws HerokuException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public Map<String, String> appsRename(@QueryParam("newname") String newname)
+      throws HerokuException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      Map<String, String> application =
-         heroku.renameApplication(appName, newname,
-            (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      Map<String, String> application = heroku.renameApplication(appName,
+         newname,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null
+      );
 
       if (projectId != null)
       {
@@ -203,46 +206,53 @@ public class HerokuService
    @Path("apps/stack")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<Stack> appsStack() throws HerokuException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public List<Stack> appsStack()
+      throws HerokuException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      return heroku
-         .getStacks(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      return heroku.getStacks(appName,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null
+      );
    }
 
    @Path("apps/stack-migrate")
    @POST
    @Produces(MediaType.TEXT_PLAIN)
-   public byte[] stackMigrate(@QueryParam("stack") String stack) throws HerokuException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public byte[] stackMigrate(@QueryParam("stack") String stack)
+      throws HerokuException, IOException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      return heroku.stackMigrate(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
-         : null, stack);
+      return heroku.stackMigrate(appName,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null,
+         stack
+      );
    }
 
    @Path("apps/logs")
    @GET
    @Produces(MediaType.TEXT_PLAIN)
-   public byte[] logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
-      VirtualFileSystemException, java.security.GeneralSecurityException
+   public byte[] logs(@QueryParam("num") int logLines)
+      throws HerokuException, IOException, VirtualFileSystemException, java.security.GeneralSecurityException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      return heroku.logs(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
-         logLines);
+      return heroku.logs(appName,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null,
+         logLines
+      );
    }
 
    @Path("apps/run")
    @POST
    @Consumes(MediaType.TEXT_PLAIN)
    @Produces(MediaType.TEXT_PLAIN)
-   public byte[] run(final String command) throws HerokuException, IOException, ParsingResponseException,
-      VirtualFileSystemException, GeneralSecurityException, InterruptedException
+   public byte[] run(final String command)
+      throws HerokuException, IOException, ParsingResponseException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      return heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
-         command);
+      return heroku.run(appName,
+         projectId != null ? new java.io.File(localPathResolver.resolve(vfs, projectId)) : null,
+         command
+      );
    }
 
 }

@@ -35,7 +35,10 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
+import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -104,40 +107,49 @@ public class Heroku
    }};
 
    private final HerokuAuthenticator authenticator;
-
+   private final CredentialStore credentialStore;
    private final SshKeyStore sshKeyStore;
 
-   public Heroku(HerokuAuthenticator authenticator, SshKeyStore sshKeyStore)
+   public Heroku(HerokuAuthenticator authenticator, CredentialStore credentialStore, SshKeyStore sshKeyStore)
    {
       this.authenticator = authenticator;
+      this.credentialStore = credentialStore;
       this.sshKeyStore = sshKeyStore;
    }
 
    /**
     * Log in with specified email/password. Result of command execution is saved 'heroku API key', see
-    * {@link HerokuAuthenticator#login(String, String)} for details.
+    * {@link HerokuAuthenticator#login(String, String, Credential)} for details.
     * 
     * @param email email address that used when create account at heroku.com
     * @param password password
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public void login(String email, String password) throws HerokuException, ParsingResponseException, IOException,
-      VirtualFileSystemException
+   public void login(String email, String password)
+      throws HerokuException, ParsingResponseException, IOException, CredentialStoreException
    {
-      authenticator.login(email, password);
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "heroku", credential);
+      authenticator.login(email, password, credential);
+      credentialStore.save(userId, "heroku", credential);
    }
 
-   /**
-    * Remove locally save authentication credentials, see {@link HerokuAuthenticator#logout()} for details.
-    * 
-    * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
-    */
-   public void logout() throws VirtualFileSystemException, IOException
+   /** Remove locally saved authentication credentials. */
+   public void logout() throws CredentialStoreException
    {
-      authenticator.logout();
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "heroku", credential);
+      credential.removeAttribute("api_key");
+      credential.removeAttribute("secret");
+      credentialStore.save(userId, "heroku", credential);
+   }
+
+   private String getUserId()
+   {
+      return ConversationState.getCurrent().getIdentity().getUserId();
    }
 
    /**
@@ -147,17 +159,12 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
     */
-   public void addSshKey() throws HerokuException, IOException, SshKeyStoreException, VirtualFileSystemException
+   public void addSshKey() throws HerokuException, IOException, SshKeyStoreException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      addSshKey(herokuCredentials);
+      addSshKey(getCredential());
    }
 
-   private void addSshKey(HerokuCredentials herokuCredentials) throws HerokuException, IOException,
+   private void addSshKey(HerokuCredential herokuCredential) throws HerokuException, IOException,
       SshKeyStoreException
    {
       final String host = "heroku.com";
@@ -173,7 +180,7 @@ public class Heroku
          URL url = new URL(HEROKU_API + "/user/keys");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("POST");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
          http.setRequestProperty("Accept", "application/xml, */*");
          http.setDoOutput(true);
          http.setRequestProperty("Content-type", "text/ssh-authkey");
@@ -208,20 +215,14 @@ public class Heroku
     * @param keyName key name to remove typically in form 'user@host'. NOTE: If <code>null</code> then all keys for current user
     *           removed
     * @throws HerokuException if heroku server return unexpected or error status for request
-    * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
     */
-   public void removeSshKey(String keyName) throws HerokuException, IOException, VirtualFileSystemException
+   public void removeSshKey(String keyName) throws HerokuException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      removeSshKey(herokuCredentials, keyName);
+      removeSshKey(getCredential(), keyName);
    }
 
-   private void removeSshKey(HerokuCredentials herokuCredentials, String keyName) throws HerokuException, IOException
+   private void removeSshKey(HerokuCredential herokuCredential, String keyName) throws HerokuException, IOException
    {
       HttpURLConnection http = null;
       try
@@ -232,7 +233,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("DELETE");
          http.setRequestProperty("Accept", "application/xml, */*");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          if (http.getResponseCode() != 200)
          {
@@ -257,20 +258,14 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public List<HerokuKey> listSshKeys(boolean inLongFormat) throws HerokuException, ParsingResponseException,
-      IOException, VirtualFileSystemException
+   public List<HerokuKey> listSshKeys(boolean inLongFormat)
+      throws HerokuException, ParsingResponseException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return listSshKeys(herokuCredentials, inLongFormat);
+      return listSshKeys(getCredential(), inLongFormat);
    }
 
-   private List<HerokuKey> listSshKeys(HerokuCredentials herokuCredentials, boolean inLongFormat)
+   private List<HerokuKey> listSshKeys(HerokuCredential herokuCredential, boolean inLongFormat)
       throws HerokuException, IOException, ParsingResponseException
    {
       HttpURLConnection http = null;
@@ -280,7 +275,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          http.setRequestProperty("Accept", "application/xml, */*");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          if (http.getResponseCode() != 200)
          {
@@ -360,19 +355,13 @@ public class Heroku
     * 
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public void removeAllSshKeys() throws HerokuException, IOException, VirtualFileSystemException
+   public void removeAllSshKeys() throws HerokuException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      removeAllSshKeys(herokuCredentials);
+      removeAllSshKeys(getCredential());
    }
 
-   private void removeAllSshKeys(HerokuCredentials herokuCredentials) throws HerokuException, IOException
+   private void removeAllSshKeys(HerokuCredential herokuCredential) throws HerokuException, IOException
    {
       HttpURLConnection http = null;
       try
@@ -381,7 +370,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("DELETE");
          http.setRequestProperty("Accept", "application/xml, */*");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          if (http.getResponseCode() != 200)
          {
@@ -413,20 +402,14 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public Map<String, String> createApplication(String name, String remote, File workDir) throws HerokuException,
-      ParsingResponseException, IOException, VirtualFileSystemException
+   public Map<String, String> createApplication(String name, String remote, File workDir)
+      throws HerokuException, ParsingResponseException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return createApplication(herokuCredentials, name, remote, workDir);
+      return createApplication(getCredential(), name, remote, workDir);
    }
 
-   private Map<String, String> createApplication(HerokuCredentials herokuCredentials, String name, String remote,
+   private Map<String, String> createApplication(HerokuCredential herokuCredential, String name, String remote,
       File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (remote == null || remote.isEmpty())
@@ -440,7 +423,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("POST");
          http.setRequestProperty("Accept", "application/xml");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
          if (name != null)
          {
             http.setDoOutput(true);
@@ -542,20 +525,14 @@ public class Heroku
     *           <code>name</code> parameter must be not <code>null</code>
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public void destroyApplication(String name, File workDir) throws HerokuException, IOException,
-      VirtualFileSystemException
+   public void destroyApplication(String name, File workDir)
+      throws HerokuException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      destroyApplication(herokuCredentials, name, workDir);
+      destroyApplication(getCredential(), name, workDir);
    }
 
-   private void destroyApplication(HerokuCredentials herokuCredentials, String name, File workDir) throws IOException,
+   private void destroyApplication(HerokuCredential herokuCredential, String name, File workDir) throws IOException,
       HerokuException
    {
       if (name == null || name.isEmpty())
@@ -570,7 +547,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("DELETE");
          http.setRequestProperty("Accept", "application/xml, */*");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          if (http.getResponseCode() != 200)
          {
@@ -602,20 +579,14 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public Map<String, String> applicationInfo(String name, boolean inRawFormat, File workDir) throws HerokuException,
-      ParsingResponseException, IOException, VirtualFileSystemException
+   public Map<String, String> applicationInfo(String name, boolean inRawFormat, File workDir)
+      throws HerokuException, ParsingResponseException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return applicationInfo(herokuCredentials, name, inRawFormat, workDir);
+      return applicationInfo(getCredential(), name, inRawFormat, workDir);
    }
 
-   private Map<String, String> applicationInfo(HerokuCredentials herokuCredentials, String name, boolean inRawFormat,
+   private Map<String, String> applicationInfo(HerokuCredential herokuCredential, String name, boolean inRawFormat,
       File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (name == null || name.isEmpty())
@@ -630,7 +601,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          http.setRequestProperty("Accept", "application/xml, */*");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          if (http.getResponseCode() != 200)
          {
@@ -723,20 +694,14 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public Map<String, String> renameApplication(String name, String newname, File workDir) throws HerokuException,
-      ParsingResponseException, IOException, VirtualFileSystemException
+   public Map<String, String> renameApplication(String name, String newname, File workDir)
+      throws HerokuException, ParsingResponseException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return renameApplication(herokuCredentials, name, newname, workDir);
+      return renameApplication(getCredential(), name, newname, workDir);
    }
 
-   private Map<String, String> renameApplication(HerokuCredentials herokuCredentials, String name, String newname,
+   private Map<String, String> renameApplication(HerokuCredential herokuCredential, String name, String newname,
       File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (newname == null || newname.isEmpty())
@@ -759,7 +724,7 @@ public class Heroku
          http.setRequestProperty("Accept", "application/xml, */*");
          http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
          http.setDoOutput(true);
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          OutputStream output = http.getOutputStream();
          try
@@ -778,7 +743,7 @@ public class Heroku
          }
 
          // Get updated info about application.
-         Map<String, String> info = applicationInfo(herokuCredentials, newname, false, workDir);
+         Map<String, String> info = applicationInfo(herokuCredential, newname, false, workDir);
 
          String gitUrl = info.get("gitUrl");
 
@@ -826,20 +791,14 @@ public class Heroku
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
-    * @throws VirtualFileSystemException
     */
-   public List<Stack> getStacks(String name, File workDir) throws HerokuException, ParsingResponseException,
-      IOException, VirtualFileSystemException
+   public List<Stack> getStacks(String name, File workDir)
+      throws HerokuException, ParsingResponseException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return getStacks(herokuCredentials, name, workDir);
+      return getStacks(getCredential(), name, workDir);
    }
 
-   private List<Stack> getStacks(HerokuCredentials herokuCredentials, String name, File workDir)
+   private List<Stack> getStacks(HerokuCredential herokuCredential, String name, File workDir)
       throws HerokuException, ParsingResponseException, IOException
    {
       List<Stack> stacks = new ArrayList<Stack>();
@@ -855,7 +814,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          http.setRequestProperty("Accept", "application/xml, */*");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
          if (http.getResponseCode() != 200)
          {
             throw fault(http);
@@ -919,20 +878,14 @@ public class Heroku
     * @return {@link String} output of the migration operation
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
-    * @throws VirtualFileSystemException
     */
-   public byte[] stackMigrate(String name, File workDir, String stack) throws HerokuException, IOException,
-      VirtualFileSystemException
+   public byte[] stackMigrate(String name, File workDir, String stack)
+      throws HerokuException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return stackMigrate(herokuCredentials, name, workDir, stack);
+      return stackMigrate(getCredential(), name, workDir, stack);
    }
 
-   private byte[] stackMigrate(HerokuCredentials herokuCredentials, String name, File workDir, String stack)
+   private byte[] stackMigrate(HerokuCredential herokuCredential, String name, File workDir, String stack)
       throws HerokuException, IOException
    {
       if (stack == null || stack.isEmpty())
@@ -953,7 +906,7 @@ public class Heroku
          http.setRequestMethod("PUT");
          http.setRequestProperty("Accept", "application/xml, */*");
          http.setDoOutput(true);
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          OutputStream output = http.getOutputStream();
          try
@@ -1000,21 +953,15 @@ public class Heroku
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
-    * @throws VirtualFileSystemException
     */
-   public List<String> listApplications() throws HerokuException, ParsingResponseException, IOException,
-      VirtualFileSystemException
+   public List<String> listApplications()
+      throws HerokuException, ParsingResponseException, IOException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return listApplications(herokuCredentials);
+      return listApplications(getCredential());
    }
 
-   private List<String> listApplications(HerokuCredentials herokuCredentials) throws HerokuException,
-      ParsingResponseException, IOException
+   private List<String> listApplications(HerokuCredential herokuCredential)
+      throws HerokuException, ParsingResponseException, IOException
    {
       HttpURLConnection http = null;
       try
@@ -1023,7 +970,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          http.setRequestProperty("Accept", "application/xml");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          if (http.getResponseCode() != 200)
          {
@@ -1091,22 +1038,15 @@ public class Heroku
     * @return LazyHttpChunkReader to read result of running command
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException if any i/o occurs
-    * @throws VirtualFileSystemException
     * @throws ParsingResponseException
-    * @throws GeneralSecurityException
     */
-   public byte[] run(String name, File workDir, String command) throws HerokuException, IOException,
-      VirtualFileSystemException, ParsingResponseException, GeneralSecurityException
+   public byte[] run(String name, File workDir, String command)
+      throws HerokuException, IOException, ParsingResponseException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      return run(herokuCredentials, name, workDir, command);
+      return run(getCredential(), name, workDir, command);
    }
 
-   private byte[] run(HerokuCredentials herokuCredentials, String name, File workDir, String command)
+   private byte[] run(HerokuCredential herokuCredential, String name, File workDir, String command)
       throws HerokuException, ParsingResponseException, IOException
    {
       if (command == null || command.isEmpty())
@@ -1119,7 +1059,7 @@ public class Heroku
          name = detectAppName(workDir);
       }
 
-      String rendezvousLocation = runAttachedProcess(name, command, herokuCredentials);
+      String rendezvousLocation = runAttachedProcess(name, command, herokuCredential);
       return accessStdInOut(rendezvousLocation);
    }
 
@@ -1128,13 +1068,13 @@ public class Heroku
     * 
     * @param appName application name
     * @param command command to run
-    * @param herokuCredentials user's credentials
+    * @param herokuCredential user's credentials
     * @return {@link String} rendezvous location
     * @throws IOException
     * @throws HerokuException
     * @throws ParsingResponseException
     */
-   private String runAttachedProcess(String appName, String command, HerokuCredentials herokuCredentials)
+   private String runAttachedProcess(String appName, String command, HerokuCredential herokuCredential)
       throws IOException, HerokuException, ParsingResponseException
    {
       HttpURLConnection http = null;
@@ -1147,7 +1087,7 @@ public class Heroku
          http.setRequestMethod("POST");
          http.setRequestProperty("Accept", "application/xml, */*");
 
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
 
          http.setDoOutput(true);
          OutputStream output = http.getOutputStream();
@@ -1273,24 +1213,18 @@ public class Heroku
     * @return {@link String} logs content
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
-    * @throws VirtualFileSystemException
     */
-   public byte[] logs(String name, File workDir, int logLines) throws HerokuException, IOException,
-      VirtualFileSystemException, java.security.GeneralSecurityException
+   public byte[] logs(String name, File workDir, int logLines)
+      throws HerokuException, IOException, GeneralSecurityException, CredentialStoreException
    {
-      HerokuCredentials herokuCredentials = authenticator.readCredentials();
-      if (herokuCredentials == null)
-      {
-         throw new HerokuException(200, "Authentication required.\n", "text/plain");
-      }
-      String logsLocation = getLogsLocation(herokuCredentials, name, workDir, logLines);
+      String logsLocation = getLogsLocation(getCredential(), name, workDir, logLines);
       return logs(logsLocation);
    }
 
    /**
     * Get the location of the logs stream.
     * 
-    * @param herokuCredentials user's credentials
+    * @param herokuCredential user's credentials
     * @param name current application name. If <code>null</code> then try to determine application name from git configuration. To
     *           be able determine application name <code>workDir</code> must not be <code>null</code>. If name not specified and
     *           cannot be determined {@link IllegalStateException} thrown
@@ -1301,7 +1235,7 @@ public class Heroku
     * @throws IOException
     * @throws HerokuException
     */
-   private String getLogsLocation(HerokuCredentials herokuCredentials, String name, File workDir, int logLines)
+   private String getLogsLocation(HerokuCredential herokuCredential, String name, File workDir, int logLines)
       throws HerokuException, IOException
    {
       if (name == null || name.isEmpty())
@@ -1318,7 +1252,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          http.setRequestProperty("Accept", "application/xml, */*");
-         authenticate(herokuCredentials, http);
+         authenticate(herokuCredential, http);
          if (http.getResponseCode() != 200)
          {
             throw fault(http);
@@ -1395,17 +1329,31 @@ public class Heroku
       }
    }
 
+
+   private HerokuCredential getCredential() throws HerokuException, CredentialStoreException
+   {
+      final Credential credential = new Credential();
+      credentialStore.load(getUserId(), "heroku", credential);
+      final String email = credential.getAttribute("email");
+      final String apiKey = credential.getAttribute("api_key");
+      if (email == null || apiKey == null)
+      {
+         throw new HerokuException(200, "Authentication required.\n", "text/plain");
+      }
+      return new HerokuCredential(email, apiKey);
+   }
+
    /**
     * Add Basic authentication headers to HttpURLConnection.
     * 
-    * @param herokuCredentials heroku account credentials
+    * @param herokuCredential heroku account credentials
     * @param http HttpURLConnection
     * @throws IOException if any i/o errors occurs
     */
-   private static void authenticate(HerokuCredentials herokuCredentials, HttpURLConnection http) throws IOException
+   private static void authenticate(HerokuCredential herokuCredential, HttpURLConnection http) throws IOException
    {
       byte[] base64 =
-         encodeBase64((herokuCredentials.getEmail() + ':' + herokuCredentials.getApiKey()).getBytes("ISO-8859-1"));
+         encodeBase64((herokuCredential.getEmail() + ':' + herokuCredential.getApiKey()).getBytes("ISO-8859-1"));
       http.setRequestProperty("Authorization", "Basic " + new String(base64, "ISO-8859-1"));
    }
 

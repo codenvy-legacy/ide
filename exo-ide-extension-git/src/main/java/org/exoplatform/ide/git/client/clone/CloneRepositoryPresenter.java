@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.shared.RepoInfo;
@@ -315,10 +314,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final FolderModel folder)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()), Type.GIT));
-      //TODO: not good, comment temporary need found other way
-      // for inviting collaborators
-      // showInvitation(result.getRemoteUri());
-      
       List<Property> properties = new ArrayList<Property>();
       properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null, properties));
@@ -332,7 +327,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
             if (userRepo != null)
             {
                IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
-            }                        
+            }
          }
       });
    }
@@ -343,23 +338,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
             .cloneFailed(remoteUri);
       IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-   }
-
-   /**
-    * Show dialog window with proposal for invite commiters.
-    * In case clone repository from GitHub show Collaborators list (see GitHub REST API http://developer.github.com/v3/repos/collaborators/).
-    * Else on server side we get unique list of commiters: name and email.  
-    *
-    * @param remoteUri
-    */
-   protected void showInvitation(String remoteUri)
-   {
-      String[] userRepo = GitURLParser.parseGitHubUrl(remoteUri);
-      if (userRepo != null)
-      {
-         GitHubCollaboratorsHandler collaboratorsHandler = new GitHubCollaboratorsHandler();
-         collaboratorsHandler.showCollaborators(userRepo[0], userRepo[1]);
-      }
    }
 
    @Override

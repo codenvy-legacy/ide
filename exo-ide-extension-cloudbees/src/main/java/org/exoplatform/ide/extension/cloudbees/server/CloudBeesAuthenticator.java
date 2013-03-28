@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,40 +16,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudfoundry.server;
+package org.exoplatform.ide.extension.cloudbees.server;
+
+import com.cloudbees.api.AccountKeysResponse;
+import com.cloudbees.api.BeesClient;
+import org.exoplatform.ide.security.paas.Credential;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class SimpleAuthenticator extends CloudfoundryAuthenticator
+public class CloudBeesAuthenticator
 {
-   private final String cfTarget;
-   private final String cfUser;
-   private final String cfPassword;
-
-   public SimpleAuthenticator(String cfTarget, String cfUser, String cfPassword)
+   public void login(BeesClient beesClient,
+                     String domain,
+                     String email,
+                     String password,
+                     Credential credential) throws Exception
    {
-      this.cfTarget = cfTarget;
-      this.cfUser = cfUser;
-      this.cfPassword = cfPassword;
+      AccountKeysResponse r = beesClient.accountKeys(domain, email, password);
+      credential.setAttribute("api_key", r.getKey());
+      credential.setAttribute("secret", r.getSecret());
    }
 
-   @Override
+   public void login(BeesClient beesClient, Credential credential) throws Exception
+   {
+      login(beesClient, getDomain(), getEmail(), getPassword(), credential);
+   }
+
+   // For test.
+
    public String getEmail()
    {
-      return cfUser;
+      return null;
    }
 
-   @Override
    public String getPassword()
    {
-      return cfPassword;
+      return null;
    }
 
-   @Override
-   public String getTarget()
+   public String getDomain()
    {
-      return cfTarget;
+      return null;
    }
 }

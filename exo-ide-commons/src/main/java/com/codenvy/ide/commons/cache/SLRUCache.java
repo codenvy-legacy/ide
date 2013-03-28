@@ -20,6 +20,7 @@ package com.codenvy.ide.commons.cache;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented
@@ -97,9 +98,14 @@ public class SLRUCache<K, V> implements Cache<K, V>
    @Override
    public V put(K key, V value)
    {
-      V oldValue1 = protectedSegment.remove(key);
-      V oldValue2 = probationarySegment.put(key, value);
-      return oldValue1 == null ? oldValue2 : oldValue1;
+      V oldValueProtected = protectedSegment.remove(key);
+      V oldValueProbationary = probationarySegment.put(key, value);
+      V oldValue = oldValueProtected == null ? oldValueProbationary : oldValueProtected;
+      if (oldValue != null)
+      {
+         evict(key, oldValue);
+      }
+      return oldValue;
    }
 
    @Override
@@ -109,6 +115,10 @@ public class SLRUCache<K, V> implements Cache<K, V>
       if (oldValue == null)
       {
          oldValue = probationarySegment.remove(key);
+      }
+      if (oldValue != null)
+      {
+         evict(key, oldValue);
       }
       return oldValue;
    }
@@ -122,8 +132,46 @@ public class SLRUCache<K, V> implements Cache<K, V>
    @Override
    public void clear()
    {
+      Set<Map.Entry<K,V>> entries = protectedSegment.entrySet();
+      for (Map.Entry<K, V> entry : entries)
+      {
+         evict(entry.getKey(), entry.getValue());
+      }
+      entries = probationarySegment.entrySet();
+      for (Map.Entry<K, V> entry : entries)
+      {
+         evict(entry.getKey(), entry.getValue());
+      }
       protectedSegment.clear();
       probationarySegment.clear();
+   }
+
+   /**
+    * Should be called when remove value from cache. Typically this method should be called from methods {@link
+    * #put(Object, Object)}, {@link #remove(Object)} and {@link #clear()}.
+    * Example:
+    * <pre>
+    *    class MyCache&lt;K, V&gt; implements Cache&lt;K, V&gt; {
+    *       ...
+    *       public V put(K key, V value) {
+    *          V previous = ... // do remove old value
+    *          if (previous != null) {
+    *             evict(key, previous);
+    *          }
+    *          return previous;
+    *       }
+    *       ...
+    *    }
+    * </pre>
+    *
+    * @param key
+    *    key
+    * @param value
+    *    evicted value
+    */
+   protected void evict(K key, V value)
+   {
+      // nothing by default
    }
 
    @Override

@@ -16,30 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.server;
+package org.exoplatform.ide.extension.heroku.server;
 
-/**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
- */
-class RHCloudCredentials
+public class HerokuCredential
 {
-   private final String rhlogin;
-   private final String password;
+   private String email;
+   private String apiKey;
 
-   RHCloudCredentials(String rhlogin, String password)
+   public HerokuCredential(String email, String apiKey)
    {
-      this.rhlogin = rhlogin;
-      this.password = password;
+      this.email = email;
+      this.apiKey = apiKey;
    }
 
-   public String getRhlogin()
+   public HerokuCredential()
    {
-      return rhlogin;
    }
 
-   public String getPassword()
+   public String getEmail()
    {
-      return password;
+      return email;
+   }
+
+   public void setEmail(String email)
+   {
+      this.email = email;
+   }
+
+   public String getApiKey()
+   {
+      return apiKey;
+   }
+
+   public void setApiKey(String apiKey)
+   {
+      this.apiKey = apiKey;
    }
 }
