@@ -18,24 +18,18 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import static org.fest.assertions.Assertions.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+
 import com.codenvy.ide.api.editor.EditorAgent;
-
-import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
-import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
-import com.codenvy.ide.java.client.wizard.NewJavaClassPageView;
-
 import com.codenvy.ide.api.selection.SelectionAgent;
-
+import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

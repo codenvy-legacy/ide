@@ -13,7 +13,16 @@ package com.codenvy.ide.java.emul.clasfmt;
 import com.codenvy.ide.java.client.core.compiler.CharOperation;
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryField;
-import com.codenvy.ide.java.client.internal.compiler.impl.*;
+import com.codenvy.ide.java.client.internal.compiler.impl.BooleanConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.ByteConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.CharConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.Constant;
+import com.codenvy.ide.java.client.internal.compiler.impl.DoubleConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.FloatConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.IntConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.LongConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.ShortConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.StringConstant;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeIds;
 import com.codenvy.ide.java.client.internal.compiler.util.Util;
 

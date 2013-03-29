@@ -10,13 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.java.emul.clasfmt;
 
-import com.codenvy.ide.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.java.client.internal.compiler.lookup.TagBits;
-import com.codenvy.ide.java.client.internal.compiler.lookup.TypeBinding;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeConstants;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeIds;
 import com.codenvy.ide.java.client.internal.compiler.util.HashtableOfObject;
-import com.codenvy.ide.java.client.internal.compiler.util.Util;
 /**
  * This type is used to store all the constant pool entries.
  */

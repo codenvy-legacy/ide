@@ -31,13 +31,11 @@ import com.codenvy.ide.java.client.internal.text.correction.JavaCorrectionProces
 import com.codenvy.ide.java.client.internal.text.correction.ProblemLocation;
 import com.codenvy.ide.java.client.internal.text.correction.proposals.CUCorrectionProposal;
 import com.codenvy.ide.java.client.quickassist.api.InvocationContext;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
-
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Assert;

@@ -18,16 +18,9 @@
  */
 package com.codenvy.ide.wizard;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-
-import com.codenvy.ide.wizard.WizardPresenter;
-import com.codenvy.ide.wizard.WizardView;
-
 import com.google.gwt.junit.GWTMockUtilities;
 
 import org.junit.After;

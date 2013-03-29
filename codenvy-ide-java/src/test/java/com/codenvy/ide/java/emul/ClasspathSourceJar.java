@@ -14,8 +14,8 @@ import com.codenvy.ide.java.client.compiler.batch.CompilationUnit;
 import com.codenvy.ide.java.client.internal.compiler.env.NameEnvironmentAnswer;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 
 

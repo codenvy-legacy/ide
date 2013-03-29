@@ -10,10 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.java.emul.clasfmt;
 
-import com.codenvy.ide.java.emul.ClassFormatException;
-import com.codenvy.ide.java.emul.TagBits;
-import com.codenvy.ide.java.emul.Util;
-
 import com.codenvy.ide.java.client.core.compiler.CharOperation;
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair;
@@ -23,7 +19,9 @@ import com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType;
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryType;
 import com.codenvy.ide.java.client.internal.compiler.impl.Constant;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeIds;
-
+import com.codenvy.ide.java.emul.ClassFormatException;
+import com.codenvy.ide.java.emul.TagBits;
+import com.codenvy.ide.java.emul.Util;
 
 import java.io.File;
 import java.io.IOException;

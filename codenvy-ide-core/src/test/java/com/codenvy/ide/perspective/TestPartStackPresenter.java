@@ -16,22 +16,14 @@
  */
 package com.codenvy.ide.perspective;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static junit.framework.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-
-
-
 import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.PartStackUIResources;
 import com.codenvy.ide.part.PartStackView;
-
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;

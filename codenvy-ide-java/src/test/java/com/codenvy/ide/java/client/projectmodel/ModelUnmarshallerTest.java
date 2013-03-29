@@ -18,27 +18,15 @@
  */
 package com.codenvy.ide.java.client.projectmodel;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.fest.assertions.Assertions.*;
+import static org.mockito.Mockito.*;
 
+import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.java.client.BaseTest;
-
-import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
-import com.codenvy.ide.java.client.projectmodel.JavaModelUnmarshaller;
-import com.codenvy.ide.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.java.client.projectmodel.JavaProjectDesctiprion;
-import com.codenvy.ide.java.client.projectmodel.Package;
-import com.codenvy.ide.java.client.projectmodel.SourceFolder;
-
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
-
-import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.json.JsonCollections;
-
 import com.google.common.collect.Lists;
 import com.google.gwt.http.client.Response;
 

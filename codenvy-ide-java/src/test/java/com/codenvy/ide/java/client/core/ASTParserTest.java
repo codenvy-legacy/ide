@@ -18,11 +18,11 @@
  */
 package com.codenvy.ide.java.client.core;
 
+import static org.junit.Assert.*;
+
 import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

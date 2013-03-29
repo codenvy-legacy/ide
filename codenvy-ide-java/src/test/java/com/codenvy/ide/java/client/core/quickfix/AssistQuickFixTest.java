@@ -11,8 +11,6 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.quickfix;
 
-import com.codenvy.ide.java.emul.FileSystem;
-
 import com.codenvy.ide.java.client.JavaExtension;
 import com.codenvy.ide.java.client.core.JavaCore;
 import com.codenvy.ide.java.client.core.formatter.DefaultCodeFormatterConstants;
@@ -25,9 +23,8 @@ import com.codenvy.ide.java.client.internal.text.correction.QuickAssistProcessor
 import com.codenvy.ide.java.client.internal.text.correction.proposals.AssignToVariableAssistProposal;
 import com.codenvy.ide.java.client.internal.text.correction.proposals.CUCorrectionProposal;
 import com.codenvy.ide.java.client.templates.CodeTemplateContextType;
-
+import com.codenvy.ide.java.emul.FileSystem;
 import com.codenvy.ide.text.DocumentImpl;
-
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;

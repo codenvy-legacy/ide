@@ -11,7 +11,6 @@
 package com.codenvy.ide.java.client.core;
 
 import com.codenvy.ide.java.client.BaseTest;
-
 import com.codenvy.ide.java.client.templates.CodeTemplateContextType;
 import com.codenvy.ide.java.client.templates.ContextTypeRegistry;
 import com.codenvy.ide.java.client.templates.ElementTypeResolver;

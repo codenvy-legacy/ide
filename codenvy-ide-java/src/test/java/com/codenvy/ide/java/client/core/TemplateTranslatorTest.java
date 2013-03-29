@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core;
 
-import com.codenvy.ide.java.client.BaseTest;
+import static org.junit.Assert.*;
 
+import com.codenvy.ide.java.client.BaseTest;
 import com.codenvy.ide.java.client.templates.api.TemplateBuffer;
 import com.codenvy.ide.java.client.templates.api.TemplateException;
 import com.codenvy.ide.java.client.templates.api.TemplateTranslator;
@@ -19,7 +20,6 @@ import com.codenvy.ide.java.client.templates.api.TemplateVariable;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

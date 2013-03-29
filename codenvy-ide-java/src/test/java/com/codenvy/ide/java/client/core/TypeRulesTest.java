@@ -18,15 +18,9 @@
  */
 package com.codenvy.ide.java.client.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import com.codenvy.ide.java.client.BaseTest;
-import com.codenvy.ide.java.client.core.quickfix.TestOptions;
-import com.codenvy.ide.java.emul.FileSystem;
-
-import com.codenvy.ide.java.client.core.JavaCore;
 import com.codenvy.ide.java.client.core.compiler.IProblem;
 import com.codenvy.ide.java.client.core.dom.AST;
 import com.codenvy.ide.java.client.core.dom.ASTParser;
@@ -35,9 +29,10 @@ import com.codenvy.ide.java.client.core.dom.FieldDeclaration;
 import com.codenvy.ide.java.client.core.dom.ITypeBinding;
 import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
 import com.codenvy.ide.java.client.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.java.client.core.quickfix.TestOptions;
 import com.codenvy.ide.java.client.editor.JavaReconcilerStrategy;
 import com.codenvy.ide.java.client.internal.corext.dom.TypeRules;
-
+import com.codenvy.ide.java.emul.FileSystem;
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Before;

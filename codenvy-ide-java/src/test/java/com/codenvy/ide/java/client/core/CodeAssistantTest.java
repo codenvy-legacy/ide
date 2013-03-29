@@ -18,18 +18,12 @@
  */
 package com.codenvy.ide.java.client.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import com.codenvy.ide.java.emul.FileSystem;
+import static org.junit.Assert.*;
 
 import com.codenvy.ide.java.client.compiler.batch.CompilationUnit;
-import com.codenvy.ide.java.client.core.CompletionProposal;
-import com.codenvy.ide.java.client.core.CompletionRequestor;
-import com.codenvy.ide.java.client.core.JavaCore;
 import com.codenvy.ide.java.client.core.compiler.IProblem;
 import com.codenvy.ide.java.client.internal.codeassist.CompletionEngine;
+import com.codenvy.ide.java.emul.FileSystem;
 
 import org.junit.Before;
 import org.junit.Test;

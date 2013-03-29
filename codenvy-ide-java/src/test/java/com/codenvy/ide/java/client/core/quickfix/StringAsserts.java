@@ -10,13 +10,13 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.quickfix;
 
+import junit.framework.Assert;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import junit.framework.Assert;
 
 /**
  *

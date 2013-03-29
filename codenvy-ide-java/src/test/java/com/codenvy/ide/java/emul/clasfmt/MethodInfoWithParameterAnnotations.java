@@ -11,9 +11,8 @@
  *******************************************************************************/
 package com.codenvy.ide.java.emul.clasfmt;
 
-import com.codenvy.ide.java.emul.Util;
-
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.java.emul.Util;
 
 
 class MethodInfoWithParameterAnnotations extends MethodInfoWithAnnotations

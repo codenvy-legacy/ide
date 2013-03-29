@@ -11,7 +11,6 @@
 package com.codenvy.ide.java.client.core.rewrite;
 
 import com.codenvy.ide.java.client.internal.core.dom.rewrite.SourceModifierImpl;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.edits.MultiTextEdit;

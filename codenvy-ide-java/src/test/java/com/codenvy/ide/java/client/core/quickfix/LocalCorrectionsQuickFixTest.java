@@ -11,10 +11,8 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.quickfix;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import com.codenvy.ide.java.emul.FileSystem;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.java.client.JavaExtension;
 import com.codenvy.ide.java.client.core.JavaCore;
@@ -27,12 +25,11 @@ import com.codenvy.ide.java.client.internal.text.correction.AssistContext;
 import com.codenvy.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
 import com.codenvy.ide.java.client.internal.text.correction.proposals.CUCorrectionProposal;
 import com.codenvy.ide.java.client.templates.CodeTemplateContextType;
-
+import com.codenvy.ide.java.emul.FileSystem;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
-
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.junit.Assert;

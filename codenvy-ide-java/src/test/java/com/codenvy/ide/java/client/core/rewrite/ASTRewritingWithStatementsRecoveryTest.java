@@ -12,7 +12,20 @@ package com.codenvy.ide.java.client.core.rewrite;
 
 import static org.junit.Assert.*;
 
-import com.codenvy.ide.java.client.core.dom.*;
+import com.codenvy.ide.java.client.core.dom.AST;
+import com.codenvy.ide.java.client.core.dom.ASTNode;
+import com.codenvy.ide.java.client.core.dom.Block;
+import com.codenvy.ide.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.java.client.core.dom.DoStatement;
+import com.codenvy.ide.java.client.core.dom.EmptyStatement;
+import com.codenvy.ide.java.client.core.dom.ExpressionStatement;
+import com.codenvy.ide.java.client.core.dom.FieldDeclaration;
+import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
+import com.codenvy.ide.java.client.core.dom.MethodInvocation;
+import com.codenvy.ide.java.client.core.dom.NumberLiteral;
+import com.codenvy.ide.java.client.core.dom.Statement;
+import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;

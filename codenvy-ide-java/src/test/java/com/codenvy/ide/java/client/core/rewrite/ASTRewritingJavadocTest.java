@@ -10,15 +10,30 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.rewrite;
 
-import com.codenvy.ide.java.client.core.dom.*;
+import static org.junit.Assert.*;
+
+import com.codenvy.ide.java.client.core.dom.AST;
+import com.codenvy.ide.java.client.core.dom.ASTNode;
+import com.codenvy.ide.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.java.client.core.dom.FieldDeclaration;
+import com.codenvy.ide.java.client.core.dom.Initializer;
+import com.codenvy.ide.java.client.core.dom.Javadoc;
+import com.codenvy.ide.java.client.core.dom.MemberRef;
+import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
+import com.codenvy.ide.java.client.core.dom.MethodRef;
+import com.codenvy.ide.java.client.core.dom.MethodRefParameter;
+import com.codenvy.ide.java.client.core.dom.PrimitiveType;
+import com.codenvy.ide.java.client.core.dom.SimpleName;
+import com.codenvy.ide.java.client.core.dom.TagElement;
+import com.codenvy.ide.java.client.core.dom.TextElement;
+import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
 
-import java.util.List;
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import java.util.List;
 
 public class ASTRewritingJavadocTest extends ASTRewritingTest
 {

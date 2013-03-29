@@ -23,16 +23,9 @@ import static org.mockito.Mockito.*;
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedHandler;
-
 import com.codenvy.ide.api.selection.Selection;
-
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-
-
-
-import com.codenvy.ide.selection.SelectionAgentImpl;
-
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
