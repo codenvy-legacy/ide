@@ -966,6 +966,14 @@ public class JGitConnection implements GitConnection
          {
             config.unset(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_REMOTE);
             config.unset(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_MERGE);
+            List<Branch> remoteBranches = branchList(new BranchListRequest("r"));
+            for (Branch remoteBranch : remoteBranches)
+            {
+               if (remoteBranch.getDisplayName().startsWith(name))
+               {
+                  branchDelete(new BranchDeleteRequest(remoteBranch.getName(), true));
+               };
+            }
          }
       }
 

@@ -119,60 +119,6 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
    }
 
    /**
-    * Method that loads branches into tree
-    * @param local is responsible for kind of branches that must be loaded.
-    */
-   private void loadBranches(final Boolean local)
-   {
-      String projectId = getSelectedProject().getId();
-      try
-      {
-         GitClientService.getInstance().branchList(vfs.getId(), projectId, local,
-            new AsyncRequestCallback<List<Branch>>(new BranchListUnmarshaller(new ArrayList<Branch>()))
-            {
-
-               @Override
-               protected void onSuccess(List<Branch> result)
-               {
-                  if (result == null || result.size() == 0)
-                  {
-                     return;
-                  }
-                  setReferences(result, local);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Method that refresh branches in branches tree.
-    */
-   private void refreshBranches()
-   {
-
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.enableMergeButton(false);
-      }
-
-      loadBranches(false);
-      loadBranches(true);
-   }
-
-   /**
     * @see org.exoplatform.ide.git.client.merge.MergeHandler#onMerge(org.exoplatform.ide.git.client.merge.MergeEvent)
     */
    @Override
@@ -180,9 +126,68 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
    {
       if (makeSelectionCheck())
       {
-         refreshBranches();
-      }
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         String projectId = getSelectedProject().getId();
+         if (display == null)
+         {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+            display.enableMergeButton(false);
+         }
 
+         try
+         {
+            GitClientService.getInstance().branchList(vfs.getId(), projectId, false,
+               new AsyncRequestCallback<List<Branch>>(new BranchListUnmarshaller(new ArrayList<Branch>()))
+               {
+
+                  @Override
+                  protected void onSuccess(List<Branch> result)
+                  {
+                     if (result == null || result.size() == 0)
+                        return;
+                     setReferences(result, true);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
+
+         try
+         {
+            GitClientService.getInstance().branchList(vfs.getId(), projectId, true,
+               new AsyncRequestCallback<List<Branch>>(new BranchListUnmarshaller(new ArrayList<Branch>()))
+               {
+
+                  @Override
+                  protected void onSuccess(List<Branch> result)
+                  {
+                     if (result == null || result.size() == 0)
+                        return;
+                     setReferences(result, false);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
+      }
    }
 
    /**
@@ -233,7 +238,8 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
       {
          return;
       }
-
+      
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = getSelectedProject().getId();
 
       try

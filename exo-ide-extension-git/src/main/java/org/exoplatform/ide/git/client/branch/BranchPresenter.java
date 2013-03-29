@@ -41,6 +41,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.BranchListUnmarshaller;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,6 +241,8 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
          display.enableCheckoutButton(false);
          display.enableDeleteButton(false);
+         //String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         //getBranches(projectId);
          getBranches(getSelectedProject().getId());
       }
    }
@@ -268,6 +271,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     */
    private void doCreateBranch(String name)
    {
+      //final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       final String projectId = getSelectedProject().getId();
 
       try
@@ -305,6 +309,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
    private void doCheckoutBranch()
    {
       String name = display.getSelectedBranch().getDisplayName();
+      //final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       final String projectId = getSelectedProject().getId();
       if (name == null)
       {
@@ -370,6 +375,7 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     */
    private void doDeleteBranch(String name)
    {
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       final String projectId = getSelectedProject().getId();
       try
       {

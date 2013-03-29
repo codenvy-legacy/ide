@@ -16,25 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.collaboration.dto;
+package com.codenvy.ide.collaboration.chat.client;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.CHAT_CODE_POINT)
-public interface ChatCodePointMessage extends ChatMessage
+public interface SendCodePointHandler extends EventHandler
 {
-   String getPath();
-
-   int getStartLine();
-
-   int getStartChar();
-
-   int getEndLine();
-
-   int getEndChar();
-
+   void onSendCodePoint(SendCodePointEvent event);
 }

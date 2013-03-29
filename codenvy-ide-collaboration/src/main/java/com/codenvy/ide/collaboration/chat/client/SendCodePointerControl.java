@@ -16,25 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.collaboration.dto;
+package com.codenvy.ide.collaboration.chat.client;
 
-import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.CHAT_CODE_POINT)
-public interface ChatCodePointMessage extends ChatMessage
+public class SendCodePointerControl  extends SimpleControl implements IDEControl
 {
-   String getPath();
 
-   int getStartLine();
+   private static final String ID = "Edit/Send Code Pointer";
 
-   int getStartChar();
+   public SendCodePointerControl(ChatResources resources)
+   {
+      super(ID);
+      setTitle("Send Code Pointer");
+      setPrompt("Send Code Pointer");
+      setEvent(new SendCodePointEvent());
+      setEnabled(false);
+      setVisible(true);
+      setShowInContextMenu(true);
+      setImages(resources.blank(), resources.blank());
+      setShowInMenu(false);
 
-   int getEndLine();
+   }
 
-   int getEndChar();
-
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void initialize()
+   {
+   }
 }

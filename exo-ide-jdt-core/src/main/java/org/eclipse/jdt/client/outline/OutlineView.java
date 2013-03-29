@@ -18,6 +18,7 @@
  */
 package org.eclipse.jdt.client.outline;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.core.client.GWT;
@@ -77,7 +78,7 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
       outlineTreeViewModel = new OutlineTreeViewModel(selectionModel);
       cellTree = new CellTree(outlineTreeViewModel, null, res);
       cellTree.getElement().setId("ideOutlineTreeGrid");
-
+      cellTree.getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP); //this ??????
       // Keyboard is disabled because of the selection problem (when selecting programmatically), if
       // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
       // and because of the focus border, when use KeyboardSelectionPolicy.ENABLED.

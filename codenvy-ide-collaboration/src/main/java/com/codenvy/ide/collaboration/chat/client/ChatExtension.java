@@ -77,6 +77,8 @@ public class ChatExtension extends Extension
 
    private boolean subscribeOnReady = false;
 
+   private SendCodePointerControl pointerControl;
+
    /**
     * {@inheritDoc}
     */
@@ -86,6 +88,8 @@ public class ChatExtension extends Extension
       resources.chatCss().ensureInjected();
       chatControl = new ShowChatControl(resources);
       IDE.getInstance().addControl(chatControl, Docking.TOOLBAR_RIGHT);
+      pointerControl = new SendCodePointerControl(resources);
+      IDE.getInstance().addControl(pointerControl);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
@@ -98,7 +102,7 @@ public class ChatExtension extends Extension
          return;
       }
       chatApi = new ChatApi(IDE.messageBus());
-      chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl,
+      chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl, pointerControl,
          userInfo.getName(), CollabEditorExtension.get());
    }
 
