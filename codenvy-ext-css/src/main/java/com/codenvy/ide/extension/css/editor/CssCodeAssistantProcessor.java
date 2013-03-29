@@ -132,7 +132,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
          parsingLineWithCursor = true;
          String textAfter = "";
          line = lineWithCursor;
-         while ((line >= 0) && (!textAfter.contains("}")))
+         while ((line < document.getNumberOfLines()) && (!textAfter.contains("}")))
          {
             int lastOpen;
             int lastClose;
