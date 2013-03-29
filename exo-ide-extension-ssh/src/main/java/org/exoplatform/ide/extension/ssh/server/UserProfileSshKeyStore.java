@@ -226,8 +226,8 @@ public class UserProfileSshKeyStore implements SshKeyStore
          final User myUser = userManager.getUserByAlias(userId);
          cache.remove(cacheKey(userId, host, PRIVATE));
          cache.remove(cacheKey(userId, host, PUBLIC));
-         myUser.getProfile().getAttribute(sshKeyAttributeName(host, PRIVATE));
-         myUser.getProfile().getAttribute(sshKeyAttributeName(host, PUBLIC));
+         myUser.getProfile().removeAttribute(sshKeyAttributeName(host, PRIVATE));
+         myUser.getProfile().removeAttribute(sshKeyAttributeName(host, PUBLIC));
          userManager.updateUser(myUser);
       }
       catch (OrganizationServiceException e)
