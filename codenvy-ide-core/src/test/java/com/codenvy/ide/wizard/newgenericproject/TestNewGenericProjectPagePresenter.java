@@ -18,9 +18,13 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 
@@ -212,6 +216,7 @@ public class TestNewGenericProjectPagePresenter
 
       presenter.doFinish();
 
+      verify(createProjecthandler).setProjectName(anyString());
       verify(createProjecthandler).create((AsyncCallback<Project>)any());
    }
 }
