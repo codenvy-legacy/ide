@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
+
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;

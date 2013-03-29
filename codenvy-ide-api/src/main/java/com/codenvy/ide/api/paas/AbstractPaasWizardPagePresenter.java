@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.wizard.newproject;
+package com.codenvy.ide.api.paas;
 
-import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
-import com.codenvy.ide.paas.HasPaaSWizardPage;
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
+import com.codenvy.ide.api.wizard.newproject.HasCreateProjectHandler;
+
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * AbstractNewProjectWizardPage is an abstract base implementation of New project wizard page.
+ * AbstractPaasWizardPagePresenter is an abstract base implementation of PaaS's wizard page.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractNewProjectWizardPage extends AbstractPaasWizardPagePresenter implements HasPaaSWizardPage
+public abstract class AbstractPaasWizardPagePresenter extends AbstractWizardPagePresenter implements HasCreateProjectHandler
 {
-   private AbstractPaasWizardPagePresenter paasWizardPagePresenter;
+   private CreateProjectHandler createProjectHandler;
 
    /**
     * Create WizardPage with given wizard page caption
     * 
     * @param caption
     */
-   public AbstractNewProjectWizardPage(String caption)
+   public AbstractPaasWizardPagePresenter(String caption)
    {
       super(caption);
    }
@@ -48,7 +50,7 @@ public abstract class AbstractNewProjectWizardPage extends AbstractPaasWizardPag
     * @param caption
     * @param image
     */
-   public AbstractNewProjectWizardPage(String caption, ImageResource image)
+   public AbstractPaasWizardPagePresenter(String caption, ImageResource image)
    {
       super(caption, image);
    }
@@ -57,17 +59,17 @@ public abstract class AbstractNewProjectWizardPage extends AbstractPaasWizardPag
     * {@inheritDoc}
     */
    @Override
-   public AbstractPaasWizardPagePresenter getPaaSWizardPage()
+   public CreateProjectHandler getCreateProjectHandler()
    {
-      return paasWizardPagePresenter;
+      return createProjectHandler;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setPaaSWizardPage(AbstractPaasWizardPagePresenter paasPage)
+   public void setCreateProjectHandler(CreateProjectHandler handler)
    {
-      paasWizardPagePresenter = paasPage;
+      createProjectHandler = handler;
    }
 }

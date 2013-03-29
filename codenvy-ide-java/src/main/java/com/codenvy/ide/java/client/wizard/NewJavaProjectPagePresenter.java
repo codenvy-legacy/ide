@@ -18,17 +18,19 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
+
+import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPageView.ActionDelegate;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.newproject.AbstractNewProjectWizardPage;
-import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;

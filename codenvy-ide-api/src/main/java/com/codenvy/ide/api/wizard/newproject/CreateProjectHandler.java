@@ -16,26 +16,53 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.paas;
+package com.codenvy.ide.api.wizard.newproject;
+
+import com.codenvy.ide.resources.model.Project;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * General interface for all classes which contains PaaS's wizard page. 
+ * General interface for all classes which creates project.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface HasPaaSWizardPage
+public interface CreateProjectHandler
 {
    /**
-    * Returns PaaS's wizard page.
+    * Adds params which needs for creating project. 
     * 
-    * @return PaaS
+    * @param name param's name
+    * @param value param's value
     */
-   public AbstractPaasWizardPagePresenter getPaaSWizardPage();
+   public void addParam(String name, String value);
 
    /**
-    * Sets PaaS's wizard page.
+    * Returns param's value by name.
     * 
-    * @param paasPage
+    * @param name param's name
+    * 
+    * @return param's name
     */
-   public void setPaaSWizardPage(AbstractPaasWizardPagePresenter paasPage);
+   public String getParam(String name);
+
+   /**
+    * Returns project's name.
+    * 
+    * @return project's name
+    */
+   public String getProjectName();
+
+   /**
+    * Sets project's name.
+    * 
+    * @param name
+    */
+   public void setProjectName(String name);
+
+   /**
+    * Creates project.
+    * 
+    * @param callback do something when project is created
+    */
+   public void create(AsyncCallback<Project> callback);
 }
