@@ -60,9 +60,11 @@ public class JavaEditor extends CollabEditor
             if (newDocument != null)
             {
                final Gutter gutter =
-                        editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
-                           .workspaceEditorCss().leftGutterBase());
-               breakPointManager = new BreakpointGutterManager(gutter, editor.getBuffer(),editor.getViewport(), JavaClientBundle.INSTANCE);
+                  editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
+                     .workspaceEditorCss().leftGutterBase());
+               breakPointManager =
+                  new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(), editor.getRenderer(),
+                     JavaClientBundle.INSTANCE);
                breakPointManager.render();
             }
          }
@@ -77,7 +79,7 @@ public class JavaEditor extends CollabEditor
    {
       return breakPointManager;
    }
-   
+
    /**
     * @see com.google.collide.client.CollabEditor#setText(java.lang.String)
     */
@@ -87,9 +89,7 @@ public class JavaEditor extends CollabEditor
       super.setText(text);
       getHoverPresenter().addHover(Document.DEFAULT_CONTENT_TYPE, new JavaTypeHover(IDE.eventBus()));
    }
-     
-    
-   
+
    /**
     * @see com.google.collide.client.CollabEditor#getCursorOffsetLeft()
     */

@@ -392,8 +392,7 @@ public class ViewportRenderer {
     }
 
     Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
-    if (expandElement != null && buffer.hasLineElement(expandElement)) {
-      expandElement.removeFromParent();
+    if (expandElement != null) {
       line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
     }
 
@@ -439,6 +438,13 @@ public class ViewportRenderer {
     }
     else
     {
+       Element expandMarker = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+       if (expandMarker != null)
+       {
+          expandMarker.removeFromParent();
+          line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
+       }
+       
        final FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
        if (foldMarker != null)
        {

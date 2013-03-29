@@ -18,21 +18,16 @@
  */
 package org.exoplatform.ide.editor.java;
 
-import com.google.collide.client.common.ThemeConstants;
-
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.ViewportModel;
-import com.google.collide.client.editor.ViewportModel.Edge;
-import com.google.collide.client.editor.ViewportModel.Listener;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
-import com.codenvy.ide.client.util.Elements;
-import org.exoplatform.ide.json.client.JsIntegerMap;
+import com.google.collide.client.editor.renderer.Renderer;
+import com.google.collide.client.editor.renderer.Renderer.LineLifecycleListener;
 import com.google.collide.shared.document.Line;
-import com.google.collide.shared.document.LineInfo;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import elemental.css.CSSStyleDeclaration;
@@ -40,7 +35,8 @@ import elemental.html.Element;
 
 import org.exoplatform.ide.editor.java.Breakpoint.Type;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
-import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.client.JsIntegerMap;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -72,40 +68,40 @@ public class BreakpointGutterManager
 
    private ViewportModel viewport;
 
+   private final Renderer renderer;
+
    /**
     * @param gutter
     * @param viewportModel 
     * @param buffer
+    * @param renderer 
     * @param instance
     */
-   public BreakpointGutterManager(Gutter gutter, Buffer buffer, ViewportModel viewport, JavaClientBundle bundle)
+   public BreakpointGutterManager(Gutter gutter, Buffer buffer, ViewportModel viewport, Renderer renderer,
+      JavaClientBundle bundle)
    {
       this.gutter = gutter;
       this.lineNumberToElementCache = JsIntegerMap.create();
       this.buffer = buffer;
       this.viewport = viewport;
-      this.viewport.getListenerRegistrar().add(new Listener()
+      this.renderer = renderer;
+      this.renderer.getLineLifecycleListenerRegistrar().add(new LineLifecycleListener()
       {
-
          @Override
-         public void onViewportShifted(ViewportModel viewport, LineInfo top, LineInfo bottom, LineInfo oldTop,
-            LineInfo oldBottom)
-         {
-            render();
-
-         }
-
-         @Override
-         public void onViewportLineNumberChanged(ViewportModel viewport, Edge edge)
+         public void onRenderedLineShifted(Line line, int lineNumber)
          {
             render();
          }
 
          @Override
-         public void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added,
-            JsonArray<Line> lines, boolean folding)
+         public void onRenderedLineGarbageCollected(Line line)
          {
-            //Nothing todo
+         }
+
+         @Override
+         public void onRenderedLineCreated(Line line, int lineNumber)
+         {
+            render();
          }
       });
       this.bundle = bundle;
@@ -226,6 +222,11 @@ public class BreakpointGutterManager
    {
       for (int i = beginLineNumber; i <= endLineNumber; i++)
       {
+         if (buffer.modelLine2VisibleLine(i) == -1)
+         {
+            garbageCollectLines(i, i);
+            continue;
+         }
          Element lineElement = lineNumberToElementCache.get(i);
          if (lineElement != null)
          {
@@ -348,8 +349,10 @@ public class BreakpointGutterManager
          }
          else
          {
-            throw new IndexOutOfBoundsException("Tried to garbage collect line number " + i
-               + " when it does not exist.");
+            // don't throws exception because line may be folded in this case
+            continue;
+            //            throw new IndexOutOfBoundsException("Tried to garbage collect line number " + i
+            //               + " when it does not exist.");
          }
       }
    }

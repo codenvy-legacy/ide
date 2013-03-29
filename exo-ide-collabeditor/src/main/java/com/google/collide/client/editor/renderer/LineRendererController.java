@@ -182,29 +182,15 @@ class LineRendererController {
     }
 
     final FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
-    if (foldMarker != null)
-    {
-       if (!foldMarker.isCollapsed())
-       {
-          Element expandElement = line.getTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT);
-          if (expandElement != null)
-          {
-             expandElement.removeFromParent();
-             line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, null);
-          }
-       }
-       else
-       {
-          Element expandElement = createExpandMarkerElement(contentElement, lineNumber);
-          line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
-
-          expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
-             @Override
-             public void handleEvent(Event evt) {
-               foldingManager.expand(foldMarker);
-             }
-         }, false);
-       }
+    if (foldMarker != null && foldMarker.isCollapsed()) {
+      Element expandElement = createExpandMarkerElement(contentElement, lineNumber);
+      line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
+      expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
+        @Override
+        public void handleEvent(Event evt) {
+          foldingManager.expand(foldMarker);
+        }
+      }, false);
     }
   }
 

@@ -18,12 +18,7 @@
  */
 package com.google.collide.client.editor.folding;
 
-import com.google.gwt.core.client.Scheduler;
-
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 import com.codenvy.ide.client.util.logging.Log;
-
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
@@ -279,31 +274,20 @@ public class FoldingManager implements Document.TextListener
    @Override
    public void onTextChange(Document document, final JsonArray<TextChange> textChanges)
    {
-      // TODO
-      // Use deferred invocation to wait while master document will updated
-      // because 'CollabEditor.TextListenerImpl' may be not first listener
-      // of all CollabEditor's document listeners.
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
+      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), true);
 
-            // if changes applied to the text into the folded block then expand this block
-            for (TextChange textChange : textChanges.asIterable())
+      // if changes applied to the text into the folded block then expand this block
+      for (TextChange textChange : textChanges.asIterable())
+      {
+         for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
+         {
+            FoldMarker foldMarker = findFoldMarker(i, false);
+            if (foldMarker != null && foldMarker.isCollapsed())
             {
-               for (int i = textChange.getLineNumber(); i <= textChange.getLastLineNumber(); i++)
-               {
-                  FoldMarker foldMarker = findFoldMarker(i, false);
-                  if (foldMarker != null && foldMarker.isCollapsed())
-                  {
-                     expand(foldMarker);
-                  }
-               }
+               expand(foldMarker);
             }
          }
-      });
+      }
    }
 
    /**
@@ -384,18 +368,8 @@ public class FoldingManager implements Document.TextListener
          {
             final int startOffset = regions[i].getOffset();
             final int length = regions[i].getLength();
-
-            if (foldMarker.isCollapsed())
-            {
-               slaveDocument.removeMasterDocumentRange(startOffset, length);
-            }
-            else
-            {
-               slaveDocument.addMasterDocumentRange(startOffset, length);
-            }
-
-            int firstLineNumber = masterDocument.getLineOfOffset(startOffset);
-            int lineCount = masterDocument.getNumberOfLines(startOffset, length);
+            final int firstLineNumber = masterDocument.getLineOfOffset(startOffset);
+            final int lineCount = masterDocument.getNumberOfLines(startOffset, length);
             Line beginLine = document.getLineFinder().findLine(firstLineNumber).line();
 
             JsonArray<Line> linesArray = JsonCollections.createArray();
@@ -409,11 +383,13 @@ public class FoldingManager implements Document.TextListener
 
             if (foldMarker.isCollapsed())
             {
-               collapseInternally(firstLineNumber - 1, linesArray);
+               slaveDocument.removeMasterDocumentRange(startOffset, length);
+               collapseInternally(firstLineNumber, linesArray);
             }
             else
             {
-               expandInternally(firstLineNumber - 1, linesArray);
+               slaveDocument.addMasterDocumentRange(startOffset, length);
+               expandInternally(firstLineNumber, linesArray);
             }
          }
       }
@@ -429,7 +405,16 @@ public class FoldingManager implements Document.TextListener
       {
          return;
       }
+      processAnchorsInColapsedRange(lineNumber, linesToCollapse);
+      dispatchCollapse(lineNumber/* + linesToCollapse.size()*/, linesToCollapse);
+   }
 
+   /**
+    * @param lineNumber
+    * @param linesToCollapse
+    */
+   private void processAnchorsInColapsedRange(int lineNumber, JsonArray<Line> linesToCollapse)
+   {
       for (Line line : linesToCollapse.asIterable())
       {
          final int deleteCountForLine = line.getText().length();
@@ -438,9 +423,8 @@ public class FoldingManager implements Document.TextListener
             anchorsInCollapsedRangeToShift, isFirstLine);
       }
 
-      // manage the anchors in the collapsed range
       Line firstLine = linesToCollapse.peek().getNextLine();
-      final int firstLineNumber = lineNumber + 1 + linesToCollapse.size();
+      final int firstLineNumber = lineNumber + linesToCollapse.size();
       final int numberOfLinesDeleted = 0; // pass '0' because there is no need to change the anchor's line number
       final int lastLineFirstUntouchedColumn = linesToCollapse.peek().getText().length();
 
@@ -448,8 +432,6 @@ public class FoldingManager implements Document.TextListener
          .handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
             anchorsLeftoverFromLastLine, firstLine, firstLineNumber, 0, numberOfLinesDeleted,
             lastLineFirstUntouchedColumn);
-
-      dispatchCollapse(lineNumber, linesToCollapse);
    }
 
    private void expandInternally(int lineNumber, JsonArray<Line> linesToExpand)
@@ -458,7 +440,6 @@ public class FoldingManager implements Document.TextListener
       {
          return;
       }
-      // there is no need to move the anchors using anchorManager.handleMultilineTextInsertion
       dispatchExpand(lineNumber, linesToExpand);
    }
 
@@ -638,7 +619,10 @@ public class FoldingManager implements Document.TextListener
       try
       {
          initializeDocumentInformationMapping(masterDocument);
-         slaveDocument.addMasterDocumentRange(0, masterDocument.getLength());
+         if (masterDocument.getLength() > 0)
+         {
+            slaveDocument.addMasterDocumentRange(0, masterDocument.getLength());
+         }
          document.putTag("ProjectionDocument", slaveDocument);
       }
       catch (BadLocationException e)
@@ -685,6 +669,11 @@ public class FoldingManager implements Document.TextListener
    public IDocumentInformationMapping getInformationMapping()
    {
       return informationMapping;
+   }
+
+   public IDocument getMasterDocument()
+   {
+      return masterDocument;
    }
 
    public ProjectionDocument getSlaveDocument()

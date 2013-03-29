@@ -118,12 +118,19 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
     */
    final class TextListenerImpl implements TextListener
    {
+      private boolean ignoreTextChanges;
+
       /**
        * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, org.exoplatform.ide.json.shared.JsonArray)
        */
       @Override
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
+         if (ignoreTextChanges)
+         {
+            return;
+         }
+
          fireEvent(new EditorContentChangedEvent(CollabEditor.this));
          try
          {
@@ -151,6 +158,16 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          {
             Log.error(getClass(), e);
          }
+      }
+
+      /**
+       * Enable/disable ignore text changes mode.
+       * 
+       * @param ignoreTextChanges <code>true</code> to ignore any text changes, <code>false</code> disable ignore mode
+       */
+      void setIgnoreTextChanges(boolean ignoreTextChanges)
+      {
+         this.ignoreTextChanges = ignoreTextChanges;
       }
    }
 
