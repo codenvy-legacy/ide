@@ -14,12 +14,11 @@
 
 package com.codenvy.ide.texteditor.input;
 
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonIntegerMap;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.texteditor.selection.SelectionModel.MoveAction;
-
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
 import com.codenvy.ide.util.browser.UserAgent;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import com.codenvy.ide.util.input.KeyCodeMap;

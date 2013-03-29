@@ -15,33 +15,31 @@
 package com.codenvy.ide.texteditor;
 
 import com.codenvy.ide.common.Constants;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.mvp.CompositeView;
+import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.store.DocumentModel;
-import com.codenvy.ide.text.store.Line;
-import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.DocumentModel.LineCountListener;
 import com.codenvy.ide.text.store.DocumentModel.LineListener;
+import com.codenvy.ide.text.store.Line;
+import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.codenvy.ide.texteditor.renderer.Renderer;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.mvp.CompositeView;
-import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.ListenerManager;
-import com.codenvy.ide.util.ListenerRegistrar;
-import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerRegistrar.RemoverManager;
+import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.dom.DomUtils;
-import com.codenvy.ide.util.dom.Elements;
-import com.codenvy.ide.util.dom.MouseGestureListener;
 import com.codenvy.ide.util.dom.DomUtils.Offset;
+import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator.FontDimensions;
+import com.codenvy.ide.util.dom.MouseGestureListener;
 import com.codenvy.ide.util.executor.Executor;
-
 import com.google.gwt.resources.client.ClientBundle;
 import elemental.client.Browser;
 import elemental.css.CSSStyleDeclaration;

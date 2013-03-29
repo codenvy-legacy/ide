@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.wizard.newfolder;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
@@ -25,8 +28,6 @@ import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.resources.model.ResourceNameValidator;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPageView.ActionDelegate;
 
 import com.codenvy.ide.json.JsonArray;

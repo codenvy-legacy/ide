@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.wizard.warproject;
 
+import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.resources.marshal.ProjectUnmarshaller;
 import com.codenvy.ide.resources.model.Project;
@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
+
 /**
  * Creates war project. 
  *
@@ -45,7 +46,7 @@ public class CreateWarProjectPresenter extends AbstractCreateProjectPresenter
 
    private EventBus eventBus;
 
-   private Console console;
+   private ConsolePart console;
 
    /**
     * Create new war project presenter.
@@ -55,7 +56,7 @@ public class CreateWarProjectPresenter extends AbstractCreateProjectPresenter
     * @param console
     */
    @Inject
-   public CreateWarProjectPresenter(ResourceProvider resourceProvider, EventBus eventBus, Console console)
+   public CreateWarProjectPresenter(ResourceProvider resourceProvider, EventBus eventBus, ConsolePart console)
    {
       this.resourceProvider = resourceProvider;
       this.eventBus = eventBus;

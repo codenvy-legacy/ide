@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.update;
 
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
@@ -60,7 +61,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
 
    private ResourceProvider resourceProvider;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -81,7 +82,7 @@ public class UpdateApplicationPresenter implements ProjectBuiltHandler
     * @param loginPresenter
     */
    @Inject
-   protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
+   protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
       LoginPresenter loginPresenter)
    {

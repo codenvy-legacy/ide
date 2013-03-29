@@ -18,9 +18,10 @@ package com.codenvy.ide.part.projectexplorer;
 
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.tree.Tree;
-import com.codenvy.ide.tree.TreeNodeElement;
-
+import com.codenvy.ide.tree.FileTreeNodeRenderer;
+import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
+import com.codenvy.ide.ui.tree.Tree;
+import com.codenvy.ide.ui.tree.TreeNodeElement;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -47,7 +48,7 @@ public class ProjectExplorerViewImpl implements ProjectExplorerView
    @Inject
    public ProjectExplorerViewImpl(Resources resources)
    {
-      tree = Tree.create(resources);
+      tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources));
    }
 
    /**
@@ -76,7 +77,7 @@ public class ProjectExplorerViewImpl implements ProjectExplorerView
    public void setDelegate(final ActionDelegate delegate)
    {
       this.delegate = delegate;
-      tree.setTreeEventHandler(new com.codenvy.ide.tree.Tree.Listener<Resource>()
+      tree.setTreeEventHandler(new Tree.Listener<Resource>()
       {
 
          @Override

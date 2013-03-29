@@ -14,19 +14,17 @@
 
 package com.codenvy.ide.texteditor.codeassistant;
 
-import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
-import com.codenvy.ide.texteditor.FocusManager;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.js.JsoArray;
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
+import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.ui.Popup;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
-import com.codenvy.ide.ui.menu.AutoHideController;
 import com.codenvy.ide.ui.menu.AutoHideComponent.AutoHideHandler;
+import com.codenvy.ide.ui.menu.AutoHideController;
 import com.codenvy.ide.ui.menu.PositionController.HorizontalAlign;
 import com.codenvy.ide.ui.menu.PositionController.Position;
 import com.codenvy.ide.ui.menu.PositionController.Positioner;
@@ -36,7 +34,6 @@ import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.dom.DomUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.input.SignalEvent;
-
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Timer;
@@ -158,7 +155,7 @@ public class AutocompleteUiController implements AutocompleteBox
 
    private Events delegate;
 
-   private final TextEditorPartView editor;
+   private final TextEditorViewImpl editor;
 
    private final Element box;
 
@@ -182,7 +179,7 @@ public class AutocompleteUiController implements AutocompleteBox
 
    private Popup infoPopup;
 
-   public AutocompleteUiController(TextEditorPartView editor, Resources res)
+   public AutocompleteUiController(TextEditorViewImpl editor, Resources res)
    {
       this.editor = editor;
       this.resources = res;
@@ -373,7 +370,7 @@ public class AutocompleteUiController implements AutocompleteBox
          anchor = null;
       }
 
-      FocusManager focusManager = editor.getFocusManager();
+      com.codenvy.ide.texteditor.api.FocusManager focusManager = editor.getFocusManager();
       if (hadFocus && !focusManager.hasFocus())
       {
          focusManager.focus();

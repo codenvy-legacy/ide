@@ -14,26 +14,23 @@
 
 package com.codenvy.ide.texteditor.linedimensions;
 
-import com.codenvy.ide.text.store.DocumentModel;
-import com.codenvy.ide.text.store.Line;
-import com.codenvy.ide.text.store.TextChange;
-import com.codenvy.ide.text.store.DocumentModel.PreTextListener;
-import com.codenvy.ide.text.store.DocumentModel.TextListener;
-import com.codenvy.ide.text.store.TextChange.Type;
-import com.codenvy.ide.texteditor.linedimensions.ColumnOffsetCache.ColumnOffset;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.text.store.DocumentModel;
+import com.codenvy.ide.text.store.DocumentModel.PreTextListener;
+import com.codenvy.ide.text.store.DocumentModel.TextListener;
+import com.codenvy.ide.text.store.Line;
+import com.codenvy.ide.text.store.TextChange;
+import com.codenvy.ide.text.store.TextChange.Type;
+import com.codenvy.ide.texteditor.linedimensions.ColumnOffsetCache.ColumnOffset;
+import com.codenvy.ide.util.ListenerRegistrar.RemoverManager;
 import com.codenvy.ide.util.Pair;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.UnicodeUtils;
-import com.codenvy.ide.util.ListenerRegistrar.RemoverManager;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator.FontDimensions;
-
 import com.google.gwt.regexp.shared.MatchResult;
-
 import com.google.gwt.regexp.shared.RegExp;
 
 

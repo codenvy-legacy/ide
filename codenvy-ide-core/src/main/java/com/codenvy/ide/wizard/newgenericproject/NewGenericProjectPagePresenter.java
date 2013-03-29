@@ -19,12 +19,12 @@
 package com.codenvy.ide.wizard.newgenericproject;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView.ActionDelegate;
 import com.codenvy.ide.wizard.newproject.AbstractNewProjectWizardPage;
 import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
@@ -70,12 +70,14 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
       
       this.resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
       {
+         @Override
          public void onSuccess(JsonArray<String> result)
          {
             projectList = result;
             hasProjectList = true;
          }
          
+         @Override
          public void onFailure(Throwable caught)
          {
             Log.error(NewGenericProjectPagePresenter.class, caught);
@@ -86,6 +88,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public WizardPagePresenter flipToNext()
    {
       AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
@@ -101,6 +104,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean canFinish()
    {
       return isCompleted() && !hasNext();
@@ -109,6 +113,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean hasNext()
    {
       return getPaaSWizardPage() != null;
@@ -117,6 +122,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCompleted()
    {
       return !view.getProjectName().isEmpty() && !hasIncorrectSymbol && hasProjectList && !hasSameProject;
@@ -125,6 +131,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getNotice()
    {
       if (view.getProjectName().isEmpty())
@@ -150,6 +157,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);
@@ -158,6 +166,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public void checkProjectName()
    {
       hasIncorrectSymbol = false;
@@ -181,6 +190,7 @@ public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage
    /**
     * {@inheritDoc}
     */
+   @Override
    public void doFinish()
    {
       CreateProjectHandler createProjectHandler = getCreateProjectHandler();

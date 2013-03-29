@@ -15,7 +15,6 @@
 package com.codenvy.ide.texteditor.linedimensions;
 
 import com.codenvy.ide.text.store.Line;
-
 import com.codenvy.ide.util.Pair;
 import com.codenvy.ide.util.SortedList;
 

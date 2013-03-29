@@ -18,7 +18,7 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 
 
 /**
- * Interface used to isolate {@link Autocompleter} from UI implementation.
+ * Interface used to isolate {@link CodeAssistantImpl} from UI implementation.
  */
 public interface AutocompleteBox {
 

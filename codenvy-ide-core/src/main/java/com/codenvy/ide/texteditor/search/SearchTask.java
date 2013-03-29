@@ -14,17 +14,15 @@
 
 package com.codenvy.ide.texteditor.search;
 
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.anchor.Anchor;
+import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.text.store.anchor.AnchorType;
-import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.texteditor.ViewportModel;
-import com.codenvy.ide.texteditor.search.SearchProgressListener;
-
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.executor.IncrementalScheduler;
 import com.codenvy.ide.util.executor.IncrementalScheduler.Task;
 

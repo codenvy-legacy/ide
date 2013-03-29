@@ -18,30 +18,29 @@
  */
 package com.codenvy.ide.texteditor.codeassistant;
 
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.TextUtilities;
 import com.codenvy.ide.texteditor.Buffer;
-import com.codenvy.ide.texteditor.UndoManager;
 import com.codenvy.ide.texteditor.Buffer.ScrollListener;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.KeyListener;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
+import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteBox.Events;
 import com.codenvy.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
-
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.input.KeyCodeMap;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEvent.KeySignalType;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -59,7 +58,7 @@ public class CodeAssistantImpl implements CodeAssistant
 
    private AutocompleteBox box;
 
-   private TextEditorPartView textEditor;
+   private TextEditorViewImpl textEditor;
 
    private String lastErrorMessage;
 
@@ -156,7 +155,7 @@ public class CodeAssistantImpl implements CodeAssistant
          Region selection = proposal.getSelection(textEditor.getDocument());
          if (selection != null)
          {
-            textEditor.getSelection().setSelectedRange(selection.getOffset(), selection.getLength());
+            textEditor.getSelection().selectAndReveal(selection.getOffset(), selection.getLength());
          }
       }
       catch (Exception e)
@@ -202,11 +201,11 @@ public class CodeAssistantImpl implements CodeAssistant
    @Override
    public void install(TextEditorPartView view)
    {
-      this.textEditor = view;
-      box = new AutocompleteUiController(view, res);
+      this.textEditor = (TextEditorViewImpl)view;
+      box = new AutocompleteUiController(textEditor, res);
       keyListenerRemover = view.getKeyListenerRegistrar().add(keyListener);
       box.setDelegate(events);
-      view.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener);
+      textEditor.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener);
    }
 
    /**

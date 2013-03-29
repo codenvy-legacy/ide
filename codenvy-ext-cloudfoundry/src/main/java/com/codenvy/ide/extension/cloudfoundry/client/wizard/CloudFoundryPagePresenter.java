@@ -18,10 +18,11 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
+import com.codenvy.ide.api.event.RefreshBrowserEvent;
+import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -42,7 +43,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -82,7 +82,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
 
    private ResourceProvider resourcesProvider;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -107,7 +107,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
    @Inject
    protected CloudFoundryPagePresenter(CloudFoundryPageView view, EventBus eventBus,
       ResourceProvider resourcesProvider, CloudFoundryResources resources,
-      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      ConsolePart console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
       LoginPresenter loginPresenter)
    {
       super("Deploy project to Cloud Foundry", resources.cloudFoundry48());

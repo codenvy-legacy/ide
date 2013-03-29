@@ -16,12 +16,10 @@
  */
 package com.codenvy.ide.core;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.core.client.Callback;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -40,7 +38,7 @@ public class ComponentRegistry
     * Instantiates Component Registry. All components should be listed in this constructor
     */
    @Inject
-   public ComponentRegistry(ResourceProvider resourceManager, Provider<StandardComponentInitializer> componentInitializer)
+   public ComponentRegistry(ResourceProviderComponent resourceManager, Provider<StandardComponentInitializer> componentInitializer)
    {
       this.componentInitializer = componentInitializer;
       pendingComponents = JsonCollections.createArray();

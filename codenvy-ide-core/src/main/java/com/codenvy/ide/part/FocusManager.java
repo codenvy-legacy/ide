@@ -16,7 +16,11 @@
  */
 package com.codenvy.ide.part;
 
-import com.codenvy.ide.core.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
 
 import com.google.inject.Inject;
@@ -32,7 +36,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class FocusManager
 {
-   private PartStackPresenter activePartStack;
+   private PartStack activePartStack;
 
    private final PartStackEventHandler partStackHandler = new PartFocusChangedHandler();
 
@@ -54,7 +58,7 @@ public class FocusManager
        * {@inheritDoc}
        */
       @Override
-      public void onRequestFocus(PartStackPresenter partStack)
+      public void onRequestFocus(PartStack partStack)
       {
          setActivePartStack(partStack);
       }
@@ -96,7 +100,7 @@ public class FocusManager
     * 
     * @param partStack
     */
-   protected void setActivePartStack(PartStackPresenter partStack)
+   protected void setActivePartStack(PartStack partStack)
    {
       // nothing to do
       if (activePartStack == partStack || partStack == null)

@@ -20,11 +20,9 @@ import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.api.TextListener;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
-
+import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.TextUtils;
-import com.codenvy.ide.util.ListenerRegistrar.Remover;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.regexp.shared.RegExp;

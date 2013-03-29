@@ -13,11 +13,10 @@
 // limitations under the License.
 package com.codenvy.ide.texteditor.documentparser;
 
-import com.codenvy.ide.texteditor.api.parser.State;
-import com.codenvy.ide.texteditor.api.parser.Token;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.texteditor.api.parser.State;
+import com.codenvy.ide.texteditor.api.parser.Token;
 
 
 /**

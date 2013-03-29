@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.info;
 
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
@@ -50,7 +51,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
 
    private ResourceProvider resourceProvider;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -71,7 +72,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
     */
    @Inject
    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      ConsolePart console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
       LoginPresenter loginPresenter)
    {
       this.view = view;

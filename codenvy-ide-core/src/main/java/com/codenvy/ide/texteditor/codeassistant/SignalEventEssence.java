@@ -18,7 +18,7 @@ import com.codenvy.ide.util.input.SignalEvent.KeySignalType;
 
 /**
  * Immutable holder of essential properties of
- * {@link org.waveprotocol.wave.client.common.util.SignalEvent}
+ * {@link SignalEvent}
  */
 public class SignalEventEssence
 {

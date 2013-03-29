@@ -16,13 +16,10 @@
  */
 package com.codenvy.ide.extension.tasks.part;
 
-import com.codenvy.ide.Resources;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -37,7 +34,6 @@ import com.google.inject.Singleton;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
-
 
 /**
  *
@@ -111,15 +107,17 @@ public class TasksPartViewImpl extends Composite implements TasksPartView
     * implement HasHTML instead of HasText.
     */
    @Inject
-   public TasksPartViewImpl(Resources resources)
+   public TasksPartViewImpl()
    {
       initWidget(uiBinder.createAndBindUi(this));
 
       TableElement tableElement = Elements.createTableElement();
       tableElement.setAttribute("style", "width: 100%");
-      list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
+      // todo
+      SimpleList.Resources css = GWT.create(SimpleList.Resources.class);
+      css.defaultSimpleListCss().ensureInjected();
+      list = SimpleList.create((View)tableElement, css.defaultSimpleListCss(), listItemRenderer, listDelegate);
 
-      this.mainPanel.setStyleName(resources.coreCss().simpleListContainer());
       this.mainPanel.add(list);
 
    }

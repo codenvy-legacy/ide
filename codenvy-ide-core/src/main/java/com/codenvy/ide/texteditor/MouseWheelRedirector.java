@@ -14,11 +14,9 @@
 
 package com.codenvy.ide.texteditor;
 
-import com.codenvy.ide.texteditor.Buffer.ScrollListener;
-
 import com.codenvy.ide.json.js.Jso;
+import com.codenvy.ide.texteditor.Buffer.ScrollListener;
 import com.codenvy.ide.util.browser.UserAgent;
-
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseWheelEvent;

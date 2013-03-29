@@ -14,17 +14,14 @@
 
 package com.codenvy.ide.texteditor.gutter;
 
+import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.gutter.Gutter.Position;
 import com.codenvy.ide.texteditor.gutter.Gutter.ViewDelegate;
-
-import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.util.dom.DomUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.MouseGestureListener;
 import com.codenvy.ide.util.dom.ScrollbarSizeCalculator;
-
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.MouseEvent;
 import elemental.html.Element;

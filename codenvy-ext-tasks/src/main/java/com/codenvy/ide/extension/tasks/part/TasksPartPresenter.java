@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.extension.tasks.part;
 
-import com.codenvy.ide.part.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

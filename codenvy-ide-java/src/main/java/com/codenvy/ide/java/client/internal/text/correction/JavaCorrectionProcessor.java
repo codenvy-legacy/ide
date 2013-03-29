@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.java.client.internal.text.correction;
 
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
+
 import com.codenvy.ide.java.client.MultiStatus;
 import com.codenvy.ide.java.client.codeassistant.CompletionProposalComparator;
 import com.codenvy.ide.java.client.codeassistant.api.IProblemLocation;
@@ -32,7 +34,6 @@ import com.codenvy.ide.java.client.quickassist.api.InvocationContext;
 import com.codenvy.ide.java.client.quickassist.api.QuickAssistProcessor;
 import com.codenvy.ide.java.client.quickassist.api.QuickFixProcessor;
 
-import com.codenvy.ide.editor.TextEditorPartPresenter;
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;

@@ -154,6 +154,11 @@
          </dependency>
          <dependency>
             <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-api</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>com.codenvy.ide</groupId>
             <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -464,6 +469,7 @@
    </build>
    <modules>
       <module>codenvy-ide-commons</module>
+      <module>codenvy-ide-api</module>
       <module>codenvy-ide-core</module>
       <module>codenvy-ext-demo</module>
       <module>codenvy-ext-css</module>

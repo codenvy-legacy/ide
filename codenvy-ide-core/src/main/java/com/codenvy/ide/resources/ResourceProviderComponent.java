@@ -16,10 +16,12 @@
  */
 package com.codenvy.ide.resources;
 
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
-import com.codenvy.ide.core.event.ProjectActionEvent;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
@@ -39,6 +41,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.ProjectNature;
 import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
@@ -50,6 +53,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -59,7 +63,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ResourceProviderComponent implements ResourceProvider
+@Singleton      
+public class ResourceProviderComponent implements ResourceProvider, Component
 {
 
    /**

@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.extension.maven.client;
 
-import com.codenvy.ide.extension.Extension;
+import com.codenvy.ide.api.extension.Extension;
+
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
 import com.codenvy.ide.loader.EmptyLoader;
 import com.google.gwt.core.client.GWT;

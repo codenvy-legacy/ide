@@ -18,12 +18,13 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
+import com.codenvy.ide.api.editor.EditorAgent;
+
 import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPageView;
 
 import com.codenvy.ide.api.selection.SelectionAgent;
-import com.codenvy.ide.core.editor.EditorAgent;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

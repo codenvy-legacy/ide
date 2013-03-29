@@ -18,18 +18,15 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -111,6 +108,7 @@ public class TestNewGenericProjectPagePresenter
       // create answer in response for calls get all available projects.
       doAnswer(new Answer<JsonArray<String>>()
       {
+         @Override
          public JsonArray<String> answer(InvocationOnMock invocation) throws Throwable
          {
             AsyncCallback<JsonArray<String>> callback = (AsyncCallback<JsonArray<String>>)invocation.getArguments()[0];

@@ -18,17 +18,21 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.core.event.ActivePartChangedEvent;
-import com.codenvy.ide.core.event.ActivePartChangedHandler;
-import com.codenvy.ide.editor.TextEditorPartPresenter;
-import com.codenvy.ide.part.AbstractPartPresenter;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 
-import com.google.inject.Singleton;
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedHandler;
+
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+
+import com.codenvy.ide.api.parts.OutlinePart;
+
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 
@@ -39,7 +43,7 @@ import com.google.web.bindery.event.shared.EventBus;
  *
  */
 @Singleton
-public class OutlinePartPrenter extends AbstractPartPresenter implements ActivePartChangedHandler
+public class OutlinePartPrenter extends AbstractPartPresenter implements ActivePartChangedHandler, OutlinePart
 {
 
    public interface OutlinePartView extends IsWidget

@@ -18,10 +18,12 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.project;
 
+import com.codenvy.ide.api.event.RefreshBrowserEvent;
+
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -72,7 +74,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
    private ResourceProvider resourceProvider;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryApplication application;
 
@@ -131,7 +133,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
       UpdatePropertiesPresenter updateProperyPresenter, ManageServicesPresenter manageServicesPresenter,
       UpdateApplicationPresenter updateApplicationPresenter, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      ConsolePart console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
       StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
       LoginPresenter loginPresenter)
    {

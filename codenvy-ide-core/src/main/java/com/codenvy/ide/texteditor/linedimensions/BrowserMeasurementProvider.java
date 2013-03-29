@@ -18,7 +18,6 @@ import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator.FontDimensions;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 

@@ -18,35 +18,35 @@
  */
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
+import com.codenvy.ide.api.editor.DocumentProvider;
+import com.codenvy.ide.api.editor.SelectionProvider;
+import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
+
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.editor.AbstractTextEditorPresenter;
-import com.codenvy.ide.editor.DocumentProvider;
-import com.codenvy.ide.editor.SelectionProvider;
-import com.codenvy.ide.editor.DocumentProvider.DocumentCallback;
+import com.codenvy.ide.api.outline.OutlineModel;
+import com.codenvy.ide.api.outline.OutlinePresenter;
+import com.codenvy.ide.outline.OutlineImpl;
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.TextListener;
-
 import com.codenvy.ide.util.executor.UserActivityManager;
-
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 public class TextEditorPresenter extends AbstractTextEditorPresenter
 {
 
-   protected TextEditorPartView editor;
+   protected TextEditorViewImpl editor;
 
    private final TextListener textListener = new TextListener()
    {
@@ -61,16 +61,15 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
       }
    };
 
-   /**
-    * @param documentProvider 
-    * 
-    */
-   public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager,
-      DocumentProvider documentProvider, TextEditorConfiguration configuration)
+   private Resources resources;
+
+   private UserActivityManager userActivityManager;
+
+   @Inject
+   public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager)
    {
-      super(configuration, documentProvider);
-      editor = new TextEditorViewImpl(resources, userActivityManager);
-      editor.getTextListenerRegistrar().add(textListener);
+      this.resources = resources;
+      this.userActivityManager = userActivityManager;
    }
 
    /**
@@ -88,14 +87,14 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
          {
             TextEditorPresenter.this.document = document;
             AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
-            editor.setDocument((DocumentImpl)document, annotationModel);
+            editor.setDocument(document, annotationModel);
             firePropertyChange(PROP_INPUT);
          }
       });
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#close(boolean)
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean)
     */
    @Override
    public void close(boolean save)
@@ -105,7 +104,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#isEditable()
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#isEditable()
     */
    @Override
    public boolean isEditable()
@@ -115,7 +114,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#doRevertToSaved()
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#doRevertToSaved()
     */
    @Override
    public void doRevertToSaved()
@@ -125,13 +124,31 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.editor.TextEditorPartPresenter#getSelectionProvider()
+    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getSelectionProvider()
     */
    @Override
    public SelectionProvider getSelectionProvider()
    {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public OutlinePresenter getOutline()
+   {
+      OutlineModel outlineModel = configuration.getOutline(editor);
+      if (outlineModel != null)
+      {
+         OutlineImpl outline = new OutlineImpl(resources, outlineModel, editor, this);
+         return outline;
+      }
+      else
+      {
+         return null;
+      }
    }
 
    protected Widget getWidget()
@@ -141,8 +158,9 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
       return h;
    }
 
+
    /**
-    * @see com.codenvy.ide.presenter.Presenter#go(com.google.gwt.user.client.ui.HasWidgets)
+    * {@inheritDoc}
     */
    @Override
    public void go(AcceptsOneWidget container)
@@ -151,7 +169,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#getTitleToolTip()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip()
     */
    @Override
    public String getTitleToolTip()
@@ -160,4 +178,11 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
       return null;
    }
 
+   @Override
+   public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider)
+   {
+      super.initialize(configuration, documentProvider);
+      editor = new TextEditorViewImpl(resources, userActivityManager);
+      editor.getTextListenerRegistrar().add(textListener);
+   }
 }

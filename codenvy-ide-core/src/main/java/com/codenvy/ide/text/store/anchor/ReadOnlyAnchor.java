@@ -16,7 +16,6 @@ package com.codenvy.ide.text.store.anchor;
 
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
-
 import com.codenvy.ide.util.ListenerRegistrar;
 
 

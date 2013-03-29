@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.delete;
 
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
@@ -62,7 +63,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
    private EventBus eventBus;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -85,7 +86,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     */
    @Inject
    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
-      EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
+      EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
       CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.view = view;

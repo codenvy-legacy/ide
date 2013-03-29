@@ -16,9 +16,10 @@
  */
 package com.codenvy.ide.client.inject;
 
+import com.codenvy.ide.api.extension.ExtensionGinModule;
+
 import com.codenvy.ide.client.BootstrapController;
 import com.codenvy.ide.client.StyleInjector;
-import com.codenvy.ide.extension.ExtensionGinModule;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 

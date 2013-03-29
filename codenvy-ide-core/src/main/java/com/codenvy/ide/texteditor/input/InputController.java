@@ -20,23 +20,21 @@ import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
-import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.ReadOnlyListener;
+import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.api.KeyListener;
 import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
-
 import com.codenvy.ide.util.ListenerManager;
+import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.TextUtils;
-import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.browser.UserAgent;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEventUtils;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import elemental.css.CSSStyleDeclaration;

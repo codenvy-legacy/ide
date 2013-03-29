@@ -14,11 +14,10 @@
 
 package com.codenvy.ide.texteditor;
 
-import com.codenvy.ide.texteditor.Buffer.ScrollListener;
-import com.codenvy.ide.texteditor.api.KeyListener;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.texteditor.Buffer.ScrollListener;
+import com.codenvy.ide.texteditor.api.KeyListener;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.executor.UserActivityManager;

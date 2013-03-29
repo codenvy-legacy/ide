@@ -18,14 +18,15 @@
  */
 package com.codenvy.ide.wizard.newfile;
 
+import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
+
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.resources.model.File;
-
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -60,7 +61,7 @@ public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter
     * @param view
     * @param resourceProvider
     */
-   protected NewTextFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider,
+   protected NewTextFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider,
       SelectionAgent selectionAgent)
    {
       super("Create a new empty text file", image, view, "txt", resourceProvider, selectionAgent);

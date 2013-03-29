@@ -18,9 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.command;
 
-import com.codenvy.ide.core.expressions.AbstractExpression;
-import com.codenvy.ide.core.expressions.ExpressionManager;
-import com.codenvy.ide.core.expressions.ProjectConstraintExpression;
+import com.codenvy.ide.api.expressions.AbstractExpression;
+import com.codenvy.ide.api.expressions.ExpressionManager;
+import com.codenvy.ide.api.expressions.ProjectConstraintExpression;
 import com.codenvy.ide.resources.model.Project;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
@@ -59,7 +60,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
 
    private EventBus eventBus;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -103,7 +104,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
     * @param autoBeanFactory
     */
    @Inject
-   protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, Console console,
+   protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console,
       StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
       LoginPresenter loginPresenter, CloudFoundryLocalizationConstant constant,
       CloudFoundryAutoBeanFactory autoBeanFactory)

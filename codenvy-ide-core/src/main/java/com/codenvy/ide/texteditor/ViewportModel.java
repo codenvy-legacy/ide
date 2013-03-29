@@ -14,23 +14,21 @@
 
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.anchor.Anchor;
+import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.text.store.anchor.AnchorType;
-import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
-
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.util.ListenerManager;
+import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.MathUtils;
-import com.codenvy.ide.util.ListenerManager.Dispatcher;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 

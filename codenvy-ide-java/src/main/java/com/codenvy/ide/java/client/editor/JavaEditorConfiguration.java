@@ -18,22 +18,25 @@
  */
 package com.codenvy.ide.java.client.editor;
 
-import com.codenvy.ide.java.client.editor.outline.OutlineModelUpdater;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 
-import com.codenvy.ide.outline.OutlineModel;
+import com.codenvy.ide.api.outline.OutlineModel;
+import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.java.client.editor.outline.JavaNodeRenderer;
+import com.codenvy.ide.java.client.editor.outline.OutlineModelUpdater;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.Document;
+import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
+import com.codenvy.ide.texteditor.api.parser.BasicTokenFactory;
+import com.codenvy.ide.texteditor.api.parser.CmParser;
 import com.codenvy.ide.texteditor.api.parser.Parser;
-import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
+import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
 import com.codenvy.ide.texteditor.api.reconciler.ReconcilerImpl;
-import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
-import com.codenvy.ide.texteditor.parser.BasicTokenFactory;
-import com.codenvy.ide.texteditor.parser.CmParser;
-import com.codenvy.ide.texteditor.parser.CodeMirror2;
-
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.codenvy.ide.util.executor.UserActivityManager;
 
@@ -48,7 +51,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
 
    private UserActivityManager manager;
 
-   private JavaEditor javaEditor;
+   private TextEditorPartPresenter javaEditor;
 
    private JavaCodeAssistProcessor codeAssistProcessor;
 
@@ -56,24 +59,29 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
 
    private OutlineModel outlineModel;
 
-   /**
-    * @param manager
-    * @param activrProjectId 
-    */
-   public JavaEditorConfiguration(UserActivityManager manager)
+
+   public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor)
    {
       super();
       this.manager = manager;
-      outlineModel = new OutlineModel();
+      this.javaEditor = javaEditor;
+      outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
+      reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
    }
 
+   private static native CmParser getParserForMime(String mime) /*-{
+      conf = $wnd.CodeMirror.defaults;
+      return $wnd.CodeMirror.getMode(conf, mime);
+   }-*/;
+
+
    /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorConfiguration#getParser()
+    * {@inheritDoc}
     */
    @Override
    public Parser getParser(TextEditorPartView view)
    {
-      CmParser parser = CodeMirror2.getParserForMime("text/x-java");
+      CmParser parser = getParserForMime("text/x-java");
       parser.setNameAndFactory("clike", new BasicTokenFactory());
       return parser;
    }
@@ -90,14 +98,6 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
       return reconciler;
    }
 
-   /**
-    * @param javaEditor
-    */
-   public void setEditor(JavaEditor javaEditor)
-   {
-      reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
-      this.javaEditor = javaEditor;
-   }
 
    private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor()
    {
@@ -114,23 +114,31 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
     * {@inheritDoc}
     */
    @Override
-   public CodeAssistant getContentAssistant(TextEditorPartView view)
+   public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view)
    {
-      CodeAssistantImpl impl = new CodeAssistantImpl();
-      impl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
-      return impl;
+
+      JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+      map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
+      return map;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartView view)
+   public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view)
    {
-      return new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
+      JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
+      assistant.install(view);
+      ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
+      return null;
    }
 
-   public OutlineModel getOutlineModel()
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public OutlineModel getOutline(TextEditorPartView view)
    {
       new OutlineModelUpdater(outlineModel, reconcilerStrategy);
       return outlineModel;

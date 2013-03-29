@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.extension.tasks.part;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
 
 import com.codenvy.ide.json.JsonArray;
 

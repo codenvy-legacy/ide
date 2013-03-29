@@ -14,27 +14,25 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.text.store.util.LineUtils;
-import com.codenvy.ide.text.store.util.PositionUtils;
 import com.codenvy.ide.text.store.util.LineUtils.LineVisitor;
+import com.codenvy.ide.text.store.util.PositionUtils;
 import com.codenvy.ide.texteditor.Buffer;
-import com.codenvy.ide.texteditor.FocusManager;
 import com.codenvy.ide.texteditor.Spacer;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.ViewportModel.Edge;
+import com.codenvy.ide.texteditor.api.FocusManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.executor.ScheduledCommandExecutor;
 import com.codenvy.ide.util.loging.Log;
-
 
 import java.util.EnumSet;
 
@@ -48,7 +46,7 @@ import java.util.EnumSet;
  * render pass.
  */
 class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listener, SelectionModel.SelectionListener,
-   Buffer.SpacerListener, FocusManager.FocusListener
+   Buffer.SpacerListener, com.codenvy.ide.texteditor.api.FocusManager.FocusListener
 {
 
    enum ChangeType {
@@ -365,7 +363,7 @@ class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listene
    }
 
    private void attach(Buffer buffer, DocumentModel document, ViewportModel viewport, SelectionModel selection,
-      FocusManager focusManager)
+      com.codenvy.ide.texteditor.api.FocusManager focusManager)
    {
       listenerRemovers.add(focusManager.getFocusListenerRegistrar().add(this));
       listenerRemovers.add(document.getTextListenerRegistrar().add(this));

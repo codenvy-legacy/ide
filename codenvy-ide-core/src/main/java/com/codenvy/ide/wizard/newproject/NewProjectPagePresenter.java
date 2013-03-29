@@ -18,12 +18,12 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.PaaS;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.WizardPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
@@ -81,6 +81,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
+   @Override
    public WizardPagePresenter flipToNext()
    {
       next.setPrevious(this);
@@ -92,6 +93,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean canFinish()
    {
       return false;
@@ -100,6 +102,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean hasNext()
    {
       return next != null;
@@ -108,6 +111,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCompleted()
    {
       return next != null && selectedPaaS != null;
@@ -116,6 +120,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getNotice()
    {
       if (next ==null)
@@ -133,6 +138,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
+   @Override
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);

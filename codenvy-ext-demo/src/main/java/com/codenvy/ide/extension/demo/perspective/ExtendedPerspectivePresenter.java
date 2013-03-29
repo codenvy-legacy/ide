@@ -16,17 +16,20 @@
  */
 package com.codenvy.ide.extension.demo.perspective;
 
-import com.codenvy.ide.outline.OutlinePartPrenter;
-import com.codenvy.ide.part.EditorPartStackPresenter;
-import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.part.console.ConsolePartPresenter;
-import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
-import com.codenvy.ide.perspective.PerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+
+import com.codenvy.ide.api.parts.OutlinePart;
+
+import com.codenvy.ide.api.parts.ConsolePart;
+
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
+
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
+
 
 import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectiveView.ExtendedPerspectiveActionDelegate;
-
 import com.google.gwt.user.client.Window;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -45,9 +48,9 @@ public class ExtendedPerspectivePresenter extends PerspectivePresenter implement
     * @param view
     */
    @Inject
-   public ExtendedPerspectivePresenter(ExtendedPerspectiveView view, EditorPartStackPresenter editorPartStackPresenter,
-      Provider<PartStackPresenter> partStackProvider, OutlinePartPrenter outlinePart, ConsolePartPresenter consolePart,
-      ProjectExplorerPartPresenter projectExplorerPart)
+   public ExtendedPerspectivePresenter(ExtendedPerspectiveView view, EditorPartStack editorPartStackPresenter,
+      Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
+      ProjectExplorerPart projectExplorerPart)
    {
       super(view, editorPartStackPresenter, partStackProvider);
       // handle Extended View Actions

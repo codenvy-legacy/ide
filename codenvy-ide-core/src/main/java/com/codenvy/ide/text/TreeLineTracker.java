@@ -18,10 +18,8 @@
  */
 package com.codenvy.ide.text;
 
-import com.codenvy.ide.text.AbstractLineTracker.DelimiterInfo;
-
 import com.codenvy.ide.runtime.Assert;
-
+import com.codenvy.ide.text.AbstractLineTracker.DelimiterInfo;
 
 import java.util.Arrays;
 import java.util.LinkedList;

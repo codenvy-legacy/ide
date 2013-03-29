@@ -18,16 +18,15 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.paas.PaaS;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.inject.Provider;
 

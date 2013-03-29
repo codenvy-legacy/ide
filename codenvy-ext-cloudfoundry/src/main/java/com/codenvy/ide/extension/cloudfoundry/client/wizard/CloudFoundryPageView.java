@@ -18,8 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.wizard;
 
+import com.codenvy.ide.api.mvp.View;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.view.View;
 
 /**
  * The view of {@link CloudFoundryPagePresenter}.

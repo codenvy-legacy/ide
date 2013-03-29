@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.menu;
 
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+import com.codenvy.ide.api.ui.menu.Selectable;
+
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;

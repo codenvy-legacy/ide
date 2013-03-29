@@ -41,9 +41,7 @@ import com.codenvy.ide.text.store.DocumentTextStore;
  * <p>
  * See {@link GapTextStore} and <code>TreeLineTracker</code> for algorithmic behavior of the used document structures.
  * </p>
- * 
- * @see org.eclipse.jface.text.GapTextStore
- * @see org.eclipse.jface.text.CopyOnWriteTextStore
+ *
  */
 public class DocumentImpl extends AbstractDocument
 {

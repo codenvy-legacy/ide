@@ -14,9 +14,8 @@
 // limitations under the License.
 package com.codenvy.ide.extension.css.editor;
 
-import com.codenvy.ide.texteditor.parser.CmState;
-
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.texteditor.api.parser.CmState;
 
 
 /**

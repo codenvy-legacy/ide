@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.TextUtilities;
@@ -26,19 +29,12 @@ import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.annotation.AnnotationModelEvent;
 import com.codenvy.ide.text.annotation.AnnotationModelListener;
 import com.codenvy.ide.texteditor.api.TextEditorOperations;
-import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.Gutter.ClickListener;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import elemental.html.Element;
-
 
 import java.util.Iterator;
 
@@ -91,7 +87,7 @@ public class VerticalRuler
 
    private final Gutter view;
 
-   private final TextEditorPartView editor;
+   private final TextEditorViewImpl editor;
 
    private InternalListener listener;
 
@@ -100,7 +96,7 @@ public class VerticalRuler
    /**
     * @param leftNotificationGutter
     */
-   public VerticalRuler(Gutter leftNotificationGutter, TextEditorPartView editor)
+   public VerticalRuler(Gutter leftNotificationGutter, TextEditorViewImpl editor)
    {
       this.view = leftNotificationGutter;
       this.editor = editor;
@@ -113,7 +109,7 @@ public class VerticalRuler
          public void onClick(int y)
          {
 
-            TextEditorPartView editor = VerticalRuler.this.editor;
+            TextEditorViewImpl editor = VerticalRuler.this.editor;
             if (editor.canDoOperation(TextEditorOperations.QUICK_ASSIST))
             {
                int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);

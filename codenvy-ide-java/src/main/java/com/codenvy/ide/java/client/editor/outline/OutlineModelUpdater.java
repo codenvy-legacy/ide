@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.java.client.editor.outline;
 
+import com.codenvy.ide.api.outline.CodeBlock;
+import com.codenvy.ide.api.outline.OutlineModel;
+
 import com.codenvy.ide.java.client.core.dom.ASTNode;
 import com.codenvy.ide.java.client.core.dom.ASTVisitor;
 import com.codenvy.ide.java.client.core.dom.AbstractTypeDeclaration;
@@ -38,8 +41,6 @@ import com.codenvy.ide.java.client.editor.AstProvider;
 import com.codenvy.ide.java.client.editor.AstProvider.AstListener;
 import com.codenvy.ide.java.client.internal.corext.dom.ASTNodes;
 
-import com.codenvy.ide.outline.CodeBlock;
-import com.codenvy.ide.outline.OutlineModel;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;

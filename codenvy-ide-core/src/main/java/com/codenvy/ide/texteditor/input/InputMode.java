@@ -18,7 +18,6 @@ import com.codenvy.ide.util.input.CharCodeWithModifiers;
 import com.codenvy.ide.util.input.KeyCodeMap;
 import com.codenvy.ide.util.input.SignalEvent;
 import com.codenvy.ide.util.input.SignalEventUtils;
-
 import elemental.events.Event;
 import elemental.js.util.JsArrayOfInt;
 import elemental.js.util.JsMapFromIntTo;

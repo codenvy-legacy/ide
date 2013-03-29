@@ -20,13 +20,11 @@ import com.codenvy.ide.texteditor.EditableContentArea;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.renderer.LineNumberRenderer;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
-import com.codenvy.ide.tree.Tree;
+import com.codenvy.ide.ui.list.SimpleList;
+import com.codenvy.ide.ui.tree.Tree;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectWizardResource;
 import com.codenvy.ide.wizard.newproject.NewProjectWizardResource;
 import com.codenvy.ide.wizard.newresource.NewResourceWizardResources;
-
-import com.codenvy.ide.ui.list.SimpleList;
-
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 

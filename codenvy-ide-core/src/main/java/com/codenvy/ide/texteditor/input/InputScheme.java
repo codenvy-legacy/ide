@@ -15,7 +15,6 @@
 package com.codenvy.ide.texteditor.input;
 
 import com.codenvy.ide.util.input.SignalEvent;
-
 import elemental.js.util.JsMapFromIntTo;
 
 /**

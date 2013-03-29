@@ -14,19 +14,17 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.js.JsoIntegerMap;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.js.JsoIntegerMap;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.resources.client.ClientBundle;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;

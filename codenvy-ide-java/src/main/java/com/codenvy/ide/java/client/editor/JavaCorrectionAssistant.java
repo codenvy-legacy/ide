@@ -18,9 +18,9 @@
  */
 package com.codenvy.ide.java.client.editor;
 
-import com.codenvy.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
+import com.codenvy.ide.api.editor.TextEditorPartPresenter;
 
-import com.codenvy.ide.editor.TextEditorPartPresenter;
+import com.codenvy.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
@@ -29,9 +29,7 @@ import com.codenvy.ide.text.annotation.Annotation;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
-
 import com.codenvy.ide.util.loging.Log;
-
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -106,8 +104,7 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
          if (newOffset != currOffset)
          {
             storePosition(currOffset, currLength);
-            textView.getSelection().setSelectedRange(newOffset, 0);
-            //            textDisplay.revealRange(newOffset, 0);
+            textView.getSelection().selectAndReveal(newOffset, 0);
             if (fIsCompletionActive)
             {
                hide();

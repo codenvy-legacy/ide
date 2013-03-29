@@ -14,20 +14,18 @@
 
 package com.codenvy.ide.texteditor;
 
-import com.codenvy.ide.text.store.Line;
-import com.codenvy.ide.text.store.anchor.Anchor;
-import com.codenvy.ide.text.store.anchor.AnchorManager;
-import com.codenvy.ide.text.store.anchor.AnchorUtils;
-import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
-import com.codenvy.ide.text.store.anchor.AnchorManager.AnchorVisitor;
-import com.codenvy.ide.text.store.util.LineUtils;
-import com.codenvy.ide.texteditor.renderer.Renderer;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.text.store.Line;
+import com.codenvy.ide.text.store.anchor.Anchor;
+import com.codenvy.ide.text.store.anchor.AnchorManager;
+import com.codenvy.ide.text.store.anchor.AnchorManager.AnchorVisitor;
+import com.codenvy.ide.text.store.anchor.AnchorUtils;
+import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
+import com.codenvy.ide.text.store.util.LineUtils;
+import com.codenvy.ide.texteditor.renderer.Renderer;
 import com.codenvy.ide.util.ListenerRegistrar;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 

@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
-import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
@@ -120,7 +121,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
    private EventBus eventBus;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -140,7 +141,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     * @param loginPresenter
     */
    @Inject
-   protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, Console console,
+   protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, ConsolePart console,
       CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant,
       CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {

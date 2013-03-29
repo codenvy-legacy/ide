@@ -18,7 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.inject;
 
-import com.codenvy.ide.extension.ExtensionGinModule;
+import com.codenvy.ide.api.extension.ExtensionGinModule;
+
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;

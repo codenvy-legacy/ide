@@ -13,15 +13,16 @@
 // limitations under the License.
 
 package com.codenvy.ide.text.store.util;
-import static com.codenvy.ide.text.store.util.LineUtils.*;
 
+import static com.codenvy.ide.text.store.util.LineUtils.getPositionBackwards;
+import static com.codenvy.ide.text.store.util.LineUtils.getPositionForward;
+
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.util.LineUtils.LineVisitor;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 
 
 

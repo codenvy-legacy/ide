@@ -14,6 +14,7 @@
 
 package com.codenvy.ide.text.store.util;
 
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
@@ -21,8 +22,6 @@ import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.PositionOutOfBoundsException;
 import com.codenvy.ide.text.store.anchor.Anchor;
-
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.TextUtils;
 
 

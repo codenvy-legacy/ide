@@ -17,10 +17,8 @@ package com.codenvy.ide.texteditor;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.anchor.Anchor;
-
 import com.codenvy.ide.util.SortedList;
 import com.codenvy.ide.util.dom.Elements;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;

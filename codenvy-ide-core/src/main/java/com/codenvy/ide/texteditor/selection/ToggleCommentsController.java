@@ -14,13 +14,11 @@
 
 package com.codenvy.ide.texteditor.selection;
 
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TextStoreMutator;
-
-import com.codenvy.ide.runtime.Assert;
-
 import com.google.gwt.regexp.shared.RegExp;
 
 

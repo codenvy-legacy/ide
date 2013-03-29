@@ -19,9 +19,11 @@
 package com.codenvy.ide.core;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.expressions.ExpressionManager;
+import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.keybinding.KeyBindingAgent;
-import com.codenvy.ide.api.ui.paas.PaaSAgent;
-import com.codenvy.ide.api.ui.toolbar.ToolbarAgent;
+import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
+import com.codenvy.ide.api.ui.menu.ToolbarAgent;
 import com.codenvy.ide.command.OpenProjectCommand;
 import com.codenvy.ide.command.SaveAllCommand;
 import com.codenvy.ide.command.SaveCommand;
@@ -31,9 +33,7 @@ import com.codenvy.ide.command.ShowNewResourceWizardCommand;
 import com.codenvy.ide.command.ShowOpenPerspectiveDialog;
 import com.codenvy.ide.command.ShowPreferenceCommand;
 import com.codenvy.ide.command.ToggleItemCommand;
-import com.codenvy.ide.core.expressions.ExpressionManager;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.keybinding.KeyBuilder;
 import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.template.TemplateServiceImpl;
