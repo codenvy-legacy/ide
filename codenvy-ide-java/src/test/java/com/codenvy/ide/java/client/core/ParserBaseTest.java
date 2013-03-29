@@ -19,7 +19,6 @@
 package com.codenvy.ide.java.client.core;
 
 import com.codenvy.ide.java.client.BaseTest;
-
 import com.codenvy.ide.java.client.core.dom.AST;
 import com.codenvy.ide.java.client.core.dom.ASTNode;
 import com.codenvy.ide.java.client.core.dom.ASTParser;
@@ -27,7 +26,6 @@ import com.codenvy.ide.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor;
 import com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment;
 import com.codenvy.ide.java.client.internal.compiler.env.NameEnvironmentAnswer;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;

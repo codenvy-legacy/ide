@@ -18,10 +18,11 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
+
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.wizard.newproject.AbstractNewProjectWizardPage;
-import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 

@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.paas;
 
+import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
+import com.codenvy.ide.api.paas.PaaS;
+
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;

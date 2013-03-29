@@ -21,7 +21,6 @@ package com.codenvy.ide.api.paas;
 import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 
 /**

@@ -22,12 +22,13 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

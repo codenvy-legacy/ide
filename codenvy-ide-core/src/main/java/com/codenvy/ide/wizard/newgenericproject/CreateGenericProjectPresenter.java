@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
+import com.codenvy.ide.api.wizard.newproject.AbstractCreateProjectPresenter;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
@@ -25,7 +27,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.newproject.AbstractCreateProjectPresenter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

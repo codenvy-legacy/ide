@@ -18,10 +18,13 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
+
+import com.codenvy.ide.api.paas.PaaS;
+
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.paas.PaaS;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.google.gwt.resources.client.ImageResource;

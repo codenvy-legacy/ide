@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.wizard.warproject;
 
+import com.codenvy.ide.api.wizard.newproject.AbstractCreateProjectPresenter;
+
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
@@ -26,7 +28,6 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.template.TemplateService;
 import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.wizard.newproject.AbstractCreateProjectPresenter;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
