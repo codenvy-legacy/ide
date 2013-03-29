@@ -63,22 +63,9 @@ import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
  */
 public class Express
 {
-   static class RHCloudCredentials
-   {
-      final String rhlogin;
-      final String password;
-
-      RHCloudCredentials(String rhlogin, String password)
-      {
-         this.rhlogin = rhlogin;
-         this.password = password;
-      }
-   }
-
    private static final Pattern GIT_URL_PATTERN = Pattern
       .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/~/git/(\\w+)\\.git/");
 
@@ -87,18 +74,18 @@ public class Express
    private final CredentialStore credentialStore;
    private final SshKeyStore sshKeyStore;
    private final OpenShiftConnectionFactory openShiftConnectionFactory;
-   // Provide cache for openshift express connections.
+   // Provide cache for openshift-express connections.
    // Objects look heavy enough, and they stored info between requests.
    // Access to cache protected by lock.
-   private final Cache<String, IOpenShiftConnection> connectionCache;
-   private final Lock connectionLock;
+   private final Cache<String, IOpenShiftConnection> connections;
+   private final Lock lock;
 
    public Express(CredentialStore credentialStore, SshKeyStore sshKeyStore)
    {
       this.credentialStore = credentialStore;
       this.sshKeyStore = sshKeyStore;
       this.openShiftConnectionFactory = new OpenShiftConnectionFactory();
-      this.connectionCache = new SLRUCache<String, IOpenShiftConnection>(10, 10)
+      this.connections = new SLRUCache<String, IOpenShiftConnection>(20, 10)
       {
          @Override
          protected void evict(String key, IOpenShiftConnection value)
@@ -109,14 +96,15 @@ public class Express
             }
          }
       };
-      this.connectionLock = new ReentrantLock();
+      this.lock = new ReentrantLock();
    }
 
    public void login(String rhlogin, String password) throws ExpressException, CredentialStoreException
    {
-      getOpenShiftConnection(rhlogin, password);
-      final Credential credential = new Credential();
       final String userId = getUserId();
+      removeOpenShiftConnection(userId);
+      newOpenShiftConnection(rhlogin, password);
+      final Credential credential = new Credential();
       credentialStore.load(userId, "openshift_express", credential);
       credential.setAttribute("rhlogin", rhlogin);
       credential.setAttribute("password", password);
@@ -125,22 +113,26 @@ public class Express
 
    public void logout() throws CredentialStoreException
    {
-      final Credential credential = new Credential();
       final String userId = getUserId();
+      removeOpenShiftConnection(userId);
+      final Credential credential = new Credential();
       credentialStore.load(userId, "openshift_express", credential);
-      final String rhlogin = credential.getAttribute("rhlogin");
-      connectionLock.lock();
-      try
-      {
-         connectionCache.remove(rhlogin);
-      }
-      finally
-      {
-         connectionLock.unlock();
-      }
       credential.removeAttribute("rhlogin");
       credential.removeAttribute("password");
       credentialStore.save(userId, "openshift_express", credential);
+   }
+
+   private void removeOpenShiftConnection(String userId)
+   {
+      lock.lock();
+      try
+      {
+         connections.remove(userId);
+      }
+      finally
+      {
+         lock.unlock();
+      }
    }
 
    public void createDomain(String namespace, boolean alter)
@@ -569,27 +561,22 @@ public class Express
 
    private IOpenShiftConnection getOpenShiftConnection() throws ExpressException, CredentialStoreException
    {
-      final RHCloudCredentials credentials = getCredentials(getUserId());
-      return getOpenShiftConnection(credentials.rhlogin, credentials.password);
-   }
-
-   private String getUserId()
-   {
-      return ConversationState.getCurrent().getIdentity().getUserId();
-   }
-
-   private IOpenShiftConnection getOpenShiftConnection(String rhlogin, String password)
-      throws ExpressException, CredentialStoreException
-   {
-      connectionLock.lock();
+      final String userId = getUserId();
+      lock.lock();
       try
       {
-         IOpenShiftConnection connection = connectionCache.get(rhlogin);
+         IOpenShiftConnection connection = connections.get(userId);
          if (connection == null)
          {
-            connection = openShiftConnectionFactory.getConnection("show-domain-info", rhlogin, password, OPENSHIFT_URL);
-            connection.getUser(); // Throws exception if credential is invalid.
-            connectionCache.put(rhlogin, connection);
+            final Credential credential = new Credential();
+            credentialStore.load(userId, "openshift_express", credential);
+            final String rhlogin = credential.getAttribute("rhlogin");
+            final String password = credential.getAttribute("password");
+            if (rhlogin == null || password == null)
+            {
+               throw new ExpressException(200, "Authentication required.\n", "text/plain");
+            }
+            connections.put(userId, connection = newOpenShiftConnection(rhlogin, password));
          }
          return connection;
       }
@@ -599,20 +586,26 @@ public class Express
       }
       finally
       {
-         connectionLock.unlock();
+         lock.unlock();
       }
    }
 
-   private RHCloudCredentials getCredentials(String userId) throws CredentialStoreException, ExpressException
+   private String getUserId()
    {
-      final Credential credential = new Credential();
-      credentialStore.load(userId, "openshift_express", credential);
-      final String rhlogin = credential.getAttribute("rhlogin");
-      final String password = credential.getAttribute("password");
-      if (rhlogin == null || password == null)
+      return ConversationState.getCurrent().getIdentity().getUserId();
+   }
+
+   private IOpenShiftConnection newOpenShiftConnection(String rhlogin, String password) throws ExpressException
+   {
+      try
       {
-         throw new ExpressException(200, "Authentication required.\n", "text/plain");
+         IOpenShiftConnection connection = openShiftConnectionFactory.getConnection("show-domain-info", rhlogin, password, OPENSHIFT_URL);
+         connection.getUser(); // Throws exception if credentials is invalid.
+         return connection;
       }
-      return new RHCloudCredentials(rhlogin, password);
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, String.format("Connection error. %s", e.getMessage()), "text/plain");
+      }
    }
 }
