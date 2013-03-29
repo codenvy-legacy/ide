@@ -18,20 +18,16 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.codenvy.ide.java.client.JavaClientBundle;
-import com.codenvy.ide.java.client.wizard.NewJavaProjectPagePresenter;
-import com.codenvy.ide.java.client.wizard.NewJavaProjectPageView;
-
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
-
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
@@ -48,6 +44,9 @@ public class NewJavaProjectPagePresenterTest extends WizardsBaseTest
 
    @Mock
    private NewJavaProjectPageView view;
+
+   @Mock
+   private CreateProjectHandler createProjecthandler;
 
    private NewJavaProjectPagePresenter presenter;
 
@@ -85,6 +84,8 @@ public class NewJavaProjectPagePresenterTest extends WizardsBaseTest
    {
       presenter.checkProjectInput();
       presenter.doFinish();
-      verify(resourceProvider).createProject(eq("project"), (JsonArray<Property>)any(), (AsyncCallback<Project>)any());
+
+      verify(createProjecthandler).setProjectName(eq("project"));
+      verify(createProjecthandler).create((AsyncCallback<Project>)any());
    }
 }
