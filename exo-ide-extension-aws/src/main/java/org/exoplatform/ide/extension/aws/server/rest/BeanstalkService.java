@@ -41,6 +41,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationReque
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateConfigurationTemplateRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -86,14 +87,14 @@ public class BeanstalkService
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws AWSException
+   public void login(Map<String, String> credentials) throws AWSException, CredentialStoreException
    {
       beanstalk.login(credentials.get("access_key"), credentials.get("secret_key"));
    }
 
    @Path("logout")
    @POST
-   public void logout() throws AWSException
+   public void logout() throws CredentialStoreException
    {
       beanstalk.logout();
    }
@@ -103,7 +104,7 @@ public class BeanstalkService
    @Path("system/solution-stacks")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<SolutionStack> listAvailableSolutionStacks() throws AWSException
+   public List<SolutionStack> listAvailableSolutionStacks() throws AWSException, CredentialStoreException
    {
       return beanstalk.listAvailableSolutionStacks();
    }
@@ -113,7 +114,7 @@ public class BeanstalkService
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public List<ConfigurationOptionInfo> listSolutionStackConfigurationOptions(
-      SolutionStackConfigurationOptionsRequest params) throws AWSException
+      SolutionStackConfigurationOptionsRequest params) throws AWSException, CredentialStoreException
    {
       return beanstalk.listSolutionStackConfigurationOptions(params.getSolutionStackName());
    }
@@ -127,14 +128,14 @@ public class BeanstalkService
    public ApplicationInfo createApplication(@QueryParam("vfsid") String vfsId,
                                             @QueryParam("projectid") String projectId,
                                             CreateApplicationRequest params)
-      throws AWSException, VirtualFileSystemException, IOException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       String warURLStr = params.getWar();
       URL warURL = warURLStr == null || warURLStr.isEmpty() ? null : new URL(warURLStr);
       ApplicationInfo app =
          beanstalk.createApplication(params.getApplicationName(), params.getDescription(), params.getS3Bucket(),
-         params.getS3Key(), vfs, projectId, warURL);
+            params.getS3Key(), vfs, projectId, warURL);
 
       if (projectId != null)
       {
@@ -150,7 +151,7 @@ public class BeanstalkService
    @Produces(MediaType.APPLICATION_JSON)
    public ApplicationInfo getApplicationInfo(@QueryParam("vfsid") String vfsId,
                                              @QueryParam("projectid") String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.getApplicationInfo(vfs, projectId);
@@ -163,7 +164,7 @@ public class BeanstalkService
    public ApplicationInfo updateApplication(@QueryParam("vfsid") String vfsId,
                                             @QueryParam("projectid") String projectId,
                                             UpdateApplicationRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.updateApplication(vfs, projectId, params.getDescription());
@@ -172,7 +173,7 @@ public class BeanstalkService
    @Path("apps/delete")
    @POST
    public void deleteApplication(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       beanstalk.deleteApplication(vfs, projectId);
@@ -184,7 +185,8 @@ public class BeanstalkService
    @Produces(MediaType.APPLICATION_JSON)
    public EventsList listApplicationEvents(@QueryParam("vfsid") String vfsId,
                                            @QueryParam("projectid") String projectId,
-                                           ListEventsRequest params) throws AWSException, VirtualFileSystemException
+                                           ListEventsRequest params)
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.listApplicationEvents(params.getVersionLabel(), params.getTemplateName(),
@@ -195,7 +197,7 @@ public class BeanstalkService
    @Path("apps")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<ApplicationInfo> listApplications() throws AWSException
+   public List<ApplicationInfo> listApplications() throws AWSException, CredentialStoreException
    {
       return beanstalk.listApplications();
    }
@@ -209,7 +211,7 @@ public class BeanstalkService
    public Configuration createConfigurationTemplate(@QueryParam("vfsid") String vfsId,
                                                     @QueryParam("projectid") String projectId,
                                                     CreateConfigurationTemplateRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.createConfigurationTemplate(params.getTemplateName(), params.getSolutionStackName(),
@@ -224,7 +226,7 @@ public class BeanstalkService
    public Configuration getConfigurationTemplate(@QueryParam("vfsid") String vfsId,
                                                  @QueryParam("projectid") String projectId,
                                                  ConfigurationRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.getConfigurationTemplate(params.getTemplateName(), vfs, projectId);
@@ -237,7 +239,7 @@ public class BeanstalkService
    public Configuration updateConfigurationTemplate(@QueryParam("vfsid") String vfsId,
                                                     @QueryParam("projectid") String projectId,
                                                     UpdateConfigurationTemplateRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.updateConfigurationTemplate(params.getTemplateName(), params.getDescription(), vfs, projectId);
@@ -249,7 +251,7 @@ public class BeanstalkService
    public void deleteConfigurationTemplate(@QueryParam("vfsid") String vfsId,
                                            @QueryParam("projectid") String projectId,
                                            DeleteConfigurationTemplateRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       beanstalk.deleteConfigurationTemplate(params.getTemplateName(), vfs, projectId);
@@ -264,7 +266,7 @@ public class BeanstalkService
    public ApplicationVersionInfo createApplicationVersion(@QueryParam("vfsid") String vfsId,
                                                           @QueryParam("projectid") String projectId,
                                                           CreateApplicationVersionRequest params)
-      throws AWSException, VirtualFileSystemException, IOException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       String warURLStr = params.getWar();
@@ -280,7 +282,7 @@ public class BeanstalkService
    public ApplicationVersionInfo updateApplicationVersion(@QueryParam("vfsid") String vfsId,
                                                           @QueryParam("projectid") String projectId,
                                                           UpdateApplicationVersionRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.updateApplicationVersion(params.getVersionLabel(), params.getDescription(), vfs, projectId);
@@ -292,7 +294,7 @@ public class BeanstalkService
    public void deleteApplicationVersion(@QueryParam("vfsid") String vfsId,
                                         @QueryParam("projectid") String projectId,
                                         DeleteApplicationVersionRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       beanstalk.deleteApplicationVersion(params.getVersionLabel(), params.isDeleteS3Bundle(), vfs, projectId);
@@ -303,7 +305,7 @@ public class BeanstalkService
    @Produces(MediaType.APPLICATION_JSON)
    public List<ApplicationVersionInfo> listApplicationVersions(@QueryParam("vfsid") String vfsId,
                                                                @QueryParam("projectid") String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.listApplicationVersions(vfs, projectId);
@@ -318,7 +320,7 @@ public class BeanstalkService
    public EnvironmentInfo createApplicationEnvironment(@QueryParam("vfsid") String vfsId,
                                                        @QueryParam("projectid") String projectId,
                                                        CreateEnvironmentRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.createApplicationEnvironment(params.getEnvironmentName(), params.getSolutionStackName(),
@@ -328,7 +330,7 @@ public class BeanstalkService
    @Path("environments/info/{id}")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public EnvironmentInfo getEnvironmentInfo(@PathParam("id") String id) throws AWSException
+   public EnvironmentInfo getEnvironmentInfo(@PathParam("id") String id) throws AWSException, CredentialStoreException
    {
       return beanstalk.getEnvironmentInfo(id);
    }
@@ -338,7 +340,7 @@ public class BeanstalkService
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public EnvironmentInfo updateEnvironment(@PathParam("id") String id, UpdateEnvironmentRequest params)
-      throws AWSException
+      throws AWSException, CredentialStoreException
    {
       return beanstalk.updateEnvironment(id, params.getDescription(), params.getVersionLabel(),
          params.getTemplateName(), params.getOptions());
@@ -346,7 +348,7 @@ public class BeanstalkService
 
    @Path("environments/rebuild/{id}")
    @GET
-   public void rebuildEnvironment(@PathParam("id") String id) throws AWSException
+   public void rebuildEnvironment(@PathParam("id") String id) throws AWSException, CredentialStoreException
    {
       beanstalk.rebuildEnvironment(id);
    }
@@ -354,7 +356,7 @@ public class BeanstalkService
    @Path("environments/stop/{id}")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public EnvironmentInfo stopEnvironment(@PathParam("id") String id) throws AWSException
+   public EnvironmentInfo stopEnvironment(@PathParam("id") String id) throws AWSException, CredentialStoreException
    {
       return beanstalk.stopEnvironment(id);
    }
@@ -366,7 +368,7 @@ public class BeanstalkService
    public List<Configuration> getEnvironmentConfigurations(@QueryParam("vfsid") String vfsId,
                                                            @QueryParam("projectid") String projectId,
                                                            ConfigurationRequest params)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.getEnvironmentConfigurations(params.getEnvironmentName(), vfs, projectId);
@@ -377,7 +379,7 @@ public class BeanstalkService
    @Produces(MediaType.APPLICATION_JSON)
    public List<EnvironmentInfo> listApplicationEnvironments(@QueryParam("vfsid") String vfsId,
                                                             @QueryParam("projectid") String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, CredentialStoreException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.listApplicationEnvironments(vfs, projectId);
@@ -387,7 +389,7 @@ public class BeanstalkService
 
    @Path("server/restart/{id}")
    @GET
-   public void restartApplicationServer(@PathParam("id") String id) throws AWSException
+   public void restartApplicationServer(@PathParam("id") String id) throws AWSException, CredentialStoreException
    {
       beanstalk.restartApplicationServer(id);
    }
@@ -395,7 +397,8 @@ public class BeanstalkService
    @Path("environments/logs/{id}")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<InstanceLog> getEnvironmentLogs(@PathParam("id") String environmentId) throws AWSException
+   public List<InstanceLog> getEnvironmentLogs(@PathParam("id") String environmentId)
+      throws AWSException, CredentialStoreException
    {
       return beanstalk.getEnvironmentLogs(environmentId);
    }
