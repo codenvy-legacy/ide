@@ -969,7 +969,7 @@ public class JGitConnection implements GitConnection
             List<Branch> remoteBranches = branchList(new BranchListRequest("r"));
             for (Branch remoteBranch : remoteBranches)
             {
-               if (remoteBranch.getDisplayName().contains(name))
+               if (remoteBranch.getDisplayName().startsWith(name))
                {
                   branchDelete(new BranchDeleteRequest(remoteBranch.getName(), true));
                };
