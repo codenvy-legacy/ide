@@ -18,15 +18,12 @@
  */
 package com.codenvy.ide.java.client.core.outline;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.fest.assertions.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.outline.CodeBlock;
 import com.codenvy.ide.api.outline.OutlineModel;
-
 import com.codenvy.ide.java.client.BaseTest;
-import com.codenvy.ide.java.emul.FileSystem;
-
 import com.codenvy.ide.java.client.core.dom.AST;
 import com.codenvy.ide.java.client.core.dom.ASTParser;
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
@@ -35,8 +32,7 @@ import com.codenvy.ide.java.client.editor.outline.BlockTypes;
 import com.codenvy.ide.java.client.editor.outline.JavaCodeBlock;
 import com.codenvy.ide.java.client.editor.outline.OutlineModelUpdater;
 import com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment;
-
-
+import com.codenvy.ide.java.emul.FileSystem;
 import com.codenvy.ide.json.JsonArray;
 
 import org.junit.Before;

@@ -10,16 +10,32 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.rewrite;
 
-import com.codenvy.ide.java.client.core.dom.*;
+import com.codenvy.ide.java.client.core.dom.AST;
+import com.codenvy.ide.java.client.core.dom.ASTNode;
+import com.codenvy.ide.java.client.core.dom.Block;
+import com.codenvy.ide.java.client.core.dom.CastExpression;
+import com.codenvy.ide.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.java.client.core.dom.Expression;
+import com.codenvy.ide.java.client.core.dom.ExpressionStatement;
+import com.codenvy.ide.java.client.core.dom.FieldDeclaration;
+import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
+import com.codenvy.ide.java.client.core.dom.PrefixExpression;
+import com.codenvy.ide.java.client.core.dom.ReturnStatement;
+import com.codenvy.ide.java.client.core.dom.SimpleName;
+import com.codenvy.ide.java.client.core.dom.TryStatement;
+import com.codenvy.ide.java.client.core.dom.Type;
+import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.VariableDeclarationFragment;
+import com.codenvy.ide.java.client.core.dom.WhileStatement;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ITrackedNodePosition;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
 
+import org.junit.Test;
+
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Test;
 
 public class ASTRewritingTrackingTest extends ASTRewritingTest
 {

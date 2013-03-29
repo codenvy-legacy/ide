@@ -19,10 +19,9 @@ import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.core.formatter.DefaultCodeFormatterConstants;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
 
-import java.util.List;
-
-
 import org.junit.Test;
+
+import java.util.List;
 
 public class ASTRewritingTypeDeclTest extends ASTRewritingTest
 {

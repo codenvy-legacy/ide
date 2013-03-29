@@ -18,28 +18,16 @@
  */
 package com.codenvy.ide.toolbar;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.event.ExpressionsChangedEvent;
-
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.expressions.ToggleStateExpression;
-
-import com.codenvy.ide.api.ui.menu.ToggleCommand;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
-import com.codenvy.ide.toolbar.ToolbarPresenter;
-import com.codenvy.ide.toolbar.ToolbarView;
-
+import com.codenvy.ide.api.ui.menu.ToggleCommand;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
-
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;

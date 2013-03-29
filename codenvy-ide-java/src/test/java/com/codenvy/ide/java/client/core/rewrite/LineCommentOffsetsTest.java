@@ -12,16 +12,33 @@ package com.codenvy.ide.java.client.core.rewrite;
 
 import static org.junit.Assert.*;
 
-import com.codenvy.ide.java.client.core.dom.*;
+import com.codenvy.ide.java.client.core.dom.AST;
+import com.codenvy.ide.java.client.core.dom.ASTNode;
+import com.codenvy.ide.java.client.core.dom.Block;
+import com.codenvy.ide.java.client.core.dom.CatchClause;
+import com.codenvy.ide.java.client.core.dom.CompilationUnit;
+import com.codenvy.ide.java.client.core.dom.Expression;
+import com.codenvy.ide.java.client.core.dom.ExpressionStatement;
+import com.codenvy.ide.java.client.core.dom.IfStatement;
+import com.codenvy.ide.java.client.core.dom.InfixExpression;
+import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
+import com.codenvy.ide.java.client.core.dom.MethodInvocation;
+import com.codenvy.ide.java.client.core.dom.ParenthesizedExpression;
+import com.codenvy.ide.java.client.core.dom.SimpleType;
+import com.codenvy.ide.java.client.core.dom.SingleVariableDeclaration;
+import com.codenvy.ide.java.client.core.dom.Statement;
+import com.codenvy.ide.java.client.core.dom.TryStatement;
+import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.TypeParameter;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
 import com.codenvy.ide.java.client.internal.core.dom.rewrite.LineCommentEndOffsets;
 
+import org.junit.Test;
+
 import java.util.HashSet;
 import java.util.List;
-
-import org.junit.Test;
 
 /**
  *

@@ -10,13 +10,11 @@
  *******************************************************************************/
 package com.codenvy.ide.java.emul;
 
-import com.codenvy.ide.java.emul.clasfmt.ClassFileReader;
-
 import com.codenvy.ide.java.client.compiler.batch.CompilationUnit;
 import com.codenvy.ide.java.client.core.compiler.CharOperation;
 import com.codenvy.ide.java.client.internal.compiler.env.NameEnvironmentAnswer;
 import com.codenvy.ide.java.client.internal.compiler.parser.ScannerHelper;
-
+import com.codenvy.ide.java.emul.clasfmt.ClassFileReader;
 
 import java.io.File;
 import java.io.FilenameFilter;

@@ -18,24 +18,12 @@
  */
 package com.codenvy.ide.part;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
-
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
-
-
-
-import com.codenvy.ide.part.FocusManager;
-import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.PartStackView;
-
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -71,7 +59,7 @@ public class TestFocusManager
    PartStackView view;
 
    @InjectMocks
-   PartStack stack;
+   PartStackPresenter stack;
 
    @Before
    public void disarm()

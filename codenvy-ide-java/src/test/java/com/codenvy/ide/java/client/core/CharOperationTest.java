@@ -18,10 +18,9 @@
  */
 package com.codenvy.ide.java.client.core;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import com.codenvy.ide.java.client.BaseTest;
-
 import com.codenvy.ide.java.client.core.compiler.CharOperation;
 
 import org.junit.Ignore;

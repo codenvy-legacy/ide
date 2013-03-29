@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.rewrite;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import com.codenvy.ide.java.client.core.dom.AST;
 import com.codenvy.ide.java.client.core.dom.ASTNode;

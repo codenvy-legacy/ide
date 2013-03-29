@@ -12,14 +12,25 @@
 package com.codenvy.ide.java.emul.clasfmt;
 
 import com.codenvy.ide.java.client.internal.compiler.ast.Annotation;
-import com.codenvy.ide.java.client.internal.compiler.env.*;
-import com.codenvy.ide.java.client.internal.compiler.impl.*;
+import com.codenvy.ide.java.client.internal.compiler.env.ClassSignature;
+import com.codenvy.ide.java.client.internal.compiler.env.EnumConstantSignature;
+import com.codenvy.ide.java.client.internal.compiler.env.IBinaryAnnotation;
+import com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair;
+import com.codenvy.ide.java.client.internal.compiler.impl.BooleanConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.ByteConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.CharConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.DoubleConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.FloatConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.IntConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.LongConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.ShortConstant;
+import com.codenvy.ide.java.client.internal.compiler.impl.StringConstant;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TagBits;
 import com.codenvy.ide.java.client.internal.compiler.util.Util;
 
-import java.util.Arrays;
-
 import org.eclipse.jdt.core.compiler.CharOperation;
+
+import java.util.Arrays;
 
 public class AnnotationInfo extends ClassFileStruct implements IBinaryAnnotation
 {

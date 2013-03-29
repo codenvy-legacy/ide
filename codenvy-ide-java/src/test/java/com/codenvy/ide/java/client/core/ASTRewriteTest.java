@@ -26,7 +26,6 @@ import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ITrackedNodePosition;
 import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
-
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;

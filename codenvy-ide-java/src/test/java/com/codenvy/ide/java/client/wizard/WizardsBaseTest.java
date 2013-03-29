@@ -18,22 +18,18 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-
-import com.codenvy.ide.java.client.BaseTest;
-
-import com.codenvy.ide.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.java.client.projectmodel.SourceFolder;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.resources.model.Resource;
-
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.java.client.BaseTest;
+import com.codenvy.ide.java.client.projectmodel.JavaProject;
+import com.codenvy.ide.java.client.projectmodel.SourceFolder;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.model.Resource;
 
 import org.junit.Before;
 import org.mockito.Mock;
-
-import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

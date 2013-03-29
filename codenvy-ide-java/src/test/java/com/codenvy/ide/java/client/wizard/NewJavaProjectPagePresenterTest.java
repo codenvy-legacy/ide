@@ -18,16 +18,14 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.fest.assertions.Assertions.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.junit.Before;
@@ -57,6 +55,7 @@ public class NewJavaProjectPagePresenterTest extends WizardsBaseTest
       ArgumentCaptor<AsyncCallback> callbackArgumentCaptor = ArgumentCaptor.forClass(AsyncCallback.class);
       presenter = new NewJavaProjectPagePresenter(JavaClientBundle.INSTANCE, view, resourceProvider);
       presenter.setUpdateDelegate(updateDelegate);
+      presenter.setCreateProjectHandler(createProjecthandler);
       verify(resourceProvider).listProjects(callbackArgumentCaptor.capture());
       callbackArgumentCaptor.getValue().onSuccess(JsonCollections.createArray());
       when(view.getProjectName()).thenReturn("project");

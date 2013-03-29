@@ -16,25 +16,14 @@
  */
 package com.codenvy.ide.perspective;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-
-import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
-
-
-
 import com.codenvy.ide.part.PartStackPresenter;
-import com.codenvy.ide.perspective.WorkspacePresenter;
-import com.codenvy.ide.perspective.WorkspaceView;
-
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

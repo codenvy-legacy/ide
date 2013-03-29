@@ -10,17 +10,12 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.rewrite;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import com.codenvy.ide.java.client.core.dom.*;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 

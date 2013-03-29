@@ -11,9 +11,6 @@
 package com.codenvy.ide.java.client.core.rewrite;
 
 import com.codenvy.ide.java.client.BaseTest;
-import com.codenvy.ide.java.client.core.quickfix.StringAsserts;
-import com.codenvy.ide.java.emul.FileSystem;
-
 import com.codenvy.ide.java.client.JavaExtension;
 import com.codenvy.ide.java.client.core.JavaCore;
 import com.codenvy.ide.java.client.core.dom.AST;
@@ -32,8 +29,9 @@ import com.codenvy.ide.java.client.core.dom.VariableDeclarationFragment;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.formatter.DefaultCodeFormatterConstants;
 import com.codenvy.ide.java.client.core.formatter.DefaultCodeFormatterOptions;
+import com.codenvy.ide.java.client.core.quickfix.StringAsserts;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
-
+import com.codenvy.ide.java.emul.FileSystem;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.edits.TextEdit;

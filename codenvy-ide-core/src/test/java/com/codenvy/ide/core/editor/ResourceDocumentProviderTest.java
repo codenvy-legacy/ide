@@ -18,13 +18,11 @@
  */
 package com.codenvy.ide.core.editor;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
-
+import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.text.Document;
