@@ -18,40 +18,16 @@
  */
 package org.exoplatform.ide.client.theme;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class ChangeThemeEvent extends GwtEvent<ChangeThemeHandler>
+public interface ThemeChangedHandler extends EventHandler
 {
    
-   public static final GwtEvent.Type<ChangeThemeHandler> TYPE = new GwtEvent.Type<ChangeThemeHandler>();
-   
-   private String theme;
-   
-   public ChangeThemeEvent(String theme)
-   {
-      this.theme = theme;
-   }
-
-   public String getTheme()
-   {
-      return theme;
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ChangeThemeHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(ChangeThemeHandler handler)
-   {
-      handler.onChangeTheme(this);
-   }
+   void onThemeChanged(ThemeChangedEvent event);
 
 }

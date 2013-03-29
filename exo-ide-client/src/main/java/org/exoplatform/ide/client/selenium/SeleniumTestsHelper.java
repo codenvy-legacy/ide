@@ -27,6 +27,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.theme.ThemeChangedEvent;
+import org.exoplatform.ide.client.theme.ThemeChangedHandler;
+import org.exoplatform.ide.client.theme.ThemeManager;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.dom.client.Style.Overflow;
@@ -46,7 +49,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, EditorOpenFileHandler, ItemsSelectedHandler
+public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, EditorOpenFileHandler, ItemsSelectedHandler, ThemeChangedHandler
 {
 
    /**
@@ -69,11 +72,17 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
     */
    private Widget selectedFile;
 
+   /**
+    * Widget for storing current theme name.
+    */
+   private Widget currentTheme;
+
    public SeleniumTestsHelper()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorOpenFileEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ThemeChangedEvent.TYPE, this);
 
       debugPanel = new AbsolutePanel();
       debugPanel.getElement().setId("debug-panel");
@@ -86,6 +95,9 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
       editorActiveFile.addDomHandler(editorActiveFileClickHandler, ClickEvent.getType());
       editorPreviousActiveFile = createDebugEntry("debug-editor-previous-active-file-url");
       selectedFile = createDebugEntry("debug-navigation-selected-file");
+
+      currentTheme = createDebugEntry("debug-current-theme-name");
+      currentTheme.getElement().setInnerText(ThemeManager.DEFAULT_THEME_NAME);
    }
 
    private ClickHandler editorActiveFileClickHandler = new ClickHandler()
@@ -143,6 +155,12 @@ public class SeleniumTestsHelper implements EditorActiveFileChangedHandler, Edit
       {
          selectedFile.getElement().setInnerText(selectedItems.get(0).getPath());
       }
+   }
+
+   @Override
+   public void onThemeChanged(ThemeChangedEvent event)
+   {
+      currentTheme.getElement().setInnerText(event.getTheme());      
    }
 
 }

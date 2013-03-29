@@ -19,7 +19,8 @@
 
 package org.exoplatform.ide.client.theme;
 
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
@@ -37,31 +38,34 @@ public class ThemesListGrid extends ListGrid<Theme>
 
    public ThemesListGrid()
    {
-//      Column<Theme, ImageResource> iconColumn = new Column<Theme, ImageResource>(new ImageResourceCell())
-//      {
-//         @Override
-//         public ImageResource getValue(Theme object)
-//         {
-//            return ProjectResolver.getImageForProject(object.getProjectType());
-//         }
-//      };
-
-      Column<Theme, String> themeNameColumn = new Column<Theme, String>(new TextCell())
+      Column<Theme, SafeHtml> themeNameColumn = new Column<Theme, SafeHtml>(new SafeHtmlCell())
       {
          @Override
-         public String getValue(Theme object)
+         public SafeHtml getValue(final Theme theme)
          {
-            return object.getName();
+            @SuppressWarnings("serial")
+            SafeHtml html = new SafeHtml()
+            {
+               @Override
+               public String asString()
+               {
+                  if (theme.isActive())
+                  {
+                     return "<span style=\"color:#3764A3;\">" + theme.getName() + "&nbsp;&nbsp;[Active]</span>";
+                  }
+                  else
+                  {
+                     return theme.getName();
+                  }
+               }
+            };
+            return html;
          }
+
       };
 
-      themeNameColumn.setCellStyleNames("default-cursor");
-
-      getCellTable().addColumn(themeNameColumn, "");
-      
-//      getCellTable().setColumnWidth(iconColumn, "20px");
-//      getCellTable().addColumn(nameColumn, "Name");
-//      getCellTable().addColumn(typeColumn, "Type");
+      themeNameColumn.setCellStyleNames("default-cursor ide-table-row-text");
+      getCellTable().addColumn(themeNameColumn, "Theme");
    }
 
 }

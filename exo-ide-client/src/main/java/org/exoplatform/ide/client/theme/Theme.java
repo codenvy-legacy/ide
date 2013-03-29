@@ -27,11 +27,13 @@ public class Theme
 {
 
    private String name;
-   
+
    private String mainFrameCss;
-   
+
    private String codemirrorCss;
-   
+
+   private boolean active;
+
    public Theme(String name, String mainFrameCss, String codemirrorCss)
    {
       this.name = name;
@@ -53,5 +55,15 @@ public class Theme
    {
       return codemirrorCss;
    }
-   
+
+   public boolean isActive()
+   {
+      return active;
+   }
+
+   public void setActive(boolean active)
+   {
+      this.active = active;
+   }
+
 }

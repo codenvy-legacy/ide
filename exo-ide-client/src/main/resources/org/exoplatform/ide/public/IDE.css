@@ -90,6 +90,14 @@ Add shadow to dialog boxes and menus
 	font-style: normal;
 }
 
+.ide-table-row-text
+{
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	font-style: normal;
+}
+
 /*
 CUSTOMIZE TOOLBAR
 */
