@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of new generic project wizard view.

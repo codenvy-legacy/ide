@@ -17,7 +17,6 @@ package com.codenvy.ide.texteditor.linedimensions;
 
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator;
-
 import elemental.canvas.CanvasRenderingContext2D;
 import elemental.canvas.TextMetrics;
 import elemental.html.CanvasElement;

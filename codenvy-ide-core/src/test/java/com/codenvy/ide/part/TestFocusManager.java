@@ -24,9 +24,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
-import com.codenvy.ide.core.event.ActivePartChangedEvent;
+import com.codenvy.ide.api.event.ActivePartChangedEvent;
+
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+import com.codenvy.ide.api.ui.perspective.PartStack;
+
+
+
 import com.codenvy.ide.part.FocusManager;
-import com.codenvy.ide.part.PartPresenter;
 import com.codenvy.ide.part.PartStackPresenter;
 import com.codenvy.ide.part.PartStackUIResources;
 import com.codenvy.ide.part.PartStackView;
@@ -66,7 +71,7 @@ public class TestFocusManager
    PartStackView view;
 
    @InjectMocks
-   PartStackPresenter stack;
+   PartStack stack;
 
    @Before
    public void disarm()
@@ -122,7 +127,7 @@ public class TestFocusManager
       // create Part Agent
       agent = new FocusManager(eventBus);
 
-      PartStackPresenter partStack = mock(PartStackPresenter.class);
+      PartStack partStack = mock(PartStackPresenter.class);
       agent.setActivePartStack(partStack); // focus requested
 
       // verify New Event generated

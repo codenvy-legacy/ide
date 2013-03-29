@@ -14,17 +14,16 @@
 
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.anchor.Anchor;
+import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.text.store.anchor.AnchorType;
-import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.util.SortedList;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
+import com.codenvy.ide.util.SortedList;
 import com.codenvy.ide.util.SortedList.OneWayIntComparator;
 import com.codenvy.ide.util.loging.Log;
 

@@ -23,7 +23,6 @@ import com.codenvy.ide.texteditor.input.DefaultActionExecutor;
 import com.codenvy.ide.texteditor.input.InputScheme;
 import com.codenvy.ide.texteditor.input.Shortcut;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
-
 import com.codenvy.ide.util.input.SignalEvent;
 
 

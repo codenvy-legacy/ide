@@ -13,10 +13,9 @@
 // limitations under the License.
 package com.codenvy.ide.texteditor.renderer;
 
-import com.codenvy.ide.text.store.Line;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.util.SortedList;
 import com.codenvy.ide.util.loging.Log;
 

@@ -17,7 +17,10 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.extension.ExtensionDescription;
+
 import com.codenvy.ide.extension.ExtensionRegistry;
+
+
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.google.inject.Inject;

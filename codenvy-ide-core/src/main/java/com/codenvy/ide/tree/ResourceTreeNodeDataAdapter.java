@@ -1,11 +1,12 @@
 package com.codenvy.ide.tree;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Resource;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.ui.tree.NodeDataAdapter;
+import com.codenvy.ide.ui.tree.TreeNodeElement;
 
 
 public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource>

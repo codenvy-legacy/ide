@@ -18,17 +18,17 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
-import com.codenvy.ide.api.ui.paas.PaaSAgent;
-import com.codenvy.ide.extension.Extension;
+import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.paas.PaaSAgent;
+import com.codenvy.ide.api.ui.menu.MainMenuAgent;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCloudFoundryProjectCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.menu.MainMenuPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -63,21 +63,22 @@ public class CloudFoundryExtension
     * @param deployAppPresenter
     * @param constant
     * @param autoBeanFactory
+    * @param wizardPage
     */
    @Inject
-   public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuPresenter menu,
+   public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuAgent menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
       ShowApplicationsCommand showApplicationsCommand, ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
-      EventBus eventBus, DeployApplicationPresenter deployAppPresenter, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory)
+      EventBus eventBus, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      CloudFoundryPagePresenter wizardPage)
    {
       resources.cloudFoundryCss().ensureInjected();
 
       // TODO change hard code types
       JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
-      paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, deployAppPresenter, null);
+      paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, wizardPage, null);
      
-      // TODO Need get service from DI?
+      // TODO Needs to get service from DI?
       String restContext = "/rest/private";
       new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant, autoBeanFactory);
 

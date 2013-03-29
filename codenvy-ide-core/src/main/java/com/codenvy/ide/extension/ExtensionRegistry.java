@@ -31,7 +31,7 @@ public interface ExtensionRegistry
    /**
     * Returns the map of Extension ID to {@link ExtensionDescription}.
     * 
-    * @return
+    * @return  
     */
    public JsonStringMap<ExtensionDescription> getExtensionDescriptions();
 

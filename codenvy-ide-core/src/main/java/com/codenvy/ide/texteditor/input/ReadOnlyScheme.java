@@ -15,7 +15,6 @@
 package com.codenvy.ide.texteditor.input;
 
 import com.codenvy.ide.texteditor.ViewportModel;
-
 import com.codenvy.ide.util.input.KeyCodeMap;
 import com.codenvy.ide.util.input.ModifierKeys;
 import com.codenvy.ide.util.input.SignalEvent;

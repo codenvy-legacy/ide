@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.perspective;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 

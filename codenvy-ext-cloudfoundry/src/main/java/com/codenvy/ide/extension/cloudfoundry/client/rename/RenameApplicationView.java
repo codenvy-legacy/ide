@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.rename;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
 
 /**
  * The view of {@link RenameApplicationPresenter}.

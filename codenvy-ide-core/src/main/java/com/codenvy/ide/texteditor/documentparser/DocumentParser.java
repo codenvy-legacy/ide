@@ -14,22 +14,21 @@
 
 package com.codenvy.ide.texteditor.documentparser;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.TaggableLine;
 import com.codenvy.ide.text.store.TextChange;
 import com.codenvy.ide.text.store.anchor.Anchor;
+import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.text.store.anchor.AnchorType;
-import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.parser.Token;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.ListenerManager;
-import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.codenvy.ide.util.executor.IncrementalScheduler;

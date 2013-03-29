@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
 
 import com.codenvy.ide.json.JsonArray;
 

@@ -18,10 +18,7 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.wizard.WizardPagePresenter;
-
 import com.codenvy.ide.json.JsonArray;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Provider;
@@ -41,7 +38,9 @@ public class NewProjectWizardData
 
    private ImageResource icon;
 
-   private Provider<? extends WizardPagePresenter> wizardPage;
+   private Provider<? extends AbstractNewProjectWizardPage> wizardPage;
+
+   private CreateProjectHandler createProjectHandler;
 
    private JsonArray<String> natures;
 
@@ -56,13 +55,15 @@ public class NewProjectWizardData
     * @param natures
     */
    public NewProjectWizardData(String title, String description, String primaryNature, ImageResource icon,
-                               Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures)
+      Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
+      JsonArray<String> natures)
    {
       this.title = title;
       this.description = description;
       this.primaryNature = primaryNature;
       this.icon = icon;
       this.wizardPage = wizardPage;
+      this.createProjectHandler = createProjectHandler;
       this.natures = natures;
    }
 
@@ -101,9 +102,11 @@ public class NewProjectWizardData
     *
     * @return
     */
-   public WizardPagePresenter getWizardPage()
+   public AbstractNewProjectWizardPage getWizardPage()
    {
-      return wizardPage.get();
+      AbstractNewProjectWizardPage page = wizardPage.get();
+      page.setCreateProjectHandler(createProjectHandler);
+      return page;
    }
 
    /**

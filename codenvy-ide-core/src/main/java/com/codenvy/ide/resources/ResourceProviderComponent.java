@@ -16,10 +16,19 @@
  */
 package com.codenvy.ide.resources;
 
+import com.codenvy.ide.api.event.ProjectActionEvent;
+import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ModelProvider;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.core.Component;
 import com.codenvy.ide.core.ComponentException;
-import com.codenvy.ide.core.event.ProjectActionEvent;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonIntegerMap;
+import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.JsonStringSet;
+import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.resources.marshal.ChildNamesUnmarshaller;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.ProjectModelProviderAdapter;
@@ -32,18 +41,10 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.ProjectNature;
 import com.codenvy.ide.resources.model.Property;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonIntegerMap;
-import com.codenvy.ide.json.JsonStringMap;
-import com.codenvy.ide.json.JsonStringSet;
-import com.codenvy.ide.json.JsonIntegerMap.IterationCallback;
-import com.codenvy.ide.loader.Loader;
+import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
-
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -52,6 +53,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -61,7 +63,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ResourceProviderComponent implements ResourceProvider
+@Singleton      
+public class ResourceProviderComponent implements ResourceProvider, Component
 {
 
    /**
@@ -574,5 +577,14 @@ public class ResourceProviderComponent implements ResourceProvider
    public String getVfsId()
    {
       return vfsInfo.getId();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getRootId()
+   {
+      return vfsInfo.getRoot().getId();
    }
 }

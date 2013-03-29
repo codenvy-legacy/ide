@@ -18,16 +18,13 @@ import com.codenvy.ide.Resources;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.texteditor.Buffer;
-import com.codenvy.ide.texteditor.FocusManager;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.renderer.ChangeTracker.ChangeType;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
-
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerRegistrar;
-
 
 import java.util.EnumSet;
 
@@ -42,7 +39,7 @@ public class Renderer
 {
 
    public static Renderer create(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-      SelectionModel selection, FocusManager focusManager, TextEditorViewImpl editor, Resources res,
+      SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager, TextEditorViewImpl editor, Resources res,
       RenderTimeExecutor renderTimeExecutor)
    {
       return new Renderer(document, viewport, buffer, leftGutter, selection, focusManager, editor, res,
@@ -95,7 +92,7 @@ public class Renderer
    private final RenderTimeExecutor renderTimeExecutor;
 
    private Renderer(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-      SelectionModel selection, FocusManager focusManager, TextEditorViewImpl editor, Resources res,
+      SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager, TextEditorViewImpl editor, Resources res,
       RenderTimeExecutor renderTimeExecutor)
    {
       this.viewport = viewport;

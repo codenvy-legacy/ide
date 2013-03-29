@@ -16,7 +16,9 @@
  */
 package com.codenvy.ide.welcome;
 
-import com.codenvy.ide.part.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+
+import com.codenvy.ide.api.parts.WelcomePart;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -35,7 +37,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-public class WelcomePartPresenter extends AbstractPartPresenter
+public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart
 {
 
    private static WelcomePartPresenterUiBinder uiBinder = GWT.create(WelcomePartPresenterUiBinder.class);
@@ -65,7 +67,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#getTitle()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle()
     */
    @Override
    public String getTitle()
@@ -74,7 +76,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#getTitleImage()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage()
     */
    @Override
    public ImageResource getTitleImage()
@@ -83,7 +85,7 @@ public class WelcomePartPresenter extends AbstractPartPresenter
    }
 
    /**
-    * @see com.codenvy.ide.part.PartPresenter#getTitleToolTip()
+    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip()
     */
    @Override
    public String getTitleToolTip()

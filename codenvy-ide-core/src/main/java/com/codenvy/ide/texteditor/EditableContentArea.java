@@ -17,7 +17,6 @@ package com.codenvy.ide.texteditor;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import elemental.html.DivElement;

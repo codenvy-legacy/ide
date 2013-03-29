@@ -16,7 +16,10 @@
  */
 package com.codenvy.ide.menu;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
+
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 
 /**
  * Main Menu View 

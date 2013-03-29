@@ -18,7 +18,6 @@ import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Timer;

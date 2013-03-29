@@ -19,7 +19,6 @@
 package com.codenvy.ide.texteditor.api.codeassistant;
 
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
-import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
 
 /**
  * An <code>CodeAssistant</code> provides support on interactive content completion.
@@ -39,7 +38,7 @@ import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
  * </p>
  * <p>
  * The interface can be implemented by clients. By default, clients use
- * {@link CodeAssistantImpl} as the standard
+ *  <b>CodeAssistantImpl</b> as the standard
  * implementer of this interface.
  * </p>
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

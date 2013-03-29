@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.wizard;
 
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 

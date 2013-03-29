@@ -14,8 +14,10 @@
 
 package com.codenvy.ide.texteditor.selection;
 
-import static com.codenvy.ide.text.store.util.LineUtils.*;
+import static com.codenvy.ide.text.store.util.LineUtils.getLastCursorColumn;
+import static com.codenvy.ide.text.store.util.LineUtils.rubberbandColumn;
 
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.TextUtilities;
@@ -33,26 +35,22 @@ import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.text.store.util.PositionUtils;
 import com.codenvy.ide.texteditor.Buffer;
-import com.codenvy.ide.texteditor.UndoManager;
 import com.codenvy.ide.texteditor.ViewportModel;
+import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.texteditor.linedimensions.LineDimensionsCalculator.RoundingStrategy;
-
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.ListenerManager;
+import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.TextUtils;
 import com.codenvy.ide.util.UnicodeUtils;
-import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.browser.UserAgent;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
 
 
-// TODO: this class is getting huge, time to split responsibilities
 /**
  * A class that models the user's selection. In addition to storing the
  * selection and cursor positions, this class listens for mouse drags and other
@@ -62,7 +60,7 @@ import com.google.gwt.regexp.shared.RegExp;
  * document is replaced, a new instance of this class is created for the new
  * document.
  */
-public class SelectionModel implements Buffer.MouseDragListener
+public class SelectionModel implements Buffer.MouseDragListener, com.codenvy.ide.texteditor.api.SelectionModel
 {
 
    /**
@@ -321,6 +319,10 @@ public class SelectionModel implements Buffer.MouseDragListener
          selectionRange[0].getColumn(), deleteCount);
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void deselect()
    {
       if (!hasSelection())
@@ -348,6 +350,9 @@ public class SelectionModel implements Buffer.MouseDragListener
       return baseAnchor.getLineNumber();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public int getCursorColumn()
    {
       return cursorAnchor.getColumn();
@@ -358,6 +363,9 @@ public class SelectionModel implements Buffer.MouseDragListener
       return cursorAnchor.getLine();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public int getCursorLineNumber()
    {
       return cursorAnchor.getLineNumber();
@@ -373,7 +381,6 @@ public class SelectionModel implements Buffer.MouseDragListener
       return selectionListenerManager;
    }
 
-   // TODO: I think we should introduce SelectionRange bean.
    /**
     * Returns the selection range where position[0] is always the logical start
     * of selection and position[1] is always the logical end.
@@ -417,11 +424,18 @@ public class SelectionModel implements Buffer.MouseDragListener
       return isCursorAtEndOfSelection() ? cursorAnchor.getLineNumber() : baseAnchor.getLineNumber();
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean hasSelection()
    {
       return AnchorUtils.compare(cursorAnchor, baseAnchor) != 0;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public String getSelectedText()
    {
       if (!hasSelection())
@@ -597,6 +611,9 @@ public class SelectionModel implements Buffer.MouseDragListener
       moveCursor(lineInfo, column, shouldUpdatePreferredColumn, isShiftHeld, getSelectionRangeForCallback());
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld)
    {
@@ -657,6 +674,9 @@ public class SelectionModel implements Buffer.MouseDragListener
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void onMouseDrag(Buffer buffer, int x, int y)
    {
@@ -850,6 +870,9 @@ public class SelectionModel implements Buffer.MouseDragListener
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void onMouseDragRelease(Buffer buffer, int x, int y)
    {
@@ -885,6 +908,10 @@ public class SelectionModel implements Buffer.MouseDragListener
       moveCursor(lineInfo, column, true, hasSelection(), getSelectionRangeForCallback());
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void selectAll()
    {
       Position[] oldSelectionRange = getSelectionRangeForCallback();
@@ -908,9 +935,14 @@ public class SelectionModel implements Buffer.MouseDragListener
       return cursorAnchor;
    }
 
-   public Position getCursorPosition()
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public com.codenvy.ide.text.Position getCursorPosition()
    {
-      return new Position(cursorAnchor.getLineInfo(), cursorAnchor.getColumn());
+      int offset = TextUtilities.getOffset(doc, cursorAnchor.getLineInfo().number(), getBaseColumn());
+      return new com.codenvy.ide.text.Position(offset);
    }
 
    private void dispatchCursorChange(final boolean isExplicitChange)
@@ -1080,7 +1112,9 @@ public class SelectionModel implements Buffer.MouseDragListener
       Line line = selectionRange[0].getLine();
       UndoManager undoManager = documentMutator.getUndoManager();
       if (undoManager != null)
+      {
          undoManager.beginCompoundChange();
+      }
       while (line != terminator)
       {
          if (indent)
@@ -1099,7 +1133,9 @@ public class SelectionModel implements Buffer.MouseDragListener
          line = line.getNextLine();
       }
       if (undoManager != null)
+      {
          undoManager.endCompoundChange();
+      }
    }
 
    private Anchor getEarlierSelectionAnchor()
@@ -1112,6 +1148,10 @@ public class SelectionModel implements Buffer.MouseDragListener
       return isCursorAtEndOfSelection() ? cursorAnchor : baseAnchor;
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public com.codenvy.ide.text.Position getSelectedRange()
    {
       int startOffset = TextUtilities.getOffset(doc, getBaseLineNumber(), getBaseColumn());
@@ -1126,7 +1166,14 @@ public class SelectionModel implements Buffer.MouseDragListener
       }
    }
 
-   public void setSelectedRange(int offset, int length)
+   /**
+    * Selects and reveals the specified range in this text editor.
+    *
+    * @param offset the offset of the selection
+    * @param length the length of the selection
+    */
+   @Override
+   public void selectAndReveal(int offset, int length)
    {
       LineFinder lineFinder = document.getLineFinder();
       try
@@ -1146,18 +1193,11 @@ public class SelectionModel implements Buffer.MouseDragListener
          Log.error(getClass(), e);
       }
    }
-   
-   /**
-    * Selects and reveals the specified range in this text editor.
-    *
-    * @param offset the offset of the selection
-    * @param length the length of the selection
-    */
-   void selectAndReveal(int offset, int length)
-   {
-      //TODO 
-   }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void setCursorPosition(int offset)
    {
       try

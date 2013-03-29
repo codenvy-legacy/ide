@@ -16,11 +16,8 @@ package com.codenvy.ide.texteditor.selection;
 
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.Position;
-import com.codenvy.ide.texteditor.FocusManager;
 import com.codenvy.ide.texteditor.renderer.LineRenderer;
-
 import com.codenvy.ide.util.MathUtils;
-
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
@@ -67,11 +64,11 @@ public class SelectionLineRenderer implements LineRenderer
 
    private final Css css;
 
-   private final FocusManager focusManager;
+   private final com.codenvy.ide.texteditor.api.FocusManager focusManager;
 
    private final SelectionModel selectionModel;
 
-   SelectionLineRenderer(SelectionModel selectionModel, FocusManager focusManager, Resources res)
+   SelectionLineRenderer(SelectionModel selectionModel, com.codenvy.ide.texteditor.api.FocusManager focusManager, Resources res)
    {
       this.focusManager = focusManager;
       this.css = res.editorSelectionLineRendererCss();

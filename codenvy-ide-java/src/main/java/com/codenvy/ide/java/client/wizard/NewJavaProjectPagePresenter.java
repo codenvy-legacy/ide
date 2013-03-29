@@ -18,27 +18,17 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import com.codenvy.ide.java.client.JavaClientBundle;
-import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
-import com.codenvy.ide.java.client.projectmodel.JavaProject;
-import com.codenvy.ide.java.client.projectmodel.JavaProjectDesctiprion;
-import com.codenvy.ide.java.client.wizard.NewJavaProjectPageView.ActionDelegate;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Folder;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.ProjectDescription;
-import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.resources.model.ResourceNameValidator;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter;
-
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.java.client.wizard.NewJavaProjectPageView.ActionDelegate;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.ResourceNameValidator;
 import com.codenvy.ide.util.loging.Log;
-
+import com.codenvy.ide.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -48,11 +38,9 @@ import com.google.inject.Inject;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
+public class NewJavaProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate
 {
    private NewJavaProjectPageView view;
-
-   private ResourceProvider resourceProvider;
 
    private boolean hasProjectList;
 
@@ -64,21 +52,30 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
 
    private boolean hasResourceFolderIncorrectSymbol;
 
+   /**
+    * Create new java project wizard page presenter.
+    * 
+    * @param resources
+    * @param view
+    * @param resourceProvider
+    */
    @Inject
-   public NewJavaProjectPagePresenter(JavaClientBundle resources, NewJavaProjectPageView view, ResourceProvider resourceProvider)
+   public NewJavaProjectPagePresenter(JavaClientBundle resources, NewJavaProjectPageView view,
+      ResourceProvider resourceProvider)
    {
       super("Java Project", resources.javaProject());
       this.view = view;
-      this.resourceProvider = resourceProvider;
-      view.setDelegate(this);
+      this.view.setDelegate(this);
       resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
       {
+         @Override
          public void onSuccess(JsonArray<String> result)
          {
             projectList = result;
             hasProjectList = true;
          }
 
+         @Override
          public void onFailure(Throwable caught)
          {
             Log.error(NewJavaProjectPagePresenter.class, caught);
@@ -90,21 +87,26 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
    @Override
    public WizardPagePresenter flipToNext()
    {
-      return null;
+      AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
+      paasWizardPage.setCreateProjectHandler(getCreateProjectHandler());
+      paasWizardPage.setPrevious(this);
+      paasWizardPage.setUpdateDelegate(delegate);
+
+      return paasWizardPage;
    }
 
    /**{@inheritDoc}*/
    @Override
    public boolean canFinish()
    {
-      return isCompleted();
+      return isCompleted() && !hasNext();
    }
 
    /**{@inheritDoc}*/
    @Override
    public boolean hasNext()
    {
-      return false;
+      return getPaaSWizardPage() != null;
    }
 
    /**{@inheritDoc}*/
@@ -190,74 +192,21 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
    @Override
    public void doFinish()
    {
-      resourceProvider.createProject(view.getProjectName(), JsonCollections
-         .<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),//
-            new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS, JsonCollections.createArray(view.getSourceFolder()))), new AsyncCallback<Project>()
+      CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+      createProjectHandler.setProjectName(view.getProjectName());
+      createProjectHandler.addParam(CreateJavaProjectPresenter.SOURCE_FOLDER, view.getSourceFolder());
+      createProjectHandler.create(new AsyncCallback<Project>()
       {
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Log.error(NewJavaProjectPagePresenter.class, caught);
-         }
-
          @Override
          public void onSuccess(Project result)
          {
-            createSourceFolder(result);
-            createReadMeFile(result);
-         }
-      }
-
-      );
-   }
-
-   private void createReadMeFile(Project project)
-   {
-
-      project.createFile(project, "Readme.txt", "This file was auto created when you created this project.",
-         MimeType.TEXT_PLAIN, new AsyncCallback<File>()
-      {
-         public void onFailure(Throwable caught)
-         {
+            // do nothing
          }
 
-         public void onSuccess(File result)
-         {
-         }
-      });
-   }
-
-   private void createSourceFolder(final Project project)
-   {
-      project.createFolder(project, view.getSourceFolder(), new AsyncCallback<Folder>()
-      {
          @Override
          public void onFailure(Throwable caught)
          {
-            Log.error(NewJavaProjectPagePresenter.class, caught);
-         }
-
-         @Override
-         public void onSuccess(Folder result)
-         {
-            createTestClass((JavaProject)project, result);
-         }
-      });
-   }
-
-   private void createTestClass(JavaProject project, Folder result)
-   {
-      project.createCompilationUnit(result, "HelloWorld.java", "\npublic class HelloWorld{\n   public static void main(String args[]){\n      System.out.println(\"Hello World!\");\n   }\n}", new AsyncCallback<CompilationUnit>()
-      {
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Log.error(NewJavaProjectPagePresenter.class, caught);
-         }
-
-         @Override
-         public void onSuccess(CompilationUnit result)
-         {
+            // do nothing
          }
       });
    }

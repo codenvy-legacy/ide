@@ -18,22 +18,15 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.wizard.WizardAgentImpl;
-import com.codenvy.ide.wizard.WizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
-import com.codenvy.ide.wizard.newproject.NewProjectPageView;
-import com.codenvy.ide.wizard.newproject.NewProjectWizardData;
-
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
+import com.codenvy.ide.paas.PaaS;
+import com.codenvy.ide.paas.PaaSAgentImpl;
+import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.inject.Provider;
 
@@ -59,9 +52,13 @@ public class TestNewProjectPagePresenter
    private NewProjectPageView view;
 
    @Mock
-   // TODO
-   //   private WizardPagePresenter newPage;
-   private NewGenericProjectPagePresenter newPage;
+   private CreateProjectHandler createProjectHandler;
+
+   @Mock
+   private AbstractNewProjectWizardPage newPage;
+
+   @Mock
+   private PaaSAgentImpl paasAgent;
 
    private NewProjectPagePresenter presenter;
 
@@ -78,15 +75,19 @@ public class TestNewProjectPagePresenter
    @SuppressWarnings("unchecked")
    private void setUp()
    {
-      Provider<WizardPagePresenter> nextPage = mock(Provider.class);
+      Provider<AbstractNewProjectWizardPage> nextPage = mock(Provider.class);
       when(nextPage.get()).thenReturn(newPage);
 
       JsonArray<NewProjectWizardData> wizards = JsonCollections.createArray();
-      wizards.add(new NewProjectWizardData("Title", "Description", "PrimaryType", null, nextPage, null));
+      wizards.add(new NewProjectWizardData("Title", "Description", "PrimaryType", null, nextPage, createProjectHandler,
+         null));
 
       when(wizardAgent.getNewProjectWizards()).thenReturn(wizards);
 
-      presenter = new NewProjectPagePresenter(wizardAgent, null, view, mock(PaaSAgentImpl.class));
+      JsonArray<PaaS> paases = JsonCollections.createArray(mock(PaaS.class));
+      when(paasAgent.getPaaSes()).thenReturn(paases);
+
+      presenter = new NewProjectPagePresenter(wizardAgent, null, view, paasAgent);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
    }
 
@@ -97,7 +98,7 @@ public class TestNewProjectPagePresenter
    }
 
    /**
-    * If technology is selected then next page must be chosen technology page. 
+    * If technology is selected and PaaS is selected then next page must be chosen technology page. 
     */
    @Test
    public void shouldBeFlipToChosenPage()
@@ -106,6 +107,8 @@ public class TestNewProjectPagePresenter
 
       //selected registered technology
       presenter.onProjectTypeSelected(0);
+      // selected PaaS
+      presenter.onPaaSSelected(0);
       
       assertEquals(presenter.flipToNext(), newPage);
    }

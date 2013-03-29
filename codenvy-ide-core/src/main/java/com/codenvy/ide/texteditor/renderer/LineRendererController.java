@@ -14,18 +14,16 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
-import com.codenvy.ide.text.store.Line;
-import com.codenvy.ide.texteditor.Buffer;
-import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.text.store.Line;
+import com.codenvy.ide.texteditor.Buffer;
+import com.codenvy.ide.texteditor.linedimensions.LineDimensionsUtils;
 import com.codenvy.ide.util.SortedList;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.loging.Log;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 import elemental.html.SpanElement;

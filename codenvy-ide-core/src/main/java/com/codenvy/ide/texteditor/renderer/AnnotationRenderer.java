@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.texteditor.renderer;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.Position;
@@ -28,12 +31,7 @@ import com.codenvy.ide.text.annotation.AnnotationModelListener;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineFinder;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.util.loging.Log;
-
 
 import java.util.Iterator;
 

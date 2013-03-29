@@ -43,7 +43,7 @@
       </dependency>
       <dependency>
          <groupId>com.codenvy.ide</groupId>
-         <artifactId>codenvy-ide-core</artifactId>
+         <artifactId>codenvy-ide-api</artifactId>
       </dependency>
 
       <dependency>

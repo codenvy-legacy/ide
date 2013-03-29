@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.part.projectexplorer;
 
+import com.codenvy.ide.api.mvp.View;
+
 import com.codenvy.ide.resources.model.Resource;
-import com.codenvy.ide.view.View;
 
 /**
  * Interface of project tree view.

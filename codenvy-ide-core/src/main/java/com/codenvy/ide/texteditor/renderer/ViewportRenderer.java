@@ -14,29 +14,26 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
+import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.anchor.Anchor;
+import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.anchor.AnchorManager;
 import com.codenvy.ide.text.store.anchor.AnchorType;
-import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.ViewportModel.Edge;
 import com.codenvy.ide.texteditor.renderer.Renderer.LineLifecycleListener;
-
-import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.user.client.Timer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
-
 
 import java.util.EnumSet;
 

@@ -14,6 +14,9 @@
 
 package com.codenvy.ide.texteditor.parenmatch;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.LineInfo;
@@ -29,15 +32,10 @@ import com.codenvy.ide.texteditor.search.SearchTask;
 import com.codenvy.ide.texteditor.search.SearchTask.SearchDirection;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.texteditor.selection.SelectionModel.CursorListener;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.RegExpUtils;
 import com.codenvy.ide.util.executor.BasicIncrementalScheduler;
 import com.codenvy.ide.util.executor.IncrementalScheduler;
-
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;

@@ -18,8 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.delete;
 
+import com.codenvy.ide.api.parts.ConsolePart;
+
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
@@ -62,7 +63,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
    private EventBus eventBus;
 
-   private Console console;
+   private ConsolePart console;
 
    private CloudFoundryLocalizationConstant constant;
 
@@ -85,7 +86,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
     */
    @Inject
    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
-      EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
+      EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
       CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
    {
       this.view = view;
@@ -212,7 +213,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       boolean isDeleteServices = view.isDeleteServices();
       String projectId = null;
 
-      Project project = resourceProvider.getActiveProject();
+      final Project project = resourceProvider.getActiveProject();
       // Checking does current project work with deleting CloudFoundry application.
       // If project don't have the same CloudFoundry application name in properties
       // then this property won't be cleaned.
@@ -224,17 +225,33 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
       try
       {
-         CloudFoundryClientService.getInstance().deleteApplication(resourceProvider.getVfsId(), projectId, appName,
-            serverName, isDeleteServices,
+         CloudFoundryClientService.getInstance().deleteApplication(
+            resourceProvider.getVfsId(),
+            projectId,
+            appName,
+            serverName,
+            isDeleteServices,
             new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
                constant, loginPresenter)
             {
                @Override
                protected void onSuccess(String result)
                {
-                  view.close();
-                  console.print(constant.applicationDeletedMsg(appName));
-                  appDeleteCallback.onSuccess(appName);
+                  project.refreshProperties(new AsyncCallback<Project>()
+                  {
+                     @Override
+                     public void onSuccess(Project result)
+                     {
+                        view.close();
+                        console.print(constant.applicationDeletedMsg(appName));
+                        appDeleteCallback.onSuccess(appName);
+                     }
+
+                     @Override
+                     public void onFailure(Throwable caught)
+                     {
+                     }
+                  });
                }
             });
       }

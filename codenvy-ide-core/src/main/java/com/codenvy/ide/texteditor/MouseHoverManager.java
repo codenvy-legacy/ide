@@ -15,19 +15,17 @@
 package com.codenvy.ide.texteditor;
 
 import com.codenvy.ide.common.Constants;
-import com.codenvy.ide.text.store.LineInfo;
-import com.codenvy.ide.texteditor.api.KeyListener;
-import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.text.store.LineInfo;
+import com.codenvy.ide.texteditor.api.KeyListener;
+import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.browser.UserAgent;
 import com.codenvy.ide.util.input.SignalEvent;
-
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Timer;
 import elemental.events.Event;

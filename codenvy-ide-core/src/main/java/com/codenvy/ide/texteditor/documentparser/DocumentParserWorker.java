@@ -14,6 +14,8 @@
 
 package com.codenvy.ide.texteditor.documentparser;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.Position;
 import com.codenvy.ide.text.store.TaggableLine;
@@ -24,9 +26,6 @@ import com.codenvy.ide.texteditor.api.parser.State;
 import com.codenvy.ide.texteditor.api.parser.Stream;
 import com.codenvy.ide.texteditor.api.parser.Token;
 import com.codenvy.ide.texteditor.api.parser.TokenType;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
 

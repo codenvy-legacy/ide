@@ -21,11 +21,11 @@ import com.codenvy.ide.text.store.TextStoreMutator;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
 import com.codenvy.ide.texteditor.api.TextListener;
+import com.codenvy.ide.texteditor.api.UndoManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
-
 import com.codenvy.ide.util.ListenerManager;
-import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.codenvy.ide.util.ListenerRegistrar;
 
 
 /**

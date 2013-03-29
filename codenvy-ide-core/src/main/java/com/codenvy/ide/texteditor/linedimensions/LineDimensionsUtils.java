@@ -16,7 +16,6 @@ package com.codenvy.ide.texteditor.linedimensions;
 
 import com.codenvy.ide.text.store.Line;
 import com.codenvy.ide.text.store.TextChange;
-
 import com.codenvy.ide.util.RegExpUtils;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.UnicodeUtils;

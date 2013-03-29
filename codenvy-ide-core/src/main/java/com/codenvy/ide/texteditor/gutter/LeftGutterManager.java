@@ -16,7 +16,6 @@ package com.codenvy.ide.texteditor.gutter;
 
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.texteditor.Buffer;
-
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
 

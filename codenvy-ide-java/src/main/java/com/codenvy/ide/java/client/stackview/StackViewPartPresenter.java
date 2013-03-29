@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.java.client.stackview;
 
-import com.codenvy.ide.part.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;

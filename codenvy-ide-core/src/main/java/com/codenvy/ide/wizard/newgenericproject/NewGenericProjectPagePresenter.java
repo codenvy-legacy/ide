@@ -19,22 +19,15 @@
 package com.codenvy.ide.wizard.newgenericproject;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.paas.HasPaaS;
-import com.codenvy.ide.paas.PaaS;
-import com.codenvy.ide.resources.model.File;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Property;
-import com.codenvy.ide.wizard.AbstractWizardPagePresenter;
-import com.codenvy.ide.wizard.WizardPagePresenter;
-import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView.ActionDelegate;
-
+import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.paas.AbstractPaasWizardPagePresenter;
+import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.loging.Log;
-
-import com.google.gwt.resources.client.ImageResource;
+import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView.ActionDelegate;
+import com.codenvy.ide.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.wizard.newproject.CreateProjectHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -45,15 +38,11 @@ import com.google.inject.Inject;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate, HasPaaS
+public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate
 {
-   // TODO changed for New war project, change it if it is not needed for New war project wizard page
-   protected NewGenericProjectPageView view;
+   private NewGenericProjectPageView view;
 
-   private WizardPagePresenter next;
-
-   // TODO
-   protected ResourceProvider resourceProvider;
+   private ResourceProvider resourceProvider;
 
    private boolean hasIncorrectSymbol;
 
@@ -63,46 +52,32 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
 
    private JsonArray<String> projectList;
 
-   protected PaaS paas;
-
    /**
     * Create presenter
     * 
-    * @param resources 
-    * @param resourceProvider
-    */
-   @Inject
-   public NewGenericProjectPagePresenter(NewGenericProjectWizardResource resources,
-      ResourceProvider resourceProvider)
-   {
-      this(resources.genericProjectIcon(), new NewGenericProjectPageViewImpl(), resourceProvider);
-   }
-
-   /**
-    * Create presenter
-    * 
-    * For Unit Tests
-    * 
-    * @param image
+    * @param resources
     * @param view
     * @param resourceProvider
     */
-   protected NewGenericProjectPagePresenter(ImageResource image, NewGenericProjectPageView view,
+   @Inject
+   protected NewGenericProjectPagePresenter(NewGenericProjectWizardResource resources, NewGenericProjectPageView view,
       ResourceProvider resourceProvider)
    {
-      super("New generic project wizard", image);
+      super("New generic project wizard", resources.genericProjectIcon());
       this.view = view;
-      view.setDelegate(this);
+      this.view.setDelegate(this);
       this.resourceProvider = resourceProvider;
       
       this.resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
       {
+         @Override
          public void onSuccess(JsonArray<String> result)
          {
             projectList = result;
             hasProjectList = true;
          }
          
+         @Override
          public void onFailure(Throwable caught)
          {
             Log.error(NewGenericProjectPagePresenter.class, caught);
@@ -113,30 +88,41 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    /**
     * {@inheritDoc}
     */
+   @Override
    public WizardPagePresenter flipToNext()
    {
-      return next;
+      AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
+      CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+      createProjectHandler.setProjectName(view.getProjectName());
+      paasWizardPage.setCreateProjectHandler(createProjectHandler);
+      paasWizardPage.setPrevious(this);
+      paasWizardPage.setUpdateDelegate(delegate);
+
+      return paasWizardPage;
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean canFinish()
    {
-      return isCompleted();
+      return isCompleted() && !hasNext();
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean hasNext()
    {
-      return false;
+      return getPaaSWizardPage() != null;
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCompleted()
    {
       return !view.getProjectName().isEmpty() && !hasIncorrectSymbol && hasProjectList && !hasSameProject;
@@ -145,6 +131,7 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getNotice()
    {
       if (view.getProjectName().isEmpty())
@@ -170,6 +157,7 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);
@@ -178,6 +166,7 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void checkProjectName()
    {
       hasIncorrectSymbol = false;
@@ -201,49 +190,24 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void doFinish()
    {
-      resourceProvider.createProject(view.getProjectName(), JsonCollections.<Property> createArray(),
-         new AsyncCallback<Project>()
+      CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+      createProjectHandler.setProjectName(view.getProjectName());
+      createProjectHandler.create(new AsyncCallback<Project>()
+      {
+         @Override
+         public void onSuccess(Project result)
          {
-            public void onSuccess(Project project)
-            {
-               project.createFile(project, "Readme.txt", "This file was auto created when you created this project.",
-                  MimeType.TEXT_PLAIN, new AsyncCallback<File>()
-                  {
-                     public void onFailure(Throwable caught)
-                     {
-                        Log.error(NewGenericProjectPagePresenter.class, caught);
-                     }
+            // do nothing
+         }
 
-                     public void onSuccess(File result)
-                     {
-                     }
-                  });
-            }
-
-            public void onFailure(Throwable caught)
-            {
-               Log.error(NewGenericProjectPagePresenter.class, caught);
-            }
-         });
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public PaaS getPaaS()
-   {
-      return paas;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setPaaS(PaaS paas)
-   {
-      this.paas = paas;
+         @Override
+         public void onFailure(Throwable caught)
+         {
+            // do nothing
+         }
+      });
    }
 }

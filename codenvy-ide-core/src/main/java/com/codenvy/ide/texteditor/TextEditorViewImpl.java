@@ -14,13 +14,18 @@
 
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.JsonStringMap.IterationCallback;
+import com.codenvy.ide.mvp.CompositeView;
+import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentImpl;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineInfo;
 import com.codenvy.ide.text.store.TextStoreMutator;
-import com.codenvy.ide.texteditor.Buffer.ScrollListener;
 import com.codenvy.ide.texteditor.api.BeforeTextListener;
 import com.codenvy.ide.texteditor.api.KeyListener;
 import com.codenvy.ide.texteditor.api.NativeKeyUpListener;
@@ -29,10 +34,14 @@ import com.codenvy.ide.texteditor.api.TextEditorOperations;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.TextInputListener;
 import com.codenvy.ide.texteditor.api.TextListener;
-import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistant;
+import com.codenvy.ide.texteditor.api.UndoManager;
+import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.parser.Parser;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
+import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 import com.codenvy.ide.texteditor.api.reconciler.Reconciler;
+import com.codenvy.ide.texteditor.codeassistant.CodeAssistantImpl;
+import com.codenvy.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import com.codenvy.ide.texteditor.documentparser.DocumentParser;
 import com.codenvy.ide.texteditor.gutter.Gutter;
 import com.codenvy.ide.texteditor.gutter.LeftGutterManager;
@@ -55,21 +64,15 @@ import com.codenvy.ide.texteditor.selection.SelectionLineRenderer;
 import com.codenvy.ide.texteditor.selection.SelectionManager;
 import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.mvp.CompositeView;
-import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.util.CssUtils;
 import com.codenvy.ide.util.ListenerManager;
-import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
+import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.util.input.SignalEvent;
-
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import elemental.html.Element;
@@ -78,12 +81,12 @@ import elemental.html.Element;
 /**
  * The Display for the text editor presenter.
  * This is default implementation for {@link TextEditorPartView}
- *  This class composes many of the other classes that together form the editor.
+ * This class composes many of the other classes that together form the editor.
  * For example, the area where the text is displayed, the {@link Buffer}, is a
  * nested presenter. Other components are not presenters, such as the input
  * mechanism which is handled by the {@link InputController}.
  *
- *  If an added element wants native browser selection, you must not inherit the
+ * If an added element wants native browser selection, you must not inherit the
  * "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
@@ -130,8 +133,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
    /**
     * ClientBundle for the editor.
     */
-   public interface Resources extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources,
-      ParenMatchHighlighter.Resources
+   public interface Resources
+      extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources, ParenMatchHighlighter.Resources
    {
       @Source({"Editor.css", "constants.css"})
       Css workspaceEditorCss();
@@ -220,21 +223,20 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
    private UndoManager editorUndoManager;
 
-   private final FocusManager focusManager;
+   private final com.codenvy.ide.texteditor.api.FocusManager focusManager;
 
    private final MouseHoverManager mouseHoverManager;
 
    private final int id = idCounter++;
 
-   private final FontDimensionsCalculator.Callback fontDimensionsChangedCallback =
-      new FontDimensionsCalculator.Callback()
+   private final FontDimensionsCalculator.Callback fontDimensionsChangedCallback = new FontDimensionsCalculator.Callback()
+   {
+      @Override
+      public void onFontDimensionsChanged(FontDimensions fontDimensions)
       {
-         @Override
-         public void onFontDimensionsChanged(FontDimensions fontDimensions)
-         {
-            handleFontDimensionsChanged();
-         }
-      };
+         handleFontDimensionsChanged();
+      }
+   };
 
    private final JsonArray<Gutter> gutters = JsonCollections.createArray();
 
@@ -271,7 +273,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
    private final UserActivityManager userActivityManager;
 
-   private CodeAssistant codeAssistant;
+   private CodeAssistantImpl codeAssistant;
 
    private VerticalRuler verticalRuler;
 
@@ -285,17 +287,16 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       renderTimeExecutor = new RenderTimeExecutor();
       LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(editorFontDimensionsCalculator);
 
-      buffer =
-         Buffer.create(resources, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions,
-            renderTimeExecutor);
+      buffer = Buffer.create(resources, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions,
+         renderTimeExecutor);
       input = new InputController();
       View view = new View(resources, buffer.getView().getElement(), input.getInputElement());
       setView(view);
 
-      focusManager = new FocusManager(buffer, input.getInputElement());
+      focusManager = new FocusManagerImpl(buffer, input.getInputElement());
 
-      Gutter leftNotificationGutter =
-         createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutterNotification());
+      Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT,
+         resources.workspaceEditorCss().leftGutterNotification());
       verticalRuler = new VerticalRuler(leftNotificationGutter, this);
 
       Gutter leftGutter = createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
@@ -304,8 +305,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       editorDocumentMutator = new EditorTextStoreMutator(this);
       mouseHoverManager = new MouseHoverManager(this);
 
-      editorActivityManager =
-         new EditorActivityManager(userActivityManager, buffer.getScrollListenerRegistrar(), getKeyListenerRegistrar());
+      editorActivityManager = new EditorActivityManager(userActivityManager, buffer.getScrollListenerRegistrar(),
+         getKeyListenerRegistrar());
 
       // TODO: instantiate input from here
       input.initializeFromEditor(this, editorDocumentMutator);
@@ -359,10 +360,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       //      });
    }
 
-   /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#addLineRenderer(com.codenvy.ide.texteditor.renderer.LineRenderer)
-    */
-   @Override
    public void addLineRenderer(LineRenderer lineRenderer)
    {
       /*
@@ -399,16 +396,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       getView().setAnimationEnabled(enabled);
    }
 
-   /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#getBeforeTextListenerRegistrar()
-    */
-   @Override
    public ListenerRegistrar<BeforeTextListener> getBeforeTextListenerRegistrar()
    {
       return editorDocumentMutator.getBeforeTextListenerRegistrar();
    }
 
-   @Override
    public Buffer getBuffer()
    {
       return buffer;
@@ -430,10 +422,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       return textStore;
    }
 
-   /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#getEditorDocumentMutator()
-    */
-   @Override
    public TextStoreMutator getEditorDocumentMutator()
    {
       return editorDocumentMutator;
@@ -452,7 +440,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     * @see com.codenvy.ide.texteditor.api.TextEditorPartView#getFocusManager()
     */
    @Override
-   public FocusManager getFocusManager()
+   public com.codenvy.ide.texteditor.api.FocusManager getFocusManager()
    {
       return focusManager;
    }
@@ -476,10 +464,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       return input.getNativeKeyUpListenerRegistrar();
    }
 
-   /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#getRenderer()
-    */
-   @Override
    public Renderer getRenderer()
    {
       return renderer;
@@ -499,7 +483,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       return localCursorController;
    }
 
-   @Override
    public ListenerRegistrar<TextListener> getTextListenerRegistrar()
    {
       return editorDocumentMutator.getTextListenerRegistrar();
@@ -516,14 +499,15 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       renderer.removeLineRenderer(lineRenderer);
    }
 
+
    /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#setDocument(com.codenvy.ide.text.DocumentImpl)
+    * {@inheritDoc}
     */
    @Override
-   public void setDocument(final DocumentImpl document)
+   public void setDocument(final Document document)
    {
       this.document = document;
-      textStore = document.getTextStore();
+      textStore = ((DocumentImpl)document).getTextStore();
 
       /*
        * TODO: dig into each component, figure out dependencies,
@@ -539,9 +523,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       SelectionModel selection = selectionManager.getSelectionModel();
       viewport = ViewportModel.create(textStore, selection, buffer);
       input.handleDocumentChanged(textStore, selection, viewport);
-      renderer =
-         Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this, resources,
-            renderTimeExecutor);
+      renderer = Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this, resources,
+         renderTimeExecutor);
       if (editorUndoManager != null)
       {
          editorUndoManager.connect(this);
@@ -678,7 +661,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
    }
 
    /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#setUndoManager(com.codenvy.ide.texteditor.UndoManager)
+    * @see com.codenvy.ide.texteditor.api.TextEditorPartView#setUndoManager(com.codenvy.ide.texteditor.api.UndoManager)
     */
    @Override
    public void setUndoManager(UndoManager undoManager)
@@ -705,15 +688,26 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       parser = configuration.getParser(this);
       RootActionExecutor actionExecutor = getInput().getActionExecutor();
       actionExecutor.addDelegate(TextActions.INSTANCE);
-      codeAssistant = configuration.getContentAssistant(this);
+      JsonStringMap<CodeAssistProcessor> processors = configuration.getContentAssistantProcessors(this);
+
       Reconciler reconciler = configuration.getReconciler(this);
       if (reconciler != null)
       {
          reconciler.install(this);
       }
 
-      if (codeAssistant != null)
+
+      if (processors != null)
       {
+         codeAssistant = new CodeAssistantImpl();
+         processors.iterate(new IterationCallback<CodeAssistProcessor>()
+         {
+            @Override
+            public void onIteration(String key, CodeAssistProcessor value)
+            {
+               codeAssistant.setCodeAssistantProcessor(key, value);
+            }
+         });
          codeAssistant.install(this);
          actionExecutor.addDelegate(new ActionExecutor()
          {
@@ -731,25 +725,27 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
          });
       }
 
-      quickAssistAssistant = configuration.getQuickAssistAssistant(this);
-      if (quickAssistAssistant != null)
+      QuickAssistProcessor assistAssistant = configuration.getQuickAssistAssistant(this);
+      if (assistAssistant != null)
       {
+         quickAssistAssistant = new QuickAssistAssistantImpl();
+         quickAssistAssistant.setQuickAssistProcessor(assistAssistant);
          quickAssistAssistant.install(this);
-         actionExecutor.addDelegate(new ActionExecutor()
-         {
-
-            @Override
-            public boolean execute(String actionName, InputScheme scheme, SignalEvent event)
-            {
-               if (CommonActions.RUN_QUICK_ASSISTANT.equals(actionName))
-               {
-                  quickAssistAssistant.showPossibleQuickAssists();
-                  return true;
-               }
-               return false;
-            }
-         });
       }
+      actionExecutor.addDelegate(new ActionExecutor()
+      {
+
+         @Override
+         public boolean execute(String actionName, InputScheme scheme, SignalEvent event)
+         {
+            if (CommonActions.RUN_QUICK_ASSISTANT.equals(actionName) && quickAssistAssistant != null)
+            {
+               quickAssistAssistant.showPossibleQuickAssists();
+               return true;
+            }
+            return false;
+         }
+      });
    }
 
    /**
@@ -762,9 +758,8 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
          return;
       }
       DocumentParser documentParser = DocumentParser.create(textStore, parser, userActivityManager);
-      syntaxHighlighter =
-         SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(), documentParser,
-            resources.workspaceEditorCss());
+      syntaxHighlighter = SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(),
+         documentParser, resources.workspaceEditorCss());
       addLineRenderer(syntaxHighlighter.getRenderer());
       //            Autoindenter.create(documentParser, this);
    }
@@ -795,19 +790,19 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
    {
       switch (operation)
       {
-         case TextEditorOperations.CODEASSIST_PROPOSALS :
+         case TextEditorOperations.CODEASSIST_PROPOSALS:
             if (codeAssistant != null)
             {
                codeAssistant.showPossibleCompletions();
             }
             break;
-         case TextEditorOperations.QUICK_ASSIST :
+         case TextEditorOperations.QUICK_ASSIST:
             if (quickAssistAssistant != null)
             {
                quickAssistAssistant.showPossibleQuickAssists();
             }
             break;
-         default :
+         default:
             throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
       }
 
@@ -836,7 +831,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     * {@inheritDoc}
     */
    @Override
-   public void setDocument(DocumentImpl document, AnnotationModel annotationModel)
+   public void setDocument(Document document, AnnotationModel annotationModel)
    {
       setDocument(document);
       if (annotationModel != null)
@@ -846,6 +841,16 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
          new AnnotationRenderer(this, annotationModel.getAnnotationDecorations()).setMode(annotationModel);
          //TODO overview ruler
       }
+   }
+
+   /**
+    * Internal API. Set specific quick assistant implementation.
+    *
+    * @param quickAssistAssistant
+    */
+   public void setQuickAssistAssistant(QuickAssistAssistant quickAssistAssistant)
+   {
+      this.quickAssistAssistant = quickAssistAssistant;
    }
 
 }

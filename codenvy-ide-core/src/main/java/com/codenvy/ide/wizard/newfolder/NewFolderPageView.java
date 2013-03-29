@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.wizard.newfolder;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of NewFolder view

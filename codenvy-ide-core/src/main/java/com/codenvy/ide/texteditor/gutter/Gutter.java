@@ -14,18 +14,16 @@
 
 package com.codenvy.ide.texteditor.gutter;
 
+import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.text.store.anchor.Anchor;
 import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.texteditor.ElementManager;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.ViewportModel;
 import com.codenvy.ide.texteditor.renderer.Renderer;
-
-import com.codenvy.ide.mvp.UiComponent;
 import com.codenvy.ide.util.ListenerManager;
-import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
-
+import com.codenvy.ide.util.ListenerRegistrar;
 import elemental.html.Element;
 
 

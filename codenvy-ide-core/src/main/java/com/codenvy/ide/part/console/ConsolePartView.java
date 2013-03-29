@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.part.console;
 
-import com.codenvy.ide.view.View;
+import com.codenvy.ide.api.mvp.View;
 
 /**
  * View of {@link ConsolePartPresenter}.

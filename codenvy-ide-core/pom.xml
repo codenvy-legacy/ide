@@ -47,7 +47,12 @@
          <groupId>com.codenvy.ide</groupId>
          <artifactId>codenvy-ide-commons</artifactId>
       </dependency>
-
+      
+      <dependency>
+         <groupId>com.codenvy.ide</groupId>
+         <artifactId>codenvy-ide-api</artifactId>
+      </dependency>
+      
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>

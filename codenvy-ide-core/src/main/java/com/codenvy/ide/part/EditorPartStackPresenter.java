@@ -16,7 +16,11 @@
  */
 package com.codenvy.ide.part;
 
-import com.codenvy.ide.editor.EditorPartPresenter;
+import com.codenvy.ide.api.editor.EditorPartPresenter;
+
+import com.codenvy.ide.api.ui.perspective.EditorPartStack;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
+
 
 import com.codenvy.ide.util.loging.Log;
 
@@ -33,7 +37,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-public class EditorPartStackPresenter extends PartStackPresenter
+public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack
 {
 
    /**

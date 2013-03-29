@@ -18,11 +18,10 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.tree.NodeDataAdapter;
-import com.codenvy.ide.tree.TreeNodeElement;
-
+import com.codenvy.ide.api.outline.CodeBlock;
 import com.codenvy.ide.json.JsonArray;
-
+import com.codenvy.ide.ui.tree.NodeDataAdapter;
+import com.codenvy.ide.ui.tree.TreeNodeElement;
 
 import java.util.HashMap;
 

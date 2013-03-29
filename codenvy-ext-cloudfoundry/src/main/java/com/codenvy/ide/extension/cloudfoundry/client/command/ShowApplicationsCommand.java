@@ -18,10 +18,12 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.command;
 
-import com.codenvy.ide.core.expressions.Expression;
+import com.codenvy.ide.api.expressions.Expression;
+
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
+
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
-import com.codenvy.ide.menu.ExtendedCommand;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -84,7 +86,6 @@ public class ShowApplicationsCommand implements ExtendedCommand
    @Override
    public Expression inContext()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -94,7 +95,6 @@ public class ShowApplicationsCommand implements ExtendedCommand
    @Override
    public Expression canExecute()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 }

@@ -18,6 +18,13 @@
  */
 package com.codenvy.ide.java.client;
 
+import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.extension.Extension;
+import com.codenvy.ide.api.resources.FileType;
+import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
+import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.java.client.codeassistant.ContentAssistHistory;
 import com.codenvy.ide.java.client.core.JavaCore;
 import com.codenvy.ide.java.client.editor.JavaEditorProvider;
@@ -43,26 +50,16 @@ import com.codenvy.ide.java.client.templates.TemplateStore;
 import com.codenvy.ide.java.client.templates.TypeResolver;
 import com.codenvy.ide.java.client.templates.TypeVariableResolver;
 import com.codenvy.ide.java.client.templates.VarResolver;
+import com.codenvy.ide.java.client.wizard.CreateJavaProjectPresenter;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPagePresenter;
 import com.codenvy.ide.java.client.wizard.NewPackagePagePresenter;
-
-import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.api.ui.menu.MainMenuAgent;
-import com.codenvy.ide.api.ui.wizard.WizardAgent;
-import com.codenvy.ide.api.ui.workspace.WorkspaceAgent;
-import com.codenvy.ide.core.editor.EditorRegistry;
-import com.codenvy.ide.extension.Extension;
-import com.codenvy.ide.resources.FileType;
-
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.rest.MimeType;
-
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
-
 
 import java.util.HashMap;
 
@@ -96,7 +93,8 @@ public class JavaExtension
       final WorkspaceAgent workspace, JavaEditorProvider javaEditorProvider, EventBus eventBus,
       WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider, MainMenuAgent mainMenu,
       Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider,
-      Provider<JavaPerspectivePresenter> javaPerspProvider, Provider<DebugPerspectivePresenter> debugPerspProvider)
+      Provider<JavaPerspectivePresenter> javaPerspProvider, Provider<DebugPerspectivePresenter> debugPerspProvider,
+      CreateJavaProjectPresenter createJavaProjectPresenter)
    {
       this();
       FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -105,7 +103,8 @@ public class JavaExtension
       resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
       JavaClientBundle.INSTANCE.css().ensureInjected();
       wizardAgent.registerNewProjectWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
-         JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, JsonCollections.<String> createArray());
+         JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, createJavaProjectPresenter,
+         JsonCollections.<String> createArray());
 
       wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(),
          packageProvider);

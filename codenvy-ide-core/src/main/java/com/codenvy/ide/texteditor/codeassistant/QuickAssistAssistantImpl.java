@@ -19,12 +19,10 @@
 package com.codenvy.ide.texteditor.codeassistant;
 
 import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.annotation.Annotation;
 import com.codenvy.ide.texteditor.api.TextEditorPartView;
 import com.codenvy.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistAssistant;
-import com.codenvy.ide.texteditor.api.quickassist.QuickAssistInvocationContext;
 import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 
 /**
@@ -143,24 +141,6 @@ public class QuickAssistAssistantImpl implements QuickAssistAssistant
    public QuickAssistProcessor getQuickAssistProcessor()
    {
       return fQuickAssistProcessor;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean canFix(Annotation annotation)
-   {
-      return fQuickAssistProcessor != null && fQuickAssistProcessor.canFix(annotation);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean canAssist(QuickAssistInvocationContext invocationContext)
-   {
-      return fQuickAssistProcessor != null && fQuickAssistProcessor.canAssist(invocationContext);
    }
 
    /**
