@@ -92,6 +92,9 @@ public class ProjectChatView extends ViewImpl implements Display
       View view = new View();
       participantList = ParticipantList.create(view);
       participantsPanel.getElement().appendChild((Node)view.getElement());
+      participantsPanel.getElement().setId("ideParticipants");
+      chatPanel.getElement().setId("ideChatMessages");
+      chatMessageInput.setId("ideChatInput");
    }
 
    /**

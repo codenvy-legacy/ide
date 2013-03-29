@@ -41,14 +41,14 @@ import java.util.Map;
  * @version $
  * 
  */
-public class ThemeManager implements ChangeThemeHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+public class ThemeManager implements EditorFileOpenedHandler, EditorFileClosedHandler
 {
    
-   private static final String DEFAULT_THEME_NAME = "Default";
+   public static final String DEFAULT_THEME_NAME = "Default";
    
    private Map<String, Theme> themes = new HashMap<String, Theme>();
    
-   private String activeThemeName;
+   private String activeThemeName = DEFAULT_THEME_NAME;
    
    public List<Theme> getThemes()
    {
@@ -57,11 +57,6 @@ public class ThemeManager implements ChangeThemeHandler, EditorFileOpenedHandler
    
    public String getActiveThemeName()
    {
-      if (activeThemeName == null)
-      {
-         activeThemeName = DEFAULT_THEME_NAME;
-      }
-      
       return activeThemeName;
    }
    
@@ -75,43 +70,40 @@ public class ThemeManager implements ChangeThemeHandler, EditorFileOpenedHandler
    public ThemeManager() {
       instance = this;
       
-      addTheme(DEFAULT_THEME_NAME, null, null);
+      Theme defaultTheme = addTheme(DEFAULT_THEME_NAME, null, null);
+      defaultTheme.setActive(true);
       addTheme("Darkula", "theme/intellij-darkula-mainframe.css", "theme/intellij-darkula-codemirror-091.css");
       
-      IDE.addHandler(ChangeThemeEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
    }
    
-   private void addTheme(String name, String mainFrameCss, String codemirrorCss)
+   private Theme addTheme(String name, String mainFrameCss, String codemirrorCss)
    {
       Theme theme = new Theme(name, mainFrameCss, codemirrorCss);
       themes.put(theme.getName(), theme);
+      return theme;
    }
    
-   @Override
-   public void onChangeTheme(ChangeThemeEvent event)
+   public void changeTheme(String themeName)
    {
-      changeTheme(event.getTheme());
-   }
-   
-   private void changeTheme(String themeName)
-   {
-      if (activeThemeName == null)
-      {
-         activeThemeName = DEFAULT_THEME_NAME;
-      }
-
       if (activeThemeName.equals(themeName))
       {
          return;
-      }      
+      }
       
-      Theme currentTheme = themes.get(activeThemeName);
-      removeCSSFromMainFrame(currentTheme);
+      if (themeName == null || themeName.isEmpty())
+      {
+         return;
+      }
+      
+      Theme activeTheme = themes.get(activeThemeName);
+      activeTheme.setActive(false);
+      removeCSSFromMainFrame(activeTheme);
       
       activeThemeName = themeName;
-      Theme newTheme = themes.get(themeName);      
+      Theme newTheme = themes.get(themeName);
+      newTheme.setActive(true);
       addCssToMainFrame(newTheme);
       
       for (String key : editors.keySet())
@@ -124,6 +116,8 @@ public class ThemeManager implements ChangeThemeHandler, EditorFileOpenedHandler
          
          injectCssToCodeMirror((CodeMirror)editor, newTheme.getCodemirrorCss());
       }
+      
+      IDE.fireEvent(new ThemeChangedEvent(themeName));
    }
    
    private com.google.gwt.dom.client.Node getChildByTagName(com.google.gwt.dom.client.Node parent, String tagName)
@@ -205,7 +199,7 @@ public class ThemeManager implements ChangeThemeHandler, EditorFileOpenedHandler
          return;
       }
       
-      if (activeThemeName == null || DEFAULT_THEME_NAME.equals(activeThemeName))
+      if (DEFAULT_THEME_NAME.equals(activeThemeName))
       {
          return;
       }

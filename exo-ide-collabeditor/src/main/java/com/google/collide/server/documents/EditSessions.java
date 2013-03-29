@@ -475,8 +475,13 @@ public class EditSessions implements Startable
       GetOpenedFilesInWorkspaceResponseImpl response = GetOpenedFilesInWorkspaceResponseImpl.make();
       for (FileEditSession session : editSessionsByResourceId.values())
       {
-         response.putOpenedFiles(session.getPath(),
-            (ArrayList<ParticipantUserDetailsImpl>)participants.getParticipants(session.getCollaborators()));
+
+         ArrayList<ParticipantUserDetailsImpl> list = (ArrayList<ParticipantUserDetailsImpl>)participants.getParticipants(
+            session.getCollaborators());
+         if(!list.isEmpty())
+         {
+            response.putOpenedFiles(session.getPath(), list);
+         }
       }
       return response;
    }

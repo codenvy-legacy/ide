@@ -35,6 +35,7 @@ import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.code.ParticipantModel.Listener;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
 import com.google.collide.client.collaboration.DocumentCollaborationController;
+import com.google.collide.dto.UserDetails;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -168,7 +169,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       {
          if (isShow(path))
          {
-            display.addNotificationMessage(user.getDisplayName() + " opened {0} file.", getName(path),
+            display.addNotificationMessage(getName(user) + " opened {0} file.", getName(path),
                new MessageCallback()
                {
                   @Override
@@ -184,6 +185,16 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          }
       }
 
+      private String getName(UserDetails user)
+      {
+         if (user.getDisplayName().contains("@"))
+         {
+            String name = user.getDisplayName();
+            return name.substring(0, name.indexOf('@'));
+         }
+         return user.getDisplayName();
+      }
+
       /**
        * {@inheritDoc}
        */
@@ -192,7 +203,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       {
          if (isShow(path))
          {
-            display.addNotificationMessage(user.getDisplayName() + " closed the " + getName(path) + " file.");
+            display.addNotificationMessage(getName(user) + " closed the " + getName(path) + " file.");
             if (viewClosed || !display.asView().isViewVisible())
             {
                control.startBlink();
