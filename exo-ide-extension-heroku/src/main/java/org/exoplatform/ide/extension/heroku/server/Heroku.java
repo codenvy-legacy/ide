@@ -142,8 +142,8 @@ public class Heroku
       final Credential credential = new Credential();
       final String userId = getUserId();
       credentialStore.load(userId, "heroku", credential);
+      credential.removeAttribute("email");
       credential.removeAttribute("api_key");
-      credential.removeAttribute("secret");
       credentialStore.save(userId, "heroku", credential);
    }
 
