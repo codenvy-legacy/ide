@@ -863,8 +863,13 @@ public class JGitConnection implements GitConnection
             {
                if (!remoteRefUpdate.getStatus().equals(org.eclipse.jgit.transport.RemoteRefUpdate.Status.OK))
                {
-                  String message = "Failed to push some refs to ‘" + request.getRemote() + "’(rejected)";
-                  throw new GitException(message);
+                  StringBuilder message = new StringBuilder();
+                  message.append("! [rejected] " + getCurrentBranch() + " -> " + request.getRefSpec()[0].split(":")[1]
+                     + " (non-fast-forward)\n");
+                  message.append("error: failed to push some refs to " + request.getRemote() + "\n");
+                  message.append("To prevent you from losing history, non-fast-forward updates were rejected\n");
+                  message.append("Merge the remote changes (e.g. git pull) before pushing again.\n");
+                  throw new GitException(message.toString());
                }
             }
          }
