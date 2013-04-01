@@ -117,6 +117,7 @@ public class ParticipantList extends UiComponent<ParticipantList.View>
             Element element = rows.get(clientId).getFirstChildElement();
             element.getStyle().setBackgroundColor(color);
             element.removeClassName(css.none());
+            element.setAttribute("data-collaboration", "true");
          }
       }
 
@@ -139,6 +140,7 @@ public class ParticipantList extends UiComponent<ParticipantList.View>
             Element element = rows.get(clientId).getFirstChildElement();
             element.getStyle().setBackgroundColor("white");
             element.addClassName(css.none());
+            element.setAttribute("data-collaboration", "false");
          }
       }
    }
