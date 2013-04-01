@@ -29,12 +29,12 @@
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
-      <gwt.version>2.5.0-rc2</gwt.version>
+      <gwt.version>2.5.1</gwt.version>
       <shindig.version>2.5.0-beta2</shindig.version>
-      <gwt.maven.plugin.version>2.5.0-rc2</gwt.maven.plugin.version>
+      <gwt.maven.plugin.version>2.5.1</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
-      <org.slf4j.version>1.5.8</org.slf4j.version>
+      <org.slf4j.version>1.6.2</org.slf4j.version>
       <chromattic.version>1.1.0-beta6</chromattic.version>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
@@ -54,7 +54,7 @@
       <version.release.plugin>2.2.1</version.release.plugin>
       <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
       <appengine.version>1.6.5</appengine.version>
-      <ch.qos.logback.version>0.9.20</ch.qos.logback.version>
+      <ch.qos.logback.version>0.9.29</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
       <maven.build.timestamp.format>dd.MM.yy HH:mm</maven.build.timestamp.format>
       <buildNumber>${maven.build.timestamp}</buildNumber>
@@ -296,12 +296,12 @@
             <!-- needs extra dependencies: objenesis & hamcrest -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.9.0</version>
+            <version>1.9.5</version>
          </dependency>
          <dependency>
             <groupId>com.googlecode.gwt-test-utils</groupId>
             <artifactId>gwt-test-utils</artifactId>
-            <version>0.39</version>
+            <version>0.44</version>
          </dependency>
          <dependency>
             <groupId>org.codehaus.groovy</groupId>
