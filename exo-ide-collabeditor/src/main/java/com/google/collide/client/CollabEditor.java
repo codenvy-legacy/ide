@@ -118,12 +118,19 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
     */
    final class TextListenerImpl implements TextListener
    {
+      private boolean ignoreTextChanges;
+
       /**
        * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, org.exoplatform.ide.json.shared.JsonArray)
        */
       @Override
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
+         if (ignoreTextChanges)
+         {
+            return;
+         }
+
          fireEvent(new EditorContentChangedEvent(CollabEditor.this));
          try
          {
@@ -151,6 +158,16 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          {
             Log.error(getClass(), e);
          }
+      }
+
+      /**
+       * Enable/disable ignore text changes mode.
+       * 
+       * @param ignoreTextChanges <code>true</code> to ignore any text changes, <code>false</code> disable ignore mode
+       */
+      void setIgnoreTextChanges(boolean ignoreTextChanges)
+      {
+         this.ignoreTextChanges = ignoreTextChanges;
       }
    }
 
@@ -409,13 +426,10 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       final int selectionEndLineNumber = selection.getSelectionEndLineNumber();
       Line selectionEndLine = editor.getDocument().getLineFinder().findLine(selectionEndLineNumber).line();
 
-      for (int i = selectionBeginLineNumber; i <= selectionEndLineNumber; i++)
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(selectionEndLineNumber, false);
+      if (foldMarker != null && foldMarker.isCollapsed())
       {
-         FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(i, false);
-         if (foldMarker != null && foldMarker.isCollapsed())
-         {
-            editor.getFoldingManager().expand(foldMarker);
-         }
+         editor.getFoldingManager().expand(foldMarker);
       }
 
       final int deleteCount =
@@ -609,7 +623,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       SelectionModel selectionModel = editor.getSelection();
       final int cursorLineNumber = selectionModel.getCursorLineNumber();
-      FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
       if (foldMarker != null)
       {
          editor.getFoldingManager().collapse(foldMarker);
@@ -624,7 +638,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       SelectionModel selectionModel = editor.getSelection();
       final int cursorLineNumber = selectionModel.getCursorLineNumber();
-      FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
       if (foldMarker != null)
       {
          editor.getFoldingManager().expand(foldMarker);

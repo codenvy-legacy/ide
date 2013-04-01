@@ -392,8 +392,7 @@ public class ViewportRenderer {
     }
 
     Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
-    if (expandElement != null && buffer.hasLineElement(expandElement)) {
-      expandElement.removeFromParent();
+    if (expandElement != null) {
       line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
     }
 
@@ -437,37 +436,8 @@ public class ViewportRenderer {
       lineRendererController.renderLine(line, lineNumber, element, true);
       line.putTag(LINE_TAG_LINE_ELEMENT, element);
     }
-    else
-    {
-       final FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
-       if (foldMarker != null)
-       {
-          if (!foldMarker.isCollapsed())
-          {
-             Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
-             if (expandElement != null)
-             {
-                expandElement.removeFromParent();
-                line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
-             }
-          }
-          else
-          {
-             Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
-             if (expandElement == null)
-             {
-                expandElement = lineRendererController.createExpandMarkerElement(element, lineNumber);
-                line.putTag(LINE_TAG_EXPAND_ELEMENT, expandElement);
-
-                expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
-                   @Override
-                   public void handleEvent(Event evt) {
-                     foldingManager.expand(foldMarker);
-                   }
-               }, false);
-             }
-          }
-       }
+    else {
+      createOrRemoveExpandElement(line, lineNumber, element);
     }
     new DebugAttributeSetter().add("lineNum", Integer.toString(lineNumber)).on(element);
 
@@ -505,6 +475,40 @@ public class ViewportRenderer {
     }
 
     return element;
+  }
+
+  /**
+   * Creates element for expanding collapsed text block.
+   * 
+   * @param line line to attach/detach expand element
+   * @param lineNumber number of the specified <code>line</code>
+   * @param parent parent element
+   * @return created element for expanding folded text block 
+   */
+  private void createOrRemoveExpandElement(final Line line, final int lineNumber, Element parent) {
+    Element expandMarker = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+    if (expandMarker != null) {
+      expandMarker.removeFromParent();
+      line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
+    }
+
+    FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(lineNumber, false);
+    if (foldMarker != null) {
+      if (!foldMarker.isCollapsed()) {
+        Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+        if (expandElement != null) {
+          expandElement.removeFromParent();
+          line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
+        }
+      }
+      else {
+        Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+        if (expandElement == null) {
+          expandElement = lineRendererController.createExpandMarkerElement(parent, foldMarker, lineNumber);
+          line.putTag(LINE_TAG_EXPAND_ELEMENT, expandElement);
+        }
+      }
+    }
   }
 
   private void handleLineEnteredViewport(Line line, int lineNumber, Element lineElement) {

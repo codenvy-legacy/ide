@@ -145,13 +145,12 @@ public class FoldMarkRenderer
    {
       for (int i = beginLineNumber; i <= endLineNumber; i++)
       {
-         if (buffer.modelLine2VisibleLine(i) == -1)
-         {
+         if (buffer.modelLine2VisibleLine(i) < 0) {
             garbageCollectLines(i, i);
             continue;
          }
 
-         FoldMarker foldMarker = foldingManager.findFoldMarker(i, false);
+         FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(i, false);
          if (foldMarker == null)
          {
             garbageCollectLines(i, i);
@@ -159,7 +158,7 @@ public class FoldMarkRenderer
          }
          if (!foldMarker.isCollapsed())
          {
-            foldMarker = foldingManager.findFoldMarker(i, true);
+            foldMarker = foldingManager.getFoldMarkerOfLine(i, true);
             if (foldMarker == null)
             {
                garbageCollectLines(i, i);
@@ -185,8 +184,8 @@ public class FoldMarkRenderer
    {
       final int lineHeight = buffer.getEditorLineHeight();
       final int elementHeight = 9;
-      final int freeSpaceAbove = (lineHeight - elementHeight) / 2;
-      foldMarkElement.getStyle().setTop(buffer.calculateLineTop(lineNumber) + freeSpaceAbove,
+      final int additionalTop = (lineHeight - elementHeight) / 2;
+      foldMarkElement.getStyle().setTop(buffer.calculateLineTop(lineNumber) + additionalTop,
          CSSStyleDeclaration.Unit.PX);
 
       NodeList childNodes = foldMarkElement.getChildNodes();

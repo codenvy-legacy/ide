@@ -60,8 +60,12 @@ public class DocumentAdaptor implements IDocumentListener
 //      mutator.insertText(editorDocument.getFirstLine(), 0, 0, "it's alive");
       try
       {
-         // Remove textListener to prevent updating an appropriate IDocument instance
-         editorDocument.getTextListenerRegistrar().remove(textListener);
+         // Temporary disable textListener to prevent updating an appropriate IDocument instance again.
+         //
+         // Do not use editorDocument.getTextListenerRegistrar().remove(textListener)
+         // and editorDocument.getTextListenerRegistrar().add(textListener)
+         // because textListener must be always the first listener for the editorDocument.
+         textListener.setIgnoreTextChanges(true);
 
          IDocument document = event.getDocument();
          int lineNumber = document.getLineOfOffset(event.getOffset());
@@ -98,7 +102,7 @@ public class DocumentAdaptor implements IDocumentListener
       }
       finally
       {
-         editorDocument.getTextListenerRegistrar().add(textListener);
+         textListener.setIgnoreTextChanges(false);
       }
    }
 

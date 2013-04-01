@@ -544,12 +544,6 @@ public class ViewportModel
         }
       });
     }
-//    listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
-//       @Override
-//       public void dispatch(Listener listener) {
-//          listener.onViewportLineNumberChanged(ViewportModel.this, Edge.BOTTOM);
-//       }
-//    });
   }
 
 }

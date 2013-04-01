@@ -191,7 +191,7 @@ public class Editor extends UiComponent<Editor.View> {
     @Source("folding/expanded.png")
     ImageResource expanded();
 
-    @Source("folding/expandArrows.png")
+    @Source("folding/expand.png")
     ImageResource expandArrows();
   }
 
