@@ -426,13 +426,10 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       final int selectionEndLineNumber = selection.getSelectionEndLineNumber();
       Line selectionEndLine = editor.getDocument().getLineFinder().findLine(selectionEndLineNumber).line();
 
-      for (int i = selectionBeginLineNumber; i <= selectionEndLineNumber; i++)
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(selectionEndLineNumber, false);
+      if (foldMarker != null && foldMarker.isCollapsed())
       {
-         FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(i, false);
-         if (foldMarker != null && foldMarker.isCollapsed())
-         {
-            editor.getFoldingManager().expand(foldMarker);
-         }
+         editor.getFoldingManager().expand(foldMarker);
       }
 
       final int deleteCount =
@@ -626,7 +623,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       SelectionModel selectionModel = editor.getSelection();
       final int cursorLineNumber = selectionModel.getCursorLineNumber();
-      FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
       if (foldMarker != null)
       {
          editor.getFoldingManager().collapse(foldMarker);
@@ -641,7 +638,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       SelectionModel selectionModel = editor.getSelection();
       final int cursorLineNumber = selectionModel.getCursorLineNumber();
-      FoldMarker foldMarker = editor.getFoldingManager().findFoldMarker(cursorLineNumber, false);
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
       if (foldMarker != null)
       {
          editor.getFoldingManager().expand(foldMarker);

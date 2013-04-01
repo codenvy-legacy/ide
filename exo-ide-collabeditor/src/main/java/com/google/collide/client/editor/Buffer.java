@@ -104,6 +104,10 @@ public class Buffer extends UiComponent<Buffer.View>
     String columnMarkerLine();
     
     String currentLine();
+
+    String expandMarker();
+
+    String expandMarkerOver();
   }
 
   /**

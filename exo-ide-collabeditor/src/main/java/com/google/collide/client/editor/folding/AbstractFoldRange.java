@@ -53,7 +53,7 @@ public abstract class AbstractFoldRange implements IProjectionPosition
    }
 
    /**
-    * Checks whether the given index is inside of this range's text range.
+    * Checks whether the given index is inside of this range.
     * 
     * @param index the index to check
     * @return <code>true</code> if <code>index</code> is inside of this range

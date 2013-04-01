@@ -207,7 +207,7 @@ public class LineNumberRenderer {
 
   private void fillOrUpdateLines(int beginLineNumber, int endLineNumber) {
     for (int i = beginLineNumber; i <= endLineNumber; i++) {
-      if (buffer.modelLine2VisibleLine(i) == -1) {
+      if (buffer.modelLine2VisibleLine(i) < 0) {
         garbageCollectLines(i, i);
         continue;
       }

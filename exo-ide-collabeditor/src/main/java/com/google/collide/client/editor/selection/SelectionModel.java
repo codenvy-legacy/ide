@@ -17,15 +17,11 @@ package com.google.collide.client.editor.selection;
 import static com.google.collide.shared.document.util.LineUtils.getLastCursorColumn;
 import static com.google.collide.shared.document.util.LineUtils.rubberbandColumn;
 
-import com.google.collide.client.editor.folding.FoldMarker;
-
-import com.google.collide.client.editor.folding.FoldingManager;
-
-import elemental.events.MouseEvent;
-
+import com.codenvy.ide.client.util.UserAgent;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.ViewportModel;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.Line;
@@ -38,18 +34,18 @@ import com.google.collide.shared.document.anchor.InsertionPlacementStrategy;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.document.util.PositionUtils;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
-import org.exoplatform.ide.shared.util.UnicodeUtils;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
+import elemental.events.MouseEvent;
 
-import com.codenvy.ide.client.util.UserAgent;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.TextUtils;
+import org.exoplatform.ide.shared.util.UnicodeUtils;
 
 // TODO: this class is getting huge, time to split responsibilities
 /**
@@ -794,7 +790,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   }
 
   public void setSelection(LineInfo baseLineInfo, int baseColumn, LineInfo cursorLineInfo,
-      int cursorColumn, boolean expand) {
+      int cursorColumn, boolean revealIfCollapsed) {
 
     Preconditions.checkArgument(baseColumn <= LineUtils.getLastCursorColumn(baseLineInfo.line()),
         "The base column is out-of-bounds");
@@ -803,9 +799,9 @@ public class SelectionModel implements Buffer.MouseDragListener {
         "The cursor column is out-of-bounds. Expected <= " + lastCursorColumn
             + ", got " + cursorColumn + ", line " + cursorLineInfo.number());
 
-    if (expand) {
+    if (revealIfCollapsed) {
       if (baseLineInfo.number() == cursorLineInfo.number()) {
-        ensureLineVisibility(baseLineInfo.number());
+        foldingManager.ensureLineVisibility(baseLineInfo.number());
       }
       else if (Math.min(baseLineInfo.number(), cursorLineInfo.number()) == baseLineInfo.number()) {
         ensureLinesVisibility(baseLineInfo, cursorLineInfo);
@@ -832,13 +828,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     Preconditions.checkArgument(column <= lastCursorColumn,
         "The cursor column is out-of-bounds. Expected <= " + lastCursorColumn
             + ", got " + column + ", line " + lineInfo.number());
-    if (buffer.modelLine2VisibleLine(lineInfo.number()) == -1) {
-      FoldMarker foldMarker = foldingManager.findFoldMarker(lineInfo.number(), false);
-      if (foldMarker != null && foldMarker.isCollapsed()) {
-        foldingManager.expand(foldMarker);
-      }
-    }
-    ensureLineVisibility(lineInfo.number());
+    foldingManager.ensureLineVisibility(lineInfo.number());
     moveCursor(lineInfo, column, true, hasSelection(), getSelectionRangeForCallback());
   }
 
@@ -1032,16 +1022,8 @@ public class SelectionModel implements Buffer.MouseDragListener {
 
   private void ensureLinesVisibility(LineInfo startLine, LineInfo endLine) {
     for (int i = startLine.number(); i <= endLine.number(); i++) {
-      ensureLineVisibility(i);
+      foldingManager.ensureLineVisibility(i);
     }
   }
 
-  private void ensureLineVisibility(int lineNumber) {
-    if (buffer.modelLine2VisibleLine(lineNumber) == -1) {
-      FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
-      if (foldMarker != null && foldMarker.isCollapsed()) {
-        foldingManager.expand(foldMarker);
-      }
-    }
-  }
 }
