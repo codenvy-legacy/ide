@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.renderer;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
@@ -87,6 +89,7 @@ public class LineNumberRenderer {
       Element renderedActiveLine = lineNumberToElementCache.get(renderedActiveLineNumber);
       if (renderedActiveLine != null) {
         renderedActiveLine.removeClassName(css.activeLineNumber());
+        renderedActiveLine.removeClassName(ThemeConstants.ACTIVE_LINE_NUMBER);
         renderedActiveLineNumber = NONE;
       }
     }
@@ -94,6 +97,7 @@ public class LineNumberRenderer {
     // Add class if it's in the viewport.
     if (newActiveLine != null) {
       newActiveLine.addClassName(css.activeLineNumber());
+      newActiveLine.addClassName(ThemeConstants.ACTIVE_LINE_NUMBER);
       renderedActiveLineNumber = lineNumber;
     }
   }
@@ -111,7 +115,7 @@ public class LineNumberRenderer {
     String lineNumber();
 
     String activeLineNumber();
-    
+
     String activeline();
   }
 
@@ -203,6 +207,10 @@ public class LineNumberRenderer {
 
   private void fillOrUpdateLines(int beginLineNumber, int endLineNumber) {
     for (int i = beginLineNumber; i <= endLineNumber; i++) {
+      if (buffer.modelLine2VisibleLine(i) < 0) {
+        garbageCollectLines(i, i);
+        continue;
+      }
       Element lineElement = lineNumberToElementCache.get(i);
       if (lineElement != null) {
         updateElementPosition(lineElement, i);
@@ -226,6 +234,7 @@ public class LineNumberRenderer {
     element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
     if (lineNumber == activeLineNumber) {
       element.addClassName(css.activeLineNumber());
+      element.addClassName(ThemeConstants.ACTIVE_LINE_NUMBER);
       renderedActiveLineNumber = activeLineNumber;
     }
     return element;
@@ -238,8 +247,10 @@ public class LineNumberRenderer {
         leftGutter.removeUnmanagedElement(lineElement);
         lineNumberToElementCache.erase(i);
       } else {
-        throw new IndexOutOfBoundsException(
-            "Tried to garbage collect line number " + i + " when it does not exist.");
+        // don't throws exception because line may be folded in this case
+        continue;
+//        throw new IndexOutOfBoundsException(
+//            "Tried to garbage collect line number " + line + " when it does not exist.");
       }
     }
     if (beginLineNumber <= renderedActiveLineNumber && renderedActiveLineNumber <= endLineNumber) {

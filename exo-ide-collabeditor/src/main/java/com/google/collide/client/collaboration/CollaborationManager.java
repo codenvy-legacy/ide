@@ -330,8 +330,8 @@ public class CollaborationManager
       if(participants.isEmpty())
       {
          openedFilesInWorkspace.remove(message.getPath());
+         path2sessionId.remove(message.getPath());
       }
-      path2sessionId.remove(message.getPath());
       participantsListenerManager.dispatch(new Dispatcher<ParticipantsListener>()
       {
          @Override

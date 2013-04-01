@@ -293,7 +293,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       
       for (ProjectModel module : project.getModules())
       {
-         if (destinationItem.getPath().startsWith(module.getPath()))
+         if (destinationItem != null && destinationItem.getPath().startsWith(module.getPath()))
          {
             if (module instanceof JavaProject)
             {
@@ -310,7 +310,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
       for (SourceDirectory sourceDirectory : project.getSourceDirectories())
       {
-         if (destinationItem.getPath().startsWith(sourceDirectory.getPath()))
+         if (destinationItem != null && destinationItem.getPath().startsWith(sourceDirectory.getPath()))
          {
             refreshSourceDirectory(sourceDirectory, destinationItem);
             return;
@@ -330,7 +330,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             continue;
          }
          
-         if (destinationItem.getPath().startsWith(folder.getPath()))
+         if (destinationItem != null && destinationItem.getPath().startsWith(folder.getPath()))
          {
             refreshFolder((FolderModel)item, project, destinationItem);
             return;
@@ -1214,7 +1214,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    
    public void refresh()
    {
-      System.out.println("PEItemTree.refresh()");
+      refreshProject(project, null);
    }
    
 }

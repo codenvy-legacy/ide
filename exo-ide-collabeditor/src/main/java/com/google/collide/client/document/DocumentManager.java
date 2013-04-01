@@ -14,22 +14,22 @@
 
 package com.google.collide.client.document;
 
+import com.codenvy.ide.client.util.PathUtil;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.Editor;
-import com.codenvy.ide.client.util.PathUtil;
 import com.google.collide.dto.ConflictChunk;
 import com.google.collide.dto.FileContents;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 import org.exoplatform.ide.shared.util.ListenerManager;
 import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.shared.util.ListenerRegistrar;
-
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Manager for documents and editors.
@@ -38,8 +38,7 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
  * in an editor!
  *
  */
-public class DocumentManager
-{
+public class DocumentManager {
 
   public static DocumentManager create(AppContext appContext) {
     return new DocumentManager(appContext);
@@ -112,7 +111,7 @@ public class DocumentManager
    */
   private Editor editor;
 
-  private DocumentManager( AppContext appContext) {
+  private DocumentManager(AppContext appContext) {
     networkController = new DocumentManagerNetworkController(this, appContext);
   }
 
@@ -223,6 +222,10 @@ public class DocumentManager
   void handleEditableFileReceived(
       FileContents fileContents, JsonArray<GetDocumentCallback> callbacks) {
 
+    /*
+     * One last check to make sure we don't already have a Document for this
+     * file
+     */
     Document document = documentsByFileEditSessionKey.get(fileContents.getFileEditSessionKey());
     if (document == null) {
        documentsByFileEditSessionKey.remove(fileContents.getFileEditSessionKey());

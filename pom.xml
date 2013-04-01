@@ -25,7 +25,7 @@
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
 
       <!-- Everrest -->
-      <everrest.version>1.0.11-SNAPSHOT</everrest.version>
+      <everrest.version>1.1.0</everrest.version>
 
       <!-- Third parties -->
       <junit.version>4.10</junit.version>
@@ -59,7 +59,7 @@
 
    <dependencyManagement>
       <dependencies>
-       <dependency>
+         <dependency>
            <groupId>com.codenvy.commons</groupId>
            <artifactId>codenvy-commons-env</artifactId>
            <version>${com.codenvy.commons.version}</version>
@@ -443,7 +443,7 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-client-framework</artifactId>
+            <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
@@ -471,6 +471,8 @@
             <artifactId>log-reader-service</artifactId>
             <version>1.0-M5</version>
          </dependency>
+         
+         
          
          <dependency>
             <groupId>com.google.gwt</groupId>

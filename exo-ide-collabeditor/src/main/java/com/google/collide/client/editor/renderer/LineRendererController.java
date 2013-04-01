@@ -14,20 +14,28 @@
 
 package com.google.collide.client.editor.renderer;
 
-import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
-import com.google.collide.client.editor.Buffer;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.logging.Log;
+import com.google.collide.client.Resources;
+import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
+import com.google.collide.client.editor.Buffer;
+import com.google.collide.client.editor.folding.FoldMarker;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.shared.document.Line;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.SortedList;
-import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.ui.Image;
 import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Node;
+import elemental.events.Event;
+import elemental.events.EventListener;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.StringUtils;
 
 /**
  * A class to maintain the list of {@link LineRenderer LineRenderers} and render
@@ -84,9 +92,13 @@ class LineRendererController {
    */
   private final JsonArray<LineRenderer> lineRenderers;
   private final Buffer buffer;
+  private final FoldingManager foldingManager;
+  private final Resources resources;
 
-  LineRendererController(Buffer buffer) {
+  LineRendererController(Buffer buffer, FoldingManager foldingManager, Resources res) {
     this.buffer = buffer;
+    this.foldingManager = foldingManager;
+    this.resources = res;
     currentLineRendererTargets = new SortedList<LineRendererController.LineRendererTarget>(
         new LineRendererTarget.Comparator());
     lineRenderers = JsonCollections.createArray();
@@ -121,6 +133,7 @@ class LineRendererController {
     }
 
     Element contentElement = Elements.createSpanElement();
+    // TODO: file a Chrome bug, place link here
     contentElement.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);
     for (int indexInLine = 0, lineSize = line.getText().length();
         indexInLine < lineSize && ensureAllRenderersHaveARenderedNextChunk();) {
@@ -167,15 +180,65 @@ class LineRendererController {
         }
       }
     }
+
+    final FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(lineNumber, true);
+    if (foldMarker != null && foldMarker.isCollapsed()) {
+      Element expandElement = createExpandMarkerElement(contentElement, foldMarker, lineNumber);
+      line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
+    }
   }
 
   private static Element createLastChunkElement(Element parent) {
-    // we need to give them a whitespace element so that it can be styled.
-    Element whitespaceElement = Elements.createSpanElement();
-    whitespaceElement.setTextContent("\u00A0");
-    whitespaceElement.getStyle().setDisplay("inline-block");
-    parent.appendChild(whitespaceElement);
-    return whitespaceElement;
+     // we need to give them a whitespace element so that it can be styled.
+     Element whitespaceElement = Elements.createSpanElement();
+     whitespaceElement.setTextContent("\u00A0");
+     whitespaceElement.getStyle().setDisplay("inline-block");
+     parent.appendChild(whitespaceElement);
+     return whitespaceElement;
+  }
+
+  /**
+   * Creates element for expanding collapsed text block.
+   * 
+   * @param parent parent element
+   * @param foldMarker <code>foldMarker</code> to expand
+   * @param lineNumber line number to generate element ID (for Selenium tests)
+   * @return created element for expanding folded text block 
+   */
+  Element createExpandMarkerElement(Element parent, final FoldMarker foldMarker, int lineNumber) {
+     final SpanElement element = Elements.createSpanElement(resources.workspaceEditorBufferCss().expandMarker());
+     // TODO: file a Chrome bug, place link here
+     element.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);
+     element.setId("expandMarker_line:" + (lineNumber+1));
+
+     element.addEventListener(Event.MOUSEOVER, new EventListener() {
+       @Override
+       public void handleEvent(Event evt) {
+         element.addClassName(resources.workspaceEditorBufferCss().expandMarkerOver());
+       }
+     }, false);
+     element.addEventListener(Event.MOUSEOUT, new EventListener() {
+        @Override
+        public void handleEvent(Event evt) {
+           element.removeClassName(resources.workspaceEditorBufferCss().expandMarkerOver());
+        }
+     }, false);
+     element.addEventListener(Event.MOUSEDOWN, new EventListener() {
+        @Override
+        public void handleEvent(Event evt) {
+           foldingManager.expand(foldMarker);
+        }
+     }, false);
+
+     com.google.gwt.user.client.Element expandImageElement = new Image(resources.expandArrows()).getElement();
+     expandImageElement.getStyle().setWidth(20, Unit.PX);
+     expandImageElement.getStyle().setOpacity(0.5);
+     expandImageElement.getStyle().setMarginBottom(4, Unit.PX);
+     element.appendChild((Node)expandImageElement);
+
+     parent.appendChild(element);
+
+     return element;
   }
 
   /**

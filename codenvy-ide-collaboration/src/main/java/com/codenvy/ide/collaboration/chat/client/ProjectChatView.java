@@ -18,11 +18,13 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
+import com.codenvy.ide.client.util.AnimationController;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.chat.client.ChatResources.ChatCss;
 import com.codenvy.ide.collaboration.chat.client.ParticipantList.View;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.MessageCallback;
+import com.codenvy.ide.notification.NotificationManager;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
@@ -37,6 +39,8 @@ import elemental.events.EventListener;
 import elemental.html.AnchorElement;
 import elemental.html.DivElement;
 import elemental.html.Element;
+import elemental.html.ImageElement;
+import elemental.html.ParagraphElement;
 import elemental.html.SpanElement;
 import elemental.html.TextAreaElement;
 
@@ -88,6 +92,9 @@ public class ProjectChatView extends ViewImpl implements Display
       View view = new View();
       participantList = ParticipantList.create(view);
       participantsPanel.getElement().appendChild((Node)view.getElement());
+      participantsPanel.getElement().setId("ideParticipants");
+      chatPanel.getElement().setId("ideChatMessages");
+      chatMessageInput.setId("ideChatInput");
    }
 
    /**
@@ -132,7 +139,7 @@ public class ProjectChatView extends ViewImpl implements Display
       chatPanel.scrollToBottom();
    }
 
-   private DivElement getMessageElement(String message, String name, Date d, MessageCallback callback)
+   private DivElement getMessageElement(String message, String name, Date d, boolean isCurrentUser)
    {
       DivElement messageElement = Elements.createDivElement();
       DivElement timeElement = getTimeElement(d);
@@ -250,7 +257,7 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void clearEditParticipants()
    {
-      participantList.clearEditParticipants();
+     participantList.clearEditParticipants();
    }
 
    @Override
@@ -270,7 +277,7 @@ public class ProjectChatView extends ViewImpl implements Display
       DivElement messageElement = Elements.createDivElement(css.chatNotification());
       messageElement.appendChild(Elements.createTextNode(split[0]));
       messageElement.appendChild(createAnchorElement(link, callback));
-      if (split.length > 1)
+      if(split.length >1)
       {
          messageElement.appendChild(Elements.createTextNode(split[1]));
       }

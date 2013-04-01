@@ -80,6 +80,13 @@ public class ProjectTreeItem extends TreeItem
       getElement().setId(prefixId + Utils.md5(item.getPath()));      
    }
    
+   public void setItem(Item item)
+   {
+      this.item = item;
+      setUserObject(item);
+      render();      
+   }
+   
    /**
     * Creates widget for tree node
     * 

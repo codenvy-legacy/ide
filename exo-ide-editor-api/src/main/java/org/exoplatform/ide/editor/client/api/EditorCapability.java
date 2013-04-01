@@ -68,5 +68,11 @@ public enum EditorCapability {
    /**
     * Editor supports the comment text
     */
-   COMMENT_SOURCE
+   COMMENT_SOURCE,
+
+   /**
+    * Editor supports code folding
+    */
+   CODE_FOLDING
+  
 }

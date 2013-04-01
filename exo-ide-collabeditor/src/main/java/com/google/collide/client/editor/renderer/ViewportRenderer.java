@@ -14,13 +14,16 @@
 
 package com.google.collide.client.editor.renderer;
 
+import com.codenvy.ide.client.util.Elements;
+import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.ViewportModel.Edge;
+import com.google.collide.client.editor.folding.FoldMarker;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.renderer.Renderer.LineLifecycleListener;
 import com.google.collide.client.testing.DebugAttributeSetter;
-import com.codenvy.ide.client.util.Elements;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
@@ -29,13 +32,15 @@ import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
 import com.google.collide.shared.document.util.LineUtils;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.Timer;
 import elemental.css.CSSStyleDeclaration;
+import elemental.events.Event;
+import elemental.events.EventListener;
 import elemental.html.Element;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import java.util.EnumSet;
 
@@ -101,6 +106,9 @@ public class ViewportRenderer {
   /** Key for a {@link Line#getTag} that stores the rendered DOM element */
   public static final String LINE_TAG_LINE_ELEMENT = "ViewportRenderer.element";
 
+  /** Key for a {@link Line#getTag} that stores the rendered DOM element for expanding folded text block */
+  public static final String LINE_TAG_EXPAND_ELEMENT = "ViewportRenderer.foldingExpandElement";
+
   /**
    * Key for a {@link Line#getTag} that stores a reference to the anchor that is
    * used to cache the line number for this line (since we cache line numbers
@@ -133,6 +141,7 @@ public class ViewportRenderer {
   private final ListenerManager<LineLifecycleListener> lineLifecycleListenerManager;
   private final LineRendererController lineRendererController;
   private final ViewportModel viewport;
+  private final FoldingManager foldingManager;
 
   /**
    * The bottom of the viewport when last rendered, or null if the viewport
@@ -146,13 +155,15 @@ public class ViewportRenderer {
   private Anchor viewportOldTopAnchor;
 
   ViewportRenderer(Document document, Buffer buffer, ViewportModel viewport,
-      Editor.View editorView, ListenerManager<LineLifecycleListener> lineLifecycleListenerManager) {
+      Editor.View editorView, ListenerManager<LineLifecycleListener> lineLifecycleListenerManager,
+      FoldingManager foldingManager, Resources res) {
     this.document = document;
     this.buffer = buffer;
     this.lineLifecycleListenerManager = lineLifecycleListenerManager;
-    this.lineRendererController = new LineRendererController(buffer);
+    this.lineRendererController = new LineRendererController(buffer, foldingManager, res);
     this.viewport = viewport;
     this.animationController = new AnimationController(editorView);
+    this.foldingManager = foldingManager;
   }
 
   private void placeOldViewportAnchors() {
@@ -240,10 +251,12 @@ public class ViewportRenderer {
   /**
    * Renders changes to the content of the viewport at a line level, for example
    * line removals or additions.
-   * 
+   *
+   * @param beginLineNumber
    * @param removedLines these lines were in the viewport at time of removal
+   * @param isByReasonOfFolding is content changed by reason of code folding
    */
-  void renderViewportContentChange(int beginLineNumber, JsonArray<Line> removedLines) {
+  void renderViewportContentChange(int beginLineNumber, JsonArray<Line> removedLines, boolean isByReasonOfFolding) {
 
     // Garbage collect the elements of removed lines
     for (int i = 0, n = removedLines.size(); i < n; i++) {
@@ -349,12 +362,16 @@ public class ViewportRenderer {
     int curLineNumber = beginLineNumber;
     if (curLineNumber <= endLineNumber) {
       for (; curLineNumber <= endLineNumber && curLine != null; curLineNumber++) {
-        createOrUpdateLineElement(curLine, curLineNumber, createOffset);
+        if (buffer.modelLine2VisibleLine(curLineNumber) > -1) {
+          createOrUpdateLineElement(curLine, curLineNumber, createOffset);
+        }
         curLine = curLine.getNextLine();
       }
     } else {
       for (; curLineNumber >= endLineNumber && curLine != null; curLineNumber--) {
-        createOrUpdateLineElement(curLine, curLineNumber, createOffset);
+        if (buffer.modelLine2VisibleLine(curLineNumber) > -1) {
+          createOrUpdateLineElement(curLine, curLineNumber, createOffset);
+        }
         curLine = curLine.getPreviousLine();
       }
     }
@@ -372,6 +389,11 @@ public class ViewportRenderer {
     if (element != null && buffer.hasLineElement(element)) {
       element.removeFromParent();
       line.putTag(LINE_TAG_LINE_ELEMENT, null);
+    }
+
+    Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+    if (expandElement != null) {
+      line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
     }
 
     handleLineLeftViewport(line);
@@ -396,7 +418,9 @@ public class ViewportRenderer {
 
     Line curLine = beginLine;
     for (int curNumber = beginNumber; curNumber <= endNumber && curLine != null; curNumber++) {
-      garbageCollectLine(curLine);
+      if (buffer.modelLine2VisibleLine(curNumber) > -1) {
+        garbageCollectLine(curLine);
+      }
       curLine = curLine.getNextLine();
     }
   }
@@ -411,6 +435,9 @@ public class ViewportRenderer {
       element.getStyle().setPosition(CSSStyleDeclaration.Position.ABSOLUTE);
       lineRendererController.renderLine(line, lineNumber, element, true);
       line.putTag(LINE_TAG_LINE_ELEMENT, element);
+    }
+    else {
+      createOrRemoveExpandElement(line, lineNumber, element);
     }
     new DebugAttributeSetter().add("lineNum", Integer.toString(lineNumber)).on(element);
 
@@ -448,6 +475,40 @@ public class ViewportRenderer {
     }
 
     return element;
+  }
+
+  /**
+   * Creates element for expanding collapsed text block.
+   * 
+   * @param line line to attach/detach expand element
+   * @param lineNumber number of the specified <code>line</code>
+   * @param parent parent element
+   * @return created element for expanding folded text block 
+   */
+  private void createOrRemoveExpandElement(final Line line, final int lineNumber, Element parent) {
+    Element expandMarker = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+    if (expandMarker != null) {
+      expandMarker.removeFromParent();
+      line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
+    }
+
+    FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(lineNumber, false);
+    if (foldMarker != null) {
+      if (!foldMarker.isCollapsed()) {
+        Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+        if (expandElement != null) {
+          expandElement.removeFromParent();
+          line.putTag(LINE_TAG_EXPAND_ELEMENT, null);
+        }
+      }
+      else {
+        Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
+        if (expandElement == null) {
+          expandElement = lineRendererController.createExpandMarkerElement(parent, foldMarker, lineNumber);
+          line.putTag(LINE_TAG_EXPAND_ELEMENT, expandElement);
+        }
+      }
+    }
   }
 
   private void handleLineEnteredViewport(Line line, int lineNumber, Element lineElement) {

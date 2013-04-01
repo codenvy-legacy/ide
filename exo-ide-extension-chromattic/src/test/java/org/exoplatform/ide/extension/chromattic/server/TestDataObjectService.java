@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.chromattic.server;
+/*package org.exoplatform.ide.extension.chromattic.server;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.ide.vfs.shared.File;
@@ -40,16 +40,15 @@ import javax.xml.xpath.XPathFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
+*/
 /**
  * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class TestDataObjectService extends BaseTest
+/*public class TestDataObjectService extends BaseTest
 {
-   /** . */
    private static final String DATA_OBJECT_BODY =
       "@org.chromattic.api.annotations.PrimaryType(name=\"exo:testNodeType\")\n" + "class DataObject {\n"
          + "@org.chromattic.api.annotations.Property(name = \"a\")" + "String a\n" + "}";
@@ -142,3 +141,4 @@ public class TestDataObjectService extends BaseTest
       session.getWorkspace().getNodeTypeManager().getNodeType("exo:testNodeType");
    }
 }
+*/

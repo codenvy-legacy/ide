@@ -77,12 +77,10 @@ public interface Editor extends IsWidget
     */
    void setText(String text);
 
-
    /**
     * @return content of editor
     */
    IDocument getDocument();
-
 
    /**
     * Check that editor support feature
@@ -272,6 +270,14 @@ public interface Editor extends IsWidget
     */
    int getCursorOffsetTop();
 
+   void collapse();
+
+   void expand();
+
+   void collapseAll();
+
+   void expandAll();
+
    /**
     * @param handler
     * @return
@@ -308,8 +314,8 @@ public interface Editor extends IsWidget
     */
    HandlerRegistration addInitializedHandler(EditorInitializedHandler handler);
 
-// ??????????????????????????
-//   listen MouseMoveEvent
-//   row, column, mouseX, mouseY
+   // ??????????????????????????
+   //   listen MouseMoveEvent
+   //   row, column, mouseX, mouseY
 
 }

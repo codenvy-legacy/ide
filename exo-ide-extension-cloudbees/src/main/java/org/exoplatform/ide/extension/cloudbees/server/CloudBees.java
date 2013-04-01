@@ -81,6 +81,7 @@ public class CloudBees extends JenkinsClient
    private final CloudBeesAuthenticator authenticator;
    private final CredentialStore credentialStore;
    private final String jenkinsCredentials;
+
    private final String accountProvisioningAPIEndpoint;
    private final String accountProvisioningUserID;
    private final String accountProvisioningCredentials;

@@ -18,6 +18,8 @@
  */
 package com.google.collide.client.editor.renderer;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Buffer.Resources;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -67,6 +69,7 @@ public class CurrentLineHighlighter
       listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
       lineHighlighter = Elements.createDivElement(res.workspaceEditorBufferCss().line());
       lineHighlighter.addClassName(res.workspaceEditorBufferCss().currentLine());
+      lineHighlighter.addClassName(ThemeConstants.ACTIVE_LINE);
       lineHighlighter.getStyle().setTop(0, "PX");
       buffer.addUnmanagedElement(lineHighlighter);
    }

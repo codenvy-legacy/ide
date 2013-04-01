@@ -18,6 +18,7 @@
  */
 package com.google.collide.client;
 
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -28,13 +29,13 @@ import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer.ContextMenuListener;
 import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.client.editor.FocusManager.FocusListener;
+import com.google.collide.client.editor.folding.FoldMarker;
 import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.Line;
@@ -42,8 +43,7 @@ import com.google.collide.shared.document.LineFinder;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
+import com.google.collide.shared.document.util.LineUtils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -78,6 +78,8 @@ import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.TextUtils;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -111,18 +113,62 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
    private boolean caseSensitive;
 
-   private final class TextListenerImpl implements TextListener
+   /**
+    * Listener that updates an appropriate IDocument instance.
+    */
+   final class TextListenerImpl implements TextListener
    {
+      private boolean ignoreTextChanges;
+
       /**
        * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, org.exoplatform.ide.json.shared.JsonArray)
        */
       @Override
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
+         if (ignoreTextChanges)
+         {
+            return;
+         }
+
          fireEvent(new EditorContentChangedEvent(CollabEditor.this));
-         updateDocument();
+         try
+         {
+            for (TextChange textChange : textChanges.asIterable())
+            {
+               final int offset =
+                  CollabEditor.this.document.getLineOffset(textChange.getLineNumber()) + textChange.getColumn();
+               int length = 0;
+               String text = "";
+               switch (textChange.getType())
+               {
+                  case INSERT :
+                     text = textChange.getText();
+                     break;
+                  case DELETE :
+                     length = textChange.getText().length();
+                     break;
+                  default :
+                     throw new UnsupportedOperationException("Unknown type of text change: " + textChange.getType());
+               }
+               updateDocument(offset, length, text);
+            }
+         }
+         catch (BadLocationException e)
+         {
+            Log.error(getClass(), e);
+         }
       }
 
+      /**
+       * Enable/disable ignore text changes mode.
+       * 
+       * @param ignoreTextChanges <code>true</code> to ignore any text changes, <code>false</code> disable ignore mode
+       */
+      void setIgnoreTextChanges(boolean ignoreTextChanges)
+      {
+         this.ignoreTextChanges = ignoreTextChanges;
+      }
    }
 
    public CollabEditor(String mimeType)
@@ -135,7 +181,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             EditorErrorListener.NOOP_ERROR_RECEIVER, this);
       contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
-//      editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
          new EditableContentArea.View(CollabEditorExtension.get().getContext().getResources());
       EditableContentArea contentArea =
@@ -159,13 +204,17 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
+    * Updates the specified document range with the given <code>text</code>.
     * 
+    * @param offset the document offset
+    * @param length the length of the specified range
+    * @param text the substitution text 
+    * @throws BadLocationException if the offset is invalid in this document
     */
-   private void updateDocument()
+   private void updateDocument(int offset, int length, String text) throws BadLocationException
    {
-      //TODO change document, not all content
       document.removeDocumentListener(documentAdaptor);
-      document.set(getText());
+      document.replace(offset, length, text);
       document.addDocumentListener(documentAdaptor);
    }
 
@@ -213,24 +262,30 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void setText(final String text)
    {
       document = new org.exoplatform.ide.editor.shared.text.Document(text);
-      document.addDocumentListener(documentAdaptor);
       hoverPresenter = new HoverPresenter(this, editor, document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-
          @Override
          public void execute()
          {
             initialized = true;
             Document editorDocument = Document.createFromString(text);
             editorDocument.putTag("IDocument", document);
-            editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
+            TextListenerImpl textListener = new TextListenerImpl();
+            editorDocument.getTextListenerRegistrar().add(textListener);
             CollabEditorExtension.get().getManager().addDocument(editorDocument);
             editorBundle.setDocument(editorDocument, mimeType, "");
-            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
+            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator(), textListener,
+               CollabEditor.this);
+
+            // IMPORTANT!
+            // Add 'documentAdaptor' as listener for the 'CollabEditor.this.document' there, because
+            // 'ProjectionDocument' must be the first listener for the 'CollabEditor.this.document'.
+            // 'ProjectionDocument' added as listener for the 'CollabEditor.this.document' in 'Editor.setDocument(Document)'.
+            CollabEditor.this.document.addDocumentListener(documentAdaptor);
+
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
-
                @Override
                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
                {
@@ -239,14 +294,12 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             });
             editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
             {
-
                @Override
                public void onContextMenu(int x, int y)
                {
                   fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
                }
             });
-
          }
       });
    }
@@ -335,9 +388,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void setFocus()
    {
-
       editor.getFocusManager().focus();
-
    }
 
    /**
@@ -370,14 +421,20 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void deleteCurrentLine()
    {
       SelectionModel selection = editor.getSelection();
-      int rowsCountToDelete = selection.getCursorLineNumber() - selection.getBaseLineNumber() + 1;
-      int baseLineNumber = selection.getBaseLineNumber();
-      while (rowsCountToDelete > 0)
+      final int selectionBeginLineNumber = selection.getSelectionBeginLineNumber();
+      Line selectionBeginLine = editor.getDocument().getLineFinder().findLine(selectionBeginLineNumber).line();
+      final int selectionEndLineNumber = selection.getSelectionEndLineNumber();
+      Line selectionEndLine = editor.getDocument().getLineFinder().findLine(selectionEndLineNumber).line();
+
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(selectionEndLineNumber, false);
+      if (foldMarker != null && foldMarker.isCollapsed())
       {
-         Line currentLine1 = editor.getDocument().getLineFinder().findLine(baseLineNumber).line();
-         editor.getEditorDocumentMutator().deleteText(currentLine1, 0, currentLine1.length());
-         rowsCountToDelete--;
+         editor.getFoldingManager().expand(foldMarker);
       }
+
+      final int deleteCount =
+         LineUtils.getTextCount(selectionBeginLine, 0, selectionEndLine, selectionEndLine.getText().length() - 1);
+      editor.getEditorDocumentMutator().deleteText(selectionBeginLine, 0, deleteCount);
    }
 
    /**
@@ -559,6 +616,54 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapse()
+    */
+   @Override
+   public void collapse()
+   {
+      SelectionModel selectionModel = editor.getSelection();
+      final int cursorLineNumber = selectionModel.getCursorLineNumber();
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
+      if (foldMarker != null)
+      {
+         editor.getFoldingManager().collapse(foldMarker);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expand()
+    */
+   @Override
+   public void expand()
+   {
+      SelectionModel selectionModel = editor.getSelection();
+      final int cursorLineNumber = selectionModel.getCursorLineNumber();
+      FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
+      if (foldMarker != null)
+      {
+         editor.getFoldingManager().expand(foldMarker);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#collapseAll()
+    */
+   @Override
+   public void collapseAll()
+   {
+      editor.getFoldingManager().collapseAll();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#expandAll()
+    */
+   @Override
+   public void expandAll()
+   {
+      editor.getFoldingManager().expandAll();
+   }
+
+   /**
     * @see org.exoplatform.ide.editor.client.api.Editor#getName()
     */
    @Override
@@ -630,8 +735,9 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       int scrollLeft = editor.getBuffer().getScrollLeft();
       Position position = editor.getSelection().getCursorPosition();
+      final int foldingGutterWidth = editor.getFoldingGutter() == null ? 0 : editor.getFoldingGutter().getWidth();
       int offsetLeft =
-         getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
+         getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth() + foldingGutterWidth
             + editor.getLeftGutterNotificationManager().getLeftGutter().getWidth()
             + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
 
@@ -890,22 +996,27 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void setDocument(final Document document)
    {
       this.document = new org.exoplatform.ide.editor.shared.text.Document(document.asText());
-      this.document.addDocumentListener(documentAdaptor);
       hoverPresenter = new HoverPresenter(this, editor, this.document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-
          @Override
          public void execute()
          {
             initialized = true;
             document.putTag("IDocument", CollabEditor.this.document);
-            document.getTextListenerRegistrar().add(new TextListenerImpl());
+            TextListenerImpl textListener = new TextListenerImpl();
+            document.getTextListenerRegistrar().add(textListener);
             editorBundle.setDocument(document, mimeType, DocumentMetadata.getFileEditSessionKey(document));
-            documentAdaptor.setDocument(document, editor.getEditorDocumentMutator());
+            documentAdaptor.setDocument(document, editor.getEditorDocumentMutator(), textListener, CollabEditor.this);
+
+            // IMPORTANT!
+            // Add 'documentAdaptor' as listener for the 'CollabEditor.this.document' there, because
+            // 'ProjectionDocument' must be the first listener for the 'CollabEditor.this.document'.
+            // 'ProjectionDocument' added as listener for the 'CollabEditor.this.document' in 'Editor.setDocument(Document)'.
+            CollabEditor.this.document.addDocumentListener(documentAdaptor);
+
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
-
                @Override
                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
                {
@@ -914,14 +1025,12 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             });
             editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
             {
-
                @Override
                public void onContextMenu(int x, int y)
                {
                   fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
                }
             });
-
          }
       });
    }

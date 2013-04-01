@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.selection;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.editor.FocusManager;
 import com.google.collide.client.editor.renderer.LineRenderer;
 import com.google.collide.shared.document.Line;
@@ -127,8 +129,13 @@ public class SelectionLineRenderer implements LineRenderer {
       curChunkIndex++;
     }
 
-    chunkStyles[curChunkIndex] =
-        focusManager.hasFocus() ? css.selection() : css.inactiveSelection();
+//    chunkStyles[curChunkIndex] =
+//        focusManager.hasFocus() ? css.selection() : css.inactiveSelection();
+        
+    chunkStyles[curChunkIndex] = focusManager.hasFocus() ? 
+       (css.selection() + " " + ThemeConstants.SELECTION) : 
+       (css.inactiveSelection() + " " + ThemeConstants.SELECTION_INACTIVE);
+             
     chunkLengths[curChunkIndex] = selectionEndColumnExclusive - selectionBeginColumn;
     curChunkIndex++;
 

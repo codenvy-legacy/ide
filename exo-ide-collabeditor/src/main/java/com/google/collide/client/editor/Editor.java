@@ -14,10 +14,13 @@
 
 package com.google.collide.client.editor;
 
+import com.google.collide.client.common.ThemeConstants;
+
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.parenmatch.ParenMatchHighlighter;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator;
 import com.google.collide.client.editor.Buffer.ScrollListener;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.Position;
 import com.google.collide.client.editor.gutter.LeftGutterManager;
@@ -74,7 +77,7 @@ public class Editor extends UiComponent<Editor.View> {
   /**
    * Static factory method for obtaining an instance of the Editor.
    */
-  public static Editor create(AppContext appContext) {
+  public static Editor create(AppContext appContext, boolean isFoldingModeEnabled) {
 
     FontDimensionsCalculator fontDimensionsCalculator =
         FontDimensionsCalculator.get(appContext.getResources().workspaceEditorCss().editorFont());
@@ -90,7 +93,7 @@ public class Editor extends UiComponent<Editor.View> {
         new View(appContext.getResources(), buffer.getView().getElement(), input.getInputElement());
     FocusManager focusManager = new FocusManager(buffer, input.getInputElement());
     return new Editor(appContext, view, buffer, input, focusManager, fontDimensionsCalculator,
-        renderTimeExecutor);
+        renderTimeExecutor, isFoldingModeEnabled);
   }
 
   /**
@@ -181,6 +184,15 @@ public class Editor extends UiComponent<Editor.View> {
     
     @Source("squiggle-warning.png")
     ImageResource squiggleWarning();
+
+    @Source("folding/collapsed.png")
+    ImageResource collapsed();
+
+    @Source("folding/expanded.png")
+    ImageResource expanded();
+
+    @Source("folding/expand.png")
+    ImageResource expandArrows();
   }
 
   /**
@@ -260,6 +272,7 @@ public class Editor extends UiComponent<Editor.View> {
       this.css = res.workspaceEditorCss();
 
       Element rootElement = Elements.createDivElement(css.root());
+      rootElement.addClassName(ThemeConstants.ROOT);
       rootElement.appendChild(bufferElement);
       rootElement.appendChild(inputElement);
       setElement(rootElement);
@@ -325,10 +338,12 @@ public class Editor extends UiComponent<Editor.View> {
   private final RenderTimeExecutor renderTimeExecutor;
   private CurrentLineHighlighter currentLineHighlighter;
   private NotificationManager leftGutterNotificationManager;
+  private FoldingManager foldingManager;
+  private boolean isFoldingMode;
 
   private Editor(AppContext appContext, View view, Buffer buffer, InputController input,
       FocusManager focusManager, FontDimensionsCalculator editorFontDimensionsCalculator,
-      RenderTimeExecutor renderTimeExecutor) {
+      RenderTimeExecutor renderTimeExecutor, boolean isFoldingModeEnabled) {
     super(view);
     this.appContext = appContext;
     this.buffer = buffer;
@@ -342,10 +357,17 @@ public class Editor extends UiComponent<Editor.View> {
     Gutter overviewGutter = createGutter(true, Position.RIGHT, appContext.getResources().workspaceEditorCss().leftGutterNotification());
     leftGutterNotificationManager = new NotificationManager(this, leftNotificationGutter, overviewGutter,appContext.getResources());
     getDocumentListenerRegistrar().add(leftGutterNotificationManager);
-    Gutter leftGutter = createGutter(
-        false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
+    Gutter leftGutter = createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
     leftGutterManager = new LeftGutterManager(leftGutter, buffer);
-
+    if (isFoldingModeEnabled) {
+      Gutter foldingGutter = createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutterBase());
+      foldingManager = new FoldingManager(foldingGutter, buffer, appContext.getResources());
+      foldingManager.getFoldingListenerRegistrar().add(leftGutterNotificationManager);
+    }
+    else {
+      foldingManager = new FoldingManager();
+    }
+    isFoldingMode = isFoldingModeEnabled;
     editorDocumentMutator = new EditorDocumentMutator(this);
     mouseHoverManager = new MouseHoverManager(this);
 
@@ -445,6 +467,15 @@ public class Editor extends UiComponent<Editor.View> {
     return leftGutterManager.getGutter();
   }
 
+  /**
+   * Returns a gutter for the folding markers.
+   * 
+   * @return folding gutter
+   */
+  public Gutter getFoldingGutter() {
+    return foldingManager.getGutter();
+  }
+
   public Document getDocument() {
     return document;
   }
@@ -500,8 +531,16 @@ public class Editor extends UiComponent<Editor.View> {
     return documentListenerManager;
   }
   
-  public NotificationManager getLeftGutterNotificationManager(){
+  public NotificationManager getLeftGutterNotificationManager() {
      return leftGutterNotificationManager;
+  }
+
+  public FoldingManager getFoldingManager() {
+     return foldingManager;
+  }
+
+  public boolean isFoldingMode() {
+     return isFoldingMode;
   }
 
   // TODO: need a public interface and impl
@@ -539,19 +578,21 @@ public class Editor extends UiComponent<Editor.View> {
      * require the multiple stages of initialization
      */
     // Core editor components
-    buffer.handleDocumentChanged(document);
+    foldingManager.handleDocumentChanged(document);
+    buffer.handleDocumentChanged(document, foldingManager);
     leftGutterManager.handleDocumentChanged(document);
     
     selectionManager =
-        SelectionManager.create(document, buffer, focusManager, appContext.getResources());
+        SelectionManager.create(document, buffer, focusManager, foldingManager, appContext.getResources());
 
     SelectionModel selection = selectionManager.getSelectionModel();
-    viewport = ViewportModel.create(document, selection, buffer);
+    viewport = ViewportModel.create(document, selection, buffer, foldingManager);
     input.handleDocumentChanged(document, selection, viewport);
     renderer = Renderer.create(document,
         viewport,
         buffer,
         getLeftGutter(),
+        getFoldingGutter(),
         selection,
         focusManager,
         this,

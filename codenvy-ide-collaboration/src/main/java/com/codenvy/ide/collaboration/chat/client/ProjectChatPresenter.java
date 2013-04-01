@@ -37,6 +37,7 @@ import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.code.ParticipantModel.Listener;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
 import com.google.collide.client.collaboration.DocumentCollaborationController;
+import com.google.collide.dto.UserDetails;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
@@ -80,8 +81,7 @@ import java.util.Date;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ProjectChatPresenter
-   implements ViewClosedHandler, ShowHideChatHandler, EditorActiveFileChangedHandler, SendCodePointHandler
+public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHandler, EditorActiveFileChangedHandler
 {
 
    public interface Display extends IsView
@@ -178,20 +178,27 @@ public class ProjectChatPresenter
       {
          if (isShow(path))
          {
-            display.addNotificationMessage(user.getDisplayName() + " opened {0} file.", getName(path),
+            display.addNotificationMessage(getName(user) + " opened {0} file.", getName(path),
                new MessageCallback()
                {
-                  @Override
-                  public void messageClicked()
+                  openFile(path);
+                  if (viewClosed || !display.asView().isViewVisible())
                   {
-                     openFile(path);
-                     if (viewClosed || !display.asView().isViewVisible())
-                     {
-                        control.startBlink();
-                     }
+                     control.startBlink();
                   }
-               });
+               }
+            });
          }
+      }
+
+      private String getName(UserDetails user)
+      {
+         if (user.getDisplayName().contains("@"))
+         {
+            String name = user.getDisplayName();
+            return name.substring(0, name.indexOf('@'));
+         }
+         return user.getDisplayName();
       }
 
       /**
@@ -202,7 +209,7 @@ public class ProjectChatPresenter
       {
          if (isShow(path))
          {
-            display.addNotificationMessage(user.getDisplayName() + " closed the " + getName(path) + " file.");
+            display.addNotificationMessage(getName(user) + " closed the " + getName(path) + " file.");
             if (viewClosed || !display.asView().isViewVisible())
             {
                control.startBlink();
@@ -227,6 +234,11 @@ public class ProjectChatPresenter
          return false;
       }
 
+      private String getName(String path)
+      {
+         path = path.substring(path.lastIndexOf('/') + 1);
+         return path;
+      }
    };
 
    private Listener listener = new Listener()
@@ -480,6 +492,7 @@ public class ProjectChatPresenter
       ChatMessageImpl chatMessage = ChatMessageImpl.make();
       chatMessage.setUserId(userId);
       chatMessage.setProjectId(project.getId());
+      String clientId = BootstrapSession.getBootstrapSession().getActiveClientId();
       chatMessage.setClientId(clientId);
       Date d = new Date();
       chatMessage.setDateTime(String.valueOf(d.getTime()));

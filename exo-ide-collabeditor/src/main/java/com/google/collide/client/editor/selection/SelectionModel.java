@@ -17,11 +17,11 @@ package com.google.collide.client.editor.selection;
 import static com.google.collide.shared.document.util.LineUtils.getLastCursorColumn;
 import static com.google.collide.shared.document.util.LineUtils.rubberbandColumn;
 
-import elemental.events.MouseEvent;
-
+import com.codenvy.ide.client.util.UserAgent;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.ViewportModel;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.Line;
@@ -34,18 +34,18 @@ import com.google.collide.shared.document.anchor.InsertionPlacementStrategy;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.document.util.PositionUtils;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerRegistrar;
-import org.exoplatform.ide.shared.util.StringUtils;
-import org.exoplatform.ide.shared.util.TextUtils;
-import org.exoplatform.ide.shared.util.UnicodeUtils;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
+import elemental.events.MouseEvent;
 
-import com.codenvy.ide.client.util.UserAgent;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.TextUtils;
+import org.exoplatform.ide.shared.util.UnicodeUtils;
 
 // TODO: this class is getting huge, time to split responsibilities
 /**
@@ -210,9 +210,9 @@ public class SelectionModel implements Buffer.MouseDragListener {
     }
   }
 
-  public static SelectionModel create(Document document, Buffer buffer) {
+  public static SelectionModel create(Document document, Buffer buffer, FoldingManager foldingManager) {
     ListenerRegistrar.RemoverManager removalManager = new ListenerRegistrar.RemoverManager();
-    SelectionModel selection = new SelectionModel(document, buffer, removalManager);
+    SelectionModel selection = new SelectionModel(document, buffer, foldingManager, removalManager);
     removalManager.track(buffer.getMouseDragListenerRegistrar().add(selection));
 
     return selection;
@@ -235,6 +235,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
    */
   private final Anchor baseAnchor;
   private final Buffer buffer;
+  private final FoldingManager foldingManager;
 
   /** The cursor of the selection */
   private final Anchor cursorAnchor;
@@ -268,9 +269,10 @@ public class SelectionModel implements Buffer.MouseDragListener {
   private ViewportModel viewport;
 
   private SelectionModel(
-      Document document, Buffer buffer, ListenerRegistrar.RemoverManager removerManager) {
+      Document document, Buffer buffer, FoldingManager foldingManager, ListenerRegistrar.RemoverManager removerManager) {
     this.document = document;
     this.buffer = buffer;
+    this.foldingManager = foldingManager;
     this.removerManager = removerManager;
     anchorListener = new AnchorListener();
     cursorAnchor = createSelectionAnchor(document.getFirstLine(), 0, 0, document, anchorListener);
@@ -458,7 +460,11 @@ public class SelectionModel implements Buffer.MouseDragListener {
            */
           column = 0;
         } else {
-          lineInfo.moveToPrevious();
+          while (lineInfo.moveToPrevious()) {
+            if (buffer.modelLine2VisibleLine(lineInfo.number()) > -1) {
+              break;
+            }
+          }
         }
 
         column = rubberbandColumn(lineInfo.line(), column);
@@ -471,7 +477,11 @@ public class SelectionModel implements Buffer.MouseDragListener {
           // Consistent with up-arrowing on first line
           column = LineUtils.getLastCursorColumn(lineInfo.line());
         } else {
-          lineInfo.moveToNext();
+          while (lineInfo.moveToNext()) {
+            if (buffer.modelLine2VisibleLine(lineInfo.number()) > -1) {
+              break;
+            }
+          }
         }
 
         column = rubberbandColumn(lineInfo.line(), column);
@@ -480,7 +490,10 @@ public class SelectionModel implements Buffer.MouseDragListener {
 
       case PAGE_UP:
         for (int i = buffer.getFlooredHeightInLines(); i > 0; i--) {
-          lineInfo.moveToPrevious();
+          do {
+            lineInfo.moveToPrevious();
+          }
+          while (buffer.modelLine2VisibleLine(lineInfo.number()) == -1);
         }
         column = rubberbandColumn(lineInfo.line(), preferredCursorColumn);
         shouldUpdatePreferredColumn = false;
@@ -488,7 +501,10 @@ public class SelectionModel implements Buffer.MouseDragListener {
 
       case PAGE_DOWN:
         for (int i = buffer.getFlooredHeightInLines(); i > 0; i--) {
-          lineInfo.moveToNext();
+          do {
+            lineInfo.moveToNext();
+          }
+          while (buffer.modelLine2VisibleLine(lineInfo.number()) == -1);
         }
         column = rubberbandColumn(lineInfo.line(), preferredCursorColumn);
         shouldUpdatePreferredColumn = false;
@@ -516,16 +532,20 @@ public class SelectionModel implements Buffer.MouseDragListener {
     }
 
     if (column < 0) {
-      if (lineInfo.moveToPrevious()) {
-        column = getLastCursorColumn(lineInfo.line());
-      } else {
-        column = 0;
+      column = 0;
+      while (lineInfo.moveToPrevious()) {
+        if (buffer.modelLine2VisibleLine(lineInfo.number()) > -1) {
+          column = getLastCursorColumn(lineInfo.line());
+          break;
+        }
       }
     } else if (column > getLastCursorColumn(lineInfo.line())) {
-      if (lineInfo.moveToNext()) {
-        column = LineUtils.getFirstCursorColumn(lineInfo.line());
-      } else {
-        column = rubberbandColumn(lineInfo.line(), column);
+      column = rubberbandColumn(lineInfo.line(), column);
+      while (lineInfo.moveToNext()) {
+        if (buffer.modelLine2VisibleLine(lineInfo.number()) > -1) {
+          column = LineUtils.getFirstCursorColumn(lineInfo.line());
+          break;
+        }
       }
     }
 
@@ -535,7 +555,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
 
   @Override
   public void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, short button) {
-    // (artem) if right mouse button pressed, not need to process click
+    // Fixed issue IDE-1883. If right mouse button pressed, not need to process click.
     if (button == MouseEvent.Button.SECONDARY) {
        return;
     }
@@ -765,7 +785,12 @@ public class SelectionModel implements Buffer.MouseDragListener {
   }
 
   public void setSelection(LineInfo baseLineInfo, int baseColumn, LineInfo cursorLineInfo,
-      int cursorColumn) {
+     int cursorColumn) {
+    setSelection(baseLineInfo, baseColumn, cursorLineInfo, cursorColumn, false);
+  }
+
+  public void setSelection(LineInfo baseLineInfo, int baseColumn, LineInfo cursorLineInfo,
+      int cursorColumn, boolean revealIfCollapsed) {
 
     Preconditions.checkArgument(baseColumn <= LineUtils.getLastCursorColumn(baseLineInfo.line()),
         "The base column is out-of-bounds");
@@ -773,6 +798,18 @@ public class SelectionModel implements Buffer.MouseDragListener {
     Preconditions.checkArgument(cursorColumn <= lastCursorColumn,
         "The cursor column is out-of-bounds. Expected <= " + lastCursorColumn
             + ", got " + cursorColumn + ", line " + cursorLineInfo.number());
+
+    if (revealIfCollapsed) {
+      if (baseLineInfo.number() == cursorLineInfo.number()) {
+        foldingManager.ensureLineVisibility(baseLineInfo.number());
+      }
+      else if (Math.min(baseLineInfo.number(), cursorLineInfo.number()) == baseLineInfo.number()) {
+        ensureLinesVisibility(baseLineInfo, cursorLineInfo);
+      }
+      else {
+        ensureLinesVisibility(cursorLineInfo, baseLineInfo);
+      }
+    }
 
     baseColumn = LineUtils.rubberbandColumn(baseLineInfo.line(), baseColumn);
     cursorColumn = LineUtils.rubberbandColumn(cursorLineInfo.line(), cursorColumn);
@@ -791,6 +828,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     Preconditions.checkArgument(column <= lastCursorColumn,
         "The cursor column is out-of-bounds. Expected <= " + lastCursorColumn
             + ", got " + column + ", line " + lineInfo.number());
+    foldingManager.ensureLineVisibility(lineInfo.number());
     moveCursor(lineInfo, column, true, hasSelection(), getSelectionRangeForCallback());
   }
 
@@ -981,4 +1019,11 @@ public class SelectionModel implements Buffer.MouseDragListener {
   private Anchor getLaterSelectionAnchor() {
     return isCursorAtEndOfSelection() ? cursorAnchor : baseAnchor;
   }
+
+  private void ensureLinesVisibility(LineInfo startLine, LineInfo endLine) {
+    for (int i = startLine.number(); i <= endLine.number(); i++) {
+      foldingManager.ensureLineVisibility(i);
+    }
+  }
+
 }

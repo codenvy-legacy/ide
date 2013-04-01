@@ -38,6 +38,8 @@ import org.exoplatform.ide.client.hotkeys.HotKeysPreferenceItem;
 import org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter;
 import org.exoplatform.ide.client.operation.autocompletion.AutocompletionHandler;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
+import org.exoplatform.ide.client.theme.SelectThemePresenter;
+import org.exoplatform.ide.client.theme.ThemePreferenceItem;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
 import org.exoplatform.ide.client.toolbar.ToolbarPreferenceItem;
 import org.exoplatform.ide.vfs.client.VirtualFileSystemFactory;
@@ -69,6 +71,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
 
       Preferences.get().addPreferenceItem(new ToolbarPreferenceItem(new CustomizeToolbarPresenter()));
       Preferences.get().addPreferenceItem(new HotKeysPreferenceItem(new CustomizeHotKeysPresenter()));
+      Preferences.get().addPreferenceItem(new ThemePreferenceItem(new SelectThemePresenter()));
 //      Preferences.get().addPreferenceItem(new WorkspacePreferenceItem(new SelectWorkspacePresenter()));
 
       new AutocompletionHandler();

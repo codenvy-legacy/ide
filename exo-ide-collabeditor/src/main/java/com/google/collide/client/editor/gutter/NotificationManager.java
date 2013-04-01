@@ -18,11 +18,14 @@
  */
 package com.google.collide.client.editor.gutter;
 
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.DocumentListener;
+import com.google.collide.client.editor.folding.FoldMarker;
+import com.google.collide.client.editor.folding.FoldingManager.FoldingListener;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.collide.client.ui.menu.PositionController.HorizontalAlign;
 import com.google.collide.client.ui.menu.PositionController.Position;
@@ -31,14 +34,13 @@ import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.tooltip.Tooltip;
 import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
-import com.codenvy.ide.client.util.Elements;
-import org.exoplatform.ide.json.client.JsIntegerMap;
 import com.google.collide.dto.CodeError;
 import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls.CodeErrorImpl;
 import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -51,9 +53,13 @@ import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.json.client.JsIntegerMap;
 import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap.IterationCallback;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -61,7 +67,7 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class NotificationManager implements DocumentListener
+public class NotificationManager implements DocumentListener, FoldingListener
 {
    /**
     * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -149,8 +155,11 @@ public class NotificationManager implements DocumentListener
    private ErrorListener errorListener;
 
    /**
+    * 
+    * @param editor
     * @param gutter
-    * @param overviewGutter 
+    * @param overviewGutter
+    * @param res
     */
    public NotificationManager(Editor editor, Gutter gutter, Gutter overviewGutter, Resources res)
    {
@@ -173,9 +182,12 @@ public class NotificationManager implements DocumentListener
     */
    public void addProblem(Marker problem)
    {
-      int lineNumber = problem.getLineNumber() - 1;
+      int lineNumber = getVisibleLineNumber(problem.getLineNumber() - 1);
+
       if (!markers.hasKey(lineNumber))
+      {
          markers.put(lineNumber, JsoArray.<Marker> create());
+      }
       markers.get(lineNumber).add(problem);
       StringBuilder message = new StringBuilder();
       JsoArray<Marker> problemList = markers.get(lineNumber);
@@ -189,7 +201,6 @@ public class NotificationManager implements DocumentListener
       leftGutter.addUnmanagedElement(m.getElement());
 
       addOverviewMark(problem, message.toString());
-
    }
 
    /**
@@ -198,9 +209,21 @@ public class NotificationManager implements DocumentListener
     */
    private void addOverviewMark(Marker problem, String string)
    {
+      final int lineNumber = getVisibleLineNumber(problem.getLineNumber() - 1);
+      int numberOfLines = 0;
+      if (editor.isFoldingMode())
+      {
+         numberOfLines = editor.getFoldingManager().getSlaveDocument().getNumberOfLines();
+      }
+      else
+      {
+         numberOfLines = document.getNumberOfLines();
+      }
+
       NotificationMark mark =
          new NotificationMark(problem, string, res, editor, rightPositioner, new HtmlTooltipRenderer());
-      mark.setTopPosition((100 * problem.getLineNumber()) / document.getNumberOfLines(), "%");
+      mark.setTopPosition((100 * lineNumber) / numberOfLines, "%");
+      mark.getElement().setAttribute("data-line-number", String.valueOf(lineNumber));
       overviewGutter.addUnmanagedElement(mark.getElement());
       overviewMarks.add(mark);
       if (problem.isError())
@@ -522,5 +545,64 @@ public class NotificationManager implements DocumentListener
    public void setErrorListener(ErrorListener errorListener)
    {
       this.errorListener = errorListener;
+   }
+
+   /**
+    * @see com.google.collide.client.editor.folding.FoldingManager.FoldingListener#onCollapse(int, com.google.collide.json.shared.JsonArray)
+    */
+   @Override
+   public void onCollapse(int lineNumber, JsonArray<Line> linesToCollapse)
+   {
+      redraw();
+   }
+
+   /**
+    * @see com.google.collide.client.editor.folding.FoldingManager.FoldingListener#onExpand(int, com.google.collide.json.shared.JsonArray)
+    */
+   @Override
+   public void onExpand(int lineNumber, JsonArray<Line> linesToExpand)
+   {
+      redraw();
+   }
+
+   private void redraw()
+   {
+      final JsIntegerMap<JsoArray<Marker>> existMarkers = JsIntegerMap.<JsoArray<Marker>> create();
+      markers.iterate(new IterationCallback<JsoArray<Marker>>()
+      {
+         @Override
+         public void onIteration(int key, JsoArray<Marker> val)
+         {
+            existMarkers.put(key, val);
+         }
+      });
+
+      clear();
+
+      existMarkers.iterate(new IterationCallback<JsoArray<Marker>>()
+      {
+         @Override
+         public void onIteration(int key, JsoArray<Marker> val)
+         {
+            Iterator<Marker> iterator = val.asIterable().iterator();
+            while (iterator.hasNext())
+            {
+               addProblem(iterator.next());
+            }
+         }
+      });
+   }
+
+   private int getVisibleLineNumber(int lineNumber)
+   {
+      if (editor.isFoldingMode())
+      {
+         FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(lineNumber, false);
+         if (foldMarker != null && foldMarker.isCollapsed())
+         {
+            return editor.getFoldingManager().getCaptionLine(foldMarker);
+         }
+      }
+      return lineNumber;
    }
 }

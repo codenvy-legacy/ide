@@ -21,13 +21,11 @@ package org.exoplatform.ide.client;
 import com.google.gwt.i18n.client.Constants;
 
 /**
- * Created by The eXo Platform SAS.
+ * Interface to represent the constants contained in resource bundle: 'IdeLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  * 
- * 
- *          Interface to represent the constants contained in resource bundle: 'IdeLocalizationConstant.properties'.
  */
 
 public interface IdeLocalizationConstant extends Constants
@@ -300,8 +298,17 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.showHiddenFiles.title")
    String showHiddenFilesControlTitle();
 
-   @Key("control.inviteGoogleContacts.title")
-   String inviteGoogleContactsControlTitle();
+   @Key("control.folding.collapse.title")
+   String foldingCollapseControlTitle();
+
+   @Key("control.folding.expand.title")
+   String foldingExpandControlTitle();
+
+   @Key("control.folding.collapseAll.title")
+   String foldingCollapseAllControlTitle();
+
+   @Key("control.folding.expandAll.title")
+   String foldingExpandAllControlTitle();
 
    /*
     * DOWNLOAD CONTROL
@@ -449,7 +456,6 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.projectExplorer.prompt")
    String projectExplorerControlPrompt();
-
 
    @Key("control.restServicesDiscovery")
    String restServicesDiscoveryControl();

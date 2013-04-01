@@ -26,6 +26,7 @@ import com.google.collide.client.editor.gutter.Gutter.Position;
 
 import org.eclipse.jdt.client.JavaContentAssistProcessor;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
 import org.exoplatform.ide.editor.shared.text.Document;
@@ -48,7 +49,8 @@ public class JavaEditor extends CollabEditor
    {
       super(mimeType);
       editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaAutocompleter());
-      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE, new JavaContentAssistProcessor());
+      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
+         new JavaContentAssistProcessor());
       editor.getDocumentListenerRegistrar().add(new DocumentListener()
       {
          @Override
@@ -58,13 +60,16 @@ public class JavaEditor extends CollabEditor
             if (newDocument != null)
             {
                final Gutter gutter =
-                        editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
-                           .workspaceEditorCss().leftGutterBase());
-               breakPointManager = new BreakpointGutterManager(gutter, editor.getBuffer(),editor.getViewport(), JavaClientBundle.INSTANCE);
+                  editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
+                     .workspaceEditorCss().leftGutterBase());
+               breakPointManager =
+                  new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(), editor.getRenderer(),
+                     JavaClientBundle.INSTANCE);
                breakPointManager.render();
             }
          }
       });
+      getEditor().getFoldingManager().setFoldFinder(new JavaFoldOccurrencesFinder());
    }
 
    /**
@@ -74,7 +79,7 @@ public class JavaEditor extends CollabEditor
    {
       return breakPointManager;
    }
-   
+
    /**
     * @see com.google.collide.client.CollabEditor#setText(java.lang.String)
     */
@@ -84,9 +89,7 @@ public class JavaEditor extends CollabEditor
       super.setText(text);
       getHoverPresenter().addHover(Document.DEFAULT_CONTENT_TYPE, new JavaTypeHover(IDE.eventBus()));
    }
-     
-    
-   
+
    /**
     * @see com.google.collide.client.CollabEditor#getCursorOffsetLeft()
     */
@@ -94,6 +97,22 @@ public class JavaEditor extends CollabEditor
    public int getCursorOffsetLeft()
    {
       return super.getCursorOffsetLeft() + breakPointManager.getGutter().getWidth();
+   }
+
+   /**
+    * @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability)
+    */
+   @Override
+   public boolean isCapable(EditorCapability capability)
+   {
+      if (capability == EditorCapability.CODE_FOLDING)
+      {
+         return true;
+      }
+      else
+      {
+         return super.isCapable(capability);
+      }
    }
 
 }
