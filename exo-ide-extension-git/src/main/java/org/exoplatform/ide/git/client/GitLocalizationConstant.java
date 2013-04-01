@@ -23,7 +23,6 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 public interface GitLocalizationConstant extends Messages
 {
@@ -317,11 +316,14 @@ public interface GitLocalizationConstant extends Messages
    @Key("view.clone.title")
    String cloneTitle();
 
-   @Key("view.clone.workdir_field_title")
-   String cloneWorkdirFieldTitle();
+   @Key("view.clone.project_name_field_title")
+   String projectNameFieldTitle();
 
    @Key("view.clone.remote_uri_field_title")
    String cloneRemoteUriFieldTitle();
+
+   @Key("view.clone.remote_uri_field_example")
+   String cloneRemoteUriFieldExample();
 
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();

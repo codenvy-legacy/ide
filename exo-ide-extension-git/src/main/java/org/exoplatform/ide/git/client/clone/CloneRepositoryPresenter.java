@@ -64,11 +64,11 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    public interface Display extends IsView
    {
       /**
-       * Returns working directory field.
+       * Returns project name field.
        *
        * @return {@link HasValue<{@link String}>}
        */
-      HasValue<String> getWorkDirValue();
+      HasValue<String> getProjectNameValue();
 
       /**
        * Returns remote URI field.
@@ -146,7 +146,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          {
             doClone(display.getRemoteUriValue().getValue(),//
                display.getRemoteNameValue().getValue(),//
-               display.getWorkDirValue().getValue());
+               display.getProjectNameValue().getValue());
          }
       });
 
@@ -166,7 +166,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
             {
                remoteUrl = remoteUrl.substring(0, remoteUrl.length() - 4);
                String[] split = remoteUrl.split("/");
-               display.getWorkDirValue().setValue(split[split.length - 1]);
+               display.getProjectNameValue().setValue(split[split.length - 1]);
             }
             display.enableCloneButton(enable);
          }
