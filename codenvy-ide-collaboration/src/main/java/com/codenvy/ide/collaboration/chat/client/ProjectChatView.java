@@ -139,7 +139,7 @@ public class ProjectChatView extends ViewImpl implements Display
       chatPanel.scrollToBottom();
    }
 
-   private DivElement getMessageElement(String message, String name, Date d, boolean isCurrentUser)
+   private DivElement getMessageElement(String message, String name, Date d, MessageCallback callback)
    {
       DivElement messageElement = Elements.createDivElement();
       DivElement timeElement = getTimeElement(d);

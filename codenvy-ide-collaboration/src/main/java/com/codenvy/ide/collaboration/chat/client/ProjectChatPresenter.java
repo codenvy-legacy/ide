@@ -39,7 +39,6 @@ import com.google.collide.client.collaboration.CollaborationManager.Participants
 import com.google.collide.client.collaboration.DocumentCollaborationController;
 import com.google.collide.dto.UserDetails;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Timer;
@@ -51,8 +50,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -61,7 +58,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.json.client.JsoStringMap;
 import org.exoplatform.ide.json.shared.JsonArray;
@@ -81,7 +77,7 @@ import java.util.Date;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHandler, EditorActiveFileChangedHandler
+public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHandler, EditorActiveFileChangedHandler, SendCodePointHandler
 {
 
    public interface Display extends IsView
@@ -178,19 +174,23 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       {
          if (isShow(path))
          {
-            display.addNotificationMessage(getName(user) + " opened {0} file.", getName(path),
-               new MessageCallback()
+            display.addNotificationMessage(getName(user) + " opened {0} file.", getName(path), new MessageCallback()
+            {
+               
+               @Override
+               public void messageClicked()
                {
                   openFile(path);
-                  if (viewClosed || !display.asView().isViewVisible())
-                  {
-                     control.startBlink();
-                  }
+                if (viewClosed || !display.asView().isViewVisible())
+                {
+                   control.startBlink();
+                }
                }
-            });
+             });
          }
       }
 
+      
       private String getName(UserDetails user)
       {
          if (user.getDisplayName().contains("@"))
