@@ -20,12 +20,11 @@
 
 -->
 <gadgets
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_objects_1_0 http://www.gatein.org/xml/ns/gadgets_1_0"
-    xmlns="http://www.gatein.org/xml/ns/gadgets_1_0">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.gatein.org/xml/ns/gadgets_1_0">
 
-  <gadget name="IDE">
-    <path>/org.exoplatform.ide.IDEGadget/org.exoplatform.ide.client.IDEGadget.gadget.xml</path>
-  </gadget>
+    <gadget name="IDE">
+        <path>/org.exoplatform.ide.IDEGadget/org.exoplatform.ide.client.IDEGadget.gadget.xml</path>
+    </gadget>
 
 </gadgets>
