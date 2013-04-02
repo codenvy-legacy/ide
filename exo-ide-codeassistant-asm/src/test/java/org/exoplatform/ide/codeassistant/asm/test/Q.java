@@ -21,25 +21,20 @@ package org.exoplatform.ide.codeassistant.asm.test;
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
 
-public class Q
-{
+public class Q {
 
-   class U
-   {
-   }
+    class U {
+    }
 
-   public U getInnerClass(Class<? extends U> t)
-   {
-      return null;
-   }
+    public U getInnerClass(Class<? extends U> t) {
+        return null;
+    }
 
-   public void methodWithExceptions(Class<?> t) throws IOException, ConcurrentModificationException
-   {
-   }
+    public void methodWithExceptions(Class<?> t) throws IOException, ConcurrentModificationException {
+    }
 
-   public <T extends ConcurrentModificationException> T methodWithExceptionAsParams(ConcurrentModificationException a)
-   {
-      return null;
-   }
+    public <T extends ConcurrentModificationException> T methodWithExceptionAsParams(ConcurrentModificationException a) {
+        return null;
+    }
 
 }

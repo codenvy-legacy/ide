@@ -24,7 +24,7 @@ import java.util.List;
 
 enum Stage {
 
-   FORMAL, PARAMETERS, RETURN, EXCEPTIONS
+    FORMAL, PARAMETERS, RETURN, EXCEPTIONS
 
 }
 
@@ -32,185 +32,143 @@ enum Stage {
  * This visitor parses return type and parameters of method's signature. Formal
  * type parameters are skipped.
  */
-public class MethodSignatureVisitor implements SignatureVisitor
-{
+public class MethodSignatureVisitor implements SignatureVisitor {
 
-   private ParameterSignatureVisitor returnType;
+    private ParameterSignatureVisitor returnType;
 
-   private ParameterSignatureVisitor parameters;
+    private ParameterSignatureVisitor parameters;
 
-   private ParameterSignatureVisitor exceptions;
+    private ParameterSignatureVisitor exceptions;
 
-   private Stage stage;
+    private Stage stage;
 
-   public MethodSignatureVisitor()
-   {
-      this.returnType = new ParameterSignatureVisitor();
-      this.parameters = new ParameterSignatureVisitor();
-      this.exceptions = new ParameterSignatureVisitor();
-   }
+    public MethodSignatureVisitor() {
+        this.returnType = new ParameterSignatureVisitor();
+        this.parameters = new ParameterSignatureVisitor();
+        this.exceptions = new ParameterSignatureVisitor();
+    }
 
-   @Override
-   public void visitFormalTypeParameter(String name)
-   {
-      stage = Stage.FORMAL;
-   }
+    @Override
+    public void visitFormalTypeParameter(String name) {
+        stage = Stage.FORMAL;
+    }
 
-   @Override
-   public SignatureVisitor visitClassBound()
-   {
-      return this;
-   }
+    @Override
+    public SignatureVisitor visitClassBound() {
+        return this;
+    }
 
-   @Override
-   public SignatureVisitor visitInterfaceBound()
-   {
-      return this;
-   }
+    @Override
+    public SignatureVisitor visitInterfaceBound() {
+        return this;
+    }
 
-   @Override
-   public SignatureVisitor visitSuperclass()
-   {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
-   }
+    @Override
+    public SignatureVisitor visitSuperclass() {
+        throw new UnsupportedOperationException("Event not supported by parameter visitor");
+    }
 
-   @Override
-   public SignatureVisitor visitInterface()
-   {
-      throw new UnsupportedOperationException("Event not supported by parameter visitor");
-   }
+    @Override
+    public SignatureVisitor visitInterface() {
+        throw new UnsupportedOperationException("Event not supported by parameter visitor");
+    }
 
-   @Override
-   public SignatureVisitor visitParameterType()
-   {
-      stage = Stage.PARAMETERS;
-      return parameters;
-   }
+    @Override
+    public SignatureVisitor visitParameterType() {
+        stage = Stage.PARAMETERS;
+        return parameters;
+    }
 
-   @Override
-   public SignatureVisitor visitReturnType()
-   {
-      stage = Stage.RETURN;
-      return returnType;
-   }
+    @Override
+    public SignatureVisitor visitReturnType() {
+        stage = Stage.RETURN;
+        return returnType;
+    }
 
-   @Override
-   public SignatureVisitor visitExceptionType()
-   {
-      stage.equals(Stage.EXCEPTIONS);
-      return exceptions;
-   }
+    @Override
+    public SignatureVisitor visitExceptionType() {
+        stage.equals(Stage.EXCEPTIONS);
+        return exceptions;
+    }
 
-   @Override
-   public void visitBaseType(char descriptor)
-   {
-      if (stage.equals(Stage.FORMAL))
-      {
-         // skip
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Event not supported by parameter visitor");
-      }
-   }
+    @Override
+    public void visitBaseType(char descriptor) {
+        if (stage.equals(Stage.FORMAL)) {
+            // skip
+        } else {
+            throw new UnsupportedOperationException("Event not supported by parameter visitor");
+        }
+    }
 
-   @Override
-   public void visitTypeVariable(String name)
-   {
-      if (stage.equals(Stage.FORMAL))
-      {
-         // skip
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Event not supported by parameter visitor");
-      }
-   }
+    @Override
+    public void visitTypeVariable(String name) {
+        if (stage.equals(Stage.FORMAL)) {
+            // skip
+        } else {
+            throw new UnsupportedOperationException("Event not supported by parameter visitor");
+        }
+    }
 
-   @Override
-   public SignatureVisitor visitArrayType()
-   {
-      if (stage.equals(Stage.FORMAL))
-      {
-         // skip
-         return this;
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Event not supported by parameter visitor");
-      }
-   }
+    @Override
+    public SignatureVisitor visitArrayType() {
+        if (stage.equals(Stage.FORMAL)) {
+            // skip
+            return this;
+        } else {
+            throw new UnsupportedOperationException("Event not supported by parameter visitor");
+        }
+    }
 
-   @Override
-   public void visitClassType(String name)
-   {
-      if (stage.equals(Stage.FORMAL))
-      {
-         // skip
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Event not supported by parameter visitor");
-      }
-   }
+    @Override
+    public void visitClassType(String name) {
+        if (stage.equals(Stage.FORMAL)) {
+            // skip
+        } else {
+            throw new UnsupportedOperationException("Event not supported by parameter visitor");
+        }
+    }
 
-   @Override
-   public void visitInnerClassType(String name)
-   {
-      if (stage.equals(Stage.FORMAL))
-      {
-         // skip
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Event not supported by parameter visitor");
-      }
-   }
+    @Override
+    public void visitInnerClassType(String name) {
+        if (stage.equals(Stage.FORMAL)) {
+            // skip
+        } else {
+            throw new UnsupportedOperationException("Event not supported by parameter visitor");
+        }
+    }
 
-   @Override
-   public void visitTypeArgument()
-   {
-      if (stage.equals(Stage.FORMAL))
-      {
-         // skip
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Event not supported by parameter visitor");
-      }
-   }
+    @Override
+    public void visitTypeArgument() {
+        if (stage.equals(Stage.FORMAL)) {
+            // skip
+        } else {
+            throw new UnsupportedOperationException("Event not supported by parameter visitor");
+        }
+    }
 
-   @Override
-   public SignatureVisitor visitTypeArgument(char wildcard)
-   {
-      if (stage.equals(Stage.FORMAL))
-      {
-         // skip
-         return this;
-      }
-      else
-      {
-         throw new UnsupportedOperationException("Event not supported by parameter visitor");
-      }
-   }
+    @Override
+    public SignatureVisitor visitTypeArgument(char wildcard) {
+        if (stage.equals(Stage.FORMAL)) {
+            // skip
+            return this;
+        } else {
+            throw new UnsupportedOperationException("Event not supported by parameter visitor");
+        }
+    }
 
-   @Override
-   public void visitEnd()
-   {
-   }
+    @Override
+    public void visitEnd() {
+    }
 
-   public List<String> getParameters()
-   {
-      return parameters.getParameters();
-   }
+    public List<String> getParameters() {
+        return parameters.getParameters();
+    }
 
-   public String getReturnType()
-   {
-      if (returnType.getParameters().isEmpty())
-      {
-         return null;
-      }
-      return returnType.getParameters().get(0);
-   }
+    public String getReturnType() {
+        if (returnType.getParameters().isEmpty()) {
+            return null;
+        }
+        return returnType.getParameters().get(0);
+    }
 
 }

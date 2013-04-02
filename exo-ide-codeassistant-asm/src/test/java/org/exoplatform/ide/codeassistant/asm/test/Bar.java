@@ -23,26 +23,25 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 public @interface Bar {
 
-   int i() default 42;
-   
-   String strring() default "";
+    int i() default 42;
 
-   E enu() default E.ONE;
+    String strring() default "";
 
-   Class<?> clazz() default String.class;
+    E enu() default E.ONE;
 
-   String[] str() default "str";
+    Class<?> clazz() default String.class;
 
-   double[] vertex() default {1.4, 2.04, 5.0007};
-   
-   Class<?>[] clazzs() default {Integer.class, List.class, Math.class};
-   
-   Foo getF() default @Foo(foo = 5, bar = {"aaa", "bbb"});
-   
-   Foo[] getArr() default {@Foo(foo = 5, bar = {"aaa", "bbb"}), @Foo(foo=10, bar={"ccc, ddd"})};
+    String[] str() default "str";
+
+    double[] vertex() default {1.4, 2.04, 5.0007};
+
+    Class<?>[] clazzs() default {Integer.class, List.class, Math.class};
+
+    Foo getF() default @Foo(foo = 5, bar = {"aaa", "bbb"});
+
+    Foo[] getArr() default {@Foo(foo = 5, bar = {"aaa", "bbb"}), @Foo(foo = 10, bar = {"ccc, ddd"})};
 
 }
