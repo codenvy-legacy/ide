@@ -28,22 +28,20 @@ import org.exoplatform.ide.extension.appfog.client.start.StartApplicationEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class StartApplicationControl extends AbstractAppfogControl
-{
+public class StartApplicationControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.startAppControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.startAppControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.startAppControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.startAppControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.startAppControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.startAppControlPrompt();
 
-   public StartApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.startApp(), AppfogClientBundle.INSTANCE.startAppDisabled());
-      setEvent(new StartApplicationEvent());
-      setDelimiterBefore(true);
-   }
+    public StartApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.startApp(), AppfogClientBundle.INSTANCE.startAppDisabled());
+        setEvent(new StartApplicationEvent());
+        setDelimiterBefore(true);
+    }
 }

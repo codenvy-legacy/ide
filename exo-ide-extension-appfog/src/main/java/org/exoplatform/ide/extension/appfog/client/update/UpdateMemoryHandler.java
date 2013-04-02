@@ -26,13 +26,12 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface UpdateMemoryHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to start application.
-    *
-    * @param event
-    */
-   void onUpdateMemory(UpdateMemoryEvent event);
+public interface UpdateMemoryHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to start application.
+     *
+     * @param event
+     */
+    void onUpdateMemory(UpdateMemoryEvent event);
 
 }

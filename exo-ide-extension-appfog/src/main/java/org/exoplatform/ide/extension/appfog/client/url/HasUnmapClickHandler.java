@@ -25,12 +25,12 @@ package org.exoplatform.ide.extension.appfog.client.url;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface HasUnmapClickHandler
-{
-   /**
-    * Adds a {@link UnmapHandler} handler.
-    *
-    * @param handler the unmap button click handler
-    */
-   void addUnmapClickHandler(UnmapHandler handler);
+public interface HasUnmapClickHandler {
+    /**
+     * Adds a {@link UnmapHandler} handler.
+     *
+     * @param handler
+     *         the unmap button click handler
+     */
+    void addUnmapClickHandler(UnmapHandler handler);
 }

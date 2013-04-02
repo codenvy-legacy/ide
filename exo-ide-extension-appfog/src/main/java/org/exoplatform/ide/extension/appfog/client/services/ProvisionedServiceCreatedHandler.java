@@ -26,10 +26,10 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ProvisionedServiceCreatedHandler
-{
-   /**
-    * @param service created service
-    */
-   void onProvisionedServiceCreated(AppfogProvisionedService service);
+public interface ProvisionedServiceCreatedHandler {
+    /**
+     * @param service
+     *         created service
+     */
+    void onProvisionedServiceCreated(AppfogProvisionedService service);
 }

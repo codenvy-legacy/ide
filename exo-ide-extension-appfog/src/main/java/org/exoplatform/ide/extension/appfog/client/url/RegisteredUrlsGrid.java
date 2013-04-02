@@ -33,67 +33,56 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class RegisteredUrlsGrid extends ListGrid<String> implements HasUnmapClickHandler
-{
-   private final String ID = "ideAppfogUnmapUrlGrid";
+public class RegisteredUrlsGrid extends ListGrid<String> implements HasUnmapClickHandler {
+    private final String ID = "ideAppfogUnmapUrlGrid";
 
-   private final String URL = AppfogExtension.LOCALIZATION_CONSTANT.applicationUnmapUrlGridUrlField();
+    private final String URL = AppfogExtension.LOCALIZATION_CONSTANT.applicationUnmapUrlGridUrlField();
 
-   private final String UNMAP_BUTTON_TITLE = AppfogExtension.LOCALIZATION_CONSTANT.unmapButton();
+    private final String UNMAP_BUTTON_TITLE = AppfogExtension.LOCALIZATION_CONSTANT.unmapButton();
 
-   private final String UNMAP_COLUMN_HEADER = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlListGridColumnTitle();
+    private final String UNMAP_COLUMN_HEADER = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlListGridColumnTitle();
 
-   private Column<String, String> buttonColumn;
+    private Column<String, String> buttonColumn;
 
-   public RegisteredUrlsGrid()
-   {
-      super();
+    public RegisteredUrlsGrid() {
+        super();
 
-      setID(ID);
+        setID(ID);
 
-      buttonColumn = new Column<String, String>(new ButtonCell())
-      {
-         @Override
-         public String getValue(String object)
-         {
-            return UNMAP_BUTTON_TITLE;
-         }
-      };
+        buttonColumn = new Column<String, String>(new ButtonCell()) {
+            @Override
+            public String getValue(String object) {
+                return UNMAP_BUTTON_TITLE;
+            }
+        };
 
-      Column<String, SafeHtml> valueColumn = new Column<String, SafeHtml>(new SafeHtmlCell())
-      {
-         @Override
-         public SafeHtml getValue(final String url)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+        Column<String, SafeHtml> valueColumn = new Column<String, SafeHtml>(new SafeHtmlCell()) {
+            @Override
+            public SafeHtml getValue(final String url) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               public String asString()
-               {
-                  return "<a target=\"_blank\" href=\"http://" + url + "\">" + url + "</a>";
-               }
-            };
-            return html;
-         }
-      };
+                    public String asString() {
+                        return "<a target=\"_blank\" href=\"http://" + url + "\">" + url + "</a>";
+                    }
+                };
+                return html;
+            }
+        };
 
-      getCellTable().addColumn(valueColumn, URL);
-      getCellTable().setColumnWidth(valueColumn, "75%");
-      getCellTable().addColumn(buttonColumn, UNMAP_COLUMN_HEADER);
-      getCellTable().setColumnWidth(buttonColumn, "25%");
-   }
+        getCellTable().addColumn(valueColumn, URL);
+        getCellTable().setColumnWidth(valueColumn, "75%");
+        getCellTable().addColumn(buttonColumn, UNMAP_COLUMN_HEADER);
+        getCellTable().setColumnWidth(buttonColumn, "25%");
+    }
 
-   @Override
-   public void addUnmapClickHandler(final UnmapHandler handler)
-   {
-      buttonColumn.setFieldUpdater(new FieldUpdater<String, String>()
-      {
-         @Override
-         public void update(int index, String url, String value)
-         {
-            handler.onUnmapUrl(url);
-         }
-      });
-   }
+    @Override
+    public void addUnmapClickHandler(final UnmapHandler handler) {
+        buttonColumn.setFieldUpdater(new FieldUpdater<String, String>() {
+            @Override
+            public void update(int index, String url, String value) {
+                handler.onUnmapUrl(url);
+            }
+        });
+    }
 }

@@ -28,22 +28,20 @@ import org.exoplatform.ide.extension.appfog.client.delete.DeleteApplicationEvent
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class DeleteApplicationControl extends AbstractAppfogControl
-{
+public class DeleteApplicationControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt();
 
-   public DeleteApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.deleteApplication(),
-         AppfogClientBundle.INSTANCE.deleteApplicationDisabled());
-      setEvent(new DeleteApplicationEvent());
-   }
+    public DeleteApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.deleteApplication(),
+                  AppfogClientBundle.INSTANCE.deleteApplicationDisabled());
+        setEvent(new DeleteApplicationEvent());
+    }
 }

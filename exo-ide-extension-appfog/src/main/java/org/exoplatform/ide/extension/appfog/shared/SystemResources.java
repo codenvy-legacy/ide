@@ -20,22 +20,22 @@ package org.exoplatform.ide.extension.appfog.shared;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface SystemResources
-{
+public interface SystemResources {
 
-   int getServices();
+    int getServices();
 
-   void setServices(int services);
+    void setServices(int services);
 
-   int getApps();
+    int getApps();
 
-   void setApps(int apps);
+    void setApps(int apps);
 
-   int getMemory();
+    int getMemory();
 
-   void setMemory(int memory);
+    void setMemory(int memory);
 
 }

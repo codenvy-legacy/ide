@@ -34,84 +34,65 @@ import org.exoplatform.ide.extension.appfog.client.login.LoginEvent;
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
- * 
  * @see AppfogRESTfulRequestCallback
  */
-public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback<T>
-{
-   private LoggedInHandler loggedIn;
+public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
+    private LoggedInHandler loggedIn;
 
-   private LoginCanceledHandler loginCanceled;
+    private LoginCanceledHandler loginCanceled;
 
-   private String loginUrl;
+    private String loginUrl;
 
-   private final static String APPFOG_EXIT_CODE = "Appfog-Exit-Code";
+    private final static String APPFOG_EXIT_CODE = "Appfog-Exit-Code";
 
-   public AppfogAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-                                     LoginCanceledHandler loginCanceled)
-   {
-      this(unmarshaller, loggedIn, loginCanceled, null);
-   }
+    public AppfogAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                      LoginCanceledHandler loginCanceled) {
+        this(unmarshaller, loggedIn, loginCanceled, null);
+    }
 
-   public AppfogAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-                                     LoginCanceledHandler loginCanceled, String loginUrl)
-   {
-      super(unmarshaller);
-      this.loggedIn = loggedIn;
-      this.loginCanceled = loginCanceled;
-      this.loginUrl = loginUrl;
-   }
+    public AppfogAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                      LoginCanceledHandler loginCanceled, String loginUrl) {
+        super(unmarshaller);
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
+        this.loginUrl = loginUrl;
+    }
 
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
-            && serverException.getMessage().contains("Authentication required."))
-         {
-            IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
-            return;
-         }
-         else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
-            && serverException.getHeader(APPFOG_EXIT_CODE) != null
-            && "200".equals(serverException.getHeader(APPFOG_EXIT_CODE)))
-         {
-            IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
-            return;
-         }
-         else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
-            && serverException.getHeader(APPFOG_EXIT_CODE) != null
-            && "301".equals(serverException.getHeader(APPFOG_EXIT_CODE)))
-         {
-            Dialogs.getInstance().showError(AppfogExtension.LOCALIZATION_CONSTANT.applicationNotFound());
-            return;
-         }
-         else
-         {
-            String msg = "";
-            if (serverException.isErrorMessageProvided())
-            {
-               msg = serverException.getLocalizedMessage();
-               if (RegExp.compile("Application '.+' already exists. Use update or delete.").exec(msg) != null)
-               {
-                  msg = "Application already exist on appfog";
-               }
-               else if (RegExp.compile("Unexpected response from service gateway").exec(msg) != null)
-               {
-                  msg = "Appfog error: " + msg;
-               }
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+                && serverException.getMessage().contains("Authentication required.")) {
+                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                return;
+            } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
+                       && serverException.getHeader(APPFOG_EXIT_CODE) != null
+                       && "200".equals(serverException.getHeader(APPFOG_EXIT_CODE))) {
+                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
+                return;
+            } else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
+                       && serverException.getHeader(APPFOG_EXIT_CODE) != null
+                       && "301".equals(serverException.getHeader(APPFOG_EXIT_CODE))) {
+                Dialogs.getInstance().showError(AppfogExtension.LOCALIZATION_CONSTANT.applicationNotFound());
+                return;
+            } else {
+                String msg = "";
+                if (serverException.isErrorMessageProvided()) {
+                    msg = serverException.getLocalizedMessage();
+                    if (RegExp.compile("Application '.+' already exists. Use update or delete.").exec(msg) != null) {
+                        msg = "Application already exist on appfog";
+                    } else if (RegExp.compile("Unexpected response from service gateway").exec(msg) != null) {
+                        msg = "Appfog error: " + msg;
+                    }
+                } else {
+                    msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+                }
+
+                Dialogs.getInstance().showError(msg);
+                return;
             }
-            else
-            {
-               msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-            }
-
-            Dialogs.getInstance().showError(msg);
-            return;
-         }
-      }
-      IDE.fireEvent(new ExceptionThrownEvent(exception));
-   }
+        }
+        IDE.fireEvent(new ExceptionThrownEvent(exception));
+    }
 }

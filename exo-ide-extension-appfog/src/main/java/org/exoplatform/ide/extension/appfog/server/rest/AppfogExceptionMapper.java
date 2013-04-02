@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.appfog.server.rest;
 import org.exoplatform.ide.extension.appfog.server.AppfogException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -31,37 +32,30 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class AppfogExceptionMapper implements ExceptionMapper<AppfogException>
-{
+public class AppfogExceptionMapper implements ExceptionMapper<AppfogException> {
 
-   private static final Log log = ExoLogger.getExoLogger(AppfogExceptionMapper.class);
+    private static final Log log = ExoLogger.getExoLogger(AppfogExceptionMapper.class);
 
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(Throwable)
-    */
-   @Override
-   public Response toResponse(AppfogException e)
-   {
-      log.debug("exit code :{}, message: {}", e.getExitCode(), e.getMessage());
-      if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage()))
-      {
-         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
-            .entity(e.getMessage()).type(e.getContentType()).build();
-      }
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(Throwable) */
+    @Override
+    public Response toResponse(AppfogException e) {
+        log.debug("exit code :{}, message: {}", e.getExitCode(), e.getMessage());
+        if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage())) {
+            return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+                           .entity(e.getMessage()).type(e.getContentType()).build();
+        }
 
-      if (e.getResponseStatus() == 500 && "Can't access target.\n".equals(e.getMessage()))
-      {
-         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Unknown-target")
-            .entity(e.getMessage()).type(e.getContentType()).build();
-      }
+        if (e.getResponseStatus() == 500 && "Can't access target.\n".equals(e.getMessage())) {
+            return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Unknown-target")
+                           .entity(e.getMessage()).type(e.getContentType()).build();
+        }
 
-      ResponseBuilder rb = Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
-         .entity(e.getMessage()).type(e.getContentType());
-      int exitCode = e.getExitCode();
-      if (exitCode != -1)
-      {
-         rb.header("Appfog-Exit-Code", exitCode);
-      }
-      return rb.build();
-   }
+        ResponseBuilder rb = Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+                                     .entity(e.getMessage()).type(e.getContentType());
+        int exitCode = e.getExitCode();
+        if (exitCode != -1) {
+            rb.header("Appfog-Exit-Code", exitCode);
+        }
+        return rb.build();
+    }
 }

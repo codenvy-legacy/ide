@@ -28,22 +28,20 @@ import org.exoplatform.ide.extension.appfog.client.url.UnmapUrlEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UnmapUrlControl extends AbstractAppfogControl
-{
+public class UnmapUrlControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlControlPrompt();
 
-   public UnmapUrlControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.mapUrl(), AppfogClientBundle.INSTANCE.mapUrlDisabled());
-      setEvent(new UnmapUrlEvent());
-      setDelimiterBefore(true);
-   }
+    public UnmapUrlControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.mapUrl(), AppfogClientBundle.INSTANCE.mapUrlDisabled());
+        setEvent(new UnmapUrlEvent());
+        setDelimiterBefore(true);
+    }
 }

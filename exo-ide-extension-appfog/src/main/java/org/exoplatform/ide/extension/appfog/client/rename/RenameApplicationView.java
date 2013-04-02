@@ -38,83 +38,69 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class RenameApplicationView extends ViewImpl implements RenameApplicationPresenter.Display
-{
-   private static final String ID = "ideRenameApplicationView";
+public class RenameApplicationView extends ViewImpl implements RenameApplicationPresenter.Display {
+    private static final String ID = "ideRenameApplicationView";
 
-   private static final int WIDTH = 410;
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 160;
+    private static final int HEIGHT = 160;
 
-   private static final String RENAME_BUTTON_ID = "ideRenameApplicationViewRenameButton";
+    private static final String RENAME_BUTTON_ID = "ideRenameApplicationViewRenameButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRenameApplicationViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideRenameApplicationViewCancelButton";
 
-   private static final String NAME_FIELD_ID = "ideRenameApplicationViewNameField";
+    private static final String NAME_FIELD_ID = "ideRenameApplicationViewNameField";
 
-   /**
-    * Application name field.
-    */
-   @UiField
-   TextField nameField;
+    /** Application name field. */
+    @UiField
+    TextField nameField;
 
-   /**
-    * Rename button.
-    */
-   @UiField
-   ImageButton renameButton;
+    /** Rename button. */
+    @UiField
+    ImageButton renameButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   private static RenameApplicationViewUiBinder uiBinder = GWT.create(RenameApplicationViewUiBinder.class);
+    private static RenameApplicationViewUiBinder uiBinder = GWT.create(RenameApplicationViewUiBinder.class);
 
-   interface RenameApplicationViewUiBinder extends UiBinder<Widget, RenameApplicationView>
-   {
-   }
+    interface RenameApplicationViewUiBinder extends UiBinder<Widget, RenameApplicationView> {
+    }
 
-   public RenameApplicationView()
-   {
-      super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public RenameApplicationView() {
+        super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      nameField.setName(NAME_FIELD_ID);
-      nameField.setHeight(22);
-      renameButton.setButtonId(RENAME_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        nameField.setName(NAME_FIELD_ID);
+        nameField.setHeight(22);
+        renameButton.setButtonId(RENAME_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   @Override
-   public TextFieldItem getRenameField()
-   {
-      return nameField;
-   }
+    @Override
+    public TextFieldItem getRenameField() {
+        return nameField;
+    }
 
-   @Override
-   public HasClickHandlers getRenameButton()
-   {
-      return renameButton;
-   }
+    @Override
+    public HasClickHandlers getRenameButton() {
+        return renameButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public void selectValueInRenameField()
-   {
-      nameField.selectValue();
-   }
+    @Override
+    public void selectValueInRenameField() {
+        nameField.selectValue();
+    }
 
-   @Override
-   public void enableRenameButton(boolean isEnabled)
-   {
-      renameButton.setEnabled(isEnabled);
-   }
+    @Override
+    public void enableRenameButton(boolean isEnabled) {
+        renameButton.setEnabled(isEnabled);
+    }
 
 }

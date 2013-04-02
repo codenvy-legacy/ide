@@ -39,87 +39,73 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class DeleteApplicationView extends ViewImpl implements DeleteApplicationPresenter.Display
-{
-   private static final String ID = "ideDeleteApplicationView";
+public class DeleteApplicationView extends ViewImpl implements DeleteApplicationPresenter.Display {
+    private static final String ID = "ideDeleteApplicationView";
 
-   private static final int WIDTH = 420;
+    private static final int WIDTH = 420;
 
-   private static final int HEIGHT = 160;
+    private static final int HEIGHT = 160;
 
-   private static final String RENAME_BUTTON_ID = "ideDeleteApplicationViewRenameButton";
+    private static final String RENAME_BUTTON_ID = "ideDeleteApplicationViewRenameButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideDeleteApplicationViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideDeleteApplicationViewCancelButton";
 
-   /**
-    * Checkbox, that indicates is delete services with application.
-    */
-   @UiField
-   CheckBox deleteServicesField;
+    /** Checkbox, that indicates is delete services with application. */
+    @UiField
+    CheckBox deleteServicesField;
 
-   /**
-    * Delete button.
-    */
-   @UiField
-   ImageButton deleteButton;
+    /** Delete button. */
+    @UiField
+    ImageButton deleteButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   Label askLabel;
+    @UiField
+    Label askLabel;
 
-   @UiField
-   Label askDeleteServicesLabel;
+    @UiField
+    Label askDeleteServicesLabel;
 
-   private static DeleteApplicationViewUiBinder uiBinder = GWT.create(DeleteApplicationViewUiBinder.class);
+    private static DeleteApplicationViewUiBinder uiBinder = GWT.create(DeleteApplicationViewUiBinder.class);
 
-   interface DeleteApplicationViewUiBinder extends UiBinder<Widget, DeleteApplicationView>
-   {
-   }
+    interface DeleteApplicationViewUiBinder extends UiBinder<Widget, DeleteApplicationView> {
+    }
 
-   public DeleteApplicationView()
-   {
-      super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public DeleteApplicationView() {
+        super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      deleteButton.setButtonId(RENAME_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        deleteButton.setButtonId(RENAME_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   @Override
-   public HasValue<Boolean> getDeleteServicesCheckbox()
-   {
-      return deleteServicesField;
-   }
+    @Override
+    public HasValue<Boolean> getDeleteServicesCheckbox() {
+        return deleteServicesField;
+    }
 
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
+    @Override
+    public HasClickHandlers getDeleteButton() {
+        return deleteButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public void setAskMessage(String message)
-   {
-      askLabel.setIsHTML(true);
-      askLabel.setValue(message);
-   }
+    @Override
+    public void setAskMessage(String message) {
+        askLabel.setIsHTML(true);
+        askLabel.setValue(message);
+    }
 
-   @Override
-   public void setAskDeleteServices(String text)
-   {
-      askDeleteServicesLabel.setIsHTML(true);
-      askDeleteServicesLabel.setValue(text);
-   }
+    @Override
+    public void setAskDeleteServices(String text) {
+        askDeleteServicesLabel.setIsHTML(true);
+        askDeleteServicesLabel.setValue(text);
+    }
 
 }

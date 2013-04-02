@@ -23,35 +23,35 @@ package org.exoplatform.ide.extension.appfog.shared;
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: CloudFoundryApplicationResources.java Mar 16, 2012 2:14:15 PM azatsarynnyy $
- *
  */
-public interface AppfogApplicationResources
-{
-   /**
-    * Get amount of memory available for application (in MB).
-    *
-    * @return amount of memory.
-    */
-   int getMemory();
+public interface AppfogApplicationResources {
+    /**
+     * Get amount of memory available for application (in MB).
+     *
+     * @return amount of memory.
+     */
+    int getMemory();
 
-   /**
-    * Set amount of memory available for application (in MB).
-    *
-    * @param memory amount of memory.
-    */
-   void setMemory(int memory);
+    /**
+     * Set amount of memory available for application (in MB).
+     *
+     * @param memory
+     *         amount of memory.
+     */
+    void setMemory(int memory);
 
-   /**
-    * Get amount disk space available for application (in MB).
-    *
-    * @return amount of disk space.
-    */
-   int getDisk();
+    /**
+     * Get amount disk space available for application (in MB).
+     *
+     * @return amount of disk space.
+     */
+    int getDisk();
 
-   /**
-    * Set amount disk space available for application (in MB).
-    *
-    * @param disk amount of disk space.
-    */
-   void setDisk(int disk);
+    /**
+     * Set amount disk space available for application (in MB).
+     *
+     * @param disk
+     *         amount of disk space.
+     */
+    void setDisk(int disk);
 }

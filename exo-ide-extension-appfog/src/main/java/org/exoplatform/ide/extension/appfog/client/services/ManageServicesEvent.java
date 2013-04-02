@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.appfog.client.services;
 
 import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 
 /**
@@ -27,43 +28,30 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ManageServicesEvent extends GwtEvent<ManageServicesHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<ManageServicesHandler> TYPE = new GwtEvent.Type<ManageServicesHandler>();
+public class ManageServicesEvent extends GwtEvent<ManageServicesHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<ManageServicesHandler> TYPE = new GwtEvent.Type<ManageServicesHandler>();
 
-   /**
-    * Application.
-    */
-   private AppfogApplication application;
+    /** Application. */
+    private AppfogApplication application;
 
-   public ManageServicesEvent(AppfogApplication application)
-   {
-      this.application = application;
-   }
+    public ManageServicesEvent(AppfogApplication application) {
+        this.application = application;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageServicesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageServicesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageServicesHandler handler)
-   {
-      handler.onManageServices(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageServicesHandler handler) {
+        handler.onManageServices(this);
+    }
 
-   public AppfogApplication getApplication()
-   {
-      return application;
-   }
+    public AppfogApplication getApplication() {
+        return application;
+    }
 }

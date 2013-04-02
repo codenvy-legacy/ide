@@ -23,61 +23,61 @@
              xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
              xmlns:e="urn:import:org.exoplatform.ide.extension.appfog.client.apps">
 
-   <ui:with field='resource' type='org.exoplatform.ide.extension.appfog.client.AppfogClientBundle'/>
-   <ui:with field="locale" type="org.exoplatform.ide.extension.appfog.client.AppfogLocalizationConstant"></ui:with>
+    <ui:with field='resource' type='org.exoplatform.ide.extension.appfog.client.AppfogClientBundle'/>
+    <ui:with field="locale" type="org.exoplatform.ide.extension.appfog.client.AppfogLocalizationConstant"></ui:with>
 
-   <ui:style>
-      .label {
-         margin-right: 5px;
-         cursor: default;
-         font-family: Verdana, Bitstream Vera Sans, sans-serif;
-         font-size: 11px;
-         font-style: normal;
-         font-weight: normal;
-         float: left;
-      }
+    <ui:style>
+        .label {
+            margin-right: 5px;
+            cursor: default;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-size: 11px;
+            font-style: normal;
+            font-weight: normal;
+            float: left;
+        }
 
-      .floatLeft {
-         float: left;
-         margin-left: 10px;
-      }
+        .floatLeft {
+            float: left;
+            margin-left: 10px;
+        }
 
-      .floatRight {
-         float: right;
-      }
-   </ui:style>
+        .floatRight {
+            float: right;
+        }
+    </ui:style>
 
-   <f:Border margin="10" borderColor="transparent">
-      <f:layer>
-         <f:Border height="75%">
-            <f:layer>
-               <g:ScrollPanel>
-                  <e:ApplicationsListGrid width="100%" ui:field="applicationsGrid"></e:ApplicationsListGrid>
-               </g:ScrollPanel>
-            </f:layer>
-         </f:Border>
-      </f:layer>
-      <f:layer bottom="0" height="30px">
-         <g:DockLayoutPanel width="100%" unit="PCT">
-            <g:west size="7">
-               <g:Label text="{locale.appsServerLabel}" styleName="{style.label}"></g:Label>
-            </g:west>
-            <g:center>
-               <f:TextInput ui:field="serverField" height="22px" width="100%" name="applicationsTarget"></f:TextInput>
-            </g:center>
-            <g:east size="40">
-               <g:FlowPanel width="100%">
-                  <f:ImageButton ui:field="showButton" width="90" height="22" text="{locale.showButton}"
-                                 imageResource="{resource.okButton}"
-                                 disabledImageResource="{resource.okButtonDisabled}" buttonId="applicationsShowButton"
-                                 addStyleNames="{style.floatLeft}"></f:ImageButton>
-                  <f:ImageButton ui:field="closeButton" width="90" height="22" text="{locale.closeButton}"
-                                 imageResource="{resource.cancelButton}"
-                                 disabledImageResource="{resource.cancelButtonDisabled}"
-                                 buttonId="applicationsCloseButton" addStyleNames="{style.floatRight}"></f:ImageButton>
-               </g:FlowPanel>
-            </g:east>
-         </g:DockLayoutPanel>
-      </f:layer>
-   </f:Border>
+    <f:Border margin="10" borderColor="transparent">
+        <f:layer>
+            <f:Border height="75%">
+                <f:layer>
+                    <g:ScrollPanel>
+                        <e:ApplicationsListGrid width="100%" ui:field="applicationsGrid"></e:ApplicationsListGrid>
+                    </g:ScrollPanel>
+                </f:layer>
+            </f:Border>
+        </f:layer>
+        <f:layer bottom="0" height="30px">
+            <g:DockLayoutPanel width="100%" unit="PCT">
+                <g:west size="7">
+                    <g:Label text="{locale.appsServerLabel}" styleName="{style.label}"></g:Label>
+                </g:west>
+                <g:center>
+                    <f:TextInput ui:field="serverField" height="22px" width="100%" name="applicationsTarget"></f:TextInput>
+                </g:center>
+                <g:east size="40">
+                    <g:FlowPanel width="100%">
+                        <f:ImageButton ui:field="showButton" width="90" height="22" text="{locale.showButton}"
+                                       imageResource="{resource.okButton}"
+                                       disabledImageResource="{resource.okButtonDisabled}" buttonId="applicationsShowButton"
+                                       addStyleNames="{style.floatLeft}"></f:ImageButton>
+                        <f:ImageButton ui:field="closeButton" width="90" height="22" text="{locale.closeButton}"
+                                       imageResource="{resource.cancelButton}"
+                                       disabledImageResource="{resource.cancelButtonDisabled}"
+                                       buttonId="applicationsCloseButton" addStyleNames="{style.floatRight}"></f:ImageButton>
+                    </g:FlowPanel>
+                </g:east>
+            </g:DockLayoutPanel>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder>

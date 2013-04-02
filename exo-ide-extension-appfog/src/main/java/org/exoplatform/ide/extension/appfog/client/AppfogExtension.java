@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.appfog.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -60,86 +61,77 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class AppfogExtension extends Extension implements InitializeServicesHandler
-{
-   public static final AppfogAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(AppfogAutoBeanFactory.class);
+public class AppfogExtension extends Extension implements InitializeServicesHandler {
+    public static final AppfogAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(AppfogAutoBeanFactory.class);
 
-   public static final AppfogLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AppfogLocalizationConstant.class);
+    public static final AppfogLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AppfogLocalizationConstant.class);
 
-   public static final String DEFAULT_SERVER = "https://api.appfog.com";
+    public static final String DEFAULT_SERVER = "https://api.appfog.com";
 
-   private static final String ID = "AppFog";
+    private static final String ID = "AppFog";
 
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new AppfogClientService(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
-   }
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new AppfogClientService(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().registerPaaS(
-         new PaaS("AppFog", "AppFog", new Image(AppfogClientBundle.INSTANCE.appfog48()), new Image(
-            AppfogClientBundle.INSTANCE.appfog48Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS,
-            ProjectType.SPRING, ProjectType.PYTHON, ProjectType.PHP, ProjectType.WAR), new DeployApplicationPresenter()));
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+    @Override
+    public void initialize() {
+        IDE.getInstance().registerPaaS(
+                new PaaS("AppFog", "AppFog", new Image(AppfogClientBundle.INSTANCE.appfog48()), new Image(
+                        AppfogClientBundle.INSTANCE.appfog48Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS,
+                                                                                       ProjectType.SPRING, ProjectType.PYTHON,
+                                                                                       ProjectType.PHP, ProjectType.WAR),
+                         new DeployApplicationPresenter()));
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new AppfogControlGroup());
-      IDE.getInstance().addControl(new CreateApplicationControl());
+        IDE.getInstance().addControl(new AppfogControlGroup());
+        IDE.getInstance().addControl(new CreateApplicationControl());
 
-      IDE.getInstance().addControl(new ApplicationsControl());
-      IDE.getInstance().addControl(new SwitchAccountControl());
+        IDE.getInstance().addControl(new ApplicationsControl());
+        IDE.getInstance().addControl(new SwitchAccountControl());
 
-      new CreateApplicationPresenter();
-      new LoginPresenter();
-      new StartApplicationPresenter();
-      new ApplicationInfoPresenter();
-      new UpdateApplicationPresenter();
-      new DeleteApplicationPresenter();
-      new UnmapUrlPresenter();
-      new UpdatePropertiesPresenter();
-      new ApplicationsPresenter();
-      new AppfogProjectPresenter();
-      new ManageServicesPresenter();
-      new CreateServicePresenter();
-   }
+        new CreateApplicationPresenter();
+        new LoginPresenter();
+        new StartApplicationPresenter();
+        new ApplicationInfoPresenter();
+        new UpdateApplicationPresenter();
+        new DeleteApplicationPresenter();
+        new UnmapUrlPresenter();
+        new UpdatePropertiesPresenter();
+        new ApplicationsPresenter();
+        new AppfogProjectPresenter();
+        new ManageServicesPresenter();
+        new CreateServicePresenter();
+    }
 
-   public static boolean canBeDeployedToAF(ProjectModel project)
-   {
-      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
-      return (targets != null && targets.contains(ID));
-   }
+    public static boolean canBeDeployedToAF(ProjectModel project) {
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+        return (targets != null && targets.contains(ID));
+    }
 
-   public static void writeProperty(ProjectModel project, String propertyName, String propertyValue)
-   {
-      Property p = new PropertyImpl(propertyName, propertyValue);
+    public static void writeProperty(ProjectModel project, String propertyName, String propertyValue) {
+        Property p = new PropertyImpl(propertyName, propertyValue);
 
-      project.getProperties().add(p);
+        project.getProperties().add(p);
 
-      ItemWrapper item = new ItemWrapper(project);
-      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
-         {
+        ItemWrapper item = new ItemWrapper(project);
+        ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
 
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               //nothing to do, only write property to project and it's all.
-            }
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    //nothing to do, only write property to project and it's all.
+                }
 
-            @Override
-            protected void onFailure(Throwable e)
-            {
-               //IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         //IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                @Override
+                protected void onFailure(Throwable e) {
+                    //IDE.fireEvent(new ExceptionThrownEvent(e));
+                }
+            });
+        } catch (RequestException e) {
+            //IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

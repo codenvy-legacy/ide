@@ -52,166 +52,134 @@ import java.util.LinkedHashMap;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class CreateServicePresenter extends GitPresenter implements CreateServiceHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      HasValue<String> getSystemServicesField();
+public class CreateServicePresenter extends GitPresenter implements CreateServiceHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        HasValue<String> getSystemServicesField();
 
-      HasValue<String> getNameField();
+        HasValue<String> getNameField();
 
-      HasClickHandlers getCreateButton();
+        HasClickHandlers getCreateButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void setServices(LinkedHashMap<String, String> values);
-   }
+        void setServices(LinkedHashMap<String, String> values);
+    }
 
-   /**
-    * Display.
-    */
-   private Display display;
+    /** Display. */
+    private Display display;
 
-   /**
-    * Handler for successful service creation.
-    */
-   private ProvisionedServiceCreatedHandler serviceCreatedHandler;
+    /** Handler for successful service creation. */
+    private ProvisionedServiceCreatedHandler serviceCreatedHandler;
 
-   private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler()
-   {
+    private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
 
-      @Override
-      public void onLoggedIn()
-      {
-         doCreate();
-      }
-   };
-
-   public CreateServicePresenter()
-   {
-      IDE.addHandler(CreateServiceEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
-
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
+        @Override
+        public void onLoggedIn() {
             doCreate();
-         }
-      });
-   }
+        }
+    };
 
-   /**
-    * Get the list of CloudFoundry services (provisioned and system).
-    */
-   private void getServices()
-   {
-      try
-      {
-         AppfogClientService.getInstance().services(AppfogExtension.DEFAULT_SERVER,
-            new AsyncRequestCallback<AppfogServices>(new AppfogServicesUnmarshaller())
-            {
+    public CreateServicePresenter() {
+        IDE.addHandler(CreateServiceEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-               @Override
-               protected void onSuccess(AppfogServices result)
-               {
-                  LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
-                  for (AppfogSystemService service : result.getAppfogSystemService())
-                  {
-                     values.put(service.getVendor(), service.getDescription());
-                  }
-                  display.setServices(values);
-               }
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  Dialogs.getInstance().showError(AppfogExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceHandler#onCreateService(org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceEvent)
-    */
-   @Override
-   public void onCreateService(CreateServiceEvent event)
-   {
-      this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      getServices();
-   }
+        display.getCreateButton().addClickHandler(new ClickHandler() {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                doCreate();
+            }
+        });
+    }
 
-   /**
-    * Create new provisioned service.
-    */
-   private void doCreate()
-   {
-      String name = display.getNameField().getValue();
-      String type = display.getSystemServicesField().getValue();
+    /** Get the list of CloudFoundry services (provisioned and system). */
+    private void getServices() {
+        try {
+            AppfogClientService.getInstance().services(AppfogExtension.DEFAULT_SERVER,
+                                                       new AsyncRequestCallback<AppfogServices>(new AppfogServicesUnmarshaller()) {
+
+                                                           @Override
+                                                           protected void onSuccess(AppfogServices result) {
+                                                               LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
+                                                               for (AppfogSystemService service : result.getAppfogSystemService()) {
+                                                                   values.put(service.getVendor(), service.getDescription());
+                                                               }
+                                                               display.setServices(values);
+                                                           }
+
+                                                           @Override
+                                                           protected void onFailure(Throwable exception) {
+                                                               Dialogs.getInstance().showError(
+                                                                       AppfogExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
+                                                           }
+                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceHandler#onCreateService(org.exoplatform.ide
+     * .extension.cloudfoundry.client.services.CreateServiceEvent) */
+    @Override
+    public void onCreateService(CreateServiceEvent event) {
+        this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        getServices();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** Create new provisioned service. */
+    private void doCreate() {
+        String name = display.getNameField().getValue();
+        String type = display.getSystemServicesField().getValue();
 
 //      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      final ProjectModel project = getSelectedProject();
-      final String infraName = project.getProperty("appfog-infra").getValue().get(0);
+        final ProjectModel project = getSelectedProject();
+        final String infraName = project.getProperty("appfog-infra").getValue().get(0);
 
-      try
-      {
-         AutoBean<AppfogProvisionedService> provisionedService = AppfogExtension.AUTO_BEAN_FACTORY.provisionedService();
-         AutoBeanUnmarshaller<AppfogProvisionedService> unmarshaller =
-            new AutoBeanUnmarshaller<AppfogProvisionedService>(provisionedService);
+        try {
+            AutoBean<AppfogProvisionedService> provisionedService = AppfogExtension.AUTO_BEAN_FACTORY.provisionedService();
+            AutoBeanUnmarshaller<AppfogProvisionedService> unmarshaller =
+                    new AutoBeanUnmarshaller<AppfogProvisionedService>(provisionedService);
 
-         AppfogClientService.getInstance().createService(AppfogExtension.DEFAULT_SERVER, type, name, null, null, null, infraName,
-            new AppfogAsyncRequestCallback<AppfogProvisionedService>(unmarshaller, createServiceLoggedInHandler, null)
-            {
+            AppfogClientService.getInstance().createService(AppfogExtension.DEFAULT_SERVER, type, name, null, null, null, infraName,
+                                                            new AppfogAsyncRequestCallback<AppfogProvisionedService>(unmarshaller,
 
-               @Override
-               protected void onSuccess(AppfogProvisionedService result)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-                  serviceCreatedHandler.onProvisionedServiceCreated(result);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+
+
+                                                                                                                     createServiceLoggedInHandler,
+                                                                                                                     null) {
+
+                                                                @Override
+                                                                protected void onSuccess(AppfogProvisionedService result) {
+                                                                    IDE.getInstance().closeView(display.asView().getId());
+                                                                    serviceCreatedHandler.onProvisionedServiceCreated(result);
+                                                                }
+                                                            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

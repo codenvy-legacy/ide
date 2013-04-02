@@ -35,69 +35,55 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ProvisionedServicesGrid extends ListGrid<AppfogProvisionedService> implements HasBindServiceHandler
-{
-   private Column<AppfogProvisionedService, String> nameColumn;
+public class ProvisionedServicesGrid extends ListGrid<AppfogProvisionedService> implements HasBindServiceHandler {
+    private Column<AppfogProvisionedService, String> nameColumn;
 
-   private Column<AppfogProvisionedService, String> bindColumn;
+    private Column<AppfogProvisionedService, String> bindColumn;
 
-   public ProvisionedServicesGrid()
-   {
-      setID("eXoProvisionedServicesGrid");
+    public ProvisionedServicesGrid() {
+        setID("eXoProvisionedServicesGrid");
 
-      nameColumn = new Column<AppfogProvisionedService, String>(new TextCell())
-      {
+        nameColumn = new Column<AppfogProvisionedService, String>(new TextCell()) {
 
-         @Override
-         public String getValue(AppfogProvisionedService object)
-         {
-            StringBuilder title = new StringBuilder(object.getName());
-            title.append(" (").append(object.getVendor()).append(" ").append(object.getVersion()).append(")");
+            @Override
+            public String getValue(AppfogProvisionedService object) {
+                StringBuilder title = new StringBuilder(object.getName());
+                title.append(" (").append(object.getVendor()).append(" ").append(object.getVersion()).append(")");
 
-            return title.toString();
-         }
-      };
+                return title.toString();
+            }
+        };
 
-      bindColumn = new Column<AppfogProvisionedService, String>(new ButtonCell())
-      {
+        bindColumn = new Column<AppfogProvisionedService, String>(new ButtonCell()) {
 
-         @Override
-         public String getValue(AppfogProvisionedService object)
-         {
-            return AppfogExtension.LOCALIZATION_CONSTANT.bindButton();
-         }
-      };
+            @Override
+            public String getValue(AppfogProvisionedService object) {
+                return AppfogExtension.LOCALIZATION_CONSTANT.bindButton();
+            }
+        };
 
-      getCellTable().addColumn(nameColumn);
-      getCellTable().addColumn(bindColumn);
-      getCellTable().setColumnWidth(bindColumn, "60px");
-   }
+        getCellTable().addColumn(nameColumn);
+        getCellTable().addColumn(bindColumn);
+        getCellTable().setColumnWidth(bindColumn, "60px");
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.HasBindServiceHandler#addBindServiceHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addBindServiceHandler(final SelectionHandler<AppfogProvisionedService> handler)
-   {
-      bindColumn.setFieldUpdater(new FieldUpdater<AppfogProvisionedService, String>()
-      {
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.HasBindServiceHandler#addBindServiceHandler(com.google.gwt.event
+     * .logical.shared.SelectionHandler) */
+    @Override
+    public void addBindServiceHandler(final SelectionHandler<AppfogProvisionedService> handler) {
+        bindColumn.setFieldUpdater(new FieldUpdater<AppfogProvisionedService, String>() {
 
-         @Override
-         public void update(int index, AppfogProvisionedService object, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(object));
-         }
-      });
-   }
+            @Override
+            public void update(int index, AppfogProvisionedService object, String value) {
+                handler.onSelection(new SelectionEventImpl(object));
+            }
+        });
+    }
 
-   private class SelectionEventImpl extends SelectionEvent<AppfogProvisionedService>
-   {
-      /**
-       * @param selectedItem
-       */
-      protected SelectionEventImpl(AppfogProvisionedService selectedItem)
-      {
-         super(selectedItem);
-      }
-   }
+    private class SelectionEventImpl extends SelectionEvent<AppfogProvisionedService> {
+        /** @param selectedItem */
+        protected SelectionEventImpl(AppfogProvisionedService selectedItem) {
+            super(selectedItem);
+        }
+    }
 }

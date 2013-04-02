@@ -24,6 +24,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 
@@ -31,91 +32,70 @@ import org.exoplatform.gwtframework.ui.client.component.TextInput;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display
-{
-   interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView>
-   {
-   }
+public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display {
+    interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView> {
+    }
 
-   private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
+    private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
 
-   @UiField
-   TextInput targetField;
+    @UiField
+    TextInput targetField;
 
-   @UiField
-   TextInput nameField;
+    @UiField
+    TextInput nameField;
 
-   @UiField
-   ComboBoxField infraField;
+    @UiField
+    ComboBoxField infraField;
 
-   /**
-    * Application URL field.
-    */
-   @UiField
-   TextInput urlField;
+    /** Application URL field. */
+    @UiField
+    TextInput urlField;
 
-   public DeployApplicationView()
-   {
-      super();
-      initWidget(uiBinder.createAndBindUi(this));
-      setHeight("220px");
-      targetField.setReadOnly(true);
-   }
+    public DeployApplicationView() {
+        super();
+        initWidget(uiBinder.createAndBindUi(this));
+        setHeight("220px");
+        targetField.setReadOnly(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getNameField()
-    */
-   @Override
-   public HasValue<String> getNameField()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getNameField() */
+    @Override
+    public HasValue<String> getNameField() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getUrlField()
-    */
-   @Override
-   public HasValue<String> getUrlField()
-   {
-      return urlField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getUrlField() */
+    @Override
+    public HasValue<String> getUrlField() {
+        return urlField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getServerField()
-    */
-   @Override
-   public HasValue<String> getServerField()
-   {
-      return targetField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getServerField() */
+    @Override
+    public HasValue<String> getServerField() {
+        return targetField;
+    }
 
-   @Override
-   public HasValue<String> getInfraField()
-   {
-      return infraField;
-   }
+    @Override
+    public HasValue<String> getInfraField() {
+        return infraField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#setServerValues(java.lang.String[])
-    */
-   @Override
-   public void setServerValue(String server)
-   {
-      targetField.setValue(server);
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#setServerValues(java.lang
+     * .String[]) */
+    @Override
+    public void setServerValue(String server) {
+        targetField.setValue(server);
+    }
 
-   @Override
-   public void setInfraValues(String[] infras)
-   {
-      infraField.setValueMap(infras);
-   }
+    @Override
+    public void setInfraValues(String[] infras) {
+        infraField.setValueMap(infras);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getView()
-    */
-   @Override
-   public Composite getView()
-   {
-      return this;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getView() */
+    @Override
+    public Composite getView() {
+        return this;
+    }
 }

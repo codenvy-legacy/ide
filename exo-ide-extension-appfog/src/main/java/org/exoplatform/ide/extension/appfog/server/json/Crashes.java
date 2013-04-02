@@ -24,60 +24,50 @@ import java.util.Arrays;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class Crashes
-{
-   private Crash[] crashes;
+public class Crashes {
+    private Crash[] crashes;
 
-   public Crash[] getCrashes()
-   {
-      return crashes;
-   }
+    public Crash[] getCrashes() {
+        return crashes;
+    }
 
-   public void setCrashes(Crash[] crashes)
-   {
-      this.crashes = crashes;
-   }
+    public void setCrashes(Crash[] crashes) {
+        this.crashes = crashes;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "Crashes{" +
-         "crashes=" + (crashes == null ? null : Arrays.asList(crashes)) +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "Crashes{" +
+               "crashes=" + (crashes == null ? null : Arrays.asList(crashes)) +
+               '}';
+    }
 
-   public static class Crash
-   {
-      private String instance;
-      private long since;
+    public static class Crash {
+        private String instance;
+        private long   since;
 
-      public String getInstance()
-      {
-         return instance;
-      }
+        public String getInstance() {
+            return instance;
+        }
 
-      public void setInstance(String instance)
-      {
-         this.instance = instance;
-      }
+        public void setInstance(String instance) {
+            this.instance = instance;
+        }
 
-      public long getSince()
-      {
-         return since;
-      }
+        public long getSince() {
+            return since;
+        }
 
-      public void setSince(long since)
-      {
-         this.since = since;
-      }
+        public void setSince(long since) {
+            this.since = since;
+        }
 
-      @Override
-      public String toString()
-      {
-         return "Crash{" +
-            "instance='" + instance + '\'' +
-            ", since=" + since +
-            '}';
-      }
-   }
+        @Override
+        public String toString() {
+            return "Crash{" +
+                   "instance='" + instance + '\'' +
+                   ", since=" + since +
+                   '}';
+        }
+    }
 }
