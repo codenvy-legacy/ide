@@ -24,7 +24,6 @@ import com.codenvy.ide.client.scheduler.Scheduler.Task;
 import com.codenvy.ide.client.util.CollectionUtils;
 import com.codenvy.ide.client.util.IntMap;
 
-
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -33,204 +32,162 @@ import java.util.Queue;
  *
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public class JobRegistry
-{
+public class JobRegistry {
 
-   /**
-    * Jobs at each priority.
-    *
-    * Array of priority ordinals to ordered maps (which JSO maps inherently are)
-    * Each map is an ordered map of id to job.
-    */
-   private final IntMap<Queue<Schedulable>> priorities = CollectionUtils.createIntMap();
+    /**
+     * Jobs at each priority.
+     * <p/>
+     * Array of priority ordinals to ordered maps (which JSO maps inherently are)
+     * Each map is an ordered map of id to job.
+     */
+    private final IntMap<Queue<Schedulable>> priorities = CollectionUtils.createIntMap();
 
-   /**
-    * Controller that collects job counts.
-    */
-   private final Controller jobCounter;
+    /** Controller that collects job counts. */
+    private final Controller jobCounter;
 
-   /**
-    * Used as part of a pair in a return value, to avoid creating an object
-    */
-   private Schedulable returnJob;
+    /** Used as part of a pair in a return value, to avoid creating an object */
+    private Schedulable returnJob;
 
-   /**
-    * Number of jobs in the registry, to provide fast {@link #isEmpty()}.
-    */
-   private int jobCount;
+    /** Number of jobs in the registry, to provide fast {@link #isEmpty()}. */
+    private int jobCount;
 
-   /**
-    * Creates a job registry.
-    *
-    * @param jobCounter counter of jobs
-    */
-   public JobRegistry(Controller jobCounter)
-   {
-      this.jobCounter = jobCounter;
+    /**
+     * Creates a job registry.
+     *
+     * @param jobCounter
+     *         counter of jobs
+     */
+    public JobRegistry(Controller jobCounter) {
+        this.jobCounter = jobCounter;
 
-      for (Priority p : Priority.values())
-      {
-         // TODO(zdwang): Use a fast LinkedList that doens't mak this class untestable.
-         priorities.put(p.ordinal(), new LinkedList<Schedulable>());
-      }
-   }
+        for (Priority p : Priority.values()) {
+            // TODO(zdwang): Use a fast LinkedList that doens't mak this class untestable.
+            priorities.put(p.ordinal(), new LinkedList<Schedulable>());
+        }
+    }
 
-   /**
-    * Add a job at the given priority
-    *
-    * @param priority
-    * @param job
-    */
-   public void add(Priority priority, Schedulable job)
-   {
-      assert job != null : "tried to add null job";
-      Queue<Schedulable> queue = priorities.get(priority.ordinal());
-      if (queue.remove(job))
-      {
-         // Do nothing else
-         queue.add(job);
-         return;
-      }
-      else
-      {
-         queue.add(job);
-         jobCount++;
-         jobCounter.jobAdded(priority, job);
-      }
-   }
+    /**
+     * Add a job at the given priority
+     *
+     * @param priority
+     * @param job
+     */
+    public void add(Priority priority, Schedulable job) {
+        assert job != null : "tried to add null job";
+        Queue<Schedulable> queue = priorities.get(priority.ordinal());
+        if (queue.remove(job)) {
+            // Do nothing else
+            queue.add(job);
+            return;
+        } else {
+            queue.add(job);
+            jobCount++;
+            jobCounter.jobAdded(priority, job);
+        }
+    }
 
-   /**
-    * @param priority
-    * @return the number of jobs at the given priority.
-    */
-   public int numJobsAtPriority(Priority priority)
-   {
-      return priorities.get(priority.ordinal()).size();
-   }
+    /**
+     * @param priority
+     * @return the number of jobs at the given priority.
+     */
+    public int numJobsAtPriority(Priority priority) {
+        return priorities.get(priority.ordinal()).size();
+    }
 
-   /**
-    * Remove the first job for the given priority.
-    * The job and its id can be retrieved by the various getRemoved* methods
-    * (This is to avoid creating a pair object as a return value).
-    *
-    * @param priority
-    */
-   public void removeFirst(Priority priority)
-   {
-      Queue<Schedulable> queue = priorities.get(priority.ordinal());
-      if (queue.isEmpty())
-      {
-         returnJob = null;
-      }
-      else
-      {
-         returnJob = queue.poll();
-         jobCount--;
-         jobCounter.jobRemoved(priority, returnJob);
-      }
-   }
+    /**
+     * Remove the first job for the given priority.
+     * The job and its id can be retrieved by the various getRemoved* methods
+     * (This is to avoid creating a pair object as a return value).
+     *
+     * @param priority
+     */
+    public void removeFirst(Priority priority) {
+        Queue<Schedulable> queue = priorities.get(priority.ordinal());
+        if (queue.isEmpty()) {
+            returnJob = null;
+        } else {
+            returnJob = queue.poll();
+            jobCount--;
+            jobCounter.jobRemoved(priority, returnJob);
+        }
+    }
 
-   /**
-    * Obliterate the job with the given priority and id.
-    * Does NOT store information to be retrieved like {@link #removeFirst(Priority)} does.
-    *
-    * @param priority
-    * @param job
-    */
-   public void remove(Priority priority, Schedulable job)
-   {
-      if (priorities.get(priority.ordinal()).remove(job))
-      {
-         jobCount--;
-         jobCounter.jobRemoved(priority, job);
-      }
-   }
+    /**
+     * Obliterate the job with the given priority and id.
+     * Does NOT store information to be retrieved like {@link #removeFirst(Priority)} does.
+     *
+     * @param priority
+     * @param job
+     */
+    public void remove(Priority priority, Schedulable job) {
+        if (priorities.get(priority.ordinal()).remove(job)) {
+            jobCount--;
+            jobCounter.jobRemoved(priority, job);
+        }
+    }
 
-   /**
-    * @return Job removed by {@link #removeFirst(Priority)}
-    */
-   public Schedulable getRemovedJob()
-   {
-      return returnJob;
-   }
+    /** @return Job removed by {@link #removeFirst(Priority)} */
+    public Schedulable getRemovedJob() {
+        return returnJob;
+    }
 
-   /**
-    * @return Job removed by {@link #removeFirst(Priority)}, Cast to IncrementalTask.
-    */
-   public IncrementalTask getRemovedJobAsProcess()
-   {
-      return (IncrementalTask)returnJob;
-   }
+    /** @return Job removed by {@link #removeFirst(Priority)}, Cast to IncrementalTask. */
+    public IncrementalTask getRemovedJobAsProcess() {
+        return (IncrementalTask)returnJob;
+    }
 
-   /**
-    * @return Job removed by {@link #removeFirst(Priority)}, Cast to Task.
-    */
-   public Task getRemovedJobAsTask()
-   {
-      return (Task)returnJob;
-   }
+    /** @return Job removed by {@link #removeFirst(Priority)}, Cast to Task. */
+    public Task getRemovedJobAsTask() {
+        return (Task)returnJob;
+    }
 
-   /**
-    * Used for testing
-    */
-   boolean debugIsClear()
-   {
-      for (Priority p : Priority.values())
-      {
-         if (!priorities.get(p.ordinal()).isEmpty())
-         {
-            assert jobCount > 0 : "Count 0 when: " + toString();
+    /** Used for testing */
+    boolean debugIsClear() {
+        for (Priority p : Priority.values()) {
+            if (!priorities.get(p.ordinal()).isEmpty()) {
+                assert jobCount > 0 : "Count 0 when: " + toString();
 
-            return false;
-         }
-      }
+                return false;
+            }
+        }
 
-      assert jobCount == 0 : "Count non-zero when: " + toString();
-      return true;
-   }
+        assert jobCount == 0 : "Count non-zero when: " + toString();
+        return true;
+    }
 
-   /**
-    * Tests if this registry has any jobs in it.
-    *
-    * @return true if this registry has no jobs, false otherwise.
-    */
-   boolean isEmpty()
-   {
-      return jobCount == 0;
-   }
+    /**
+     * Tests if this registry has any jobs in it.
+     *
+     * @return true if this registry has no jobs, false otherwise.
+     */
+    boolean isEmpty() {
+        return jobCount == 0;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString()
-   {
-      // NOTE(user): this causes "too much recursion" errors in Firefox?
-      // return priorities.toSource();
-      // ... so we do explicit building instead :(
-      StringBuilder result = new StringBuilder();
-      for (Priority p : Priority.values())
-      {
-         result.append(" { priority: " + p + "; ");
-         result.append(" jobs: " + priorities.get(p.ordinal()) + "; } ");
-      }
-      return result.toString();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        // NOTE(user): this causes "too much recursion" errors in Firefox?
+        // return priorities.toSource();
+        // ... so we do explicit building instead :(
+        StringBuilder result = new StringBuilder();
+        for (Priority p : Priority.values()) {
+            result.append(" { priority: " + p + "; ");
+            result.append(" jobs: " + priorities.get(p.ordinal()) + "; } ");
+        }
+        return result.toString();
+    }
 
-   /**
-    * @return short description
-    */
-   public String debugShortDescription()
-   {
-      // NOTE(user): this causes "too much recursion" errors in Firefox?
-      // return priorities.toSource();
-      // ... so we do explicit building instead :(
-      StringBuilder result = new StringBuilder();
-      for (Priority p : Priority.values())
-      {
-         result.append(" { priority: " + p + "; ");
-         result.append(" jobs count: " + priorities.get(p.ordinal()).size() + "; } ");
-      }
-      return result.toString();
-   }
+    /** @return short description */
+    public String debugShortDescription() {
+        // NOTE(user): this causes "too much recursion" errors in Firefox?
+        // return priorities.toSource();
+        // ... so we do explicit building instead :(
+        StringBuilder result = new StringBuilder();
+        for (Priority p : Priority.values()) {
+            result.append(" { priority: " + p + "; ");
+            result.append(" jobs count: " + priorities.get(p.ordinal()).size() + "; } ");
+        }
+        return result.toString();
+    }
 }

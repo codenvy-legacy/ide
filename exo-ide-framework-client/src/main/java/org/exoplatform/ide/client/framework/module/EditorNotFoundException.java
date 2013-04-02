@@ -21,15 +21,12 @@ package org.exoplatform.ide.client.framework.module;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
 @SuppressWarnings("serial")
-public class EditorNotFoundException extends Exception
-{
+public class EditorNotFoundException extends Exception {
 
-   public EditorNotFoundException(String message)
-   {
-      super(message);
-   }
+    public EditorNotFoundException(String message) {
+        super(message);
+    }
 
 }

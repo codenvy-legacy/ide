@@ -15,42 +15,42 @@ import com.codenvy.eclipse.jdt.core.search.IJavaSearchScope;
 
 public abstract class AbstractSearchScope implements IJavaSearchScope {
 
-/**
- * @see IJavaSearchScope#includesBinaries()
- * @deprecated
- */
-public boolean includesBinaries() {
-	return true;
-}
+    /**
+     * @see IJavaSearchScope#includesBinaries()
+     * @deprecated
+     */
+    public boolean includesBinaries() {
+        return true;
+    }
 
-/**
- * @see IJavaSearchScope#includesClasspaths()
- * @deprecated
- */
-public boolean includesClasspaths() {
-	return true;
-}
+    /**
+     * @see IJavaSearchScope#includesClasspaths()
+     * @deprecated
+     */
+    public boolean includesClasspaths() {
+        return true;
+    }
 
-/* (non-Javadoc)
- * Process the given delta and refresh its internal state if needed.
- * Returns whether the internal state was refreshed.
- */
-public abstract void processDelta(IJavaElementDelta delta, int eventType);
+    /* (non-Javadoc)
+     * Process the given delta and refresh its internal state if needed.
+     * Returns whether the internal state was refreshed.
+     */
+    public abstract void processDelta(IJavaElementDelta delta, int eventType);
 
-/**
- * @see IJavaSearchScope#setIncludesBinaries(boolean)
- * @deprecated
- */
-public void setIncludesBinaries(boolean includesBinaries) {
-	// implements interface method
-}
+    /**
+     * @see IJavaSearchScope#setIncludesBinaries(boolean)
+     * @deprecated
+     */
+    public void setIncludesBinaries(boolean includesBinaries) {
+        // implements interface method
+    }
 
-/**
- * @see IJavaSearchScope#setIncludesClasspaths(boolean)
- * @deprecated
- */
-public void setIncludesClasspaths(boolean includesClasspaths) {
-	// implements interface method
-}
+    /**
+     * @see IJavaSearchScope#setIncludesClasspaths(boolean)
+     * @deprecated
+     */
+    public void setIncludesClasspaths(boolean includesClasspaths) {
+        // implements interface method
+    }
 
 }

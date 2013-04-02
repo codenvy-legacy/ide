@@ -22,9 +22,8 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BreakPointEvent extends DebuggerEvent
-{
-   BreakPoint getBreakPoint();
+public interface BreakPointEvent extends DebuggerEvent {
+    BreakPoint getBreakPoint();
 
-   void setBreakPoint(BreakPoint breakPoint);
+    void setBreakPoint(BreakPoint breakPoint);
 }

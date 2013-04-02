@@ -24,47 +24,42 @@ package org.exoplatform.ide.vfs.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: ItemType.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
-public enum ItemType
-{
-   FILE("file"), FOLDER("folder"), PROJECT("project");
+public enum ItemType {
+    FILE("file"), FOLDER("folder"), PROJECT("project");
 
-   private final String value;
+    private final String value;
 
-   private ItemType(String value)
-   {
-      this.value = value;
-   }
+    private ItemType(String value) {
+        this.value = value;
+    }
 
-   /** @return value of Type */
-   public String value()
-   {
-      return value;
-   }
+    /** @return value of Type */
+    public String value() {
+        return value;
+    }
 
-   /**
-    * Get Type instance from string value.
-    *
-    * @param value string value
-    * @return Type
-    * @throws IllegalArgumentException if there is no corresponded Type for specified <code>value</code>
-    */
-   public static ItemType fromValue(String value)
-   {
-      String v = value.toLowerCase();
-      for (ItemType e : ItemType.values())
-      {
-         if (e.value.equals(v))
-         {
-            return e;
-         }
-      }
-      throw new IllegalArgumentException(value);
-   }
+    /**
+     * Get Type instance from string value.
+     *
+     * @param value
+     *         string value
+     * @return Type
+     * @throws IllegalArgumentException
+     *         if there is no corresponded Type for specified <code>value</code>
+     */
+    public static ItemType fromValue(String value) {
+        String v = value.toLowerCase();
+        for (ItemType e : ItemType.values()) {
+            if (e.value.equals(v)) {
+                return e;
+            }
+        }
+        throw new IllegalArgumentException(value);
+    }
 
-   /** @see java.lang.Enum#toString() */
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    /** @see java.lang.Enum#toString() */
+    @Override
+    public String toString() {
+        return value;
+    }
 }

@@ -24,39 +24,34 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Called when entry point was changed.
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class VfsChangedEvent extends GwtEvent<VfsChangedHandler>
-{
+public class VfsChangedEvent extends GwtEvent<VfsChangedHandler> {
 
-   public static final GwtEvent.Type<VfsChangedHandler> TYPE = new GwtEvent.Type<VfsChangedHandler>();
+    public static final GwtEvent.Type<VfsChangedHandler> TYPE = new GwtEvent.Type<VfsChangedHandler>();
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   public VfsChangedEvent(VirtualFileSystemInfo vfsInfo)
-   {
-      this.vfsInfo = vfsInfo;
-   }
+    public VfsChangedEvent(VirtualFileSystemInfo vfsInfo) {
+        this.vfsInfo = vfsInfo;
+    }
 
-   public VirtualFileSystemInfo getVfsInfo()
-   {
-      return vfsInfo;
-   }
+    public VirtualFileSystemInfo getVfsInfo() {
+        return vfsInfo;
+    }
 
-   @Override
-   protected void dispatch(VfsChangedHandler handler)
-   {
-      handler.onVfsChanged(this);
-   }
+    @Override
+    protected void dispatch(VfsChangedHandler handler) {
+        handler.onVfsChanged(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<VfsChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<VfsChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 }

@@ -16,23 +16,21 @@ package com.google.collide.client.util.collections;
 
 /**
  * Object that is used for counting, how many times object is added to "bag".
- *
+ * <p/>
  * <p>New instance have counter equal to 1.
  * <p>{@link #decrement()} returns {@code true} if counter reaches 0.
  */
 final class Counter {
 
-  private int counter = 1;
+    private int counter = 1;
 
-  public final void increment() {
-    counter++;
-  }
+    public final void increment() {
+        counter++;
+    }
 
-  /**
-   * @return {@code true} if counter reaches 0.
-   */
-  public final boolean decrement() {
-    counter--;
-    return counter == 0;
-  }
+    /** @return {@code true} if counter reaches 0. */
+    public final boolean decrement() {
+        counter--;
+        return counter == 0;
+    }
 }

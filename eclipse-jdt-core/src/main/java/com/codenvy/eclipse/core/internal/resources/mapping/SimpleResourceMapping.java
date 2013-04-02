@@ -25,73 +25,62 @@ import com.codenvy.eclipse.core.runtime.IProgressMonitor;
  *
  * @since 3.1
  */
-public class SimpleResourceMapping extends ResourceMapping
-{
-   private final IResource resource;
+public class SimpleResourceMapping extends ResourceMapping {
+    private final IResource resource;
 
-   public SimpleResourceMapping(IResource resource)
-   {
-      this.resource = resource;
-   }
+    public SimpleResourceMapping(IResource resource) {
+        this.resource = resource;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.core.resources.mapping.ResourceMapping#contains(org.eclipse.core.resources.mapping.ResourceMapping)
-    */
-   public boolean contains(ResourceMapping mapping)
-   {
-      if (mapping.getModelProviderId().equals(this.getModelProviderId()))
-      {
-         Object object = mapping.getModelObject();
-         if (object instanceof IResource)
-         {
-            IResource other = (IResource)object;
-            return resource.getFullPath().isPrefixOf(other.getFullPath());
-         }
-         //			if (object instanceof ShallowContainer) {
-         //				ShallowContainer sc = (ShallowContainer) object;
-         //				IResource other = sc.getResource();
-         //				return resource.getFullPath().isPrefixOf(other.getFullPath());
-         //			}
-      }
-      return false;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.core.resources.mapping.ResourceMapping#contains(org.eclipse.core.resources.mapping.ResourceMapping)
+     */
+    public boolean contains(ResourceMapping mapping) {
+        if (mapping.getModelProviderId().equals(this.getModelProviderId())) {
+            Object object = mapping.getModelObject();
+            if (object instanceof IResource) {
+                IResource other = (IResource)object;
+                return resource.getFullPath().isPrefixOf(other.getFullPath());
+            }
+            //			if (object instanceof ShallowContainer) {
+            //				ShallowContainer sc = (ShallowContainer) object;
+            //				IResource other = sc.getResource();
+            //				return resource.getFullPath().isPrefixOf(other.getFullPath());
+            //			}
+        }
+        return false;
+    }
 
-   /* (non-Javadoc)
-    * Method declared on ResourceMapping.
-    */
-   public Object getModelObject()
-   {
-      return resource;
-   }
+    /* (non-Javadoc)
+     * Method declared on ResourceMapping.
+     */
+    public Object getModelObject() {
+        return resource;
+    }
 
-   public String getModelProviderId()
-   {
-      return ModelProvider.RESOURCE_MODEL_PROVIDER_ID;
-   }
+    public String getModelProviderId() {
+        return ModelProvider.RESOURCE_MODEL_PROVIDER_ID;
+    }
 
-   /* (non-Javadoc)
-    * Method declared on ResourceMapping.
-    */
-   public IProject[] getProjects()
-   {
-      if (resource.getType() == IResource.ROOT)
-      {
-         return ((IWorkspaceRoot)resource).getProjects();
-      }
-      return new IProject[]{resource.getProject()};
-   }
+    /* (non-Javadoc)
+     * Method declared on ResourceMapping.
+     */
+    public IProject[] getProjects() {
+        if (resource.getType() == IResource.ROOT) {
+            return ((IWorkspaceRoot)resource).getProjects();
+        }
+        return new IProject[]{resource.getProject()};
+    }
 
-   /* (non-Javadoc)
-    * Method declared on ResourceMapping.
-    */
-   public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor)
-   {
-      if (resource.getType() == IResource.ROOT)
-      {
-         return new ResourceTraversal[]{new ResourceTraversal(((IWorkspaceRoot)resource).getProjects(),
-            IResource.DEPTH_INFINITE, IResource.NONE)};
-      }
-      return new ResourceTraversal[]{new ResourceTraversal(new IResource[]{resource}, IResource.DEPTH_INFINITE,
-         IResource.NONE)};
-   }
+    /* (non-Javadoc)
+     * Method declared on ResourceMapping.
+     */
+    public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) {
+        if (resource.getType() == IResource.ROOT) {
+            return new ResourceTraversal[]{new ResourceTraversal(((IWorkspaceRoot)resource).getProjects(),
+                                                                 IResource.DEPTH_INFINITE, IResource.NONE)};
+        }
+        return new ResourceTraversal[]{new ResourceTraversal(new IResource[]{resource}, IResource.DEPTH_INFINITE,
+                                                             IResource.NONE)};
+    }
 }

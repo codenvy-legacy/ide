@@ -22,21 +22,20 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationMetaInfo
-{
-   String getDebug();
+public interface ApplicationMetaInfo {
+    String getDebug();
 
-   void setDebug(String v);
+    void setDebug(String v);
 
-   String getConsole();
+    String getConsole();
 
-   void setConsole(String v);
+    void setConsole(String v);
 
-   long getVersion();
+    long getVersion();
 
-   void setVersion(long v);
+    void setVersion(long v);
 
-   long getCreated();
+    long getCreated();
 
-   void setCreated(long date);
+    void setCreated(long date);
 }

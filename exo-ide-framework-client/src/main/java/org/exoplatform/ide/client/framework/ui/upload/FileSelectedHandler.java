@@ -21,16 +21,14 @@ package org.exoplatform.ide.client.framework.ui.upload;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Handler for process browse event in &lt;input type='file'&gt; element.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface FileSelectedHandler extends EventHandler
-{
+public interface FileSelectedHandler extends EventHandler {
 
-   void onFileSelected(FileSelectedEvent event);
+    void onFileSelected(FileSelectedEvent event);
 
 }

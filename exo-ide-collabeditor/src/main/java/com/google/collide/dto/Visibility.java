@@ -14,17 +14,15 @@
 
 package com.google.collide.dto;
 
-/**
- * Enum for the possible visibility states of a workspace or project.
- */
+/** Enum for the possible visibility states of a workspace or project. */
 public enum Visibility {
 
-  /** Public to anyone with the link */
-  PUBLIC,
+    /** Public to anyone with the link */
+    PUBLIC,
 
-  /** Public to anyone in the creator's domain */
-  DOMAIN,
+    /** Public to anyone in the creator's domain */
+    DOMAIN,
 
-  /** Only accessible to members */
-  PRIVATE
+    /** Only accessible to members */
+    PRIVATE
 }

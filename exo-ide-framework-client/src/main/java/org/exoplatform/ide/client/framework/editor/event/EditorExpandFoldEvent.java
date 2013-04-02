@@ -21,49 +21,37 @@ package org.exoplatform.ide.client.framework.editor.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: EditorExpandFoldEvent.java Feb 28, 2013 5:08:29 PM azatsarynnyy $
- *
  */
-public class EditorExpandFoldEvent extends GwtEvent<EditorExpandFoldHandler>
-{
-   private boolean expandAll;
+public class EditorExpandFoldEvent extends GwtEvent<EditorExpandFoldHandler> {
+    private boolean expandAll;
 
-   public EditorExpandFoldEvent()
-   {
-      super();
-   }
+    public EditorExpandFoldEvent() {
+        super();
+    }
 
-   public EditorExpandFoldEvent(boolean expandAll)
-   {
-      super();
-      this.expandAll = expandAll;
-   }
+    public EditorExpandFoldEvent(boolean expandAll) {
+        super();
+        this.expandAll = expandAll;
+    }
 
-   public static final GwtEvent.Type<EditorExpandFoldHandler> TYPE = new GwtEvent.Type<EditorExpandFoldHandler>();
+    public static final GwtEvent.Type<EditorExpandFoldHandler> TYPE = new GwtEvent.Type<EditorExpandFoldHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorExpandFoldHandler handler)
-   {
-      handler.onEditorExpand(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorExpandFoldHandler handler) {
+        handler.onEditorExpand(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorExpandFoldHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorExpandFoldHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public boolean isExpandAll()
-   {
-      return expandAll;
-   }
+    public boolean isExpandAll() {
+        return expandAll;
+    }
 
 }

@@ -40,259 +40,202 @@ import org.exoplatform.ide.extension.logreader.shared.LogEntry;
 
 /**
  * Presenter for {@link LogReaderView}
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandler
-{
-   public interface Display extends IsView
-   {
-      String ID = "ideExtensionLogReaderView";
+public class LogReaderPresenter implements ShowLogReaderHandler, ViewClosedHandler {
+    public interface Display extends IsView {
+        String ID = "ideExtensionLogReaderView";
 
-      HasClickHandlers getNexLogButton();
+        HasClickHandlers getNexLogButton();
 
-      HasClickHandlers getPrevLogButton();
+        HasClickHandlers getPrevLogButton();
 
-      HasClickHandlers getRefreshLogButton();
+        HasClickHandlers getRefreshLogButton();
 
-      void addLog(String logContent);
+        void addLog(String logContent);
 
-      void setPrevLogButtonEnabled(boolean enabled);
+        void setPrevLogButtonEnabled(boolean enabled);
 
-      void setNextLogButtonEnabled(boolean enabled);
+        void setNextLogButtonEnabled(boolean enabled);
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private String currentToken;
+    private String currentToken;
 
-   /**
-    * 
-    */
-   public LogReaderPresenter()
-   {
-      IDE.addHandler(ShowLogReaderEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public LogReaderPresenter() {
+        IDE.addHandler(ShowLogReaderEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderHandler#onShowlogReader(org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderEvent)
-    */
-   @Override
-   public void onShowlogReader(ShowLogReaderEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bind();
-         IDE.getInstance().openView(display.asView());
-         getLogs();
-      }
-      else
-      {
-         display.asView().setViewVisible();
-      }
+    /** @see org.exoplatform.ide.extension.logreader.client.event.ShowLogReaderHandler#onShowlogReader(org.exoplatform.ide.extension
+     * .logreader.client.event.ShowLogReaderEvent) */
+    @Override
+    public void onShowlogReader(ShowLogReaderEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bind();
+            IDE.getInstance().openView(display.asView());
+            getLogs();
+        } else {
+            display.asView().setViewVisible();
+        }
 
-   }
+    }
 
-   /**
-    * Bind view to presenter
-    */
-   private void bind()
-   {
+    /** Bind view to presenter */
+    private void bind() {
 
-      display.getNexLogButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            getNextLog();
-         }
-      });
-
-      display.getPrevLogButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            prevLog();
-         }
-      });
-
-      display.getRefreshLogButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            refreshLog();
-         }
-      });
-   }
-
-   /**
-    * 
-    */
-   private void refreshLog()
-   {
-      if (currentToken == null)
-      {
-         getLogs();
-         return;
-      }
-      try
-      {
-         AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
-         AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
-         LogReaderService.get().getLog(currentToken, new AsyncRequestCallback<LogEntry>(unmarshaller)
-         {
+        display.getNexLogButton().addClickHandler(new ClickHandler() {
 
             @Override
-            protected void onSuccess(LogEntry result)
-            {
-               display.addLog(result.getContent());
-               updateButtonState(result);
+            public void onClick(ClickEvent event) {
+                getNextLog();
             }
+        });
+
+        display.getPrevLogButton().addClickHandler(new ClickHandler() {
 
             @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            public void onClick(ClickEvent event) {
+                prevLog();
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        });
 
-   /**
-    * Get previous log
-    */
-   private void prevLog()
-   {
-      try
-      {
-         AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
-         AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
-         LogReaderService.get().getPrevLog(currentToken, new AsyncRequestCallback<LogEntry>(unmarshaller)
-         {
+        display.getRefreshLogButton().addClickHandler(new ClickHandler() {
 
             @Override
-            protected void onSuccess(LogEntry result)
-            {
-               currentToken = result.getToken();
-               display.addLog(result.getContent());
-               updateButtonState(result);
+            public void onClick(ClickEvent event) {
+                refreshLog();
             }
+        });
+    }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
+    /**
+     *
+     */
+    private void refreshLog() {
+        if (currentToken == null) {
+            getLogs();
+            return;
+        }
+        try {
+            AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
+            AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
+            LogReaderService.get().getLog(currentToken, new AsyncRequestCallback<LogEntry>(unmarshaller) {
 
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                @Override
+                protected void onSuccess(LogEntry result) {
+                    display.addLog(result.getContent());
+                    updateButtonState(result);
+                }
 
-   /**
-    * Update log navigation control enabling
-    * 
-    * @param log
-    */
-   private void updateButtonState(LogEntry log)
-   {
-      display.setNextLogButtonEnabled(log.isHasNext());
-      display.setPrevLogButtonEnabled(log.isHasPrevious());
-   }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * Send request to LogReader service
-    */
-   private void getLogs()
-   {
-      try
-      {
-         AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
-         AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
-         LogReaderService.get().getLastLog(new AsyncRequestCallback<LogEntry>(unmarshaller)
-         {
+    /** Get previous log */
+    private void prevLog() {
+        try {
+            AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
+            AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
+            LogReaderService.get().getPrevLog(currentToken, new AsyncRequestCallback<LogEntry>(unmarshaller) {
 
-            @Override
-            protected void onSuccess(LogEntry result)
-            {
-               display.addLog(result.getContent());
-               currentToken = result.getToken();
-               updateButtonState(result);
-            }
+                @Override
+                protected void onSuccess(LogEntry result) {
+                    currentToken = result.getToken();
+                    display.addLog(result.getContent());
+                    updateButtonState(result);
+                }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
 
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * Get next log
-    */
-   private void getNextLog()
-   {
-      try
-      {
-         AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
-         AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
-         LogReaderService.get().getNextLog(currentToken, new AsyncRequestCallback<LogEntry>(unmarshaller)
-         {
+    /**
+     * Update log navigation control enabling
+     *
+     * @param log
+     */
+    private void updateButtonState(LogEntry log) {
+        display.setNextLogButtonEnabled(log.isHasNext());
+        display.setPrevLogButtonEnabled(log.isHasPrevious());
+    }
 
-            @Override
-            protected void onSuccess(LogEntry result)
-            {
-               currentToken = result.getToken();
-               display.addLog(result.getContent());
-               updateButtonState(result);
-            }
+    /** Send request to LogReader service */
+    private void getLogs() {
+        try {
+            AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
+            AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
+            LogReaderService.get().getLastLog(new AsyncRequestCallback<LogEntry>(unmarshaller) {
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                @Override
+                protected void onSuccess(LogEntry result) {
+                    display.addLog(result.getContent());
+                    currentToken = result.getToken();
+                    updateButtonState(result);
+                }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** Get next log */
+    private void getNextLog() {
+        try {
+            AutoBean<LogEntry> logEntry = LogReaderExtension.AUTO_BEAN_FACTORY.create(LogEntry.class);
+            AutoBeanUnmarshaller<LogEntry> unmarshaller = new AutoBeanUnmarshaller<LogEntry>(logEntry);
+            LogReaderService.get().getNextLog(currentToken, new AsyncRequestCallback<LogEntry>(unmarshaller) {
+
+                @Override
+                protected void onSuccess(LogEntry result) {
+                    currentToken = result.getToken();
+                    display.addLog(result.getContent());
+                    updateButtonState(result);
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 }

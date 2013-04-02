@@ -24,37 +24,36 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface UpdateApplicationRequest
-{
-   /**
-    * Get name of application.
-    *
-    * @return application name
-    */
-   String getApplicationName();
+public interface UpdateApplicationRequest {
+    /**
+     * Get name of application.
+     *
+     * @return application name
+     */
+    String getApplicationName();
 
-   /**
-    * Set name of application.
-    *
-    * @param name
-    *    application name
-    * @see #getApplicationName()
-    */
-   void setApplicationName(String name);
+    /**
+     * Set name of application.
+     *
+     * @param name
+     *         application name
+     * @see #getApplicationName()
+     */
+    void setApplicationName(String name);
 
-   /**
-    * Get new description of application. Length: 0 - 200 characters.
-    *
-    * @return application description
-    */
-   String getDescription();
+    /**
+     * Get new description of application. Length: 0 - 200 characters.
+     *
+     * @return application description
+     */
+    String getDescription();
 
-   /**
-    * Set new application description. Length: 0 - 200 characters.
-    *
-    * @param description
-    *    application description
-    * @see #getDescription()
-    */
-   void setDescription(String description);
+    /**
+     * Set new application description. Length: 0 - 200 characters.
+     *
+     * @param description
+     *         application description
+     * @see #getDescription()
+     */
+    void setDescription(String description);
 }

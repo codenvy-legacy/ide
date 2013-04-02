@@ -13,18 +13,11 @@ package com.codenvy.eclipse.jdt.internal.eval;
 import com.codenvy.eclipse.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.eclipse.jdt.internal.compiler.ClassFile;
 
-/**
- * A callback interface for receiving code snippet evaluation results.
- */
-public interface IRequestor
-{
-   /**
-    * @see com.codenvy.eclipse.jdt.core.eval.ICodeSnippetRequestor
-    */
-   boolean acceptClassFiles(ClassFile[] classFiles, char[] codeSnippetClassName);
+/** A callback interface for receiving code snippet evaluation results. */
+public interface IRequestor {
+    /** @see com.codenvy.eclipse.jdt.core.eval.ICodeSnippetRequestor */
+    boolean acceptClassFiles(ClassFile[] classFiles, char[] codeSnippetClassName);
 
-   /**
-    * @see com.codenvy.eclipse.jdt.core.eval.ICodeSnippetRequestor
-    */
-   void acceptProblem(CategorizedProblem problem, char[] fragmentSource, int fragmentKind);
+    /** @see com.codenvy.eclipse.jdt.core.eval.ICodeSnippetRequestor */
+    void acceptProblem(CategorizedProblem problem, char[] fragmentSource, int fragmentKind);
 }

@@ -20,35 +20,31 @@ package org.exoplatform.ide.client.framework.event;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class CursorPosition
-{
-   
-   private int row;
-   
-   private int column;
-   
-   public CursorPosition(int row, int column)
-   {
-      this.row = row;
-      this.column = column;
-   }
-   
-   public CursorPosition(int row)
-   {
-      this(row,1);
-   }
-   
-   public int getRow()
-   {
-      return row;
-   }
-   
-   public int getColumn()
-   {
-      return column;
-   }
+ */
+public class CursorPosition {
+
+    private int row;
+
+    private int column;
+
+    public CursorPosition(int row, int column) {
+        this.row = row;
+        this.column = column;
+    }
+
+    public CursorPosition(int row) {
+        this(row, 1);
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
 
 }

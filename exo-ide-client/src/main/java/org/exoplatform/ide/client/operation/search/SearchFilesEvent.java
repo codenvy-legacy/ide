@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class SearchFilesEvent extends GwtEvent<SearchFilesHandler>
-{
+public class SearchFilesEvent extends GwtEvent<SearchFilesHandler> {
 
-   public static final GwtEvent.Type<SearchFilesHandler> TYPE = new GwtEvent.Type<SearchFilesHandler>();
+    public static final GwtEvent.Type<SearchFilesHandler> TYPE = new GwtEvent.Type<SearchFilesHandler>();
 
-   @Override
-   protected void dispatch(SearchFilesHandler handler)
-   {
-      handler.onSearchFiles(this);
-   }
+    @Override
+    protected void dispatch(SearchFilesHandler handler) {
+        handler.onSearchFiles(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SearchFilesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SearchFilesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

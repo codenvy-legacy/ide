@@ -29,147 +29,115 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EC2InstancesGrid.java Sep 21, 2012 3:07:04 PM azatsarynnyy $
- *
  */
-public class EC2InstancesGrid extends ListGrid<InstanceInfo>
-{
-   private static final String ID = "ideEC2IntancesGrid";
+public class EC2InstancesGrid extends ListGrid<InstanceInfo> {
+    private static final String ID = "ideEC2IntancesGrid";
 
-   public EC2InstancesGrid()
-   {
-      setID(ID);
-      initColumns();
-   }
+    public EC2InstancesGrid() {
+        setID(ID);
+        initColumns();
+    }
 
-   /**
-    * Initialize columns.
-    */
-   private void initColumns()
-   {
-      Column<InstanceInfo, String> instanceIdCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getId();
-         }
-      };
-
-      Column<InstanceInfo, String> imageIdCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getImageId();
-         }
-      };
-
-      Column<InstanceInfo, String> rootDeviceCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getRootDeviceType();
-         }
-      };
-
-      Column<InstanceInfo, String> imageTypeCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getImageType();
-         }
-      };
-
-      Column<InstanceInfo, String> stateCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getState().toString();
-         }
-      };
-
-      Column<InstanceInfo, String> securityGroupsCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            StringBuffer securityGroups = new StringBuffer();
-            for (String securityGroup : ec2Intance.getSetSecurityGroupsNames())
-            {
-               securityGroups.append(securityGroup).append(", ");
+    /** Initialize columns. */
+    private void initColumns() {
+        Column<InstanceInfo, String> instanceIdCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getId();
             }
-            return securityGroups.substring(0, securityGroups.length()-2);
-         }
-      };
+        };
 
-      Column<InstanceInfo, String> keyPairNameCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getKeyName();
-         }
-      };
+        Column<InstanceInfo, String> imageIdCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getImageId();
+            }
+        };
 
-      Column<InstanceInfo, String> publicDNSNameCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getPublicDNSName();
-         }
-      };
+        Column<InstanceInfo, String> rootDeviceCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getRootDeviceType();
+            }
+        };
 
-      Column<InstanceInfo, String> availabilityZoneCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return ec2Intance.getAvailabilityZone();
-         }
-      };
+        Column<InstanceInfo, String> imageTypeCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getImageType();
+            }
+        };
 
-      Column<InstanceInfo, String> launchTimeCol = new Column<InstanceInfo, String>(new TextCell())
-      {
-         @Override
-         public String getValue(InstanceInfo ec2Intance)
-         {
-            return new Date(ec2Intance.getLaunchTime()).toString();
-         }
-      };
+        Column<InstanceInfo, String> stateCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getState().toString();
+            }
+        };
 
-      getCellTable().addColumn(instanceIdCol, "Instance");
-      getCellTable().setColumnWidth(launchTimeCol, 30, Unit.PCT);
-      getCellTable().addColumn(imageIdCol, "AMI ID");
-      getCellTable().addColumn(rootDeviceCol, "Root Device");
-      getCellTable().addColumn(imageTypeCol, "Type");
-      getCellTable().addColumn(stateCol, "State");
-      getCellTable().addColumn(securityGroupsCol, "Security Groups");
-      getCellTable().addColumn(keyPairNameCol, "Key Pair Name");
-      getCellTable().addColumn(publicDNSNameCol, "Public DNS");
-      getCellTable().addColumn(availabilityZoneCol, "Availability Zone");
-      getCellTable().addColumn(launchTimeCol, "Launch Time");
-      getCellTable().setColumnWidth(launchTimeCol, 30, Unit.PCT);
-   }
+        Column<InstanceInfo, String> securityGroupsCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                StringBuffer securityGroups = new StringBuffer();
+                for (String securityGroup : ec2Intance.getSetSecurityGroupsNames()) {
+                    securityGroups.append(securityGroup).append(", ");
+                }
+                return securityGroups.substring(0, securityGroups.length() - 2);
+            }
+        };
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)
-    */
-   @Override
-   public void setValue(List<InstanceInfo> value)
-   {
-      super.setValue(value);
-      if (value != null && value.size() > 0)
-      {
-         selectItem(value.get(0));
-      }
-      getCellTable().redraw();
-   }
+        Column<InstanceInfo, String> keyPairNameCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getKeyName();
+            }
+        };
+
+        Column<InstanceInfo, String> publicDNSNameCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getPublicDNSName();
+            }
+        };
+
+        Column<InstanceInfo, String> availabilityZoneCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return ec2Intance.getAvailabilityZone();
+            }
+        };
+
+        Column<InstanceInfo, String> launchTimeCol = new Column<InstanceInfo, String>(new TextCell()) {
+            @Override
+            public String getValue(InstanceInfo ec2Intance) {
+                return new Date(ec2Intance.getLaunchTime()).toString();
+            }
+        };
+
+        getCellTable().addColumn(instanceIdCol, "Instance");
+        getCellTable().setColumnWidth(launchTimeCol, 30, Unit.PCT);
+        getCellTable().addColumn(imageIdCol, "AMI ID");
+        getCellTable().addColumn(rootDeviceCol, "Root Device");
+        getCellTable().addColumn(imageTypeCol, "Type");
+        getCellTable().addColumn(stateCol, "State");
+        getCellTable().addColumn(securityGroupsCol, "Security Groups");
+        getCellTable().addColumn(keyPairNameCol, "Key Pair Name");
+        getCellTable().addColumn(publicDNSNameCol, "Public DNS");
+        getCellTable().addColumn(availabilityZoneCol, "Availability Zone");
+        getCellTable().addColumn(launchTimeCol, "Launch Time");
+        getCellTable().setColumnWidth(launchTimeCol, 30, Unit.PCT);
+    }
+
+    /** @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List) */
+    @Override
+    public void setValue(List<InstanceInfo> value) {
+        super.setValue(value);
+        if (value != null && value.size() > 0) {
+            selectItem(value.get(0));
+        }
+        getCellTable().redraw();
+    }
 
 }

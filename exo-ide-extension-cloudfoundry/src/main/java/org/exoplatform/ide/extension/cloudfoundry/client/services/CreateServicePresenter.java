@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.services;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -47,166 +46,135 @@ import java.util.LinkedHashMap;
 
 /**
  * Presenter for creating new service.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 16, 2012 12:31:33 PM anya $
- * 
  */
-public class CreateServicePresenter implements CreateServiceHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      HasValue<String> getSystemServicesField();
+public class CreateServicePresenter implements CreateServiceHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        HasValue<String> getSystemServicesField();
 
-      HasValue<String> getNameField();
+        HasValue<String> getNameField();
 
-      HasClickHandlers getCreateButton();
+        HasClickHandlers getCreateButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void setServices(LinkedHashMap<String, String> values);
-   }
+        void setServices(LinkedHashMap<String, String> values);
+    }
 
-   /**
-    * Display.
-    */
-   private Display display;
+    /** Display. */
+    private Display display;
 
-   /**
-    * Handler for successful service creation.
-    */
-   private ProvisionedServiceCreatedHandler serviceCreatedHandler;
+    /** Handler for successful service creation. */
+    private ProvisionedServiceCreatedHandler serviceCreatedHandler;
 
-   private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler()
-   {
+    private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
 
-      @Override
-      public void onLoggedIn()
-      {
-         doCreate();
-      }
-   };
-
-   public CreateServicePresenter()
-   {
-      IDE.addHandler(CreateServiceEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
-
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
+        @Override
+        public void onLoggedIn() {
             doCreate();
-         }
-      });
-   }
+        }
+    };
 
-   /**
-    * Get the list of CloudFoundry services (provisioned and system).
-    */
-   private void getServices()
-   {
-      try
-      {
-         CloudFoundryClientService.getInstance().services(null,
-            new AsyncRequestCallback<CloudfoundryServices>(new CloudFoundryServicesUnmarshaller())
-            {
+    public CreateServicePresenter() {
+        IDE.addHandler(CreateServiceEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-               @Override
-               protected void onSuccess(CloudfoundryServices result)
-               {
-                  LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
-                  for (SystemService service : result.getSystem())
-                  {
-                     values.put(service.getVendor(), service.getDescription());
-                  }
-                  display.setServices(values);
-               }
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceHandler#onCreateService(org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceEvent)
-    */
-   @Override
-   public void onCreateService(CreateServiceEvent event)
-   {
-      this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      getServices();
-   }
+        display.getCreateButton().addClickHandler(new ClickHandler() {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                doCreate();
+            }
+        });
+    }
 
-   /**
-    * Create new provisioned service.
-    */
-   private void doCreate()
-   {
-      String name = display.getNameField().getValue();
-      String type = display.getSystemServicesField().getValue();
-      try
-      {
-         AutoBean<ProvisionedService> provisionedService = CloudFoundryExtension.AUTO_BEAN_FACTORY.provisionedService();
-         AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
-            new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
+    /** Get the list of CloudFoundry services (provisioned and system). */
+    private void getServices() {
+        try {
+            CloudFoundryClientService.getInstance().services(null,
+                                                             new AsyncRequestCallback<CloudfoundryServices>(
+                                                                     new CloudFoundryServicesUnmarshaller()) {
 
-         CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null,
-            new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null)
-            {
+                                                                 @Override
+                                                                 protected void onSuccess(CloudfoundryServices result) {
+                                                                     LinkedHashMap<String, String> values =
+                                                                             new LinkedHashMap<String, String>();
+                                                                     for (SystemService service : result.getSystem()) {
+                                                                         values.put(service.getVendor(), service.getDescription());
+                                                                     }
+                                                                     display.setServices(values);
+                                                                 }
 
-               @Override
-               protected void onSuccess(ProvisionedService result)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-                  serviceCreatedHandler.onProvisionedServiceCreated(result);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                 @Override
+                                                                 protected void onFailure(Throwable exception) {
+                                                                     Dialogs.getInstance().showError(
+                                                                             CloudFoundryExtension.LOCALIZATION_CONSTANT
+                                                                                                  .retrieveServicesFailed());
+                                                                 }
+                                                             });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceHandler#onCreateService(org.exoplatform.ide
+     * .extension.cloudfoundry.client.services.CreateServiceEvent) */
+    @Override
+    public void onCreateService(CreateServiceEvent event) {
+        this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        getServices();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** Create new provisioned service. */
+    private void doCreate() {
+        String name = display.getNameField().getValue();
+        String type = display.getSystemServicesField().getValue();
+        try {
+            AutoBean<ProvisionedService> provisionedService = CloudFoundryExtension.AUTO_BEAN_FACTORY.provisionedService();
+            AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
+                    new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
+
+            CloudFoundryClientService.getInstance().createService(null, type, name, null, null, null,
+                                                                  new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller,
+
+
+                                                                                                                           createServiceLoggedInHandler,
+                                                                                                                           null) {
+
+                                                                      @Override
+                                                                      protected void onSuccess(ProvisionedService result) {
+                                                                          IDE.getInstance().closeView(display.asView().getId());
+                                                                          serviceCreatedHandler.onProvisionedServiceCreated(result);
+                                                                      }
+                                                                  });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

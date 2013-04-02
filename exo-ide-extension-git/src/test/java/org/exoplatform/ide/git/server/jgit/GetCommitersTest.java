@@ -28,25 +28,23 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: Aug 3, 2012
  */
-public class GetCommitersTest extends BaseTest
-{
-   public void testGetCommiters() throws Exception
-   {
-      Git git = new Git(getDefaultRepository());
-      File workDir = git.getRepository().getWorkTree();
-      addFile(workDir, "t-log1", "AAA\n");
-      git.add().addFilepattern(".").call();
-      git.commit().setMessage("log\ntest").setCommitter("Chuck Norris", "gmail@chucknorris.com").call();
-      
-      List<GitUser> commiters = getDefaultConnection().getCommiters();
-      Assert.assertNotNull("No commiters", commiters);
-      Assert.assertEquals("Must be to comitters one of them owner of repository, other commiter from test", 2, commiters.size());
-      Assert.assertEquals("gmail@chucknorris.com", commiters.get(0).getEmail());
-      Assert.assertEquals("Chuck Norris", commiters.get(0).getName());
-   }
-   
+public class GetCommitersTest extends BaseTest {
+    public void testGetCommiters() throws Exception {
+        Git git = new Git(getDefaultRepository());
+        File workDir = git.getRepository().getWorkTree();
+        addFile(workDir, "t-log1", "AAA\n");
+        git.add().addFilepattern(".").call();
+        git.commit().setMessage("log\ntest").setCommitter("Chuck Norris", "gmail@chucknorris.com").call();
+
+        List<GitUser> commiters = getDefaultConnection().getCommiters();
+        Assert.assertNotNull("No commiters", commiters);
+        Assert.assertEquals("Must be to comitters one of them owner of repository, other commiter from test", 2, commiters.size());
+        Assert.assertEquals("gmail@chucknorris.com", commiters.get(0).getEmail());
+        Assert.assertEquals("Chuck Norris", commiters.get(0).getName());
+    }
+
 }

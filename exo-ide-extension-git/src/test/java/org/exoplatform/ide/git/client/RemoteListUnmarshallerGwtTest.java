@@ -27,32 +27,24 @@ import java.util.ArrayList;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class RemoteListUnmarshallerGwtTest extends BaseGwtTest
-{
-   private final String REMOTE_LIST_RESPONSE = "[{\"name\":\"origin\",\"url\":\"git/anya/remoteToAdd\"}]";
+public class RemoteListUnmarshallerGwtTest extends BaseGwtTest {
+    private final String REMOTE_LIST_RESPONSE = "[{\"name\":\"origin\",\"url\":\"git/anya/remoteToAdd\"}]";
 
-   /**
-    * Test remote list response unmarshaller.
-    */
-   public void testLogResponseUnmarshaller()
-   {
-      java.util.List<Remote> remotes = new ArrayList<Remote>();
+    /** Test remote list response unmarshaller. */
+    public void testLogResponseUnmarshaller() {
+        java.util.List<Remote> remotes = new ArrayList<Remote>();
 
-      RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(remotes);
-      try
-      {
-         unmarshaller.unmarshal(new MockResponse(REMOTE_LIST_RESPONSE));
-      }
-      catch (UnmarshallerException e)
-      {
-         fail(e.getMessage());
-      }
+        RemoteListUnmarshaller unmarshaller = new RemoteListUnmarshaller(remotes);
+        try {
+            unmarshaller.unmarshal(new MockResponse(REMOTE_LIST_RESPONSE));
+        } catch (UnmarshallerException e) {
+            fail(e.getMessage());
+        }
 
-      assertEquals(1, remotes.size());
-      Remote remote = remotes.get(0);
-      assertEquals("git/anya/remoteToAdd", remote.getUrl());
-      assertEquals("origin", remote.getName());
-   }
+        assertEquals(1, remotes.size());
+        Remote remote = remotes.get(0);
+        assertEquals("git/anya/remoteToAdd", remote.getUrl());
+        assertEquals("origin", remote.getName());
+    }
 }

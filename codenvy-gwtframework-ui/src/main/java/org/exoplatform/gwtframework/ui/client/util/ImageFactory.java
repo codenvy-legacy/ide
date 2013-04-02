@@ -18,66 +18,58 @@
  */
 package org.exoplatform.gwtframework.ui.client.util;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.Image;
-
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ImageFactory
-{
+public class ImageFactory {
 
-   private static Map<String, ImageProducer> images = new HashMap<String, ImageProducer>();
+    private static Map<String, ImageProducer> images = new HashMap<String, ImageProducer>();
 
-   private static ImageProducer defaultImageProducer = new ImageProducer("gwtframework-images/default-image.png");
+    private static ImageProducer defaultImageProducer = new ImageProducer("gwtframework-images/default-image.png");
 
-   //   private static ImageProducer defaultImageProducer = new ImageProducer(ShowCaseImageBundle.INSTANCE.add(),
-   //      ShowCaseImageBundle.INSTANCE.addDisabled());
+    //   private static ImageProducer defaultImageProducer = new ImageProducer(ShowCaseImageBundle.INSTANCE.add(),
+    //      ShowCaseImageBundle.INSTANCE.addDisabled());
 
-   public static List<String> getImageNames()
-   {
-      return new ArrayList<String>(images.keySet());
-   }
+    public static List<String> getImageNames() {
+        return new ArrayList<String>(images.keySet());
+    }
 
-   public static Image getImage(String imageName)
-   {
-      ImageProducer producer = images.get(imageName);
-      if (producer != null)
-      {
-         return producer.getImage();
-      }
+    public static Image getImage(String imageName) {
+        ImageProducer producer = images.get(imageName);
+        if (producer != null) {
+            return producer.getImage();
+        }
 
-      return defaultImageProducer.getImage();
-   }
+        return defaultImageProducer.getImage();
+    }
 
-   public static Image getDisabledImage(String imageName)
-   {
-      ImageProducer producer = images.get(imageName);
-      if (producer != null)
-      {
-         return producer.getDisabledImage();
-      }
+    public static Image getDisabledImage(String imageName) {
+        ImageProducer producer = images.get(imageName);
+        if (producer != null) {
+            return producer.getDisabledImage();
+        }
 
-      return defaultImageProducer.getImage();
-   }
+        return defaultImageProducer.getImage();
+    }
 
-   public static void addImage(String imageName, ImageResource imageResource)
-   {
-      images.put(imageName, new ImageProducer(imageResource));
-   }
+    public static void addImage(String imageName, ImageResource imageResource) {
+        images.put(imageName, new ImageProducer(imageResource));
+    }
 
-   public static void addImage(String imageName, ImageResource imageResource, ImageResource disabledImageResource)
-   {
-      images.put(imageName, new ImageProducer(imageResource, disabledImageResource));
-   }
+    public static void addImage(String imageName, ImageResource imageResource, ImageResource disabledImageResource) {
+        images.put(imageName, new ImageProducer(imageResource, disabledImageResource));
+    }
 
 }

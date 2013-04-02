@@ -25,38 +25,34 @@ package org.exoplatform.ide.client.operation.uploadfile;
  * <p/>
  * If while uploading was exception, than error message will be received in such form:
  * <code>&lt;pre&gt;Code: &lt;exit-code&gt; Text: &lt;error message&gt; &lt;/pre&gt;<code>
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UploadHelper.java Nov 15, 2011 12:35:34 PM vereshchaka $
  */
-public class UploadHelper
-{
+public class UploadHelper {
 
-   public static class ErrorData
-   {
-      public ErrorData(int code, String text)
-      {
-         this.code = code;
-         this.text = text;
-      }
+    public static class ErrorData {
+        public ErrorData(int code, String text) {
+            this.code = code;
+            this.text = text;
+        }
 
-      public int code;
+        public int code;
 
-      public String text;
-   }
+        public String text;
+    }
 
-   /**
-    * Parse error message in such form:
-    * <p/>
-    * <code>&lt;pre&gt;Code: &lt;exit-code&gt; Text: &lt;error message&gt; &lt;/pre&gt;<code>.
-    * 
-    * @param errorMsg
-    * @return
-    */
-   public static ErrorData parseError(String errorMsg)
-   {
-      String[] res = errorMsg.split("^<pre>Code: | Text: |</pre>$");
-      return new ErrorData(Integer.valueOf(res[1]).intValue(), res[2]);
-   }
+    /**
+     * Parse error message in such form:
+     * <p/>
+     * <code>&lt;pre&gt;Code: &lt;exit-code&gt; Text: &lt;error message&gt; &lt;/pre&gt;<code>.
+     *
+     * @param errorMsg
+     * @return
+     */
+    public static ErrorData parseError(String errorMsg) {
+        String[] res = errorMsg.split("^<pre>Code: | Text: |</pre>$");
+        return new ErrorData(Integer.valueOf(res[1]).intValue(), res[2]);
+    }
 
 }

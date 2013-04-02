@@ -17,13 +17,10 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Client-visible workspace change summary.
- * 
- */
+/** Client-visible workspace change summary. */
 @RoutingType(type = RoutingTypes.GETWORKSPACECHANGESUMMARY)
 public interface GetWorkspaceChangeSummary extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 }

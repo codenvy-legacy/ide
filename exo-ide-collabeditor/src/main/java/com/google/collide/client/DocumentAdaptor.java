@@ -35,45 +35,38 @@ import org.exoplatform.ide.editor.shared.text.IDocumentListener;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class DocumentAdaptor implements IDocumentListener
-{
+public class DocumentAdaptor implements IDocumentListener {
 
-   private DocumentMutator mutator;
+    private DocumentMutator mutator;
 
-   private Document editorDocument;
+    private Document editorDocument;
 
-   /**
-    * Listener for updating an appropriate IDocument instance.
-    */
-   private TextListenerImpl textListener;
+    /** Listener for updating an appropriate IDocument instance. */
+    private TextListenerImpl textListener;
 
-   private CollabEditor collabEditor;
+    private CollabEditor collabEditor;
 
-   /**
-    * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
-    */
-   @Override
-   public void documentChanged(final DocumentEvent event)
-   {
+    /** @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text
+     * .DocumentEvent) */
+    @Override
+    public void documentChanged(final DocumentEvent event) {
 //      mutator.insertText(editorDocument.getFirstLine(), 0, 0, "it's alive");
-      try
-      {
-         // Temporary disable textListener to prevent updating an appropriate IDocument instance again.
-         //
-         // Do not use editorDocument.getTextListenerRegistrar().remove(textListener)
-         // and editorDocument.getTextListenerRegistrar().add(textListener)
-         // because textListener must be always the first listener for the editorDocument.
-         textListener.setIgnoreTextChanges(true);
+        try {
+            // Temporary disable textListener to prevent updating an appropriate IDocument instance again.
+            //
+            // Do not use editorDocument.getTextListenerRegistrar().remove(textListener)
+            // and editorDocument.getTextListenerRegistrar().add(textListener)
+            // because textListener must be always the first listener for the editorDocument.
+            textListener.setIgnoreTextChanges(true);
 
-         IDocument document = event.getDocument();
-         int lineNumber = document.getLineOfOffset(event.getOffset());
-         int col = event.getOffset() - document.getLineOffset(lineNumber);
+            IDocument document = event.getDocument();
+            int lineNumber = document.getLineOfOffset(event.getOffset());
+            int col = event.getOffset() - document.getLineOffset(lineNumber);
 
-         LineInfo lineInfo = editorDocument.getLineFinder().findLine(lineNumber);
-         Line line = lineInfo.line();
-         mutator.deleteText(line, col, event.fLength);
+            LineInfo lineInfo = editorDocument.getLineFinder().findLine(lineNumber);
+            Line line = lineInfo.line();
+            mutator.deleteText(line, col, event.fLength);
 //         StringBuilder b = new StringBuilder(line.getText());
 //         int length = col + event.getLength();
 //         int nextLine = lineNumber + 1;
@@ -91,42 +84,36 @@ public class DocumentAdaptor implements IDocumentListener
 
 //         LineInfo lineIn = editorDocument.getLineFinder().findLine(lineNumber);
 //         mutator.deleteText(lineIn.line(), 0, lineIn.line().length());
-         mutator.insertText(line, lineInfo.number(), col, event.fText, false);
+            mutator.insertText(line, lineInfo.number(), col, event.fText, false);
 //         setLineText(lineNumber, b.toString());
 
-         collabEditor.asWidget().fireEvent(new EditorContentChangedEvent(collabEditor));
-      }
-      catch (BadLocationException e)
-      {
-         Log.error(getClass(), e);
-      }
-      finally
-      {
-         textListener.setIgnoreTextChanges(false);
-      }
-   }
+            collabEditor.asWidget().fireEvent(new EditorContentChangedEvent(collabEditor));
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        } finally {
+            textListener.setIgnoreTextChanges(false);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentAboutToBeChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
-    */
-   @Override
-   public void documentAboutToBeChanged(DocumentEvent event)
-   {
-      // TODO Auto-generated method stub
-   }
+    /** @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentAboutToBeChanged(org.exoplatform.ide.editor.shared.text
+     * .DocumentEvent) */
+    @Override
+    public void documentAboutToBeChanged(DocumentEvent event) {
+        // TODO Auto-generated method stub
+    }
 
-   /**
-    * @param editorDocument
-    * @param editorDocumentMutator
-    * @param textListener textListener for updating an appropriate IDocument instance
-    */
-   public void setDocument(Document editorDocument, EditorDocumentMutator editorDocumentMutator,
-      TextListenerImpl textListener, CollabEditor editor)
-   {
-      this.editorDocument = editorDocument;
-      mutator = editorDocumentMutator;
-      this.textListener = textListener;
-      this.collabEditor = editor;
-   }
+    /**
+     * @param editorDocument
+     * @param editorDocumentMutator
+     * @param textListener
+     *         textListener for updating an appropriate IDocument instance
+     */
+    public void setDocument(Document editorDocument, EditorDocumentMutator editorDocumentMutator,
+                            TextListenerImpl textListener, CollabEditor editor) {
+        this.editorDocument = editorDocument;
+        mutator = editorDocumentMutator;
+        this.textListener = textListener;
+        this.collabEditor = editor;
+    }
 
 }

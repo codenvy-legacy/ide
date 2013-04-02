@@ -29,53 +29,44 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class FolderOpenedEvent extends GwtEvent<FolderOpenedHandler>
-{
+public class FolderOpenedEvent extends GwtEvent<FolderOpenedHandler> {
 
-   public static final GwtEvent.Type<FolderOpenedHandler> TYPE = new GwtEvent.Type<FolderOpenedHandler>();
+    public static final GwtEvent.Type<FolderOpenedHandler> TYPE = new GwtEvent.Type<FolderOpenedHandler>();
 
-   private FolderModel folder;
+    private FolderModel folder;
 
-   private List<Item> children;
+    private List<Item> children;
 
-   public FolderOpenedEvent(FolderModel folder)
-   {
-      this.folder = folder;
-   }
+    public FolderOpenedEvent(FolderModel folder) {
+        this.folder = folder;
+    }
 
-   public FolderOpenedEvent(FolderModel folder, List<Item> children)
-   {
-      this.folder = folder;
-      this.children = children;
-   }
+    public FolderOpenedEvent(FolderModel folder, List<Item> children) {
+        this.folder = folder;
+        this.children = children;
+    }
 
-   public FolderModel getFolder()
-   {
-      return folder;
-   }
+    public FolderModel getFolder() {
+        return folder;
+    }
 
-   public List<Item> getChildren()
-   {
-      if (children == null)
-      {
-         children = new ArrayList<Item>();
-      }
-      
-      return children;
-   }
+    public List<Item> getChildren() {
+        if (children == null) {
+            children = new ArrayList<Item>();
+        }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FolderOpenedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+        return children;
+    }
 
-   @Override
-   protected void dispatch(FolderOpenedHandler handler)
-   {
-      handler.onFolderOpened(this);
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<FolderOpenedHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    @Override
+    protected void dispatch(FolderOpenedHandler handler) {
+        handler.onFolderOpened(this);
+    }
 
 }

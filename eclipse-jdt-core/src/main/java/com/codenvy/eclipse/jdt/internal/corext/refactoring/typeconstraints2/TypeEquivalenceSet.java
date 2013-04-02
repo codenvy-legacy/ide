@@ -15,99 +15,81 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class TypeEquivalenceSet
-{
+public class TypeEquivalenceSet {
 
-   private ConstraintVariable2[] fVariables;
+    private ConstraintVariable2[] fVariables;
 
-   private ITypeSet fTypeEstimate;
+    private ITypeSet fTypeEstimate;
 
 
-   public TypeEquivalenceSet(ConstraintVariable2 first, ConstraintVariable2 second)
-   {
-      fVariables = new ConstraintVariable2[]{first, second};
-   }
+    public TypeEquivalenceSet(ConstraintVariable2 first, ConstraintVariable2 second) {
+        fVariables = new ConstraintVariable2[]{first, second};
+    }
 
-   public TypeEquivalenceSet(ConstraintVariable2 variable)
-   {
-      fVariables = new ConstraintVariable2[]{variable};
-   }
+    public TypeEquivalenceSet(ConstraintVariable2 variable) {
+        fVariables = new ConstraintVariable2[]{variable};
+    }
 
-   public void add(ConstraintVariable2 variable)
-   {
-      for (int i = 0; i < fVariables.length; i++)
-      {
-         if (fVariables[i] == variable)
-         {
-            return;
-         }
-      }
-
-      int length = fVariables.length;
-      ConstraintVariable2[] newElements = new ConstraintVariable2[length + 1];
-      System.arraycopy(fVariables, 0, newElements, 0, length);
-      newElements[length] = variable;
-      fVariables = newElements;
-   }
-
-   public ConstraintVariable2[] getContributingVariables()
-   {
-      return fVariables;
-   }
-
-   public void addAll(ConstraintVariable2[] variables)
-   {
-      if (fVariables.length * variables.length > 100)
-      {
-         LinkedHashSet<ConstraintVariable2> result = new LinkedHashSet<ConstraintVariable2>(
-            fVariables.length + variables.length);
-         result.addAll(Arrays.asList(fVariables));
-         result.addAll(Arrays.asList(variables));
-         fVariables = result.toArray(new ConstraintVariable2[result.size()]);
-
-      }
-      else
-      {
-         List<ConstraintVariable2> elements = Arrays.asList(fVariables);
-         ArrayList<ConstraintVariable2> result = new ArrayList<ConstraintVariable2>(
-            fVariables.length + variables.length);
-         result.addAll(elements);
-         for (int i = 0; i < variables.length; i++)
-         {
-            ConstraintVariable2 right = variables[i];
-            if (!result.contains(right))
-            {
-               result.add(right);
+    public void add(ConstraintVariable2 variable) {
+        for (int i = 0; i < fVariables.length; i++) {
+            if (fVariables[i] == variable) {
+                return;
             }
-         }
-         fVariables = result.toArray(new ConstraintVariable2[result.size()]);
-      }
+        }
 
-   }
+        int length = fVariables.length;
+        ConstraintVariable2[] newElements = new ConstraintVariable2[length + 1];
+        System.arraycopy(fVariables, 0, newElements, 0, length);
+        newElements[length] = variable;
+        fVariables = newElements;
+    }
 
-   public void setTypeEstimate(ITypeSet estimate)
-   {
-      fTypeEstimate = estimate;
-   }
+    public ConstraintVariable2[] getContributingVariables() {
+        return fVariables;
+    }
 
-   public ITypeSet getTypeEstimate()
-   {
-      return fTypeEstimate;
-   }
+    public void addAll(ConstraintVariable2[] variables) {
+        if (fVariables.length * variables.length > 100) {
+            LinkedHashSet<ConstraintVariable2> result = new LinkedHashSet<ConstraintVariable2>(
+                    fVariables.length + variables.length);
+            result.addAll(Arrays.asList(fVariables));
+            result.addAll(Arrays.asList(variables));
+            fVariables = result.toArray(new ConstraintVariable2[result.size()]);
 
-   @Override
-   public String toString()
-   {
-      StringBuffer result = new StringBuffer();
-      if (fVariables.length > 0)
-      {
-         result.append(fVariables[0].toString());
-      }
-      for (int i = 1; i < fVariables.length; i++)
-      {
-         result.append(" =^= \n"); //$NON-NLS-1$
-         result.append(fVariables[i].toString());
-      }
-      return result.toString();
-   }
+        } else {
+            List<ConstraintVariable2> elements = Arrays.asList(fVariables);
+            ArrayList<ConstraintVariable2> result = new ArrayList<ConstraintVariable2>(
+                    fVariables.length + variables.length);
+            result.addAll(elements);
+            for (int i = 0; i < variables.length; i++) {
+                ConstraintVariable2 right = variables[i];
+                if (!result.contains(right)) {
+                    result.add(right);
+                }
+            }
+            fVariables = result.toArray(new ConstraintVariable2[result.size()]);
+        }
+
+    }
+
+    public void setTypeEstimate(ITypeSet estimate) {
+        fTypeEstimate = estimate;
+    }
+
+    public ITypeSet getTypeEstimate() {
+        return fTypeEstimate;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+        if (fVariables.length > 0) {
+            result.append(fVariables[0].toString());
+        }
+        for (int i = 1; i < fVariables.length; i++) {
+            result.append(" =^= \n"); //$NON-NLS-1$
+            result.append(fVariables[i].toString());
+        }
+        return result.toString();
+    }
 }

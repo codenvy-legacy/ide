@@ -18,69 +18,57 @@
  */
 package org.exoplatform.ide.client.framework.ui.api.event;
 
-import org.exoplatform.ide.client.framework.ui.api.View;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.client.framework.ui.api.View;
 
 /**
  * This event generates after changing of view visibility.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ViewVisibilityChangedEvent extends GwtEvent<ViewVisibilityChangedHandler>
-{
+public class ViewVisibilityChangedEvent extends GwtEvent<ViewVisibilityChangedHandler> {
 
-   /**
-    * Type of this event.
-    */
-   public static final GwtEvent.Type<ViewVisibilityChangedHandler> TYPE =
-      new GwtEvent.Type<ViewVisibilityChangedHandler>();
+    /** Type of this event. */
+    public static final GwtEvent.Type<ViewVisibilityChangedHandler> TYPE =
+            new GwtEvent.Type<ViewVisibilityChangedHandler>();
 
-   /**
-    * View which visibility was changed.
-    */
-   private View view;
+    /** View which visibility was changed. */
+    private View view;
 
-   /**
-    * Creates a new instance of this event.
-    * 
-    * @param view view which visibility was changed
-    */
-   public ViewVisibilityChangedEvent(View view)
-   {
-      this.view = view;
-   }
+    /**
+     * Creates a new instance of this event.
+     *
+     * @param view
+     *         view which visibility was changed
+     */
+    public ViewVisibilityChangedEvent(View view) {
+        this.view = view;
+    }
 
-   /**
-    * Gets view which visibility was changed.
-    * 
-    * @return view instance of view which visibility was changed
-    */
-   public View getView()
-   {
-      return view;
-   }
+    /**
+     * Gets view which visibility was changed.
+     *
+     * @return view instance of view which visibility was changed
+     */
+    public View getView() {
+        return view;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewVisibilityChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ViewVisibilityChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ViewVisibilityChangedHandler handler)
-   {
-      handler.onViewVisibilityChanged(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ViewVisibilityChangedHandler handler) {
+        handler.onViewVisibilityChanged(this);
+    }
 
 }

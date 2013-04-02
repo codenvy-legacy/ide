@@ -20,20 +20,20 @@ package com.codenvy.eclipse.jdt.internal.formatter;
  */
 public class FormatJavadocReference extends FormatJavadocNode {
 
-public FormatJavadocReference(int start, int end, int line) {
-	super(start, end, line);
-}
+    public FormatJavadocReference(int start, int end, int line) {
+        super(start, end, line);
+    }
 
-public FormatJavadocReference(long position, int line) {
-	super((int) (position >>> 32), (int) position, line);
-}
+    public FormatJavadocReference(long position, int line) {
+        super((int)(position >>> 32), (int)position, line);
+    }
 
-void clean() {
-	// Clean positions when used
-}
+    void clean() {
+        // Clean positions when used
+    }
 
-protected void toString(StringBuffer buffer) {
-	buffer.append("ref");	//$NON-NLS-1$
-	super.toString(buffer);
-}
+    protected void toString(StringBuffer buffer) {
+        buffer.append("ref");    //$NON-NLS-1$
+        super.toString(buffer);
+    }
 }

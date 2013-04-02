@@ -34,33 +34,27 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class TargetsUnmarshaller implements Unmarshallable<List<String>>
-{
-   private List<String> targets;
+public class TargetsUnmarshaller implements Unmarshallable<List<String>> {
+    private List<String> targets;
 
-   public TargetsUnmarshaller(List<String> targets)
-   {
-      this.targets = targets;
-   }
+    public TargetsUnmarshaller(List<String> targets) {
+        this.targets = targets;
+    }
 
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         JSONValue value = jsonArray.get(i);
-         if (value.isString() != null)
-         {
-            targets.add(value.isString().stringValue());
-         }
-      }
-   }
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONValue value = jsonArray.get(i);
+            if (value.isString() != null) {
+                targets.add(value.isString().stringValue());
+            }
+        }
+    }
 
-   @Override
-   public List<String> getPayload()
-   {
-      return targets;
-   }
+    @Override
+    public List<String> getPayload() {
+        return targets;
+    }
 }

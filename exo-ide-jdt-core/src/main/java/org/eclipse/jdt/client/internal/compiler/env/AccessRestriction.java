@@ -10,31 +10,27 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.env;
 
-public class AccessRestriction
-{
+public class AccessRestriction {
 
-   private AccessRule accessRule;
+    private AccessRule accessRule;
 
-   public byte classpathEntryType;
+    public byte classpathEntryType;
 
-   public static final byte COMMAND_LINE = 0, PROJECT = 1, LIBRARY = 2;
+    public static final byte COMMAND_LINE = 0, PROJECT = 1, LIBRARY = 2;
 
-   public String classpathEntryName;
+    public String classpathEntryName;
 
-   public AccessRestriction(AccessRule accessRule, byte classpathEntryType, String classpathEntryName)
-   {
-      this.accessRule = accessRule;
-      this.classpathEntryName = classpathEntryName;
-      this.classpathEntryType = classpathEntryType;
-   }
+    public AccessRestriction(AccessRule accessRule, byte classpathEntryType, String classpathEntryName) {
+        this.accessRule = accessRule;
+        this.classpathEntryName = classpathEntryName;
+        this.classpathEntryType = classpathEntryType;
+    }
 
-   public int getProblemId()
-   {
-      return this.accessRule.getProblemId();
-   }
+    public int getProblemId() {
+        return this.accessRule.getProblemId();
+    }
 
-   public boolean ignoreIfBetter()
-   {
-      return this.accessRule.ignoreIfBetter();
-   }
+    public boolean ignoreIfBetter() {
+        return this.accessRule.ignoreIfBetter();
+    }
 }

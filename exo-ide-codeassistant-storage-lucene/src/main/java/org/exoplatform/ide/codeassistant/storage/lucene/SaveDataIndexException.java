@@ -18,15 +18,11 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-/**
- * Exception which indicates errors on saving TypeInfo in Lucene Index
- */
-public class SaveDataIndexException extends Exception
-{
-   private static final long serialVersionUID = 1L;
+/** Exception which indicates errors on saving TypeInfo in Lucene Index */
+public class SaveDataIndexException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-   public SaveDataIndexException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public SaveDataIndexException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

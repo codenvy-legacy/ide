@@ -24,13 +24,11 @@ import com.google.gwt.resources.client.ClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeAssistantClientBundle Feb 22, 2011 5:06:30 PM evgen $
- * 
  */
-public interface CodeAssistantClientBundle extends ClientBundle
-{
-   CodeAssistantClientBundle INSTANCE = GWT.create(CodeAssistantClientBundle.class);
+public interface CodeAssistantClientBundle extends ClientBundle {
+    CodeAssistantClientBundle INSTANCE = GWT.create(CodeAssistantClientBundle.class);
 
-   @Source("org/exoplatform/ide/editor/client/bundle/codeassistant.css")
-   CodeAssistantCss css();
+    @Source("org/exoplatform/ide/editor/client/bundle/codeassistant.css")
+    CodeAssistantCss css();
 
 }

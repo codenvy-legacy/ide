@@ -19,19 +19,19 @@ package com.codenvy.eclipse.jdt.core;
  * @since 2.0
  * @deprecated Use {@link WorkingCopyOwner} instead
  */
-public interface IBufferFactory
-{
+public interface IBufferFactory {
 
-   /**
-    * Creates a buffer for the given owner.
-    * The new buffer will be initialized with the contents of the owner
-    * if and only if it was not already initialized by the factory (a buffer is uninitialized if
-    * its content is <code>null</code>).
-    *
-    * @param owner the owner of the buffer
-    * @return the newly created buffer
-    * @see IBuffer
-    */
-   IBuffer createBuffer(IOpenable owner);
+    /**
+     * Creates a buffer for the given owner.
+     * The new buffer will be initialized with the contents of the owner
+     * if and only if it was not already initialized by the factory (a buffer is uninitialized if
+     * its content is <code>null</code>).
+     *
+     * @param owner
+     *         the owner of the buffer
+     * @return the newly created buffer
+     * @see IBuffer
+     */
+    IBuffer createBuffer(IOpenable owner);
 }
 

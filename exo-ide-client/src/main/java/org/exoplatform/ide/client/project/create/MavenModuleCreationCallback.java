@@ -47,94 +47,77 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class MavenModuleCreationCallback implements EditorFileOpenedHandler, EditorFileClosedHandler, VfsChangedHandler
-{
+public class MavenModuleCreationCallback implements EditorFileOpenedHandler, EditorFileClosedHandler, VfsChangedHandler {
 
-   private static MavenModuleCreationCallback instance;
+    private static MavenModuleCreationCallback instance;
 
-   public static MavenModuleCreationCallback getInstance()
-   {
-      return instance;
-   }
+    public static MavenModuleCreationCallback getInstance() {
+        return instance;
+    }
 
-   private VirtualFileSystemInfo vfs;
+    private VirtualFileSystemInfo vfs;
 
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   public MavenModuleCreationCallback()
-   {
-      instance = this;
+    public MavenModuleCreationCallback() {
+        instance = this;
 
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedFiles = event.getOpenedFiles();
+    }
 
-   @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        openedFiles = event.getOpenedFiles();
+    }
 
-   public boolean isPomXMLOpened(ProjectModel project)
-   {
-      for (Item child : project.getChildren().getItems())
-      {
-         if ("pom.xml".equals(child.getName()))
-         {
-            return openedFiles.containsKey(child.getId());
-         }
-      }
+    public boolean isPomXMLOpened(ProjectModel project) {
+        for (Item child : project.getChildren().getItems()) {
+            if ("pom.xml".equals(child.getName())) {
+                return openedFiles.containsKey(child.getId());
+            }
+        }
 
-      return false;
-   }
+        return false;
+    }
 
-   public void moduleCreated(final ProjectModel parent, final ProjectModel module)
-   {
-      // ask server to add module in pom.xml
-      try
-      {
-         String url =
-            Utils.getRestContext() + "/ide/project/addModule" +
-                     "?vfsId=" + vfs.getId() +
-                     "&projectId=" + parent.getId() + 
-                     "&moduleName=" + module.getName();
+    public void moduleCreated(final ProjectModel parent, final ProjectModel module) {
+        // ask server to add module in pom.xml
+        try {
+            String url =
+                    Utils.getRestContext() + "/ide/project/addModule" +
+                    "?vfsId=" + vfs.getId() +
+                    "&projectId=" + parent.getId() +
+                    "&moduleName=" + module.getName();
 
-         AsyncRequest.build(RequestBuilder.GET, URL.encode(url), false).loader(IDELoader.get())
-            .send(new AsyncRequestCallback<Void>()
-            {
-               @Override
-               protected void onSuccess(Void result)
-               {
-                  IDE.fireEvent(new ModuleCreatedEvent(module));
-                  IDE.fireEvent(new RefreshBrowserEvent(parent));
-               }
+            AsyncRequest.build(RequestBuilder.GET, URL.encode(url), false).loader(IDELoader.get())
+                        .send(new AsyncRequestCallback<Void>() {
+                            @Override
+                            protected void onSuccess(Void result) {
+                                IDE.fireEvent(new ModuleCreatedEvent(module));
+                                IDE.fireEvent(new RefreshBrowserEvent(parent));
+                            }
 
-               @Override
-               protected void onFailure(Throwable e)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-      }
-   }
+                            @Override
+                            protected void onFailure(Throwable e) {
+                                IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+                            }
+                        });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+        }
+    }
 
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfs = event.getVfsInfo();
-   }
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfs = event.getVfsInfo();
+    }
 
 }

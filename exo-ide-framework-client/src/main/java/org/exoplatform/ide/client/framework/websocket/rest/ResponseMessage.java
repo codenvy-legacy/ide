@@ -20,25 +20,23 @@ package org.exoplatform.ide.client.framework.websocket.rest;
 
 /**
  * RESTful response messages.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ResponseMessage.java Nov 8, 2012 6:29:19 PM azatsarynnyy $
- *
  */
-public interface ResponseMessage extends RESTMessage
-{
-   /**
-    * Get response code.
-    *
-    * @return response code
-    */
-   int getResponseCode();
+public interface ResponseMessage extends RESTMessage {
+    /**
+     * Get response code.
+     *
+     * @return response code
+     */
+    int getResponseCode();
 
-   /**
-    * Get response code.
-    *
-    * @param responseCode
-    *    response code
-    */
-   void setResponseCode(int responseCode);
+    /**
+     * Get response code.
+     *
+     * @param responseCode
+     *         response code
+     */
+    void setResponseCode(int responseCode);
 }

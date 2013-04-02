@@ -17,19 +17,16 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request to submit the specified workspace to the parent workspace.
- *
- */
+/** Request to submit the specified workspace to the parent workspace. */
 @RoutingType(type = RoutingTypes.SUBMIT)
 public interface Submit extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getClientId();
+    String getClientId();
 
-  String getWorkspaceName();
+    String getWorkspaceName();
 
-  String getWorkspaceDescription();
+    String getWorkspaceDescription();
 }

@@ -27,29 +27,20 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UpdateApplicationEvent extends GwtEvent<UpdateApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<UpdateApplicationHandler> TYPE = new GwtEvent.Type<UpdateApplicationHandler>();
+public class UpdateApplicationEvent extends GwtEvent<UpdateApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<UpdateApplicationHandler> TYPE = new GwtEvent.Type<UpdateApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateApplicationHandler handler)
-   {
-      handler.onUpdateApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateApplicationHandler handler) {
+        handler.onUpdateApplication(this);
+    }
 
 }

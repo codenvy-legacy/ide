@@ -22,68 +22,70 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 
 /**
  * Interface represents the Jenkins build job status.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: JobStatus.java Mar 15, 2012 4:04:15 PM azatsarynnyy $
- *
  */
-public interface JobStatus
-{
+public interface JobStatus {
 
-   /**
-    * Get the name of the build job.
-    * 
-    * @return name of the build job.
-    */
-   public String getName();
+    /**
+     * Get the name of the build job.
+     *
+     * @return name of the build job.
+     */
+    public String getName();
 
-   /**
-    * Set the job name.
-    * 
-    * @param job name.
-    */
-   public void setName(String name);
+    /**
+     * Set the job name.
+     *
+     * @param job
+     *         name.
+     */
+    public void setName(String name);
 
-   /**
-    * Get the current status of the build job.
-    * 
-    * @return status of the build job.
-    */
-   public Status getStatus();
+    /**
+     * Get the current status of the build job.
+     *
+     * @return status of the build job.
+     */
+    public Status getStatus();
 
-   /**
-    * Set the current status of the build job.
-    * 
-    * @param status status of the build job.
-    */
-   public void setStatus(Status status);
+    /**
+     * Set the current status of the build job.
+     *
+     * @param status
+     *         status of the build job.
+     */
+    public void setStatus(Status status);
 
-   /**
-    * Get result of the last build job.
-    * 
-    * @return result of the last build job.
-    */
-   public String getLastBuildResult();
+    /**
+     * Get result of the last build job.
+     *
+     * @return result of the last build job.
+     */
+    public String getLastBuildResult();
 
-   /**
-    * Set result of the last build job.
-    * 
-    * @param lastBuildResult result of the last build job.
-    */
-   public void setLastBuildResult(String lastBuildResult);
+    /**
+     * Set result of the last build job.
+     *
+     * @param lastBuildResult
+     *         result of the last build job.
+     */
+    public void setLastBuildResult(String lastBuildResult);
 
-   /**
-    * Get the URL to download artifact.
-    * 
-    * @return URL to download artifact.
-    */
-   public String getArtifactUrl();
+    /**
+     * Get the URL to download artifact.
+     *
+     * @return URL to download artifact.
+     */
+    public String getArtifactUrl();
 
-   /**
-    * Set the URL to download artifact.
-    * 
-    * @param artifactUrl URL to download artifact.
-    */
-   public void setArtifactUrl(String artifactUrl);
+    /**
+     * Set the URL to download artifact.
+     *
+     * @param artifactUrl
+     *         URL to download artifact.
+     */
+    public void setArtifactUrl(String artifactUrl);
 
 }

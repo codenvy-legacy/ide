@@ -17,24 +17,15 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Code graph request from client to frontend.
- *
- */
+/** Code graph request from client to frontend. */
 @RoutingType(type = RoutingTypes.CODEGRAPHREQUEST)
 public interface CodeGraphRequest extends ClientToServerDto {
-  /**
-   * @return freshness values currently available on the client
-   */
-  CodeGraphFreshness getFreshness();
+    /** @return freshness values currently available on the client */
+    CodeGraphFreshness getFreshness();
 
-  /**
-   * @return workspace ID
-   */
-  String getWorkspaceId();
+    /** @return workspace ID */
+    String getWorkspaceId();
 
-  /**
-   * @return context file path
-   */
-  String getFilePath();
+    /** @return context file path */
+    String getFilePath();
 }

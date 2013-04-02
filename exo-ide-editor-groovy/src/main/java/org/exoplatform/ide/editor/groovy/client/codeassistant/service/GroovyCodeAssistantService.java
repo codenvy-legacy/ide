@@ -35,56 +35,49 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyCodeAssistant Apr 6, 2011 2:53:10 PM evgen $
- * 
  */
-public class GroovyCodeAssistantService extends CodeAssistantService
-{
+public class GroovyCodeAssistantService extends CodeAssistantService {
 
-   private static GroovyCodeAssistantService instance;
-   
-   private static final String FIND_BY_PROJECT = "/ide/code-assistant/groovy/find-in-package";
+    private static GroovyCodeAssistantService instance;
 
-   /**
-    * @param eventBus
-    * @param restServiceContext
-    * @param loader
-    */
-   public GroovyCodeAssistantService(String restServiceContext, Loader loader)
-   {
-      super(restServiceContext, loader, "/ide/code-assistant/groovy/class-description?fqn=", // GET_CLASS_URL
-         "/ide/code-assistant/groovy/find-by-prefix/", // FIND_CLASS_BY_PREFIX
-         "/ide/code-assistant/groovy/find-by-type/" // FIND_TYPE
-      );
-      instance = this;
-   }
+    private static final String FIND_BY_PROJECT = "/ide/code-assistant/groovy/find-in-package";
 
-   public static GroovyCodeAssistantService get()
-   {
-      return instance;
-   }
-   
-   /**
-    * Find all classes from project with file.
-    * 
-    * @param fileRelPath for who autocompletion called (Need for find classpath)
-    * @param callback - the callback which client has to implement
-    */
-   public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<List<Token>> callback)
-   {
-      if (fileId != null)
-      {
-         String url = restServiceContext + FIND_BY_PROJECT;
-         url +=
-            "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
-               + VirtualFileSystem.getInstance().getInfo().getId();
-         try
-         {
-            AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-         }
-         catch (RequestException e)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-         }
-      }
-   }
+    /**
+     * @param eventBus
+     * @param restServiceContext
+     * @param loader
+     */
+    public GroovyCodeAssistantService(String restServiceContext, Loader loader) {
+        super(restServiceContext, loader, "/ide/code-assistant/groovy/class-description?fqn=", // GET_CLASS_URL
+              "/ide/code-assistant/groovy/find-by-prefix/", // FIND_CLASS_BY_PREFIX
+              "/ide/code-assistant/groovy/find-by-type/" // FIND_TYPE
+             );
+        instance = this;
+    }
+
+    public static GroovyCodeAssistantService get() {
+        return instance;
+    }
+
+    /**
+     * Find all classes from project with file.
+     *
+     * @param fileRelPath
+     *         for who autocompletion called (Need for find classpath)
+     * @param callback
+     *         - the callback which client has to implement
+     */
+    public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<List<Token>> callback) {
+        if (fileId != null) {
+            String url = restServiceContext + FIND_BY_PROJECT;
+            url +=
+                    "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
+                    + VirtualFileSystem.getInstance().getInfo().getId();
+            try {
+                AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
+    }
 }

@@ -20,18 +20,16 @@ package org.exoplatform.ide.client.framework.websocket.rest;
 
 /**
  * Pair that may be used to emulate headers of HTTP request/response.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
- *
  */
-public interface Pair
-{
-   String getName();
+public interface Pair {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getValue();
+    String getValue();
 
-   void setValue(String value);
+    void setValue(String value);
 }

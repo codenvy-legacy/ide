@@ -17,21 +17,18 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 
-/**
- * Request to deploy a workspace to App Engine.
- *
- */
+/** Request to deploy a workspace to App Engine. */
 @RoutingType(type = RoutingTypes.DEPLOYWORKSPACE)
 public interface DeployWorkspace extends GetAppEngineClusterType {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  // Optional. The basepath in the workspace to deploy from.
-  String basePath();
+    // Optional. The basepath in the workspace to deploy from.
+    String basePath();
 
-  // Optional. The app id to deploy to.
-  String appId();
+    // Optional. The app id to deploy to.
+    String appId();
 
-  // Optional. The app version to deploy to.
-  String appVersion();
+    // Optional. The app version to deploy to.
+    String appVersion();
 }

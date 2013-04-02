@@ -44,12 +44,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysHandler;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
-import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.*;
 import org.exoplatform.ide.extension.ssh.client.keymanager.ui.HasSshGrid;
 import org.exoplatform.ide.extension.ssh.client.marshaller.SshKeysUnmarshaller;
 import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
@@ -58,270 +53,212 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
- *
  */
 public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler,
-   ConfigurationReceivedSuccessfullyHandler, PreferencePerformer, RefreshKeysHandler
-{
-   public interface Display extends IsView
-   {
-      String ID = "ideSshKeyManagerView";
+                                               ConfigurationReceivedSuccessfullyHandler, PreferencePerformer, RefreshKeysHandler {
+    public interface Display extends IsView {
+        String ID = "ideSshKeyManagerView";
 
-      HasSshGrid<KeyItem> getKeyItemGrid();
+        HasSshGrid<KeyItem> getKeyItemGrid();
 
-      HasClickHandlers getGenerateButton();
+        HasClickHandlers getGenerateButton();
 
-      HasClickHandlers getUploadButton();
+        HasClickHandlers getUploadButton();
 
-      HasClickHandlers getGenerateGithubKeyButton();
+        HasClickHandlers getGenerateGithubKeyButton();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private IDEConfiguration configuration;
+    private IDEConfiguration configuration;
 
-   /**
-    *
-    */
-   public SshKeyManagerPresenter()
-   {
-      IDE.addHandler(ShowSshKeyManagerEvent.TYPE, this);
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-      // add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(RefreshKeysEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public SshKeyManagerPresenter() {
+        IDE.addHandler(ShowSshKeyManagerEvent.TYPE, this);
+        IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+        // add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(RefreshKeysEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler#onShowSshKeyManager(org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent)
-    */
-   @Override
-   public void onShowSshKeyManager(ShowSshKeyManagerEvent event)
-   {
-      if (display != null)
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler#onShowSshKeyManager(org.exoplatform.ide
+     * .extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent) */
+    @Override
+    public void onShowSshKeyManager(ShowSshKeyManagerEvent event) {
+        if (display != null) {
+            return;
+        }
 
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
+        display = GWT.create(Display.class);
+        IDE.getInstance().openView(display.asView());
+        bindDisplay();
 
-      refreshKeys();
-   }
+        refreshKeys();
+    }
 
-   /**
-    *
-    */
-   private void refreshKeys()
-   {
-      SshKeyService.get().getAllKeys(new JsonpAsyncCallback<JavaScriptObject>()
-      {
+    /**
+     *
+     */
+    private void refreshKeys() {
+        SshKeyService.get().getAllKeys(new JsonpAsyncCallback<JavaScriptObject>() {
 
-         @Override
-         public void onSuccess(JavaScriptObject result)
-         {
-            getLoader().hide();
-            try
-            {
-               display.getKeyItemGrid().setValue(SshKeysUnmarshaller.unmarshal(result));
-            }
-            catch (UnmarshallerException e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         }
-
-         @Override
-         public void onFailure(Throwable exception)
-         {
-            getLoader().hide();
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
-   }
-
-   /**
-    *
-    */
-   private void bindDisplay()
-   {
-      display.getKeyItemGrid().addViewButtonSelectionHandler(new SelectionHandler<KeyItem>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<KeyItem> event)
-         {
-            if (event.getSelectedItem().getPublicKeyURL() != null)
-            {
-               IDE.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
-            }
-         }
-      });
-
-      display.getKeyItemGrid().addDeleteButtonSelectionHandler(new SelectionHandler<KeyItem>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<KeyItem> event)
-         {
-            deleteSshPublicKey(event.getSelectedItem());
-         }
-      });
-
-      display.getGenerateButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            Dialogs.getInstance().askForValue("Generate Ssh Key", "Host name (w/o port): ", "",
-               new StringValueReceivedHandler()
-               {
-
-                  @Override
-                  public void stringValueReceived(String value)
-                  {
-                     if (value != null && !"".equals(value))
-                     {
-                        generateKey(value);
-                     }
-                  }
-               });
-         }
-      });
-
-      display.getUploadButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            new UploadSshKeyPresenter(configuration.getContext());
-         }
-      });
-
-      display.getGenerateGithubKeyButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new GenerateGitHubKeyEvent());
-         }
-      });
-   }
-
-   /**
-    * @param keyItem
-    */
-   private void deleteSshPublicKey(final KeyItem keyItem)
-   {
-      Dialogs.getInstance().ask("IDE", "Do you want to delete ssh keys for <b>" + keyItem.getHost() + "</b> host?",
-         new BooleanValueReceivedHandler()
-         {
             @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value != null && value)
-               {
-                  doDeleteKey(keyItem);
-               }
+            public void onSuccess(JavaScriptObject result) {
+                getLoader().hide();
+                try {
+                    display.getKeyItemGrid().setValue(SshKeysUnmarshaller.unmarshal(result));
+                } catch (UnmarshallerException e) {
+                    IDE.fireEvent(new ExceptionThrownEvent(e));
+                }
             }
-         });
-   }
 
-   /**
-    * @param keyItem
-    */
-   private void doDeleteKey(KeyItem keyItem)
-   {
-      SshKeyService.get().deleteKey(keyItem, new JsonpAsyncCallback<Void>()
-      {
-         @Override
-         public void onSuccess(Void result)
-         {
-            getLoader().hide();
+            @Override
+            public void onFailure(Throwable exception) {
+                getLoader().hide();
+                IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    private void bindDisplay() {
+        display.getKeyItemGrid().addViewButtonSelectionHandler(new SelectionHandler<KeyItem>() {
+
+            @Override
+            public void onSelection(SelectionEvent<KeyItem> event) {
+                if (event.getSelectedItem().getPublicKeyURL() != null) {
+                    IDE.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
+                }
+            }
+        });
+
+        display.getKeyItemGrid().addDeleteButtonSelectionHandler(new SelectionHandler<KeyItem>() {
+
+            @Override
+            public void onSelection(SelectionEvent<KeyItem> event) {
+                deleteSshPublicKey(event.getSelectedItem());
+            }
+        });
+
+        display.getGenerateButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                Dialogs.getInstance().askForValue("Generate Ssh Key", "Host name (w/o port): ", "",
+                                                  new StringValueReceivedHandler() {
+
+                                                      @Override
+                                                      public void stringValueReceived(String value) {
+                                                          if (value != null && !"".equals(value)) {
+                                                              generateKey(value);
+                                                          }
+                                                      }
+                                                  });
+            }
+        });
+
+        display.getUploadButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                new UploadSshKeyPresenter(configuration.getContext());
+            }
+        });
+
+        display.getGenerateGithubKeyButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new GenerateGitHubKeyEvent());
+            }
+        });
+    }
+
+    /** @param keyItem */
+    private void deleteSshPublicKey(final KeyItem keyItem) {
+        Dialogs.getInstance().ask("IDE", "Do you want to delete ssh keys for <b>" + keyItem.getHost() + "</b> host?",
+                                  new BooleanValueReceivedHandler() {
+                                      @Override
+                                      public void booleanValueReceived(Boolean value) {
+                                          if (value != null && value) {
+                                              doDeleteKey(keyItem);
+                                          }
+                                      }
+                                  });
+    }
+
+    /** @param keyItem */
+    private void doDeleteKey(KeyItem keyItem) {
+        SshKeyService.get().deleteKey(keyItem, new JsonpAsyncCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                getLoader().hide();
+                refreshKeys();
+            }
+
+            @Override
+            public void onFailure(Throwable exception) {
+                getLoader().hide();
+                IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
+    }
+
+    private void generateKey(String host) {
+        try {
+            SshKeyService.get().generateKey(host, new AsyncRequestCallback<GenKeyRequest>() {
+                @Override
+                protected void onSuccess(GenKeyRequest result) {
+                    refreshKeys();
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+        if (event.getView() instanceof org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display) {
             refreshKeys();
-         }
+        }
+    }
 
-         @Override
-         public void onFailure(Throwable exception)
-         {
-            getLoader().hide();
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
-   }
+    /** @see org.exoplatform.ide.client.framework.configuration.event
+     * .ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration
+     * .event.ConfigurationReceivedSuccessfullyEvent) */
+    @Override
+    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
+        configuration = event.getConfiguration();
+    }
 
-   private void generateKey(String host)
-   {
-      try
-      {
-         SshKeyService.get().generateKey(host, new AsyncRequestCallback<GenKeyRequest>()
-         {
-            @Override
-            protected void onSuccess(GenKeyRequest result)
-            {
-               refreshKeys();
-            }
+    /** @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference() */
+    @Override
+    public View getPreference() {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
+        refreshKeys();
+        return display.asView();
+    }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-      if (event.getView() instanceof org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display)
-      {
-         refreshKeys();
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)
-    */
-   @Override
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      configuration = event.getConfiguration();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
-    */
-   @Override
-   public View getPreference()
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-      }
-      refreshKeys();
-      return display.asView();
-   }
-
-   @Override
-   public void onRefreshKeys(RefreshKeysEvent event)
-   {
-      refreshKeys();
-   }
+    @Override
+    public void onRefreshKeys(RefreshKeysEvent event) {
+        refreshKeys();
+    }
 }

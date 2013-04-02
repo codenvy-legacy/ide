@@ -18,19 +18,19 @@ import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * DTO for client-visible directory information in a directory listing.
- *
+ * <p/>
  * This defines a recursive structure.
  */
 public interface DirInfo extends TreeNodeInfo {
-  JsonArray<FileInfo> getFiles();
+    JsonArray<FileInfo> getFiles();
 
-  JsonArray<DirInfo> getSubDirectories();
+    JsonArray<DirInfo> getSubDirectories();
 
-  /**
-   * @return whether or not this node has been populated. We support lazy
-   *         querying of the file tree structure. If this is false, then it
-   *         means we need to run another query for file/directory information
-   *         starting at this node.
-   */
-  boolean isComplete();
+    /**
+     * @return whether or not this node has been populated. We support lazy
+     *         querying of the file tree structure. If this is false, then it
+     *         means we need to run another query for file/directory information
+     *         starting at this node.
+     */
+    boolean isComplete();
 }

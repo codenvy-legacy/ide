@@ -23,15 +23,10 @@ import org.exoplatform.ide.client.framework.module.Extension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
  */
-public class RubyExtension extends Extension
-{
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-   }
+public class RubyExtension extends Extension {
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+    }
 }

@@ -27,86 +27,60 @@ import org.eclipse.jdt.client.core.IType;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:28:31 AM Mar 30, 2012 evgen $
- * 
  */
-public class TypeImpl implements IType
-{
+public class TypeImpl implements IType {
 
-   private JSONObject jsObj;
+    private JSONObject jsObj;
 
-   private PackageFragment packageFragment;
+    private PackageFragment packageFragment;
 
-   /**
-    * @param jsObj
-    */
-   public TypeImpl(JSONObject jsObj)
-   {
-      this.jsObj = jsObj;
-   }
+    /** @param jsObj */
+    public TypeImpl(JSONObject jsObj) {
+        this.jsObj = jsObj;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.IJavaElement#getElementName()
-    */
-   @Override
-   public String getElementName()
-   {
-      return jsObj.get("name").isString().stringValue();
-   }
+    /** @see org.eclipse.jdt.client.core.IJavaElement#getElementName() */
+    @Override
+    public String getElementName() {
+        return jsObj.get("name").isString().stringValue();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.IJavaElement#getElementType()
-    */
-   @Override
-   public int getElementType()
-   {
-      return IJavaElement.TYPE;
-   }
+    /** @see org.eclipse.jdt.client.core.IJavaElement#getElementType() */
+    @Override
+    public int getElementType() {
+        return IJavaElement.TYPE;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.IType#getFlags()
-    */
-   @Override
-   public int getFlags()
-   {
-      return (int)jsObj.get("modifiers").isNumber().doubleValue();
-   }
+    /** @see org.eclipse.jdt.client.core.IType#getFlags() */
+    @Override
+    public int getFlags() {
+        return (int)jsObj.get("modifiers").isNumber().doubleValue();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.IType#getFullyQualifiedName()
-    */
-   @Override
-   public String getFullyQualifiedName()
-   {
-      return jsObj.get("name").isString().stringValue();
-   }
+    /** @see org.eclipse.jdt.client.core.IType#getFullyQualifiedName() */
+    @Override
+    public String getFullyQualifiedName() {
+        return jsObj.get("name").isString().stringValue();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.IType#getFullyQualifiedName(char)
-    */
-   @Override
-   public String getFullyQualifiedName(char c)
-   {
-      return getFullyQualifiedName();
-   }
+    /** @see org.eclipse.jdt.client.core.IType#getFullyQualifiedName(char) */
+    @Override
+    public String getFullyQualifiedName(char c) {
+        return getFullyQualifiedName();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.IType#getTypeQualifiedName(char)
-    */
-   @Override
-   public String getTypeQualifiedName(char c)
-   {
-      return getFullyQualifiedName();
-   }
+    /** @see org.eclipse.jdt.client.core.IType#getTypeQualifiedName(char) */
+    @Override
+    public String getTypeQualifiedName(char c) {
+        return getFullyQualifiedName();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.core.IType#getPackageFragment()
-    */
-   @Override
-   public IPackageFragment getPackageFragment()
-   {
-      if (packageFragment == null)
-         packageFragment = new PackageFragment(getFullyQualifiedName());
-      return packageFragment;
-   }
+    /** @see org.eclipse.jdt.client.core.IType#getPackageFragment() */
+    @Override
+    public IPackageFragment getPackageFragment() {
+        if (packageFragment == null)
+            packageFragment = new PackageFragment(getFullyQualifiedName());
+        return packageFragment;
+    }
 
 }

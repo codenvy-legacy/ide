@@ -27,15 +27,13 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 12:44:17 PM anya $
- * 
  */
-public interface HasPaaSActions
-{
-   void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler);
-   
-   void deploy(ProjectModel project, DeployResultHandler deployResultHandler);
+public interface HasPaaSActions {
+    void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler);
 
-   Composite getDeployView(String projectName, ProjectType projectType);
-   
-   boolean validate();
+    void deploy(ProjectModel project, DeployResultHandler deployResultHandler);
+
+    Composite getDeployView(String projectName, ProjectType projectType);
+
+    boolean validate();
 }

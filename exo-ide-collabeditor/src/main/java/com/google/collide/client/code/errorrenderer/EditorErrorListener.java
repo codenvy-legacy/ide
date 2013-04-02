@@ -30,82 +30,85 @@ import org.exoplatform.ide.json.shared.JsonArray;
  */
 public class EditorErrorListener implements ErrorReceiver.ErrorListener {
 
-  /** An error receiver which never receives any errors */
-  public static ErrorReceiver NOOP_ERROR_RECEIVER = new ErrorReceiver() {
-    @Override
-    public void setActiveDocument(String fileEditSessionKey) {}
-
-    @Override
-    public void addErrorListener(String fileEditSessionKey, ErrorListener listener) {}
-
-    @Override
-    public void removeErrorListener(String fileEditSessionKey, ErrorListener listener) {}
-  };
-
-  private final Editor editor;
-  private final ErrorRenderer errorRenderer;
-  private final ErrorReceiver errorReceiver;
-  private final PositionMigrator positionMigrator;
-  private String currentFileEditSessionKey;
-
-  public EditorErrorListener(
-      Editor editor, ErrorReceiver errorReceiver,
-      ErrorRenderer errorRenderer) {
-    this.editor = editor;
-    this.errorReceiver = errorReceiver;
-    this.errorRenderer = errorRenderer;
-    this.positionMigrator = new PositionMigrator(ClientDocOpFactory.INSTANCE);
-  }
-
-  @Override
-  public void onErrorsChanged(JsonArray<CodeError> newErrors) {
-    if (editor.getDocument() == null) {
-      return;
-    }
-    JsonArray<Line> linesToRender = JsoArray.create();
-    getLinesOfErrorsInViewport(errorRenderer.getCodeErrors(), linesToRender);
-    getLinesOfErrorsInViewport(newErrors, linesToRender);
-    positionMigrator.reset();
-    errorRenderer.setCodeErrors(newErrors, positionMigrator);
-
-    for (int i = 0; i < linesToRender.size(); i++) {
-      editor.getRenderer().requestRenderLine(linesToRender.get(i));
-    }
-    editor.getRenderer().renderChanges();
-  }
-
-  private void getLinesOfErrorsInViewport(JsonArray<CodeError> errors, JsonArray<Line> lines) {
-    LineFinder lineFinder = editor.getDocument().getLineFinder();
-    int topLineNumber = editor.getViewport().getTopLineNumber();
-    int bottomLineNumber = editor.getViewport().getBottomLineNumber();
-    for (int i = 0; i < errors.size(); i++) {
-      CodeError error = errors.get(i);
-      for (int j = error.getErrorStart().getLineNumber();
-           j <= error.getErrorEnd().getLineNumber(); j++) {
-        if (j >= topLineNumber && j <= bottomLineNumber) {
-          lines.add(lineFinder.findLine(j).line());
+    /** An error receiver which never receives any errors */
+    public static ErrorReceiver NOOP_ERROR_RECEIVER = new ErrorReceiver() {
+        @Override
+        public void setActiveDocument(String fileEditSessionKey) {
         }
-      }
+
+        @Override
+        public void addErrorListener(String fileEditSessionKey, ErrorListener listener) {
+        }
+
+        @Override
+        public void removeErrorListener(String fileEditSessionKey, ErrorListener listener) {
+        }
+    };
+
+    private final Editor           editor;
+    private final ErrorRenderer    errorRenderer;
+    private final ErrorReceiver    errorReceiver;
+    private final PositionMigrator positionMigrator;
+    private       String           currentFileEditSessionKey;
+
+    public EditorErrorListener(
+            Editor editor, ErrorReceiver errorReceiver,
+            ErrorRenderer errorRenderer) {
+        this.editor = editor;
+        this.errorReceiver = errorReceiver;
+        this.errorRenderer = errorRenderer;
+        this.positionMigrator = new PositionMigrator(ClientDocOpFactory.INSTANCE);
     }
-  }
 
-  public void cleanup() {
-    positionMigrator.stop();
-    errorReceiver.removeErrorListener(currentFileEditSessionKey, this);
-    currentFileEditSessionKey = null;
-  }
+    @Override
+    public void onErrorsChanged(JsonArray<CodeError> newErrors) {
+        if (editor.getDocument() == null) {
+            return;
+        }
+        JsonArray<Line> linesToRender = JsoArray.create();
+        getLinesOfErrorsInViewport(errorRenderer.getCodeErrors(), linesToRender);
+        getLinesOfErrorsInViewport(newErrors, linesToRender);
+        positionMigrator.reset();
+        errorRenderer.setCodeErrors(newErrors, positionMigrator);
 
-  public void onDocumentChanged(Document document, String fileEditSessionKey) {
-    if (currentFileEditSessionKey != null) {
-      // We no longer want to listen for new errors in old file.
-      errorReceiver.removeErrorListener(currentFileEditSessionKey, this);
+        for (int i = 0; i < linesToRender.size(); i++) {
+            editor.getRenderer().requestRenderLine(linesToRender.get(i));
+        }
+        editor.getRenderer().renderChanges();
     }
 
-    currentFileEditSessionKey = fileEditSessionKey;
-    positionMigrator.start(document.getTextListenerRegistrar());
-    errorReceiver.addErrorListener(currentFileEditSessionKey, this);
-    errorReceiver.setActiveDocument(currentFileEditSessionKey);
-    errorRenderer.setCodeErrors(JsoArray.<CodeError>create(), positionMigrator);
-    editor.addLineRenderer(errorRenderer);
-  }
+    private void getLinesOfErrorsInViewport(JsonArray<CodeError> errors, JsonArray<Line> lines) {
+        LineFinder lineFinder = editor.getDocument().getLineFinder();
+        int topLineNumber = editor.getViewport().getTopLineNumber();
+        int bottomLineNumber = editor.getViewport().getBottomLineNumber();
+        for (int i = 0; i < errors.size(); i++) {
+            CodeError error = errors.get(i);
+            for (int j = error.getErrorStart().getLineNumber();
+                 j <= error.getErrorEnd().getLineNumber(); j++) {
+                if (j >= topLineNumber && j <= bottomLineNumber) {
+                    lines.add(lineFinder.findLine(j).line());
+                }
+            }
+        }
+    }
+
+    public void cleanup() {
+        positionMigrator.stop();
+        errorReceiver.removeErrorListener(currentFileEditSessionKey, this);
+        currentFileEditSessionKey = null;
+    }
+
+    public void onDocumentChanged(Document document, String fileEditSessionKey) {
+        if (currentFileEditSessionKey != null) {
+            // We no longer want to listen for new errors in old file.
+            errorReceiver.removeErrorListener(currentFileEditSessionKey, this);
+        }
+
+        currentFileEditSessionKey = fileEditSessionKey;
+        positionMigrator.start(document.getTextListenerRegistrar());
+        errorReceiver.addErrorListener(currentFileEditSessionKey, this);
+        errorReceiver.setActiveDocument(currentFileEditSessionKey);
+        errorRenderer.setCodeErrors(JsoArray.<CodeError>create(), positionMigrator);
+        editor.addLineRenderer(errorRenderer);
+    }
 }

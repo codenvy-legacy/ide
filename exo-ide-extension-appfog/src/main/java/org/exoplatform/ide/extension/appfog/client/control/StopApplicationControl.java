@@ -28,21 +28,19 @@ import org.exoplatform.ide.extension.appfog.client.start.StopApplicationEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class StopApplicationControl extends AbstractAppfogControl
-{
+public class StopApplicationControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.stopAppControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.stopAppControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.stopAppControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.stopAppControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.stopAppControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.stopAppControlPrompt();
 
-   public StopApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.stopApp(), AppfogClientBundle.INSTANCE.stopAppDisabled());
-      setEvent(new StopApplicationEvent());
-   }
+    public StopApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.stopApp(), AppfogClientBundle.INSTANCE.stopAppDisabled());
+        setEvent(new StopApplicationEvent());
+    }
 }

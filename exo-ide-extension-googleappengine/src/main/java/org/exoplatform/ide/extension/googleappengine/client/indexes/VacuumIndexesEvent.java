@@ -22,34 +22,26 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class VacuumIndexesEvent extends GwtEvent<VacuumIndexesHandler>
-{
-   
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<VacuumIndexesHandler> TYPE = new GwtEvent.Type<VacuumIndexesHandler>();
+ */
+public class VacuumIndexesEvent extends GwtEvent<VacuumIndexesHandler> {
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<VacuumIndexesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<VacuumIndexesHandler> TYPE = new GwtEvent.Type<VacuumIndexesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(VacuumIndexesHandler handler)
-   {
-      handler.onVacuumIndexes(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<VacuumIndexesHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(VacuumIndexesHandler handler) {
+        handler.onVacuumIndexes(this);
+    }
 
 
 }

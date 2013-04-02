@@ -24,44 +24,38 @@ import com.google.gwt.user.client.Window.Location;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ProxyUtil
-{
+public class ProxyUtil {
 
-   private static native String getProxyServiceContext() /*-{
+    private static native String getProxyServiceContext() /*-{
         return $wnd.proxyServiceContext;
-     }-*/;
+    }-*/;
 
-   private static String getCurrentHost()
-   {
-      String currentHost = Location.getProtocol() + "//" + Location.getHost();
-      return currentHost;
-   }
+    private static String getCurrentHost() {
+        String currentHost = Location.getProtocol() + "//" + Location.getHost();
+        return currentHost;
+    }
 
-   public static String getCheckedURL(String url)
-   {
-      String proxyServiceContext = getProxyServiceContext();
-      if (proxyServiceContext == null || "".equals(proxyServiceContext))
-      {
-         return url;
-      }
+    public static String getCheckedURL(String url) {
+        String proxyServiceContext = getProxyServiceContext();
+        if (proxyServiceContext == null || "".equals(proxyServiceContext)) {
+            return url;
+        }
 
-      if (!(url.startsWith("http://") || url.startsWith("https://")))
-      {
-         return url;
-      }
+        if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+            return url;
+        }
 
-      String currentHost = getCurrentHost();
-      if (url.startsWith(currentHost))
-      {
-         return url;
-      }
-      
-      return proxyServiceContext + "?url=" + URL.encodeComponent(url);
-   }
+        String currentHost = getCurrentHost();
+        if (url.startsWith(currentHost)) {
+            return url;
+        }
+
+        return proxyServiceContext + "?url=" + URL.encodeComponent(url);
+    }
 
 }

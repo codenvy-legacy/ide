@@ -18,55 +18,41 @@
  */
 package org.exoplatform.ide.vfs.client.event;
 
-import org.exoplatform.ide.vfs.shared.Item;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 31, 2011 evgen $
- * 
  */
-public class ItemPropertiesSavedEvent extends GwtEvent<ItemPropertiesSavedHandler>
-{
+public class ItemPropertiesSavedEvent extends GwtEvent<ItemPropertiesSavedHandler> {
 
-   public static final GwtEvent.Type<ItemPropertiesSavedHandler> TYPE = new Type<ItemPropertiesSavedHandler>();
+    public static final GwtEvent.Type<ItemPropertiesSavedHandler> TYPE = new Type<ItemPropertiesSavedHandler>();
 
-   private Item item;
+    private Item item;
 
-   /**
-    * @param item
-    */
-   public ItemPropertiesSavedEvent(Item item)
-   {
-      super();
-      this.item = item;
-   }
+    /** @param item */
+    public ItemPropertiesSavedEvent(Item item) {
+        super();
+        this.item = item;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ItemPropertiesSavedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ItemPropertiesSavedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ItemPropertiesSavedHandler handler)
-   {
-      handler.onItemPropertiesSaved(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ItemPropertiesSavedHandler handler) {
+        handler.onItemPropertiesSaved(this);
+    }
 
-   /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
+    /** @return the item */
+    public Item getItem() {
+        return item;
+    }
 
 }

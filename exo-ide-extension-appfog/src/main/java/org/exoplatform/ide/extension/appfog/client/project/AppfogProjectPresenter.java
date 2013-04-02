@@ -33,8 +33,6 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -66,253 +64,211 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: $
  */
 public class AppfogProjectPresenter extends GitPresenter implements /*ProjectOpenedHandler, ProjectClosedHandler,*/
-   ManageAppfogProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
-   /*, ActiveProjectChangedHandler*/
-{
-   interface Display extends IsView
-   {
-      HasClickHandlers getCloseButton();
+        ManageAppfogProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
+   /*, ActiveProjectChangedHandler*/ {
+    interface Display extends IsView {
+        HasClickHandlers getCloseButton();
 
-      HasClickHandlers getUpdateButton();
+        HasClickHandlers getUpdateButton();
 
-      HasClickHandlers getLogsButton();
+        HasClickHandlers getLogsButton();
 
-      HasClickHandlers getServicesButton();
+        HasClickHandlers getServicesButton();
 
-      HasClickHandlers getDeleteButton();
+        HasClickHandlers getDeleteButton();
 
-      HasClickHandlers getInfoButton();
+        HasClickHandlers getInfoButton();
 
-      HasValue<String> getApplicationName();
+        HasValue<String> getApplicationName();
 
-      void setApplicationURL(String url);
+        void setApplicationURL(String url);
 
-      HasValue<String> getApplicationModel();
+        HasValue<String> getApplicationModel();
 
-      HasValue<String> getApplicationInfra();
+        HasValue<String> getApplicationInfra();
 
-      HasValue<String> getApplicationStack();
+        HasValue<String> getApplicationStack();
 
-      HasValue<String> getApplicationInstances();
+        HasValue<String> getApplicationInstances();
 
-      HasValue<String> getApplicationMemory();
+        HasValue<String> getApplicationMemory();
 
-      HasValue<String> getApplicationStatus();
+        HasValue<String> getApplicationStatus();
 
-      HasClickHandlers getStartButton();
+        HasClickHandlers getStartButton();
 
-      HasClickHandlers getStopButton();
+        HasClickHandlers getStopButton();
 
-      HasClickHandlers getRestartButton();
+        HasClickHandlers getRestartButton();
 
-      HasClickHandlers getEditMemoryButton();
+        HasClickHandlers getEditMemoryButton();
 
-      HasClickHandlers getEditURLButton();
+        HasClickHandlers getEditURLButton();
 
-      HasClickHandlers getEditInstancesButton();
+        HasClickHandlers getEditInstancesButton();
 
-      void setStartButtonEnabled(boolean enabled);
+        void setStartButtonEnabled(boolean enabled);
 
-      void setStopButtonEnabled(boolean enabled);
+        void setStopButtonEnabled(boolean enabled);
 
-      void setRestartButtonEnabled(boolean enabled);
-   }
+        void setRestartButtonEnabled(boolean enabled);
+    }
 
-   /**
-    * Presenter's display.
-    */
-   private Display display;
+    /** Presenter's display. */
+    private Display display;
 
 //   /**
 //    * Opened project in Project Explorer.
 //    */
 //   private ProjectModel openedProject;
 
-   private AppfogApplication application;
+    private AppfogApplication application;
 
-   public AppfogProjectPresenter()
-   {
-      IDE.getInstance().addControl(new AppfogControl());
+    public AppfogProjectPresenter() {
+        IDE.getInstance().addControl(new AppfogControl());
 
 //      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 //      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ManageAppfogProjectEvent.TYPE, this);
-      IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
+        IDE.addHandler(ManageAppfogProjectEvent.TYPE, this);
+        IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
 //      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
+    }
 
-   /**
-    * Bind display with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new DeleteApplicationEvent());
-         }
-      });
+    /** Bind display with presenter. */
+    public void bindDisplay() {
+        display.getDeleteButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new DeleteApplicationEvent());
+            }
+        });
 
-      display.getUpdateButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UpdateApplicationEvent());
-         }
-      });
+        display.getUpdateButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UpdateApplicationEvent());
+            }
+        });
 
-      display.getLogsButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            getLogs();
-         }
-      });
+        display.getLogsButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                getLogs();
+            }
+        });
 
-      display.getServicesButton().addClickHandler(new ClickHandler()
-      {
+        display.getServicesButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new ManageServicesEvent(application));
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new ManageServicesEvent(application));
+            }
+        });
 
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getInfoButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new ApplicationInfoEvent());
-         }
-      });
+        display.getInfoButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new ApplicationInfoEvent());
+            }
+        });
 
-      display.getStartButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new StartApplicationEvent());
-         }
-      });
+        display.getStartButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new StartApplicationEvent());
+            }
+        });
 
-      display.getStopButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new StopApplicationEvent());
-         }
-      });
+        display.getStopButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new StopApplicationEvent());
+            }
+        });
 
-      display.getRestartButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new RestartApplicationEvent());
-         }
-      });
+        display.getRestartButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new RestartApplicationEvent());
+            }
+        });
 
-      display.getEditInstancesButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UpdateInstancesEvent());
-         }
-      });
+        display.getEditInstancesButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UpdateInstancesEvent());
+            }
+        });
 
-      display.getEditMemoryButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UpdateMemoryEvent());
-         }
-      });
+        display.getEditMemoryButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UpdateMemoryEvent());
+            }
+        });
 
-      display.getEditURLButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UnmapUrlEvent());
-         }
-      });
+        display.getEditURLButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UnmapUrlEvent());
+            }
+        });
 
-   }
+    }
 
-   protected void getLogs()
-   {
-      try
-      {
-         ProjectModel project = getSelectedProject();
-         
-         AppfogClientService.getInstance().getLogs(vfs.getId(), project.getId(),
-            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-            {
+    protected void getLogs() {
+        try {
+            ProjectModel project = getSelectedProject();
 
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>", Type.OUTPUT));
-               }
+            AppfogClientService.getInstance().getLogs(vfs.getId(), project.getId(),
+                                                      new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-         e.printStackTrace();
-      }
-   }
+                                                          @Override
+                                                          protected void onSuccess(StringBuilder result) {
+                                                              IDE.fireEvent(
+                                                                      new OutputEvent("<pre>" + result.toString() + "</pre>", Type.OUTPUT));
+                                                          }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+                                                          @Override
+                                                          protected void onFailure(Throwable exception) {
+                                                              IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
+                                                          }
+                                                      });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+            e.printStackTrace();
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectHandler#onManageCloudFoundryProject(org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectEvent)
-    */
-   @Override
-   public void onManageAppfogProject(ManageAppfogProjectEvent event)
-   {
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectHandler#onManageCloudFoundryProject(org
+     * .exoplatform.ide.extension.cloudfoundry.client.project.ManageCloudFoundryProjectEvent) */
+    @Override
+    public void onManageAppfogProject(ManageAppfogProjectEvent event) {
 //      getApplicationInfo(openedProject);
-      getApplicationInfo(getSelectedProject());
-   }
+        getApplicationInfo(getSelectedProject());
+    }
 
 //   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+// .project.ProjectClosedEvent)
 //    */
 //   @Override
 //   public void onProjectClosed(ProjectClosedEvent event)
@@ -321,7 +277,8 @@ public class AppfogProjectPresenter extends GitPresenter implements /*ProjectOpe
 //   }
 //
 //   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+// .project.ProjectOpenedEvent)
 //    */
 //   @Override
 //   public void onProjectOpened(ProjectOpenedEvent event)
@@ -335,112 +292,119 @@ public class AppfogProjectPresenter extends GitPresenter implements /*ProjectOpe
 //      openedProject = event.getProject();
 //   }
 
-   /**
-    * Get application properties.
-    *
-    * @param project
-    */
-   protected void getApplicationInfo(final ProjectModel project)
-   {
-      try
-      {
-         AutoBean<AppfogApplication> appfogApplication =
-            AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+    /**
+     * Get application properties.
+     *
+     * @param project
+     */
+    protected void getApplicationInfo(final ProjectModel project) {
+        try {
+            AutoBean<AppfogApplication> appfogApplication =
+                    AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
 
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-         AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
-               {
-                  getApplicationInfo(project);
-               }
-            }, null)
-            {
-               @Override
-               protected void onSuccess(AppfogApplication result)
-               {
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                  }
-                  application = result;
-                  displayApplicationProperties(result);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), project.getId(), null, null,
+                                                                 new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
+                                                                                                                   new LoggedInHandler() {
+                                                                                                                       @Override
+                                                                                                                       public void
+                                                                                                                       onLoggedIn() {
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent)
-    */
-   @Override
-   public void onApplicationDeleted(ApplicationDeletedEvent event)
-   {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                           getApplicationInfo(
+                                                                                                                                   project);
+                                                                                                                       }
+                                                                                                                   }, null) {
+                                                                     @Override
+                                                                     protected void onSuccess(AppfogApplication result) {
+                                                                         if (display == null) {
+                                                                             display = GWT.create(Display.class);
+                                                                             bindDisplay();
+                                                                             IDE.getInstance().openView(display.asView());
+                                                                         }
+                                                                         application = result;
+                                                                         displayApplicationProperties(result);
+                                                                     }
+                                                                 });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent) */
+    @Override
+    public void onApplicationDeleted(ApplicationDeletedEvent event) {
 //      if (event.getApplicationName() != null && openedProject != null
 //         && event.getApplicationName().equals((String)openedProject.getPropertyValue("appfog-application")))
-      if (event.getApplicationName() != null && getSelectedProject() != null
-               && event.getApplicationName().equals((String)getSelectedProject().getPropertyValue("appfog-application")))
-      {
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-         //IDE.fireEvent(new RefreshBrowserEvent(openedProject));
-         IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
-      }
-   }
+        if (event.getApplicationName() != null && getSelectedProject() != null
+            && event.getApplicationName().equals((String)getSelectedProject().getPropertyValue("appfog-application"))) {
+            if (display != null) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+            //IDE.fireEvent(new RefreshBrowserEvent(openedProject));
+            IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
+        }
+    }
 
-   protected void displayApplicationProperties(AppfogApplication application)
-   {
-      display.getApplicationName().setValue(application.getName());
-      display.getApplicationInstances().setValue(String.valueOf(application.getInstances()));
-      display.getApplicationMemory().setValue(String.valueOf(application.getResources().getMemory()) + "MB");
-      display.getApplicationModel().setValue(String.valueOf(application.getStaging().getModel()));
-      display.getApplicationStack().setValue(String.valueOf(application.getStaging().getStack()));
-      display.getApplicationStatus().setValue(String.valueOf(application.getState()));
-      display.getApplicationInfra().setValue(String.valueOf(application.getInfra().getProvider()));
+    protected void displayApplicationProperties(AppfogApplication application) {
+        display.getApplicationName().setValue(application.getName());
+        display.getApplicationInstances().setValue(String.valueOf(application.getInstances()));
+        display.getApplicationMemory().setValue(String.valueOf(application.getResources().getMemory()) + "MB");
+        display.getApplicationModel().setValue(String.valueOf(application.getStaging().getModel()));
+        display.getApplicationStack().setValue(String.valueOf(application.getStaging().getStack()));
+        display.getApplicationStatus().setValue(String.valueOf(application.getState()));
+        display.getApplicationInfra().setValue(String.valueOf(application.getInfra().getProvider()));
 
-      if (application.getUris() != null && application.getUris().size() > 0)
-      {
-         display.setApplicationURL(application.getUris().get(0));
-      }
-      else
-      {
-         //Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
-         //info window will be appear old url, that is not good
-         display.setApplicationURL(null);
-      }
-      boolean isStarted = ("STARTED".equals(application.getState()));
-      display.setStartButtonEnabled(!isStarted);
-      display.setStopButtonEnabled(isStarted);
-   }
+        if (application.getUris() != null && application.getUris().size() > 0) {
+            display.setApplicationURL(application.getUris().get(0));
+        } else {
+            //Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
+            //info window will be appear old url, that is not good
+            display.setApplicationURL(null);
+        }
+        boolean isStarted = ("STARTED".equals(application.getState()));
+        display.setStartButtonEnabled(!isStarted);
+        display.setStopButtonEnabled(isStarted);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler#onApplicationInfoChanged(org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent)
-    */
-   @Override
-   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
-   {
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler#onApplicationInfoChanged(org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent) */
+    @Override
+    public void onApplicationInfoChanged(ApplicationInfoChangedEvent event) {
 //      if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
 //         && openedProject != null && openedProject.getId().equals(event.getProjectId()))
 //      {
 //         getApplicationInfo(openedProject);
 //      }
-      if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
-               && getSelectedProject() != null && getSelectedProject().getId().equals(event.getProjectId()))
-            {
-               getApplicationInfo(getSelectedProject());
-            }
-   }
+        if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
+            && getSelectedProject() != null && getSelectedProject().getId().equals(event.getProjectId())) {
+            getApplicationInfo(getSelectedProject());
+        }
+    }
 
 }

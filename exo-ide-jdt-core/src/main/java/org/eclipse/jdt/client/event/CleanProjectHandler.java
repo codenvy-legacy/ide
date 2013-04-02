@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  9:52:48 AM Mar 5, 2012 evgen $
- *
  */
-public interface CleanProjectHandler extends EventHandler
-{
+public interface CleanProjectHandler extends EventHandler {
 
-   void onCleanProject(CleanProjectEvent event);
+    void onCleanProject(CleanProjectEvent event);
 
 }

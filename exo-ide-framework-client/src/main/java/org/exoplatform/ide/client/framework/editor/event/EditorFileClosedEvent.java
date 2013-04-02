@@ -26,46 +26,40 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class EditorFileClosedEvent extends GwtEvent<EditorFileClosedHandler>
-{
+public class EditorFileClosedEvent extends GwtEvent<EditorFileClosedHandler> {
 
-   public static final GwtEvent.Type<EditorFileClosedHandler> TYPE = new GwtEvent.Type<EditorFileClosedHandler>();
+    public static final GwtEvent.Type<EditorFileClosedHandler> TYPE = new GwtEvent.Type<EditorFileClosedHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   private Map<String, FileModel> openedFiles;
+    private Map<String, FileModel> openedFiles;
 
-   public EditorFileClosedEvent(FileModel file, Map<String, FileModel> openedFiles)
-   {
-      this.file = file;
-      this.openedFiles = openedFiles;
-   }
+    public EditorFileClosedEvent(FileModel file, Map<String, FileModel> openedFiles) {
+        this.file = file;
+        this.openedFiles = openedFiles;
+    }
 
-   public FileModel getFile()
-   {
-      return file;
-   }
+    public FileModel getFile() {
+        return file;
+    }
 
-   public Map<String, FileModel> getOpenedFiles()
-   {
-      return openedFiles;
-   }
+    public Map<String, FileModel> getOpenedFiles() {
+        return openedFiles;
+    }
 
-   @Override
-   protected void dispatch(EditorFileClosedHandler handler)
-   {
-      handler.onEditorFileClosed(this);
-   }
+    @Override
+    protected void dispatch(EditorFileClosedHandler handler) {
+        handler.onEditorFileClosed(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFileClosedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorFileClosedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

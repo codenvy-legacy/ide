@@ -25,106 +25,88 @@ import java.util.ArrayList;
 
 /**
  * Buffer of the shell commands.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 4, 2011 10:14:20 AM anya $
- * 
  */
-public class ShellComandBuffer extends ArrayList<String>
-{
-   private final int MAX_SIZE = 500;
+public class ShellComandBuffer extends ArrayList<String> {
+    private final int MAX_SIZE = 500;
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   private int iterator = -1;
+    private int iterator = -1;
 
-   /**
-    * @see java.util.ArrayList#add(java.lang.Object)
-    */
-   @Override
-   public boolean add(String e)
-   {
-      if (MAX_SIZE == size())
-      {
-         remove(0);
-      }
-      if (size() > 0 && e.equals(get(size() - 1)))
-      {
-         resetIterator();
-         return false;
-      }
+    /** @see java.util.ArrayList#add(java.lang.Object) */
+    @Override
+    public boolean add(String e) {
+        if (MAX_SIZE == size()) {
+            remove(0);
+        }
+        if (size() > 0 && e.equals(get(size() - 1))) {
+            resetIterator();
+            return false;
+        }
 
-      boolean result = super.add(e);
-      resetIterator();
-      return result;
-   }
+        boolean result = super.add(e);
+        resetIterator();
+        return result;
+    }
 
-   /**
-    * Reset the list iterator.
-    */
-   public void resetIterator()
-   {
-      iterator = size();
-   }
+    /** Reset the list iterator. */
+    public void resetIterator() {
+        iterator = size();
+    }
 
-   /**
-    * Get the next value upper in the list.
-    * 
-    * @return {@link String}
-    */
-   public String goUp()
-   {
-      if (iterator <= 0)
-         return null;
-      iterator--;
-      return get(iterator);
-   }
+    /**
+     * Get the next value upper in the list.
+     *
+     * @return {@link String}
+     */
+    public String goUp() {
+        if (iterator <= 0)
+            return null;
+        iterator--;
+        return get(iterator);
+    }
 
-   /**
-    * Get the next value down the list.
-    * 
-    * @return {@link String}
-    */
-   public String goDown()
-   {
-      if (iterator < 0 || iterator == size() - 1)
-      {
-         resetIterator();
-         return null;
-      }
-      if (iterator < size() - 1)
-      {
-         iterator++;
-      }
-      return get(iterator);
-   }
+    /**
+     * Get the next value down the list.
+     *
+     * @return {@link String}
+     */
+    public String goDown() {
+        if (iterator < 0 || iterator == size() - 1) {
+            resetIterator();
+            return null;
+        }
+        if (iterator < size() - 1) {
+            iterator++;
+        }
+        return get(iterator);
+    }
 
-   /**
-    * Transform buffer to JSON Array
-    * 
-    * @return String of JSON Array
-    */
-   public String toJSON()
-   {
-      JSONArray a = new JSONArray();
-      for (int i = 0; i < size(); i++)
-      {
-         a.set(i, new JSONString(get(i)));
-      }
-      return a.toString();
-   }
+    /**
+     * Transform buffer to JSON Array
+     *
+     * @return String of JSON Array
+     */
+    public String toJSON() {
+        JSONArray a = new JSONArray();
+        for (int i = 0; i < size(); i++) {
+            a.set(i, new JSONString(get(i)));
+        }
+        return a.toString();
+    }
 
-   /**
-    * Init buffer from JSON Array
-    * 
-    * @param array
-    */
-   public void init(JSONArray array)
-   {
-      for (int i = 0; i < array.size(); i++)
-      {
-         add(array.get(i).isString().stringValue());
-      }
-   }
+    /**
+     * Init buffer from JSON Array
+     *
+     * @param array
+     */
+    public void init(JSONArray array) {
+        for (int i = 0; i < array.size(); i++) {
+            add(array.get(i).isString().stringValue());
+        }
+    }
 
 }

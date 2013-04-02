@@ -23,9 +23,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Jul 17, 2012 11:36:49 AM anya $
- *
  */
-public interface HasUnbindServiceHandler
-{
-   void addUnbindServiceHandler(SelectionHandler<String> handler);
+public interface HasUnbindServiceHandler {
+    void addUnbindServiceHandler(SelectionHandler<String> handler);
 }

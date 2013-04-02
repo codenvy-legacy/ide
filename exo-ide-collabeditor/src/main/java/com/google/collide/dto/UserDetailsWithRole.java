@@ -21,15 +21,15 @@ package com.google.collide.dto;
  */
 public interface UserDetailsWithRole extends UserDetails {
 
-  /**
-   * Returns the {@link Role} of this user in the context of a project or
-   * workspace.
-   */
-  Role getRole();
+    /**
+     * Returns the {@link Role} of this user in the context of a project or
+     * workspace.
+     */
+    Role getRole();
 
-  /**
-   * Returns true if the user created the workspace. Returns false for projects
-   * because we do not store project creator information.
-   */
-  boolean isCreator();
+    /**
+     * Returns true if the user created the workspace. Returns false for projects
+     * because we do not store project creator information.
+     */
+    boolean isCreator();
 }

@@ -21,54 +21,44 @@ package org.exoplatform.ide.testframework.server.jenkins;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Job.java Aug 23, 2011 12:18:16 PM vereshchaka $
- * 
  */
-public class Job
-{
-   private String name;
+public class Job {
+    private String name;
 
-   private String buildUrl;
+    private String buildUrl;
 
-   private String statusUrl;
+    private String statusUrl;
 
-   public Job(String name, String buildUrl, String statusUrl)
-   {
-      this.name = name;
-      this.buildUrl = buildUrl;
-      this.statusUrl = statusUrl;
-   }
+    public Job(String name, String buildUrl, String statusUrl) {
+        this.name = name;
+        this.buildUrl = buildUrl;
+        this.statusUrl = statusUrl;
+    }
 
-   public Job()
-   {
-   }
+    public Job() {
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public String getBuildUrl()
-   {
-      return buildUrl;
-   }
+    public String getBuildUrl() {
+        return buildUrl;
+    }
 
-   public void setBuildUrl(String buildUrl)
-   {
-      this.buildUrl = buildUrl;
-   }
+    public void setBuildUrl(String buildUrl) {
+        this.buildUrl = buildUrl;
+    }
 
-   public String getStatusUrl()
-   {
-      return statusUrl;
-   }
+    public String getStatusUrl() {
+        return statusUrl;
+    }
 
-   public void setStatusUrl(String statusUrl)
-   {
-      this.statusUrl = statusUrl;
-   }
+    public void setStatusUrl(String statusUrl) {
+        this.statusUrl = statusUrl;
+    }
 }

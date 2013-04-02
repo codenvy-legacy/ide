@@ -21,8 +21,7 @@ package org.exoplatform.ide.extension.googleappengine.client.model;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  May 23, 2012 4:54:58 PM anya $
- *
  */
 public enum State {
-   START, STOP;
+    START, STOP;
 }

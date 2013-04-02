@@ -26,12 +26,11 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.ITEM_DELETED)
-public interface ItemDeletedDto extends ServerToClientDto
-{
+public interface ItemDeletedDto extends ServerToClientDto {
 
-   String getFileId();
+    String getFileId();
 
-   String getFilePath();
+    String getFilePath();
 
-   String getUserId();
+    String getUserId();
 }

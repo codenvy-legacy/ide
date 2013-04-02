@@ -26,45 +26,34 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 11, 2012 9:35:21 AM anya $
- * 
  */
-public class XmlCommentsModifier extends AbstractCommentsModifier
-{
+public class XmlCommentsModifier extends AbstractCommentsModifier {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getOpenBlockComment()
-    */
-   @Override
-   public String getOpenBlockComment()
-   {
-      return "<!-- ";
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getOpenBlockComment() */
+    @Override
+    public String getOpenBlockComment() {
+        return "<!-- ";
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getCloseBlockComment()
-    */
-   @Override
-   public String getCloseBlockComment()
-   {
-      return " -->";
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getCloseBlockComment() */
+    @Override
+    public String getCloseBlockComment() {
+        return " -->";
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment()
-    */
-   @Override
-   public String getSingleLineComment()
-   {
-      return null;
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#getSingleLineComment() */
+    @Override
+    public String getSingleLineComment() {
+        return null;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.client.api.SelectionRange,
-    *      org.exoplatform.ide.editor.shared.text.IDocument)
-    */
-   @Override
-   public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document)
-   {
-      return null;
-   }
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor
+     * .client.api.SelectionRange,
+     *      org.exoplatform.ide.editor.shared.text.IDocument)
+     */
+    @Override
+    public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document) {
+        return null;
+    }
 }

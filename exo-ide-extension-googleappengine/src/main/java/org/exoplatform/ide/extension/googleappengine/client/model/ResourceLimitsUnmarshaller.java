@@ -31,57 +31,42 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 31, 2012 4:32:27 PM anya $
- * 
  */
-public class ResourceLimitsUnmarshaller implements Unmarshallable<List<ResourceLimit>>
-{
-   private List<ResourceLimit> resourceLimits;
+public class ResourceLimitsUnmarshaller implements Unmarshallable<List<ResourceLimit>> {
+    private List<ResourceLimit> resourceLimits;
 
-   public ResourceLimitsUnmarshaller(List<ResourceLimit> resourceLimits)
-   {
-      this.resourceLimits = resourceLimits;
-   }
+    public ResourceLimitsUnmarshaller(List<ResourceLimit> resourceLimits) {
+        this.resourceLimits = resourceLimits;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         if (response.getText() == null || response.getText().isEmpty())
-         {
-            return;
-         }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            if (response.getText() == null || response.getText().isEmpty()) {
+                return;
+            }
 
-         JSONObject json = JSONParser.parseLenient(response.getText()).isObject();
+            JSONObject json = JSONParser.parseLenient(response.getText()).isObject();
 
-         if (json == null)
-         {
-            return;
-         }
+            if (json == null) {
+                return;
+            }
 
-         Iterator<String> keysIterator = json.keySet().iterator();
-         while (keysIterator.hasNext())
-         {
-            String key = keysIterator.next();
-            Long value = (long)json.get(key).isNumber().doubleValue();
-            resourceLimits.add(new ResourceLimit(key, value));
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't map with long values.");
-      }
-   }
+            Iterator<String> keysIterator = json.keySet().iterator();
+            while (keysIterator.hasNext()) {
+                String key = keysIterator.next();
+                Long value = (long)json.get(key).isNumber().doubleValue();
+                resourceLimits.add(new ResourceLimit(key, value));
+            }
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't map with long values.");
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<ResourceLimit> getPayload()
-   {
-      return resourceLimits;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public List<ResourceLimit> getPayload() {
+        return resourceLimits;
+    }
 }

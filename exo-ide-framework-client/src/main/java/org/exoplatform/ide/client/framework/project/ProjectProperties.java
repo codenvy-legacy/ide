@@ -21,32 +21,26 @@ package org.exoplatform.ide.client.framework.project;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 26, 2012 10:31:58 AM anya $
- * 
  */
 public enum ProjectProperties {
-   TYPE("vfs:projectType"), TARGET("exoide:target"), DESCRIPTION("exoide:projectDescription");
+    TYPE("vfs:projectType"), TARGET("exoide:target"), DESCRIPTION("exoide:projectDescription");
 
-   private String value;
+    private String value;
 
-   private ProjectProperties(String value)
-   {
-      this.value = value;
-   }
+    private ProjectProperties(String value) {
+        this.value = value;
+    }
 
-   public String value()
-   {
-      return value;
-   }
+    public String value() {
+        return value;
+    }
 
-   public static ProjectProperties fromValue(String v)
-   {
-      for (ProjectProperties c : ProjectProperties.values())
-      {
-         if (c.value.equals(v))
-         {
-            return c;
-         }
-      }
-      throw new IllegalArgumentException(v);
-   }
+    public static ProjectProperties fromValue(String v) {
+        for (ProjectProperties c : ProjectProperties.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
+    }
 }

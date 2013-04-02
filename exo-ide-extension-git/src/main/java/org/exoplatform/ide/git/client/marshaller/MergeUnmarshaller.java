@@ -31,97 +31,76 @@ import org.exoplatform.ide.git.shared.MergeResult.MergeStatus;
 
 /**
  * Unmarshaller for merge result in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 20, 2011 12:01:03 PM anya $
- * 
  */
-public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants
-{
-   /**
-    * Result of merge operation.
-    */
-   private Merge merge;
+public class MergeUnmarshaller implements Unmarshallable<MergeResult>, Constants {
+    /** Result of merge operation. */
+    private Merge merge;
 
-   /**
-    * @param merge result of merge operation
-    */
-   public MergeUnmarshaller(Merge merge)
-   {
-      this.merge = merge;
-   }
+    /**
+     * @param merge
+     *         result of merge operation
+     */
+    public MergeUnmarshaller(Merge merge) {
+        this.merge = merge;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         if (response.getText() == null || response.getText().isEmpty())
-         {
-            return;
-         }
-         
-         JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
-         
-         if (jsonObject == null) 
-         {
-            return;
-         }
-         
-         if (jsonObject.containsKey(CONFLICTS) && jsonObject.get(CONFLICTS).isArray() != null)
-         {
-            JSONArray array = jsonObject.get(CONFLICTS).isArray();
-            merge.setConflicts(getArray(array));
-         }
-         if (jsonObject.containsKey(MERGED_COMMITS) && jsonObject.get(MERGED_COMMITS).isArray() != null)
-         {
-            JSONArray array = jsonObject.get(MERGED_COMMITS).isArray();
-            merge.setMergedCommits(getArray(array));
-         }
-         if (jsonObject.containsKey(MERGE_STATUS) && jsonObject.get(MERGE_STATUS).isString() != null)
-         {
-            merge.setMergeStatus(MergeStatus.valueOf(jsonObject.get(MERGE_STATUS).isString().stringValue()));
-         }
-         if (jsonObject.containsKey(NEW_HEAD) && jsonObject.get(NEW_HEAD).isString() != null)
-         {
-            merge.setNewHead(jsonObject.get(NEW_HEAD).isString().stringValue());
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException(GitExtension.MESSAGES.mergeUnmarshallerFailed());
-      }
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            if (response.getText() == null || response.getText().isEmpty()) {
+                return;
+            }
 
-   /**
-    * Get array from JSON array.
-    * 
-    * @param jsonArray JSON array
-    * @return array of {@link String}
-    */
-   private String[] getArray(JSONArray jsonArray)
-   {
-      if (jsonArray == null || jsonArray.size() == 0)
-      {
-         return null;
-      }
-      String[] array = new String[jsonArray.size()];
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         array[i] = jsonArray.get(i).isString().stringValue();
-      }
-      return array;
-   }
+            JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public Merge getPayload()
-   {
-      return merge;
-   }
+            if (jsonObject == null) {
+                return;
+            }
+
+            if (jsonObject.containsKey(CONFLICTS) && jsonObject.get(CONFLICTS).isArray() != null) {
+                JSONArray array = jsonObject.get(CONFLICTS).isArray();
+                merge.setConflicts(getArray(array));
+            }
+            if (jsonObject.containsKey(MERGED_COMMITS) && jsonObject.get(MERGED_COMMITS).isArray() != null) {
+                JSONArray array = jsonObject.get(MERGED_COMMITS).isArray();
+                merge.setMergedCommits(getArray(array));
+            }
+            if (jsonObject.containsKey(MERGE_STATUS) && jsonObject.get(MERGE_STATUS).isString() != null) {
+                merge.setMergeStatus(MergeStatus.valueOf(jsonObject.get(MERGE_STATUS).isString().stringValue()));
+            }
+            if (jsonObject.containsKey(NEW_HEAD) && jsonObject.get(NEW_HEAD).isString() != null) {
+                merge.setNewHead(jsonObject.get(NEW_HEAD).isString().stringValue());
+            }
+        } catch (Exception e) {
+            throw new UnmarshallerException(GitExtension.MESSAGES.mergeUnmarshallerFailed());
+        }
+    }
+
+    /**
+     * Get array from JSON array.
+     *
+     * @param jsonArray
+     *         JSON array
+     * @return array of {@link String}
+     */
+    private String[] getArray(JSONArray jsonArray) {
+        if (jsonArray == null || jsonArray.size() == 0) {
+            return null;
+        }
+        String[] array = new String[jsonArray.size()];
+        for (int i = 0; i < jsonArray.size(); i++) {
+            array[i] = jsonArray.get(i).isString().stringValue();
+        }
+        return array;
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public Merge getPayload() {
+        return merge;
+    }
 }

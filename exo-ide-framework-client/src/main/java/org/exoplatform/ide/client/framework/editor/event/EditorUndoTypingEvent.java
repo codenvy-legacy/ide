@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorUndoTypingEvent extends GwtEvent<EditorUndoTypingHandler>
-{
+public class EditorUndoTypingEvent extends GwtEvent<EditorUndoTypingHandler> {
 
-   public static final GwtEvent.Type<EditorUndoTypingHandler> TYPE = new GwtEvent.Type<EditorUndoTypingHandler>();
+    public static final GwtEvent.Type<EditorUndoTypingHandler> TYPE = new GwtEvent.Type<EditorUndoTypingHandler>();
 
-   @Override
-   protected void dispatch(EditorUndoTypingHandler handler)
-   {
-      handler.onEditorUndoTyping(this);
-   }
+    @Override
+    protected void dispatch(EditorUndoTypingHandler handler) {
+        handler.onEditorUndoTyping(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorUndoTypingHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorUndoTypingHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

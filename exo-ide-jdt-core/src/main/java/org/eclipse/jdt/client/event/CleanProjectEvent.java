@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 9:52:24 AM Mar 5, 2012 evgen $
- * 
  */
-public class CleanProjectEvent extends GwtEvent<CleanProjectHandler>
-{
+public class CleanProjectEvent extends GwtEvent<CleanProjectHandler> {
 
-   public static GwtEvent.Type<CleanProjectHandler> TYPE = new Type<CleanProjectHandler>();
+    public static GwtEvent.Type<CleanProjectHandler> TYPE = new Type<CleanProjectHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CleanProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CleanProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CleanProjectHandler handler)
-   {
-      handler.onCleanProject(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CleanProjectHandler handler) {
+        handler.onCleanProject(this);
+    }
 
 }

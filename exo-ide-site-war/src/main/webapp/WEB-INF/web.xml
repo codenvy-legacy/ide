@@ -20,49 +20,49 @@
 
 -->
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-  version="3.0"
-  metadata-complete="true">
-  
-  <display-name>site</display-name>
+         version="3.0"
+         metadata-complete="true">
 
-   <servlet>
-      <servlet-name>EverrestServlet</servlet-name>
-      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
-   </servlet>
+    <display-name>site</display-name>
 
-   <servlet-mapping>
-      <servlet-name>EverrestServlet</servlet-name>
-      <url-pattern>/rest/*</url-pattern>
-   </servlet-mapping>
+    <servlet>
+        <servlet-name>EverrestServlet</servlet-name>
+        <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+    </servlet>
 
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>site</web-resource-name>
-      <url-pattern>*.html</url-pattern>      	            
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>developer</role-name>
-    </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>NONE</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
 
-  <login-config>
-    <auth-method>FORM</auth-method>
-    <realm-name>exo-domain</realm-name>
-    <form-login-config>
-      <form-login-page>/login.jsp</form-login-page>
-      <form-error-page>/error.jsp</form-error-page>
-    </form-login-config>
-  </login-config>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>site</web-resource-name>
+            <url-pattern>*.html</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>developer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 
-  <security-role>
-    <description>the user role</description>
-    <role-name>developer</role-name>
-  </security-role>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>exo-domain</realm-name>
+        <form-login-config>
+            <form-login-page>/login.jsp</form-login-page>
+            <form-error-page>/error.jsp</form-error-page>
+        </form-login-config>
+    </login-config>
+
+    <security-role>
+        <description>the user role</description>
+        <role-name>developer</role-name>
+    </security-role>
 </web-app>
 

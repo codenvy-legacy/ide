@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.properties;
 
 import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -33,122 +34,103 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
 public class PropertiesPresenter implements EditorActiveFileChangedHandler, ShowPropertiesHandler, ViewClosedHandler,
-   FileSavedHandler
-{
+                                            FileSavedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      void showProperties(FileModel file);
+        void showProperties(FileModel file);
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private FileModel file;
+    private FileModel file;
 
-   public PropertiesPresenter()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ShowPropertiesEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(FileSavedEvent.TYPE, this);
+    public PropertiesPresenter() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ShowPropertiesEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(FileSavedEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new ShowPropertiesControl(), Docking.TOOLBAR_RIGHT);
-   }
+        IDE.getInstance().addControl(new ShowPropertiesControl(), Docking.TOOLBAR_RIGHT);
+    }
 
-   @Override
-   public void onShowProperties(ShowPropertiesEvent event)
-   {
-      if (event.isShowProperties() && display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView((View)display);
-         display.showProperties(file);
-         return;
-      }
-
-      if (!event.isShowProperties() && display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-   }
-
-   private void refreshProperties(FileModel file)
-   {
-      if (this.file == null)
-      {
-         return;
-      }
-
-      if (!file.getId().equals(this.file.getId()))
-      {
-         return;
-      }
-
-      this.file = file;
-
-      if (display != null)
-      {
-         display.showProperties(file);
-      }
-   }
-
-   // TODO: need rework according new VFS
-   // public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
-   // {
-   // if (event.getItem() instanceof FileModel)
-   // {
-   // refreshProperties((FileModel)event.getItem());
-   // }
-   // }
-
-   // public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
-   // {
-   // if (event.getItem() instanceof File)
-   // {
-   // refreshProperties((File)event.getItem());
-   // }
-   // }
-
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      file = event.getFile();
-      if (display != null)
-      {
-         if (file == null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-         else
-         {
+    @Override
+    public void onShowProperties(ShowPropertiesEvent event) {
+        if (event.isShowProperties() && display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView((View)display);
             display.showProperties(file);
-         }
-      }
-   }
+            return;
+        }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        if (!event.isShowProperties() && display != null) {
+            IDE.getInstance().closeView(display.asView().getId());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
-    */
-   @Override
-   public void onFileSaved(FileSavedEvent event)
-   {
-      refreshProperties(event.getFile());
-   }
+    private void refreshProperties(FileModel file) {
+        if (this.file == null) {
+            return;
+        }
+
+        if (!file.getId().equals(this.file.getId())) {
+            return;
+        }
+
+        this.file = file;
+
+        if (display != null) {
+            display.showProperties(file);
+        }
+    }
+
+    // TODO: need rework according new VFS
+    // public void onItemPropertiesSaved(ItemPropertiesSavedEvent event)
+    // {
+    // if (event.getItem() instanceof FileModel)
+    // {
+    // refreshProperties((FileModel)event.getItem());
+    // }
+    // }
+
+    // public void onItemPropertiesReceived(ItemPropertiesReceivedEvent event)
+    // {
+    // if (event.getItem() instanceof File)
+    // {
+    // refreshProperties((File)event.getItem());
+    // }
+    // }
+
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        file = event.getFile();
+        if (display != null) {
+            if (file == null) {
+                IDE.getInstance().closeView(display.asView().getId());
+            } else {
+                display.showProperties(file);
+            }
+        }
+    }
+
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
+     * .FileSavedEvent) */
+    @Override
+    public void onFileSaved(FileSavedEvent event) {
+        refreshProperties(event.getFile());
+    }
 
 }

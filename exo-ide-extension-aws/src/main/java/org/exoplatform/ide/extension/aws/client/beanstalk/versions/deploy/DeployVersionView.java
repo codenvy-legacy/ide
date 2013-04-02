@@ -36,131 +36,107 @@ import java.util.LinkedHashMap;
 
 /**
  * View for deploy application's version.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: DeployVersionView.java Sep 27, 2012 6:05:14 PM azatsarynnyy $
- *
  */
-public class DeployVersionView extends ViewImpl implements DeployVersionPresenter.Display
-{
-   private static final String ID = "ideDeployVersionView";
+public class DeployVersionView extends ViewImpl implements DeployVersionPresenter.Display {
+    private static final String ID = "ideDeployVersionView";
 
-   private static final int WIDTH = 580;
+    private static final int WIDTH = 580;
 
-   private static final int HEIGHT = 230;
+    private static final int HEIGHT = 230;
 
-   private static final String DEPLOY_MODE_RADIO_BUTTON_ID = "ideDeployVersionViewDeployMode";
+    private static final String DEPLOY_MODE_RADIO_BUTTON_ID = "ideDeployVersionViewDeployMode";
 
-   private static final String ENVIRONMENTS_FIELD_ID = "ideDeployVersionViewEnvironmentsField";
+    private static final String ENVIRONMENTS_FIELD_ID = "ideDeployVersionViewEnvironmentsField";
 
-   private static final String DEPLOY_BUTTON_ID = "ideDeployVersionViewDeployButton";
+    private static final String DEPLOY_BUTTON_ID = "ideDeployVersionViewDeployButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideDeployVersionViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideDeployVersionViewCancelButton";
 
-   private static CreateVersionViewUiBinder uiBinder = GWT.create(CreateVersionViewUiBinder.class);
+    private static CreateVersionViewUiBinder uiBinder = GWT.create(CreateVersionViewUiBinder.class);
 
-   interface CreateVersionViewUiBinder extends UiBinder<Widget, DeployVersionView>
-   {
-   }
+    interface CreateVersionViewUiBinder extends UiBinder<Widget, DeployVersionView> {
+    }
 
-   @UiField
-   RadioButton deployToNewEnvironment;
+    @UiField
+    RadioButton deployToNewEnvironment;
 
-   @UiField
-   RadioButton deployToExistingEnvironment;
+    @UiField
+    RadioButton deployToExistingEnvironment;
 
-   @UiField
-   SelectItem environmentsField;
+    @UiField
+    SelectItem environmentsField;
 
-   @UiField
-   ImageButton deployButton;
+    @UiField
+    ImageButton deployButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   public DeployVersionView()
-   {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.deployVersionViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public DeployVersionView() {
+        super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.deployVersionViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      deployToNewEnvironment.setName(DEPLOY_MODE_RADIO_BUTTON_ID);
-      deployToExistingEnvironment.setName(DEPLOY_MODE_RADIO_BUTTON_ID);
-      environmentsField.setName(ENVIRONMENTS_FIELD_ID);
-      environmentsField.setEnabled(false);
-      deployButton.setButtonId(DEPLOY_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        deployToNewEnvironment.setName(DEPLOY_MODE_RADIO_BUTTON_ID);
+        deployToExistingEnvironment.setName(DEPLOY_MODE_RADIO_BUTTON_ID);
+        environmentsField.setName(ENVIRONMENTS_FIELD_ID);
+        environmentsField.setEnabled(false);
+        deployButton.setButtonId(DEPLOY_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#getNewEnvironmentMode()
-    */
-   @Override
-   public HasValue<Boolean> getNewEnvironmentMode()
-   {
-      return deployToNewEnvironment;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#getNewEnvironmentMode() */
+    @Override
+    public HasValue<Boolean> getNewEnvironmentMode() {
+        return deployToNewEnvironment;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#getExistingEnvironmentMode()
-    */
-   @Override
-   public HasValue<Boolean> getExistingEnvironmentMode()
-   {
-      return deployToExistingEnvironment;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#getExistingEnvironmentMode
+     * () */
+    @Override
+    public HasValue<Boolean> getExistingEnvironmentMode() {
+        return deployToExistingEnvironment;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#getEnvironmentsField()
-    */
-   @Override
-   public HasValue<String> getEnvironmentsField()
-   {
-      return environmentsField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#getEnvironmentsField() */
+    @Override
+    public HasValue<String> getEnvironmentsField() {
+        return environmentsField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#setEnvironmentsValues(java.util.LinkedHashMap)
-    */
-   @Override
-   public void setEnvironmentsValues(LinkedHashMap<String, String> values)
-   {
-      environmentsField.setValueMap(values);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#setEnvironmentsValues(java
+     * .util.LinkedHashMap) */
+    @Override
+    public void setEnvironmentsValues(LinkedHashMap<String, String> values) {
+        environmentsField.setValueMap(values);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#enableEnvironmentsField(boolean)
-    */
-   @Override
-   public void enableEnvironmentsField(boolean value)
-   {
-      environmentsField.setEnabled(value);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#enableEnvironmentsField
+     * (boolean) */
+    @Override
+    public void enableEnvironmentsField(boolean value) {
+        environmentsField.setEnabled(value);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter.Display#getDeployButton()
-    */
-   @Override
-   public HasClickHandlers getDeployButton()
-   {
-      return deployButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter.Display#getDeployButton() */
+    @Override
+    public HasClickHandlers getDeployButton() {
+        return deployButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#enableDeployButton(boolean)
-    */
-   @Override
-   public void enableDeployButton(boolean value)
-   {
-      deployButton.setEnabled(value);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter.Display#enableDeployButton
+     * (boolean) */
+    @Override
+    public void enableDeployButton(boolean value) {
+        deployButton.setEnabled(value);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
 }

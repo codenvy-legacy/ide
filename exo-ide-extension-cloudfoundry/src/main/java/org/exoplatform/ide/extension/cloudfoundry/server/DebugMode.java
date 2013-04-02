@@ -24,28 +24,23 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DebugMode
-{
-   public static final String DEFAULT_MODE = "run";
+public class DebugMode {
+    public static final String DEFAULT_MODE = "run";
 
-   private String mode = DEFAULT_MODE;
+    private String mode = DEFAULT_MODE;
 
-   public DebugMode(String mode)
-   {
-      this.mode = mode;
-   }
+    public DebugMode(String mode) {
+        this.mode = mode;
+    }
 
-   public DebugMode()
-   {
-   }
+    public DebugMode() {
+    }
 
-   public String getMode()
-   {
-      return mode;
-   }
+    public String getMode() {
+        return mode;
+    }
 
-   public void setMode(String mode)
-   {
-      this.mode = mode;
-   }
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
 }

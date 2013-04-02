@@ -18,60 +18,42 @@ package com.codenvy.eclipse.core.internal.watson;
  * rely on the behaviour of this type, and the ElementTree maintainer
  * reserves the right to change its behaviour as necessary.
  */
-public final class DefaultElementComparator implements IElementComparator
-{
-   private static DefaultElementComparator singleton;
+public final class DefaultElementComparator implements IElementComparator {
+    private static DefaultElementComparator singleton;
 
-   /**
-    * Force clients to use the singleton
-    */
-   protected DefaultElementComparator()
-   {
-      super();
-   }
+    /** Force clients to use the singleton */
+    protected DefaultElementComparator() {
+        super();
+    }
 
-   /**
-    * Returns the type of change.
-    */
-   public int compare(Object oldInfo, Object newInfo)
-   {
-      if (oldInfo == null && newInfo == null)
-      {
-         return 0;
-      }
-      if (oldInfo == null || newInfo == null)
-      {
-         return 1;
-      }
-      return testEquality(oldInfo, newInfo) ? 0 : 1;
-   }
+    /** Returns the type of change. */
+    public int compare(Object oldInfo, Object newInfo) {
+        if (oldInfo == null && newInfo == null) {
+            return 0;
+        }
+        if (oldInfo == null || newInfo == null) {
+            return 1;
+        }
+        return testEquality(oldInfo, newInfo) ? 0 : 1;
+    }
 
-   /**
-    * Returns the singleton instance
-    */
-   public static IElementComparator getComparator()
-   {
-      if (singleton == null)
-      {
-         singleton = new DefaultElementComparator();
-      }
-      return singleton;
-   }
+    /** Returns the singleton instance */
+    public static IElementComparator getComparator() {
+        if (singleton == null) {
+            singleton = new DefaultElementComparator();
+        }
+        return singleton;
+    }
 
-   /**
-    * Makes a comparison based on equality
-    */
-   protected boolean testEquality(Object oldInfo, Object newInfo)
-   {
-      if (oldInfo == null && newInfo == null)
-      {
-         return true;
-      }
-      if (oldInfo == null || newInfo == null)
-      {
-         return false;
-      }
+    /** Makes a comparison based on equality */
+    protected boolean testEquality(Object oldInfo, Object newInfo) {
+        if (oldInfo == null && newInfo == null) {
+            return true;
+        }
+        if (oldInfo == null || newInfo == null) {
+            return false;
+        }
 
-      return oldInfo.equals(newInfo);
-   }
+        return oldInfo.equals(newInfo);
+    }
 }

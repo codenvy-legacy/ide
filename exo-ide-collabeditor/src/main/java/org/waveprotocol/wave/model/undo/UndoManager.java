@@ -19,41 +19,41 @@ package org.waveprotocol.wave.model.undo;
 /**
  * An undo manager.
  *
- *
- * @param <T> The type of operations.
+ * @param <T>
+ *         The type of operations.
  */
 public interface UndoManager<T> {
 
-  /**
-   * Places into the undo manager an operation that should be undone by undos.
-   *
-   * @param op the operation that should be undone by an appropriate undo
-   */
-  void undoableOp(T op);
+    /**
+     * Places into the undo manager an operation that should be undone by undos.
+     *
+     * @param op
+     *         the operation that should be undone by an appropriate undo
+     */
+    void undoableOp(T op);
 
-  /**
-   * Places into the undo manager an operation that should not be undone by undos.
-   *
-   * @param op the operation that should not be undone by any undos
-   */
-  void nonUndoableOp(T op);
+    /**
+     * Places into the undo manager an operation that should not be undone by undos.
+     *
+     * @param op
+     *         the operation that should not be undone by any undos
+     */
+    void nonUndoableOp(T op);
 
-  /**
-   * Places an undo checkpoint.
-   */
-  void checkpoint();
+    /** Places an undo checkpoint. */
+    void checkpoint();
 
-  /**
-   * Effects an undo.  Returns null if there are no operations to undo.
-   *
-   * @return the operation that will effect an undo
-   */
-  T undo();
+    /**
+     * Effects an undo.  Returns null if there are no operations to undo.
+     *
+     * @return the operation that will effect an undo
+     */
+    T undo();
 
-  /**
-   * Effects a redo.  Returns null if there are no operations to redo.
-   *
-   * @return the operation that will effect a redo
-   */
-  T redo();
+    /**
+     * Effects a redo.  Returns null if there are no operations to redo.
+     *
+     * @return the operation that will effect a redo
+     */
+    T redo();
 }

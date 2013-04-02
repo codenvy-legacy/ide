@@ -19,18 +19,16 @@ import com.google.collide.dto.WorkspaceInfo.WorkspaceType;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request for the a specific project.
- */
+/** Request for the a specific project. */
 @RoutingType(type = RoutingTypes.GETPROJECTBYID)
 public interface GetProjectById extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 
-  WorkspaceType getWorkspaceType();
+    WorkspaceType getWorkspaceType();
 
-  String getStartKey();
+    String getStartKey();
 
-  int getPageLength();
+    int getPageLength();
 
-  boolean getShouldLoadWorkspaces();
+    boolean getShouldLoadWorkspaces();
 }

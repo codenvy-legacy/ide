@@ -24,60 +24,46 @@ import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class AsmAnnotationParameter implements AnnotationParameter
-{
+public class AsmAnnotationParameter implements AnnotationParameter {
 
-   private String name;
+    private String name;
 
-   private Object value;
+    private Object value;
 
-   /**
-    * @param name
-    * @param value
-    */
-   public AsmAnnotationParameter(String name, Object value)
-   {
-      super();
-      this.name = name;
-      this.value = value;
-   }
+    /**
+     * @param name
+     * @param value
+     */
+    public AsmAnnotationParameter(String name, Object value) {
+        super();
+        this.name = name;
+        this.value = value;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getName()
-    */
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getName() */
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getValue()
-    */
-   @Override
-   public AnnotationValue getValue()
-   {
-      return new AsmAnnotationValue(value);
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getValue() */
+    @Override
+    public AnnotationValue getValue() {
+        return new AsmAnnotationValue(value);
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setName(java.lang.String)
-    */
-   @Override
-   public void setName(String name)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setName(java.lang.String) */
+    @Override
+    public void setName(String name) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setValue(org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue)
-    */
-   @Override
-   public void setValue(AnnotationValue value)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setValue(org.exoplatform.ide.codeassistant.jvm.shared
+     * .AnnotationValue) */
+    @Override
+    public void setValue(AnnotationValue value) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
 }

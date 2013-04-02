@@ -18,29 +18,23 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class StorageApplication extends Application
-{
+public class StorageApplication extends Application {
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> classes = new HashSet<Class<?>>();
-      classes.add(UpdateStorage.class);
-      classes.add(Storage.class);
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<Class<?>>();
+        classes.add(UpdateStorage.class);
+        classes.add(Storage.class);
+        return classes;
+    }
 
 }

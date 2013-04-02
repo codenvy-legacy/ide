@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Anna Zhuleva</a>
  * @version $Id:
  */
-public interface EditorFormatTextHandler extends EventHandler
-{
+public interface EditorFormatTextHandler extends EventHandler {
 
-   void onFormatFile(EditorFormatTextEvent event);
+    void onFormatFile(EditorFormatTextEvent event);
 
 }

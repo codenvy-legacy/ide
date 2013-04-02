@@ -29,44 +29,35 @@ import org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresen
 
 /**
  * IDE Jenkins extension entry point
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class JenkinsExtension extends Extension implements InitializeServicesHandler
-{
+public class JenkinsExtension extends Extension implements InitializeServicesHandler {
 
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   public static final JenkinsAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(JenkinsAutoBeanFactory.class);
+    /** The generator of an {@link AutoBean}. */
+    public static final JenkinsAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(JenkinsAutoBeanFactory.class);
 
-   public static final JenkinsMessages MESSAGES = GWT.create(JenkinsMessages.class);
+    public static final JenkinsMessages MESSAGES = GWT.create(JenkinsMessages.class);
 
-   public static final JenkinsResourceBundle RESOURCES = GWT.create(JenkinsResourceBundle.class);
+    public static final JenkinsResourceBundle RESOURCES = GWT.create(JenkinsResourceBundle.class);
 
-   /** Channel for the messages containing status of the Jenkins job. */
-   public static final String JOB_STATUS_CHANNEL = "jenkins:jobStatus:";
+    /** Channel for the messages containing status of the Jenkins job. */
+    public static final String JOB_STATUS_CHANNEL = "jenkins:jobStatus:";
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      // IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        // IDE.getInstance().addControl(new BuildControl(), DockTarget.NONE, false);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new BuildApplicationPresenter();
-      new JenkinsService(event.getApplicationConfiguration().getContext(), event.getLoader());
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new BuildApplicationPresenter();
+        new JenkinsService(event.getApplicationConfiguration().getContext(), event.getLoader());
+    }
 
 }

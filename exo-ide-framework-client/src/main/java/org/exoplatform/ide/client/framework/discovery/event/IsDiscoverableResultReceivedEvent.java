@@ -22,48 +22,41 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class IsDiscoverableResultReceivedEvent extends GwtEvent<IsDiscoverableResultReceivedHandler>
-{
+public class IsDiscoverableResultReceivedEvent extends GwtEvent<IsDiscoverableResultReceivedHandler> {
 
-   public static final GwtEvent.Type<IsDiscoverableResultReceivedHandler> TYPE =
-      new GwtEvent.Type<IsDiscoverableResultReceivedHandler>();
+    public static final GwtEvent.Type<IsDiscoverableResultReceivedHandler> TYPE =
+            new GwtEvent.Type<IsDiscoverableResultReceivedHandler>();
 
-   private boolean discoverable;
+    private boolean discoverable;
 
-   public IsDiscoverableResultReceivedEvent(boolean discoverable)
-   {
-      this.discoverable = discoverable;
-   }
+    public IsDiscoverableResultReceivedEvent(boolean discoverable) {
+        this.discoverable = discoverable;
+    }
 
-   public IsDiscoverableResultReceivedEvent()
-   {
-   }
+    public IsDiscoverableResultReceivedEvent() {
+    }
 
-   public void setDiscoverable(boolean discoverable)
-   {
-      this.discoverable = discoverable;
-   }
+    public void setDiscoverable(boolean discoverable) {
+        this.discoverable = discoverable;
+    }
 
-   public boolean isDiscoverable()
-   {
-      return discoverable;
-   }
+    public boolean isDiscoverable() {
+        return discoverable;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<IsDiscoverableResultReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<IsDiscoverableResultReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(IsDiscoverableResultReceivedHandler handler)
-   {
-      handler.isDiscoverableResultReceived(this);
-   }
+    @Override
+    protected void dispatch(IsDiscoverableResultReceivedHandler handler) {
+        handler.isDiscoverableResultReceived(this);
+    }
 
 }

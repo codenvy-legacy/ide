@@ -13,52 +13,43 @@ package com.codenvy.eclipse.jdt.internal.compiler.lookup;
 import com.codenvy.eclipse.jdt.core.compiler.CharOperation;
 import com.codenvy.eclipse.jdt.internal.compiler.ast.ImportReference;
 
-public class ImportBinding extends Binding
-{
-   public char[][] compoundName;
+public class ImportBinding extends Binding {
+    public char[][] compoundName;
 
-   public boolean onDemand;
+    public boolean onDemand;
 
-   public ImportReference reference;
+    public ImportReference reference;
 
-   public Binding resolvedImport; // must ensure the import is resolved
+    public Binding resolvedImport; // must ensure the import is resolved
 
-   public ImportBinding(char[][] compoundName, boolean isOnDemand, Binding binding, ImportReference reference)
-   {
-      this.compoundName = compoundName;
-      this.onDemand = isOnDemand;
-      this.resolvedImport = binding;
-      this.reference = reference;
-   }
+    public ImportBinding(char[][] compoundName, boolean isOnDemand, Binding binding, ImportReference reference) {
+        this.compoundName = compoundName;
+        this.onDemand = isOnDemand;
+        this.resolvedImport = binding;
+        this.reference = reference;
+    }
 /* API
 * Answer the receiver's binding type from Binding.BindingID.
 */
 
-   public final int kind()
-   {
-      return IMPORT;
-   }
+    public final int kind() {
+        return IMPORT;
+    }
 
-   public boolean isStatic()
-   {
-      return this.reference != null && this.reference.isStatic();
-   }
+    public boolean isStatic() {
+        return this.reference != null && this.reference.isStatic();
+    }
 
-   public char[] readableName()
-   {
-      if (this.onDemand)
-      {
-         return CharOperation.concat(CharOperation.concatWith(this.compoundName, '.'),
-            ".*".toCharArray()); //$NON-NLS-1$
-      }
-      else
-      {
-         return CharOperation.concatWith(this.compoundName, '.');
-      }
-   }
+    public char[] readableName() {
+        if (this.onDemand) {
+            return CharOperation.concat(CharOperation.concatWith(this.compoundName, '.'),
+                                        ".*".toCharArray()); //$NON-NLS-1$
+        } else {
+            return CharOperation.concatWith(this.compoundName, '.');
+        }
+    }
 
-   public String toString()
-   {
-      return "import : " + new String(readableName()); //$NON-NLS-1$
-   }
+    public String toString() {
+        return "import : " + new String(readableName()); //$NON-NLS-1$
+    }
 }

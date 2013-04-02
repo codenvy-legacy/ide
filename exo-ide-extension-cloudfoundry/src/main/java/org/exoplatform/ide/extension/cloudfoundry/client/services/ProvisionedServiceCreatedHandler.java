@@ -22,15 +22,14 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 
 /**
  * Handler to process successful service creation.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Jul 16, 2012 12:35:22 PM anya $
- *
  */
-public interface ProvisionedServiceCreatedHandler
-{
-   /**
-    * @param service created service
-    */
-   void onProvisionedServiceCreated(ProvisionedService service);
+public interface ProvisionedServiceCreatedHandler {
+    /**
+     * @param service
+     *         created service
+     */
+    void onProvisionedServiceCreated(ProvisionedService service);
 }

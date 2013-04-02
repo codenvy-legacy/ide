@@ -1,38 +1,38 @@
 .editbox {
-  margin: .4em;
-  padding: 0;
-  font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
-  font-size: 10pt;
-  color: black;
+    margin: .4em;
+    padding: 0;
+    font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 10pt;
+    color: black;
 }
 
 .editbox p {
-  margin: 0;
+    margin: 0;
 }
 
 .editbox span.diff-header {
-	color: #75507B;
-	font-weight: bold;
+    color: #75507B;
+    font-weight: bold;
 }
 
 .editbox span.diff-add {
-	color: #4E9A06;
+    color: #4E9A06;
 }
 
 .editbox span.diff-remove {
-	color: #cc0000;
+    color: #cc0000;
 }
 
 .editbox span.diff-nochange {
-	color: black;
+    color: black;
 }
 
 .editbox span.diff-info {
-	color: #4E9A06;
-	font-weight: bold;
+    color: #4E9A06;
+    font-weight: bold;
 }
 
 .editbox span.diff-change {
-	color: #C4A000;
+    color: #C4A000;
 }
 

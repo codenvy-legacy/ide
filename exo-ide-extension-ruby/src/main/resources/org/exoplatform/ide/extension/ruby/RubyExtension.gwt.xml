@@ -20,12 +20,12 @@
 -->
 
 <module>
-   <inherits name="com.google.gwt.user.User" />
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.xml.XML' />
-   <inherits name='com.google.gwt.json.JSON' />
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name='com.google.gwt.json.JSON'/>
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
 
-   <source path="client" />
-   <entry-point class='org.exoplatform.ide.extension.ruby.client.RubyExtension' />
+    <source path="client"/>
+    <entry-point class='org.exoplatform.ide.extension.ruby.client.RubyExtension'/>
 </module>

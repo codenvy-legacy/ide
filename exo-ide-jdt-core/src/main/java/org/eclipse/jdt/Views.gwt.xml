@@ -19,41 +19,41 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-       <replace-with class="org.eclipse.jdt.client.AstView">
-      <when-type-is class="org.eclipse.jdt.client.AstPresenter.Display" />
-   </replace-with>
-   
-    <replace-with class="org.eclipse.jdt.client.outline.OutlineView">
-      <when-type-is class="org.eclipse.jdt.client.outline.OutlinePresenter.Display" />
-   </replace-with>
-   
-    <replace-with class="org.eclipse.jdt.client.core.formatter.FormatterProfileView">
-      <when-type-is class="org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display" />
-   </replace-with>
-   
-     <replace-with class="org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsView">
-      <when-type-is class="org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display" />
-   </replace-with>
-   
-   <replace-with class="org.eclipse.jdt.client.create.CreatePackageView">
-      <when-type-is class="org.eclipse.jdt.client.create.CreatePackagePresenter.Display" />
-   </replace-with>
-   
-   <replace-with class="org.eclipse.jdt.client.create.CreateJavaClassView">
-      <when-type-is class="org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display" />
-   </replace-with>
-   
-   <replace-with class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterView">
-      <when-type-is class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display" />
-   </replace-with>
-   
-   <replace-with class="org.eclipse.jdt.client.packaging.PackageExplorerView">
-      <when-type-is class="org.exoplatform.ide.client.framework.project.PackageExplorerDisplay" />
-   </replace-with>
+    <inherits name='com.google.gwt.user.User'/>
+    <replace-with class="org.eclipse.jdt.client.AstView">
+        <when-type-is class="org.eclipse.jdt.client.AstPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.eclipse.jdt.client.refactoring.rename.RefactoringRenameView">
-      <when-type-is class="org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display" />
-   </replace-with>
+    <replace-with class="org.eclipse.jdt.client.outline.OutlineView">
+        <when-type-is class="org.eclipse.jdt.client.outline.OutlinePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.eclipse.jdt.client.core.formatter.FormatterProfileView">
+        <when-type-is class="org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsView">
+        <when-type-is class="org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.eclipse.jdt.client.create.CreatePackageView">
+        <when-type-is class="org.eclipse.jdt.client.create.CreatePackagePresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.eclipse.jdt.client.create.CreateJavaClassView">
+        <when-type-is class="org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterView">
+        <when-type-is class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.eclipse.jdt.client.packaging.PackageExplorerView">
+        <when-type-is class="org.exoplatform.ide.client.framework.project.PackageExplorerDisplay"/>
+    </replace-with>
+
+    <replace-with class="org.eclipse.jdt.client.refactoring.rename.RefactoringRenameView">
+        <when-type-is class="org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display"/>
+    </replace-with>
 
 </module>

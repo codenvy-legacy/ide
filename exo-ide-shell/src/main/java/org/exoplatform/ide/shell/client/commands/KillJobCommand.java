@@ -33,72 +33,55 @@ import java.util.Set;
 
 /**
  * Kills job by id.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 12, 2012 5:20:49 PM anya $
- * 
  */
-public class KillJobCommand extends ClientCommand
-{
-   private static final Set<String> commands = new HashSet<String>();
+public class KillJobCommand extends ClientCommand {
+    private static final Set<String> commands = new HashSet<String>();
 
-   static
-   {
-      commands.add("kill");
-   }
+    static {
+        commands.add("kill");
+    }
 
-   public KillJobCommand()
-   {
-      super(commands, new Options(), CloudShell.messages.killHelp());
-   }
+    public KillJobCommand() {
+        super(commands, new Options(), CloudShell.messages.killHelp());
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
-    */
-   @Override
-   public void execute(CommandLine commandLine)
-   {
-      @SuppressWarnings("unchecked")
-      List<String> args = commandLine.getArgList();
-      args.remove(0);
+    /** @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine) */
+    @Override
+    public void execute(CommandLine commandLine) {
+        @SuppressWarnings("unchecked")
+        List<String> args = commandLine.getArgList();
+        args.remove(0);
 
-      if (commandLine.hasOption('h'))
-      {
-         printHelp(CloudShell.messages.killUsage());
-         return;
-      }
+        if (commandLine.hasOption('h')) {
+            printHelp(CloudShell.messages.killUsage());
+            return;
+        }
 
-      if (args.isEmpty())
-      {
-         printHelp(CloudShell.messages.killUsage());
-         return;
-      }
-      else if (args.size() == 1)
-      {
-         String jobId = args.get(0);
-         try
-         {
-            JobService.getService().killJob(jobId, new AsyncRequestCallback<StringBuilder>()
-            {
+        if (args.isEmpty()) {
+            printHelp(CloudShell.messages.killUsage());
+            return;
+        } else if (args.size() == 1) {
+            String jobId = args.get(0);
+            try {
+                JobService.getService().killJob(jobId, new AsyncRequestCallback<StringBuilder>() {
 
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  CloudShell.console().println(CloudShell.messages.killJobSuccess());
-               }
+                    @Override
+                    protected void onSuccess(StringBuilder result) {
+                        CloudShell.console().println(CloudShell.messages.killJobSuccess());
+                    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  CloudShell.console().println(CloudShell.messages.killError());
-               }
-            });
-         }
-         catch (RequestException e)
-         {
-            CloudShell.console().println(CloudShell.messages.killError());
-         }
-      }
-   }
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        CloudShell.console().println(CloudShell.messages.killError());
+                    }
+                });
+            } catch (RequestException e) {
+                CloudShell.console().println(CloudShell.messages.killError());
+            }
+        }
+    }
 
 }

@@ -18,47 +18,41 @@
  */
 package org.exoplatform.ide.client.framework.settings;
 
-import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ApplicationSettingsReceivedEvent extends ServerExceptionEvent<ApplicationSettingsReceivedHandler>
-{
+public class ApplicationSettingsReceivedEvent extends ServerExceptionEvent<ApplicationSettingsReceivedHandler> {
 
-   public static final GwtEvent.Type<ApplicationSettingsReceivedHandler> TYPE =
-      new GwtEvent.Type<ApplicationSettingsReceivedHandler>();
+    public static final GwtEvent.Type<ApplicationSettingsReceivedHandler> TYPE =
+            new GwtEvent.Type<ApplicationSettingsReceivedHandler>();
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   public ApplicationSettingsReceivedEvent(ApplicationSettings applicationSettings)
-   {
-      super(null);
-      this.applicationSettings = applicationSettings;
-   }
+    public ApplicationSettingsReceivedEvent(ApplicationSettings applicationSettings) {
+        super(null);
+        this.applicationSettings = applicationSettings;
+    }
 
-   @Override
-   protected void dispatch(ApplicationSettingsReceivedHandler handler)
-   {
-      handler.onApplicationSettingsReceived(this);
-   }
+    @Override
+    protected void dispatch(ApplicationSettingsReceivedHandler handler) {
+        handler.onApplicationSettingsReceived(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationSettingsReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationSettingsReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public ApplicationSettings getApplicationSettings()
-   {
-      return applicationSettings;
-   }
+    public ApplicationSettings getApplicationSettings() {
+        return applicationSettings;
+    }
 
 }

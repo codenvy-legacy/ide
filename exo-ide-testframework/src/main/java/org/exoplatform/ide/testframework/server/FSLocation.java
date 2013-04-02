@@ -22,48 +22,43 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class FSLocation
-{
-   private final String url;
+public class FSLocation {
+    private final String url;
 
-   /**
-    * @param url full URL of resource in IDE notation
-    */
-   public FSLocation(String url)
-   {
-      this.url = url;
-   }
+    /**
+     * @param url
+     *         full URL of resource in IDE notation
+     */
+    public FSLocation(String url) {
+        this.url = url;
+    }
 
-   public String getURL()
-   {
-      return url;
-   }
+    public String getURL() {
+        return url;
+    }
 
-   @Deprecated
-   public String getLocalPath(UriInfo uriInfo)
-   {
-      return getLocalPath();
-   }
+    @Deprecated
+    public String getLocalPath(UriInfo uriInfo) {
+        return getLocalPath();
+    }
 
-   public String getLocalPath()
-   {
+    public String getLocalPath() {
 
-      String localPath = getRootPath();
-      if (localPath == null)
-         throw new IllegalStateException("Root path may not be null. ");
-      if (!localPath.endsWith("/"))
-         localPath += "/"; // unix like path only!
-      localPath += "repository/dev-monit" + url;
-      return localPath;
-   }
+        String localPath = getRootPath();
+        if (localPath == null)
+            throw new IllegalStateException("Root path may not be null. ");
+        if (!localPath.endsWith("/"))
+            localPath += "/"; // unix like path only!
+        localPath += "repository/dev-monit" + url;
+        return localPath;
+    }
 
-   protected String getRootPath()
-   {
-      return System.getProperty("org.exoplatform.ide.server.fs-root-path");
-   }
+    protected String getRootPath() {
+        return System.getProperty("org.exoplatform.ide.server.fs-root-path");
+    }
 }

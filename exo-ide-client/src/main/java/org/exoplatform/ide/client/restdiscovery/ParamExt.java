@@ -23,54 +23,40 @@ import org.exoplatform.ide.client.restdiscovery.ui.RestServiceParameterListGrid;
 
 /**
  * Represents extended parameter for {@link RestServiceParameterListGrid}.
- * 
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ParamExt.java Mar 23, 2011 10:20:43 AM vereshchaka $
- * 
  */
-public class ParamExt
-{
+public class ParamExt {
 
-   private Param param;
+    private Param param;
 
-   private boolean group = false;
+    private boolean group = false;
 
-   private String title;
+    private String title;
 
-   public ParamExt(Param param)
-   {
-      this.param = param;
-   }
+    public ParamExt(Param param) {
+        this.param = param;
+    }
 
-   public ParamExt(String title)
-   {
-      this.title = title;
-      group = true;
-   }
+    public ParamExt(String title) {
+        this.title = title;
+        group = true;
+    }
 
-   /**
-    * @return the param
-    */
-   public Param getParam()
-   {
-      return param;
-   }
+    /** @return the param */
+    public Param getParam() {
+        return param;
+    }
 
-   /**
-    * @return the title
-    */
-   public String getTitle()
-   {
-      return title;
-   }
+    /** @return the title */
+    public String getTitle() {
+        return title;
+    }
 
-   /**
-    * @return the group
-    */
-   public boolean isGroup()
-   {
-      return group;
-   }
+    /** @return the group */
+    public boolean isGroup() {
+        return group;
+    }
 
 }

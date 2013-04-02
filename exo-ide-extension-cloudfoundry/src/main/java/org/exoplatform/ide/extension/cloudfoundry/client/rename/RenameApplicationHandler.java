@@ -22,18 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link RenameApplicationEvent} event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RenameApplicationHandler.java Jul 15, 2011 11:23:26 AM vereshchaka $
- *
  */
-public interface RenameApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to rename application.
-    * 
-    * @param event
-    */
-   void onRenameApplication(RenameApplicationEvent event);
+public interface RenameApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to rename application.
+     *
+     * @param event
+     */
+    void onRenameApplication(RenameApplicationEvent event);
 
 }

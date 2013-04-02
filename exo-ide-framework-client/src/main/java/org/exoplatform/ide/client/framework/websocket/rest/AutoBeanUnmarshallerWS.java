@@ -27,40 +27,30 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 
 /**
- * 
+ * @param <T>
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: AutoBeanUnmarshallerWS.java Nov 19, 2012 11:44:19 AM azatsarynnyy $
- *
- * @param <T>
  */
-public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T>
-{
-   private AutoBean<T> bean;
+public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T> {
+    private AutoBean<T> bean;
 
-   public AutoBeanUnmarshallerWS(AutoBean<T> autoBean)
-   {
-      this.bean = autoBean;
-   }
+    public AutoBeanUnmarshallerWS(AutoBean<T> autoBean) {
+        this.bean = autoBean;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage)
-    */
-   @Override
-   public void unmarshal(ResponseMessage response) throws UnmarshallerException
-   {
-      if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null)
-      {
-         Splittable data = StringQuoter.split(response.getBody());
-         AutoBeanCodex.decodeInto(data, bean);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket
+     * .rest.ResponseMessage) */
+    @Override
+    public void unmarshal(ResponseMessage response) throws UnmarshallerException {
+        if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null) {
+            Splittable data = StringQuoter.split(response.getBody());
+            AutoBeanCodex.decodeInto(data, bean);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public T getPayload()
-   {
-      return bean.as();
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#getPayload() */
+    @Override
+    public T getPayload() {
+        return bean.as();
+    }
 }

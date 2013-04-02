@@ -16,9 +16,7 @@ package com.google.collide.shared.ot;
 
 import com.google.collide.dto.DocOp;
 
-/**
- * Consumer for document operations.
- */
+/** Consumer for document operations. */
 public interface DocOpSink {
-  void consume(DocOp docOp);
+    void consume(DocOp docOp);
 }

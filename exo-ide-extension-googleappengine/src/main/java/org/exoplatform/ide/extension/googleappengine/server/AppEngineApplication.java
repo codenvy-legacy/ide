@@ -18,30 +18,26 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class AppEngineApplication extends Application
-{
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> classes = new HashSet<Class<?>>(1);
-      classes.add(AppEngineService.class);
-      return classes;
-   }
+public class AppEngineApplication extends Application {
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<Class<?>>(1);
+        classes.add(AppEngineService.class);
+        return classes;
+    }
 
-   @Override
-   public Set<Object> getSingletons()
-   {
-      Set<Object> objects = new HashSet<Object>(1);
-      objects.add(new AppAdminExceptionMapper());
-      return objects;
-   }
+    @Override
+    public Set<Object> getSingletons() {
+        Set<Object> objects = new HashSet<Object>(1);
+        objects.add(new AppAdminExceptionMapper());
+        return objects;
+    }
 }

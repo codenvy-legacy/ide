@@ -19,41 +19,43 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" 
-             xmlns:g="urn:import:com.google.gwt.user.client.ui" 
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
              xmlns:e="urn:import:org.exoplatform.ide.client.permissions">
-             
-   <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
-   <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
-   <ui:with field="idePermissionsLocale" type="org.exoplatform.ide.client.messages.IdePermissionsLocalizationConstant"></ui:with>
 
-   <f:Border margin="15" borderColor="transparent">
-      <g:VerticalPanel spacing="3" horizontalAlignment="center">
+    <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle'/>
+    <ui:with field="ideLocale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
+    <ui:with field="idePermissionsLocale" type="org.exoplatform.ide.client.messages.IdePermissionsLocalizationConstant"></ui:with>
 
-         <f:TextField ui:field="itemNameField" width="100%" title="{idePermissionsLocale.permissionsName}" height="22px"></f:TextField>
+    <f:Border margin="15" borderColor="transparent">
+        <g:VerticalPanel spacing="3" horizontalAlignment="center">
 
-         <f:TextField ui:field="itemOwnerField" width="100%" title="{idePermissionsLocale.permissionsOwner}" height="22px"></f:TextField>
+            <f:TextField ui:field="itemNameField" width="100%" title="{idePermissionsLocale.permissionsName}" height="22px"></f:TextField>
 
-         <f:Border margin="10">
-            <e:PermissionsListGrid width="100%" ui:field="permissionsListGrid"></e:PermissionsListGrid>
-         </f:Border>
+            <f:TextField ui:field="itemOwnerField" width="100%" title="{idePermissionsLocale.permissionsOwner}" height="22px"></f:TextField>
 
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:ImageButton ui:field="addEntityButton" width="90" height="22" text="{ideLocale.addButton}"
-               imageResource="{resource.add}" disabledImageResource="{resource.addDisabled}"></f:ImageButton>
-            <f:ImageButton ui:field="removeButton" width="90" height="22" text="{ideLocale.deleteButton}" imageResource="{resource.remove}"
-               disabledImageResource="{resource.removeDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
-         
-         <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
-            <f:ImageButton ui:field="saveACLButton" width="90" height="22" text="{ideLocale.saveButton}"
-               imageResource="{resource.yes}" disabledImageResource="{resource.yesDisabled}"></f:ImageButton>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}" imageResource="{resource.cancel}"
-               disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
-         </g:HorizontalPanel>
-         
-      </g:VerticalPanel>
-   </f:Border>
+            <f:Border margin="10">
+                <e:PermissionsListGrid width="100%" ui:field="permissionsListGrid"></e:PermissionsListGrid>
+            </f:Border>
+
+            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+                <f:ImageButton ui:field="addEntityButton" width="90" height="22" text="{ideLocale.addButton}"
+                               imageResource="{resource.add}" disabledImageResource="{resource.addDisabled}"></f:ImageButton>
+                <f:ImageButton ui:field="removeButton" width="90" height="22" text="{ideLocale.deleteButton}"
+                               imageResource="{resource.remove}"
+                               disabledImageResource="{resource.removeDisabled}"></f:ImageButton>
+            </g:HorizontalPanel>
+
+            <g:HorizontalPanel height="40" spacing="5" horizontalAlignment="center" verticalAlignment="bottom">
+                <f:ImageButton ui:field="saveACLButton" width="90" height="22" text="{ideLocale.saveButton}"
+                               imageResource="{resource.yes}" disabledImageResource="{resource.yesDisabled}"></f:ImageButton>
+                <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{ideLocale.cancelButton}"
+                               imageResource="{resource.cancel}"
+                               disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
+            </g:HorizontalPanel>
+
+        </g:VerticalPanel>
+    </f:Border>
 
 </ui:UiBinder>

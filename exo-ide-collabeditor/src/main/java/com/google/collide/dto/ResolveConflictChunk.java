@@ -19,27 +19,23 @@ import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Message sent by the client to resolve (or un-resolve) a conflict chunk.
- */
+/** Message sent by the client to resolve (or un-resolve) a conflict chunk. */
 @RoutingType(type = RoutingTypes.RESOLVECONFLICTCHUNK)
 public interface ResolveConflictChunk extends ClientToServerDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getFileEditSessionKey();
+    String getFileEditSessionKey();
 
-  /**
-   * Array index of the conflict chunk within the file.
-   */
-  int getConflictChunkIndex();
+    /** Array index of the conflict chunk within the file. */
+    int getConflictChunkIndex();
 
-  /**
-   * Set to <code>true</code> to mark the conflict chunk as resolved. It can
-   * also be set to <code>false</code> to "un-resolve" a conflict chunk (e.g.,
-   * if the user clicks an undo link after resolving a conflict).
-   */
-  boolean isResolved();
-  
-  ConflictHandle getConflictHandle();
+    /**
+     * Set to <code>true</code> to mark the conflict chunk as resolved. It can
+     * also be set to <code>false</code> to "un-resolve" a conflict chunk (e.g.,
+     * if the user clicks an undo link after resolving a conflict).
+     */
+    boolean isResolved();
+
+    ConflictHandle getConflictHandle();
 }

@@ -20,34 +20,29 @@ package org.exoplatform.ide.client.framework.ui.upload;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class FormFields
-{
+public class FormFields {
 
-   public static final String FILE = "file";
+    public static final String FILE = "file";
 
-   public static final String LOCATION = "location";
+    public static final String LOCATION = "location";
 
-   public static final String PARENT_ID = "parentId";
+    public static final String PARENT_ID = "parentId";
 
-   public static final String NAME = "name";
+    public static final String NAME = "name";
 
-   public static final String MIME_TYPE = "mimeType";
+    public static final String MIME_TYPE = "mimeType";
 
-   public static final String VFS_ID = "vfsId";
+    public static final String VFS_ID = "vfsId";
 
-   /**
-    * Operation with file: update or create
-    */
-   public static final String ACTION_UPDATE = "update";
+    /** Operation with file: update or create */
+    public static final String ACTION_UPDATE = "update";
 
-   /**
-    * The id of existing file, which will be overrided with new uploaded file.
-    */
-   public static final String FILE_ID = "fileId";
+    /** The id of existing file, which will be overrided with new uploaded file. */
+    public static final String FILE_ID = "fileId";
 
 }

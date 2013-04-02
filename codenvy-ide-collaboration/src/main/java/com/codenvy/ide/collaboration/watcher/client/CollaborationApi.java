@@ -28,22 +28,16 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class CollaborationApi extends FrontendApi
-{
+public class CollaborationApi extends FrontendApi {
 
-   /**
-    * Send a message that user closed file.
-    */
-   public final SendApi<ProjectOpenedDto> PROJECT_OPEN = makeApi("ide/vfs/watch/project/opened");
+    /** Send a message that user closed file. */
+    public final SendApi<ProjectOpenedDto> PROJECT_OPEN = makeApi("ide/vfs/watch/project/opened");
 
-   /**
-    * Send a message that user closed file.
-    */
-   public final SendApi<ProjectClosedDto> PROJECT_CLOSED = makeApi("ide/vfs/watch/project/closed");
+    /** Send a message that user closed file. */
+    public final SendApi<ProjectClosedDto> PROJECT_CLOSED = makeApi("ide/vfs/watch/project/closed");
 
 
-   public CollaborationApi(MessageBus messageBus)
-   {
-      super(messageBus);
-   }
+    public CollaborationApi(MessageBus messageBus) {
+        super(messageBus);
+    }
 }

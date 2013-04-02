@@ -18,155 +18,113 @@ import com.codenvy.eclipse.resources.ResourceInfo;
 
 import java.util.HashMap;
 
-public class ProjectInfo extends ResourceInfo
-{
+public class ProjectInfo extends ResourceInfo {
 
-   /**
-    * The description of this object
-    */
-   protected ProjectDescription description = null;
+    /** The description of this object */
+    protected ProjectDescription description = null;
 
-   /**
-    * The list of natures for this project
-    */
-   protected HashMap<String, IProjectNature> natures = null;
+    /** The list of natures for this project */
+    protected HashMap<String, IProjectNature> natures = null;
 
-   /**
-    * The property store for this resource (used only by the compatibility fragment)
-    */
-   protected Object propertyStore = null;
+    /** The property store for this resource (used only by the compatibility fragment) */
+    protected Object propertyStore = null;
 
-   /**
-    * The content type matcher for this project.
-    */
-   protected IContentTypeMatcher matcher = null;
+    /** The content type matcher for this project. */
+    protected IContentTypeMatcher matcher = null;
 
-   /**
-    * Discards stale natures on this project after project description
-    * has changed.
-    */
-   public synchronized void discardNatures()
-   {
-      natures = null;
-   }
+    /**
+     * Discards stale natures on this project after project description
+     * has changed.
+     */
+    public synchronized void discardNatures() {
+        natures = null;
+    }
 
-   //	/**
-   //	 * Discards any stale state on this project after it has been moved.  Builder
-   //	 * instances must be cleared because they reference the old project handle.
-   //	 */
-   //	public synchronized void fixupAfterMove() {
-   //		natures = null;
-   //		// note that the property store instance will be recreated lazily
-   //		propertyStore = null;
-   //		if (description != null) {
-   //			ICommand[] buildSpec = description.getBuildSpec(false);
-   //			for (int i = 0; i < buildSpec.length; i++)
-   //				((BuildCommand) buildSpec[i]).setBuilders(null);
-   //		}
-   //	}
+    //	/**
+    //	 * Discards any stale state on this project after it has been moved.  Builder
+    //	 * instances must be cleared because they reference the old project handle.
+    //	 */
+    //	public synchronized void fixupAfterMove() {
+    //		natures = null;
+    //		// note that the property store instance will be recreated lazily
+    //		propertyStore = null;
+    //		if (description != null) {
+    //			ICommand[] buildSpec = description.getBuildSpec(false);
+    //			for (int i = 0; i < buildSpec.length; i++)
+    //				((BuildCommand) buildSpec[i]).setBuilders(null);
+    //		}
+    //	}
 
-   /**
-    * Returns the description associated with this info.  The return value may be null.
-    */
-   public ProjectDescription getDescription()
-   {
-      return description;
-   }
+    /** Returns the description associated with this info.  The return value may be null. */
+    public ProjectDescription getDescription() {
+        return description;
+    }
 
-   /**
-    * Returns the content type matcher associated with this info.  The return value may be null.
-    */
-   public IContentTypeMatcher getMatcher()
-   {
-      return matcher;
-   }
+    /** Returns the content type matcher associated with this info.  The return value may be null. */
+    public IContentTypeMatcher getMatcher() {
+        return matcher;
+    }
 
-   public IProjectNature getNature(String natureId)
-   {
-      // thread safety: (Concurrency001)
-      HashMap<String, IProjectNature> temp = natures;
-      if (temp == null)
-      {
-         return null;
-      }
-      return temp.get(natureId);
-   }
+    public IProjectNature getNature(String natureId) {
+        // thread safety: (Concurrency001)
+        HashMap<String, IProjectNature> temp = natures;
+        if (temp == null) {
+            return null;
+        }
+        return temp.get(natureId);
+    }
 
-   /**
-    * Returns the property store associated with this info.  The return value may be null.
-    */
-   public Object getPropertyStore()
-   {
-      return propertyStore;
-   }
+    /** Returns the property store associated with this info.  The return value may be null. */
+    public Object getPropertyStore() {
+        return propertyStore;
+    }
 
-   /**
-    * Sets the description associated with this info.  The value may be null.
-    */
-   public void setDescription(ProjectDescription value)
-   {
-      if (description != null)
-      {
-         //if we already have a description, assign the new
-         //build spec on top of the old one to ensure we maintain
-         //any existing builder instances in the old build commands
-         ICommand[] oldSpec = description.buildSpec;
-         ICommand[] newSpec = value.buildSpec;
-         value.buildSpec = oldSpec;
-         value.setBuildSpec(newSpec);
-      }
-      description = value;
-   }
+    /** Sets the description associated with this info.  The value may be null. */
+    public void setDescription(ProjectDescription value) {
+        if (description != null) {
+            //if we already have a description, assign the new
+            //build spec on top of the old one to ensure we maintain
+            //any existing builder instances in the old build commands
+            ICommand[] oldSpec = description.buildSpec;
+            ICommand[] newSpec = value.buildSpec;
+            value.buildSpec = oldSpec;
+            value.setBuildSpec(newSpec);
+        }
+        description = value;
+    }
 
-   /**
-    * Sets the content type matcher to be associated with this info.  The value may be null.
-    */
-   public void setMatcher(IContentTypeMatcher matcher)
-   {
-      this.matcher = matcher;
-   }
+    /** Sets the content type matcher to be associated with this info.  The value may be null. */
+    public void setMatcher(IContentTypeMatcher matcher) {
+        this.matcher = matcher;
+    }
 
-   public synchronized void setNature(String natureId, IProjectNature value)
-   {
-      // thread safety: (Concurrency001)
-      if (value == null)
-      {
-         if (natures == null)
-         {
-            return;
-         }
-         HashMap<String, IProjectNature> temp = (HashMap<String, IProjectNature>)natures.clone();
-         temp.remove(natureId);
-         if (temp.isEmpty())
-         {
-            natures = null;
-         }
-         else
-         {
+    public synchronized void setNature(String natureId, IProjectNature value) {
+        // thread safety: (Concurrency001)
+        if (value == null) {
+            if (natures == null) {
+                return;
+            }
+            HashMap<String, IProjectNature> temp = (HashMap<String, IProjectNature>)natures.clone();
+            temp.remove(natureId);
+            if (temp.isEmpty()) {
+                natures = null;
+            } else {
+                natures = temp;
+            }
+        } else {
+            HashMap<String, IProjectNature> temp = natures;
+            if (temp == null) {
+                temp = new HashMap<String, IProjectNature>(5);
+            } else {
+                temp = (HashMap<String, IProjectNature>)natures.clone();
+            }
+            temp.put(natureId, value);
             natures = temp;
-         }
-      }
-      else
-      {
-         HashMap<String, IProjectNature> temp = natures;
-         if (temp == null)
-         {
-            temp = new HashMap<String, IProjectNature>(5);
-         }
-         else
-         {
-            temp = (HashMap<String, IProjectNature>)natures.clone();
-         }
-         temp.put(natureId, value);
-         natures = temp;
-      }
-   }
+        }
+    }
 
-   /**
-    * Sets the property store associated with this info.  The value may be null.
-    */
-   public void setPropertyStore(Object value)
-   {
-      propertyStore = value;
-   }
+    /** Sets the property store associated with this info.  The value may be null. */
+    public void setPropertyStore(Object value) {
+        propertyStore = value;
+    }
 }

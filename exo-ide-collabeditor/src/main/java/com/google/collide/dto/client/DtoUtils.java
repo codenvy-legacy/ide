@@ -18,29 +18,28 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.client.Jso;
 
 
-/**
- * Utilities to simplify working with DTOs.
- */
+/** Utilities to simplify working with DTOs. */
 public class DtoUtils {
 
-  /**
-   * Deserializes a string into a DTO of type {@code T}.
-   * 
-   * @param types list of the deserialized DTO's expected types; should
-   *        generally be one or more of of the constants declared in
-   *        {@link RoutingTypes}.
-   */
-  @SuppressWarnings("unchecked")
-  public static <T> T parseAsDto(String payload, int... types) {
-    ServerToClientDto responseData = (ServerToClientDto) Jso.deserialize(payload);
-    for (int type : types) {
-      if (responseData.getType() == type) {
-        return (T) responseData;
-      }
+    /**
+     * Deserializes a string into a DTO of type {@code T}.
+     *
+     * @param types
+     *         list of the deserialized DTO's expected types; should
+     *         generally be one or more of of the constants declared in
+     *         {@link RoutingTypes}.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T parseAsDto(String payload, int... types) {
+        ServerToClientDto responseData = (ServerToClientDto)Jso.deserialize(payload);
+        for (int type : types) {
+            if (responseData.getType() == type) {
+                return (T)responseData;
+            }
+        }
+        throw new IllegalArgumentException("Unexpected dto type " + responseData.getType());
     }
-    throw new IllegalArgumentException("Unexpected dto type " + responseData.getType());
-  }
 
-  private DtoUtils() {
-  }
+    private DtoUtils() {
+    }
 }

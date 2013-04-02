@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.framework.project.api;
 
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.ProjectImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,33 +27,27 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class ProjectBuilder
-{
-   
-   public interface Builder
-   {
-      
-      IDEProject build(ProjectModel project);
-      
-   }
+public class ProjectBuilder {
 
-   private static Map<String, Builder> builders = new HashMap<String, ProjectBuilder.Builder>();
-   
-   public static void addBuilder(String projectType, Builder builder)
-   {
-      builders.put(projectType, builder);
-   }
-   
-   public static IDEProject createProject(ProjectModel project)
-   {
-      if (builders.containsKey(project.getProjectType()))
-      {
-         return builders.get(project.getProjectType()).build(project);
-      }
-      
-      return new IDEProject(project);
-   }
+    public interface Builder {
+
+        IDEProject build(ProjectModel project);
+
+    }
+
+    private static Map<String, Builder> builders = new HashMap<String, ProjectBuilder.Builder>();
+
+    public static void addBuilder(String projectType, Builder builder) {
+        builders.put(projectType, builder);
+    }
+
+    public static IDEProject createProject(ProjectModel project) {
+        if (builders.containsKey(project.getProjectType())) {
+            return builders.get(project.getProjectType()).build(project);
+        }
+
+        return new IDEProject(project);
+    }
 
 }

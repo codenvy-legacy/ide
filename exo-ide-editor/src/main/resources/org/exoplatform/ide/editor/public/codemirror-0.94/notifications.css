@@ -17,27 +17,26 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-.editor-notification
-{
-	position: absolute;
-	color: #222222;
-	background: #FFFFE1;
-	border: #999999 1px solid;
-	z-index:65000;
-	min-width:100px;
-	min-height:20px;
-	padding:5px;
-	overflow:visible;
-	line-height:16px;
-	
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 12px;
-	font-style: normal;
-	font-weight: normal;
-	cursor: default;
-	
-	-moz-box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
-	-webkit-box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
-	box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
+.editor-notification {
+    position: absolute;
+    color: #222222;
+    background: #FFFFE1;
+    border: #999999 1px solid;
+    z-index: 65000;
+    min-width: 100px;
+    min-height: 20px;
+    padding: 5px;
+    overflow: visible;
+    line-height: 16px;
+
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    cursor: default;
+
+    -moz-box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
+    -webkit-box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
+    box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
 }
 

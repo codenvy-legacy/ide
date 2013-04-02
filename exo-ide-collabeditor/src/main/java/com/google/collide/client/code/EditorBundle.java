@@ -14,8 +14,11 @@
 
 package com.google.collide.client.code;
 
-import org.exoplatform.ide.editor.client.api.EditorCapability;
+import elemental.html.Element;
 
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.UserActivityManager;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.autoindenter.Autoindenter;
@@ -36,13 +39,11 @@ import com.google.collide.client.editor.Editor.Css;
 import com.google.collide.client.editor.TextActions;
 import com.google.collide.client.editor.input.RootActionExecutor;
 import com.google.collide.client.syntaxhighlighter.SyntaxHighlighter;
-import com.codenvy.ide.client.util.Elements;
-import com.codenvy.ide.client.util.UserActivityManager;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.collide.codemirror2.Parser;
 import com.google.collide.shared.document.Document;
-import elemental.html.Element;
+
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * A class that bundles together all of the editor-related components, such as the editor widget,
@@ -50,31 +51,29 @@ import elemental.html.Element;
  */
 public class EditorBundle implements Content {
 
-  /**
-   * Static factory method for obtaining an instance of the EditorBundle.
-   */
-  public static EditorBundle create(AppContext appContext,
+    /** Static factory method for obtaining an instance of the EditorBundle. */
+    public static EditorBundle create(AppContext appContext,
 //      Place currentPlace,
-      DocumentManager documentManager,
+                                      DocumentManager documentManager,
 //      ParticipantModel participantModel,
 //      OutlineModel outlineModel,
 //      FileTreeModel fileTreeModel,
-      ErrorReceiver errorReceiver, CollabEditor collEditor) {
+                                      ErrorReceiver errorReceiver, CollabEditor collEditor) {
 
-    final Editor editor = Editor.create(appContext, collEditor.isCapable(EditorCapability.CODE_FOLDING));
+        final Editor editor = Editor.create(appContext, collEditor.isCapable(EditorCapability.CODE_FOLDING));
 
-    EditorErrorListener editorErrorListener = new EditorErrorListener(
-        editor, errorReceiver, new ErrorRenderer(appContext.getResources()));
+        EditorErrorListener editorErrorListener = new EditorErrorListener(
+                editor, errorReceiver, new ErrorRenderer(appContext.getResources()));
 
-    EditorPopupController editorPopupController = EditorPopupController.create(
-        appContext.getResources(), editor);
+        EditorPopupController editorPopupController = EditorPopupController.create(
+                appContext.getResources(), editor);
 
 //    // TODO: clean this up when things stabilize.
 //    CubeClientWrapper cubeClientWrapper = new CubeClientWrapper(
 //        appContext.getFrontendApi().GET_CODE_GRAPH);
 //    CubeClient cubeClient = cubeClientWrapper.getCubeClient();
-    AutocompleterFacade autocompleter = AutocompleterFacade.create(
-        editor, collEditor, appContext.getResources());
+        AutocompleterFacade autocompleter = AutocompleterFacade.create(
+                editor, collEditor, appContext.getResources());
 
 //    GoToDefinitionHandler goToDefinition = new GoToDefinitionHandler(currentPlace,
 //        editor,
@@ -98,90 +97,90 @@ public class EditorBundle implements Content {
 
 //    OutlineController outlineController = new OutlineController(outlineModel, cubeClient, editor);
 
-    final EditorBundle editorBundle = new EditorBundle(documentManager,
-        editor,
-        editorErrorListener,
-        autocompleter,
+        final EditorBundle editorBundle = new EditorBundle(documentManager,
+                                                           editor,
+                                                           editorErrorListener,
+                                                           autocompleter,
 //        null, //goToDefinition,
 //        selectionRestorer,
 //        debuggingModelController,
 //        breadcrumbs,
 //        null,//cubeClientWrapper,
 //        outlineController,
-        appContext.getUserActivityManager(),
-        editorPopupController,
-        appContext.getResources().workspaceEditorCss());
+                                                           appContext.getUserActivityManager(),
+                                                           editorPopupController,
+                                                           appContext.getResources().workspaceEditorCss());
 
-    return editorBundle;
-  }
+        return editorBundle;
+    }
 
-  private final AutocompleterFacade autocompleter;
-  private Autoindenter autoindenter;
-  private final DocumentManager documentManager;
-  private final Editor editor;
-//  private final GoToDefinitionHandler goToDefinition;
-  private DocumentParser parser;
+    private final AutocompleterFacade autocompleter;
+    private       Autoindenter        autoindenter;
+    private final DocumentManager     documentManager;
+    private final Editor              editor;
+    //  private final GoToDefinitionHandler goToDefinition;
+    private       DocumentParser      parser;
 //  private final SelectionRestorer selectionRestorer;
 //  private final DebuggingModelController debuggingModelController;
 //  private final WorkspaceLocationBreadcrumbs breadcrumbs;
 //  private final CubeClientWrapper cubeClientWrapper;
 //  private final OutlineController outlineController;
 
-  /*
-   * TODO: EditorBundle shouldn't have path. It's here to satisfy legacy dependency
-   */
+    /*
+     * TODO: EditorBundle shouldn't have path. It's here to satisfy legacy dependency
+     */
 //  private PathUtil path;
-  private SyntaxHighlighter syntaxHighlighter;
-  private final EditorErrorListener editorErrorListener;
-  private final UserActivityManager userActivityManager;
-  private final EditorPopupController editorPopupController;
-  private ParenMatchHighlighter matchHighlighter;
-  private RootActionExecutor.Remover languageActionsRemover;
-  private RootActionExecutor.Remover textActionsRemover;
-  private final Css editorCss;
-  private final boolean isReadOnly = false;
+    private       SyntaxHighlighter          syntaxHighlighter;
+    private final EditorErrorListener        editorErrorListener;
+    private final UserActivityManager        userActivityManager;
+    private final EditorPopupController      editorPopupController;
+    private       ParenMatchHighlighter      matchHighlighter;
+    private       RootActionExecutor.Remover languageActionsRemover;
+    private       RootActionExecutor.Remover textActionsRemover;
+    private final Css                        editorCss;
+    private final boolean isReadOnly = false;
 
-  private EditorBundle(DocumentManager documentManager,
-      Editor editor,
-      EditorErrorListener editorErrorListener,
-      AutocompleterFacade autoCompleter,
+    private EditorBundle(DocumentManager documentManager,
+                         Editor editor,
+                         EditorErrorListener editorErrorListener,
+                         AutocompleterFacade autoCompleter,
 //      GoToDefinitionHandler goToDefinition,
 //      SelectionRestorer selectionRestorer,
 //      DebuggingModelController debuggingModelController,
 //      WorkspaceLocationBreadcrumbs breadcrumbs,
 //      CubeClientWrapper cubeClientWrapper,
 //      OutlineController outlineController,
-      UserActivityManager userActivityManager,
-      EditorPopupController editorPopupController,
-      Editor.Css editorCss) {
-    this.documentManager = documentManager;
-    this.editor = editor;
-    this.editorErrorListener = editorErrorListener;
-    this.autocompleter = autoCompleter;
+                         UserActivityManager userActivityManager,
+                         EditorPopupController editorPopupController,
+                         Editor.Css editorCss) {
+        this.documentManager = documentManager;
+        this.editor = editor;
+        this.editorErrorListener = editorErrorListener;
+        this.autocompleter = autoCompleter;
 //    this.goToDefinition = goToDefinition;
 //    this.selectionRestorer = selectionRestorer;
 //    this.debuggingModelController = debuggingModelController;
 //    this.breadcrumbs = breadcrumbs;
 //    this.cubeClientWrapper = cubeClientWrapper;
 //    this.outlineController = outlineController;
-    this.userActivityManager = userActivityManager;
-    this.editorPopupController = editorPopupController;
-    this.editorCss = editorCss;
-  }
+        this.userActivityManager = userActivityManager;
+        this.editorPopupController = editorPopupController;
+        this.editorCss = editorCss;
+    }
 
-  public Editor getEditor() {
-    return editor;
-  }
+    public Editor getEditor() {
+        return editor;
+    }
 
-  /**
-   * The readonly state of this workspace. The readonly state of the editor can change (i.e. when a
-   * file is deleted, the workspace temporarily goes into readonly mode until a current file is
-   * open), but the readonly state of the EditorBundle is final based on the workspace. This is now
-   * hardcoded to false.
-   */
-  public boolean isReadOnly() {
-    return isReadOnly;
-  }
+    /**
+     * The readonly state of this workspace. The readonly state of the editor can change (i.e. when a
+     * file is deleted, the workspace temporarily goes into readonly mode until a current file is
+     * open), but the readonly state of the EditorBundle is final based on the workspace. This is now
+     * hardcoded to false.
+     */
+    public boolean isReadOnly() {
+        return isReadOnly;
+    }
 
 //  public WorkspaceLocationBreadcrumbs getBreadcrumbs() {
 //    return breadcrumbs;
@@ -195,168 +194,161 @@ public class EditorBundle implements Content {
 //    return debuggingModelController;
 //  }
 
-  public void cleanup() {
-    reset();
+    public void cleanup() {
+        reset();
 //    goToDefinition.cleanup();
-    autocompleter.cleanup();
-    editorErrorListener.cleanup();
-    editor.cleanup();
+        autocompleter.cleanup();
+        editorErrorListener.cleanup();
+        editor.cleanup();
 //    outlineController.cleanup();
 //    cubeClientWrapper.cleanup();
-    editorPopupController.cleanup();
+        editorPopupController.cleanup();
 //    debuggingModelController.cleanup();
 
-    // TODO: remove
-    Element readOnlyElement = Elements.getElementById("readOnly");
-    if (readOnlyElement != null) {
-      readOnlyElement.removeFromParent();
-    }
-  }
-
-  /**
-   * Detach services attached on {@link #setDocument}.
-   *
-   * <p>
-   * These services are constructed on the base of document and path, When active document is
-   * changed or editor is closed, they should gracefully cleanup.
-   */
-  private void reset() {
-    if (parser != null) {
-      parser.teardown();
-      parser = null;
+        // TODO: remove
+        Element readOnlyElement = Elements.getElementById("readOnly");
+        if (readOnlyElement != null) {
+            readOnlyElement.removeFromParent();
+        }
     }
 
-    if (syntaxHighlighter != null) {
-      editor.removeLineRenderer(syntaxHighlighter.getRenderer());
-      syntaxHighlighter.teardown();
-      syntaxHighlighter = null;
+    /**
+     * Detach services attached on {@link #setDocument}.
+     * <p/>
+     * <p/>
+     * These services are constructed on the base of document and path, When active document is
+     * changed or editor is closed, they should gracefully cleanup.
+     */
+    private void reset() {
+        if (parser != null) {
+            parser.teardown();
+            parser = null;
+        }
+
+        if (syntaxHighlighter != null) {
+            editor.removeLineRenderer(syntaxHighlighter.getRenderer());
+            syntaxHighlighter.teardown();
+            syntaxHighlighter = null;
+        }
+
+        if (autoindenter != null) {
+            autoindenter.teardown();
+            autoindenter = null;
+        }
+
+        if (matchHighlighter != null) {
+            matchHighlighter.teardown();
+        }
+
+        if (languageActionsRemover != null) {
+            languageActionsRemover.remove();
+            languageActionsRemover = null;
+        }
+
+        if (textActionsRemover != null) {
+            textActionsRemover.remove();
+            textActionsRemover = null;
+        }
     }
 
-    if (autoindenter != null) {
-      autoindenter.teardown();
-      autoindenter = null;
-    }
-
-    if (matchHighlighter != null) {
-      matchHighlighter.teardown();
-    }
-
-    if (languageActionsRemover != null) {
-      languageActionsRemover.remove();
-      languageActionsRemover = null;
-    }
-
-    if (textActionsRemover != null) {
-      textActionsRemover.remove();
-      textActionsRemover = null;
-    }
-  }
-
-  /**
-   * Replaces the document for the editor and related components.
-   */
-  public void setDocument(Document document, String mimeType, String fileEditSessionKey) {
+    /** Replaces the document for the editor and related components. */
+    public void setDocument(Document document, String mimeType, String fileEditSessionKey) {
 //    selectionRestorer.onBeforeDocumentChanged();
 
-    reset();
+        reset();
 
 //    this.path = path;
 
-    documentManager.attachToEditor(document, editor);
+        documentManager.attachToEditor(document, editor);
 
-    Parser codeMirrorParser = CodeMirror2.getParser(mimeType);
-    parser = codeMirrorParser == null ? null
-        : DocumentParser.create(document, codeMirrorParser, userActivityManager);
+        Parser codeMirrorParser = CodeMirror2.getParser(mimeType);
+        parser = codeMirrorParser == null ? null
+                                          : DocumentParser.create(document, codeMirrorParser, userActivityManager);
 
-    LanguageHelper languageHelper = LanguageHelperResolver.getHelper(parser.getSyntaxType());
-    RootActionExecutor actionExecutor = editor.getInput().getActionExecutor();
-    languageActionsRemover = actionExecutor.addDelegate(languageHelper.getActionExecutor());
-    textActionsRemover = actionExecutor.addDelegate(TextActions.INSTANCE);
+        LanguageHelper languageHelper = LanguageHelperResolver.getHelper(parser.getSyntaxType());
+        RootActionExecutor actionExecutor = editor.getInput().getActionExecutor();
+        languageActionsRemover = actionExecutor.addDelegate(languageHelper.getActionExecutor());
+        textActionsRemover = actionExecutor.addDelegate(TextActions.INSTANCE);
 
 //    cubeClientWrapper.setDocument(document, path.getPathString());
 
 //    goToDefinition.editorContentsReplaced(path, parser);
 //    selectionRestorer.onDocumentChanged(fileEditSessionKey);
-    editorErrorListener.onDocumentChanged(document, fileEditSessionKey);
+        editorErrorListener.onDocumentChanged(document, fileEditSessionKey);
 
 //    debuggingModelController.setDocument(document, path, parser);
 //    outlineController.onDocumentChanged(parser);
 
-    try {
-      autocompleter.editorContentsReplaced(parser);
-    } catch (Throwable t) {
-      Log.error(getClass(), "Autocompletion subsystem failed to accept the changed document", t);
-    }
+        try {
+            autocompleter.editorContentsReplaced(parser);
+        } catch (Throwable t) {
+            Log.error(getClass(), "Autocompletion subsystem failed to accept the changed document", t);
+        }
 
-    syntaxHighlighter = SyntaxHighlighter.create(document,
-        editor.getRenderer(),
-        editor.getViewport(),
-        editor.getSelection(),
-        parser,
-        editorCss);
-    editor.addLineRenderer(syntaxHighlighter.getRenderer());
+        syntaxHighlighter = SyntaxHighlighter.create(document,
+                                                     editor.getRenderer(),
+                                                     editor.getViewport(),
+                                                     editor.getSelection(),
+                                                     parser,
+                                                     editorCss);
+        editor.addLineRenderer(syntaxHighlighter.getRenderer());
     /*
      * Make sure we open the editor in the right state according to the workspace readonly state.
      * (For example, deleting a file will temporarily set the editor in readonly mode while it's
      * still open).
      */
-    editor.setReadOnly(isReadOnly);
+        editor.setReadOnly(isReadOnly);
 
-    autoindenter = Autoindenter.create(parser, editor);
+        autoindenter = Autoindenter.create(parser, editor);
 
-    parser.begin();
+        parser.begin();
 
 //    breadcrumbs.setPath(path);
 
-    if (!isReadOnly) {
-      matchHighlighter = ParenMatchHighlighter.create(document,
-          editor.getViewport(),
-          document.getAnchorManager(),
-          editor.getView().getResources(),
-          editor.getRenderer(),
-          editor.getSelection());
+        if (!isReadOnly) {
+            matchHighlighter = ParenMatchHighlighter.create(document,
+                                                            editor.getViewport(),
+                                                            document.getAnchorManager(),
+                                                            editor.getView().getResources(),
+                                                            editor.getRenderer(),
+                                                            editor.getSelection());
+        }
     }
-  }
 
-  @Override
-  public Element getContentElement() {
-    return getEditor().getElement();
-  }
+    @Override
+    public Element getContentElement() {
+        return getEditor().getElement();
+    }
 
-  @Override
-  public void onContentDisplayed() {
-    getEditor().getBuffer().synchronizeScrollTop();
-  }
+    @Override
+    public void onContentDisplayed() {
+        getEditor().getBuffer().synchronizeScrollTop();
+    }
 
 //  public OutlineController getOutlineController() {
 //    return outlineController;
 //  }
-  
-  /**
-   * @return the autocompleter
-   */
-  public AutocompleterFacade getAutocompleter() {
-    return autocompleter;
-  }
-  
-  /**
-   * @return the editorPopupController
-   */
-  public EditorPopupController getEditorPopupController()
-  {
-    return editorPopupController;
-  }
-  
-  public ErrorListener getErrorListener() {
-     return editorErrorListener;
-  }
 
-  /**
-   * Get parser for a document that delegates to CodeMirror.
-   * 
-   * @return parser for a document
-   */
-  public DocumentParser getParser() {
-     return parser;
-  }
+    /** @return the autocompleter */
+    public AutocompleterFacade getAutocompleter() {
+        return autocompleter;
+    }
+
+    /** @return the editorPopupController */
+    public EditorPopupController getEditorPopupController() {
+        return editorPopupController;
+    }
+
+    public ErrorListener getErrorListener() {
+        return editorErrorListener;
+    }
+
+    /**
+     * Get parser for a document that delegates to CodeMirror.
+     *
+     * @return parser for a document
+     */
+    public DocumentParser getParser() {
+        return parser;
+    }
 }

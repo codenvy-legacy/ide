@@ -35,66 +35,55 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class SearchResultsViewExtended extends ViewImpl implements
-   org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display
-{
+                                                        org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display {
 
-   private static final String ID = "ideSearchResultView";
+    private static final String ID = "ideSearchResultView";
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 250;
+    /** Initial width of this view */
+    private static final int WIDTH = 250;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 450;
+    /** Initial height of this view */
+    private static final int HEIGHT = 450;
 
-   private static SearchResultsViewExtendedUiBinder uiBinder = GWT.create(SearchResultsViewExtendedUiBinder.class);
+    private static SearchResultsViewExtendedUiBinder uiBinder = GWT.create(SearchResultsViewExtendedUiBinder.class);
 
-   interface SearchResultsViewExtendedUiBinder extends UiBinder<Widget, SearchResultsViewExtended>
-   {
-   }
+    interface SearchResultsViewExtendedUiBinder extends UiBinder<Widget, SearchResultsViewExtended> {
+    }
 
-   @UiField
-   ItemTree treeGrid;
+    @UiField
+    ItemTree treeGrid;
 
-   private static final String TITLE = IDE.NAVIGATION_CONSTANT.searchResultTitle();
+    private static final String TITLE = IDE.NAVIGATION_CONSTANT.searchResultTitle();
 
-   public SearchResultsViewExtended()
-   {
-      super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public SearchResultsViewExtended() {
+        super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.search()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public TreeGridItem<Item> getSearchResultTree()
-   {
-      return treeGrid;
-   }
+    @Override
+    public TreeGridItem<Item> getSearchResultTree() {
+        return treeGrid;
+    }
 
-   @Override
-   public List<Item> getSelectedItems()
-   {
-      return treeGrid.getSelectedItems();
-   }
+    @Override
+    public List<Item> getSelectedItems() {
+        return treeGrid.getSelectedItems();
+    }
 
-   @Override
-   public void selectItem(String href)
-   {
-      treeGrid.selectItem(href);
-   }
+    @Override
+    public void selectItem(String href) {
+        treeGrid.selectItem(href);
+    }
 
-   @Override
-   public void deselectAllItems()
-   {
-      treeGrid.deselectAllRecords();
-   }
+    @Override
+    public void deselectAllItems() {
+        treeGrid.deselectAllRecords();
+    }
 
 }

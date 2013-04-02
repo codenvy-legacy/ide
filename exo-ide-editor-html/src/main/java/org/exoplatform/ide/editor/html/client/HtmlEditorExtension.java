@@ -35,33 +35,26 @@ import org.exoplatform.ide.editor.html.client.codemirror.HtmlOutlineItemCreator;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class HtmlEditorExtension extends Extension
-{
+public class HtmlEditorExtension extends Extension {
 
-   public static final HtmlMessages MESSAGES = GWT.create(HtmlMessages.class);
+    public static final HtmlMessages MESSAGES = GWT.create(HtmlMessages.class);
 
-   public static final HtmlClientBundle RESOURCES = GWT.create(HtmlClientBundle.class);
+    public static final HtmlClientBundle RESOURCES = GWT.create(HtmlClientBundle.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      RESOURCES.css().ensureInjected();
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        RESOURCES.css().ensureInjected();
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New HTML", MESSAGES.controlNewHtmlTitle(), MESSAGES.controlNewHtmlPrompt(),
-            Images.HTML, MimeType.TEXT_HTML).setGroupName(GroupNames.NEW_FILE));
+        IDE.getInstance().addControl(
+                new NewItemControl("File/New/New HTML", MESSAGES.controlNewHtmlTitle(), MESSAGES.controlNewHtmlPrompt(),
+                                   Images.HTML, MimeType.TEXT_HTML).setGroupName(GroupNames.NEW_FILE));
 
-      IDE.getInstance().getFileTypeRegistry()
-         .addFileType(new FileType(MimeType.TEXT_HTML, "html", Images.INSTANCE.html()), new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
+        IDE.getInstance().getFileTypeRegistry()
+           .addFileType(new FileType(MimeType.TEXT_HTML, "html", Images.INSTANCE.html()), new EditorCreator() {
+                            @Override
+                            public Editor createEditor() {
 //               return new CodeMirror(
 //                  MimeType.TEXT_HTML,
 //                  new CodeMirrorConfiguration()
@@ -73,19 +66,18 @@ public class HtmlEditorExtension extends Extension
 //                     .setParser(new HtmlParser()).setCanBeOutlined(true)
 //                     .setAutocompleteHelper(new HtmlAutocompleteHelper()).setCodeAssistant(new HtmlCodeAssistant())
 //                     .setCanHaveSeveralMimeTypes(true));
-               return new HtmlEditor(MimeType.TEXT_HTML);
-            }
-         }, new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CKEditor(MimeType.TEXT_HTML);
-            }
-         });
+                                return new HtmlEditor(MimeType.TEXT_HTML);
+                            }
+                        }, new EditorCreator() {
+                            @Override
+                            public Editor createEditor() {
+                                return new CKEditor(MimeType.TEXT_HTML);
+                            }
+                        }
+                       );
 
-      IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_HTML, new HtmlOutlineItemCreator());
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_HTML, new HtmlCommentsModifier()));
-   }
+        IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_HTML, new HtmlOutlineItemCreator());
+        IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_HTML, new HtmlCommentsModifier()));
+    }
 
 }

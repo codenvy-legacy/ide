@@ -22,38 +22,33 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ShowLineNumbersEvent extends GwtEvent<ShowLineNumbersHandler>
-{
+public class ShowLineNumbersEvent extends GwtEvent<ShowLineNumbersHandler> {
 
-   public static final GwtEvent.Type<ShowLineNumbersHandler> TYPE = new GwtEvent.Type<ShowLineNumbersHandler>();
+    public static final GwtEvent.Type<ShowLineNumbersHandler> TYPE = new GwtEvent.Type<ShowLineNumbersHandler>();
 
-   private boolean showLineNumber;
+    private boolean showLineNumber;
 
-   public ShowLineNumbersEvent(boolean showLineNumber)
-   {
-      this.showLineNumber = showLineNumber;
-   }
+    public ShowLineNumbersEvent(boolean showLineNumber) {
+        this.showLineNumber = showLineNumber;
+    }
 
-   @Override
-   protected void dispatch(ShowLineNumbersHandler handler)
-   {
-      handler.onShowLineNumbers(this);
-   }
+    @Override
+    protected void dispatch(ShowLineNumbersHandler handler) {
+        handler.onShowLineNumbers(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowLineNumbersHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowLineNumbersHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public boolean isShowLineNumber()
-   {
-      return showLineNumber;
-   }
+    public boolean isShowLineNumber() {
+        return showLineNumber;
+    }
 
 }

@@ -26,11 +26,10 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.ITEM_MOVED)
-public interface ItemMovedDto extends ServerToClientDto
-{
-   Item movedItem();
+public interface ItemMovedDto extends ServerToClientDto {
+    Item movedItem();
 
-   String oldPath();
+    String oldPath();
 
-   String getUserId();
+    String getUserId();
 }

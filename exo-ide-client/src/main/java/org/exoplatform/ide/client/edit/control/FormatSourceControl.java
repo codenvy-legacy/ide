@@ -32,74 +32,60 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class FormatSourceControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class FormatSourceControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Edit/Format";
+    public static final String ID = "Edit/Format";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.formatControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.formatControl();
 
-   /**
-    * 
-    */
-   public FormatSourceControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
-      setEvent(new EditorFormatTextEvent());
-      setHotKey("Ctrl+Shift+F");
-      setGroupName(GroupNames.EDIT);
-   }
+    /**
+     *
+     */
+    public FormatSourceControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.format(), IDEImageBundle.INSTANCE.formatDisabled());
+        setEvent(new EditorFormatTextEvent());
+        setHotKey("Ctrl+Shift+F");
+        setGroupName(GroupNames.EDIT);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      // TODO versions
-      if (event.getFile() == null || event.getEditor() == null /* || (event.getFile() instanceof Version) */)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-
-      if (event.getEditor().isCapable(EditorCapability.FORMAT_SOURCE))
-      {
-         String mimeType = event.getFile().getMimeType();
-         //TODO add possibility to configure editor capability's 
-         if (MimeType.TEXT_PLAIN.equals(mimeType) || MimeType.TEXT_X_PYTHON.equals(mimeType))
-         {
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        // TODO versions
+        if (event.getFile() == null || event.getEditor() == null /* || (event.getFile() instanceof Version) */) {
             setVisible(false);
             setEnabled(false);
-         }
-         else
-         {
-            setVisible(true);
-            setEnabled(true);
-         }
-      }
-      else
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
-   }
+            return;
+        }
+
+        if (event.getEditor().isCapable(EditorCapability.FORMAT_SOURCE)) {
+            String mimeType = event.getFile().getMimeType();
+            //TODO add possibility to configure editor capability's
+            if (MimeType.TEXT_PLAIN.equals(mimeType) || MimeType.TEXT_X_PYTHON.equals(mimeType)) {
+                setVisible(false);
+                setEnabled(false);
+            } else {
+                setVisible(true);
+                setEnabled(true);
+            }
+        } else {
+            setVisible(false);
+            setEnabled(false);
+        }
+    }
 }

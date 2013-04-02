@@ -22,25 +22,22 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public abstract class ClientTest extends GWTTestCase
-{
+public abstract class ClientTest extends GWTTestCase {
 
-   protected static final int SLEEP_TIME = 10000;
+    protected static final int SLEEP_TIME = 10000;
 
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ideall.testframework.IDEallTestFramework";
-   }
+    @Override
+    public String getModuleName() {
+        return "org.exoplatform.ideall.testframework.IDEallTestFramework";
+    }
 
-   protected void sleepTest()
-   {
-      delayTestFinish(SLEEP_TIME);
-   }
+    protected void sleepTest() {
+        delayTestFinish(SLEEP_TIME);
+    }
 
 }

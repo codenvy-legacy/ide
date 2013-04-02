@@ -20,31 +20,24 @@ package org.exoplatform.ide.extension.heroku.client.marshaller;
 
 /**
  * Response of the stack migration operation.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 1, 2011 4:06:44 PM anya $
- * 
  */
-public class StackMigrationResponse
-{
-   /**
-    * Result of the stack migration.
-    */
-   private String result;
+public class StackMigrationResponse {
+    /** Result of the stack migration. */
+    private String result;
 
-   /**
-    * @return the result of the stack migration
-    */
-   public String getResult()
-   {
-      return result;
-   }
+    /** @return the result of the stack migration */
+    public String getResult() {
+        return result;
+    }
 
-   /**
-    * @param result the result of the stack migration
-    */
-   public void setResult(String result)
-   {
-      this.result = result;
-   }
+    /**
+     * @param result
+     *         the result of the stack migration
+     */
+    public void setResult(String result) {
+        this.result = result;
+    }
 }

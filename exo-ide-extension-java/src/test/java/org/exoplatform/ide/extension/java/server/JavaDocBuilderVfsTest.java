@@ -33,79 +33,71 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 28, 2011 4:34:52 PM evgen $
- * 
  */
 @Ignore
-public class JavaDocBuilderVfsTest extends JavaDocBase
-{
+public class JavaDocBuilderVfsTest extends JavaDocBase {
 
-   @Test
-   public void projectParserConstruntorTest() throws CodeAssistantException, VirtualFileSystemException
-   {
-      TypeInfo clazz =
-         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
-            project.getId(), VFS_ID);
-      Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", clazz.getName());
-      Assert.assertEquals(1, clazz.getModifiers());
-      List<MethodInfo> methods = clazz.getMethods();
-      List<MethodInfo> constructors = new ArrayList<MethodInfo>();
-      for (MethodInfo methodInfo : methods)
-      {
-         if (methodInfo.isConstructor())
-            constructors.add(methodInfo);
-      }
-      Assert.assertEquals(1, constructors.size());
-      MethodInfo info = constructors.get(0);
-      Assert.assertEquals("AutoCompletionManager", info.getName());
-      Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", info.getDeclaringClass());
-      Assert.assertEquals("com.google.gwt.event.shared.HandlerManager", info.getParameterTypes().get(0));
-   }
+    @Test
+    public void projectParserConstruntorTest() throws CodeAssistantException, VirtualFileSystemException {
+        TypeInfo clazz =
+                javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
+                                                project.getId(), VFS_ID);
+        Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", clazz.getName());
+        Assert.assertEquals(1, clazz.getModifiers());
+        List<MethodInfo> methods = clazz.getMethods();
+        List<MethodInfo> constructors = new ArrayList<MethodInfo>();
+        for (MethodInfo methodInfo : methods) {
+            if (methodInfo.isConstructor())
+                constructors.add(methodInfo);
+        }
+        Assert.assertEquals(1, constructors.size());
+        MethodInfo info = constructors.get(0);
+        Assert.assertEquals("AutoCompletionManager", info.getName());
+        Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", info.getDeclaringClass());
+        Assert.assertEquals("com.google.gwt.event.shared.HandlerManager", info.getParameterTypes().get(0));
+    }
 
-   @Test
-   public void projectParserFieldsTest() throws CodeAssistantException, VirtualFileSystemException
-   {
-      TypeInfo clazz =
-         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
-            project.getId(), VFS_ID);
-      Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", clazz.getName());
-      List<FieldInfo> fields = clazz.getFields();
-      Assert.assertEquals(6, fields.size());
-      FieldInfo info = fields.get(0);
-      Assert.assertNotNull(info.getName());
-      Assert.assertNotNull(info.getType());
-      Assert.assertNotNull(info.getDeclaringClass());
-      Assert.assertNotNull(info.getModifiers());
-      Assert.assertNotNull(info.getDescriptor());
-   }
+    @Test
+    public void projectParserFieldsTest() throws CodeAssistantException, VirtualFileSystemException {
+        TypeInfo clazz =
+                javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
+                                                project.getId(), VFS_ID);
+        Assert.assertEquals("org.exoplatform.ide.client.autocompletion.AutoCompletionManager", clazz.getName());
+        List<FieldInfo> fields = clazz.getFields();
+        Assert.assertEquals(6, fields.size());
+        FieldInfo info = fields.get(0);
+        Assert.assertNotNull(info.getName());
+        Assert.assertNotNull(info.getType());
+        Assert.assertNotNull(info.getDeclaringClass());
+        Assert.assertNotNull(info.getModifiers());
+        Assert.assertNotNull(info.getDescriptor());
+    }
 
-   @Test
-   public void projectParserMethodsTest() throws CodeAssistantException, VirtualFileSystemException
-   {
-      TypeInfo clazz =
-         javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
-            project.getId(), VFS_ID);
+    @Test
+    public void projectParserMethodsTest() throws CodeAssistantException, VirtualFileSystemException {
+        TypeInfo clazz =
+                javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.autocompletion.AutoCompletionManager",
+                                                project.getId(), VFS_ID);
 
-      List<MethodInfo> methods = clazz.getMethods();
-      Assert.assertNotNull(methods);
-      Assert.assertEquals(7, methods.size());
-      MethodInfo methodInfo = methods.get(0);
-      Assert.assertNotNull(methodInfo.getName());
-      Assert.assertNotNull(methodInfo.getModifiers());
-      Assert.assertNotNull(methodInfo.getParameterTypes());
-      Assert.assertNotNull(methodInfo.getDeclaringClass());
-   }
+        List<MethodInfo> methods = clazz.getMethods();
+        Assert.assertNotNull(methods);
+        Assert.assertEquals(7, methods.size());
+        MethodInfo methodInfo = methods.get(0);
+        Assert.assertNotNull(methodInfo.getName());
+        Assert.assertNotNull(methodInfo.getModifiers());
+        Assert.assertNotNull(methodInfo.getParameterTypes());
+        Assert.assertNotNull(methodInfo.getDeclaringClass());
+    }
 
-   @Test
-   public void classWithDafaultConstructor() throws Exception
-   {
-      TypeInfo clazz = javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.IDEShell", project.getId(), VFS_ID);
-      List<MethodInfo> constructors = new ArrayList<MethodInfo>();
-      for (MethodInfo methodInfo : clazz.getMethods())
-      {
-         if (methodInfo.isConstructor())
-            constructors.add(methodInfo);
-      }
-      Assert.assertEquals(1, constructors.size());
-   }
+    @Test
+    public void classWithDafaultConstructor() throws Exception {
+        TypeInfo clazz = javaCa.getClassByFqnFromProject("org.exoplatform.ide.client.IDEShell", project.getId(), VFS_ID);
+        List<MethodInfo> constructors = new ArrayList<MethodInfo>();
+        for (MethodInfo methodInfo : clazz.getMethods()) {
+            if (methodInfo.isConstructor())
+                constructors.add(methodInfo);
+        }
+        Assert.assertEquals(1, constructors.size());
+    }
 
 }

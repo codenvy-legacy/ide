@@ -24,20 +24,18 @@ import org.exoplatform.ide.extension.openshift.client.start.RestartApplicationEv
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class RestartApplicationControl extends AbstractOpenShiftControl
-{
+public class RestartApplicationControl extends AbstractOpenShiftControl {
 
-   private static final String ID = "PaaS/OpenShift/RestartApp";
+    private static final String ID = "PaaS/OpenShift/RestartApp";
 
-   private static final String TITLE = "Restart Application";
+    private static final String TITLE = "Restart Application";
 
-   private static final String PROMPT = "Restart Application";
+    private static final String PROMPT = "Restart Application";
 
-   public RestartApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new RestartApplicationEvent());
-   }
+    public RestartApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setEvent(new RestartApplicationEvent());
+    }
 }

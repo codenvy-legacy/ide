@@ -20,38 +20,38 @@ package org.exoplatform.ide.extension.googleappengine.client.model;
 
 /**
  * Represents user's credentials.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 11:13:17 AM anya $
- * 
  */
-public interface Credentials
-{
-   /**
-    * Returns user's email.
-    * 
-    * @return {@link String} user's email
-    */
-   String getEmail();
+public interface Credentials {
+    /**
+     * Returns user's email.
+     *
+     * @return {@link String} user's email
+     */
+    String getEmail();
 
-   /**
-    * Sets user's email.
-    * 
-    * @param email user's email
-    */
-   void setEmail(String email);
+    /**
+     * Sets user's email.
+     *
+     * @param email
+     *         user's email
+     */
+    void setEmail(String email);
 
-   /**
-    * Returns user's password.
-    * 
-    * @return {@link String} user's password
-    */
-   String getPassword();
+    /**
+     * Returns user's password.
+     *
+     * @return {@link String} user's password
+     */
+    String getPassword();
 
-   /**
-    * Sets user's password.
-    * 
-    * @param password user's password
-    */
-   void setPassword(String password);
+    /**
+     * Sets user's password.
+     *
+     * @param password
+     *         user's password
+     */
+    void setPassword(String password);
 }

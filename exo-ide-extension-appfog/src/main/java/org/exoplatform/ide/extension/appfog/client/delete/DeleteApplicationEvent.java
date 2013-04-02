@@ -26,63 +26,44 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<DeleteApplicationHandler> TYPE = new GwtEvent.Type<DeleteApplicationHandler>();
+public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<DeleteApplicationHandler> TYPE = new GwtEvent.Type<DeleteApplicationHandler>();
 
-   private String applicationName;
+    private String applicationName;
 
-   private String server;
+    private String server;
 
-   public DeleteApplicationEvent()
-   {
-      this.applicationName = null;
-      this.server = null;
-   }
+    public DeleteApplicationEvent() {
+        this.applicationName = null;
+        this.server = null;
+    }
 
-   /**
-    * @param applicationName
-    */
-   public DeleteApplicationEvent(String applicationName, String server)
-   {
-      this.applicationName = applicationName;
-      this.server = server;
-   }
+    /** @param applicationName */
+    public DeleteApplicationEvent(String applicationName, String server) {
+        this.applicationName = applicationName;
+        this.server = server;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeleteApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DeleteApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DeleteApplicationHandler handler)
-   {
-      handler.onDeleteApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(DeleteApplicationHandler handler) {
+        handler.onDeleteApplication(this);
+    }
 
-   /**
-    * @return the applicationName
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
-   }
+    /** @return the applicationName */
+    public String getApplicationName() {
+        return applicationName;
+    }
 
-   /**
-    * @return the server
-    */
-   public String getServer()
-   {
-      return server;
-   }
+    /** @return the server */
+    public String getServer() {
+        return server;
+    }
 }

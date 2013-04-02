@@ -22,34 +22,26 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs , when clients chooses to search text in editor.
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: ${date} ${time}
- * 
  */
-public class FindTextEvent extends GwtEvent<FindTextHandler>
-{
+public class FindTextEvent extends GwtEvent<FindTextHandler> {
 
-   public static final GwtEvent.Type<FindTextHandler> TYPE = new GwtEvent.Type<FindTextHandler>();
+    public static final GwtEvent.Type<FindTextHandler> TYPE = new GwtEvent.Type<FindTextHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(FindTextHandler handler)
-   {
-      handler.onFindText(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(FindTextHandler handler) {
+        handler.onFindText(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FindTextHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<FindTextHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

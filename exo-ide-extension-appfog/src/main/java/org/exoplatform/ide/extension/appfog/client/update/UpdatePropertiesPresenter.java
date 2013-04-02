@@ -47,303 +47,292 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMemoryHandler, UpdateInstancesHandler
-{
-   
-   private int memory;
+public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMemoryHandler, UpdateInstancesHandler {
 
-   private String instances;
+    private int memory;
 
-   public UpdatePropertiesPresenter()
-   {
-      IDE.addHandler(UpdateMemoryEvent.TYPE, this);
-      IDE.addHandler(UpdateInstancesEvent.TYPE, this);
-   }
+    private String instances;
 
-   public void bindDisplay(List<Framework> frameworks)
-   {
-   }
+    public UpdatePropertiesPresenter() {
+        IDE.addHandler(UpdateMemoryEvent.TYPE, this);
+        IDE.addHandler(UpdateInstancesEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryHandler#onUpdateMemory(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent)
-    */
-   @Override
-   public void onUpdateMemory(UpdateMemoryEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         getOldMemoryValue();
-      }
-   }
+    public void bindDisplay(List<Framework> frameworks) {
+    }
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler getOldMemoryValueLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getOldMemoryValue();
-      }
-   };
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryHandler#onUpdateMemory(org.exoplatform.ide.extension
+     * .cloudfoundry.client.update.UpdateMemoryEvent) */
+    @Override
+    public void onUpdateMemory(UpdateMemoryEvent event) {
+        if (makeSelectionCheck()) {
+            getOldMemoryValue();
+        }
+    }
 
-   private void getOldMemoryValue()
-   {
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler getOldMemoryValueLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getOldMemoryValue();
+        }
+    };
+
+    private void getOldMemoryValue() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         AutoBean<AppfogApplication> appfogApplication =
-            AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+        String projectId = getSelectedProject().getId();
 
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+        try {
+            AutoBean<AppfogApplication> appfogApplication =
+                    AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
 
-         AppfogClientService.getInstance().getApplicationInfo(
-            vfs.getId(),
-            projectId,
-            null,
-            null,
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
-               getOldMemoryValueLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(AppfogApplication result)
-               {
-                  askForNewMemoryValue(result.getResources().getMemory());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-   private void askForNewMemoryValue(int oldMemoryValue)
-   {
-      Dialogs.getInstance().askForValue(AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryDialogTitle(),
-         AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryDialogMessage(), String.valueOf(oldMemoryValue),
-         new StringValueReceivedHandler()
-         {
-            @Override
-            public void stringValueReceived(String value)
-            {
-               if (value != null)
-               {
-                  try
-                  {
-                     memory = Integer.parseInt(value);
-                     updateMemory(memory);
-                  }
-                  catch (NumberFormatException e)
-                  {
-                     String msg = AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryInvalidNumberMessage();
-                     IDE.fireEvent(new ExceptionThrownEvent(msg));
-                  }
-               }
-            }
-         });
-   }
+            AppfogClientService.getInstance().getApplicationInfo(
+                    vfs.getId(),
+                    projectId,
+                    null,
+                    null,
+                    new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
+                                                                      getOldMemoryValueLoggedInHandler, null) {
+                        @Override
+                        protected void onSuccess(AppfogApplication result) {
+                            askForNewMemoryValue(result.getResources().getMemory());
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler updateMemoryLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         updateMemory(memory);
-      }
-   };
+    private void askForNewMemoryValue(int oldMemoryValue) {
+        Dialogs.getInstance().askForValue(AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryDialogTitle(),
+                                          AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryDialogMessage(), String.valueOf(oldMemoryValue),
+                                          new StringValueReceivedHandler() {
+                                              @Override
+                                              public void stringValueReceived(String value) {
+                                                  if (value != null) {
+                                                      try {
+                                                          memory = Integer.parseInt(value);
+                                                          updateMemory(memory);
+                                                      } catch (NumberFormatException e) {
+                                                          String msg =
+                                                                  AppfogExtension.LOCALIZATION_CONSTANT.updateMemoryInvalidNumberMessage();
+                                                          IDE.fireEvent(new ExceptionThrownEvent(msg));
+                                                      }
+                                                  }
+                                              }
+                                          });
+    }
 
-   private void updateMemory(final int memory)
-   {
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler updateMemoryLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            updateMemory(memory);
+        }
+    };
+
+    private void updateMemory(final int memory) {
 //      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel projectModel = getSelectedProject();
+        ProjectModel projectModel = getSelectedProject();
 
-      final String server = projectModel.getProperty("appfog-target").getValue().get(0);
-      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
-      final String projectId = projectModel.getId();
+        final String server = projectModel.getProperty("appfog-target").getValue().get(0);
+        final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
+        final String projectId = projectModel.getId();
 
-      try
-      {
-         AppfogClientService.getInstance().updateMemory(null, null, appName, server, memory,
-            new AppfogAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  String msg = AppfogExtension.LOCALIZATION_CONSTANT.updateMemorySuccess(String.valueOf(memory));
-                  IDE.fireEvent(new OutputEvent(msg));
-                  IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        try {
+            AppfogClientService.getInstance().updateMemory(null, null, appName, server, memory,
+                                                           new AppfogAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null) {
+                                                               @Override
+                                                               protected void onSuccess(String result) {
+                                                                   String msg = AppfogExtension.LOCALIZATION_CONSTANT
+                                                                                               .updateMemorySuccess(String.valueOf(memory));
+                                                                   IDE.fireEvent(new OutputEvent(msg));
+                                                                   IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+                                                               }
+                                                           });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesHandler#onUpdateInstances(org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesEvent)
-    */
-   @Override
-   public void onUpdateInstances(UpdateInstancesEvent event)
-   {
-      getOldInstancesValue();
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesHandler#onUpdateInstances(org.exoplatform.ide
+     * .extension.cloudfoundry.client.update.UpdateInstancesEvent) */
+    @Override
+    public void onUpdateInstances(UpdateInstancesEvent event) {
+        getOldInstancesValue();
+    }
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler getOldInstancesValueLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getOldInstancesValue();
-      }
-   };
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler getOldInstancesValueLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getOldInstancesValue();
+        }
+    };
 
-   private void getOldInstancesValue()
-   {
+    private void getOldInstancesValue() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
+        String projectId = getSelectedProject().getId();
 
-      try
-      {
-         AutoBean<AppfogApplication> appfogApplication =
-            AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+        try {
+            AutoBean<AppfogApplication> appfogApplication =
+                    AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
 
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+            AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-         AppfogClientService.getInstance().getApplicationInfo(
-            vfs.getId(),
-            projectId,
-            null,
-            null,
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
-               getOldInstancesValueLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(AppfogApplication result)
-               {
-                  askForInstancesNumber(result.getInstances());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            AppfogClientService.getInstance().getApplicationInfo(
+                    vfs.getId(),
+                    projectId,
+                    null,
+                    null,
+                    new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
+                                                                      getOldInstancesValueLoggedInHandler, null) {
+                        @Override
+                        protected void onSuccess(AppfogApplication result) {
+                            askForInstancesNumber(result.getInstances());
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   private void askForInstancesNumber(int oldInstancesValue)
-   {
-      Dialogs.getInstance().askForValue(AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesDialogTitle(),
-         AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesDialogMessage(), String.valueOf(oldInstancesValue),
-         new StringValueReceivedHandler()
-         {
-            @Override
-            public void stringValueReceived(String value)
-            {
-               if (value != null)
-               {
+    private void askForInstancesNumber(int oldInstancesValue) {
+        Dialogs.getInstance().askForValue(AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesDialogTitle(),
+                                          AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesDialogMessage(),
+                                          String.valueOf(oldInstancesValue),
+                                          new StringValueReceivedHandler() {
+                                              @Override
+                                              public void stringValueReceived(String value) {
+                                                  if (value != null) {
 
-                  instances = value;
-                  try
-                  {
-                     // check, is instances contains only numbers
-                     Integer.parseInt(instances);
-                     updateInstances(instances);
-                  }
-                  catch (NumberFormatException e)
-                  {
-                     String msg = AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesInvalidValueMessage();
-                     IDE.fireEvent(new ExceptionThrownEvent(msg));
-                  }
-               }
-            }
-         });
-   }
+                                                      instances = value;
+                                                      try {
+                                                          // check, is instances contains only numbers
+                                                          Integer.parseInt(instances);
+                                                          updateInstances(instances);
+                                                      } catch (NumberFormatException e) {
+                                                          String msg = AppfogExtension.LOCALIZATION_CONSTANT
+                                                                                      .updateInstancesInvalidValueMessage();
+                                                          IDE.fireEvent(new ExceptionThrownEvent(msg));
+                                                      }
+                                                  }
+                                              }
+                                          });
+    }
 
-   private LoggedInHandler updateInstancesLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         updateInstances(instances);
-      }
-   };
+    private LoggedInHandler updateInstancesLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            updateInstances(instances);
+        }
+    };
 
-   /**
-    * @param instancesExpression how should we change number of instances. Expected are:
-    *           <ul>
-    *           <li>&lt;num&gt; - set number of instances to &lt;num&gt;</li>
-    *           <li>&lt;+num&gt; - increase by &lt;num&gt; of instances</li>
-    *           <li>&lt;-num&gt; - decrease by &lt;num&gt; of instances</li>
-    *           </ul>
-    */
-   private void updateInstances(final String instancesExpression)
-   {
+    /**
+     * @param instancesExpression
+     *         how should we change number of instances. Expected are:
+     *         <ul>
+     *         <li>&lt;num&gt; - set number of instances to &lt;num&gt;</li>
+     *         <li>&lt;+num&gt; - increase by &lt;num&gt; of instances</li>
+     *         <li>&lt;-num&gt; - decrease by &lt;num&gt; of instances</li>
+     *         </ul>
+     */
+    private void updateInstances(final String instancesExpression) {
 //      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-      ProjectModel projectModel = getSelectedProject();
+        ProjectModel projectModel = getSelectedProject();
 
-      final String server = projectModel.getProperty("appfog-target").getValue().get(0);
-      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
-      
+        final String server = projectModel.getProperty("appfog-target").getValue().get(0);
+        final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
+
 //      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      final String projectId = projectModel.getId();
+        final String projectId = projectModel.getId();
 
-      String encodedExp = URL.encodePathSegment(instancesExpression);
+        String encodedExp = URL.encodePathSegment(instancesExpression);
 
-      try
-      {
-         AppfogClientService.getInstance().updateInstances(vfs.getId(), projectId, appName, server, encodedExp,
-            new AppfogAsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()), updateInstancesLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  try
-                  {
-                     AutoBean<AppfogApplication> appfogApplication =
-                        AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+        try {
+            AppfogClientService.getInstance().updateInstances(vfs.getId(), projectId, appName, server, encodedExp,
+                                                              new AppfogAsyncRequestCallback<StringBuilder>(
+                                                                      new StringUnmarshaller(new StringBuilder()),
+                                                                      updateInstancesLoggedInHandler, null) {
+                                                                  @Override
+                                                                  protected void onSuccess(StringBuilder result) {
+                                                                      try {
+                                                                          AutoBean<AppfogApplication> appfogApplication =
+                                                                                  AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
 
-                     AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-                        new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+                                                                          AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+                                                                                  new AutoBeanUnmarshaller<AppfogApplication>(
+                                                                                          appfogApplication);
 
-                     AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, AppfogExtension.DEFAULT_SERVER,
-                        new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, null, null)
-                        {
-                           @Override
-                           protected void onSuccess(AppfogApplication result)
-                           {
-                              String msg =
-                                 AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String
-                                    .valueOf(result.getInstances()));
-                              IDE.fireEvent(new OutputEvent(msg));
-                              IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-                           }
-                        });
-                  }
-                  catch (RequestException e)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(e));
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                          AppfogClientService.getInstance()
+                                                                                             .getApplicationInfo(vfs.getId(), projectId,
+                                                                                                                 null,
+                                                                                                                 AppfogExtension
+                                                                                                                         .DEFAULT_SERVER,
+                                                                                                                 new
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                         AppfogAsyncRequestCallback<AppfogApplication>(
+                                                                                                                         unmarshaller, null,
+                                                                                                                         null) {
+                                                                                                                     @Override
+                                                                                                                     protected void onSuccess(
+                                                                                                                             AppfogApplication result) {
+                                                                                                                         String msg =
+                                                                                                                                 AppfogExtension
+                                                                                                                                         .LOCALIZATION_CONSTANT
+                                                                                                                                         .updateInstancesSuccess(
+                                                                                                                                                 String
+                                                                                                                                                         .valueOf(
+                                                                                                                                                                 result.getInstances()));
+                                                                                                                         IDE.fireEvent(
+                                                                                                                                 new OutputEvent(
+                                                                                                                                         msg));
+                                                                                                                         IDE.fireEvent(
+                                                                                                                                 new ApplicationInfoChangedEvent(
+                                                                                                                                         vfs.getId(),
+                                                                                                                                         projectId));
+                                                                                                                     }
+                                                                                                                 });
+                                                                      } catch (RequestException e) {
+                                                                          IDE.fireEvent(new ExceptionThrownEvent(e));
+                                                                      }
+                                                                  }
+                                                              });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
 }

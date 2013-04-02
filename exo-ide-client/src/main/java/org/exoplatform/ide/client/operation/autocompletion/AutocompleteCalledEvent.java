@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.operation.autocompletion;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class AutocompleteCalledEvent extends GwtEvent<AutocompleteCalledHandler>
-{
+public class AutocompleteCalledEvent extends GwtEvent<AutocompleteCalledHandler> {
 
-   public static final GwtEvent.Type<AutocompleteCalledHandler> TYPE = new GwtEvent.Type<AutocompleteCalledHandler>();
+    public static final GwtEvent.Type<AutocompleteCalledHandler> TYPE = new GwtEvent.Type<AutocompleteCalledHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AutocompleteCalledHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AutocompleteCalledHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(AutocompleteCalledHandler handler)
-   {
-      handler.onAutocompleteCalled(this);
-   }
+    @Override
+    protected void dispatch(AutocompleteCalledHandler handler) {
+        handler.onAutocompleteCalled(this);
+    }
 
 }

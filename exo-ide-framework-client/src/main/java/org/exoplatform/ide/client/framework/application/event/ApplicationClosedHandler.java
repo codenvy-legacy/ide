@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ApplicationClosedEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 5, 2012 11:21:00 AM anya $
- * 
  */
-public interface ApplicationClosedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when application is closed.
-    * 
-    * @param event
-    */
-   void onApplicationClosed(ApplicationClosedEvent event);
+public interface ApplicationClosedHandler extends EventHandler {
+    /**
+     * Perform actions, when application is closed.
+     *
+     * @param event
+     */
+    void onApplicationClosed(ApplicationClosedEvent event);
 }

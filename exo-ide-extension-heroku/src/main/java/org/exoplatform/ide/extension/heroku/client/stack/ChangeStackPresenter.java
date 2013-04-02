@@ -47,187 +47,147 @@ import java.util.List;
 
 /**
  * Presenter for changing Heroku application's stack.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 29, 2011 9:41:46 AM anya $
- * 
  */
 public class ChangeStackPresenter extends GitPresenter implements ViewClosedHandler, ChangeApplicationStackHandler,
-   LoggedInHandler
-{
-   interface Display extends IsView
-   {
-      ListGridItem<Stack> getStackGrid();
+                                                                  LoggedInHandler {
+    interface Display extends IsView {
+        ListGridItem<Stack> getStackGrid();
 
-      HasClickHandlers getChangeButton();
+        HasClickHandlers getChangeButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void enableChangeButton(boolean enable);
+        void enableChangeButton(boolean enable);
 
-      Stack getSelectedStack();
-   }
+        Stack getSelectedStack();
+    }
 
-   private String herokuApplication = null;
+    private String herokuApplication = null;
 
-   /**
-    * Presenter's view.
-    */
-   private Display display;
+    /** Presenter's view. */
+    private Display display;
 
-   /**
-    *
-    */
-   public ChangeStackPresenter()
-   {
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ChangeApplicationStackEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public ChangeStackPresenter() {
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ChangeApplicationStackEvent.TYPE, this);
+    }
 
-   /**
-    * Bind display with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getStackGrid().addSelectionHandler(new SelectionHandler<Stack>()
-      {
+    /** Bind display with presenter. */
+    public void bindDisplay() {
+        display.getStackGrid().addSelectionHandler(new SelectionHandler<Stack>() {
 
-         @Override
-         public void onSelection(SelectionEvent<Stack> event)
-         {
-            display.enableChangeButton(event.getSelectedItem() != null && !event.getSelectedItem().isCurrent());
-         }
-      });
+            @Override
+            public void onSelection(SelectionEvent<Stack> event) {
+                display.enableChangeButton(event.getSelectedItem() != null && !event.getSelectedItem().isCurrent());
+            }
+        });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getChangeButton().addClickHandler(new ClickHandler()
-      {
+        display.getChangeButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doMigrateStack();
-         }
-      });
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                doMigrateStack();
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.stack.ChangeApplicationStackHandler#onChangeApplicationStack(org.exoplatform.ide.extension.heroku.client.stack.ChangeApplicationStackEvent)
-    */
-   @Override
-   public void onChangeApplicationStack(ChangeApplicationStackEvent event)
-   {
-      herokuApplication = event.getApplication();
+    /** @see org.exoplatform.ide.extension.heroku.client.stack.ChangeApplicationStackHandler#onChangeApplicationStack(org.exoplatform.ide
+     * .extension.heroku.client.stack.ChangeApplicationStackEvent) */
+    @Override
+    public void onChangeApplicationStack(ChangeApplicationStackEvent event) {
+        herokuApplication = event.getApplication();
 
-      if (event.getApplication() != null && !event.getApplication().isEmpty())
-      {
-         getStacks();
-         return;
-      }
+        if (event.getApplication() != null && !event.getApplication().isEmpty()) {
+            getStacks();
+            return;
+        }
 
-      if (makeSelectionCheck())
-      {
-         getStacks();
-      }
-   }
+        if (makeSelectionCheck()) {
+            getStacks();
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   public void getStacks()
-   {
-      //String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
-      String projectId = (herokuApplication == null) ? getSelectedProject().getId() : null;
-      try
-      {
-         HerokuClientService.getInstance().getStackList(herokuApplication, vfs.getId(), projectId,
-            new StackListAsyncRequestCallback(this)
-            {
-               @Override
-               protected void onSuccess(List<Stack> result)
-               {
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                  }
-                  display.enableChangeButton(false);
-                  display.getStackGrid().setValue(result, true);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    public void getStacks() {
+        //String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+        String projectId = (herokuApplication == null) ? getSelectedProject().getId() : null;
+        try {
+            HerokuClientService.getInstance().getStackList(herokuApplication, vfs.getId(), projectId,
+                                                           new StackListAsyncRequestCallback(this) {
+                                                               @Override
+                                                               protected void onSuccess(List<Stack> result) {
+                                                                   if (display == null) {
+                                                                       display = GWT.create(Display.class);
+                                                                       bindDisplay();
+                                                                       IDE.getInstance().openView(display.asView());
+                                                                   }
+                                                                   display.enableChangeButton(false);
+                                                                   display.getStackGrid().setValue(result, true);
+                                                               }
+                                                           });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         getStacks();
-      }
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client
+     * .login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        if (!event.isFailed()) {
+            getStacks();
+        }
+    }
 
-   /**
-    * Perform stack migration.
-    */
-   public void doMigrateStack()
-   {
-      Stack stack = display.getSelectedStack();
-      if (stack == null)
-      {
-         return;
-      }
+    /** Perform stack migration. */
+    public void doMigrateStack() {
+        Stack stack = display.getSelectedStack();
+        if (stack == null) {
+            return;
+        }
 
 //      String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
-      String projectId = (herokuApplication == null) ? getSelectedProject().getId() : null;
-      try
-      {
-         HerokuClientService.getInstance().migrateStack(herokuApplication, vfs.getId(), projectId, stack.getName(),
-            new StackMigrationAsyncRequestCallback(this)
-            {
+        String projectId = (herokuApplication == null) ? getSelectedProject().getId() : null;
+        try {
+            HerokuClientService.getInstance().migrateStack(herokuApplication, vfs.getId(), projectId, stack.getName(),
+                                                           new StackMigrationAsyncRequestCallback(this) {
 
-               @Override
-               protected void onSuccess(StackMigrationResponse result)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-                  String output =
-                     (result.getResult() != null && !result.getResult().isEmpty()) ? result.getResult().replace("\n",
-                        "<br>") : "";
-                  IDE.fireEvent(new OutputEvent(output, Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                               @Override
+                                                               protected void onSuccess(StackMigrationResponse result) {
+                                                                   IDE.getInstance().closeView(display.asView().getId());
+                                                                   String output =
+                                                                           (result.getResult() != null && !result.getResult().isEmpty())
+                                                                           ? result.getResult().replace("\n",
+                                                                                                        "<br>") : "";
+                                                                   IDE.fireEvent(new OutputEvent(output, Type.INFO));
+                                                               }
+                                                           });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
 }

@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import com.sun.jdi.ArrayReference;
-import com.sun.jdi.Field;
-import com.sun.jdi.ObjectReference;
-import com.sun.jdi.PrimitiveValue;
-import com.sun.jdi.ReferenceType;
-import com.sun.jdi.Value;
+import com.sun.jdi.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,90 +27,70 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JdiValueImpl implements JdiValue
-{
-   private final Value value;
-   private JdiVariable[] variables;
+public class JdiValueImpl implements JdiValue {
+    private final Value         value;
+    private       JdiVariable[] variables;
 
-   public JdiValueImpl(Value value)
-   {
-      if (value == null)
-      {
-         throw new IllegalArgumentException("Underlying value may not be null. ");
-      }
-      this.value = value;
-   }
+    public JdiValueImpl(Value value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Underlying value may not be null. ");
+        }
+        this.value = value;
+    }
 
-   @Override
-   public String getAsString()
-   {
-      return value.toString();
-   }
+    @Override
+    public String getAsString() {
+        return value.toString();
+    }
 
-   @Override
-   public JdiVariable[] getVariables()
-   {
-      if (variables == null)
-      {
-         if (isPrimitive())
-         {
-            variables = new JdiVariable[0];
-         }
-         else
-         {
-            if (isArray())
-            {
-               ArrayReference array = (ArrayReference)value;
-               int length = array.length();
-               variables = new JdiVariable[length];
-               for (int i = 0; i < length; i++)
-               {
-                  variables[i] = new JdiArrayElementImpl(i, array.getValue(i));
-               }
+    @Override
+    public JdiVariable[] getVariables() {
+        if (variables == null) {
+            if (isPrimitive()) {
+                variables = new JdiVariable[0];
+            } else {
+                if (isArray()) {
+                    ArrayReference array = (ArrayReference)value;
+                    int length = array.length();
+                    variables = new JdiVariable[length];
+                    for (int i = 0; i < length; i++) {
+                        variables[i] = new JdiArrayElementImpl(i, array.getValue(i));
+                    }
+                } else {
+                    ObjectReference object = (ObjectReference)value;
+                    ReferenceType type = object.referenceType();
+                    List<Field> fields = type.allFields();
+                    variables = new JdiVariable[fields.size()];
+                    int i = 0;
+                    for (Field f : fields) {
+                        variables[i++] = new JdiFieldImpl(f, object);
+                    }
+                    // See JdiFieldImpl#compareTo(JdiFieldImpl).
+                    Arrays.sort(variables);
+                }
             }
-            else
-            {
-               ObjectReference object = (ObjectReference)value;
-               ReferenceType type = object.referenceType();
-               List<Field> fields = type.allFields();
-               variables = new JdiVariable[fields.size()];
-               int i = 0;
-               for (Field f : fields)
-               {
-                  variables[i++] = new JdiFieldImpl(f, object);
-               }
-               // See JdiFieldImpl#compareTo(JdiFieldImpl).
-               Arrays.sort(variables);
+        }
+        return variables;
+    }
+
+    @Override
+    public JdiVariable getVariableByName(String name) throws DebuggerException {
+        if (name == null) {
+            throw new IllegalArgumentException("Variable name may not be null. ");
+        }
+        for (JdiVariable variable : getVariables()) {
+            if (name.equals(variable.getName())) {
+                return variable;
             }
-         }
-      }
-      return variables;
-   }
+        }
+        return null;
+    }
 
-   @Override
-   public JdiVariable getVariableByName(String name) throws DebuggerException
-   {
-      if (name == null)
-      {
-         throw new IllegalArgumentException("Variable name may not be null. ");
-      }
-      for (JdiVariable variable : getVariables())
-      {
-         if (name.equals(variable.getName()))
-         {
-            return variable;
-         }
-      }
-      return null;
-   }
+    private boolean isArray() {
+        return value instanceof ArrayReference;
+    }
 
-   private boolean isArray()
-   {
-      return value instanceof ArrayReference;
-   }
-
-   private boolean isPrimitive()
-   {
-      return value instanceof PrimitiveValue;
-   }
+    private boolean isPrimitive() {
+        return value instanceof PrimitiveValue;
+    }
 }

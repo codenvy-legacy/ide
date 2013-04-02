@@ -10,42 +10,34 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 
-class TryFlowInfo extends FlowInfo
-{
+class TryFlowInfo extends FlowInfo {
 
-   public TryFlowInfo()
-   {
-      super();
-   }
+    public TryFlowInfo() {
+        super();
+    }
 
-   public void mergeTry(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void mergeTry(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      assign(info);
-   }
+        assign(info);
+    }
 
-   public void mergeCatch(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void mergeCatch(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      mergeConditional(info, context);
-   }
+        mergeConditional(info, context);
+    }
 
-   public void mergeFinally(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void mergeFinally(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      mergeSequential(info, context);
-   }
+        mergeSequential(info, context);
+    }
 }
 

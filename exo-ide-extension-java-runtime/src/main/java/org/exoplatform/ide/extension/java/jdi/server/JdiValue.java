@@ -24,37 +24,36 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface JdiValue
-{
-   /**
-    * Get value in String representation.
-    *
-    * @return value in String representation
-    * @throws DebuggerException
-    *    if an error occurs
-    */
-   String getAsString() throws DebuggerException;
+public interface JdiValue {
+    /**
+     * Get value in String representation.
+     *
+     * @return value in String representation
+     * @throws DebuggerException
+     *         if an error occurs
+     */
+    String getAsString() throws DebuggerException;
 
-   /**
-    * Get nested variables.
-    *
-    * @return nested variables. This method always returns empty array for primitive type since primitive type has not
-    *         any fields. If value represents array this method returns array members
-    * @throws DebuggerException
-    *    if an error occurs
-    */
-   JdiVariable[] getVariables() throws DebuggerException;
+    /**
+     * Get nested variables.
+     *
+     * @return nested variables. This method always returns empty array for primitive type since primitive type has not
+     *         any fields. If value represents array this method returns array members
+     * @throws DebuggerException
+     *         if an error occurs
+     */
+    JdiVariable[] getVariables() throws DebuggerException;
 
-   /**
-    * Get nested variable by name.
-    *
-    * @param name
-    *    name of variable. Typically it is name of field. If this value represents array then name should be in form:
-    *    <i>[i]</i>, where <i>i</i> is index of element
-    * @return nested variable with specified name or <code>null</code> if there is no such variable
-    * @throws DebuggerException
-    *    if an error occurs
-    * @see org.exoplatform.ide.extension.java.jdi.server.JdiVariable#getName()
-    */
-   JdiVariable getVariableByName(String name) throws DebuggerException;
+    /**
+     * Get nested variable by name.
+     *
+     * @param name
+     *         name of variable. Typically it is name of field. If this value represents array then name should be in form:
+     *         <i>[i]</i>, where <i>i</i> is index of element
+     * @return nested variable with specified name or <code>null</code> if there is no such variable
+     * @throws DebuggerException
+     *         if an error occurs
+     * @see org.exoplatform.ide.extension.java.jdi.server.JdiVariable#getName()
+     */
+    JdiVariable getVariableByName(String name) throws DebuggerException;
 }

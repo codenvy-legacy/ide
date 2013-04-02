@@ -23,21 +23,18 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-final class Context extends JavaScriptObject
-{
+final class Context extends JavaScriptObject {
 
-   protected Context()
-   {
-   }
-   
-   public native void setPrefix(String prefix)/*-{
-      this['prefix'] = prefix;
-   }-*/;
-   
-   public native static Context create()/*-{
-      return {};
-   }-*/;
+    protected Context() {
+    }
+
+    public native void setPrefix(String prefix)/*-{
+        this['prefix'] = prefix;
+    }-*/;
+
+    public native static Context create()/*-{
+        return {};
+    }-*/;
 
 }

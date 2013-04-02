@@ -19,14 +19,14 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-   
-   <replace-with class="org.exoplatform.ide.extension.java.client.create.CreateJavaProjectView">
-      <when-type-is class="org.exoplatform.ide.extension.java.client.create.CreateJavaProjectPresenter.Display" />
-   </replace-with>
-   
-   <replace-with class="org.exoplatform.ide.extension.java.client.project_explorer.ProjectExplorerView">
-      <when-type-is class="org.exoplatform.ide.extension.java.client.project_explorer.ProjectExplorerPresenter.Display" />
-   </replace-with>   
-   
+    <inherits name='com.google.gwt.user.User'/>
+
+    <replace-with class="org.exoplatform.ide.extension.java.client.create.CreateJavaProjectView">
+        <when-type-is class="org.exoplatform.ide.extension.java.client.create.CreateJavaProjectPresenter.Display"/>
+    </replace-with>
+
+    <replace-with class="org.exoplatform.ide.extension.java.client.project_explorer.ProjectExplorerView">
+        <when-type-is class="org.exoplatform.ide.extension.java.client.project_explorer.ProjectExplorerPresenter.Display"/>
+    </replace-with>
+
 </module>

@@ -17,34 +17,29 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Client-visible file diff.
- *
- */
+/** Client-visible file diff. */
 @RoutingType(type = RoutingTypes.GETFILEDIFF)
 public interface GetFileDiff extends ClientToServerDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getClientId();
-  
-  NodeMutationDto.MutationType getChangedType();
+    String getClientId();
 
-  String getPath();
+    NodeMutationDto.MutationType getChangedType();
 
-  /**
-   * Returns an optional node ID of the before node. If this method returns
-   * null, the oldest version of the node in he workspace is used.
-   */
-  String getBeforeNodeId();
+    String getPath();
 
-  /**
-   * Returns an optional node ID of the after node. If this method returns null,
-   * the most recent version of the node in he workspace is used.
-   */
-  String getAfterNodeId();
+    /**
+     * Returns an optional node ID of the before node. If this method returns
+     * null, the oldest version of the node in he workspace is used.
+     */
+    String getBeforeNodeId();
 
-  /**
-   * Returns true if only the stats should be included.
-   */
-  boolean isStatsOnly();
+    /**
+     * Returns an optional node ID of the after node. If this method returns null,
+     * the most recent version of the node in he workspace is used.
+     */
+    String getAfterNodeId();
+
+    /** Returns true if only the stats should be included. */
+    boolean isStatsOnly();
 }

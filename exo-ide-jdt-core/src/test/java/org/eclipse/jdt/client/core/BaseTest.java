@@ -23,26 +23,20 @@ import com.googlecode.gwt.test.GwtTest;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
  */
-public abstract class BaseTest extends GwtTest
-{
+public abstract class BaseTest extends GwtTest {
 
-   /**
-    * 
-    */
-   public BaseTest()
-   {
-      super();
-   }
+    /**
+     *
+     */
+    public BaseTest() {
+        super();
+    }
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.eclipse.jdt.IdeJdt";
-   }
+    /** @see com.google.gwt.junit.client.GWTTestCase#getModuleName() */
+    @Override
+    public String getModuleName() {
+        return "org.eclipse.jdt.IdeJdt";
+    }
 
 }

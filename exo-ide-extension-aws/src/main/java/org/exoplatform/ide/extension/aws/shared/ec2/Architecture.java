@@ -24,33 +24,27 @@ package org.exoplatform.ide.extension.aws.shared.ec2;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum Architecture
-{
-   i386("i386"),
-   x86_64("x86_64");
+public enum Architecture {
+    i386("i386"),
+    x86_64("x86_64");
 
-   private final String value;
+    private final String value;
 
-   private Architecture(String value)
-   {
-      this.value = value;
-   }
+    private Architecture(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static Architecture fromValue(String value)
-   {
-      for (Architecture v : Architecture.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static Architecture fromValue(String value) {
+        for (Architecture v : Architecture.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

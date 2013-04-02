@@ -22,43 +22,36 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SystemResources
-{
-   private int services;
+public class SystemResources {
+    private int services;
 
-   /** Number of application deployed under account. */
-   private int apps;
+    /** Number of application deployed under account. */
+    private int apps;
 
-   /** Memory available for all applications under account (in MB). */
-   private int memory;
+    /** Memory available for all applications under account (in MB). */
+    private int memory;
 
-   public int getServices()
-   {
-      return services;
-   }
+    public int getServices() {
+        return services;
+    }
 
-   public void setServices(int services)
-   {
-      this.services = services;
-   }
+    public void setServices(int services) {
+        this.services = services;
+    }
 
-   public int getApps()
-   {
-      return apps;
-   }
+    public int getApps() {
+        return apps;
+    }
 
-   public void setApps(int apps)
-   {
-      this.apps = apps;
-   }
+    public void setApps(int apps) {
+        this.apps = apps;
+    }
 
-   public int getMemory()
-   {
-      return memory;
-   }
+    public int getMemory() {
+        return memory;
+    }
 
-   public void setMemory(int memory)
-   {
-      this.memory = memory;
-   }
+    public void setMemory(int memory) {
+        this.memory = memory;
+    }
 }

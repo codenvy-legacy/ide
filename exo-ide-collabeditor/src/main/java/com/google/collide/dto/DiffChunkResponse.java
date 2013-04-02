@@ -15,53 +15,36 @@
 package com.google.collide.dto;
 
 
-/**
- * DTO to capture a diff chunk, which may span an entire line or part of it.
- *
- */
+/** DTO to capture a diff chunk, which may span an entire line or part of it. */
 public interface DiffChunkResponse {
 
-  public enum DiffType {
+    public enum DiffType {
 
-    /**
-     * An unchanged chunk.
-     */
-    UNCHANGED,
+        /** An unchanged chunk. */
+        UNCHANGED,
 
-    /**
-     * A modified chunk.
-     */
-    CHANGED,
+        /** A modified chunk. */
+        CHANGED,
 
-    /**
-     * An added chunk.
-     */
-    ADDED,
+        /** An added chunk. */
+        ADDED,
 
-    /**
-     * A removed chunk.
-     */
-    REMOVED,
+        /** A removed chunk. */
+        REMOVED,
 
-    /**
-     * The unchanged part of a line that has a <code>CHANGED</code> portion.
-     */
-    CHANGED_LINE,
+        /** The unchanged part of a line that has a <code>CHANGED</code> portion. */
+        CHANGED_LINE,
 
-    /**
-     * The unchanged part of a line that has a <code>ADDED</code> portion.
-     */
-    ADDED_LINE,
+        /** The unchanged part of a line that has a <code>ADDED</code> portion. */
+        ADDED_LINE,
 
-    /**
-     * The unchanged part of a line that has a <code>REMOVED</code> portion.
-     */
-    REMOVED_LINE;
-  }
+        /** The unchanged part of a line that has a <code>REMOVED</code> portion. */
+        REMOVED_LINE;
+    }
 
-  String getAfterData();
+    String getAfterData();
 
-  String getBeforeData();
+    String getBeforeData();
 
-  DiffType getDiffType();
+    DiffType getDiffType();
 }

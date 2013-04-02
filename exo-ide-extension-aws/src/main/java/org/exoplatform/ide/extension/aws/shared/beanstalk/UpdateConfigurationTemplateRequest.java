@@ -22,53 +22,52 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface UpdateConfigurationTemplateRequest
-{
-   /**
-    * Get name of application.
-    *
-    * @return application name
-    */
-   String getApplicationName();
+public interface UpdateConfigurationTemplateRequest {
+    /**
+     * Get name of application.
+     *
+     * @return application name
+     */
+    String getApplicationName();
 
-   /**
-    * Set name of application.
-    *
-    * @param name
-    *    application name
-    * @see #getApplicationName()
-    */
-   void setApplicationName(String name);
+    /**
+     * Set name of application.
+     *
+     * @param name
+     *         application name
+     * @see #getApplicationName()
+     */
+    void setApplicationName(String name);
 
-   /**
-    * Get name of template to delete.
-    *
-    * @return name of template to delete
-    */
-   String getTemplateName();
+    /**
+     * Get name of template to delete.
+     *
+     * @return name of template to delete
+     */
+    String getTemplateName();
 
-   /**
-    * Set name of template to delete.
-    *
-    * @param templateName
-    *    name of template to delete
-    */
-   void setTemplateName(String templateName);
+    /**
+     * Set name of template to delete.
+     *
+     * @param templateName
+     *         name of template to delete
+     */
+    void setTemplateName(String templateName);
 
-   /**
-    * Get new description of configuration template. Length: 0 - 200 characters.
-    *
-    * @return configuration template description
-    */
-   String getDescription();
+    /**
+     * Get new description of configuration template. Length: 0 - 200 characters.
+     *
+     * @return configuration template description
+     */
+    String getDescription();
 
-   /**
-    * Set new configuration template description. Length: 0 - 200 characters.
-    *
-    * @param description
-    *    configuration template description
-    * @see #getDescription()
-    */
-   void setDescription(String description);
+    /**
+     * Set new configuration template description. Length: 0 - 200 characters.
+     *
+     * @param description
+     *         configuration template description
+     * @see #getDescription()
+     */
+    void setDescription(String description);
 
 }

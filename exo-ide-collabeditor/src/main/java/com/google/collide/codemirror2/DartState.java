@@ -14,10 +14,8 @@
 
 package com.google.collide.codemirror2;
 
-/**
- * Dart parser state.
- */
+/** Dart parser state. */
 public class DartState extends CmState {
-  protected DartState() {
-  }
+    protected DartState() {
+    }
 }

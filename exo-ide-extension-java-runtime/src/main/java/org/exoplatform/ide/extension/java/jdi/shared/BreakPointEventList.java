@@ -24,9 +24,8 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BreakPointEventList
-{
-   List<BreakPointEvent> getEvents();
+public interface BreakPointEventList {
+    List<BreakPointEvent> getEvents();
 
-   void setEvents(List<BreakPointEvent> events);
+    void setEvents(List<BreakPointEvent> events);
 }

@@ -23,18 +23,13 @@ import com.google.gwt.junit.client.GWTTestCase;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 10, 2011 3:15:45 PM anya $
- *
  */
-public abstract class GwtComponentTest extends GWTTestCase
-{
+public abstract class GwtComponentTest extends GWTTestCase {
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.gwtframework.ui.UITest";
-   }
+    /** @see com.google.gwt.junit.client.GWTTestCase#getModuleName() */
+    @Override
+    public String getModuleName() {
+        return "org.exoplatform.gwtframework.ui.UITest";
+    }
 
 }

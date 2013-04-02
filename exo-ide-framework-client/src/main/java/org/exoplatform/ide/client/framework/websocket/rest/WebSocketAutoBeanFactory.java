@@ -25,38 +25,36 @@ import org.exoplatform.ide.client.framework.websocket.Message;
 
 /**
  * The interface for the {@link AutoBean} generating.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocketAutoBeanFactory.java Jul 13, 2012 5:25:39 PM azatsarynnyy $
- *
  */
-public interface WebSocketAutoBeanFactory extends AutoBeanFactory
-{
-   /**
-    * A factory method for a {@link Message} bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Message}
-    */
-   AutoBean<Message> message();
+public interface WebSocketAutoBeanFactory extends AutoBeanFactory {
+    /**
+     * A factory method for a {@link Message} bean.
+     *
+     * @return an {@link AutoBean} of type {@link Message}
+     */
+    AutoBean<Message> message();
 
-   /**
-    * A factory method for a {@link Pair} bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Pair}
-    */
-   AutoBean<Pair> pair();
+    /**
+     * A factory method for a {@link Pair} bean.
+     *
+     * @return an {@link AutoBean} of type {@link Pair}
+     */
+    AutoBean<Pair> pair();
 
-   /**
-    * A factory method for a {@link RequestMessage} bean.
-    * 
-    * @return an {@link AutoBean} of type {@link RequestMessage}
-    */
-   AutoBean<RequestMessage> requestMessage();
+    /**
+     * A factory method for a {@link RequestMessage} bean.
+     *
+     * @return an {@link AutoBean} of type {@link RequestMessage}
+     */
+    AutoBean<RequestMessage> requestMessage();
 
-   /**
-    * A factory method for a {@link ResponseMessage} bean.
-    * 
-    * @return an {@link AutoBean} of type {@link ResponseMessage}
-    */
-   AutoBean<ResponseMessage> responseMessage();
+    /**
+     * A factory method for a {@link ResponseMessage} bean.
+     *
+     * @return an {@link AutoBean} of type {@link ResponseMessage}
+     */
+    AutoBean<ResponseMessage> responseMessage();
 }

@@ -16,46 +16,36 @@ package com.google.collide.codemirror2;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Interface that represents CodeMirror parser.
- */
+/** Interface that represents CodeMirror parser. */
 public interface Parser {
 
-  /**
-   * @return {@code true} if {@link #indent} is supported by this parser
-   */
-  boolean hasSmartIndent();
+    /** @return {@code true} if {@link #indent} is supported by this parser */
+    boolean hasSmartIndent();
 
-  /**
-   * @return syntax type (language) served by this parser
-   */
-  SyntaxType getSyntaxType();
+    /** @return syntax type (language) served by this parser */
+    SyntaxType getSyntaxType();
 
-  /**
-   * @param stateAbove parser state before current line
-   * @param text left-trimmed content of the line to be indented
-   * @return proposed number of spaces before the text
-   */
-  int indent(State stateAbove, String text);
+    /**
+     * @param stateAbove
+     *         parser state before current line
+     * @param text
+     *         left-trimmed content of the line to be indented
+     * @return proposed number of spaces before the text
+     */
+    int indent(State stateAbove, String text);
 
-  /**
-   * @return newly constructed "before the first line" state
-   */
-  State defaultState();
+    /** @return newly constructed "before the first line" state */
+    State defaultState();
 
-  /**
-   * Consumes characters from input, updates state
-   * and pushes recognized token to output.
-   */
-  void parseNext(Stream stream, State parserState, JsonArray<Token> tokens);
+    /**
+     * Consumes characters from input, updates state
+     * and pushes recognized token to output.
+     */
+    void parseNext(Stream stream, State parserState, JsonArray<Token> tokens);
 
-  /**
-   * Wraps text in JS object used by native parser.
-   */
-  Stream createStream(String text);
+    /** Wraps text in JS object used by native parser. */
+    Stream createStream(String text);
 
-  /**
-   * Extracts the name (mode) from the given {@link State}.
-   */
-  String getName(State state);
+    /** Extracts the name (mode) from the given {@link State}. */
+    String getName(State state);
 }

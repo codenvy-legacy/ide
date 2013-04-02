@@ -27,42 +27,32 @@ import org.exoplatform.ide.git.shared.BranchListRequest;
 
 /**
  * Marshaller for building branch list request in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 5, 2011 1:58:33 PM anya $
- * 
  */
-public class BranchListRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Branch list request.
-    */
-   private BranchListRequest branchListRequest;
+public class BranchListRequestMarshaller implements Marshallable, Constants {
+    /** Branch list request. */
+    private BranchListRequest branchListRequest;
 
-   /**
-    * @param branchListRequest branch list request
-    */
-   public BranchListRequestMarshaller(BranchListRequest branchListRequest)
-   {
-      this.branchListRequest = branchListRequest;
-   }
+    /**
+     * @param branchListRequest
+     *         branch list request
+     */
+    public BranchListRequestMarshaller(BranchListRequest branchListRequest) {
+        this.branchListRequest = branchListRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      if (branchListRequest.getListMode() != null)
-      {
-         jsonObject.put(LIST_MODE, new JSONString(branchListRequest.getListMode()));
-      }
-      else
-      {
-         jsonObject.put(LIST_MODE, JSONNull.getInstance());
-      }
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        if (branchListRequest.getListMode() != null) {
+            jsonObject.put(LIST_MODE, new JSONString(branchListRequest.getListMode()));
+        } else {
+            jsonObject.put(LIST_MODE, JSONNull.getInstance());
+        }
+        return jsonObject.toString();
+    }
 
 }

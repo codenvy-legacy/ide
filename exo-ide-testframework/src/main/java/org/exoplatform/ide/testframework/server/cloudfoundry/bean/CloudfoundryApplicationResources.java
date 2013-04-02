@@ -22,31 +22,26 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryApplicationResources
-{
-   /** Memory available for application (in MB). */
-   private int memory;
+public class CloudfoundryApplicationResources {
+    /** Memory available for application (in MB). */
+    private int memory;
 
-   /** Disk space available for application (in MB). */
-   private int disk;
+    /** Disk space available for application (in MB). */
+    private int disk;
 
-   public int getMemory()
-   {
-      return memory;
-   }
+    public int getMemory() {
+        return memory;
+    }
 
-   public void setMemory(int memory)
-   {
-      this.memory = memory;
-   }
+    public void setMemory(int memory) {
+        this.memory = memory;
+    }
 
-   public int getDisk()
-   {
-      return disk;
-   }
+    public int getDisk() {
+        return disk;
+    }
 
-   public void setDisk(int disk)
-   {
-      this.disk = disk;
-   }
+    public void setDisk(int disk) {
+        this.disk = disk;
+    }
 }

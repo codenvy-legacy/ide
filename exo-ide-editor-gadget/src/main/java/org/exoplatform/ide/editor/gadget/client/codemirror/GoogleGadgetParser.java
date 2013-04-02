@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.editor.gadget.client.codemirror;
 
-import java.util.HashMap;
+import com.google.gwt.core.client.JavaScriptObject;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
@@ -28,84 +28,75 @@ import org.exoplatform.ide.editor.codemirror.Node;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlParser;
 import org.exoplatform.ide.editor.xml.client.codemirror.XmlParser;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.HashMap;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
- *
  */
-public class GoogleGadgetParser extends CodeMirrorParserImpl
-{
+public class GoogleGadgetParser extends CodeMirrorParserImpl {
 
-   String currentContentMimeType;
+    String currentContentMimeType;
 
-   private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
-   
-   static
-   {
-      factory.put(MimeType.TEXT_HTML, new HtmlParser());
-      factory.put(MimeType.TEXT_XML, new XmlParser());   
-   }
+    private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
 
-   protected static CodeMirrorParserImpl getParser(String mimeType)
-   {
-      if (factory.containsKey(mimeType))
-      {
-         return factory.get(mimeType);
-      }
+    static {
+        factory.put(MimeType.TEXT_HTML, new HtmlParser());
+        factory.put(MimeType.TEXT_XML, new XmlParser());
+    }
 
-      return null;
-   }
-   
-   @Override
-   public void init()
-   {
-      currentContentMimeType = MimeType.TEXT_XML;
-   }
+    protected static CodeMirrorParserImpl getParser(String mimeType) {
+        if (factory.containsKey(mimeType)) {
+            return factory.get(mimeType);
+        }
 
-   @Override
-   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser)
-   {
-      // interrupt at the end of the document
-      if (node == null)
-         return currentToken;
+        return null;
+    }
 
-      String nodeContent = Node.getContent(node).trim(); // returns text without ended space " " in the text
+    @Override
+    public void init() {
+        currentContentMimeType = MimeType.TEXT_XML;
+    }
 
-      // recognize CDATA open tag "<![CDATA["  within the TEXT_XML content
-      if (XmlParser.isCDATAOpenNode(nodeContent) && MimeType.TEXT_XML.equals(currentContentMimeType))
-      {
-         TokenBeenImpl newToken = new TokenBeenImpl("CDATA", TokenType.CDATA, lineNumber, MimeType.TEXT_HTML);
-         if (currentToken != null)
-         {
-            currentToken.addSubToken(newToken);
-         }
-         currentToken = newToken;
+    @Override
+    public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken, boolean hasParentParser) {
+        // interrupt at the end of the document
+        if (node == null)
+            return currentToken;
 
-         currentContentMimeType = MimeType.TEXT_HTML;
-         getParser(currentContentMimeType).init();
-         node = Node.getNext(node); // pass parsed node
-      }
+        String nodeContent = Node.getContent(node).trim(); // returns text without ended space " " in the text
 
-      // recognize CDATA close tag "]]>" within the CDATA content
-      else if (XmlParser.isCDATACloseNode(nodeContent) && !MimeType.TEXT_XML.equals(currentContentMimeType))
-      {
-         currentToken = XmlParser.closeTag(lineNumber, currentToken);
+        // recognize CDATA open tag "<![CDATA["  within the TEXT_XML content
+        if (XmlParser.isCDATAOpenNode(nodeContent) && MimeType.TEXT_XML.equals(currentContentMimeType)) {
+            TokenBeenImpl newToken = new TokenBeenImpl("CDATA", TokenType.CDATA, lineNumber, MimeType.TEXT_HTML);
+            if (currentToken != null) {
+                currentToken.addSubToken(newToken);
+            }
+            currentToken = newToken;
 
-         currentContentMimeType = MimeType.TEXT_XML;
-         getParser(currentContentMimeType).init();
-         node = Node.getNext(node); // pass parsed node
-      }
+            currentContentMimeType = MimeType.TEXT_HTML;
+            getParser(currentContentMimeType).init();
+            node = Node.getNext(node); // pass parsed node
+        }
 
-      currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
+        // recognize CDATA close tag "]]>" within the CDATA content
+        else if (XmlParser.isCDATACloseNode(nodeContent) && !MimeType.TEXT_XML.equals(currentContentMimeType)) {
+            currentToken = XmlParser.closeTag(lineNumber, currentToken);
 
-      if (node == null || Node.getName(node).equals("BR"))
-      {
-         return currentToken;
-      }
+            currentContentMimeType = MimeType.TEXT_XML;
+            getParser(currentContentMimeType).init();
+            node = Node.getNext(node); // pass parsed node
+        }
 
-      return parseLine(Node.getNext(node), lineNumber, currentToken, false); // call itself 
+        currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
 
-   };
+        if (node == null || Node.getName(node).equals("BR")) {
+            return currentToken;
+        }
+
+        return parseLine(Node.getNext(node), lineNumber, currentToken, false); // call itself
+
+    }
+
+    ;
 }

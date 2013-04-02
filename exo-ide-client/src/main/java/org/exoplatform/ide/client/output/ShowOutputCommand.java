@@ -26,36 +26,30 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Dec 22, 2011 12:20:39 PM evgen $
- * 
  */
-public class ShowOutputCommand extends SimpleControl implements IDEControl
-{
-   public static final String ID = "View/Output";
+public class ShowOutputCommand extends SimpleControl implements IDEControl {
+    public static final String ID = "View/Output";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outputTitleControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.outputTitleControl();
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.outputPromptControl();
+    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.outputPromptControl();
 
-   /**
-    * 
-    */
-   public ShowOutputCommand()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.output(), IDEImageBundle.INSTANCE.outputDisabled());
-      setEvent(new ShowOutputEvent());
-   }
+    /**
+     *
+     */
+    public ShowOutputCommand() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.output(), IDEImageBundle.INSTANCE.outputDisabled());
+        setEvent(new ShowOutputEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setEnabled(true);
-      setVisible(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setEnabled(true);
+        setVisible(true);
+    }
 
 }

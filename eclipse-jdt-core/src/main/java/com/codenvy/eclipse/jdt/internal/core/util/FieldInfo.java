@@ -20,211 +20,157 @@ import com.codenvy.eclipse.jdt.core.util.IConstantValueAttribute;
 import com.codenvy.eclipse.jdt.core.util.IFieldInfo;
 import com.codenvy.eclipse.jdt.core.util.IModifierConstants;
 
-/**
- * Default implementation of IFieldInfo.
- */
-public class FieldInfo extends ClassFileStruct implements IFieldInfo
-{
-   private int accessFlags;
+/** Default implementation of IFieldInfo. */
+public class FieldInfo extends ClassFileStruct implements IFieldInfo {
+    private int accessFlags;
 
-   private int attributeBytes;
+    private int attributeBytes;
 
-   private IClassFileAttribute[] attributes;
+    private IClassFileAttribute[] attributes;
 
-   private int attributesCount;
+    private int attributesCount;
 
-   private IConstantValueAttribute constantValueAttribute;
+    private IConstantValueAttribute constantValueAttribute;
 
-   private char[] descriptor;
+    private char[] descriptor;
 
-   private int descriptorIndex;
+    private int descriptorIndex;
 
-   private boolean isDeprecated;
+    private boolean isDeprecated;
 
-   private boolean isSynthetic;
+    private boolean isSynthetic;
 
-   private char[] name;
+    private char[] name;
 
-   private int nameIndex;
+    private int nameIndex;
 
-   /**
-    * @param classFileBytes byte[]
-    * @param constantPool   IConstantPool
-    * @param offset         int
-    */
-   public FieldInfo(byte classFileBytes[], IConstantPool constantPool, int offset) throws ClassFormatException
-   {
-      final int flags = u2At(classFileBytes, 0, offset);
-      this.accessFlags = flags;
-      if ((flags & IModifierConstants.ACC_SYNTHETIC) != 0)
-      {
-         this.isSynthetic = true;
-      }
-      this.nameIndex = u2At(classFileBytes, 2, offset);
-      IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.nameIndex);
-      if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8)
-      {
-         throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-      }
-      this.name = constantPoolEntry.getUtf8Value();
-
-      this.descriptorIndex = u2At(classFileBytes, 4, offset);
-      constantPoolEntry = constantPool.decodeEntry(this.descriptorIndex);
-      if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8)
-      {
-         throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-      }
-      this.descriptor = constantPoolEntry.getUtf8Value();
-
-      this.attributesCount = u2At(classFileBytes, 6, offset);
-      this.attributes = ClassFileAttribute.NO_ATTRIBUTES;
-      int readOffset = 8;
-      if (this.attributesCount != 0)
-      {
-         this.attributes = new IClassFileAttribute[this.attributesCount];
-      }
-      int attributesIndex = 0;
-      for (int i = 0; i < this.attributesCount; i++)
-      {
-         constantPoolEntry = constantPool.decodeEntry(u2At(classFileBytes, readOffset, offset));
-         if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8)
-         {
-            throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-         }
-         char[] attributeName = constantPoolEntry.getUtf8Value();
-         if (equals(attributeName, IAttributeNamesConstants.DEPRECATED))
-         {
-            this.isDeprecated = true;
-            this.attributes[attributesIndex++] = new ClassFileAttribute(classFileBytes, constantPool,
-               offset + readOffset);
-         }
-         else if (equals(attributeName, IAttributeNamesConstants.SYNTHETIC))
-         {
+    /**
+     * @param classFileBytes
+     *         byte[]
+     * @param constantPool
+     *         IConstantPool
+     * @param offset
+     *         int
+     */
+    public FieldInfo(byte classFileBytes[], IConstantPool constantPool, int offset) throws ClassFormatException {
+        final int flags = u2At(classFileBytes, 0, offset);
+        this.accessFlags = flags;
+        if ((flags & IModifierConstants.ACC_SYNTHETIC) != 0) {
             this.isSynthetic = true;
-            this.attributes[attributesIndex++] = new ClassFileAttribute(classFileBytes, constantPool,
-               offset + readOffset);
-         }
-         else if (equals(attributeName, IAttributeNamesConstants.CONSTANT_VALUE))
-         {
-            this.constantValueAttribute = new ConstantValueAttribute(classFileBytes, constantPool, offset + readOffset);
-            this.attributes[attributesIndex++] = this.constantValueAttribute;
-         }
-         else if (equals(attributeName, IAttributeNamesConstants.SIGNATURE))
-         {
-            this.attributes[attributesIndex++] = new SignatureAttribute(classFileBytes, constantPool,
-               offset + readOffset);
-         }
-         else if (equals(attributeName, IAttributeNamesConstants.RUNTIME_VISIBLE_ANNOTATIONS))
-         {
-            this.attributes[attributesIndex++] = new RuntimeVisibleAnnotationsAttribute(classFileBytes, constantPool,
-               offset + readOffset);
-         }
-         else if (equals(attributeName, IAttributeNamesConstants.RUNTIME_INVISIBLE_ANNOTATIONS))
-         {
-            this.attributes[attributesIndex++] = new RuntimeInvisibleAnnotationsAttribute(classFileBytes, constantPool,
-               offset + readOffset);
-         }
-         else
-         {
-            this.attributes[attributesIndex++] = new ClassFileAttribute(classFileBytes, constantPool,
-               offset + readOffset);
-         }
-         readOffset += (6 + u4At(classFileBytes, readOffset + 2, offset));
-      }
+        }
+        this.nameIndex = u2At(classFileBytes, 2, offset);
+        IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.nameIndex);
+        if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8) {
+            throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+        }
+        this.name = constantPoolEntry.getUtf8Value();
 
-      this.attributeBytes = readOffset;
-   }
+        this.descriptorIndex = u2At(classFileBytes, 4, offset);
+        constantPoolEntry = constantPool.decodeEntry(this.descriptorIndex);
+        if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8) {
+            throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+        }
+        this.descriptor = constantPoolEntry.getUtf8Value();
 
-   /**
-    * @see IFieldInfo#getAccessFlags()
-    */
-   public int getAccessFlags()
-   {
-      return this.accessFlags;
-   }
+        this.attributesCount = u2At(classFileBytes, 6, offset);
+        this.attributes = ClassFileAttribute.NO_ATTRIBUTES;
+        int readOffset = 8;
+        if (this.attributesCount != 0) {
+            this.attributes = new IClassFileAttribute[this.attributesCount];
+        }
+        int attributesIndex = 0;
+        for (int i = 0; i < this.attributesCount; i++) {
+            constantPoolEntry = constantPool.decodeEntry(u2At(classFileBytes, readOffset, offset));
+            if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8) {
+                throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+            }
+            char[] attributeName = constantPoolEntry.getUtf8Value();
+            if (equals(attributeName, IAttributeNamesConstants.DEPRECATED)) {
+                this.isDeprecated = true;
+                this.attributes[attributesIndex++] = new ClassFileAttribute(classFileBytes, constantPool,
+                                                                            offset + readOffset);
+            } else if (equals(attributeName, IAttributeNamesConstants.SYNTHETIC)) {
+                this.isSynthetic = true;
+                this.attributes[attributesIndex++] = new ClassFileAttribute(classFileBytes, constantPool,
+                                                                            offset + readOffset);
+            } else if (equals(attributeName, IAttributeNamesConstants.CONSTANT_VALUE)) {
+                this.constantValueAttribute = new ConstantValueAttribute(classFileBytes, constantPool, offset + readOffset);
+                this.attributes[attributesIndex++] = this.constantValueAttribute;
+            } else if (equals(attributeName, IAttributeNamesConstants.SIGNATURE)) {
+                this.attributes[attributesIndex++] = new SignatureAttribute(classFileBytes, constantPool,
+                                                                            offset + readOffset);
+            } else if (equals(attributeName, IAttributeNamesConstants.RUNTIME_VISIBLE_ANNOTATIONS)) {
+                this.attributes[attributesIndex++] = new RuntimeVisibleAnnotationsAttribute(classFileBytes, constantPool,
+                                                                                            offset + readOffset);
+            } else if (equals(attributeName, IAttributeNamesConstants.RUNTIME_INVISIBLE_ANNOTATIONS)) {
+                this.attributes[attributesIndex++] = new RuntimeInvisibleAnnotationsAttribute(classFileBytes, constantPool,
+                                                                                              offset + readOffset);
+            } else {
+                this.attributes[attributesIndex++] = new ClassFileAttribute(classFileBytes, constantPool,
+                                                                            offset + readOffset);
+            }
+            readOffset += (6 + u4At(classFileBytes, readOffset + 2, offset));
+        }
 
-   /**
-    * @see IFieldInfo#getAttributeCount()
-    */
-   public int getAttributeCount()
-   {
-      return this.attributesCount;
-   }
+        this.attributeBytes = readOffset;
+    }
 
-   /**
-    * @see IFieldInfo#getAttributes()
-    */
-   public IClassFileAttribute[] getAttributes()
-   {
-      return this.attributes;
-   }
+    /** @see IFieldInfo#getAccessFlags() */
+    public int getAccessFlags() {
+        return this.accessFlags;
+    }
 
-   /**
-    * @see IFieldInfo#getConstantValueAttribute()
-    */
-   public IConstantValueAttribute getConstantValueAttribute()
-   {
-      return this.constantValueAttribute;
-   }
+    /** @see IFieldInfo#getAttributeCount() */
+    public int getAttributeCount() {
+        return this.attributesCount;
+    }
 
-   /**
-    * @see IFieldInfo#getDescriptor()
-    */
-   public char[] getDescriptor()
-   {
-      return this.descriptor;
-   }
+    /** @see IFieldInfo#getAttributes() */
+    public IClassFileAttribute[] getAttributes() {
+        return this.attributes;
+    }
 
-   /**
-    * @see IFieldInfo#getDescriptorIndex()
-    */
-   public int getDescriptorIndex()
-   {
-      return this.descriptorIndex;
-   }
+    /** @see IFieldInfo#getConstantValueAttribute() */
+    public IConstantValueAttribute getConstantValueAttribute() {
+        return this.constantValueAttribute;
+    }
 
-   /**
-    * @see IFieldInfo#getName()
-    */
-   public char[] getName()
-   {
-      return this.name;
-   }
+    /** @see IFieldInfo#getDescriptor() */
+    public char[] getDescriptor() {
+        return this.descriptor;
+    }
 
-   /**
-    * @see IFieldInfo#getNameIndex()
-    */
-   public int getNameIndex()
-   {
-      return this.nameIndex;
-   }
+    /** @see IFieldInfo#getDescriptorIndex() */
+    public int getDescriptorIndex() {
+        return this.descriptorIndex;
+    }
 
-   /**
-    * @see IFieldInfo#hasConstantValueAttribute()
-    */
-   public boolean hasConstantValueAttribute()
-   {
-      return this.constantValueAttribute != null;
-   }
+    /** @see IFieldInfo#getName() */
+    public char[] getName() {
+        return this.name;
+    }
 
-   /**
-    * @see IFieldInfo#isDeprecated()
-    */
-   public boolean isDeprecated()
-   {
-      return this.isDeprecated;
-   }
+    /** @see IFieldInfo#getNameIndex() */
+    public int getNameIndex() {
+        return this.nameIndex;
+    }
 
-   /**
-    * @see IFieldInfo#isSynthetic()
-    */
-   public boolean isSynthetic()
-   {
-      return this.isSynthetic;
-   }
+    /** @see IFieldInfo#hasConstantValueAttribute() */
+    public boolean hasConstantValueAttribute() {
+        return this.constantValueAttribute != null;
+    }
 
-   int sizeInBytes()
-   {
-      return this.attributeBytes;
-   }
+    /** @see IFieldInfo#isDeprecated() */
+    public boolean isDeprecated() {
+        return this.isDeprecated;
+    }
+
+    /** @see IFieldInfo#isSynthetic() */
+    public boolean isSynthetic() {
+        return this.isSynthetic;
+    }
+
+    int sizeInBytes() {
+        return this.attributeBytes;
+    }
 }

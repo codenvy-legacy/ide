@@ -23,35 +23,25 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event occurs, when user tries to remove selected items in browser from commit. Implement {@link RemoveFilesHandler} handler to
  * process event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 3:54:53 PM anya $
- * 
  */
-public class RemoveFilesEvent extends GwtEvent<RemoveFilesHandler>
-{
+public class RemoveFilesEvent extends GwtEvent<RemoveFilesHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<RemoveFilesHandler> TYPE = new GwtEvent.Type<RemoveFilesHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<RemoveFilesHandler> TYPE = new GwtEvent.Type<RemoveFilesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public GwtEvent.Type<RemoveFilesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public GwtEvent.Type<RemoveFilesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RemoveFilesHandler handler)
-   {
-      handler.onRemoveFiles(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RemoveFilesHandler handler) {
+        handler.onRemoveFiles(this);
+    }
 
 }

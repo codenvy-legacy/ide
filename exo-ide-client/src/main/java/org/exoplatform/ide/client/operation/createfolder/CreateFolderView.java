@@ -35,99 +35,86 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ * <p/>
  * View for create folder form.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.Display
-{
+public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.Display {
 
-   public static final String ID = "ideCreateFolderForm";
+    public static final String ID = "ideCreateFolderForm";
 
-   public static final int WIDTH = 410;
+    public static final int WIDTH = 410;
 
-   public static final int HEIGHT = 175;
+    public static final int HEIGHT = 175;
 
-   public final String ID_CREATE_BUTTON = "ideCreateFolderFormCreateButton";
+    public final String ID_CREATE_BUTTON = "ideCreateFolderFormCreateButton";
 
-   public final String ID_CANCEL_BUTTON = "ideCreateFolderFormCancelButton";
+    public final String ID_CANCEL_BUTTON = "ideCreateFolderFormCancelButton";
 
-   public final String ID_DYNAMIC_FORM = "ideCreateFolderFormDynamicForm";
+    public final String ID_DYNAMIC_FORM = "ideCreateFolderFormDynamicForm";
 
-   public final String NAME_FIELD = "ideCreateFolderFormNameField";
+    public final String NAME_FIELD = "ideCreateFolderFormNameField";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFolderFormTitle();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFolderFormTitle();
 
-   @UiField
-   TextInput folderNameField;
+    @UiField
+    TextInput folderNameField;
 
-   @UiField
-   ImageButton createButton;
+    @UiField
+    ImageButton createButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   interface CreateFolderViewUiBinder extends UiBinder<Widget, CreateFolderView>
-   {
-   }
+    interface CreateFolderViewUiBinder extends UiBinder<Widget, CreateFolderView> {
+    }
 
-   private static CreateFolderViewUiBinder uiBinder = GWT.create(CreateFolderViewUiBinder.class);
+    private static CreateFolderViewUiBinder uiBinder = GWT.create(CreateFolderViewUiBinder.class);
 
-   /**
-    * @param eventBus
-    * @param selectedItem
-    * @param href
-    */
-   public CreateFolderView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.newFolder()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    /**
+     * @param eventBus
+     * @param selectedItem
+     * @param href
+     */
+    public CreateFolderView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.newFolder()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      folderNameField.setName(NAME_FIELD);
-      createButton.setButtonId(ID_CREATE_BUTTON);
-      cancelButton.setButtonId(ID_CANCEL_BUTTON);
-   }
+        folderNameField.setName(NAME_FIELD);
+        createButton.setButtonId(ID_CREATE_BUTTON);
+        cancelButton.setButtonId(ID_CANCEL_BUTTON);
+    }
 
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   public HasClickHandlers getCreateButton()
-   {
-      return createButton;
-   }
+    public HasClickHandlers getCreateButton() {
+        return createButton;
+    }
 
-   public HasValue<String> getFolderNameField()
-   {
-      return folderNameField;
-   }
+    public HasValue<String> getFolderNameField() {
+        return folderNameField;
+    }
 
-   public HasKeyPressHandlers getFolderNameFiledKeyPressed()
-   {
-      return (HasKeyPressHandlers)folderNameField;
-   }
+    public HasKeyPressHandlers getFolderNameFiledKeyPressed() {
+        return (HasKeyPressHandlers)folderNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.CreateFolderPresenter.Display#setFocusInNameField()
-    */
-   @Override
-   public void setFocusInNameField()
-   {
-      folderNameField.focus();
-   }
+    /** @see org.exoplatform.ide.client.navigation.CreateFolderPresenter.Display#setFocusInNameField() */
+    @Override
+    public void setFocusInNameField() {
+        folderNameField.focus();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display#selectFolderName()
-    */
-   @Override
-   public void selectFolderName()
-   {
-      folderNameField.selectAll();
-   }
+    /** @see org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display#selectFolderName() */
+    @Override
+    public void selectFolderName() {
+        folderNameField.selectAll();
+    }
 
 }

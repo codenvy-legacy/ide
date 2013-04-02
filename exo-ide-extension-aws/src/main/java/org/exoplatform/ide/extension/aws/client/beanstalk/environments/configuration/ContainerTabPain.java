@@ -27,79 +27,62 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: ContainerTabPain.java Oct 8, 2012 5:38:06 PM azatsarynnyy $
- *
  */
-public class ContainerTabPain extends Composite
-{
+public class ContainerTabPain extends Composite {
 
-   private static ContainerTabPainUiBinder uiBinder = GWT.create(ContainerTabPainUiBinder.class);
+    private static ContainerTabPainUiBinder uiBinder = GWT.create(ContainerTabPainUiBinder.class);
 
-   interface ContainerTabPainUiBinder extends UiBinder<Widget, ContainerTabPain>
-   {
-   }
+    interface ContainerTabPainUiBinder extends UiBinder<Widget, ContainerTabPain> {
+    }
 
-   private static final String INIT_JVM_HEAP_SIZE_FIELD_ID = "ideContainerTabPainInitialJVMHeapSizeField";
+    private static final String INIT_JVM_HEAP_SIZE_FIELD_ID = "ideContainerTabPainInitialJVMHeapSizeField";
 
-   private static final String MAX_JVM_HEAP_SIZE_FIELD_ID = "ideContainerTabPainMaximumJVMHeapSizeField";
+    private static final String MAX_JVM_HEAP_SIZE_FIELD_ID = "ideContainerTabPainMaximumJVMHeapSizeField";
 
-   private static final String MAX_PERM_SIZE_FIELD_ID = "ideContainerTabPainMaxPermSizeField";
+    private static final String MAX_PERM_SIZE_FIELD_ID = "ideContainerTabPainMaxPermSizeField";
 
-   private static final String JVM_OPTIONS_FIELD_ID = "ideContainerTabPainJVMOptionsField";
+    private static final String JVM_OPTIONS_FIELD_ID = "ideContainerTabPainJVMOptionsField";
 
-   @UiField
-   TextInput initialJVMHeapSizeField;
+    @UiField
+    TextInput initialJVMHeapSizeField;
 
-   @UiField
-   TextInput maximumJVMHeapSizeField;
+    @UiField
+    TextInput maximumJVMHeapSizeField;
 
-   @UiField
-   TextInput maxPermSizeField;
-   
-   @UiField
-   TextInput jvmOptionsField;
+    @UiField
+    TextInput maxPermSizeField;
 
-   public ContainerTabPain()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
+    @UiField
+    TextInput jvmOptionsField;
 
-      initialJVMHeapSizeField.setName(INIT_JVM_HEAP_SIZE_FIELD_ID);
-      maximumJVMHeapSizeField.setName(MAX_JVM_HEAP_SIZE_FIELD_ID);
-      maxPermSizeField.setName(MAX_PERM_SIZE_FIELD_ID);
-      jvmOptionsField.setName(JVM_OPTIONS_FIELD_ID);
-   }
+    public ContainerTabPain() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-   /**
-    * @return the appHealthCheckUrlField
-    */
-   public TextInput getInitialJVMHeapSizeField()
-   {
-      return initialJVMHeapSizeField;
-   }
+        initialJVMHeapSizeField.setName(INIT_JVM_HEAP_SIZE_FIELD_ID);
+        maximumJVMHeapSizeField.setName(MAX_JVM_HEAP_SIZE_FIELD_ID);
+        maxPermSizeField.setName(MAX_PERM_SIZE_FIELD_ID);
+        jvmOptionsField.setName(JVM_OPTIONS_FIELD_ID);
+    }
 
-   /**
-    * @return the healthCheckIntervalField
-    */
-   public TextInput getMaximumJVMHeapSizeField()
-   {
-      return maximumJVMHeapSizeField;
-   }
+    /** @return the appHealthCheckUrlField */
+    public TextInput getInitialJVMHeapSizeField() {
+        return initialJVMHeapSizeField;
+    }
 
-   /**
-    * @return the maxPermSizeField
-    */
-   public TextInput getMaxPermSizeField()
-   {
-      return maxPermSizeField;
-   }
+    /** @return the healthCheckIntervalField */
+    public TextInput getMaximumJVMHeapSizeField() {
+        return maximumJVMHeapSizeField;
+    }
 
-   /**
-    * @return the jvmOptionsField
-    */
-   public TextInput getJVMOptionsField()
-   {
-      return jvmOptionsField;
-   }
+    /** @return the maxPermSizeField */
+    public TextInput getMaxPermSizeField() {
+        return maxPermSizeField;
+    }
+
+    /** @return the jvmOptionsField */
+    public TextInput getJVMOptionsField() {
+        return jvmOptionsField;
+    }
 }

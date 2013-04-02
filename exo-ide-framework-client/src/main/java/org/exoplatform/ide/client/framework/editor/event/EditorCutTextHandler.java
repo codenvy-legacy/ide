@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorCutTextEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  May 4, 2012 9:29:17 AM anya $
- *
  */
-public interface EditorCutTextHandler extends EventHandler
-{
-   /**
-    * Perform cutting selected text from editor.
-    * 
-    * @param event
-    */
-   void onEditorCutText(EditorCutTextEvent event);
+public interface EditorCutTextHandler extends EventHandler {
+    /**
+     * Perform cutting selected text from editor.
+     *
+     * @param event
+     */
+    void onEditorCutText(EditorCutTextEvent event);
 }

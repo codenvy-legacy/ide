@@ -23,11 +23,11 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  */
 @RoutingType(type = RoutingTypes.DIFFSTATSDTO)
 public interface DiffStatsDto extends ServerToClientDto {
-  int getAdded();
+    int getAdded();
 
-  int getChanged();
+    int getChanged();
 
-  int getDeleted();
+    int getDeleted();
 
-  int getUnchanged();
+    int getUnchanged();
 }

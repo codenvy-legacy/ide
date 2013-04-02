@@ -41,82 +41,67 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class DownloadHandler implements ItemsSelectedHandler, DownloadItemHandler
-{
+public class DownloadHandler implements ItemsSelectedHandler, DownloadItemHandler {
 
-   private static final IdeUploadLocalizationConstant UPLOAD_LOCALIZATION_CONSTANT = GWT
-      .create(IdeUploadLocalizationConstant.class);
+    private static final IdeUploadLocalizationConstant UPLOAD_LOCALIZATION_CONSTANT = GWT
+            .create(IdeUploadLocalizationConstant.class);
 
-   private AbsolutePanel downloadPanel;
+    private AbsolutePanel downloadPanel;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   public DownloadHandler()
-   {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(DownloadItemEvent.TYPE, this);
+    public DownloadHandler() {
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(DownloadItemEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new DownloadItemControl(false));
-      IDE.getInstance().addControl(new DownloadItemControl(true));
-   }
+        IDE.getInstance().addControl(new DownloadItemControl(false));
+        IDE.getInstance().addControl(new DownloadItemControl(true));
+    }
 
-   private void downloadResource(String url)
-   {
-      if (downloadPanel == null)
-      {
-         downloadPanel = new AbsolutePanel();
-         downloadPanel.getElement().getStyle().setWidth(1, Unit.PX);
-         downloadPanel.getElement().getStyle().setHeight(1, Unit.PX);
-         downloadPanel.getElement().getStyle().setOverflow(Overflow.HIDDEN);
-         RootPanel.get().add(downloadPanel, -10000, -10000);
-      }
+    private void downloadResource(String url) {
+        if (downloadPanel == null) {
+            downloadPanel = new AbsolutePanel();
+            downloadPanel.getElement().getStyle().setWidth(1, Unit.PX);
+            downloadPanel.getElement().getStyle().setHeight(1, Unit.PX);
+            downloadPanel.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+            RootPanel.get().add(downloadPanel, -10000, -10000);
+        }
 
-      Frame frame = new Frame(url);
-      frame.setHeight("100%");
-      frame.setWidth("100%");
-      downloadPanel.add(frame);
-   }
+        Frame frame = new Frame(url);
+        frame.setHeight("100%");
+        frame.setWidth("100%");
+        downloadPanel.add(frame);
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+    }
 
-   @Override
-   public void onDownloadItem(DownloadItemEvent event)
-   {
-      if (selectedItems.size() != 1)
-      {
-         Dialogs.getInstance().showError("Only one file must be selected.");
-         return;
-      }
+    @Override
+    public void onDownloadItem(DownloadItemEvent event) {
+        if (selectedItems.size() != 1) {
+            Dialogs.getInstance().showError("Only one file must be selected.");
+            return;
+        }
 
-      Item item = selectedItems.get(0);
+        Item item = selectedItems.get(0);
 
-      if (item instanceof FileModel)
-      {
-         downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_FILE).getHref());
-      }
-      else if (item instanceof FolderModel)
-      {
-         downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref());
-      }
-      else if (item instanceof ProjectModel)
-      {
-         downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref());
-      }
-      else
-      {
-         Dialogs.getInstance().showError(UPLOAD_LOCALIZATION_CONSTANT.downloadFileError());
-      }
-   }
+        if (item instanceof FileModel) {
+            downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_FILE).getHref());
+        } else if (item instanceof FolderModel) {
+            downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref());
+        } else if (item instanceof ProjectModel) {
+            downloadResource(item.getLinkByRelation(Link.REL_DOWNLOAD_ZIP).getHref());
+        } else {
+            Dialogs.getInstance().showError(UPLOAD_LOCALIZATION_CONSTANT.downloadFileError());
+        }
+    }
 
 }

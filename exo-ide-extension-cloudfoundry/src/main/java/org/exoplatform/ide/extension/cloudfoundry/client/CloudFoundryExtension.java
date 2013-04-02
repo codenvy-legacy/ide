@@ -56,71 +56,62 @@ import java.util.List;
  *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryExtension.java Jul 7, 2011 5:00:41 PM vereshchaka $
- *
  */
-public class CloudFoundryExtension extends Extension implements InitializeServicesHandler
-{
+public class CloudFoundryExtension extends Extension implements InitializeServicesHandler {
 
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   public static final CloudFoundryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudFoundryAutoBeanFactory.class);
+    /** The generator of an {@link AutoBean}. */
+    public static final CloudFoundryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudFoundryAutoBeanFactory.class);
 
-   public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
-      .create(CloudFoundryLocalizationConstant.class);
+    public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
+            .create(CloudFoundryLocalizationConstant.class);
 
-   /**
-    * Default CloudFoundry server.
-    */
-   public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
+    /** Default CloudFoundry server. */
+    public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
 
-   private static final String ID = "CloudFoundry";
+    private static final String ID = "CloudFoundry";
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().registerPaaS(
-         new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
-            new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()), Arrays.asList(ProjectType.JSP,
-            ProjectType.RUBY_ON_RAILS, ProjectType.SPRING, ProjectType.WAR), new DeployApplicationPresenter()));
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.getInstance().registerPaaS(
+                new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
+                         new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()), Arrays.asList(ProjectType.JSP,
+                                                                                                              ProjectType.RUBY_ON_RAILS,
+                                                                                                              ProjectType.SPRING,
+                                                                                                              ProjectType.WAR),
+                         new DeployApplicationPresenter()));
 
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new CloudFoundryControlGroup());
-      IDE.getInstance().addControl(new CreateApplicationControl());
+        IDE.getInstance().addControl(new CloudFoundryControlGroup());
+        IDE.getInstance().addControl(new CreateApplicationControl());
 
-      IDE.getInstance().addControl(new ApplicationsControl());
-      IDE.getInstance().addControl(new SwitchAccountControl());
+        IDE.getInstance().addControl(new ApplicationsControl());
+        IDE.getInstance().addControl(new SwitchAccountControl());
 
-      new CreateApplicationPresenter();
-      new LoginPresenter();
-      new StartApplicationPresenter();
-      new ApplicationInfoPresenter();
-      new UpdateApplicationPresenter();
-      new DeleteApplicationPresenter();
-      new UnmapUrlPresenter();
-      new UpdatePropertiesPresenter();
-      new ApplicationsPresenter();
-      new CloudFoundryProjectPresenter();
-      new ManageServicesPresenter();
-      new CreateServicePresenter();
-   }
+        new CreateApplicationPresenter();
+        new LoginPresenter();
+        new StartApplicationPresenter();
+        new ApplicationInfoPresenter();
+        new UpdateApplicationPresenter();
+        new DeleteApplicationPresenter();
+        new UnmapUrlPresenter();
+        new UpdatePropertiesPresenter();
+        new ApplicationsPresenter();
+        new CloudFoundryProjectPresenter();
+        new ManageServicesPresenter();
+        new CreateServicePresenter();
+    }
 
-   public static boolean canBeDeployedToCF(ProjectModel project)
-   {
-      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
-      return (targets != null && targets.contains(ID));
-   }
+    public static boolean canBeDeployedToCF(ProjectModel project) {
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+        return (targets != null && targets.contains(ID));
+    }
 }

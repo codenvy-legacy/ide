@@ -17,55 +17,50 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Code graph response object. May have
- *
- */
+/** Code graph response object. May have */
 @RoutingType(type = RoutingTypes.CODEGRAPHRESPONSE)
 public interface CodeGraphResponse extends ServerToClientDto {
-  /**
-   * @return freshness of the different response segments
-   */
-  CodeGraphFreshness getFreshness();
+    /** @return freshness of the different response segments */
+    CodeGraphFreshness getFreshness();
 
-  /**
-   * @return json-serialized {@link CodeGraph} object which includes
-   *         code blocks and associations from immutable workspace libs
-   *         (unused as of Jun 14)
-   */
-  String getLibsSubgraphJson();
+    /**
+     * @return json-serialized {@link CodeGraph} object which includes
+     *         code blocks and associations from immutable workspace libs
+     *         (unused as of Jun 14)
+     */
+    String getLibsSubgraphJson();
 
-  /**
-   * @return json-serialized {@link CodeGraph} object which includes
-   *         code blocks from the context file (unused as of Jun 14)
-   */
-  String getFileTreeJson();
+    /**
+     * @return json-serialized {@link CodeGraph} object which includes
+     *         code blocks from the context file (unused as of Jun 14)
+     */
+    String getFileTreeJson();
 
-  /**
-   * @return json-serialized {@link CodeGraph} object which includes
-   *         code blocks from all mutable workspace files
-   *         (unused as of Jun 14)
-   */
-  String getWorkspaceTreeJson();
+    /**
+     * @return json-serialized {@link CodeGraph} object which includes
+     *         code blocks from all mutable workspace files
+     *         (unused as of Jun 14)
+     */
+    String getWorkspaceTreeJson();
 
-  /**
-   * @return json-serialized {@link CodeGraph} object which includes
-   *         links (associations and cross-references) between
-   *         mutable workspace files (unused as of Jun 14)
-   */
-  String getWorkspaceLinksJson();
+    /**
+     * @return json-serialized {@link CodeGraph} object which includes
+     *         links (associations and cross-references) between
+     *         mutable workspace files (unused as of Jun 14)
+     */
+    String getWorkspaceLinksJson();
 
-  /**
-   * @return json-serialized {@link CodeGraph} object which includes
-   *         code block trees of all workspace and library files and
-   *         links (associations and cross-references) between
-   *         workspace files and libs
-   */
-  String getFullGraphJson();
+    /**
+     * @return json-serialized {@link CodeGraph} object which includes
+     *         code block trees of all workspace and library files and
+     *         links (associations and cross-references) between
+     *         workspace files and libs
+     */
+    String getFullGraphJson();
 
-  /**
-   * @return json-serialized {@link CodeReferences} object which includes
-   *         references for the context file
-   */
-  String getFileReferencesJson();
+    /**
+     * @return json-serialized {@link CodeReferences} object which includes
+     *         references for the context file
+     */
+    String getFileReferencesJson();
 }

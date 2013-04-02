@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link FetchEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 11:45:57 AM anya $
- * 
  */
-public interface FetchHandler extends EventHandler
-{
-   /**
-    * Perform actions when user tries to fetch data from remote repository.
-    * 
-    * @param event
-    */
-   void onFetch(FetchEvent event);
+public interface FetchHandler extends EventHandler {
+    /**
+     * Perform actions when user tries to fetch data from remote repository.
+     *
+     * @param event
+     */
+    void onFetch(FetchEvent event);
 }

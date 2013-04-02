@@ -21,14 +21,11 @@ package org.exoplatform.ide.client.framework.editor.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: EditorFoldSelectionHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
- *
  */
-public interface EditorFoldSelectionHandler extends EventHandler
-{
+public interface EditorFoldSelectionHandler extends EventHandler {
 
-   void onEditorFoldSelection(EditorFoldSelectionEvent event);
+    void onEditorFoldSelection(EditorFoldSelectionEvent event);
 
 }

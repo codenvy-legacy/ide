@@ -18,74 +18,49 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server.expression;
 
-import com.sun.jdi.ClassNotLoadedException;
-import com.sun.jdi.IncompatibleThreadStateException;
-import com.sun.jdi.InvalidStackFrameException;
-import com.sun.jdi.InvalidTypeException;
-import com.sun.jdi.LocalVariable;
-import com.sun.jdi.ThreadReference;
-import com.sun.jdi.Value;
+import com.sun.jdi.*;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class LocalValue implements ExpressionValue
-{
-   private final ThreadReference thread;
-   private final LocalVariable variable;
-   private Value value;
+public class LocalValue implements ExpressionValue {
+    private final ThreadReference thread;
+    private final LocalVariable   variable;
+    private       Value           value;
 
-   public LocalValue(ThreadReference thread, LocalVariable variable)
-   {
-      this.thread = thread;
-      this.variable = variable;
-   }
+    public LocalValue(ThreadReference thread, LocalVariable variable) {
+        this.thread = thread;
+        this.variable = variable;
+    }
 
-   @Override
-   public Value getValue()
-   {
-      if (value == null)
-      {
-         try
-         {
-            value = thread.frame(0).getValue(variable);
-         }
-         catch (IncompatibleThreadStateException e)
-         {
-            throw new ExpressionException(e.getMessage(), e);
-         }
-         catch (IllegalArgumentException e)
-         {
-            throw new ExpressionException(e.getMessage(), e);
-         }
-         catch (InvalidStackFrameException e)
-         {
-            throw new ExpressionException(e.getMessage(), e);
-         }
-      }
-      return value;
-   }
+    @Override
+    public Value getValue() {
+        if (value == null) {
+            try {
+                value = thread.frame(0).getValue(variable);
+            } catch (IncompatibleThreadStateException e) {
+                throw new ExpressionException(e.getMessage(), e);
+            } catch (IllegalArgumentException e) {
+                throw new ExpressionException(e.getMessage(), e);
+            } catch (InvalidStackFrameException e) {
+                throw new ExpressionException(e.getMessage(), e);
+            }
+        }
+        return value;
+    }
 
-   @Override
-   public void setValue(Value value)
-   {
-      try
-      {
-         thread.frame(0).setValue(variable, value);
-      }
-      catch (IncompatibleThreadStateException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-      catch (InvalidTypeException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-      catch (ClassNotLoadedException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-      this.value = value;
-   }
+    @Override
+    public void setValue(Value value) {
+        try {
+            thread.frame(0).setValue(variable, value);
+        } catch (IncompatibleThreadStateException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        } catch (InvalidTypeException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        } catch (ClassNotLoadedException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        }
+        this.value = value;
+    }
 }

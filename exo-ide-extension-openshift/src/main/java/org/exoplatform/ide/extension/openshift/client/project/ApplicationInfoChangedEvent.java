@@ -24,51 +24,37 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ApplicationInfoChangedEvent extends GwtEvent<ApplicationInfoChangedHandler>
-{
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ApplicationInfoChangedHandler> TYPE =
-      new GwtEvent.Type<ApplicationInfoChangedHandler>();
+public class ApplicationInfoChangedEvent extends GwtEvent<ApplicationInfoChangedHandler> {
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ApplicationInfoChangedHandler> TYPE =
+            new GwtEvent.Type<ApplicationInfoChangedHandler>();
 
 
-   /**
-    * Application name.
-    */
-   private String appName;
+    /** Application name. */
+    private String appName;
 
-   /**
-    * @param appName application name
-    */
-   public ApplicationInfoChangedEvent(String appName)
-   {
-      this.appName = appName;
-   }
+    /**
+     * @param appName
+     *         application name
+     */
+    public ApplicationInfoChangedEvent(String appName) {
+        this.appName = appName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationInfoChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationInfoChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationInfoChangedHandler handler)
-   {
-      handler.onApplicationInfoChanged(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationInfoChangedHandler handler) {
+        handler.onApplicationInfoChanged(this);
+    }
 
-   /**
-    * @return the appName project's id
-    */
-   public String getAppName()
-   {
-      return appName;
-   }
+    /** @return the appName project's id */
+    public String getAppName() {
+        return appName;
+    }
 }

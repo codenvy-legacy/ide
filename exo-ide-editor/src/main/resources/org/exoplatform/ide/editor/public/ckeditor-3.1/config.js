@@ -1,11 +1,11 @@
 // see http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html for details
 
 CKEDITOR.config.toolbar_IDE = [
-    ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Find','Replace','SelectAll','RemoveFormat'],
+    ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Find', 'Replace', 'SelectAll', 'RemoveFormat'],
     ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
     '/',    // it is needed to normal work of "Collapse Toolbar" button
-    ['Bold','Italic','Underline','Strike','-','Subscript','Superscript','-','NumberedList','BulletedList','-','Outdent','Indent','Blockquote','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-    ['Templates', '-', 'Link','Unlink','Anchor','-','Image','Flash','Table','HorizontalRule','Smiley','SpecialChar'],
+    ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript', '-', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+    ['Templates', '-', 'Link', 'Unlink', 'Anchor', '-', 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
 ];
 
 CKEDITOR.config.width = "100%";
@@ -20,12 +20,12 @@ CKEDITOR.config.minHeight = "100%";
 CKEDITOR.dialog.minHeight = 50;
 CKEDITOR.dialog.minWidth = 50;
 /*
-CKEDITOR.config.toolbar = "IDE";
-CKEDITOR.config.theme = "default";
-CKEDITOR.config.skin = "ide";
-CKEDITOR.config.language = "en";
-CKEDITOR.config.fullPage = true;   // A full page includes the <html>, <head> and <body> tags. The final output will include the <body> contents.
-*/
+ CKEDITOR.config.toolbar = "IDE";
+ CKEDITOR.config.theme = "default";
+ CKEDITOR.config.skin = "ide";
+ CKEDITOR.config.language = "en";
+ CKEDITOR.config.fullPage = true;   // A full page includes the <html>, <head> and <body> tags. The final output will include the <body> contents.
+ */
 CKEDITOR.config.resize_enabled = false;
 CKEDITOR.config.baseFloatZIndex = 220000;    // to display ckeditor dialogs under the smartGWT tabSet which has ZIndex = 200000 
 
@@ -39,5 +39,5 @@ CKEDITOR.config.removePlugins = 'elementspath,';  // To remove plugin which disp
 CKEDITOR.config.removePlugins += 'colorbutton,colordialog,font,format,maximize,newpage,pagebreak,preview,print,save,stylescombo,about,showblocks';
 
 // protect CDATA tags
-CKEDITOR.config.protectedSource.push( /<\s*!\s*\[\s*CDATA\s*\[/img );
-CKEDITOR.config.protectedSource.push( /\]\s*\]\s*>/img );
+CKEDITOR.config.protectedSource.push(/<\s*!\s*\[\s*CDATA\s*\[/img);
+CKEDITOR.config.protectedSource.push(/\]\s*\]\s*>/img);

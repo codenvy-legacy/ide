@@ -21,15 +21,13 @@ package org.exoplatform.ide.codeassistant.jvm.shared;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface Annotation
-{
-   String getTypeName();
+public interface Annotation {
+    String getTypeName();
 
-   AnnotationParameter[] getAnnotationParameters();
+    AnnotationParameter[] getAnnotationParameters();
 
-   void setTypeName(String name);
+    void setTypeName(String name);
 
-   void setAnnotationParameters(AnnotationParameter[] parameters);
+    void setAnnotationParameters(AnnotationParameter[] parameters);
 }

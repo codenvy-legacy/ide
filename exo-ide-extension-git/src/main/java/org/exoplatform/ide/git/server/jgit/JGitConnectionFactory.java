@@ -34,27 +34,21 @@ import java.io.IOException;
  * @version $Id: JGitConnectionFactory.java 22811 2011-03-22 07:28:35Z andrew00x
  *          $
  */
-public class JGitConnectionFactory extends GitConnectionFactory
-{
-   /**
-    * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File,
-    *      org.exoplatform.ide.git.shared.GitUser)
-    */
-   @Override
-   public GitConnection getConnection(File workDir, GitUser user) throws GitException
-   {
-      return new JGitConnection(createRepository(workDir), user);
-   }
+public class JGitConnectionFactory extends GitConnectionFactory {
+    /**
+     * @see org.exoplatform.ide.git.server.GitConnectionFactory#getConnection(java.io.File,
+     *      org.exoplatform.ide.git.shared.GitUser)
+     */
+    @Override
+    public GitConnection getConnection(File workDir, GitUser user) throws GitException {
+        return new JGitConnection(createRepository(workDir), user);
+    }
 
-   private static Repository createRepository(File workDir) throws GitException
-   {
-      try
-      {
-         return new FileRepository(new File(workDir, Constants.DOT_GIT));
-      }
-      catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-   }
+    private static Repository createRepository(File workDir) throws GitException {
+        try {
+            return new FileRepository(new File(workDir, Constants.DOT_GIT));
+        } catch (IOException e) {
+            throw new GitException(e.getMessage(), e);
+        }
+    }
 }

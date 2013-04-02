@@ -19,24 +19,24 @@ import org.exoplatform.ide.editor.shared.text.Position;
  * A fragment is a range of the master document that has an image, the so called
  * segment, in a projection document.</p>
  *
- * @since 3.0
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @noextend This class is not intended to be subclassed by clients.
+ * @since 3.0
  */
 public class Fragment extends Position {
 
-	/**
-	 * The corresponding segment of this fragment.
-	 */
-	public Segment segment;
+    /** The corresponding segment of this fragment. */
+    public Segment segment;
 
-	/**
-	 * Creates a new fragment covering the given range.
-	 *
-	 * @param offset the offset of the fragment
-	 * @param length the length of the fragment
-	 */
-	public Fragment(int offset, int length) {
-		super(offset, length);
-	}
+    /**
+     * Creates a new fragment covering the given range.
+     *
+     * @param offset
+     *         the offset of the fragment
+     * @param length
+     *         the length of the fragment
+     */
+    public Fragment(int offset, int length) {
+        super(offset, length);
+    }
 }

@@ -65,174 +65,145 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
- * 
  */
 public class ChromatticEditorExtension extends Extension implements InitializeServicesHandler,
-   JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
-{
+                                                                    JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler,
+                                                                    ProjectOpenedHandler, ProjectClosedHandler {
 
-   private ProjectModel openedProject;
+    private ProjectModel openedProject;
 
-   private JavaCodeAssistant groovyCodeAssistant;
+    private JavaCodeAssistant groovyCodeAssistant;
 
-   private JavaTokenWidgetFactory factory;
-   
-   private GroovyCodeValidator groovyCodeValidator;
-   
-   private GroovyCodeAssistantService service;
+    private JavaTokenWidgetFactory factory;
 
-   private static final Images IMAGES = GWT.create(Images.class);
+    private GroovyCodeValidator groovyCodeValidator;
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+    private GroovyCodeAssistantService service;
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object", Images.CHROMATTIC,
-            MimeType.CHROMATTIC_DATA_OBJECT).setGroupName(GroupNames.NEW_SCRIPT));
-   }
+    private static final Images IMAGES = GWT.create(Images.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      if (GroovyCodeAssistantService.get() == null)
-      {
-         service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
-      }
-      else
-      {
-         service = GroovyCodeAssistantService.get();
-      }
-      
-      String context = event.getApplicationConfiguration().getContext() + "/ide/code-assistant/groovy/class-doc?fqn=";
-      factory = new JavaTokenWidgetFactory(context);
-      groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
-      groovyCodeValidator = new GroovyCodeValidator();
-            
-      IDE.getInstance().getFileTypeRegistry()
-         .addFileType(new FileType(MimeType.CHROMATTIC_DATA_OBJECT, "cmtc", IMAGES.chromattic()), new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
-               return new CodeMirror(MimeType.CHROMATTIC_DATA_OBJECT, new CodeMirrorConfiguration()
-                  .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
-                  .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
-                  .setParser(new GroovyParser())
-                  .setCanBeOutlined(true)
-                  .setAutocompleteHelper(new GroovyAutocompleteHelper())
-                  .setCodeAssistant(groovyCodeAssistant)
-                  .setCodeValidator(groovyCodeValidator));
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+
+        IDE.getInstance().addControl(
+                new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object", Images.CHROMATTIC,
+                                   MimeType.CHROMATTIC_DATA_OBJECT).setGroupName(GroupNames.NEW_SCRIPT));
+    }
+
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        if (GroovyCodeAssistantService.get() == null) {
+            service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
+        } else {
+            service = GroovyCodeAssistantService.get();
+        }
+
+        String context = event.getApplicationConfiguration().getContext() + "/ide/code-assistant/groovy/class-doc?fqn=";
+        factory = new JavaTokenWidgetFactory(context);
+        groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
+        groovyCodeValidator = new GroovyCodeValidator();
+
+        IDE.getInstance().getFileTypeRegistry()
+           .addFileType(new FileType(MimeType.CHROMATTIC_DATA_OBJECT, "cmtc", IMAGES.chromattic()), new EditorCreator() {
+               @Override
+               public Editor createEditor() {
+                   return new CodeMirror(MimeType.CHROMATTIC_DATA_OBJECT, new CodeMirrorConfiguration()
+                           .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+                           .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+                           .setParser(new GroovyParser())
+                           .setCanBeOutlined(true)
+                           .setAutocompleteHelper(new GroovyAutocompleteHelper())
+                           .setCodeAssistant(groovyCodeAssistant)
+                           .setCodeValidator(groovyCodeValidator));
+               }
+           });
+
+        IDE.getInstance().addOutlineItemCreator(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyOutlineItemCreator());
+        IDE.fireEvent(new AddCommentsModifierEvent(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyCommentsModifier()));
+    }
+
+    /** @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable) */
+    @Override
+    public void handleError(Throwable exc) {
+        if (exc instanceof ServerException) {
+            ServerException exception = (ServerException)exc;
+            StringBuffer outputContent = new StringBuffer();
+            outputContent.append("Error (<i>").append(exception.getHTTPStatus()).append("</i>: <i>")
+                         .append(exception.getStatusText()).append("</i>)");
+            if (!exception.getMessage().equals("")) {
+                outputContent.append("<br />").append(exception.getMessage().replace("\n", "<br />")); // replace "end of line"
+                // symbols on "<br />"
             }
-         });
 
-      IDE.getInstance().addOutlineItemCreator(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyOutlineItemCreator());
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyCommentsModifier()));
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
-    */
-   @Override
-   public void handleError(Throwable exc)
-   {
-      if (exc instanceof ServerException)
-      {
-         ServerException exception = (ServerException)exc;
-         StringBuffer outputContent = new StringBuffer();
-         outputContent.append("Error (<i>").append(exception.getHTTPStatus()).append("</i>: <i>")
-            .append(exception.getStatusText()).append("</i>)");
-         if (!exception.getMessage().equals(""))
-         {
-            outputContent.append("<br />").append(exception.getMessage().replace("\n", "<br />")); // replace "end of line"
-                                                                                                   // symbols on "<br />"
-         }
-
-         IDE.fireEvent(new OutputEvent(outputContent.toString(), OutputMessage.Type.ERROR));
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
-      }
-   }
+            IDE.fireEvent(new OutputEvent(outputContent.toString(), OutputMessage.Type.ERROR));
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
+        }
+    }
 
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event)
-   {
-      FileModel file = event.getFile();
-      if (file == null)
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event) {
+        FileModel file = event.getFile();
+        if (file == null) {
+            return;
+        }
 
-      final ProjectModel project = file.getProject() != null ? file.getProject() : openedProject;
-      
-      if (project != null)
-      {
-         groovyCodeAssistant.setActiveProjectId(project.getId());
-         factory.setProjectId(project.getId());
-      }
+        final ProjectModel project = file.getProject() != null ? file.getProject() : openedProject;
 
-      if (!file.isPersisted())
-      {
-         return;
-      }
+        if (project != null) {
+            groovyCodeAssistant.setActiveProjectId(project.getId());
+            factory.setProjectId(project.getId());
+        }
 
-      if (file.getMimeType().equals(MimeType.APPLICATION_GROOVY) || file.getMimeType().equals(MimeType.GROOVY_SERVICE)
-         || file.getMimeType().equals(MimeType.CHROMATTIC_DATA_OBJECT))
-      {
-         List<Token> classes = new ArrayList<Token>();
-         FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
-         
-         service.findClassesByProject(file.getId(), project.getId(),
-            new AsyncRequestCallback<List<Token>>(unmarshaller)
-            {
+        if (!file.isPersisted()) {
+            return;
+        }
 
-               @Override
-               protected void onSuccess(List<Token> result)
-               {
-                  groovyCodeValidator.setClassesFromProject(result);
-                  ((CodeMirror)event.getEditor()).forceValidateCode();
-               }
+        if (file.getMimeType().equals(MimeType.APPLICATION_GROOVY) || file.getMimeType().equals(MimeType.GROOVY_SERVICE)
+            || file.getMimeType().equals(MimeType.CHROMATTIC_DATA_OBJECT)) {
+            List<Token> classes = new ArrayList<Token>();
+            FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-   }
+            service.findClassesByProject(file.getId(), project.getId(),
+                                         new AsyncRequestCallback<List<Token>>(unmarshaller) {
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      openedProject = null;
-   }
+                                             @Override
+                                             protected void onSuccess(List<Token> result) {
+                                                 groovyCodeValidator.setClassesFromProject(result);
+                                                 ((CodeMirror)event.getEditor()).forceValidateCode();
+                                             }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      openedProject = event.getProject();
+                                             @Override
+                                             protected void onFailure(Throwable exception) {
+                                                 handleError(exception);
+                                             }
+                                         });
+        }
+    }
 
-      String projectId = openedProject.getId();
-      groovyCodeAssistant.setActiveProjectId(projectId);
-      factory.setProjectId(projectId);
-   }
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        openedProject = null;
+    }
+
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        openedProject = event.getProject();
+
+        String projectId = openedProject.getId();
+        groovyCodeAssistant.setActiveProjectId(projectId);
+        factory.setProjectId(projectId);
+    }
 
 }

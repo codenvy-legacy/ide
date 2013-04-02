@@ -24,30 +24,25 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ShowHideChatEvent extends GwtEvent<ShowHideChatHandler>
-{
-   public static Type<ShowHideChatHandler> TYPE = new Type<ShowHideChatHandler>();
+public class ShowHideChatEvent extends GwtEvent<ShowHideChatHandler> {
+    public static Type<ShowHideChatHandler> TYPE = new Type<ShowHideChatHandler>();
 
-   private boolean show;
+    private boolean show;
 
-   public ShowHideChatEvent(boolean show)
-   {
-      this.show = show;
-   }
+    public ShowHideChatEvent(boolean show) {
+        this.show = show;
+    }
 
-   public Type<ShowHideChatHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    public Type<ShowHideChatHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   protected void dispatch(ShowHideChatHandler handler)
-   {
-      handler.onShowHideChat(this);
-   }
+    protected void dispatch(ShowHideChatHandler handler) {
+        handler.onShowHideChat(this);
+    }
 
-   public boolean isShow()
-   {
-      return show;
-   }
+    public boolean isShow() {
+        return show;
+    }
 }
 

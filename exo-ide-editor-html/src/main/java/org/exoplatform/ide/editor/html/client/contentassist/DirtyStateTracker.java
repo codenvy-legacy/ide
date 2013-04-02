@@ -16,37 +16,31 @@ package org.exoplatform.ide.editor.html.client.contentassist;
 
 //import javax.annotation.Nullable;
 
-/**
- * Class that tracks "dirty" state and sends notifications to delegate.
- */
+/** Class that tracks "dirty" state and sends notifications to delegate. */
 public class DirtyStateTracker {
 
-  /**
-   * Flag that indicates that parsing of this tag is not finished yet.
-   */
-  private boolean dirty;
+    /** Flag that indicates that parsing of this tag is not finished yet. */
+    private boolean dirty;
 
-  /**
-   * Delegate to be notified when object becomes "clean".
-   */
-  private Runnable delegate;
+    /** Delegate to be notified when object becomes "clean". */
+    private Runnable delegate;
 
-  public DirtyStateTracker() {
-    setDirty(true);
-  }
-
-  public boolean isDirty() {
-    return dirty;
-  }
-
-  protected void setDirty(boolean dirty) {
-    this.dirty = dirty;
-    if (!dirty && delegate != null) {
-      delegate.run();
+    public DirtyStateTracker() {
+        setDirty(true);
     }
-  }
 
-  public void setDelegate(/*@Nullable */Runnable delegate) {
-    this.delegate = delegate;
-  }
+    public boolean isDirty() {
+        return dirty;
+    }
+
+    protected void setDirty(boolean dirty) {
+        this.dirty = dirty;
+        if (!dirty && delegate != null) {
+            delegate.run();
+        }
+    }
+
+    public void setDelegate(/*@Nullable */Runnable delegate) {
+        this.delegate = delegate;
+    }
 }

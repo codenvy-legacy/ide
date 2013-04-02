@@ -20,10 +20,6 @@ package org.exoplatform.ide.shell.server.rest;
 
 import org.exoplatform.ide.shell.conversationstate.ShellUser;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -32,30 +28,32 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 @Path("/ide/shell/configuration")
-public class DummyConfigurationService
-{
-   @GET
-   @Path("/init")
-   @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed({"developer"})
-   public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request)
-   {
+public class DummyConfigurationService {
+    @GET
+    @Path("/init")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"developer"})
+    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request) {
 
-      Map<String, Object> result = new HashMap<String, Object>();
-      result.put("userSettings", "{}");
-      ShellUser user =
-         new ShellUser(request.getUserPrincipal().getName(), Collections.<String> emptyList());
-      result.put("user", user);
-      result.put("userSettings", "{}");
-      return result;
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("userSettings", "{}");
+        ShellUser user =
+                new ShellUser(request.getUserPrincipal().getName(), Collections.<String>emptyList());
+        result.put("user", user);
+        result.put("userSettings", "{}");
+        return result;
 
-   }
+    }
 
 }

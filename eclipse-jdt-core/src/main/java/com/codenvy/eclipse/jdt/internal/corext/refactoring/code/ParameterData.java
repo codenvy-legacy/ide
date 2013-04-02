@@ -18,113 +18,90 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow.FlowInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-/* package */ class ParameterData
-{
+/* package */ class ParameterData {
 
-   public static final String PROPERTY = ParameterData.class.getName();
+    public static final String PROPERTY = ParameterData.class.getName();
 
-   private SingleVariableDeclaration fDeclaration;
+    private SingleVariableDeclaration fDeclaration;
 
-   private int fAccessMode;
+    private int fAccessMode;
 
-   private List<SimpleName> fReferences;
+    private List<SimpleName> fReferences;
 
-   private int fOperatorPrecedence;
+    private int fOperatorPrecedence;
 
-   public ParameterData(SingleVariableDeclaration decl)
-   {
-      super();
-      fDeclaration = decl;
-      fAccessMode = FlowInfo.UNUSED;
-      fReferences = new ArrayList<SimpleName>(2);
-      fOperatorPrecedence = -1;
-   }
+    public ParameterData(SingleVariableDeclaration decl) {
+        super();
+        fDeclaration = decl;
+        fAccessMode = FlowInfo.UNUSED;
+        fReferences = new ArrayList<SimpleName>(2);
+        fOperatorPrecedence = -1;
+    }
 
-   public String getName()
-   {
-      return fDeclaration.getName().getIdentifier();
-   }
+    public String getName() {
+        return fDeclaration.getName().getIdentifier();
+    }
 
-   public ITypeBinding getTypeBinding()
-   {
-      return fDeclaration.resolveBinding().getType();
-   }
+    public ITypeBinding getTypeBinding() {
+        return fDeclaration.resolveBinding().getType();
+    }
 
-   public void addReference(SimpleName node)
-   {
-      fReferences.add(node);
-   }
+    public void addReference(SimpleName node) {
+        fReferences.add(node);
+    }
 
-   public List<SimpleName> references()
-   {
-      return fReferences;
-   }
+    public List<SimpleName> references() {
+        return fReferences;
+    }
 
-   public void setAccessMode(int mode)
-   {
-      fAccessMode = mode;
-   }
+    public void setAccessMode(int mode) {
+        fAccessMode = mode;
+    }
 
-   public boolean isUnused()
-   {
-      return fAccessMode == FlowInfo.UNUSED;
-   }
+    public boolean isUnused() {
+        return fAccessMode == FlowInfo.UNUSED;
+    }
 
-   public boolean isReadOnly()
-   {
-      return (fAccessMode & (FlowInfo.READ | FlowInfo.READ_POTENTIAL)) != 0;
-   }
+    public boolean isReadOnly() {
+        return (fAccessMode & (FlowInfo.READ | FlowInfo.READ_POTENTIAL)) != 0;
+    }
 
-   public boolean isWrite()
-   {
-      return (fAccessMode & (FlowInfo.WRITE | FlowInfo.WRITE_POTENTIAL | FlowInfo.UNKNOWN)) != 0;
-   }
+    public boolean isWrite() {
+        return (fAccessMode & (FlowInfo.WRITE | FlowInfo.WRITE_POTENTIAL | FlowInfo.UNKNOWN)) != 0;
+    }
 
-   public int getSimplifiedAccessMode()
-   {
-      if (isWrite())
-      {
-         return FlowInfo.WRITE;
-      }
-      if (isReadOnly())
-      {
-         return FlowInfo.READ;
-      }
-      return FlowInfo.UNUSED;
-   }
+    public int getSimplifiedAccessMode() {
+        if (isWrite()) {
+            return FlowInfo.WRITE;
+        }
+        if (isReadOnly()) {
+            return FlowInfo.READ;
+        }
+        return FlowInfo.UNUSED;
+    }
 
-   public int getNumberOfAccesses()
-   {
-      return fReferences.size();
-   }
+    public int getNumberOfAccesses() {
+        return fReferences.size();
+    }
 
-   public boolean needsEvaluation()
-   {
-      if (fReferences.size() <= 1)
-      {
-         return false;
-      }
-      return true;
-   }
+    public boolean needsEvaluation() {
+        if (fReferences.size() <= 1) {
+            return false;
+        }
+        return true;
+    }
 
-   public void setOperatorPrecedence(int newValue)
-   {
-      if (newValue == -1)
-      {
-         fOperatorPrecedence = newValue;
-      }
-      else if (fOperatorPrecedence == -1)
-      {
-         fOperatorPrecedence = newValue;
-      }
-      else
-      {
-         fOperatorPrecedence = Math.min(fOperatorPrecedence, newValue);
-      }
-   }
+    public void setOperatorPrecedence(int newValue) {
+        if (newValue == -1) {
+            fOperatorPrecedence = newValue;
+        } else if (fOperatorPrecedence == -1) {
+            fOperatorPrecedence = newValue;
+        } else {
+            fOperatorPrecedence = Math.min(fOperatorPrecedence, newValue);
+        }
+    }
 
-   public int getOperatorPrecedence()
-   {
-      return fOperatorPrecedence;
-   }
+    public int getOperatorPrecedence() {
+        return fOperatorPrecedence;
+    }
 }

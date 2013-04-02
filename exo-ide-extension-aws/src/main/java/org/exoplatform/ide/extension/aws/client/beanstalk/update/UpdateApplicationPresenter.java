@@ -47,162 +47,134 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationReque
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 19, 2012 4:45:58 PM anya $
- * 
  */
-public class UpdateApplicationPresenter implements UpdateApplicationHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      HasClickHandlers getUpdateButton();
+public class UpdateApplicationPresenter implements UpdateApplicationHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        HasClickHandlers getUpdateButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasValue<String> getDescriptionField();
+        HasValue<String> getDescriptionField();
 
-      void enableUpdateButton(boolean enabled);
+        void enableUpdateButton(boolean enabled);
 
-      void focusInDescriptionField();
-   }
+        void focusInDescriptionField();
+    }
 
-   private Display display;
+    private Display display;
 
-   private String vfsId;
+    private String vfsId;
 
-   private String projectId;
+    private String projectId;
 
-   private ApplicationUpdatedHandler applicationUpdatedHandler;
+    private ApplicationUpdatedHandler applicationUpdatedHandler;
 
-   private ApplicationInfo applicationInfo;
+    private ApplicationInfo applicationInfo;
 
-   public UpdateApplicationPresenter()
-   {
-      IDE.addHandler(UpdateApplicationEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public UpdateApplicationPresenter() {
+        IDE.addHandler(UpdateApplicationEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.update.UpdateApplicationHandler#onUpdateApplication(org.exoplatform.ide.extension.aws.client.beanstalk.update.UpdateApplicationEvent)
-    */
-   @Override
-   public void onUpdateApplication(UpdateApplicationEvent event)
-   {
-      this.vfsId = event.getVfsId();
-      this.projectId = event.getProjectId();
-      this.applicationInfo = event.getApplicationInfo();
-      this.applicationUpdatedHandler = event.getApplicationUpdatedHandler();
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.update.UpdateApplicationHandler#onUpdateApplication(org.exoplatform.ide
+     * .extension.aws.client.beanstalk.update.UpdateApplicationEvent) */
+    @Override
+    public void onUpdateApplication(UpdateApplicationEvent event) {
+        this.vfsId = event.getVfsId();
+        this.projectId = event.getProjectId();
+        this.applicationInfo = event.getApplicationInfo();
+        this.applicationUpdatedHandler = event.getApplicationUpdatedHandler();
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
 
-      display.getDescriptionField().setValue(
-         applicationInfo.getDescription() != null ? applicationInfo.getDescription() : "");
-      display.focusInDescriptionField();
-      display.enableUpdateButton(false);
-   }
+        display.getDescriptionField().setValue(
+                applicationInfo.getDescription() != null ? applicationInfo.getDescription() : "");
+        display.focusInDescriptionField();
+        display.enableUpdateButton(false);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getDescriptionField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+        display.getDescriptionField().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableUpdateButton(event.getValue() != null
-               && !event.getValue().equals(applicationInfo.getDescription()));
-         }
-      });
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableUpdateButton(event.getValue() != null
+                                           && !event.getValue().equals(applicationInfo.getDescription()));
+            }
+        });
 
-      display.getUpdateButton().addClickHandler(new ClickHandler()
-      {
+        display.getUpdateButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doUpdate();
-         }
-      });
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                doUpdate();
+            }
+        });
+    }
 
-   public void doUpdate()
-   {
-      UpdateApplicationRequest updateApplicationRequest =
-         AWSExtension.AUTO_BEAN_FACTORY.updateApplicationRequest().as();
-      updateApplicationRequest.setApplicationName(applicationInfo.getName());
-      updateApplicationRequest.setDescription(display.getDescriptionField().getValue());
+    public void doUpdate() {
+        UpdateApplicationRequest updateApplicationRequest =
+                AWSExtension.AUTO_BEAN_FACTORY.updateApplicationRequest().as();
+        updateApplicationRequest.setApplicationName(applicationInfo.getName());
+        updateApplicationRequest.setDescription(display.getDescriptionField().getValue());
 
-      AutoBean<ApplicationInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationInfo();
+        AutoBean<ApplicationInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationInfo();
 
-      try
-      {
-         BeanstalkClientService.getInstance().updateApplication(
-            vfsId,
-            projectId,
-            updateApplicationRequest,
-            new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
-               new LoggedInHandler()
-               {
+        try {
+            BeanstalkClientService.getInstance().updateApplication(
+                    vfsId,
+                    projectId,
+                    updateApplicationRequest,
+                    new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+                                                                 new LoggedInHandler() {
 
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     doUpdate();
-                  }
-               })
-            {
+                                                                     @Override
+                                                                     public void onLoggedIn() {
+                                                                         doUpdate();
+                                                                     }
+                                                                 }) {
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message =
-                     AWSExtension.LOCALIZATION_CONSTANT.updateApplicationFailed(applicationInfo.getName());
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-               }
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            String message =
+                                    AWSExtension.LOCALIZATION_CONSTANT.updateApplicationFailed(applicationInfo.getName());
+                            if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null) {
+                                message += "<br>" + ((ServerException)exception).getMessage();
+                            }
+                            IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                        }
 
-               @Override
-               protected void onSuccess(ApplicationInfo result)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-                  if (applicationUpdatedHandler != null)
-                  {
-                     applicationUpdatedHandler.onApplicationUpdated(result);
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        @Override
+                        protected void onSuccess(ApplicationInfo result) {
+                            IDE.getInstance().closeView(display.asView().getId());
+                            if (applicationUpdatedHandler != null) {
+                                applicationUpdatedHandler.onApplicationUpdated(result);
+                            }
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

@@ -19,41 +19,42 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
-   <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
-   <ui:style>
-      .spacing {
-      	margin-top: 15px;
-      }
-      
-      .label {
-      	margin-bottom: 5px;
-      	cursor: default;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-size: 11px;
-      	font-style: normal;
-      	font-weight: normal;
-      }
-   </ui:style>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
+    <ui:style>
+        .spacing {
+            margin-top: 15px;
+        }
 
-   <c:Border margin="20" borderColor="transparent">
-      <c:layer>
-         <g:FlowPanel width="100%">
-            <c:Label value="{locale.openFileByURLFieldTitle}" width="100%" styleName="{style.label}"></c:Label>
-            <c:TextInput ui:field="urlField" width="99%"></c:TextInput>
-            <g:HorizontalPanel spacing="5" width="100%" styleName="{style.spacing}">
-               <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
-                  <c:ImageButton text="{locale.openFileByURLOpenButtonTitle}" ui:field="openButton" imageName="ok"
-                     buttonId="ide.openFileByURL.openButton"></c:ImageButton>
-               </g:cell>
-               <g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">
-                  <c:ImageButton text="{locale.openFileByURLCancelButtonTitle}" ui:field="cancelButton" imageName="cancel"
-                     buttonId="ide.openFileByURL.cancelButton"></c:ImageButton>
-               </g:cell>
+        .label {
+            margin-bottom: 5px;
+            cursor: default;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-size: 11px;
+            font-style: normal;
+            font-weight: normal;
+        }
+    </ui:style>
 
-            </g:HorizontalPanel>
-         </g:FlowPanel>
-      </c:layer>
-   </c:Border>
+    <c:Border margin="20" borderColor="transparent">
+        <c:layer>
+            <g:FlowPanel width="100%">
+                <c:Label value="{locale.openFileByURLFieldTitle}" width="100%" styleName="{style.label}"></c:Label>
+                <c:TextInput ui:field="urlField" width="99%"></c:TextInput>
+                <g:HorizontalPanel spacing="5" width="100%" styleName="{style.spacing}">
+                    <g:cell horizontalAlignment='ALIGN_RIGHT' verticalAlignment="ALIGN_MIDDLE">
+                        <c:ImageButton text="{locale.openFileByURLOpenButtonTitle}" ui:field="openButton" imageName="ok"
+                                       buttonId="ide.openFileByURL.openButton"></c:ImageButton>
+                    </g:cell>
+                    <g:cell horizontalAlignment='ALIGN_LEFT' verticalAlignment="ALIGN_MIDDLE">
+                        <c:ImageButton text="{locale.openFileByURLCancelButtonTitle}" ui:field="cancelButton" imageName="cancel"
+                                       buttonId="ide.openFileByURL.cancelButton"></c:ImageButton>
+                    </g:cell>
+
+                </g:HorizontalPanel>
+            </g:FlowPanel>
+        </c:layer>
+    </c:Border>
 
 </ui:UiBinder>

@@ -38,150 +38,137 @@ import java.util.Map;
  * @deprecated since 1.2, use {@link com.codenvy.eclipse.ltk.core.refactoring.resource.RenameResourceDescriptor} from
  *             <code>org.eclipse.ltk.core.refactoring</code> instead.
  */
-public final class RenameResourceDescriptor extends JavaRefactoringDescriptor
-{
+public final class RenameResourceDescriptor extends JavaRefactoringDescriptor {
 
-   /**
-    * The name attribute
-    */
-   private String fName = null;
+    /** The name attribute */
+    private String fName = null;
 
-   /**
-    * The resource path attribute (full path)
-    */
-   private IPath fResourcePath = null;
+    /** The resource path attribute (full path) */
+    private IPath fResourcePath = null;
 
-   /**
-    * Creates a new refactoring descriptor.
-    */
-   public RenameResourceDescriptor()
-   {
-      super(IJavaRefactorings.RENAME_RESOURCE);
-   }
+    /** Creates a new refactoring descriptor. */
+    public RenameResourceDescriptor() {
+        super(IJavaRefactorings.RENAME_RESOURCE);
+    }
 
-   /**
-    * Creates a new refactoring descriptor.
-    *
-    * @param project     the non-empty name of the project associated with this
-    *                    refactoring, or <code>null</code> for a workspace
-    *                    refactoring
-    * @param description a non-empty human-readable description of the particular
-    *                    refactoring instance
-    * @param comment     the human-readable comment of the particular refactoring
-    *                    instance, or <code>null</code> for no comment
-    * @param arguments   a map of arguments that will be persisted and describes
-    *                    all settings for this refactoring
-    * @param flags       the flags of the refactoring descriptor
-    * @throws IllegalArgumentException if the argument map contains invalid keys/values
-    * @since 1.2
-    */
-   public RenameResourceDescriptor(String project, String description, String comment, Map arguments, int flags)
-   {
-      super(IJavaRefactorings.RENAME_RESOURCE, project, description, comment, arguments, flags);
-      fResourcePath = JavaRefactoringDescriptorUtil.getResourcePath(arguments, ATTRIBUTE_INPUT, project);
-      fName = JavaRefactoringDescriptorUtil.getString(arguments, ATTRIBUTE_NAME);
-   }
+    /**
+     * Creates a new refactoring descriptor.
+     *
+     * @param project
+     *         the non-empty name of the project associated with this
+     *         refactoring, or <code>null</code> for a workspace
+     *         refactoring
+     * @param description
+     *         a non-empty human-readable description of the particular
+     *         refactoring instance
+     * @param comment
+     *         the human-readable comment of the particular refactoring
+     *         instance, or <code>null</code> for no comment
+     * @param arguments
+     *         a map of arguments that will be persisted and describes
+     *         all settings for this refactoring
+     * @param flags
+     *         the flags of the refactoring descriptor
+     * @throws IllegalArgumentException
+     *         if the argument map contains invalid keys/values
+     * @since 1.2
+     */
+    public RenameResourceDescriptor(String project, String description, String comment, Map arguments, int flags) {
+        super(IJavaRefactorings.RENAME_RESOURCE, project, description, comment, arguments, flags);
+        fResourcePath = JavaRefactoringDescriptorUtil.getResourcePath(arguments, ATTRIBUTE_INPUT, project);
+        fName = JavaRefactoringDescriptorUtil.getString(arguments, ATTRIBUTE_NAME);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   protected void populateArgumentMap()
-   {
-      super.populateArgumentMap();
-      JavaRefactoringDescriptorUtil.setResourcePath(fArguments, ATTRIBUTE_INPUT, getProject(), fResourcePath);
-      JavaRefactoringDescriptorUtil.setString(fArguments, ATTRIBUTE_NAME, fName);
-   }
+    /** {@inheritDoc} */
+    protected void populateArgumentMap() {
+        super.populateArgumentMap();
+        JavaRefactoringDescriptorUtil.setResourcePath(fArguments, ATTRIBUTE_INPUT, getProject(), fResourcePath);
+        JavaRefactoringDescriptorUtil.setString(fArguments, ATTRIBUTE_NAME, fName);
+    }
 
-   /**
-    * Sets the new name to rename the resource to.
-    *
-    * @param name the non-empty new name to set
-    */
-   public void setNewName(final String name)
-   {
-      Assert.isNotNull(name);
-      Assert.isLegal(!"".equals(name), "Name must not be empty"); //$NON-NLS-1$//$NON-NLS-2$
-      fName = name;
-   }
+    /**
+     * Sets the new name to rename the resource to.
+     *
+     * @param name
+     *         the non-empty new name to set
+     */
+    public void setNewName(final String name) {
+        Assert.isNotNull(name);
+        Assert.isLegal(!"".equals(name), "Name must not be empty"); //$NON-NLS-1$//$NON-NLS-2$
+        fName = name;
+    }
 
-   /**
-    * Returns the new name to rename the resource to.
-    *
-    * @return the new name to rename the resource to
-    * @since 1.2
-    */
-   public String getNewName()
-   {
-      return fName;
-   }
+    /**
+     * Returns the new name to rename the resource to.
+     *
+     * @return the new name to rename the resource to
+     * @since 1.2
+     */
+    public String getNewName() {
+        return fName;
+    }
 
-   /**
-    * Sets the project name of this refactoring.
-    * <p>
-    * Note: If the resource to be renamed is of type {@link IResource#PROJECT},
-    * clients are required to to set the project name to <code>null</code>.
-    * </p>
-    * <p>
-    * The default is to associate the refactoring with the workspace.
-    * </p>
-    *
-    * @param project the non-empty project name to set, or <code>null</code> for
-    *                the workspace
-    * @see #getProject()
-    */
-   public void setProject(final String project)
-   {
-      super.setProject(project);
-   }
+    /**
+     * Sets the project name of this refactoring.
+     * <p>
+     * Note: If the resource to be renamed is of type {@link IResource#PROJECT},
+     * clients are required to to set the project name to <code>null</code>.
+     * </p>
+     * <p>
+     * The default is to associate the refactoring with the workspace.
+     * </p>
+     *
+     * @param project
+     *         the non-empty project name to set, or <code>null</code> for
+     *         the workspace
+     * @see #getProject()
+     */
+    public void setProject(final String project) {
+        super.setProject(project);
+    }
 
-   /**
-    * Sets the resource to be renamed.
-    * <p>
-    * Note: If the resource to be renamed is of type {@link IResource#PROJECT},
-    * clients are required to to set the project name to <code>null</code>.
-    * </p>
-    *
-    * @param resource the resource to be renamed
-    */
-   public void setResource(final IResource resource)
-   {
-      Assert.isNotNull(resource);
-      fResourcePath = resource.getFullPath();
-   }
+    /**
+     * Sets the resource to be renamed.
+     * <p>
+     * Note: If the resource to be renamed is of type {@link IResource#PROJECT},
+     * clients are required to to set the project name to <code>null</code>.
+     * </p>
+     *
+     * @param resource
+     *         the resource to be renamed
+     */
+    public void setResource(final IResource resource) {
+        Assert.isNotNull(resource);
+        fResourcePath = resource.getFullPath();
+    }
 
 
-   /**
-    * Returns the path of the resource to rename.
-    *
-    * @return the path of the resource to rename
-    * @since 1.2
-    */
-   public IPath getResourcePath()
-   {
-      return fResourcePath;
-   }
+    /**
+     * Returns the path of the resource to rename.
+     *
+     * @return the path of the resource to rename
+     * @since 1.2
+     */
+    public IPath getResourcePath() {
+        return fResourcePath;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringStatus validateDescriptor()
-   {
-      RefactoringStatus status = super.validateDescriptor();
-      if (fResourcePath == null)
-      {
-         status.merge(
-            RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameResourceDescriptor_no_resource));
-      }
-      if (fName == null || "".equals(fName)) //$NON-NLS-1$
-      {
-         status.merge(
-            RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameResourceDescriptor_no_new_name));
-      }
-      if (fResourcePath.segmentCount() == 1 && getProject() != null)
-      {
-         status.merge(
-            RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameResourceDescriptor_project_constraint));
-      }
-      return status;
-   }
+    /** {@inheritDoc} */
+    public RefactoringStatus validateDescriptor() {
+        RefactoringStatus status = super.validateDescriptor();
+        if (fResourcePath == null) {
+            status.merge(
+                    RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameResourceDescriptor_no_resource));
+        }
+        if (fName == null || "".equals(fName)) //$NON-NLS-1$
+        {
+            status.merge(
+                    RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameResourceDescriptor_no_new_name));
+        }
+        if (fResourcePath.segmentCount() == 1 && getProject() != null) {
+            status.merge(
+                    RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameResourceDescriptor_project_constraint));
+        }
+        return status;
+    }
 }

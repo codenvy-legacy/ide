@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.server.expression;
 
 import com.sun.jdi.Value;
+
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -30,42 +31,32 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class ANTLRExpressionParser extends ExpressionParser
-{
-   private CommonTreeNodeStream nodes;
+public final class ANTLRExpressionParser extends ExpressionParser {
+    private CommonTreeNodeStream nodes;
 
-   public ANTLRExpressionParser(String expression)
-   {
-      super(expression);
-   }
+    public ANTLRExpressionParser(String expression) {
+        super(expression);
+    }
 
-   @Override
-   public Value evaluate(Evaluator ev)
-   {
-      try
-      {
-         if (nodes == null)
-         {
-            parse();
-         }
-         else
-         {
-            nodes.reset();
-         }
-         JavaTreeParser walker = new JavaTreeParser(nodes, ev);
-         return walker.evaluate();
-      }
-      catch (RecognitionException e)
-      {
-         throw new ExpressionException(e.getMessage(), e);
-      }
-   }
+    @Override
+    public Value evaluate(Evaluator ev) {
+        try {
+            if (nodes == null) {
+                parse();
+            } else {
+                nodes.reset();
+            }
+            JavaTreeParser walker = new JavaTreeParser(nodes, ev);
+            return walker.evaluate();
+        } catch (RecognitionException e) {
+            throw new ExpressionException(e.getMessage(), e);
+        }
+    }
 
-   private void parse() throws RecognitionException
-   {
-      JavaLexer lexer = new JavaLexer(new ANTLRStringStream(getExpression()));
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-      JavaParser parser = new JavaParser(tokens);
-      nodes = new CommonTreeNodeStream(parser.expression().getTree());
-   }
+    private void parse() throws RecognitionException {
+        JavaLexer lexer = new JavaLexer(new ANTLRStringStream(getExpression()));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        JavaParser parser = new JavaParser(tokens);
+        nodes = new CommonTreeNodeStream(parser.expression().getTree());
+    }
 }

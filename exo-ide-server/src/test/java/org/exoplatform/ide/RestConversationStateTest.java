@@ -24,66 +24,57 @@ import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.ide.conversationstate.IdeUser;
-import org.exoplatform.services.security.Authenticator;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Credential;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.PasswordCredential;
-import org.exoplatform.services.security.UsernameCredential;
+import org.exoplatform.services.security.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.SecurityContext;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.SecurityContext;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class RestConversationStateTest extends BaseTest
-{
+public class RestConversationStateTest extends BaseTest {
 
-   private SecurityContext securityContext;
+    private SecurityContext securityContext;
 
-   @Before
-   public void setUp() throws Exception
-   {
-      super.setUp();
-      Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
-      String validUser =
-         authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
-      Identity id = authr.createIdentity(validUser);
-      Set<String> roles = new HashSet<String>();
-      roles.add("users");
-      roles.add("administrators");
-      id.setRoles(roles);
-      ConversationState s = new ConversationState(id);
-      ConversationState.setCurrent(s);
-   }
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
+        String validUser =
+                authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
+        Identity id = authr.createIdentity(validUser);
+        Set<String> roles = new HashSet<String>();
+        roles.add("users");
+        roles.add("administrators");
+        id.setRoles(roles);
+        ConversationState s = new ConversationState(id);
+        ConversationState.setCurrent(s);
+    }
 
-   @Test
-   public void testWhoami() throws Exception
-   {
-      Set<String> userRoles = new HashSet<String>();
-      userRoles.add("users");
-      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, securityContext);
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      ContainerResponse cres = launcher.service("POST", "/ide/conversation-state/whoami", "", headers, null, null, ctx);
-      Assert.assertEquals(200, cres.getStatus());
-      Assert.assertNotNull(cres.getEntity());
-      Assert.assertTrue(cres.getEntity() instanceof IdeUser);
-      IdeUser user = (IdeUser)cres.getEntity();
-      Assert.assertEquals("root", user.getUserId());
-      Assert.assertTrue(user.getRoles().contains("users"));
-      Assert.assertTrue(user.getRoles().contains("administrators"));
-      Assert.assertEquals(2, user.getRoles().size());
-   }
+    @Test
+    public void testWhoami() throws Exception {
+        Set<String> userRoles = new HashSet<String>();
+        userRoles.add("users");
+        securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
+        EnvironmentContext ctx = new EnvironmentContext();
+        ctx.put(SecurityContext.class, securityContext);
+        MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+        ContainerResponse cres = launcher.service("POST", "/ide/conversation-state/whoami", "", headers, null, null, ctx);
+        Assert.assertEquals(200, cres.getStatus());
+        Assert.assertNotNull(cres.getEntity());
+        Assert.assertTrue(cres.getEntity() instanceof IdeUser);
+        IdeUser user = (IdeUser)cres.getEntity();
+        Assert.assertEquals("root", user.getUserId());
+        Assert.assertTrue(user.getRoles().contains("users"));
+        Assert.assertTrue(user.getRoles().contains("administrators"));
+        Assert.assertEquals(2, user.getRoles().size());
+    }
 }

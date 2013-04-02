@@ -24,17 +24,14 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class SendCodePointEvent extends GwtEvent<SendCodePointHandler>
-{
-   public static Type<SendCodePointHandler> TYPE = new Type<SendCodePointHandler>();
+public class SendCodePointEvent extends GwtEvent<SendCodePointHandler> {
+    public static Type<SendCodePointHandler> TYPE = new Type<SendCodePointHandler>();
 
-   public Type<SendCodePointHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    public Type<SendCodePointHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   protected void dispatch(SendCodePointHandler handler)
-   {
-      handler.onSendCodePoint(this);
-   }
+    protected void dispatch(SendCodePointHandler handler) {
+        handler.onSendCodePoint(this);
+    }
 }

@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link DeployApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 4:47:31 PM anya $
- * 
  */
-public interface DeployApplicationHandler extends EventHandler
-{
-   /**
-    * Perform deploying application to Google App Engine.
-    * 
-    * @param event
-    */
-   void onDeployApplication(DeployApplicationEvent event);
+public interface DeployApplicationHandler extends EventHandler {
+    /**
+     * Perform deploying application to Google App Engine.
+     *
+     * @param event
+     */
+    void onDeployApplication(DeployApplicationEvent event);
 }

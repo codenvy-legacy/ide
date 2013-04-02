@@ -17,29 +17,23 @@ package org.exoplatform.ide.dtogen.client;
 import org.exoplatform.ide.dtogen.shared.RoutableDto;
 import org.exoplatform.ide.json.client.Jso;
 
-/**
- * Client side base class for all DTO payload implementations.
- */
-public abstract class RoutableDtoClientImpl extends Jso implements RoutableDto
-{
+/** Client side base class for all DTO payload implementations. */
+public abstract class RoutableDtoClientImpl extends Jso implements RoutableDto {
 
-   // To work around devmode bug where static field references on the interface
-   // implemented by this SingleJsoImpl, blow up.
-   @SuppressWarnings("unused")
-   private static final String TYPE_FIELD = RoutableDto.TYPE_FIELD;
+    // To work around devmode bug where static field references on the interface
+    // implemented by this SingleJsoImpl, blow up.
+    @SuppressWarnings("unused")
+    private static final String TYPE_FIELD = RoutableDto.TYPE_FIELD;
 
-   @SuppressWarnings("unused")
-   private static final int NON_ROUTABLE_TYPE = RoutableDto.NON_ROUTABLE_TYPE;
+    @SuppressWarnings("unused")
+    private static final int NON_ROUTABLE_TYPE = RoutableDto.NON_ROUTABLE_TYPE;
 
-   protected RoutableDtoClientImpl()
-   {
-   }
+    protected RoutableDtoClientImpl() {
+    }
 
-   /**
-    * @return the type of the JsonMessage so the client knows how to route it.
-    */
-   public final native int getType() /*-{
-      return this[@org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl::TYPE_FIELD] ||
-         @org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl::NON_ROUTABLE_TYPE;
-   }-*/;
+    /** @return the type of the JsonMessage so the client knows how to route it. */
+    public final native int getType() /*-{
+        return this[@org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl::TYPE_FIELD] ||
+            @org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl::NON_ROUTABLE_TYPE;
+    }-*/;
 }

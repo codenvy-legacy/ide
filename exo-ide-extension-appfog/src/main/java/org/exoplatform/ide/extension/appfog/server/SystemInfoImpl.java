@@ -21,153 +21,136 @@ package org.exoplatform.ide.extension.appfog.server;
 import org.exoplatform.ide.extension.appfog.shared.Framework;
 import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
 import org.exoplatform.ide.extension.appfog.shared.SystemResources;
+
 import java.util.Map;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class SystemInfoImpl implements SystemInfo
-{
-   private SystemResources limits;
-   private SystemResources usage;
-   /** Cloud platform description. */
-   private String description;
-   /** User email. */
-   private String user;
-   /** Cloud platform version. */
-   private String version;
-   /** Cloud platform name. */
-   private String name;
-   /** Support email address. */
-   private String support;
-   /** Supported frameworks. */
-   private Map<String, Framework> frameworks;
+public class SystemInfoImpl implements SystemInfo {
+    private SystemResources        limits;
+    private SystemResources        usage;
+    /** Cloud platform description. */
+    private String                 description;
+    /** User email. */
+    private String                 user;
+    /** Cloud platform version. */
+    private String                 version;
+    /** Cloud platform name. */
+    private String                 name;
+    /** Support email address. */
+    private String                 support;
+    /** Supported frameworks. */
+    private Map<String, Framework> frameworks;
 
-   /** {@inheritDoc} */
-   @Override
-   public SystemResources getUsage()
-   {
-      return usage;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public SystemResources getUsage() {
+        return usage;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setUsage(SystemResources usage)
-   {
-      this.usage = usage;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setUsage(SystemResources usage) {
+        this.usage = usage;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public SystemResources getLimits()
-   {
-      return limits;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public SystemResources getLimits() {
+        return limits;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setLimits(SystemResources limits)
-   {
-      this.limits = limits;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setLimits(SystemResources limits) {
+        this.limits = limits;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public String getDescription()
-   {
-      return description;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public String getUser()
-   {
-      return user;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getUser() {
+        return user;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setUser(String user)
-   {
-      this.user = user;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setUser(String user) {
+        this.user = user;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public String getVersion()
-   {
-      return version;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getVersion() {
+        return version;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public String getSupport()
-   {
-      return support;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getSupport() {
+        return support;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setSupport(String support)
-   {
-      this.support = support;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setSupport(String support) {
+        this.support = support;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public Map<String, Framework> getFrameworks()
-   {
-      return frameworks;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Map<String, Framework> getFrameworks() {
+        return frameworks;
+    }
 
-   /** {@inheritDoc} */
-   @Override
-   public void setFrameworks(Map<String, Framework> frameworks)
-   {
-      this.frameworks = frameworks;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setFrameworks(Map<String, Framework> frameworks) {
+        this.frameworks = frameworks;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "SystemInfoImpl{" +
-         "limits=" + limits +
-         ", usage=" + usage +
-         ", description='" + description + '\'' +
-         ", user='" + user + '\'' +
-         ", version='" + version + '\'' +
-         ", name='" + name + '\'' +
-         ", support='" + support + '\'' +
-         ", frameworks=" + frameworks +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "SystemInfoImpl{" +
+               "limits=" + limits +
+               ", usage=" + usage +
+               ", description='" + description + '\'' +
+               ", user='" + user + '\'' +
+               ", version='" + version + '\'' +
+               ", name='" + name + '\'' +
+               ", support='" + support + '\'' +
+               ", frameworks=" + frameworks +
+               '}';
+    }
 }

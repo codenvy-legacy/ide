@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.client.marking;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ * <p/>
  * Description of a Java problem, as detected by the compiler or some of the underlying
  * technology reusing the compiler.
  * A problem provides access to:
@@ -31,81 +31,79 @@ package org.exoplatform.ide.editor.client.marking;
  * <li> its ID : a number identifying the very nature of this problem. All possible IDs are listed
  * as constants on this interface. </li>
  * </ul>
- *
+ * <p/>
  * Note: the compiler produces Problems internally, which are turned into markers by the JavaBuilder
  * so as to persist problem descriptions. This explains why there is no API allowing to reach Problem detected
  * when compiling. However, the Java problem markers carry equivalent information to IProblem, in particular
  * their ID (attribute "id") is set to one of the IDs defined on this interface.
  *
- * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Marker
-{
-   
-   public enum Type
-   {
-      
-   }
+public interface Marker {
 
-   /**
-    * Returns the problem id
-    *
-    * @return the problem id
-    */
-   int getID();
+    public enum Type {
 
-   /**
-    * Answer a localized, human-readable message string which describes the problem.
-    *
-    * @return a localized, human-readable message string which describes the problem
-    */
-   String getMessage();
+    }
 
-   /**
-    * Answer the line number in source where the problem begins.
-    *
-    * @return the line number in source where the problem begins
-    */
-   int getLineNumber();
+    /**
+     * Returns the problem id
+     *
+     * @return the problem id
+     */
+    int getID();
 
-   /**
-    * Answer the end position of the problem (inclusive), or -1 if unknown.
-    *
-    * @return the end position of the problem (inclusive), or -1 if unknown
-    */
-   int getEnd();
+    /**
+     * Answer a localized, human-readable message string which describes the problem.
+     *
+     * @return a localized, human-readable message string which describes the problem
+     */
+    String getMessage();
 
-   /**
-    * Answer the start position of the problem (inclusive), or -1 if unknown.
-    *
-    * @return the start position of the problem (inclusive), or -1 if unknown
-    */
-   int getStart();
+    /**
+     * Answer the line number in source where the problem begins.
+     *
+     * @return the line number in source where the problem begins
+     */
+    int getLineNumber();
 
-   /**
-    * Checks the severity to see if the Error bit is set.
-    *
-    * @return true if the Error bit is set for the severity, false otherwise
-    */
-   boolean isError();
+    /**
+     * Answer the end position of the problem (inclusive), or -1 if unknown.
+     *
+     * @return the end position of the problem (inclusive), or -1 if unknown
+     */
+    int getEnd();
 
-   /**
-    * Checks the severity to see if the Error bit is not set.
-    *
-    * @return true if the Error bit is not set for the severity, false otherwise
-    */
-   boolean isWarning();
-   
-   /**
-    * Checks the severity to see if this is Breakpoint
-    * @return true if this is breakpoint
-    */
-   boolean isBreakpoint();
+    /**
+     * Answer the start position of the problem (inclusive), or -1 if unknown.
+     *
+     * @return the start position of the problem (inclusive), or -1 if unknown
+     */
+    int getStart();
+
+    /**
+     * Checks the severity to see if the Error bit is set.
+     *
+     * @return true if the Error bit is set for the severity, false otherwise
+     */
+    boolean isError();
+
+    /**
+     * Checks the severity to see if the Error bit is not set.
+     *
+     * @return true if the Error bit is not set for the severity, false otherwise
+     */
+    boolean isWarning();
+
+    /**
+     * Checks the severity to see if this is Breakpoint
+     *
+     * @return true if this is breakpoint
+     */
+    boolean isBreakpoint();
 
 
-   boolean isCurrentBreakPoint();
+    boolean isCurrentBreakPoint();
 
 }

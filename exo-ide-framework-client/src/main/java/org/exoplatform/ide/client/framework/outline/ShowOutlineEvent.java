@@ -22,38 +22,32 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- * 
  */
-public class ShowOutlineEvent extends GwtEvent<ShowOutlineHandler>
-{
+public class ShowOutlineEvent extends GwtEvent<ShowOutlineHandler> {
 
-   public static final GwtEvent.Type<ShowOutlineHandler> TYPE = new GwtEvent.Type<ShowOutlineHandler>();
+    public static final GwtEvent.Type<ShowOutlineHandler> TYPE = new GwtEvent.Type<ShowOutlineHandler>();
 
-   private boolean show;
+    private boolean show;
 
-   public ShowOutlineEvent(boolean show)
-   {
-      this.show = show;
-   }
+    public ShowOutlineEvent(boolean show) {
+        this.show = show;
+    }
 
-   @Override
-   protected void dispatch(ShowOutlineHandler handler)
-   {
-      handler.onShowOutline(this);
-   }
+    @Override
+    protected void dispatch(ShowOutlineHandler handler) {
+        handler.onShowOutline(this);
+    }
 
-   public boolean isShow()
-   {
-      return show;
-   }
+    public boolean isShow() {
+        return show;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowOutlineHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowOutlineHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

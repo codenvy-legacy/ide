@@ -27,30 +27,30 @@ import java.util.List;
  * support. Using this to have Java/GWT regex support agree on a similar
  * interface for both runtime and testing implementations.
  */
-public interface RegExp
-{
+public interface RegExp {
 
-   interface Factory
-   {
-      RegExp create(String regex);
-   }
+    interface Factory {
+        RegExp create(String regex);
+    }
 
-   Factory FACTORY = GWT.create(RegExp.Factory.class);
+    Factory FACTORY = GWT.create(RegExp.Factory.class);
 
-   /**
-    * Tests if the given string matches the regexp, and returns true if matching,
-    * false if not.
-    *
-    * @param test the string to test against.
-    * @return true if match was found, otherwise false.
-    */
-   public boolean test(String test);
+    /**
+     * Tests if the given string matches the regexp, and returns true if matching,
+     * false if not.
+     *
+     * @param test
+     *         the string to test against.
+     * @return true if match was found, otherwise false.
+     */
+    public boolean test(String test);
 
-   /**
-    * Searches a string for a specified value. Returns all strings that matched.
-    *
-    * @param test the string to test against.
-    * @return list of matches or empty list is non-found.
-    */
-   public List<String> getMatches(String test);
+    /**
+     * Searches a string for a specified value. Returns all strings that matched.
+     *
+     * @param test
+     *         the string to test against.
+     * @return list of matches or empty list is non-found.
+     */
+    public List<String> getMatches(String test);
 }

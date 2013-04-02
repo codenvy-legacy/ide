@@ -22,53 +22,52 @@ package org.exoplatform.ide.extension.appfog.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface AppfogApplicationStatistics
-{
-   String getName();
+public interface AppfogApplicationStatistics {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getState();
+    String getState();
 
-   void setState(String state);
+    void setState(String state);
 
-   String getHost();
+    String getHost();
 
-   void setHost(String host);
+    void setHost(String host);
 
-   int getPort();
+    int getPort();
 
-   void setPort(int port);
+    void setPort(int port);
 
-   String[] getUris();
+    String[] getUris();
 
-   void setUris(String[] uris);
+    void setUris(String[] uris);
 
-   String getUptime();
+    String getUptime();
 
-   void setUptime(String uptime);
+    void setUptime(String uptime);
 
-   int getCpuCores();
+    int getCpuCores();
 
-   void setCpuCores(int cores);
+    void setCpuCores(int cores);
 
-   double getCpu();
+    double getCpu();
 
-   void setCpu(double cpu);
+    void setCpu(double cpu);
 
-   int getMem();
+    int getMem();
 
-   void setMem(int mem);
+    void setMem(int mem);
 
-   int getDisk();
+    int getDisk();
 
-   void setDisk(int disk);
+    void setDisk(int disk);
 
-   int getMemLimit();
+    int getMemLimit();
 
-   void setMemLimit(int memLimit);
+    void setMemLimit(int memLimit);
 
-   int getDiskLimit();
+    int getDiskLimit();
 
-   void setDiskLimit(int diskLimit);
+    void setDiskLimit(int diskLimit);
 }

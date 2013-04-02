@@ -17,21 +17,16 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Message used to add members to a workspace.
- * 
- */
+/** Message used to add members to a workspace. */
 @RoutingType(type = RoutingTypes.ADDWORKSPACEMEMBERS)
 public interface AddWorkspaceMembers extends ClientToServerDto {
 
-  String getProjectId();
+    String getProjectId();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * Returns a comma or newline delimited string of user email addresses.
-   */
-  String getUserEmails();
+    /** Returns a comma or newline delimited string of user email addresses. */
+    String getUserEmails();
 
-  ChangeRoleInfo getChangeRoleInfo();
+    ChangeRoleInfo getChangeRoleInfo();
 }

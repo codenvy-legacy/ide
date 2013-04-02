@@ -24,9 +24,8 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface VariablePath
-{
-   List<String> getPath();
+public interface VariablePath {
+    List<String> getPath();
 
-   void setPath(List<String> path);
+    void setPath(List<String> path);
 }

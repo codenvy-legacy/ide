@@ -35,15 +35,14 @@ package com.codenvy.eclipse.ltk.core.refactoring;
  *
  * @since 3.0
  */
-public abstract class ContentStamp
-{
+public abstract class ContentStamp {
 
-   /**
-    * Checks whether the stamp is the null stamp or not. A null stamp
-    * is generated for files which either don't exist or exist in a
-    * closed project.
-    *
-    * @return whether the stamp is the null stamp or not.
-    */
-   public abstract boolean isNullStamp();
+    /**
+     * Checks whether the stamp is the null stamp or not. A null stamp
+     * is generated for files which either don't exist or exist in a
+     * closed project.
+     *
+     * @return whether the stamp is the null stamp or not.
+     */
+    public abstract boolean isNullStamp();
 }

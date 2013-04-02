@@ -14,48 +14,47 @@
 
 package com.google.collide.client.editor;
 
+import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.client.util.UserActivityManager;
 import com.google.collide.client.editor.Buffer.ScrollListener;
 import com.google.collide.client.editor.Editor.KeyListener;
-import com.codenvy.ide.client.util.UserActivityManager;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.shared.util.ListenerRegistrar;
 import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import com.codenvy.ide.client.util.SignalEvent;
-
 /**
  * A class that listens to editor events to update the user activity manager on
  * the user's status.
- *
  */
 public class EditorActivityManager {
 
-  private JsonArray<Remover> listenerRemovers = JsonCollections.createArray();
+    private JsonArray<Remover> listenerRemovers = JsonCollections.createArray();
 
-  EditorActivityManager(final UserActivityManager userActivityManager,
-      ListenerRegistrar<ScrollListener> scrollListenerRegistrar,
-      ListenerRegistrar<KeyListener> keyListenerRegistrar) {
+    EditorActivityManager(final UserActivityManager userActivityManager,
+                          ListenerRegistrar<ScrollListener> scrollListenerRegistrar,
+                          ListenerRegistrar<KeyListener> keyListenerRegistrar) {
 
-    listenerRemovers.add(scrollListenerRegistrar.add(new ScrollListener() {
-      @Override
-      public void onScroll(Buffer buffer, int scrollTop) {
-        userActivityManager.markUserActive();
-      }
-    }));
+        listenerRemovers.add(scrollListenerRegistrar.add(new ScrollListener() {
+            @Override
+            public void onScroll(Buffer buffer, int scrollTop) {
+                userActivityManager.markUserActive();
+            }
+        }));
 
-    listenerRemovers.add(keyListenerRegistrar.add(new KeyListener() {
-      @Override
-      public boolean onKeyPress(SignalEvent event) {
-        userActivityManager.markUserActive();
-        return false;
-      }
-    }));
-  }
-
-  void teardown() {
-    for (int i = 0, n = listenerRemovers.size(); i < n; i++) {
-      listenerRemovers.get(i).remove();
+        listenerRemovers.add(keyListenerRegistrar.add(new KeyListener() {
+            @Override
+            public boolean onKeyPress(SignalEvent event) {
+                userActivityManager.markUserActive();
+                return false;
+            }
+        }));
     }
-  }
+
+    void teardown() {
+        for (int i = 0, n = listenerRemovers.size(); i < n; i++) {
+            listenerRemovers.get(i).remove();
+        }
+    }
 }

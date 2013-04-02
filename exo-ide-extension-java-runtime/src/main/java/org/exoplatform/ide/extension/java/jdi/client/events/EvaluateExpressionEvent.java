@@ -25,55 +25,42 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: EvaluateExpressionEvent.java May 7, 2012 12:25:37 PM azatsarynnyy $
- *
  */
-public class EvaluateExpressionEvent extends GwtEvent<EvaluateExpressionHandler>
-{
+public class EvaluateExpressionEvent extends GwtEvent<EvaluateExpressionHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<EvaluateExpressionHandler> TYPE = new GwtEvent.Type<EvaluateExpressionHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<EvaluateExpressionHandler> TYPE = new GwtEvent.Type<EvaluateExpressionHandler>();
 
-   /**
-    * Connected debugger information.
-    */
-   private DebuggerInfo debuggerInfo;
+    /** Connected debugger information. */
+    private DebuggerInfo debuggerInfo;
 
-   /**
-    * @param debuggerInfo connected debugger
-    */
-   public EvaluateExpressionEvent(DebuggerInfo debuggerInfo)
-   {
-      this.debuggerInfo = debuggerInfo;
-   }
+    /**
+     * @param debuggerInfo
+     *         connected debugger
+     */
+    public EvaluateExpressionEvent(DebuggerInfo debuggerInfo) {
+        this.debuggerInfo = debuggerInfo;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EvaluateExpressionHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EvaluateExpressionHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EvaluateExpressionHandler handler)
-   {
-      handler.onEvaluateExpression(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EvaluateExpressionHandler handler) {
+        handler.onEvaluateExpression(this);
+    }
 
-   /**
-    * Returns the connected debugger information.
-    * 
-    * @return debugger information
-    */
-   public DebuggerInfo getDebuggerInfo()
-   {
-      return debuggerInfo;
-   }
+    /**
+     * Returns the connected debugger information.
+     *
+     * @return debugger information
+     */
+    public DebuggerInfo getDebuggerInfo() {
+        return debuggerInfo;
+    }
 
 }

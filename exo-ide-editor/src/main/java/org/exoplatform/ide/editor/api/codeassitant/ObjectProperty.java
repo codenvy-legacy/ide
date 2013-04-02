@@ -20,57 +20,44 @@ package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
  * Object implementation of {@link TokenProperty} Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class ObjectProperty extends TokenProperty
-{
+public class ObjectProperty extends TokenProperty {
 
-   private Object value;
+    private Object value;
 
-   /**
-    * @param value
-    */
-   public ObjectProperty(Object value)
-   {
-      super();
-      this.value = value;
-   }
+    /** @param value */
+    public ObjectProperty(Object value) {
+        super();
+        this.value = value;
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isObjectProperty()
-    */
-   @Override
-   public ObjectProperty isObjectProperty()
-   {
-      return this;
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isObjectProperty() */
+    @Override
+    public ObjectProperty isObjectProperty() {
+        return this;
+    }
 
-   /**
-    * @return value of this property
-    */
-   public Object objectValue()
-   {
-      return value;
-   }
+    /** @return value of this property */
+    public Object objectValue() {
+        return value;
+    }
 
-   @Override
-   public StringProperty isStringProperty()
-   {
-      return null;
-   }
+    @Override
+    public StringProperty isStringProperty() {
+        return null;
+    }
 
-   @Override
-   public NumericProperty isNumericProperty()
-   {
-      return null;
-   }
+    @Override
+    public NumericProperty isNumericProperty() {
+        return null;
+    }
 
-   @Override
-   public ArrayProperty isArrayProperty()
-   {
-      return null;
-   }
+    @Override
+    public ArrayProperty isArrayProperty() {
+        return null;
+    }
 
 }

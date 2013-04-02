@@ -27,112 +27,100 @@ import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: UpdateContentTest.java 75032 2011-10-13 15:24:34Z andrew00x $
  */
-public class UpdateContentTest extends MemoryFileSystemTest
-{
-   private String fileId;
-   private String folderId;
-   private String content = "__UpdateContentTest__";
+public class UpdateContentTest extends MemoryFileSystemTest {
+    private String fileId;
+    private String folderId;
+    private String content = "__UpdateContentTest__";
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      String name = getClass().getName();
-      MemoryFolder updateContentTestFolder = new MemoryFolder(name);
-      testRoot.addChild(updateContentTestFolder);
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        String name = getClass().getName();
+        MemoryFolder updateContentTestFolder = new MemoryFolder(name);
+        testRoot.addChild(updateContentTestFolder);
 
-      MemoryFile file = new MemoryFile("UpdateContentTest_FILE", "text/plain",
-         new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      updateContentTestFolder.addChild(file);
-      fileId = file.getId();
+        MemoryFile file = new MemoryFile("UpdateContentTest_FILE", "text/plain",
+                                         new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+        updateContentTestFolder.addChild(file);
+        fileId = file.getId();
 
-      MemoryFolder folder = new MemoryFolder("UpdateContentTest_FOLDER");
-      updateContentTestFolder.addChild(folder);
-      folderId = folder.getId();
+        MemoryFolder folder = new MemoryFolder("UpdateContentTest_FOLDER");
+        updateContentTestFolder.addChild(folder);
+        folderId = folder.getId();
 
-      memoryContext.putItem(updateContentTestFolder);
-   }
+        memoryContext.putItem(updateContentTestFolder);
+    }
 
-   public void testUpdateContent() throws Exception
-   {
-      String path = SERVICE_URI + "content/" + fileId;
+    public void testUpdateContent() throws Exception {
+        String path = SERVICE_URI + "content/" + fileId;
 
-      Map<String, List<String>> headers = new HashMap<String, List<String>>();
-      List<String> contentType = new ArrayList<String>();
-      contentType.add("text/plain;charset=utf8");
-      headers.put("Content-Type", contentType);
+        Map<String, List<String>> headers = new HashMap<String, List<String>>();
+        List<String> contentType = new ArrayList<String>();
+        contentType.add("text/plain;charset=utf8");
+        headers.put("Content-Type", contentType);
 
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
-      assertEquals(204, response.getStatus());
+        ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
+        assertEquals(204, response.getStatus());
 
-      MemoryFile file = (MemoryFile)memoryContext.getItem(fileId);
-      checkFileContext(content, "text/plain;charset=utf8", file);
-   }
+        MemoryFile file = (MemoryFile)memoryContext.getItem(fileId);
+        checkFileContext(content, "text/plain;charset=utf8", file);
+    }
 
-   public void testUpdateContentFolder() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "content/" + folderId;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
-      assertEquals(400, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
+    public void testUpdateContentFolder() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "content/" + folderId;
+        ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
+        assertEquals(400, response.getStatus());
+        log.info(new String(writer.getBody()));
+    }
 
-   public void testUpdateContentNoPermissions() throws Exception
-   {
-      AccessControlEntry adminACE = new AccessControlEntryImpl();
-      adminACE.setPrincipal("admin");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
-      AccessControlEntry userACE = new AccessControlEntryImpl();
-      userACE.setPrincipal("john");
-      userACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
-      memoryContext.getItem(fileId).updateACL(Arrays.asList(adminACE, userACE), true);
+    public void testUpdateContentNoPermissions() throws Exception {
+        AccessControlEntry adminACE = new AccessControlEntryImpl();
+        adminACE.setPrincipal("admin");
+        adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
+        AccessControlEntry userACE = new AccessControlEntryImpl();
+        userACE.setPrincipal("john");
+        userACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
+        memoryContext.getItem(fileId).updateACL(Arrays.asList(adminACE, userACE), true);
 
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "content/" + fileId;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
-      assertEquals(403, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "content/" + fileId;
+        ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+        assertEquals(403, response.getStatus());
+        log.info(new String(writer.getBody()));
+    }
 
-   public void testUpdateContentLocked() throws Exception
-   {
-      MemoryFile file = (MemoryFile)memoryContext.getItem(fileId);
-      String lockToken = file.lock();
+    public void testUpdateContentLocked() throws Exception {
+        MemoryFile file = (MemoryFile)memoryContext.getItem(fileId);
+        String lockToken = file.lock();
 
-      String path = SERVICE_URI + "content/" + fileId + '?' + "lockToken=" + lockToken;
+        String path = SERVICE_URI + "content/" + fileId + '?' + "lockToken=" + lockToken;
 
-      Map<String, List<String>> headers = new HashMap<String, List<String>>();
-      List<String> contentType = new ArrayList<String>();
-      contentType.add("text/plain;charset=utf8");
-      headers.put("Content-Type", contentType);
+        Map<String, List<String>> headers = new HashMap<String, List<String>>();
+        List<String> contentType = new ArrayList<String>();
+        contentType.add("text/plain;charset=utf8");
+        headers.put("Content-Type", contentType);
 
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
-      assertEquals(204, response.getStatus());
+        ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
+        assertEquals(204, response.getStatus());
 
-      file = (MemoryFile)memoryContext.getItem(fileId);
-      checkFileContext(content, "text/plain;charset=utf8", file);
-   }
+        file = (MemoryFile)memoryContext.getItem(fileId);
+        checkFileContext(content, "text/plain;charset=utf8", file);
+    }
 
-   public void testUpdateContentLocked_NoLockTokens() throws Exception
-   {
-      MemoryFile file = (MemoryFile)memoryContext.getItem(fileId);
-      file.lock();
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "content/" + fileId;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
-      assertEquals(423, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
+    public void testUpdateContentLocked_NoLockTokens() throws Exception {
+        MemoryFile file = (MemoryFile)memoryContext.getItem(fileId);
+        file.lock();
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "content/" + fileId;
+        ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+        assertEquals(423, response.getStatus());
+        log.info(new String(writer.getBody()));
+    }
 }

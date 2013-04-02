@@ -27,32 +27,27 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class AppfogControlGroup extends SimpleControl implements IDEControl
-{
+public class AppfogControlGroup extends SimpleControl implements IDEControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlPrompt();
 
-   public AppfogControlGroup()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.appfog(),
-         AppfogClientBundle.INSTANCE.appfogDisabled());
-   }
+    public AppfogControlGroup() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.appfog(),
+                  AppfogClientBundle.INSTANCE.appfogDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

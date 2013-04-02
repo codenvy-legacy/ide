@@ -29,57 +29,47 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * Control to expand all existing fold in the document.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: ExpandFoldControl.java Feb 28, 2013 5:00:20 PM azatsarynnyy $
- *
  */
-public class ExpandAllFoldsControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class ExpandAllFoldsControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Edit/Folding/ExpandAll";
+    public static final String ID = "Edit/Folding/ExpandAll";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.expandAllFoldsControlTitle();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.expandAllFoldsControlTitle();
 
-   public ExpandAllFoldsControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
-      setEvent(new EditorExpandFoldEvent(true));
-      setHotKey("Ctrl+Shift+Numpad +");
-   }
+    public ExpandAllFoldsControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
+        setEvent(new EditorExpandFoldEvent(true));
+        setHotKey("Ctrl+Shift+Numpad +");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
-    */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null || event.getEditor() == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
+    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     * .editor.event.EditorActiveFileChangedEvent) */
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() == null || event.getEditor() == null) {
+            setVisible(false);
+            setEnabled(false);
+            return;
+        }
 
-      if (event.getEditor().isReadOnly())
-      {
-         setEnabled(false);
-         return;
-      }
+        if (event.getEditor().isReadOnly()) {
+            setEnabled(false);
+            return;
+        }
 
-      boolean isFoldingSupported = event.getEditor().isCapable(EditorCapability.CODE_FOLDING);
-      setVisible(isFoldingSupported);
-      setEnabled(isFoldingSupported);
-   }
+        boolean isFoldingSupported = event.getEditor().isCapable(EditorCapability.CODE_FOLDING);
+        setVisible(isFoldingSupported);
+        setEnabled(isFoldingSupported);
+    }
 }

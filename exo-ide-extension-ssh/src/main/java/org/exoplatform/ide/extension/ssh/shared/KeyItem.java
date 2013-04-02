@@ -22,55 +22,46 @@ package org.exoplatform.ide.extension.ssh.shared;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class KeyItem
-{
-   /** Host name. */
-   private String host;
-   
-   /** URL for download public key. May be <code>null</code> if public key no available. */
-   private String publicKeyURL;
-   
-   /** URL for remove key. */
-   private String removeKeyURL;
+public class KeyItem {
+    /** Host name. */
+    private String host;
 
-   public KeyItem(String host, String publicKeyURL, String removeKeyURL)
-   {
-      this.host = host;
-      this.publicKeyURL = publicKeyURL;
-      this.removeKeyURL = removeKeyURL;
-   }
+    /** URL for download public key. May be <code>null</code> if public key no available. */
+    private String publicKeyURL;
 
-   public KeyItem()
-   {
-   }
+    /** URL for remove key. */
+    private String removeKeyURL;
 
-   public String getHost()
-   {
-      return host;
-   }
+    public KeyItem(String host, String publicKeyURL, String removeKeyURL) {
+        this.host = host;
+        this.publicKeyURL = publicKeyURL;
+        this.removeKeyURL = removeKeyURL;
+    }
 
-   public void setHost(String host)
-   {
-      this.host = host;
-   }
+    public KeyItem() {
+    }
 
-   public String getPublicKeyURL()
-   {
-      return publicKeyURL;
-   }
+    public String getHost() {
+        return host;
+    }
 
-   public void setPublicKeyURL(String publicKeyURL)
-   {
-      this.publicKeyURL = publicKeyURL;
-   }
-   
-   public void setRemoveKeyURL(String removeKeyURL)
-   {
-      this.removeKeyURL = removeKeyURL;
-   }
-   
-   public String getRemoveKeyURL()
-   {
-      return removeKeyURL;
-   }
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPublicKeyURL() {
+        return publicKeyURL;
+    }
+
+    public void setPublicKeyURL(String publicKeyURL) {
+        this.publicKeyURL = publicKeyURL;
+    }
+
+    public void setRemoveKeyURL(String removeKeyURL) {
+        this.removeKeyURL = removeKeyURL;
+    }
+
+    public String getRemoveKeyURL() {
+        return removeKeyURL;
+    }
 }

@@ -35,81 +35,68 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import java.util.List;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ShowProjectsView extends ViewImpl implements
-   org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display
-{
+                                               org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display {
 
-   private static ShowProjectsViewUiBinder uiBinder = GWT.create(ShowProjectsViewUiBinder.class);
+    private static ShowProjectsViewUiBinder uiBinder = GWT.create(ShowProjectsViewUiBinder.class);
 
-   interface ShowProjectsViewUiBinder extends UiBinder<Widget, ShowProjectsView>
-   {
-   }
+    interface ShowProjectsViewUiBinder extends UiBinder<Widget, ShowProjectsView> {
+    }
 
-   public static final String ID = "ideShowProjectsView";
+    public static final String ID = "ideShowProjectsView";
 
-   public static final String TITLE = "Projects";
+    public static final String TITLE = "Projects";
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 500;
+    /** Initial width of this view */
+    private static final int WIDTH = 500;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 280;
+    /** Initial height of this view */
+    private static final int HEIGHT = 280;
 
-   @UiField
-   ProjectsListGrid projectsListGrid;
+    @UiField
+    ProjectsListGrid projectsListGrid;
 
-   @UiField
-   ImageButton openButton;
+    @UiField
+    ImageButton openButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   public ShowProjectsView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public ShowProjectsView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public ListGridItem<ProjectModel> getProjectsListGrid()
-   {
-      return projectsListGrid;
-   }
+    @Override
+    public ListGridItem<ProjectModel> getProjectsListGrid() {
+        return projectsListGrid;
+    }
 
-   @Override
-   public HasClickHandlers getOpenButton()
-   {
-      return openButton;
-   }
+    @Override
+    public HasClickHandlers getOpenButton() {
+        return openButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public void setOpenButtonEnabled(boolean enabled)
-   {
-      openButton.setEnabled(enabled);
-   }
+    @Override
+    public void setOpenButtonEnabled(boolean enabled) {
+        openButton.setEnabled(enabled);
+    }
 
-   @Override
-   public List<ProjectModel> getSelectedItems()
-   {
-      return projectsListGrid.getSelectedItems();
-   }
+    @Override
+    public List<ProjectModel> getSelectedItems() {
+        return projectsListGrid.getSelectedItems();
+    }
 
 }

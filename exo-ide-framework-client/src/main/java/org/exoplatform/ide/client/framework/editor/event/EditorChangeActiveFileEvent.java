@@ -24,39 +24,34 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class EditorChangeActiveFileEvent extends GwtEvent<EditorChangeActiveFileHandler>
-{
+public class EditorChangeActiveFileEvent extends GwtEvent<EditorChangeActiveFileHandler> {
 
-   public static final GwtEvent.Type<EditorChangeActiveFileHandler> TYPE =
-      new GwtEvent.Type<EditorChangeActiveFileHandler>();
+    public static final GwtEvent.Type<EditorChangeActiveFileHandler> TYPE =
+            new GwtEvent.Type<EditorChangeActiveFileHandler>();
 
-   private FileModel file;
-   
-   public EditorChangeActiveFileEvent(FileModel file)
-   {
-      this.file = file;
-   }
+    private FileModel file;
 
-   public FileModel getFile()
-   {
-      return file;
-   }
-   
-   @Override
-   protected void dispatch(EditorChangeActiveFileHandler handler)
-   {
-      handler.onEditorChangeActiveFile(this);
-   }
+    public EditorChangeActiveFileEvent(FileModel file) {
+        this.file = file;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorChangeActiveFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    public FileModel getFile() {
+        return file;
+    }
+
+    @Override
+    protected void dispatch(EditorChangeActiveFileHandler handler) {
+        handler.onEditorChangeActiveFile(this);
+    }
+
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorChangeActiveFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

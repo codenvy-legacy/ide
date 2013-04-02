@@ -24,31 +24,28 @@ import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicatio
 
 /**
  * Control for deleting application on CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
- *
  */
-public class DeleteApplicationControl extends AbstractCloudFoundryControl
-{
+public class DeleteApplicationControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt();
 
-   /**
-    * 
-    */
-   public DeleteApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.deleteApplication(),
-         CloudFoundryClientBundle.INSTANCE.deleteApplicationDisabled());
-      setEvent(new DeleteApplicationEvent());
-   }
+    /**
+     *
+     */
+    public DeleteApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.deleteApplication(),
+                  CloudFoundryClientBundle.INSTANCE.deleteApplicationDisabled());
+        setEvent(new DeleteApplicationEvent());
+    }
 
 }

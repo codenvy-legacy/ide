@@ -27,6 +27,5 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.0
  */
-public abstract class DeleteProcessor extends RefactoringProcessor
-{
+public abstract class DeleteProcessor extends RefactoringProcessor {
 }

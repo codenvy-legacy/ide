@@ -31,38 +31,35 @@ import java.util.Map;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagDeleteTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class TagDeleteTest extends BaseTest
-{
-   private RevTag goodTag;
+public class TagDeleteTest extends BaseTest {
+    private RevTag goodTag;
 
-   private RevTag badTag;
+    private RevTag badTag;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      Repository repo = getDefaultRepository();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        Repository repo = getDefaultRepository();
 
-      RevWalk revWalker = new RevWalk(repo);
-      Git git = new Git(repo);
+        RevWalk revWalker = new RevWalk(repo);
+        Git git = new Git(repo);
 
-      Ref goodRef = git.tag().setName("good-tag").setMessage("good-tag").call();
-      Ref badRef = git.tag().setName("bad-tag").setMessage("bad-tag").call();
+        Ref goodRef = git.tag().setName("good-tag").setMessage("good-tag").call();
+        Ref badRef = git.tag().setName("bad-tag").setMessage("bad-tag").call();
 
-      goodTag = revWalker.parseTag(goodRef.getLeaf().getObjectId());
-      badTag = revWalker.parseTag(badRef.getLeaf().getObjectId());
-   }
+        goodTag = revWalker.parseTag(goodRef.getLeaf().getObjectId());
+        badTag = revWalker.parseTag(badRef.getLeaf().getObjectId());
+    }
 
-   public void testDeleteTag() throws Exception
-   {
-      Map<String, Ref> tags = getDefaultRepository().getTags();
-      assertTrue(tags.containsKey(badTag.getTagName()));
-      assertTrue(tags.containsKey(goodTag.getTagName()));
+    public void testDeleteTag() throws Exception {
+        Map<String, Ref> tags = getDefaultRepository().getTags();
+        assertTrue(tags.containsKey(badTag.getTagName()));
+        assertTrue(tags.containsKey(goodTag.getTagName()));
 
-      getDefaultConnection().tagDelete(new TagDeleteRequest(badTag.getTagName()));
+        getDefaultConnection().tagDelete(new TagDeleteRequest(badTag.getTagName()));
 
-      tags = getDefaultRepository().getTags();
-      assertFalse(tags.containsKey(badTag.getTagName()));
-      assertTrue(tags.containsKey(goodTag.getTagName()));
-   }
+        tags = getDefaultRepository().getTags();
+        assertFalse(tags.containsKey(badTag.getTagName()));
+        assertTrue(tags.containsKey(goodTag.getTagName()));
+    }
 }

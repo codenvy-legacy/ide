@@ -25,20 +25,16 @@ package org.exoplatform.ide.extension.aws.server;
  * @version $Id: AWSException.java Aug 23, 2012
  */
 @SuppressWarnings("serial")
-public class AWSException extends Exception
-{
-   public AWSException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+public class AWSException extends Exception {
+    public AWSException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   public AWSException(Throwable cause)
-   {
-      super(cause);
-   }
+    public AWSException(Throwable cause) {
+        super(cause);
+    }
 
-   public AWSException(String message)
-   {
-      super(message);
-   }
+    public AWSException(String message) {
+        super(message);
+    }
 }

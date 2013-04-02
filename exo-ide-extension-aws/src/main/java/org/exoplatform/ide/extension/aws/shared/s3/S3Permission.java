@@ -24,36 +24,30 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public enum S3Permission
-{
-   FullControl("FULL_CONTROL"),
-   Read("READ"),
-   Write("WRITE"),
-   ReadAcp("READ_ACP"),
-   WriteAcp("WRITE_ACP");
+public enum S3Permission {
+    FullControl("FULL_CONTROL"),
+    Read("READ"),
+    Write("WRITE"),
+    ReadAcp("READ_ACP"),
+    WriteAcp("WRITE_ACP");
 
-   private final String value;
+    private final String value;
 
-   private S3Permission(String value)
-   {
-      this.value = value;
-   }
+    private S3Permission(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static S3Permission fromValue(String value)
-   {
-      for (S3Permission v : S3Permission.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static S3Permission fromValue(String value) {
+        for (S3Permission v : S3Permission.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

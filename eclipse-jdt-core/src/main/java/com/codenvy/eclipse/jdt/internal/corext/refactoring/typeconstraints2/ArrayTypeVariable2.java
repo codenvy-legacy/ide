@@ -13,17 +13,13 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2;
 
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types.ArrayType;
 
-/**
- * An ArrayTypeVariable2 is a ConstraintVariable which stands for an array type.
- */
-public class ArrayTypeVariable2 extends ConstraintVariable2
-{
+/** An ArrayTypeVariable2 is a ConstraintVariable which stands for an array type. */
+public class ArrayTypeVariable2 extends ConstraintVariable2 {
 
-   public ArrayTypeVariable2(ArrayType type)
-   {
-      super(type);
-   }
+    public ArrayTypeVariable2(ArrayType type) {
+        super(type);
+    }
 
-   // hashCode() and equals(..) not necessary (unique per construction)
+    // hashCode() and equals(..) not necessary (unique per construction)
 
 }

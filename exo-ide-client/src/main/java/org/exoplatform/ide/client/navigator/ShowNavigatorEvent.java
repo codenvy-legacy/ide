@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.navigator;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ShowNavigatorEvent extends GwtEvent<ShowNavigatorHandler>
-{
+public class ShowNavigatorEvent extends GwtEvent<ShowNavigatorHandler> {
 
-   public static final GwtEvent.Type<ShowNavigatorHandler> TYPE = new GwtEvent.Type<ShowNavigatorHandler>();
+    public static final GwtEvent.Type<ShowNavigatorHandler> TYPE = new GwtEvent.Type<ShowNavigatorHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowNavigatorHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowNavigatorHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ShowNavigatorHandler handler)
-   {
-      handler.onShowNavigator(this);
-   }
+    @Override
+    protected void dispatch(ShowNavigatorHandler handler) {
+        handler.onShowNavigator(this);
+    }
 
 }

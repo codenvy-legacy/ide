@@ -30,61 +30,53 @@ import org.exoplatform.ide.client.IDE;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @version $Id: $
  */
 
-public class IDEConfigurationLoader
-{
+public class IDEConfigurationLoader {
 
-   /* Consts */
-   public static final String APPLICATION_NAME = "IDE"; //$NON-NLS-1$
+    /* Consts */
+    public static final String APPLICATION_NAME = "IDE"; //$NON-NLS-1$
 
-   /* Error messages */
-   private static final String CANT_READ_CONFIGURATION = IDE.ERRORS_CONSTANT.confLoaderCantReadConfiguration();
+    /* Error messages */
+    private static final String CANT_READ_CONFIGURATION = IDE.ERRORS_CONSTANT.confLoaderCantReadConfiguration();
 
-   private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
+    private static final String INVALID_CONFIGURATION_TITLE = IDE.ERRORS_CONSTANT.confInvalidConfTitle();
 
-   /* Fields */
-   private boolean loaded = false;
+    /* Fields */
+    private boolean loaded = false;
 
-   private HandlerManager eventBus;
+    private HandlerManager eventBus;
 
-   private Loader loader;
+    private Loader loader;
 
-   public IDEConfigurationLoader(HandlerManager eventBus, Loader loader)
-   {
-      this.eventBus = eventBus;
-      this.loader = loader;
-   }
+    public IDEConfigurationLoader(HandlerManager eventBus, Loader loader) {
+        this.eventBus = eventBus;
+        this.loader = loader;
+    }
 
-   public void loadConfiguration(AsyncRequestCallback<IDEInitializationConfiguration> callback)
-   {
-      try
-      {
-         String url = getConfigurationURL();
-         if (url == null)
-         {
-            throw new Exception(IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("configurationURL"));
-         }
-         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
-      }
-      catch (Exception e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e, CANT_READ_CONFIGURATION));
-      }
-   }
+    public void loadConfiguration(AsyncRequestCallback<IDEInitializationConfiguration> callback) {
+        try {
+            String url = getConfigurationURL();
+            if (url == null) {
+                throw new Exception(IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("configurationURL"));
+            }
+            AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+        } catch (Exception e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e, CANT_READ_CONFIGURATION));
+        }
+    }
 
-   public boolean isLoaded()
-   {
-      return loaded;
-   }
+    public boolean isLoaded() {
+        return loaded;
+    }
 
-   private static native String getConfigurationURL()/*-{
-                                                     return $wnd.configurationURL;
-                                                     }-*/;
+    private static native String getConfigurationURL()/*-{
+        return $wnd.configurationURL;
+    }-*/;
 
-   public static native JavaScriptObject getAppConfig() /*-{
-                                                         return $wnd.appConfig;
-                                                         }-*/;
+    public static native JavaScriptObject getAppConfig() /*-{
+        return $wnd.appConfig;
+    }-*/;
 }

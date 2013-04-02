@@ -14,96 +14,78 @@ import com.codenvy.eclipse.core.resources.IResource;
 import com.codenvy.eclipse.core.runtime.Assert;
 import com.codenvy.eclipse.jdt.core.IJavaElement;
 
-public class ReorgDestinationFactory
-{
+public class ReorgDestinationFactory {
 
-   private static class Destination implements IReorgDestination
-   {
+    private static class Destination implements IReorgDestination {
 
-      private final Object fDestination;
+        private final Object fDestination;
 
-      private final int fLocation;
+        private final int fLocation;
 
-      public Destination(Object destination, int location)
-      {
-         Assert.isNotNull(destination);
-         Assert.isLegal(location == LOCATION_AFTER || location == LOCATION_BEFORE || location == LOCATION_ON);
+        public Destination(Object destination, int location) {
+            Assert.isNotNull(destination);
+            Assert.isLegal(location == LOCATION_AFTER || location == LOCATION_BEFORE || location == LOCATION_ON);
 
-         fDestination = destination;
-         fLocation = location;
-      }
+            fDestination = destination;
+            fLocation = location;
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      public Object getDestination()
-      {
-         return fDestination;
-      }
+        /** {@inheritDoc} */
+        public Object getDestination() {
+            return fDestination;
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      public int getLocation()
-      {
-         return fLocation;
-      }
+        /** {@inheritDoc} */
+        public int getLocation() {
+            return fLocation;
+        }
 
-   }
+    }
 
-   static final class ResourceDestination extends Destination
-   {
+    static final class ResourceDestination extends Destination {
 
-      private ResourceDestination(IResource destination, int location)
-      {
-         super(destination, location);
-      }
+        private ResourceDestination(IResource destination, int location) {
+            super(destination, location);
+        }
 
-      public IResource getResource()
-      {
-         return (IResource)getDestination();
-      }
+        public IResource getResource() {
+            return (IResource)getDestination();
+        }
 
-   }
+    }
 
-   static final class JavaElementDestination extends Destination
-   {
+    static final class JavaElementDestination extends Destination {
 
-      private JavaElementDestination(IJavaElement destination, int location)
-      {
-         super(destination, location);
-      }
+        private JavaElementDestination(IJavaElement destination, int location) {
+            super(destination, location);
+        }
 
-      public IJavaElement getJavaElement()
-      {
-         return (IJavaElement)getDestination();
-      }
+        public IJavaElement getJavaElement() {
+            return (IJavaElement)getDestination();
+        }
 
-   }
+    }
 
-   /**
-    * Wrap the given object into a destination
-    *
-    * @param destination the object to wrap
-    * @return a reorg destination if possible reorg destination or <b>null</b> otherwise
-    */
-   public static IReorgDestination createDestination(Object destination)
-   {
-      return createDestination(destination, IReorgDestination.LOCATION_ON);
-   }
+    /**
+     * Wrap the given object into a destination
+     *
+     * @param destination
+     *         the object to wrap
+     * @return a reorg destination if possible reorg destination or <b>null</b> otherwise
+     */
+    public static IReorgDestination createDestination(Object destination) {
+        return createDestination(destination, IReorgDestination.LOCATION_ON);
+    }
 
-   public static IReorgDestination createDestination(Object destination, int location)
-   {
-      if (destination instanceof IJavaElement)
-      {
-         return new JavaElementDestination((IJavaElement)destination, location);
-      }
-      if (destination instanceof IResource)
-      {
-         return new ResourceDestination((IResource)destination, location);
-      }
+    public static IReorgDestination createDestination(Object destination, int location) {
+        if (destination instanceof IJavaElement) {
+            return new JavaElementDestination((IJavaElement)destination, location);
+        }
+        if (destination instanceof IResource) {
+            return new ResourceDestination((IResource)destination, location);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
 }

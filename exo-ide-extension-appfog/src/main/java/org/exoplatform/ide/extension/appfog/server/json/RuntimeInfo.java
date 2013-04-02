@@ -24,28 +24,23 @@ import java.util.Set;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class RuntimeInfo
-{
-   private String version;
-   private Set<String> debug_modes;
+public class RuntimeInfo {
+    private String      version;
+    private Set<String> debug_modes;
 
-   public String getVersion()
-   {
-      return version;
-   }
+    public String getVersion() {
+        return version;
+    }
 
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   public Set<String> getDebug_modes()
-   {
-      return debug_modes;
-   }
+    public Set<String> getDebug_modes() {
+        return debug_modes;
+    }
 
-   public void setDebug_modes(Set<String> debug_modes)
-   {
-      this.debug_modes = debug_modes;
-   }
+    public void setDebug_modes(Set<String> debug_modes) {
+        this.debug_modes = debug_modes;
+    }
 }

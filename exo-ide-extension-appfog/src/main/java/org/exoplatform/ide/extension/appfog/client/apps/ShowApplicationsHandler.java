@@ -24,9 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ShowApplicationsHandler extends EventHandler
-{
+public interface ShowApplicationsHandler extends EventHandler {
 
-   void onShowApplications(ShowApplicationsEvent event);
+    void onShowApplications(ShowApplicationsEvent event);
 
 }

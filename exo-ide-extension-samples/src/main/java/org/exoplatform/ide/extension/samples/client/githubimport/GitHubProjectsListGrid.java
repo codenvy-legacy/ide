@@ -34,74 +34,61 @@ import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesListGrid.java Aug 30, 2011 11:43:59 AM vereshchaka $
- * 
  */
-public class GitHubProjectsListGrid extends ListGrid<ProjectData>
-{
-   private static final String ID = "ideGithubProjectsGrid";
+public class GitHubProjectsListGrid extends ListGrid<ProjectData> {
+    private static final String ID = "ideGithubProjectsGrid";
 
-   private static final String REPOSITORY_HEADER = SamplesExtension.LOCALIZATION_CONSTANT.samplesListRepositoryColumn();
+    private static final String REPOSITORY_HEADER = SamplesExtension.LOCALIZATION_CONSTANT.samplesListRepositoryColumn();
 
-   private static final String DESCRIPTION_HEADER = SamplesExtension.LOCALIZATION_CONSTANT
-      .samplesListDescriptionColumn();
+    private static final String DESCRIPTION_HEADER = SamplesExtension.LOCALIZATION_CONSTANT
+                                                                     .samplesListDescriptionColumn();
 
-   public GitHubProjectsListGrid()
-   {
-      super();
+    public GitHubProjectsListGrid() {
+        super();
 
-      setID(ID);
+        setID(ID);
 
-      // Image column
-      Column<ProjectData, ImageResource> iconColumn = new Column<ProjectData, ImageResource>(new ImageResourceCell())
-      {
-         @Override
-         public ImageResource getValue(ProjectData item)
-         {
-            return ProjectResolver.getImageForProject(item.getType());
-         }
-      };
+        // Image column
+        Column<ProjectData, ImageResource> iconColumn = new Column<ProjectData, ImageResource>(new ImageResourceCell()) {
+            @Override
+            public ImageResource getValue(ProjectData item) {
+                return ProjectResolver.getImageForProject(item.getType());
+            }
+        };
 
-      Column<ProjectData, SafeHtml> repositoryColumn = new Column<ProjectData, SafeHtml>(new SafeHtmlCell())
-      {
-         @Override
-         public SafeHtml getValue(final ProjectData item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+        Column<ProjectData, SafeHtml> repositoryColumn = new Column<ProjectData, SafeHtml>(new SafeHtmlCell()) {
+            @Override
+            public SafeHtml getValue(final ProjectData item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               public String asString()
-               {
-                  return item.getName();
-               }
-            };
-            return html;
-         }
-      };
+                    public String asString() {
+                        return item.getName();
+                    }
+                };
+                return html;
+            }
+        };
 
-      Column<ProjectData, SafeHtml> descriptionColumn = new Column<ProjectData, SafeHtml>(new SafeHtmlCell())
-      {
-         @Override
-         public SafeHtml getValue(final ProjectData item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+        Column<ProjectData, SafeHtml> descriptionColumn = new Column<ProjectData, SafeHtml>(new SafeHtmlCell()) {
+            @Override
+            public SafeHtml getValue(final ProjectData item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               public String asString()
-               {
-                  return "<span>" + item.getDescription() + "</span>";
-               }
-            };
-            return html;
-         }
-      };
+                    public String asString() {
+                        return "<span>" + item.getDescription() + "</span>";
+                    }
+                };
+                return html;
+            }
+        };
 
-      getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
-      getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
+        getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+        getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
 
-      getCellTable().addColumn(repositoryColumn, REPOSITORY_HEADER);
-      getCellTable().addColumn(descriptionColumn, DESCRIPTION_HEADER);
-   }
+        getCellTable().addColumn(repositoryColumn, REPOSITORY_HEADER);
+        getCellTable().addColumn(descriptionColumn, DESCRIPTION_HEADER);
+    }
 
 }

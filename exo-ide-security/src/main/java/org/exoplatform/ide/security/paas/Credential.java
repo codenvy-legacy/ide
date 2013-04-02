@@ -25,40 +25,31 @@ import java.util.Map;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: Credentials.java Mar 1, 2013 vetal $
  */
-public class Credential
-{
-   private final Map<String, String> attributes;
+public class Credential {
+    private final Map<String, String> attributes;
 
-   public Credential()
-   {
-      attributes = new HashMap<String, String>(2);
-   }
+    public Credential() {
+        attributes = new HashMap<String, String>(2);
+    }
 
-   public Map<String, String> getAttributes()
-   {
-      return attributes;
-   }
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
 
-   public String getAttribute(String name)
-   {
-      return attributes.get(name);
-   }
+    public String getAttribute(String name) {
+        return attributes.get(name);
+    }
 
-   public void setAttribute(String name, String value)
-   {
-      if (value == null)
-      {
-         attributes.remove(name);
-      }
-      else
-      {
-         attributes.put(name, value);
-      }
-   }
+    public void setAttribute(String name, String value) {
+        if (value == null) {
+            attributes.remove(name);
+        } else {
+            attributes.put(name, value);
+        }
+    }
 
-   public void removeAttribute(String name)
-   {
-      attributes.remove(name);
-   }
+    public void removeAttribute(String name) {
+        attributes.remove(name);
+    }
 }
 

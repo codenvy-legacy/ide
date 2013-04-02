@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ConfigurationOptionRestriction
-{
-   String getLabel();
+public interface ConfigurationOptionRestriction {
+    String getLabel();
 
-   void setLabel(String label);
+    void setLabel(String label);
 
-   String getPattern();
+    String getPattern();
 
-   void setPattern(String pattern);
+    void setPattern(String pattern);
 }

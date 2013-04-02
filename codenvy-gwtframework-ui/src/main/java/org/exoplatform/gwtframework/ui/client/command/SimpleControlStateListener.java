@@ -21,18 +21,17 @@ package org.exoplatform.gwtframework.ui.client.command;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface SimpleControlStateListener extends ControlStateListener
-{
-   
-   void updateControlTitle(String title);
-   
-   void updateControlSelectionState(boolean selected);
-   
-   void updateControlHotKey(String hotKey);
+public interface SimpleControlStateListener extends ControlStateListener {
+
+    void updateControlTitle(String title);
+
+    void updateControlSelectionState(boolean selected);
+
+    void updateControlHotKey(String hotKey);
 
 }

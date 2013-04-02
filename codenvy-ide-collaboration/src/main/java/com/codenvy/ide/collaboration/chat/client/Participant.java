@@ -28,35 +28,29 @@ import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class Participant extends UserDetailsImpl
-{
+public class Participant extends UserDetailsImpl {
 
-   private static final String COLOR_KEY = "__color";
+    private static final String COLOR_KEY = "__color";
 
-   private static final String CLIENT_ID_KEY = "__client_id";
+    private static final String CLIENT_ID_KEY = "__client_id";
 
-   protected Participant()
-   {
-   }
+    protected Participant() {
+    }
 
-   public final String getColor()
-   {
-      return getStringField(COLOR_KEY);
-   }
+    public final String getColor() {
+        return getStringField(COLOR_KEY);
+    }
 
-   public final void setColor(String color)
-   {
-      addField(COLOR_KEY, color);
-   }
+    public final void setColor(String color) {
+        addField(COLOR_KEY, color);
+    }
 
-   public final String getClientId()
-   {
-      return getStringField(CLIENT_ID_KEY);
-   }
+    public final String getClientId() {
+        return getStringField(CLIENT_ID_KEY);
+    }
 
-   public final void setClientId(String clientId)
-   {
-      addField(CLIENT_ID_KEY, clientId);
-   }
+    public final void setClientId(String clientId) {
+        addField(CLIENT_ID_KEY, clientId);
+    }
 
 }

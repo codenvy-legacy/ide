@@ -24,34 +24,26 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:38:16 PM anya $
- * 
  */
-public class GoogleAppEngineControl extends SimpleControl implements IDEControl
-{
+public class GoogleAppEngineControl extends SimpleControl implements IDEControl {
 
-   private static final String ID = "PaaS/Google App Engine";
+    private static final String ID = "PaaS/Google App Engine";
 
-   private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
+    private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
 
-   /**
-    * @param id
-    */
-   public GoogleAppEngineControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(GAEClientBundle.INSTANCE.googleAppEngine(), GAEClientBundle.INSTANCE.googleAppEngineDisabled());
-   }
+    /** @param id */
+    public GoogleAppEngineControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(GAEClientBundle.INSTANCE.googleAppEngine(), GAEClientBundle.INSTANCE.googleAppEngineDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

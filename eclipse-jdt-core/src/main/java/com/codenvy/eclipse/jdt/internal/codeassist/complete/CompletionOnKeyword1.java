@@ -15,33 +15,40 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.Scope;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnKeyword1 extends SingleTypeReference implements CompletionOnKeyword {
-	private char[][] possibleKeywords;
-	public boolean canCompleteEmptyToken;
+    private char[][] possibleKeywords;
+    public  boolean  canCompleteEmptyToken;
 
-	public CompletionOnKeyword1(char[] token, long pos, char[] possibleKeyword) {
-		this(token, pos, new char[][]{possibleKeyword});
-	}
-	public CompletionOnKeyword1(char[] token, long pos, char[][] possibleKeywords) {
-		super(token, pos);
-		this.possibleKeywords = possibleKeywords;
-	}
-	public boolean canCompleteEmptyToken() {
-		return this.canCompleteEmptyToken;
-	}
-	public char[] getToken() {
-		return this.token;
-	}
-	public char[][] getPossibleKeywords() {
-		return this.possibleKeywords;
-	}
-	public void aboutToResolve(Scope scope) {
-		getTypeBinding(scope);
-	}
-	protected TypeBinding getTypeBinding(Scope scope) {
-		throw new CompletionNodeFound(this, scope);
-	}
-	public StringBuffer printExpression(int indent, StringBuffer output){
+    public CompletionOnKeyword1(char[] token, long pos, char[] possibleKeyword) {
+        this(token, pos, new char[][]{possibleKeyword});
+    }
 
-		return output.append("<CompleteOnKeyword:").append(this.token).append('>');  //$NON-NLS-1$
-	}
+    public CompletionOnKeyword1(char[] token, long pos, char[][] possibleKeywords) {
+        super(token, pos);
+        this.possibleKeywords = possibleKeywords;
+    }
+
+    public boolean canCompleteEmptyToken() {
+        return this.canCompleteEmptyToken;
+    }
+
+    public char[] getToken() {
+        return this.token;
+    }
+
+    public char[][] getPossibleKeywords() {
+        return this.possibleKeywords;
+    }
+
+    public void aboutToResolve(Scope scope) {
+        getTypeBinding(scope);
+    }
+
+    protected TypeBinding getTypeBinding(Scope scope) {
+        throw new CompletionNodeFound(this, scope);
+    }
+
+    public StringBuffer printExpression(int indent, StringBuffer output) {
+
+        return output.append("<CompleteOnKeyword:").append(this.token).append('>');  //$NON-NLS-1$
+    }
 }

@@ -23,104 +23,104 @@ import com.google.collide.dto.DocOp;
  */
 public class PositionTransformer {
 
-  private class Transformer implements DocOpCursor {
-    private int docOpColumn;
-    private int docOpLineNumber;
+    private class Transformer implements DocOpCursor {
+        private int docOpColumn;
+        private int docOpLineNumber;
 
-    @Override
-    public void delete(String text) {
-      if (lineNumber == docOpLineNumber) {
-        if (column >= docOpColumn) {
-          // We need to update the position because the deletion is before it
-          int columnOfLastDeletedChar = docOpColumn + text.length() - 1;
-          if (column <= columnOfLastDeletedChar) {
+        @Override
+        public void delete(String text) {
+            if (lineNumber == docOpLineNumber) {
+                if (column >= docOpColumn) {
+                    // We need to update the position because the deletion is before it
+                    int columnOfLastDeletedChar = docOpColumn + text.length() - 1;
+                    if (column <= columnOfLastDeletedChar) {
             /*
              * The position is inside the deleted region, but we want to keep it
              * alive, so it's final position is the column where the delete
              * collapses to
              */
-            column = docOpColumn;
-          } else {
+                        column = docOpColumn;
+                    } else {
             /*
              * The position is after the deletion region, offset the position to
              * account for the delete
              */
-            column -= text.length();
-          }
-        }
-      } else if (text.endsWith("\n") && lineNumber == docOpLineNumber + 1) {
+                        column -= text.length();
+                    }
+                }
+            } else if (text.endsWith("\n") && lineNumber == docOpLineNumber + 1) {
         /*
          * This line and the next are being joined and our position is on the
          * next line. Bring the position onto this line.
          */
-        lineNumber = docOpLineNumber;
-        column += docOpColumn;
-      } else if (text.endsWith("\n") && lineNumber > docOpLineNumber) {
-        lineNumber--;
-      }
-    }
-
-    @Override
-    public void insert(String text) {
-      if (lineNumber == docOpLineNumber) {
-        if (column >= docOpColumn) {
-          if (text.endsWith("\n")) {
-            // Splitting the lines
-            lineNumber++;
-            column = column - docOpColumn;
-          } else {
-            column += text.length();
-          }
+                lineNumber = docOpLineNumber;
+                column += docOpColumn;
+            } else if (text.endsWith("\n") && lineNumber > docOpLineNumber) {
+                lineNumber--;
+            }
         }
-      } else if (lineNumber > docOpLineNumber && text.endsWith("\n")) {
-        lineNumber++;
-      }
 
-      if (text.endsWith("\n")) {
-        skipDocOpLines(1);
-      } else {
-        docOpColumn += text.length();
-      }
+        @Override
+        public void insert(String text) {
+            if (lineNumber == docOpLineNumber) {
+                if (column >= docOpColumn) {
+                    if (text.endsWith("\n")) {
+                        // Splitting the lines
+                        lineNumber++;
+                        column = column - docOpColumn;
+                    } else {
+                        column += text.length();
+                    }
+                }
+            } else if (lineNumber > docOpLineNumber && text.endsWith("\n")) {
+                lineNumber++;
+            }
+
+            if (text.endsWith("\n")) {
+                skipDocOpLines(1);
+            } else {
+                docOpColumn += text.length();
+            }
+        }
+
+        @Override
+        public void retain(int count, boolean hasTrailingNewline) {
+            if (hasTrailingNewline) {
+                skipDocOpLines(1);
+            } else {
+                docOpColumn += count;
+            }
+        }
+
+        @Override
+        public void retainLine(int lineCount) {
+            skipDocOpLines(lineCount);
+        }
+
+        private void skipDocOpLines(int lineCount) {
+            docOpLineNumber += lineCount;
+            docOpColumn = 0;
+        }
     }
 
-    @Override
-    public void retain(int count, boolean hasTrailingNewline) {
-      if (hasTrailingNewline) {
-        skipDocOpLines(1);
-      } else {
-        docOpColumn += count;
-      }
+    private int column;
+    private int lineNumber;
+
+    public PositionTransformer(int lineNumber, int column) {
+        this.column = column;
+        this.lineNumber = lineNumber;
     }
 
-    @Override
-    public void retainLine(int lineCount) {
-      skipDocOpLines(lineCount);
+    public void transform(DocOp op) {
+        Transformer transformer = new Transformer();
+        DocOpUtils.accept(op, transformer);
     }
 
-    private void skipDocOpLines(int lineCount) {
-      docOpLineNumber += lineCount;
-      docOpColumn = 0;
+    public int getColumn() {
+        return column;
     }
-  }
 
-  private int column;
-  private int lineNumber;
-
-  public PositionTransformer(int lineNumber, int column) {
-    this.column = column;
-    this.lineNumber = lineNumber;
-  }
-
-  public void transform(DocOp op) {
-    Transformer transformer = new Transformer();
-    DocOpUtils.accept(op, transformer);
-  }
-
-  public int getColumn() {
-    return column;
-  }
-
-  public int getLineNumber() {
-    return lineNumber;
-  }
+    public int getLineNumber() {
+        return lineNumber;
+    }
 }

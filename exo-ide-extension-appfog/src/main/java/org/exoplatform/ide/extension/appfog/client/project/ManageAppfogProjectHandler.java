@@ -26,12 +26,11 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ManageAppfogProjectHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to manage project deployed on Appfog.
-    *
-    * @param event
-    */
-   void onManageAppfogProject(ManageAppfogProjectEvent event);
+public interface ManageAppfogProjectHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to manage project deployed on Appfog.
+     *
+     * @param event
+     */
+    void onManageAppfogProject(ManageAppfogProjectEvent event);
 }

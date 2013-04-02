@@ -27,86 +27,69 @@ import com.google.gwt.user.client.ui.Image;
  * a segment of the projection document. If collapsed, it represents a region of
  * the master document that does not have a corresponding segment in the
  * projection document.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: FoldMarker.java Mar 12, 2013 12:59:31 AM azatsarynnyy $
- *
  */
-public class FoldMarker
-{
-   /**
-    * Image for collapsed fold marker.
-    */
-   private Image collapsedImage;
+public class FoldMarker {
+    /** Image for collapsed fold marker. */
+    private Image collapsedImage;
 
-   /**
-    * Image for expanded fold marker.
-    */
-   private Image expandedImage;
+    /** Image for expanded fold marker. */
+    private Image expandedImage;
 
-   /**
-    * The state of this fold marker.
-    */
-   private boolean isCollapsed;
+    /** The state of this fold marker. */
+    private boolean isCollapsed;
 
-   /**
-    * Creates a new expanded fold marker.
-    * 
-    * @param resources
-    */
-   public FoldMarker(Resources resources)
-   {
-      this(false, resources);
-   }
+    /**
+     * Creates a new expanded fold marker.
+     *
+     * @param resources
+     */
+    public FoldMarker(Resources resources) {
+        this(false, resources);
+    }
 
-   /**
-    * Creates a new fold marker. When <code>isCollapsed</code>
-    * is <code>true</code> the fold marker is initially collapsed.
-    *
-    * @param isCollapsed <code>true</code> if the fold marker should initially be collapsed, <code>false</code> otherwise
-    * @param resources
-    */
-   public FoldMarker(boolean isCollapsed, Resources resources)
-   {
-      this.isCollapsed = isCollapsed;
-      this.collapsedImage = new Image(resources.collapsed());
-      this.expandedImage = new Image(resources.expanded());
-   }
+    /**
+     * Creates a new fold marker. When <code>isCollapsed</code>
+     * is <code>true</code> the fold marker is initially collapsed.
+     *
+     * @param isCollapsed
+     *         <code>true</code> if the fold marker should initially be collapsed, <code>false</code> otherwise
+     * @param resources
+     */
+    public FoldMarker(boolean isCollapsed, Resources resources) {
+        this.isCollapsed = isCollapsed;
+        this.collapsedImage = new Image(resources.collapsed());
+        this.expandedImage = new Image(resources.expanded());
+    }
 
-   /**
-    * Returns the state of this fold point.
-    *
-    * @return <code>true</code> if collapsed, <code>false</code> otherwise
-    */
-   public boolean isCollapsed()
-   {
-      return isCollapsed;
-   }
+    /**
+     * Returns the state of this fold point.
+     *
+     * @return <code>true</code> if collapsed, <code>false</code> otherwise
+     */
+    public boolean isCollapsed() {
+        return isCollapsed;
+    }
 
-   /**
-    * Marks this fold point as being collapsed.
-    */
-   void markCollapsed()
-   {
-      isCollapsed = true;
-   }
+    /** Marks this fold point as being collapsed. */
+    void markCollapsed() {
+        isCollapsed = true;
+    }
 
-   /**
-    * Marks this fold point as being unfolded.
-    */
-   void markExpanded()
-   {
-      isCollapsed = false;
-   }
+    /** Marks this fold point as being unfolded. */
+    void markExpanded() {
+        isCollapsed = false;
+    }
 
-   /**
-    * Get marker's image.
-    * 
-    * @return image for marker
-    */
-   public Image getImage()
-   {
-      return isCollapsed() ? collapsedImage : expandedImage;
-   }
+    /**
+     * Get marker's image.
+     *
+     * @return image for marker
+     */
+    public Image getImage() {
+        return isCollapsed() ? collapsedImage : expandedImage;
+    }
 
 }

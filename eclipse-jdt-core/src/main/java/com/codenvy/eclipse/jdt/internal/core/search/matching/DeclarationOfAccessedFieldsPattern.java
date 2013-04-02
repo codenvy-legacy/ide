@@ -16,14 +16,14 @@ import com.codenvy.eclipse.jdt.internal.compiler.util.SimpleSet;
 
 public class DeclarationOfAccessedFieldsPattern extends FieldPattern {
 
-protected IJavaElement enclosingElement;
-protected SimpleSet knownFields;
+    protected IJavaElement enclosingElement;
+    protected SimpleSet    knownFields;
 
-public DeclarationOfAccessedFieldsPattern(IJavaElement enclosingElement) {
-	super(null, null, null, null, null, IJavaSearchConstants.REFERENCES, R_PATTERN_MATCH);
+    public DeclarationOfAccessedFieldsPattern(IJavaElement enclosingElement) {
+        super(null, null, null, null, null, IJavaSearchConstants.REFERENCES, R_PATTERN_MATCH);
 
-	this.enclosingElement = enclosingElement;
-	this.knownFields = new SimpleSet();
-	this.mustResolve = true;
-}
+        this.enclosingElement = enclosingElement;
+        this.knownFields = new SimpleSet();
+        this.mustResolve = true;
+    }
 }

@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
@@ -31,76 +27,63 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Execute queries against lucene index.
- */
-public class LuceneQueryExecutor
-{
-   private final LuceneInfoStorage infoStorage;
+/** Execute queries against lucene index. */
+public class LuceneQueryExecutor {
+    private final LuceneInfoStorage infoStorage;
 
-   public LuceneQueryExecutor(LuceneInfoStorage infoStorage)
-   {
-      this.infoStorage = infoStorage;
-   }
+    public LuceneQueryExecutor(LuceneInfoStorage infoStorage) {
+        this.infoStorage = infoStorage;
+    }
 
-   /**
-    * Execute query
-    * 
-    * @param select
-    *           - extractor of results.
-    * @param from
-    *           - type of index to search (java code ,jvadoc)
-    * @param where
-    *           - constrain of search
-    * @param limit
-    *           - limit number of results.
-    * @param offset
-    *           - offset in results.
-    * @return - List of values depends on select extractor
-    * 
-    * @throws CodeAssistantException
-    */
-   public <T> List<T> executeQuery(ContentExtractor<T> select, IndexType from, LuceneSearchConstraint where, int limit,
-      int offset) throws CodeAssistantException
-   {
-      if (limit < 0)
-      {
-         throw new CodeAssistantException(500, "Negative limit " + limit + " is not allowed");
-      }
+    /**
+     * Execute query
+     *
+     * @param select
+     *         - extractor of results.
+     * @param from
+     *         - type of index to search (java code ,jvadoc)
+     * @param where
+     *         - constrain of search
+     * @param limit
+     *         - limit number of results.
+     * @param offset
+     *         - offset in results.
+     * @return - List of values depends on select extractor
+     * @throws CodeAssistantException
+     */
+    public <T> List<T> executeQuery(ContentExtractor<T> select, IndexType from, LuceneSearchConstraint where, int limit,
+                                    int offset) throws CodeAssistantException {
+        if (limit < 0) {
+            throw new CodeAssistantException(500, "Negative limit " + limit + " is not allowed");
+        }
 
-      if (offset < 0)
-      {
-         throw new CodeAssistantException(500, "Negative offset " + offset + " is not allowed");
-      }
-      try
-      {
-         IndexSearcher searcher = infoStorage.getTypeInfoIndexSearcher();
+        if (offset < 0) {
+            throw new CodeAssistantException(500, "Negative offset " + offset + " is not allowed");
+        }
+        try {
+            IndexSearcher searcher = infoStorage.getTypeInfoIndexSearcher();
 
-         Query contentQuery = from.getQuery();
-         if (!where.matchAll())
-         {
-            BooleanQuery booleanQuery = new BooleanQuery();
-            booleanQuery.add(contentQuery, BooleanClause.Occur.MUST);
-            booleanQuery.add(where.getQuery(), BooleanClause.Occur.MUST);
-            contentQuery = booleanQuery;
-         }
+            Query contentQuery = from.getQuery();
+            if (!where.matchAll()) {
+                BooleanQuery booleanQuery = new BooleanQuery();
+                booleanQuery.add(contentQuery, BooleanClause.Occur.MUST);
+                booleanQuery.add(where.getQuery(), BooleanClause.Occur.MUST);
+                contentQuery = booleanQuery;
+            }
 
-         TopDocs docs = searcher.search(contentQuery, limit + offset);
+            TopDocs docs = searcher.search(contentQuery, limit + offset);
 
-         List<T> result = new ArrayList<T>(Math.max(0, docs.totalHits - offset));
+            List<T> result = new ArrayList<T>(Math.max(0, docs.totalHits - offset));
 
-         for (int i = offset; i < docs.scoreDocs.length; i++)
-         {
-            result.add(select.getValue(searcher.getIndexReader(), docs.scoreDocs[i].doc));
-         }
-         return result;
+            for (int i = offset; i < docs.scoreDocs.length; i++) {
+                result.add(select.getValue(searcher.getIndexReader(), docs.scoreDocs[i].doc));
+            }
+            return result;
 
-      }
-      catch (IOException e)
-      {
-         throw new CodeAssistantException(404, e.getLocalizedMessage());
-      }
+        } catch (IOException e) {
+            throw new CodeAssistantException(404, e.getLocalizedMessage());
+        }
 
-   }
+    }
 
 }

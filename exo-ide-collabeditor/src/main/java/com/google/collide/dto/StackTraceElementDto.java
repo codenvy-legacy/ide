@@ -17,17 +17,14 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * A single frame of a stack trace for a serialized exception.
- *
- */
+/** A single frame of a stack trace for a serialized exception. */
 @RoutingType(type = RoutingTypes.STACKTRACEELEMENTDTO)
 public interface StackTraceElementDto extends ClientToServerDto {
-  String getClassName();
+    String getClassName();
 
-  String getFileName();
+    String getFileName();
 
-  String getMethodName();
+    String getMethodName();
 
-  int getLineNumber();
+    int getLineNumber();
 }

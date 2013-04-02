@@ -34,91 +34,71 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 5:05:49 PM anya $
- *
  */
-public class IndexFilesGrid extends ListGrid<IndexFile>
-{
-   /**
-    * Grid's ID.
-    */
-   private static final String ID = "ideIndexFilesGrid";
+public class IndexFilesGrid extends ListGrid<IndexFile> {
+    /** Grid's ID. */
+    private static final String ID = "ideIndexFilesGrid";
 
-   private final String FILES = "Files for commit";
+    private final String FILES = "Files for commit";
 
-   /**
-    * Files column.
-    */
-   Column<IndexFile, String> filesColumn;
+    /** Files column. */
+    Column<IndexFile, String> filesColumn;
 
-   /**
-    * Column with checkboxes.
-    */
-   Column<IndexFile, Boolean> checkColumn;
+    /** Column with checkboxes. */
+    Column<IndexFile, Boolean> checkColumn;
 
-   public IndexFilesGrid()
-   {
-      super();
-      setID(ID);
-      initColumns();
-   }
+    public IndexFilesGrid() {
+        super();
+        setID(ID);
+        initColumns();
+    }
 
-   /**
-    * Initialize the columns of the grid.
-    */
-   private void initColumns()
-   {
-      CellTable<IndexFile> cellTable = getCellTable();
+    /** Initialize the columns of the grid. */
+    private void initColumns() {
+        CellTable<IndexFile> cellTable = getCellTable();
 
-      // Create files column:
-      filesColumn = new Column<IndexFile, String>(new TextCell())
-      {
-         @Override
-         public String getValue(IndexFile file)
-         {
-            return file.getPath();
-         }
-      };
+        // Create files column:
+        filesColumn = new Column<IndexFile, String>(new TextCell()) {
+            @Override
+            public String getValue(IndexFile file) {
+                return file.getPath();
+            }
+        };
 
-      // Create column with checkboxes:
-      checkColumn = new Column<IndexFile, Boolean>(new CheckboxCell(false, true))
-      {
+        // Create column with checkboxes:
+        checkColumn = new Column<IndexFile, Boolean>(new CheckboxCell(false, true)) {
 
-         @Override
-         public Boolean getValue(IndexFile file)
-         {
-            return !file.isIndexed();
-         }
+            @Override
+            public Boolean getValue(IndexFile file) {
+                return !file.isIndexed();
+            }
 
-      };
+        };
 
-      // Create bean value updater:
-      FieldUpdater<IndexFile, Boolean> checkFieldUpdater = new FieldUpdater<IndexFile, Boolean>()
-      {
+        // Create bean value updater:
+        FieldUpdater<IndexFile, Boolean> checkFieldUpdater = new FieldUpdater<IndexFile, Boolean>() {
 
-         @Override
-         public void update(int index, IndexFile file, Boolean value)
-         {
-            file.setIndexed(!value);
-         }
-      };
+            @Override
+            public void update(int index, IndexFile file, Boolean value) {
+                file.setIndexed(!value);
+            }
+        };
 
-      checkColumn.setFieldUpdater(checkFieldUpdater);
+        checkColumn.setFieldUpdater(checkFieldUpdater);
 
-      filesColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+        filesColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
-      cellTable.addColumn(checkColumn, new SafeHtml()
-      {
-         private static final long serialVersionUID = 1L;
+        cellTable.addColumn(checkColumn, new SafeHtml() {
+            private static final long serialVersionUID = 1L;
 
-         @Override
-         public String asString()
-         {
-            return "&nbsp;";
-         }
-      });
-      cellTable.setColumnWidth(checkColumn, 1, Unit.PCT);
+            @Override
+            public String asString() {
+                return "&nbsp;";
+            }
+        });
+        cellTable.setColumnWidth(checkColumn, 1, Unit.PCT);
 
-      cellTable.addColumn(filesColumn, FILES);
-      cellTable.setColumnWidth(filesColumn, 35, Unit.PCT);
-   }
+        cellTable.addColumn(filesColumn, FILES);
+        cellTable.setColumnWidth(filesColumn, 35, Unit.PCT);
+    }
 }

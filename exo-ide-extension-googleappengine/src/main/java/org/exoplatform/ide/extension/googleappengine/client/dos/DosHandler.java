@@ -33,51 +33,39 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 5:00:19 PM anya $
- * 
  */
-public class DosHandler extends GoogleAppEnginePresenter implements UpdateDosHandler
-{
+public class DosHandler extends GoogleAppEnginePresenter implements UpdateDosHandler {
 
-   public DosHandler()
-   {
-      IDE.addHandler(UpdateDosEvent.TYPE, this);
-   }
+    public DosHandler() {
+        IDE.addHandler(UpdateDosEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesHandler#onUpdateQueues(org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent)
-    */
-   @Override
-   public void onUpdateDos(UpdateDosEvent event)
-   {
-      if (isAppEngineProject())
-      {
-         updateDos();
-      }
-      else
-      {
-         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
-      }
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesHandler#onUpdateQueues(org.exoplatform.ide.extension
+     * .googleappengine.client.queues.UpdateQueuesEvent) */
+    @Override
+    public void onUpdateDos(UpdateDosEvent event) {
+        if (isAppEngineProject()) {
+            updateDos();
+        } else {
+            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
+        }
+    }
 
-   public void updateDos()
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().updateDos(currentVfs.getId(), currentProject.getId(),
-            new GoogleAppEngineAsyncRequestCallback<Object>()
-            {
+    public void updateDos() {
+        try {
+            GoogleAppEngineClientService.getInstance().updateDos(currentVfs.getId(), currentProject.getId(),
+                                                                 new GoogleAppEngineAsyncRequestCallback<Object>() {
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateDosSuccessfully(),
-                     Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                     @Override
+                                                                     protected void onSuccess(Object result) {
+                                                                         IDE.fireEvent(new OutputEvent(
+                                                                                 GoogleAppEngineExtension.GAE_LOCALIZATION
+                                                                                                         .updateDosSuccessfully(),
+                                                                                 Type.INFO));
+                                                                     }
+                                                                 });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

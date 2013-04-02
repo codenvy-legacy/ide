@@ -25,17 +25,14 @@ import org.exoplatform.ide.json.client.JsoArray;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-final class JavaScriptContenassistProvider extends JavaScriptObject
-{
+final class JavaScriptContenassistProvider extends JavaScriptObject {
 
-   protected JavaScriptContenassistProvider()
-   {
-   }
-   
-   public native JsoArray<JsProposal> computeProposals(String buffer, int offset, Context context)/*-{
-      return this['computeProposals'](buffer, offset, context);
-   }-*/;
+    protected JavaScriptContenassistProvider() {
+    }
+
+    public native JsoArray<JsProposal> computeProposals(String buffer, int offset, Context context)/*-{
+        return this['computeProposals'](buffer, offset, context);
+    }-*/;
 
 }

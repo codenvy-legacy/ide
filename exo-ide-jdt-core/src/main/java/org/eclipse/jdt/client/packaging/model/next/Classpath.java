@@ -23,15 +23,12 @@ import org.exoplatform.ide.vfs.shared.ItemImpl;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class Classpath extends ItemImpl
-{
-   
-   public Classpath(String name)
-   {
-      super(null);
-      setName(name);
-   }
-   
+public class Classpath extends ItemImpl {
+
+    public Classpath(String name) {
+        super(null);
+        setName(name);
+    }
+
 }

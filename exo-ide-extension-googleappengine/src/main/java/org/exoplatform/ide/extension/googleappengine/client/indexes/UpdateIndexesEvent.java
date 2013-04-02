@@ -22,34 +22,26 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class UpdateIndexesEvent extends GwtEvent<UpdateIndexesHandler>
-{
-   
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<UpdateIndexesHandler> TYPE = new GwtEvent.Type<UpdateIndexesHandler>();
+ */
+public class UpdateIndexesEvent extends GwtEvent<UpdateIndexesHandler> {
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateIndexesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<UpdateIndexesHandler> TYPE = new GwtEvent.Type<UpdateIndexesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateIndexesHandler handler)
-   {
-      handler.onUpdateIndexes(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateIndexesHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateIndexesHandler handler) {
+        handler.onUpdateIndexes(this);
+    }
 
 
 }

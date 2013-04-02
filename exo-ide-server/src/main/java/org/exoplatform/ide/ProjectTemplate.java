@@ -22,46 +22,38 @@ import java.util.List;
 
 /**
  * Project template.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectTemplate.java Jul 28, 2011 5:26:21 PM vereshchaka $
- * 
  */
-public class ProjectTemplate extends FolderTemplate
-{
-   private String type;
+public class ProjectTemplate extends FolderTemplate {
+    private String type;
 
-   private List<String> targets;
+    private List<String> targets;
 
-   /**
-    * @param type the type to set
-    */
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    /**
+     * @param type
+     *         the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   /**
-    * @return the type
-    */
-   public String getType()
-   {
-      return type;
-   }
+    /** @return the type */
+    public String getType() {
+        return type;
+    }
 
-   /**
-    * @return the destination
-    */
-   public List<String> getTargets()
-   {
-      return targets;
-   }
+    /** @return the destination */
+    public List<String> getTargets() {
+        return targets;
+    }
 
-   /**
-    * @param destination the destination to set
-    */
-   public void setDestination(List<String> targets)
-   {
-      this.targets = targets;
-   }
+    /**
+     * @param destination
+     *         the destination to set
+     */
+    public void setDestination(List<String> targets) {
+        this.targets = targets;
+    }
 }

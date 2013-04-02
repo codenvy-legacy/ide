@@ -26,35 +26,31 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class TypesListBean implements TypesList
-{
+ */
+public class TypesListBean implements TypesList {
 
-   private List<ShortTypeInfo> types;
+    private List<ShortTypeInfo> types;
 
-   public TypesListBean()
-   {
-   }
+    public TypesListBean() {
+    }
 
-   public TypesListBean(List<ShortTypeInfo> types)
-   {
-      this.types = types;
-   }
+    public TypesListBean(List<ShortTypeInfo> types) {
+        this.types = types;
+    }
 
-   @Override
-   public void setTypes(List<ShortTypeInfo> types)
-   {
-      this.types = types;
-   }
+    @Override
+    public void setTypes(List<ShortTypeInfo> types) {
+        this.types = types;
+    }
 
-   @Override
-   public List<ShortTypeInfo> getTypes()
-   {
-      if (types != null)
-         return types;
-      return Collections.emptyList();
-   }
+    @Override
+    public List<ShortTypeInfo> getTypes() {
+        if (types != null)
+            return types;
+        return Collections.emptyList();
+    }
 
 }

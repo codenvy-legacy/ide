@@ -20,49 +20,38 @@ package org.eclipse.jdt.client.core.formatter;
 
 import java.util.Map;
 
-public class Profile
-{
-   private final String name;
+public class Profile {
+    private final String name;
 
-   private final String id;
+    private final String id;
 
-   private final Map<String, String> settings;
+    private final Map<String, String> settings;
 
-   /**
-    * @param name
-    * @param id
-    * @param settings
-    */
-   public Profile(String name, String id, Map<String, String> settings)
-   {
-      super();
-      this.name = name;
-      this.id = id;
-      this.settings = settings;
-   }
+    /**
+     * @param name
+     * @param id
+     * @param settings
+     */
+    public Profile(String name, String id, Map<String, String> settings) {
+        super();
+        this.name = name;
+        this.id = id;
+        this.settings = settings;
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @return the name */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @return the id
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /** @return the id */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * @return the settings
-    */
-   public Map<String, String> getSettings()
-   {
-      return settings;
-   }
+    /** @return the settings */
+    public Map<String, String> getSettings() {
+        return settings;
+    }
 
 }

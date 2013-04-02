@@ -28,225 +28,184 @@ import com.codenvy.eclipse.jdt.internal.core.util.Util;
  * throw Throwable so that the user can write a code snipet that
  * throws checked exceptio without having to catch those.
  */
-public class CodeSnippetSkeleton implements IBinaryType, EvaluationConstants
-{
-   public static class BinaryMethodSkeleton implements IBinaryMethod
-   {
-      char[][] exceptionTypeNames;
+public class CodeSnippetSkeleton implements IBinaryType, EvaluationConstants {
+    public static class BinaryMethodSkeleton implements IBinaryMethod {
+        char[][] exceptionTypeNames;
 
-      char[] methodDescriptor;
+        char[] methodDescriptor;
 
-      char[] selector;
+        char[] selector;
 
-      boolean isConstructor;
+        boolean isConstructor;
 
-      public BinaryMethodSkeleton(char[] selector, char[] methodDescriptor, char[][] exceptionTypeNames,
-         boolean isConstructor)
-      {
-         this.selector = selector;
-         this.methodDescriptor = methodDescriptor;
-         this.exceptionTypeNames = exceptionTypeNames;
-         this.isConstructor = isConstructor;
-      }
+        public BinaryMethodSkeleton(char[] selector, char[] methodDescriptor, char[][] exceptionTypeNames,
+                                    boolean isConstructor) {
+            this.selector = selector;
+            this.methodDescriptor = methodDescriptor;
+            this.exceptionTypeNames = exceptionTypeNames;
+            this.isConstructor = isConstructor;
+        }
 
-      public IBinaryAnnotation[] getAnnotations()
-      {
-         return null;
-      }
+        public IBinaryAnnotation[] getAnnotations() {
+            return null;
+        }
 
-      public char[][] getArgumentNames()
-      {
-         return null;
-      }
+        public char[][] getArgumentNames() {
+            return null;
+        }
 
-      public Object getDefaultValue()
-      {
-         return null;
-      }
+        public Object getDefaultValue() {
+            return null;
+        }
 
-      public char[][] getExceptionTypeNames()
-      {
-         return this.exceptionTypeNames;
-      }
+        public char[][] getExceptionTypeNames() {
+            return this.exceptionTypeNames;
+        }
 
-      public char[] getGenericSignature()
-      {
-         return null;
-      }
+        public char[] getGenericSignature() {
+            return null;
+        }
 
-      public char[] getMethodDescriptor()
-      {
-         return this.methodDescriptor;
-      }
+        public char[] getMethodDescriptor() {
+            return this.methodDescriptor;
+        }
 
-      public int getModifiers()
-      {
-         return ClassFileConstants.AccPublic;
-      }
+        public int getModifiers() {
+            return ClassFileConstants.AccPublic;
+        }
 
-      public IBinaryAnnotation[] getParameterAnnotations(int index)
-      {
-         return null;
-      }
+        public IBinaryAnnotation[] getParameterAnnotations(int index) {
+            return null;
+        }
 
-      public int getAnnotatedParametersCount()
-      {
-         return 0;
-      }
+        public int getAnnotatedParametersCount() {
+            return 0;
+        }
 
-      public char[] getSelector()
-      {
-         return this.selector;
-      }
+        public char[] getSelector() {
+            return this.selector;
+        }
 
-      public long getTagBits()
-      {
-         return 0;
-      }
+        public long getTagBits() {
+            return 0;
+        }
 
-      public boolean isClinit()
-      {
-         return false;
-      }
+        public boolean isClinit() {
+            return false;
+        }
 
-      public boolean isConstructor()
-      {
-         return this.isConstructor;
-      }
-   }
+        public boolean isConstructor() {
+            return this.isConstructor;
+        }
+    }
 
-   IBinaryMethod[] methods = new IBinaryMethod[]{new BinaryMethodSkeleton("<init>".toCharArray(), //$NON-NLS-1$
-      "()V".toCharArray(), //$NON-NLS-1$
-      new char[][]{}, true), new BinaryMethodSkeleton("run".toCharArray(), //$NON-NLS-1$
-      "()V".toCharArray(), //$NON-NLS-1$
-      new char[][]{"java/lang/Throwable".toCharArray()}, //$NON-NLS-1$
-      false), new BinaryMethodSkeleton("setResult".toCharArray(), //$NON-NLS-1$
-      "(Ljava/lang/Object;Ljava/lang/Class;)V".toCharArray(), //$NON-NLS-1$
-      new char[][]{}, false)};
+    IBinaryMethod[] methods = new IBinaryMethod[]{new BinaryMethodSkeleton("<init>".toCharArray(), //$NON-NLS-1$
+                                                                           "()V".toCharArray(), //$NON-NLS-1$
+                                                                           new char[][]{}, true),
+                                                  new BinaryMethodSkeleton("run".toCharArray(), //$NON-NLS-1$
+                                                                           "()V".toCharArray(), //$NON-NLS-1$
+                                                                           new char[][]{"java/lang/Throwable".toCharArray()}, //$NON-NLS-1$
+                                                                           false),
+                                                  new BinaryMethodSkeleton("setResult".toCharArray(), //$NON-NLS-1$
+                                                                           "(Ljava/lang/Object;Ljava/lang/Class;)V".toCharArray(),
+                                                                           //$NON-NLS-1$
+                                                                           new char[][]{}, false)};
 
-   /**
-    * CodeSnippetSkeleton constructor comment.
-    */
-   public CodeSnippetSkeleton()
-   {
-      super();
-   }
+    /** CodeSnippetSkeleton constructor comment. */
+    public CodeSnippetSkeleton() {
+        super();
+    }
 
-   public IBinaryAnnotation[] getAnnotations()
-   {
-      return null;
-   }
+    public IBinaryAnnotation[] getAnnotations() {
+        return null;
+    }
 
-   public char[] getEnclosingMethod()
-   {
-      return null;
-   }
+    public char[] getEnclosingMethod() {
+        return null;
+    }
 
-   public char[] getEnclosingTypeName()
-   {
-      return null;
-   }
+    public char[] getEnclosingTypeName() {
+        return null;
+    }
 
-   public IBinaryField[] getFields()
-   {
-      return null;
-   }
+    public IBinaryField[] getFields() {
+        return null;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.IDependent#getFileName()
-    */
-   public char[] getFileName()
-   {
-      return CharOperation.concat(CODE_SNIPPET_NAME, Util.defaultJavaExtension().toCharArray());
-   }
+    /** @see com.codenvy.eclipse.jdt.internal.compiler.env.IDependent#getFileName() */
+    public char[] getFileName() {
+        return CharOperation.concat(CODE_SNIPPET_NAME, Util.defaultJavaExtension().toCharArray());
+    }
 
-   public char[] getGenericSignature()
-   {
-      return null;
-   }
+    public char[] getGenericSignature() {
+        return null;
+    }
 
-   public char[][] getInterfaceNames()
-   {
-      return null;
-   }
+    public char[][] getInterfaceNames() {
+        return null;
+    }
 
-   public String getJavadocContents()
-   {
-      return null;
-   }
+    public String getJavadocContents() {
+        return null;
+    }
 
-   public String getJavadocContents(IProgressMonitor monitor, String defaultEncoding) throws JavaModelException
-   {
-      return null;
-   }
+    public String getJavadocContents(IProgressMonitor monitor, String defaultEncoding) throws JavaModelException {
+        return null;
+    }
 
-   public IBinaryNestedType[] getMemberTypes()
-   {
-      return null;
-   }
+    public IBinaryNestedType[] getMemberTypes() {
+        return null;
+    }
 
-   public IBinaryMethod[] getMethods()
-   {
-      return this.methods;
-   }
+    public IBinaryMethod[] getMethods() {
+        return this.methods;
+    }
 
-   public int getModifiers()
-   {
-      return ClassFileConstants.AccPublic;
-   }
+    public int getModifiers() {
+        return ClassFileConstants.AccPublic;
+    }
 
-   public char[][][] getMissingTypeNames()
-   {
-      return null;
-   }
+    public char[][][] getMissingTypeNames() {
+        return null;
+    }
 
-   public char[] getName()
-   {
-      return CODE_SNIPPET_NAME;
-   }
+    public char[] getName() {
+        return CODE_SNIPPET_NAME;
+    }
 
-   public char[] getSourceName()
-   {
-      return ROOT_CLASS_NAME;
-   }
+    public char[] getSourceName() {
+        return ROOT_CLASS_NAME;
+    }
 
-   public char[] getSuperclassName()
-   {
-      return null;
-   }
+    public char[] getSuperclassName() {
+        return null;
+    }
 
-   public long getTagBits()
-   {
-      return 0;
-   }
+    public long getTagBits() {
+        return 0;
+    }
 
-   public String getURLContents(String docUrlValue, String defaultEncoding)
-   {
-      return null;
-   }
+    public String getURLContents(String docUrlValue, String defaultEncoding) {
+        return null;
+    }
 
-   public boolean isAnonymous()
-   {
-      return false;
-   }
+    public boolean isAnonymous() {
+        return false;
+    }
 
-   public boolean isBinaryType()
-   {
-      return true;
-   }
+    public boolean isBinaryType() {
+        return true;
+    }
 
-   public boolean isLocal()
-   {
-      return false;
-   }
+    public boolean isLocal() {
+        return false;
+    }
 
-   public boolean isMember()
-   {
-      return false;
-   }
+    public boolean isMember() {
+        return false;
+    }
 
-   public char[] sourceFileName()
-   {
-      return null;
-   }
+    public char[] sourceFileName() {
+        return null;
+    }
 }

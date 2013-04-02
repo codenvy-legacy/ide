@@ -14,68 +14,66 @@
 
 package org.exoplatform.ide.shared.util;
 
-/**
- * Utility methods for logging from shared code.
- */
+/** Utility methods for logging from shared code. */
 public class SharedLogUtils {
 
-  public interface Implementation {
-    void markTimeline(Class<?> clazz, String label);
+    public interface Implementation {
+        void markTimeline(Class<?> clazz, String label);
 
-    void info(Class<?> clazz, Object... objects);
-    
-    void warn(Class<?> clazz, Object... objects);
+        void info(Class<?> clazz, Object... objects);
 
-    void error(Class<?> clazz, Object... objects);
+        void warn(Class<?> clazz, Object... objects);
 
-    void debug(Class<?> clazz, Object... objects);
-  }
+        void error(Class<?> clazz, Object... objects);
 
-  private static class NoopImplementation implements Implementation {
-    @Override
-    public void markTimeline(Class<?> clazz, String label) {
-    }
-    
-    @Override
-    public void info(Class<?> clazz, Object... objects) {
+        void debug(Class<?> clazz, Object... objects);
     }
 
-    @Override
-    public void debug(Class<?> clazz, Object... objects) {
+    private static class NoopImplementation implements Implementation {
+        @Override
+        public void markTimeline(Class<?> clazz, String label) {
+        }
+
+        @Override
+        public void info(Class<?> clazz, Object... objects) {
+        }
+
+        @Override
+        public void debug(Class<?> clazz, Object... objects) {
+        }
+
+        @Override
+        public void error(Class<?> clazz, Object... objects) {
+        }
+
+        @Override
+        public void warn(Class<?> clazz, Object... objects) {
+        }
     }
 
-    @Override
-    public void error(Class<?> clazz, Object... objects) {
+    private static Implementation implementation = new NoopImplementation();
+
+    public static void setImplementation(Implementation implementation) {
+        SharedLogUtils.implementation = implementation;
     }
 
-    @Override
-    public void warn(Class<?> clazz, Object... objects) {
+    public static void markTimeline(Class<?> clazz, String label) {
+        implementation.markTimeline(clazz, label);
     }
-  }
 
-  private static Implementation implementation = new NoopImplementation();
+    public static void info(Class<?> clazz, Object... objects) {
+        implementation.info(clazz, objects);
+    }
 
-  public static void setImplementation(Implementation implementation) {
-    SharedLogUtils.implementation = implementation;
-  }
+    public static void error(Class<?> clazz, Object... objects) {
+        implementation.error(clazz, objects);
+    }
 
-  public static void markTimeline(Class<?> clazz, String label) {
-    implementation.markTimeline(clazz, label);
-  }
-  
-  public static void info(Class<?> clazz, Object... objects) {
-    implementation.info(clazz, objects);
-  }
-  
-  public static void error(Class<?> clazz, Object... objects) {
-    implementation.error(clazz, objects);
-  }
+    public static void debug(Class<?> clazz, Object... objects) {
+        implementation.debug(clazz, objects);
+    }
 
-  public static void debug(Class<?> clazz, Object... objects) {
-    implementation.debug(clazz, objects);
-  }
-
-  public static void warn(Class<?> clazz, Object... objects) {
-    implementation.warn(clazz, objects);
-  }
+    public static void warn(Class<?> clazz, Object... objects) {
+        implementation.warn(clazz, objects);
+    }
 }

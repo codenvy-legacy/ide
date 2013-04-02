@@ -14,9 +14,7 @@
 
 package com.google.collide.client.collaboration.cc;
 
-/**
- * A provider for the latest revision received.
- */
+/** A provider for the latest revision received. */
 public interface RevisionProvider {
-  int revision();
+    int revision();
 }

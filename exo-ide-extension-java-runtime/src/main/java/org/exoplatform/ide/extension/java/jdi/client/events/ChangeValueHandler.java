@@ -22,17 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ChangeValueEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ChangeValueHandler.java Apr 28, 2012 10:03:43 AM azatsarynnyy $
- *
  */
-public interface ChangeValueHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to change variable value.
-    * 
-    * @param event {@link ChangeValueEvent}
-    */
-   void onChangeValue(ChangeValueEvent e);
+public interface ChangeValueHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to change variable value.
+     *
+     * @param event
+     *         {@link ChangeValueEvent}
+     */
+    void onChangeValue(ChangeValueEvent e);
 }

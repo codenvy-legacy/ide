@@ -24,101 +24,94 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface S3ObjectVersion
-{
-   /**
-    * Get S3 bucket name
-    *
-    * @return
-    *    name of the bucket
-    */
-   String getS3Bucket();
+public interface S3ObjectVersion {
+    /**
+     * Get S3 bucket name
+     *
+     * @return name of the bucket
+     */
+    String getS3Bucket();
 
-   /**
-    * Set S3 bucket name
-    *
-    * @param s3Bucket
-    *    name of the bucket
-    */
-   void setS3Bucket(String s3Bucket);
+    /**
+     * Set S3 bucket name
+     *
+     * @param s3Bucket
+     *         name of the bucket
+     */
+    void setS3Bucket(String s3Bucket);
 
-   /**
-    * Get S3 key name
-    *
-    * @return
-    *    name of the key where object is stored
-    */
-   String getS3Key();
+    /**
+     * Get S3 key name
+     *
+     * @return name of the key where object is stored
+     */
+    String getS3Key();
 
-   /**
-    * Set S3 key name
-    *
-    * @param s3Key
-    *    name of the key where object is stored
-    */
-   void setS3Key(String s3Key);
+    /**
+     * Set S3 key name
+     *
+     * @param s3Key
+     *         name of the key where object is stored
+     */
+    void setS3Key(String s3Key);
 
-   /**
-    * Get version ID of current S3 key
-    *
-    * @return
-    *    ID of version
-    */
-   String getVersionId();
+    /**
+     * Get version ID of current S3 key
+     *
+     * @return ID of version
+     */
+    String getVersionId();
 
-   /**
-    * Set version ID for current S3 key
-    *
-    * @param versionId
-    *    ID of version
-    */
-   void setVersionId(String versionId);
+    /**
+     * Set version ID for current S3 key
+     *
+     * @param versionId
+     *         ID of version
+     */
+    void setVersionId(String versionId);
 
-   /**
-    * Get S3 key owner
-    *
-    * @return
-    *    owner of the S3 key
-    */
-   S3Owner getOwner();
+    /**
+     * Get S3 key owner
+     *
+     * @return owner of the S3 key
+     */
+    S3Owner getOwner();
 
-   /**
-    * Set S3 key owner
-    *
-    * @param owner
-    *    owner of the S3 key
-    */
-   void setOwner(S3Owner owner);
+    /**
+     * Set S3 key owner
+     *
+     * @param owner
+     *         owner of the S3 key
+     */
+    void setOwner(S3Owner owner);
 
-   /**
-    * Get last modified date
-    *
-    * @return
-    *    timestamp of the last modified date
-    */
-   long getLastModifiedDate();
+    /**
+     * Get last modified date
+     *
+     * @return timestamp of the last modified date
+     */
+    long getLastModifiedDate();
 
-   /**
-    * Set last modified date
-    *
-    * @param lastModifiedDate
-    *    timestamp of the last modified date
-    */
-   void setLastModifiedDate(long lastModifiedDate);
+    /**
+     * Set last modified date
+     *
+     * @param lastModifiedDate
+     *         timestamp of the last modified date
+     */
+    void setLastModifiedDate(long lastModifiedDate);
 
-   /**
-    * Get size of the S3 key
-    *
-    * @return
-    *    size in bytes
-    */
-   long getSize();
+    /**
+     * Get size of the S3 key
+     *
+     * @return size in bytes
+     */
+    long getSize();
 
-   /**
-    * Set size of the S3 key
-    *
-    * @param size
-    *    size in bytes
-    */
-   void setSize(long size);
+    /**
+     * Set size of the S3 key
+     *
+     * @param size
+     *         size in bytes
+     */
+    void setSize(long size);
 }

@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is fired, on user action to clone remote repository. Implement {@link CloneRepositoryHandler} handler to process event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 4:07:34 PM anya $
- * 
  */
-public class CloneRepositoryEvent extends GwtEvent<CloneRepositoryHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<CloneRepositoryHandler> TYPE = new GwtEvent.Type<CloneRepositoryHandler>();
+public class CloneRepositoryEvent extends GwtEvent<CloneRepositoryHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<CloneRepositoryHandler> TYPE = new GwtEvent.Type<CloneRepositoryHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CloneRepositoryHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CloneRepositoryHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CloneRepositoryHandler handler)
-   {
-      handler.onCloneRepository(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CloneRepositoryHandler handler) {
+        handler.onCloneRepository(this);
+    }
 
 }

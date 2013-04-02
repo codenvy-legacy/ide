@@ -24,113 +24,104 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * Information that the client needs to display UI for resolving a conflicted
  * line of history.
- * 
  */
 @RoutingType(type = RoutingTypes.NODECONFLICTDTO)
 public interface NodeConflictDto extends ServerToClientDto, ClientToServerDto {
 
-  public enum SimplifiedConflictType {
-    FILE_LEVEL, TREE_LEVEL, RESOLVED;
-  }
-
-  /**
-   * Handle to the specific conflict. This should be mostly opaque to the
-   * client, except for equality checks on the underlying conflict ID to compare
-   * instances of this.
-   */
-  public interface ConflictHandle {
+    public enum SimplifiedConflictType {
+        FILE_LEVEL, TREE_LEVEL, RESOLVED;
+    }
 
     /**
-     * The conflict id that the server uses to look up a conflicted line of
-     * history.
+     * Handle to the specific conflict. This should be mostly opaque to the
+     * client, except for equality checks on the underlying conflict ID to compare
+     * instances of this.
      */
-    String getConflictId();
+    public interface ConflictHandle {
+
+        /**
+         * The conflict id that the server uses to look up a conflicted line of
+         * history.
+         */
+        String getConflictId();
+
+        /**
+         * The specific conflict in the line of history that we are presenting
+         * resolution strategies for.
+         */
+        int getConflictIndex();
+    }
+
+    /** Simple descriptor to present a conflicted path in the UI. */
+    public interface ConflictedPath {
+        String getPath();
+
+        /** {#TreeNodeInfo.DIR_TYPE} or {@TreeNodeInfo.FILE_TYPE}. */
+        int getNodeType();
+
+        String getWorkspaceId();
+
+        String getStartId();
+
+        /** {@code true} if this is a UTF8 file. */
+        boolean isUtf8();
+    }
 
     /**
-     * The specific conflict in the line of history that we are presenting
-     * resolution strategies for.
+     * A handle to the specific conflict on the conflicted line of history that we
+     * are presenting resolution UI for.
      */
-    int getConflictIndex();
-  }
+    ConflictHandle getConflictHandle();
 
-  /** Simple descriptor to present a conflicted path in the UI. */
-  public interface ConflictedPath {
-    String getPath();
+    /** This is a server generated message that describes the conflict. */
+    String getConflictDescription();
 
-    /** {#TreeNodeInfo.DIR_TYPE} or {@TreeNodeInfo.FILE_TYPE}. */
-    int getNodeType();
+    /** This is a server generated message that describes the child state. */
+    String getChildDescription();
 
-    String getWorkspaceId();
+    /** This is a server generated message that describes the parent state. */
+    String getParentDescription();
 
-    String getStartId();
+    /** The resolution strategies that are presented to the user. */
+    JsonArray<ConflictResolutionChoice> getValidResolutions();
 
     /**
-     * {@code true} if this is a UTF8 file.
+     * Simple categorization of the conflict so the client need not do any
+     * analysis.
      */
-    boolean isUtf8();
-  }
+    SimplifiedConflictType getSimplifiedConflictType();
 
-  /**
-   * A handle to the specific conflict on the conflicted line of history that we
-   * are presenting resolution UI for.
-   */
-  ConflictHandle getConflictHandle();
+    /**
+     * The path in the child workspace that is in conflict. If we have more than
+     * one dependent conflicts, then they will be present in the
+     * {@link #getGroupedConflicts()} list.
+     */
+    ConflictedPath getChildPath();
 
-  /**
-   * This is a server generated message that describes the conflict.
-   */
-  String getConflictDescription();
+    /**
+     * Other conflicted lines of history that should be resolved along with this
+     * resolution. This can happen in the case of recursive conflicts dropped on
+     * extant nodes in the child.
+     */
+    JsonArray<NodeConflictDto> getGroupedConflicts();
 
-  /**
-   * This is a server generated message that describes the child state.
-   */
-  String getChildDescription();
-
-  /**
-   * This is a server generated message that describes the parent state.
-   */
-  String getParentDescription();
-
-  /** The resolution strategies that are presented to the user. */
-  JsonArray<ConflictResolutionChoice> getValidResolutions();
-
-  /**
-   * Simple categorization of the conflict so the client need not do any
-   * analysis.
-   */
-  SimplifiedConflictType getSimplifiedConflictType();
-
-  /**
-   * The path in the child workspace that is in conflict. If we have more than
-   * one dependent conflicts, then they will be present in the
-   * {@link #getGroupedConflicts()} list.
-   */
-  ConflictedPath getChildPath();
-
-  /**
-   * Other conflicted lines of history that should be resolved along with this
-   * resolution. This can happen in the case of recursive conflicts dropped on
-   * extant nodes in the child.
-   */
-  JsonArray<NodeConflictDto> getGroupedConflicts();
-
-  /**
-   * Paths that exist only in the parent workspace, but not in the child (for
-   * example, recursive conflicts in the parent workspace) will get associated
-   * with this node as "Parent paths". Note that we ensure that the matching
-   * Parent path for the elected conflict indicated by the conflict index on
-   * this node is at the 0th index in the list.
-   * 
-   * In other words:
-   * 
-   * Each individual conflict (a conflicted node, and an index into the list of
-   * conflicts on that node) has a relevant child and parent path.
-   * 
-   * This NodeConflictDto potentially encapsulates multiple grouped conflicted
-   * lines of history.
-   * 
-   * The path that is the "path in parent for our child path" lives in the first
-   * spot in the list.
-   */
-  JsonArray<ConflictedPath> getParentPaths();
+    /**
+     * Paths that exist only in the parent workspace, but not in the child (for
+     * example, recursive conflicts in the parent workspace) will get associated
+     * with this node as "Parent paths". Note that we ensure that the matching
+     * Parent path for the elected conflict indicated by the conflict index on
+     * this node is at the 0th index in the list.
+     * <p/>
+     * In other words:
+     * <p/>
+     * Each individual conflict (a conflicted node, and an index into the list of
+     * conflicts on that node) has a relevant child and parent path.
+     * <p/>
+     * This NodeConflictDto potentially encapsulates multiple grouped conflicted
+     * lines of history.
+     * <p/>
+     * The path that is the "path in parent for our child path" lives in the first
+     * spot in the list.
+     */
+    JsonArray<ConflictedPath> getParentPaths();
 }

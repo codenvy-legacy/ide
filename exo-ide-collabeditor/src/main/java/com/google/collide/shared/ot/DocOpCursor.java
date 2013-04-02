@@ -14,15 +14,13 @@
 
 package com.google.collide.shared.ot;
 
-/**
- * Callback used to iterate through a document operation.
- */
+/** Callback used to iterate through a document operation. */
 public interface DocOpCursor {
-  void delete(String text);
+    void delete(String text);
 
-  void insert(String text);
+    void insert(String text);
 
-  void retain(int count, boolean hasTrailingNewline);
+    void retain(int count, boolean hasTrailingNewline);
 
-  void retainLine(int lineCount);
+    void retainLine(int lineCount);
 }

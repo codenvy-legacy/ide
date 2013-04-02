@@ -27,19 +27,19 @@ package org.exoplatform.ide.editor.shared.text;
  * <p>
  * Clients may implement this interface or use the standard implementation {@link org.eclipse.jface.text.DefaultPositionUpdater}.
  * </p>
- * 
+ *
  * @see org.eclipse.jface.text.IDocument
  * @see org.eclipse.jface.text.Position
  */
-public interface IPositionUpdater
-{
+public interface IPositionUpdater {
 
-   /**
-    * Adapts positions to the change specified by the document event. It is ensured that the document's partitioning has been
-    * adapted to this document change and that all the position updaters which have a smaller index in the document's position
-    * updater list have been called.
-    * 
-    * @param event the document event describing the document change
-    */
-   void update(DocumentEvent event);
+    /**
+     * Adapts positions to the change specified by the document event. It is ensured that the document's partitioning has been
+     * adapted to this document change and that all the position updaters which have a smaller index in the document's position
+     * updater list have been called.
+     *
+     * @param event
+     *         the document event describing the document change
+     */
+    void update(DocumentEvent event);
 }

@@ -27,9 +27,6 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,47 +35,42 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configuration service for shell.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShellConfigurationService.java Mar 6, 2012 4:46:36 PM azatsarynnyy $
- * 
  */
 @Path("/ide/shell/configuration")
-public class ShellConfigurationService
-{
-   private static Log LOG = ExoLogger.getLogger(ShellConfigurationService.class);
+public class ShellConfigurationService {
+    private static Log LOG = ExoLogger.getLogger(ShellConfigurationService.class);
 
-   @GET
-   @Path("/init")
-   @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed({"developer"})
-   public Map<String, Object> inializationParameters(@Context UriInfo uriInfo)
-   {
-      try
-      {
-         String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
-         Map<String, Object> result = new HashMap<String, Object>();
-         ConversationState curentState = ConversationState.getCurrent();
-         if (curentState != null)
-         {
-            Identity identity = curentState.getIdentity();
-            ShellUser user = new ShellUser(identity.getUserId(), identity.getRoles());
-            if (LOG.isDebugEnabled())
-               LOG.info("Getting user identity: " + identity.getUserId());
-            result.put("user", user);
-            result.put("userSettings", "{}");
-         }
-         result.put("vfsId", vfsId);
-         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build().toString());
-         return result;
-      }
-      catch (Exception e)
-      {
-         throw new WebApplicationException(e);
-      }
-   }
-  
+    @GET
+    @Path("/init")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"developer"})
+    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo) {
+        try {
+            String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
+            Map<String, Object> result = new HashMap<String, Object>();
+            ConversationState curentState = ConversationState.getCurrent();
+            if (curentState != null) {
+                Identity identity = curentState.getIdentity();
+                ShellUser user = new ShellUser(identity.getUserId(), identity.getRoles());
+                if (LOG.isDebugEnabled())
+                    LOG.info("Getting user identity: " + identity.getUserId());
+                result.put("user", user);
+                result.put("userSettings", "{}");
+            }
+            result.put("vfsId", vfsId);
+            result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build().toString());
+            return result;
+        } catch (Exception e) {
+            throw new WebApplicationException(e);
+        }
+    }
+
 }

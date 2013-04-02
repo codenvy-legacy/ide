@@ -25,16 +25,15 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.CHAT_CODE_POINT)
-public interface ChatCodePointMessage extends ChatMessage
-{
-   String getPath();
+public interface ChatCodePointMessage extends ChatMessage {
+    String getPath();
 
-   int getStartLine();
+    int getStartLine();
 
-   int getStartChar();
+    int getStartChar();
 
-   int getEndLine();
+    int getEndLine();
 
-   int getEndChar();
+    int getEndChar();
 
 }

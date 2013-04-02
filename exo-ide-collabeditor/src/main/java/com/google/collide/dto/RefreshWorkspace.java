@@ -24,11 +24,11 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 @RoutingType(type = RoutingTypes.REFRESHWORKSPACE)
 public interface RefreshWorkspace extends ServerToClientDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * Directory that needs to be refreshed. "/" is sent if the whole workspace
-   * needs to be refreshed.
-   */
-  String getBasePath();
+    /**
+     * Directory that needs to be refreshed. "/" is sent if the whole workspace
+     * needs to be refreshed.
+     */
+    String getBasePath();
 }

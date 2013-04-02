@@ -18,37 +18,32 @@
  */
 package org.exoplatform.ide.extension.python.server;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class AppRunnerApplication extends Application
-{
-   private final Set<Class<?>> classes;
-   private final Set<Object> objects;
+public class AppRunnerApplication extends Application {
+    private final Set<Class<?>> classes;
+    private final Set<Object>   objects;
 
-   public AppRunnerApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(ApplicationRunnerService.class);
-      objects = new HashSet<Object>(1);
-      objects.add(new ApplicationRunnerExceptionMapper());
-   }
+    public AppRunnerApplication() {
+        classes = new HashSet<Class<?>>(1);
+        classes.add(ApplicationRunnerService.class);
+        objects = new HashSet<Object>(1);
+        objects.add(new ApplicationRunnerExceptionMapper());
+    }
 
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return objects;
-   }
+    @Override
+    public Set<Object> getSingletons() {
+        return objects;
+    }
 }

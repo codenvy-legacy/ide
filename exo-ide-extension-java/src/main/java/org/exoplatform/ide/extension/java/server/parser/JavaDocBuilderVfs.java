@@ -39,92 +39,68 @@ import java.util.List;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 28, 2011 3:07:14 PM evgen $
  */
-public class JavaDocBuilderVfs extends JavaDocBuilder
-{
-   /**
-    *
-    */
-   private static final long serialVersionUID = 2801488236934185900L;
+public class JavaDocBuilderVfs extends JavaDocBuilder {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2801488236934185900L;
 
-   private VirtualFileSystem vfs;
+    private VirtualFileSystem vfs;
 
-   /**
-    * Logger.
-    */
-   private static final Log LOG = ExoLogger.getLogger(JavaDocBuilderVfs.class);
+    /** Logger. */
+    private static final Log LOG = ExoLogger.getLogger(JavaDocBuilderVfs.class);
 
-   /**
-    * @param vfs
-    */
-   public JavaDocBuilderVfs(VirtualFileSystem vfs, VfsClassLibrary library)
-   {
-      super(library);
-      this.vfs = vfs;
-   }
+    /** @param vfs */
+    public JavaDocBuilderVfs(VirtualFileSystem vfs, VfsClassLibrary library) {
+        super(library);
+        this.vfs = vfs;
+    }
 
-   @Override
-   protected JavaClass createSourceClass(String name)
-   {
-      InputStream sourceFile = ((VfsClassLibrary)getClassLibrary()).getSourceFileContent(name);
-      if (sourceFile != null)
-      {
-         try
-         {
+    @Override
+    protected JavaClass createSourceClass(String name) {
+        InputStream sourceFile = ((VfsClassLibrary)getClassLibrary()).getSourceFileContent(name);
+        if (sourceFile != null) {
+            try {
 
 
-            JavaSource source = addSource(new InputStreamReader(sourceFile), name);
-            for (int index = 0; index < source.getClasses().length; index++)
-            {
-               JavaClass clazz = source.getClasses()[index];
-               if (name.equals(clazz.getFullyQualifiedName()))
-               {
-                  return clazz;
-               }
+                JavaSource source = addSource(new InputStreamReader(sourceFile), name);
+                for (int index = 0; index < source.getClasses().length; index++) {
+                    JavaClass clazz = source.getClasses()[index];
+                    if (name.equals(clazz.getFullyQualifiedName())) {
+                        return clazz;
+                    }
+                }
+                return source.getNestedClassByName(name);
+            } catch (IndexOutOfBoundsException e) {
+                LOG.error(e);
             }
-            return source.getNestedClassByName(name);
-         }
-         catch (IndexOutOfBoundsException e)
-         {
-            LOG.error(e);
-         }
-      }
-      return null;
-   }
+        }
+        return null;
+    }
 
-   public void addSourceTree(Folder folder) throws VirtualFileSystemException
-   {
-      FolderScanner scanner = new FolderScanner(folder, vfs);
-      scanner.addFilter(new FileSuffixFilter(".java"));
-      List<Item> list = scanner.scan();
-      for (Item i : list)
-      {
-         try
-         {
-            addSource(new InputStreamReader(vfs.getContent(i.getId()).getStream()), i.getId());
-         }
-         catch (VirtualFileSystemException e)
-         {
-            if (LOG.isDebugEnabled())
-            {
-               LOG.debug(e);
+    public void addSourceTree(Folder folder) throws VirtualFileSystemException {
+        FolderScanner scanner = new FolderScanner(folder, vfs);
+        scanner.addFilter(new FileSuffixFilter(".java"));
+        List<Item> list = scanner.scan();
+        for (Item i : list) {
+            try {
+                addSource(new InputStreamReader(vfs.getContent(i.getId()).getStream()), i.getId());
+            } catch (VirtualFileSystemException e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(e);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   /**
-    * @see com.thoughtworks.qdox.JavaDocBuilder#getClassByName(java.lang.String)
-    */
-   @Override
-   public JavaClass getClassByName(String name)
-   {
-      for (JavaClass clazz : getClasses())
-      {
-         if (clazz.getFullyQualifiedName().equals(name))
-         {
-            return clazz;
-         }
-      }
-      return null;
-   }
+    /** @see com.thoughtworks.qdox.JavaDocBuilder#getClassByName(java.lang.String) */
+    @Override
+    public JavaClass getClassByName(String name) {
+        for (JavaClass clazz : getClasses()) {
+            if (clazz.getFullyQualifiedName().equals(name)) {
+                return clazz;
+            }
+        }
+        return null;
+    }
 }

@@ -20,12 +20,11 @@ package org.exoplatform.ide.vfs.client.event;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ItemRenamedEvent
-{
+public class ItemRenamedEvent {
 
 }

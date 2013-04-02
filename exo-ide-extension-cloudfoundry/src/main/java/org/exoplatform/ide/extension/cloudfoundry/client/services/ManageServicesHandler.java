@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ManageServicesEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 13, 2012 10:40:33 AM anya $
- * 
  */
-public interface ManageServicesHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to manage CloudFoundry services.
-    * 
-    * @param event
-    */
-   void onManageServices(ManageServicesEvent event);
+public interface ManageServicesHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to manage CloudFoundry services.
+     *
+     * @param event
+     */
+    void onManageServices(ManageServicesEvent event);
 }

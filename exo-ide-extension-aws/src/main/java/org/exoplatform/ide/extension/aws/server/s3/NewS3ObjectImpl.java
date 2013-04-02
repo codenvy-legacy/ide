@@ -24,66 +24,56 @@ import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class NewS3ObjectImpl implements NewS3Object
-{
-   private String s3Bucket;
-   private String s3Key;
-   private String versionId;
+public class NewS3ObjectImpl implements NewS3Object {
+    private String s3Bucket;
+    private String s3Key;
+    private String versionId;
 
-   public NewS3ObjectImpl()
-   {
-   }
+    public NewS3ObjectImpl() {
+    }
 
-   public NewS3ObjectImpl(String s3Bucket, String s3Key, String versionId)
-   {
-      this.s3Bucket = s3Bucket;
-      this.s3Key = s3Key;
-      this.versionId = versionId;
-   }
+    public NewS3ObjectImpl(String s3Bucket, String s3Key, String versionId) {
+        this.s3Bucket = s3Bucket;
+        this.s3Key = s3Key;
+        this.versionId = versionId;
+    }
 
-   @Override
-   public String getS3Bucket()
-   {
-      return s3Bucket;
-   }
+    @Override
+    public String getS3Bucket() {
+        return s3Bucket;
+    }
 
-   @Override
-   public void setS3Bucket(String s3Bucket)
-   {
-      this.s3Bucket = s3Bucket;
-   }
+    @Override
+    public void setS3Bucket(String s3Bucket) {
+        this.s3Bucket = s3Bucket;
+    }
 
-   @Override
-   public String getS3Key()
-   {
-      return s3Key;
-   }
+    @Override
+    public String getS3Key() {
+        return s3Key;
+    }
 
-   @Override
-   public void setS3Key(String s3Key)
-   {
-      this.s3Key = s3Key;
-   }
+    @Override
+    public void setS3Key(String s3Key) {
+        this.s3Key = s3Key;
+    }
 
-   @Override
-   public String getVersionId()
-   {
-      return versionId;
-   }
+    @Override
+    public String getVersionId() {
+        return versionId;
+    }
 
-   @Override
-   public void setVersionId(String versionId)
-   {
-      this.versionId = versionId;
-   }
+    @Override
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "NewS3ObjectImpl{" +
-         "s3Bucket='" + s3Bucket + '\'' +
-         ", s3Key='" + s3Key + '\'' +
-         ", versionId='" + versionId + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "NewS3ObjectImpl{" +
+               "s3Bucket='" + s3Bucket + '\'' +
+               ", s3Key='" + s3Key + '\'' +
+               ", versionId='" + versionId + '\'' +
+               '}';
+    }
 }

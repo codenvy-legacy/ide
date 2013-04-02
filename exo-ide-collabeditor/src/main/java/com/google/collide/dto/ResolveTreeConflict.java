@@ -19,25 +19,21 @@ import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * DTO to resolve a single tree conflict.
- * 
- * 
- */
+/** DTO to resolve a single tree conflict. */
 @RoutingType(type = RoutingTypes.RESOLVETREECONFLICT)
 public interface ResolveTreeConflict extends ClientToServerDto {
 
-  public enum ConflictResolutionChoice {
-    CHOOSE_PARENT, CHOOSE_CHILD, CHILD_AND_RENAME, PARENT_AND_RENAME;
-  }
+    public enum ConflictResolutionChoice {
+        CHOOSE_PARENT, CHOOSE_CHILD, CHILD_AND_RENAME, PARENT_AND_RENAME;
+    }
 
-  ConflictResolutionChoice getResolutionChoice();
+    ConflictResolutionChoice getResolutionChoice();
 
-  ConflictHandle getConflictHandle();
+    ConflictHandle getConflictHandle();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  // If the resolution choice is RENAME_REMOTE or RENAME_LOCAL, the new path is
-  // set here.
-  String getNewPath();
+    // If the resolution choice is RENAME_REMOTE or RENAME_LOCAL, the new path is
+    // set here.
+    String getNewPath();
 }

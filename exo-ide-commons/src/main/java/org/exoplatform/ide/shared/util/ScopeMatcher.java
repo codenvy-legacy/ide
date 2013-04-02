@@ -20,81 +20,81 @@ package org.exoplatform.ide.shared.util;
  * scopeEnd. Examples of this are for finding matching { }, [ ] and ( ) pairs.
  */
 public class ScopeMatcher {
-  private final boolean searchingForward;
-  private final char scopeEndChar;
-  private final char scopeStartChar;
-  private int stack = 0;
-  private int nextMatchColumn;
+    private final boolean searchingForward;
+    private final char    scopeEndChar;
+    private final char    scopeStartChar;
+    private int stack = 0;
+    private int nextMatchColumn;
 
-  public ScopeMatcher(boolean searchingForward, char start, char end) {
-    this.searchingForward = searchingForward;
-    scopeStartChar = start;
-    scopeEndChar = end;
-  }
-
-  /**
-   * Search the next line for {@link #scopeEndChar}, keeping the {@link #stack}
-   * in mind.
-   * 
-   * @param text
-   * @return columnIndex, or -1 if no match on this line.
-   */
-  public int searchNextLine(String text) {
-    nextMatchColumn = searchingForward ? 0 : text.length() - 1;
-    while (true) {
-      if (isStartColumnNext(text)) {
-        stack++;
-      } else if (nextMatchColumn >= 0) {
-        stack--;
-      }
-
-      if (stack == 0 && nextMatchColumn >= 0) {
-        return nextMatchColumn;
-      } else if (nextMatchColumn == -1) {
-        break;
-      }
-      proceedForward();
+    public ScopeMatcher(boolean searchingForward, char start, char end) {
+        this.searchingForward = searchingForward;
+        scopeStartChar = start;
+        scopeEndChar = end;
     }
-    return -1;
-  }
 
-  /**
-   * Move to the next occurrence of either {@link #scopeStartChar} or
-   * {@link #scopeEndChar} and update {@link #nextMatchColumn}.
-   */
-  private boolean isStartColumnNext(String text) {
-    int startCharColumn;
-    if (searchingForward) {
-      startCharColumn = text.indexOf(scopeStartChar, nextMatchColumn);
-      nextMatchColumn = text.indexOf(scopeEndChar, nextMatchColumn);
-      if ((startCharColumn < nextMatchColumn || nextMatchColumn == -1) && startCharColumn != -1) {
-        nextMatchColumn = startCharColumn;
-        return true;
-      }
-    } else {
-      if (nextMatchColumn == -1) {
+    /**
+     * Search the next line for {@link #scopeEndChar}, keeping the {@link #stack}
+     * in mind.
+     *
+     * @param text
+     * @return columnIndex, or -1 if no match on this line.
+     */
+    public int searchNextLine(String text) {
+        nextMatchColumn = searchingForward ? 0 : text.length() - 1;
+        while (true) {
+            if (isStartColumnNext(text)) {
+                stack++;
+            } else if (nextMatchColumn >= 0) {
+                stack--;
+            }
+
+            if (stack == 0 && nextMatchColumn >= 0) {
+                return nextMatchColumn;
+            } else if (nextMatchColumn == -1) {
+                break;
+            }
+            proceedForward();
+        }
+        return -1;
+    }
+
+    /**
+     * Move to the next occurrence of either {@link #scopeStartChar} or
+     * {@link #scopeEndChar} and update {@link #nextMatchColumn}.
+     */
+    private boolean isStartColumnNext(String text) {
+        int startCharColumn;
+        if (searchingForward) {
+            startCharColumn = text.indexOf(scopeStartChar, nextMatchColumn);
+            nextMatchColumn = text.indexOf(scopeEndChar, nextMatchColumn);
+            if ((startCharColumn < nextMatchColumn || nextMatchColumn == -1) && startCharColumn != -1) {
+                nextMatchColumn = startCharColumn;
+                return true;
+            }
+        } else {
+            if (nextMatchColumn == -1) {
         /*
          * TODO: Firefox/Chrome bug where lastIndexOf with a
          * negative offset parameter will return a match for the first
          * character. http://code.google.com/p/google-web-toolkit/issues/detail?id=6615
          */
+                return false;
+            }
+            startCharColumn = text.lastIndexOf(scopeStartChar, nextMatchColumn);
+            nextMatchColumn = text.lastIndexOf(scopeEndChar, nextMatchColumn);
+            if ((startCharColumn > nextMatchColumn || nextMatchColumn == -1) && startCharColumn != -1) {
+                nextMatchColumn = startCharColumn;
+                return true;
+            }
+        }
         return false;
-      }
-      startCharColumn = text.lastIndexOf(scopeStartChar, nextMatchColumn);
-      nextMatchColumn = text.lastIndexOf(scopeEndChar, nextMatchColumn);
-      if ((startCharColumn > nextMatchColumn || nextMatchColumn == -1) && startCharColumn != -1) {
-        nextMatchColumn = startCharColumn;
-        return true;
-      }
     }
-    return false;
-  }
 
-  private void proceedForward() {
-    if (searchingForward) {
-      nextMatchColumn++;
-    } else {
-      nextMatchColumn--;
+    private void proceedForward() {
+        if (searchingForward) {
+            nextMatchColumn++;
+        } else {
+            nextMatchColumn--;
+        }
     }
-  }
 }

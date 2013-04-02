@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link LogoutEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 14, 2012 11:39:21 AM anya $
- * 
  */
-public interface LogoutHandler extends EventHandler
-{
-   /**
-    * Perform log out Google App Engine.
-    * 
-    * @param event
-    */
-   void onLogout(LogoutEvent event);
+public interface LogoutHandler extends EventHandler {
+    /**
+     * Perform log out Google App Engine.
+     *
+     * @param event
+     */
+    void onLogout(LogoutEvent event);
 }

@@ -28,45 +28,36 @@ import org.exoplatform.ide.git.shared.PushRequest;
 
 /**
  * Marshaller for creating push request in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 4:04:27 PM anya $
- * 
  */
-public class PushRequestMarshaller implements Marshallable, Constants
-{
+public class PushRequestMarshaller implements Marshallable, Constants {
 
-   /**
-    * Push request.
-    */
-   private PushRequest pushRequest;
+    /** Push request. */
+    private PushRequest pushRequest;
 
-   /**
-    * @param pushRequest push request
-    */
-   public PushRequestMarshaller(PushRequest pushRequest)
-   {
-      this.pushRequest = pushRequest;
-   }
+    /**
+     * @param pushRequest
+     *         push request
+     */
+    public PushRequestMarshaller(PushRequest pushRequest) {
+        this.pushRequest = pushRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(REMOTE, new JSONString(pushRequest.getRemote()));
-      jsonObject.put(FORCE, JSONBoolean.getInstance(pushRequest.isForce()));
-      if (pushRequest.getRefSpec() != null && pushRequest.getRefSpec().length > 0)
-      {
-         JSONArray array = new JSONArray();
-         for (int i = 0; i < pushRequest.getRefSpec().length; i++)
-         {
-            array.set(i, new JSONString(pushRequest.getRefSpec()[i]));
-         }
-         jsonObject.put(REF_SPEC, array);
-      }
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(REMOTE, new JSONString(pushRequest.getRemote()));
+        jsonObject.put(FORCE, JSONBoolean.getInstance(pushRequest.isForce()));
+        if (pushRequest.getRefSpec() != null && pushRequest.getRefSpec().length > 0) {
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < pushRequest.getRefSpec().length; i++) {
+                array.set(i, new JSONString(pushRequest.getRefSpec()[i]));
+            }
+            jsonObject.put(REF_SPEC, array);
+        }
+        return jsonObject.toString();
+    }
 }

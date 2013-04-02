@@ -23,17 +23,12 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SelectedEventImpl.java Mar 16, 2011 4:55:42 PM vereshchaka $
- *
  */
-public class SelectedEventImpl<T> extends SelectionEvent<T>
-{
+public class SelectedEventImpl<T> extends SelectionEvent<T> {
 
-   /**
-    * @param selectedItem
-    */
-   public SelectedEventImpl(T selectedItem)
-   {
-      super(selectedItem);
-   }
+    /** @param selectedItem */
+    public SelectedEventImpl(T selectedItem) {
+        super(selectedItem);
+    }
 
 }

@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to execute rake command. Implement {@link RakeCommandHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 17, 2011 5:09:41 PM anya $
- * 
  */
-public class RakeCommandEvent extends GwtEvent<RakeCommandHandler>
-{
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<RakeCommandHandler> TYPE = new GwtEvent.Type<RakeCommandHandler>();
+public class RakeCommandEvent extends GwtEvent<RakeCommandHandler> {
+    /** Type used to register event. */
+    public static final GwtEvent.Type<RakeCommandHandler> TYPE = new GwtEvent.Type<RakeCommandHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RakeCommandHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RakeCommandHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RakeCommandHandler handler)
-   {
-      handler.onRakeCommand(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RakeCommandHandler handler) {
+        handler.onRakeCommand(this);
+    }
 
 }

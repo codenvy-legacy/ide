@@ -43,111 +43,88 @@ import java.util.LinkedHashMap;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFileChangedHandler,
-   ApplicationSettingsReceivedHandler
-{
+                                               ApplicationSettingsReceivedHandler {
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   public SaveFileCommandHandler()
-   {
-      IDE.getInstance().addControl(new SaveFileControl(), Docking.TOOLBAR);
+    public SaveFileCommandHandler() {
+        IDE.getInstance().addControl(new SaveFileControl(), Docking.TOOLBAR);
 
-      IDE.addHandler(SaveFileEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-   }
+        IDE.addHandler(SaveFileEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+    }
 
-   public void onSaveFile(SaveFileEvent event)
-   {
-      final FileModel file = event.getFile() != null ? event.getFile() : activeFile;
-      if (file == null)
-      {
-         return;
-      }
+    public void onSaveFile(SaveFileEvent event) {
+        final FileModel file = event.getFile() != null ? event.getFile() : activeFile;
+        if (file == null) {
+            return;
+        }
 
-      if (!file.isPersisted())
-      {
-         IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
-         return;
-      }
+        if (!file.isPersisted()) {
+            IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+            return;
+        }
 
-      if (file.isContentChanged())
-      {
-         try
-         {
-            VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>()
-            {
+        if (file.isContentChanged()) {
+            try {
+                VirtualFileSystem.getInstance().updateContent(file, new AsyncRequestCallback<FileModel>() {
 
-               @Override
-               protected void onSuccess(FileModel result)
-               {
-                  getProperties(file);
-               }
+                    @Override
+                    protected void onSuccess(FileModel result) {
+                        getProperties(file);
+                    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
-               }
-            });
-         }
-         catch (RequestException e)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
-         }
-         return;
-      }
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
+                    }
+                });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+            }
+            return;
+        }
 
-      IDE.fireEvent(new FileSavedEvent(file, null));
-   }
+        IDE.fireEvent(new FileSavedEvent(file, null));
+    }
 
-   private void getProperties(final FileModel file)
-   {
-      // TODO
-      try
-      {
-         VirtualFileSystem.getInstance().getItemById(file.getId(),
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file)))
-            {
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  IDE.fireEvent(new FileSavedEvent((FileModel)result.getItem(), null));
-               }
+    private void getProperties(final FileModel file) {
+        // TODO
+        try {
+            VirtualFileSystem.getInstance().getItemById(file.getId(),
+                                                        new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(file))) {
+                                                            @Override
+                                                            protected void onSuccess(ItemWrapper result) {
+                                                                IDE.fireEvent(new FileSavedEvent((FileModel)result.getItem(), null));
+                                                            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                            @Override
+                                                            protected void onFailure(Throwable exception) {
+                                                                IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                            }
+                                                        });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-   }
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
-      {
-         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
-   }
+    /** @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     * .exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent) */
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null) {
+            event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+        }
+    }
 
 }

@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ConfigureBackendEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 5:24:51 PM anya $
- * 
  */
-public interface ConfigureBackendHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to configure backend.
-    * 
-    * @param event
-    */
-   void onConfigureBackend(ConfigureBackendEvent event);
+public interface ConfigureBackendHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to configure backend.
+     *
+     * @param event
+     */
+    void onConfigureBackend(ConfigureBackendEvent event);
 }

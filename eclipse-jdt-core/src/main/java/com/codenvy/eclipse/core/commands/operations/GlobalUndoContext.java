@@ -18,22 +18,19 @@ package com.codenvy.eclipse.core.commands.operations;
  *
  * @since 3.1
  */
-public class GlobalUndoContext implements IUndoContext
-{
+public class GlobalUndoContext implements IUndoContext {
 
-   /* (non-Javadoc)
-    * @see org.eclipse.core.commands.operations.IUndoContext#getLabel()
-    */
-   public String getLabel()
-   {
-      return "Global Undo Context"; //$NON-NLS-1$
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.core.commands.operations.IUndoContext#getLabel()
+     */
+    public String getLabel() {
+        return "Global Undo Context"; //$NON-NLS-1$
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.core.commands.operations.IUndoContext#matches(IUndoContext context)
-    */
-   public boolean matches(IUndoContext context)
-   {
-      return true;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.core.commands.operations.IUndoContext#matches(IUndoContext context)
+     */
+    public boolean matches(IUndoContext context) {
+        return true;
+    }
 }

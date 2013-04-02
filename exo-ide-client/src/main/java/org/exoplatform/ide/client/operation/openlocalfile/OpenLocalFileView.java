@@ -19,6 +19,12 @@
 
 package org.exoplatform.ide.client.operation.openlocalfile;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.*;
+
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
@@ -29,143 +35,117 @@ import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
 import org.exoplatform.ide.client.framework.ui.upload.FormFields;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Hidden;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
-
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class OpenLocalFileView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display
-{
+                                                org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display {
 
-   public static final int WIDTH = 500;
+    public static final int WIDTH = 500;
 
-   public static final int HEIGHT = 200;
+    public static final int HEIGHT = 200;
 
-   private static final String ID = "ideOpenLocalFile";
+    private static final String ID = "ideOpenLocalFile";
 
-   private static final String TITLE = IDE.UPLOAD_CONSTANT.openLocalFileTitle();
+    private static final String TITLE = IDE.UPLOAD_CONSTANT.openLocalFileTitle();
 
-   private static OpenLocalFileViewUiBinder uiBinder = GWT.create(OpenLocalFileViewUiBinder.class);
+    private static OpenLocalFileViewUiBinder uiBinder = GWT.create(OpenLocalFileViewUiBinder.class);
 
-   interface OpenLocalFileViewUiBinder extends UiBinder<Widget, OpenLocalFileView>
-   {
-   }
+    interface OpenLocalFileViewUiBinder extends UiBinder<Widget, OpenLocalFileView> {
+    }
 
-   @UiField
-   ImageButton openButton, cancelButton;
+    @UiField
+    ImageButton openButton, cancelButton;
 
-   @UiField
-   TextInput fileNameField;
+    @UiField
+    TextInput fileNameField;
 
-   @UiField
-   HorizontalPanel postFieldsPanel;
+    @UiField
+    HorizontalPanel postFieldsPanel;
 
-   @UiField
-   FormPanel uploadForm;
+    @UiField
+    FormPanel uploadForm;
 
-   @UiField
-   FileUploadInput fileUploadInput;
+    @UiField
+    FileUploadInput fileUploadInput;
 
-   @UiField
-   ComboBoxField mimeTypesField;
+    @UiField
+    ComboBoxField mimeTypesField;
 
-   public OpenLocalFileView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.openLocalFile()), WIDTH, HEIGHT, false);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      fileNameField.getElement().setId("ideUploadFormFilenameField");
-   }
+    public OpenLocalFileView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.openLocalFile()), WIDTH, HEIGHT, false);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        fileNameField.getElement().setId("ideUploadFormFilenameField");
+    }
 
-   @Override
-   public HasValue<String> getMimeTypeField()
-   {
-      return mimeTypesField;
-   }
+    @Override
+    public HasValue<String> getMimeTypeField() {
+        return mimeTypesField;
+    }
 
-   @Override
-   public void setSelectedMimeType(String mimeType)
-   {
-      mimeTypesField.setValue(mimeType);
-   }
+    @Override
+    public void setSelectedMimeType(String mimeType) {
+        mimeTypesField.setValue(mimeType);
+    }
 
-   @Override
-   public void setMimeTypes(String[] mimeTypes)
-   {
-      mimeTypesField.setValueMap(mimeTypes);
-   }
+    @Override
+    public void setMimeTypes(String[] mimeTypes) {
+        mimeTypesField.setValueMap(mimeTypes);
+    }
 
-   @Override
-   public void setMimeTypeFieldEnabled(boolean enabled)
-   {
-      mimeTypesField.setEnabled(enabled);
-   }
+    @Override
+    public void setMimeTypeFieldEnabled(boolean enabled) {
+        mimeTypesField.setEnabled(enabled);
+    }
 
-   @Override
-   public void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType)
-   {
-      Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
-      postFieldsPanel.add(mimeTypeField);
+    @Override
+    public void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType) {
+        Hidden mimeTypeField = new Hidden(FormFields.MIME_TYPE, mimeType);
+        postFieldsPanel.add(mimeTypeField);
 
-      // Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
-      // postFieldsPanel.add(nodeTypeField);
-      //
-      // Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
-      // postFieldsPanel.add(jcrContentNodeTypeField);
+        // Hidden nodeTypeField = new Hidden(FormFields.NODE_TYPE, nodeType);
+        // postFieldsPanel.add(nodeTypeField);
+        //
+        // Hidden jcrContentNodeTypeField = new Hidden(FormFields.JCR_CONTENT_NODE_TYPE, jcrContentNodeType);
+        // postFieldsPanel.add(jcrContentNodeTypeField);
 
-      Hidden locationField = new Hidden(FormFields.LOCATION, location);
-      postFieldsPanel.add(locationField);
-   }
+        Hidden locationField = new Hidden(FormFields.LOCATION, location);
+        postFieldsPanel.add(locationField);
+    }
 
-   @Override
-   public HasClickHandlers getOpenButton()
-   {
-      return openButton;
-   }
+    @Override
+    public HasClickHandlers getOpenButton() {
+        return openButton;
+    }
 
-   @Override
-   public void setOpenButtonEnabled(boolean enabled)
-   {
-      openButton.setEnabled(enabled);
-   }
+    @Override
+    public void setOpenButtonEnabled(boolean enabled) {
+        openButton.setEnabled(enabled);
+    }
 
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public FormPanel getUploadForm()
-   {
-      return uploadForm;
-   }
+    @Override
+    public FormPanel getUploadForm() {
+        return uploadForm;
+    }
 
-   @Override
-   public HasValue<String> getFileNameField()
-   {
-      return fileNameField;
-   }
+    @Override
+    public HasValue<String> getFileNameField() {
+        return fileNameField;
+    }
 
-   @Override
-   public HasFileSelectedHandler getFileUploadInput()
-   {
-      return fileUploadInput;
-   }
+    @Override
+    public HasFileSelectedHandler getFileUploadInput() {
+        return fileUploadInput;
+    }
 
 }

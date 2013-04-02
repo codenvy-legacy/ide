@@ -22,41 +22,34 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public enum S3IdentityGroupType
-{
-   AllUsers("AllUsers", "http://acs.amazonaws.com/groups/global/AllUsers"),
-   AuthenticatedUsers("AuthenticatedUsers", "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"),
-   LogDelivery("LogDelivery", "http://acs.amazonaws.com/groups/s3/LogDelivery");
+public enum S3IdentityGroupType {
+    AllUsers("AllUsers", "http://acs.amazonaws.com/groups/global/AllUsers"),
+    AuthenticatedUsers("AuthenticatedUsers", "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"),
+    LogDelivery("LogDelivery", "http://acs.amazonaws.com/groups/s3/LogDelivery");
 
-   private final String value;
-   private final String uri;
+    private final String value;
+    private final String uri;
 
-   private S3IdentityGroupType(String value, String uri)
-   {
-      this.value = value;
-      this.uri = uri;
-   }
+    private S3IdentityGroupType(String value, String uri) {
+        this.value = value;
+        this.uri = uri;
+    }
 
-   public String getUri()
-   {
-      return uri;
-   }
+    public String getUri() {
+        return uri;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static S3IdentityGroupType fromValue(String value)
-   {
-      for (S3IdentityGroupType v : S3IdentityGroupType.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static S3IdentityGroupType fromValue(String value) {
+        for (S3IdentityGroupType v : S3IdentityGroupType.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

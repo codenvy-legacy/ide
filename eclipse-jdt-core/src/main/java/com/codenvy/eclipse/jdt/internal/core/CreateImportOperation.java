@@ -46,163 +46,136 @@ import java.util.Iterator;
  * Importing <code>"java.lang.*"</code>, or the package in which the compilation unit
  * is defined, are not treated as special cases.  If they are specified, they are
  * included in the result.
- *
+ * <p/>
  * <p>Required Attributes:<ul>
  * <li>Compilation unit
  * <li>Import name - the name of the import to add to the
  * compilation unit. For example: <code>"java.io.File"</code> or <code>"java.awt.*"</code>
  * </ul>
  */
-public class CreateImportOperation extends CreateElementInCUOperation
-{
+public class CreateImportOperation extends CreateElementInCUOperation {
 
-   /*
-    * The name of the import to be created.
-    */
-   protected String importName;
+    /*
+     * The name of the import to be created.
+     */
+    protected String importName;
 
-   /*
-    * The flags of the import to be created (either Flags#AccDefault or Flags#AccStatic)
-    */
-   protected int flags;
+    /*
+     * The flags of the import to be created (either Flags#AccDefault or Flags#AccStatic)
+     */
+    protected int flags;
 
-   /**
-    * When executed, this operation will add an import to the given compilation unit.
-    */
-   public CreateImportOperation(String importName, ICompilationUnit parentElement, int flags)
-   {
-      super(parentElement);
-      this.importName = importName;
-      this.flags = flags;
-   }
+    /** When executed, this operation will add an import to the given compilation unit. */
+    public CreateImportOperation(String importName, ICompilationUnit parentElement, int flags) {
+        super(parentElement);
+        this.importName = importName;
+        this.flags = flags;
+    }
 
-   protected StructuralPropertyDescriptor getChildPropertyDescriptor(ASTNode parent)
-   {
-      return CompilationUnit.IMPORTS_PROPERTY;
-   }
+    protected StructuralPropertyDescriptor getChildPropertyDescriptor(ASTNode parent) {
+        return CompilationUnit.IMPORTS_PROPERTY;
+    }
 
-   protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException
-   {
-      // ensure no duplicate
-      Iterator imports = this.cuAST.imports().iterator();
-      boolean onDemand = this.importName.endsWith(".*"); //$NON-NLS-1$
-      String importActualName = this.importName;
-      if (onDemand)
-      {
-         importActualName = this.importName.substring(0, this.importName.length() - 2);
-      }
-      while (imports.hasNext())
-      {
-         ImportDeclaration importDeclaration = (ImportDeclaration)imports.next();
-         if (importActualName.equals(
-            importDeclaration.getName().getFullyQualifiedName()) && (onDemand == importDeclaration.isOnDemand()) && (Flags.isStatic(
-            this.flags) == importDeclaration.isStatic()))
-         {
-            this.creationOccurred = false;
-            return null;
-         }
-      }
-
-      AST ast = this.cuAST.getAST();
-      ImportDeclaration importDeclaration = ast.newImportDeclaration();
-      importDeclaration.setStatic(Flags.isStatic(this.flags));
-      // split import name into individual fragments, checking for on demand imports
-      char[][] charFragments = CharOperation.splitOn('.', importActualName.toCharArray(), 0, importActualName.length());
-      int length = charFragments.length;
-      String[] strFragments = new String[length];
-      for (int i = 0; i < length; i++)
-      {
-         strFragments[i] = String.valueOf(charFragments[i]);
-      }
-      Name name = ast.newName(strFragments);
-      importDeclaration.setName(name);
-      if (onDemand)
-      {
-         importDeclaration.setOnDemand(true);
-      }
-      return importDeclaration;
-   }
-
-   /**
-    * @see CreateElementInCUOperation#generateResultHandle
-    */
-   protected IJavaElement generateResultHandle()
-   {
-      return getCompilationUnit().getImport(this.importName);
-   }
-
-   /**
-    * @see CreateElementInCUOperation#getMainTaskName()
-    */
-   public String getMainTaskName()
-   {
-      return Messages.operation_createImportsProgress;
-   }
-
-   /**
-    * Sets the correct position for the new import:<ul>
-    * <li> after the last import
-    * <li> if no imports, before the first type
-    * <li> if no type, after the package statement
-    * <li> and if no package statement - first thing in the CU
-    */
-   protected void initializeDefaultPosition()
-   {
-      try
-      {
-         ICompilationUnit cu = getCompilationUnit();
-         IImportDeclaration[] imports = cu.getImports();
-         if (imports.length > 0)
-         {
-            createAfter(imports[imports.length - 1]);
-            return;
-         }
-         IType[] types = cu.getTypes();
-         if (types.length > 0)
-         {
-            createBefore(types[0]);
-            return;
-         }
-         IJavaElement[] children = cu.getChildren();
-         //look for the package declaration
-         for (int i = 0; i < children.length; i++)
-         {
-            if (children[i].getElementType() == IJavaElement.PACKAGE_DECLARATION)
-            {
-               createAfter(children[i]);
-               return;
+    protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException {
+        // ensure no duplicate
+        Iterator imports = this.cuAST.imports().iterator();
+        boolean onDemand = this.importName.endsWith(".*"); //$NON-NLS-1$
+        String importActualName = this.importName;
+        if (onDemand) {
+            importActualName = this.importName.substring(0, this.importName.length() - 2);
+        }
+        while (imports.hasNext()) {
+            ImportDeclaration importDeclaration = (ImportDeclaration)imports.next();
+            if (importActualName.equals(
+                    importDeclaration.getName().getFullyQualifiedName()) && (onDemand == importDeclaration.isOnDemand()) && (Flags.isStatic(
+                    this.flags) == importDeclaration.isStatic())) {
+                this.creationOccurred = false;
+                return null;
             }
-         }
-      }
-      catch (JavaModelException e)
-      {
-         // cu doesn't exit: ignore
-      }
-   }
+        }
 
-   /**
-    * Possible failures: <ul>
-    * <li>NO_ELEMENTS_TO_PROCESS - the compilation unit supplied to the operation is
-    * <code>null</code>.
-    * <li>INVALID_NAME - not a valid import declaration name.
-    * </ul>
-    *
-    * @see IJavaModelStatus
-    * @see JavaConventions
-    */
-   public IJavaModelStatus verify()
-   {
-      IJavaModelStatus status = super.verify();
-      if (!status.isOK())
-      {
-         return status;
-      }
-      IJavaProject project = getParentElement().getJavaProject();
-      if (JavaConventions.validateImportDeclaration(this.importName, project.getOption(JavaCore.COMPILER_SOURCE, true),
-         project.getOption(JavaCore.COMPILER_COMPLIANCE, true)).getSeverity() == IStatus.ERROR)
-      {
-         return new JavaModelStatus(IJavaModelStatusConstants.INVALID_NAME, this.importName);
-      }
-      return JavaModelStatus.VERIFIED_OK;
-   }
+        AST ast = this.cuAST.getAST();
+        ImportDeclaration importDeclaration = ast.newImportDeclaration();
+        importDeclaration.setStatic(Flags.isStatic(this.flags));
+        // split import name into individual fragments, checking for on demand imports
+        char[][] charFragments = CharOperation.splitOn('.', importActualName.toCharArray(), 0, importActualName.length());
+        int length = charFragments.length;
+        String[] strFragments = new String[length];
+        for (int i = 0; i < length; i++) {
+            strFragments[i] = String.valueOf(charFragments[i]);
+        }
+        Name name = ast.newName(strFragments);
+        importDeclaration.setName(name);
+        if (onDemand) {
+            importDeclaration.setOnDemand(true);
+        }
+        return importDeclaration;
+    }
+
+    /** @see CreateElementInCUOperation#generateResultHandle */
+    protected IJavaElement generateResultHandle() {
+        return getCompilationUnit().getImport(this.importName);
+    }
+
+    /** @see CreateElementInCUOperation#getMainTaskName() */
+    public String getMainTaskName() {
+        return Messages.operation_createImportsProgress;
+    }
+
+    /**
+     * Sets the correct position for the new import:<ul>
+     * <li> after the last import
+     * <li> if no imports, before the first type
+     * <li> if no type, after the package statement
+     * <li> and if no package statement - first thing in the CU
+     */
+    protected void initializeDefaultPosition() {
+        try {
+            ICompilationUnit cu = getCompilationUnit();
+            IImportDeclaration[] imports = cu.getImports();
+            if (imports.length > 0) {
+                createAfter(imports[imports.length - 1]);
+                return;
+            }
+            IType[] types = cu.getTypes();
+            if (types.length > 0) {
+                createBefore(types[0]);
+                return;
+            }
+            IJavaElement[] children = cu.getChildren();
+            //look for the package declaration
+            for (int i = 0; i < children.length; i++) {
+                if (children[i].getElementType() == IJavaElement.PACKAGE_DECLARATION) {
+                    createAfter(children[i]);
+                    return;
+                }
+            }
+        } catch (JavaModelException e) {
+            // cu doesn't exit: ignore
+        }
+    }
+
+    /**
+     * Possible failures: <ul>
+     * <li>NO_ELEMENTS_TO_PROCESS - the compilation unit supplied to the operation is
+     * <code>null</code>.
+     * <li>INVALID_NAME - not a valid import declaration name.
+     * </ul>
+     *
+     * @see IJavaModelStatus
+     * @see JavaConventions
+     */
+    public IJavaModelStatus verify() {
+        IJavaModelStatus status = super.verify();
+        if (!status.isOK()) {
+            return status;
+        }
+        IJavaProject project = getParentElement().getJavaProject();
+        if (JavaConventions.validateImportDeclaration(this.importName, project.getOption(JavaCore.COMPILER_SOURCE, true),
+                                                      project.getOption(JavaCore.COMPILER_COMPLIANCE, true)).getSeverity() ==
+            IStatus.ERROR) {
+            return new JavaModelStatus(IJavaModelStatusConstants.INVALID_NAME, this.importName);
+        }
+        return JavaModelStatus.VERIFIED_OK;
+    }
 }

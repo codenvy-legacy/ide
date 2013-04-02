@@ -27,31 +27,29 @@ import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
 /**
  * The interface for the AutoBean generator.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: OpenShiftAutoBeanFactory.java Mar 13, 2012 2:38:22 PM azatsarynnyy $
- *
  */
-public interface OpenShiftAutoBeanFactory extends AutoBeanFactory
-{
-   /**
-    * A factory method for an application info bean.
-    * 
-    * @return an {@link AutoBean} of type {@link AppInfo}
-    */
-   AutoBean<AppInfo> appInfo();
+public interface OpenShiftAutoBeanFactory extends AutoBeanFactory {
+    /**
+     * A factory method for an application info bean.
+     *
+     * @return an {@link AutoBean} of type {@link AppInfo}
+     */
+    AutoBean<AppInfo> appInfo();
 
-   /**
-    * A factory method for a RedHat user info bean.
-    * 
-    * @return a {@link AutoBean} of type {@link RHUserInfo}
-    */
-   AutoBean<RHUserInfo> rhUserInfo();
+    /**
+     * A factory method for a RedHat user info bean.
+     *
+     * @return a {@link AutoBean} of type {@link RHUserInfo}
+     */
+    AutoBean<RHUserInfo> rhUserInfo();
 
-   /**
-    * A factory method for a credentials bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Credentials}
-    */
-   AutoBean<Credentials> credentials();
+    /**
+     * A factory method for a credentials bean.
+     *
+     * @return an {@link AutoBean} of type {@link Credentials}
+     */
+    AutoBean<Credentials> credentials();
 }

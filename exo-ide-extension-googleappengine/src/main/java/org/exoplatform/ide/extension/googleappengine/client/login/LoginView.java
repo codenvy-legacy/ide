@@ -34,67 +34,53 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
 
 /**
  * View for log in Google App Engine.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 18, 2012 12:36:27 PM anya $
- * 
  */
-public class LoginView extends ViewImpl implements LoginPresenter.Display
-{
-   private static final String ID = "ideLoginView";
+public class LoginView extends ViewImpl implements LoginPresenter.Display {
+    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 440;
+    private static final int WIDTH = 440;
 
-   private static final int HEIGHT = 170;
+    private static final int HEIGHT = 170;
 
-   private static final String LABEL_ID = "ideLoginViewLabel";
+    private static final String LABEL_ID = "ideLoginViewLabel";
 
-   private static final String GO_BUTTON_ID = "ideLoginViewGoButton";
+    private static final String GO_BUTTON_ID = "ideLoginViewGoButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
 
-   /**
-    * UI binder for this view.
-    */
-   private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
+    /** UI binder for this view. */
+    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
-   interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
-   {
-   }
+    interface LoginViewUiBinder extends UiBinder<Widget, LoginView> {
+    }
 
-   @UiField
-   Label label;
+    @UiField
+    Label label;
 
-   /**
-    * Go button.
-    */
-   @UiField
-   LinkButton goButton;
+    /** Go button. */
+    @UiField
+    LinkButton goButton;
 
-   public LoginView()
-   {
-      super(ID, ViewType.MODAL, GoogleAppEngineExtension.GAE_LOCALIZATION.loginViewTitle(), new Image(
-         GAEClientBundle.INSTANCE.googleAppEngine()), WIDTH, HEIGHT, true);
-      add(uiBinder.createAndBindUi(this));
-      label.setID(LABEL_ID);
-      goButton.setId(GO_BUTTON_ID);
-   }
+    public LoginView() {
+        super(ID, ViewType.MODAL, GoogleAppEngineExtension.GAE_LOCALIZATION.loginViewTitle(), new Image(
+                GAEClientBundle.INSTANCE.googleAppEngine()), WIDTH, HEIGHT, true);
+        add(uiBinder.createAndBindUi(this));
+        label.setID(LABEL_ID);
+        goButton.setId(GO_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getGoButton()
-    */
-   @Override
-   public HasClickHandlers getGoButton()
-   {
-      return goButton;
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getGoButton() */
+    @Override
+    public HasClickHandlers getGoButton() {
+        return goButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#setLoginLocation(java.lang.String)
-    */
-   @Override
-   public void setLoginLocation(String href)
-   {
-      goButton.setHref(href);
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#setLoginLocation(java.lang.String) */
+    @Override
+    public void setLoginLocation(String href) {
+        goButton.setHref(href);
+    }
 }

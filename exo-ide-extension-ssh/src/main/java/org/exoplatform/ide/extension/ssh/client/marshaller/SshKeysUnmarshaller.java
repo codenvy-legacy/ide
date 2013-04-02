@@ -30,42 +30,35 @@ import java.util.List;
 
 /**
  * Unmarshaller for get All Keys request
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeysUnmarshaller May 18, 2011 4:57:42 PM evgen $
- * 
+ *          <p/>
  *          Changed made for use this marshaler in JsonpRequest. We use it for cross-domain Ajax calls
  */
-public class SshKeysUnmarshaller
-{
+public class SshKeysUnmarshaller {
 
-   public static List<KeyItem> unmarshal(JavaScriptObject response) throws UnmarshallerException
-   {
-      try
-      {
-         List<KeyItem> keyItems = new ArrayList<KeyItem>();
-         JSONArray array = new JSONArray(response);
-         for (int i = 0; i < array.size(); i++)
-         {
-            JSONObject object = array.get(i).isObject();
-            KeyItem keyItem = new KeyItem();
-            keyItem.setHost(object.get("host").isString().stringValue());
-            // check of "publicKeyURL" field, may be null
-            if (object.containsKey("publicKeyURL") && object.get("publicKeyURL").isNull() == null)
-            {
-               keyItem.setPublicKeyURL(object.get("publicKeyURL").isString().stringValue());
+    public static List<KeyItem> unmarshal(JavaScriptObject response) throws UnmarshallerException {
+        try {
+            List<KeyItem> keyItems = new ArrayList<KeyItem>();
+            JSONArray array = new JSONArray(response);
+            for (int i = 0; i < array.size(); i++) {
+                JSONObject object = array.get(i).isObject();
+                KeyItem keyItem = new KeyItem();
+                keyItem.setHost(object.get("host").isString().stringValue());
+                // check of "publicKeyURL" field, may be null
+                if (object.containsKey("publicKeyURL") && object.get("publicKeyURL").isNull() == null) {
+                    keyItem.setPublicKeyURL(object.get("publicKeyURL").isString().stringValue());
+                }
+
+                if (object.containsKey("removeKeyURL") && object.get("removeKeyURL").isNull() == null)
+                    keyItem.setRemoveKeyURL(object.get("removeKeyURL").isString().stringValue());
+                keyItems.add(keyItem);
             }
-
-            if (object.containsKey("removeKeyURL") && object.get("removeKeyURL").isNull() == null)
-               keyItem.setRemoveKeyURL(object.get("removeKeyURL").isString().stringValue());
-            keyItems.add(keyItem);
-         }
-         return keyItems;
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse SSH Keys");
-      }
-   }
+            return keyItems;
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't parse SSH Keys");
+        }
+    }
 
 }

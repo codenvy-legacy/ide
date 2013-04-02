@@ -14,20 +14,16 @@
 
 package com.codenvy.ide.client.util;
 
-/**
- * Random utility methods on the client.
- */
-public class Utils
-{
+/** Random utility methods on the client. */
+public class Utils {
 
-   /**
-    * Compares two objects.
-    *
-    * @return {@code true} if the objects are same of equal,
-    *         or {@code false} otherwise
-    */
-   public static boolean equalsOrNull(Object a, Object b)
-   {
-      return (a != null) ? a.equals(b) : (b == null);
-   }
+    /**
+     * Compares two objects.
+     *
+     * @return {@code true} if the objects are same of equal,
+     *         or {@code false} otherwise
+     */
+    public static boolean equalsOrNull(Object a, Object b) {
+        return (a != null) ? a.equals(b) : (b == null);
+    }
 }

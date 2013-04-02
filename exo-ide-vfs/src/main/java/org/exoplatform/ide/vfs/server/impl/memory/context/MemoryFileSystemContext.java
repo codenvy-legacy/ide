@@ -30,96 +30,74 @@ import java.util.concurrent.ConcurrentMap;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class MemoryFileSystemContext
-{
-   static final String ROOT_FOLDER_ID = ObjectIdGenerator.generateId();
+public final class MemoryFileSystemContext {
+    static final String ROOT_FOLDER_ID = ObjectIdGenerator.generateId();
 
-   private final ConcurrentMap<String, MemoryItem> entries;
-   private final MemoryFolder root;
+    private final ConcurrentMap<String, MemoryItem> entries;
+    private final MemoryFolder                      root;
 
-   public MemoryFileSystemContext()
-   {
-      root = new MemoryFolder(ROOT_FOLDER_ID, "");
-      entries = new ConcurrentHashMap<String, MemoryItem>();
-      entries.put(root.getId(), root);
-   }
+    public MemoryFileSystemContext() {
+        root = new MemoryFolder(ROOT_FOLDER_ID, "");
+        entries = new ConcurrentHashMap<String, MemoryItem>();
+        entries.put(root.getId(), root);
+    }
 
-   public MemoryFolder getRoot()
-   {
-      return root;
-   }
+    public MemoryFolder getRoot() {
+        return root;
+    }
 
-   public void putItem(MemoryItem item) throws VirtualFileSystemException
-   {
-      if (item.isFolder())
-      {
-         final Map<String, MemoryItem> flatten = new HashMap<String, MemoryItem>();
-         item.accept(new MemoryItemVisitor()
-         {
-            @Override
-            public void visit(MemoryItem i) throws VirtualFileSystemException
-            {
-               if (i.isFolder())
-               {
-                  for (MemoryItem ii : ((MemoryFolder)i).getChildren())
-                  {
-                     ii.accept(this);
-                  }
-                  flatten.put(i.getId(), i);
-               }
-               else
-               {
-                  flatten.put(i.getId(), i);
-               }
+    public void putItem(MemoryItem item) throws VirtualFileSystemException {
+        if (item.isFolder()) {
+            final Map<String, MemoryItem> flatten = new HashMap<String, MemoryItem>();
+            item.accept(new MemoryItemVisitor() {
+                @Override
+                public void visit(MemoryItem i) throws VirtualFileSystemException {
+                    if (i.isFolder()) {
+                        for (MemoryItem ii : ((MemoryFolder)i).getChildren()) {
+                            ii.accept(this);
+                        }
+                        flatten.put(i.getId(), i);
+                    } else {
+                        flatten.put(i.getId(), i);
+                    }
+                }
+            });
+            entries.putAll(flatten);
+        } else {
+            entries.put(item.getId(), item);
+        }
+    }
+
+    public MemoryItem getItem(String id) {
+        return entries.get(id);
+    }
+
+    public MemoryItem getItemByPath(String path) {
+        if (path == null) {
+            throw new IllegalArgumentException("Item path may not be null. ");
+        }
+        if ("/".equals(path)) {
+            return getRoot();
+        }
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+        MemoryItem item = getRoot();
+        String[] split = path.split("/");
+        for (int i = 0, length = split.length; item != null && i < length; i++) {
+            String name = split[i];
+            if (item.isFolder()) {
+                item = ((MemoryFolder)item).getChild(name);
             }
-         });
-         entries.putAll(flatten);
-      }
-      else
-      {
-         entries.put(item.getId(), item);
-      }
-   }
+        }
+        return item;
+    }
 
-   public MemoryItem getItem(String id)
-   {
-      return entries.get(id);
-   }
+    public void deleteItem(String id) {
+        entries.remove(id);
+    }
 
-   public MemoryItem getItemByPath(String path)
-   {
-      if (path == null)
-      {
-         throw new IllegalArgumentException("Item path may not be null. ");
-      }
-      if ("/".equals(path))
-      {
-         return getRoot();
-      }
-      if (path.startsWith("/"))
-      {
-         path = path.substring(1);
-      }
-      MemoryItem item = getRoot();
-      String[] split = path.split("/");
-      for (int i = 0, length = split.length; item != null && i < length; i++)
-      {
-         String name = split[i];
-         if (item.isFolder())
-         {
-            item = ((MemoryFolder)item).getChild(name);
-         }
-      }
-      return item;
-   }
-
-   public void deleteItem(String id)
-   {
-      entries.remove(id);
-   }
-
-   public void deleteItems(Collection<String> ids)
-   {
-      entries.keySet().removeAll(ids);
-   }
+    public void deleteItems(Collection<String> ids) {
+        entries.keySet().removeAll(ids);
+    }
 }

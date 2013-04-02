@@ -27,20 +27,16 @@ import javax.ws.rs.ext.Provider;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 @Provider
-public class GitUrlResolveExceptionMapper implements ExceptionMapper<GitUrlResolveException>
-{
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Response toResponse(GitUrlResolveException exception)
-   {
-      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_NOT_FOUND)).build();
-   }
+public class GitUrlResolveExceptionMapper implements ExceptionMapper<GitUrlResolveException> {
+    /** {@inheritDoc} */
+    @Override
+    public Response toResponse(GitUrlResolveException exception) {
+        return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_NOT_FOUND)).build();
+    }
 }

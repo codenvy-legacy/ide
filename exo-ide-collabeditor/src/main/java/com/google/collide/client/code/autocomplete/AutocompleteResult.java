@@ -16,38 +16,29 @@ package com.google.collide.client.code.autocomplete;
 
 import com.google.collide.client.editor.Editor;
 
-/**
- * Object that encapsulates knowledge about changes to be applied to document.
- */
+/** Object that encapsulates knowledge about changes to be applied to document. */
 public interface AutocompleteResult {
 
-  /**
-   * Enumeration of action types performed when result is applied.
-   */
-  public enum PopupAction {
+    /** Enumeration of action types performed when result is applied. */
+    public enum PopupAction {
+
+        /** Close popup (if opened). */
+        CLOSE,
+
+        /** Open popup. */
+        OPEN,
+
+        /** Leave popup as it is. */
+        NONE
+    }
+
+    PopupAction getPopupAction();
 
     /**
-     * Close popup (if opened).
+     * Applies changes to document.
+     *
+     * @param editor
+     *         document container.
      */
-    CLOSE,
-
-    /**
-     * Open popup.
-     */
-    OPEN,
-
-    /**
-     * Leave popup as it is.
-     */
-    NONE
-  }
-
-  PopupAction getPopupAction();
-
-  /**
-   * Applies changes to document.
-   *
-   * @param editor document container.
-   */
-  void apply(Editor editor);
+    void apply(Editor editor);
 }

@@ -14,99 +14,87 @@
 
 package com.google.collide.client.code;
 
-import com.google.gwt.resources.client.ClientBundle;
-
-import com.google.collide.client.AppContext;
-import com.codenvy.ide.client.util.Elements;
-import com.google.collide.mvp.CompositeView;
-import com.google.collide.mvp.UiComponent;
-import com.google.gwt.resources.client.CssResource;
-
 import elemental.html.DivElement;
 import elemental.html.Element;
 
-/**
- * The main content area on the CodePerspective.
- *
- */
+import com.codenvy.ide.client.util.Elements;
+import com.google.collide.client.AppContext;
+import com.google.collide.mvp.CompositeView;
+import com.google.collide.mvp.UiComponent;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+
+/** The main content area on the CodePerspective. */
 public class EditableContentArea extends UiComponent<EditableContentArea.View> {
 
-  /**
-   * Static factory method for obtaining an instance of the EditableContentArea.
-   */
-  public static EditableContentArea create(
-      View view, AppContext appContext, EditorBundle editorBundle) {
+    /** Static factory method for obtaining an instance of the EditableContentArea. */
+    public static EditableContentArea create(
+            View view, AppContext appContext, EditorBundle editorBundle) {
 //    final EditorToolBar toolBar = EditorToolBar.create(
 //        view.getEditorToolBarView(), FileSelectedPlace.PLACE, appContext, editorBundle);
 //    // Hook presenter in the editor bundle to the view in the header
 //    editorBundle.getBreadcrumbs().setView(view.getBreadcrumbsView());
-    return new EditableContentArea(view);
-  }
+        return new EditableContentArea(view);
+    }
 
-  /**
-   * Type for things that can be added to the content area of the CodePerspective.
-   */
-  public interface Content {
+    /** Type for things that can be added to the content area of the CodePerspective. */
+    public interface Content {
 
-    /**
-     * @return The {@link Element} that we set as the contents of the content
-     *         area.
-     */
-    Element getContentElement();
-    
-    /**
-     * Called when the content is displayed.
-     *
-     * It's possible that element returned by {@link #getContentElement()} was removed from DOM and
-     * re-added, so this callback is a good place to re-initialize any values that may have been
-     * cleared.
-     */
-    void onContentDisplayed();
-  }
+        /**
+         * @return The {@link Element} that we set as the contents of the content
+         *         area.
+         */
+        Element getContentElement();
 
-  /**
-   * Style names.
-   */
-  public interface Css extends CssResource {
-    String base();
+        /**
+         * Called when the content is displayed.
+         * <p/>
+         * It's possible that element returned by {@link #getContentElement()} was removed from DOM and
+         * re-added, so this callback is a good place to re-initialize any values that may have been
+         * cleared.
+         */
+        void onContentDisplayed();
+    }
 
-    String contentHeader();
+    /** Style names. */
+    public interface Css extends CssResource {
+        String base();
 
-    String contentContainer();
+        String contentHeader();
 
-    int editableContentAreaRight();
-  }
+        String contentContainer();
 
-  public interface Resources extends ClientBundle {
+        int editableContentAreaRight();
+    }
 
-    @Source({"com/google/collide/client/common/constants.css", "EditableContentArea.css"})
-    Css editableContentAreaCss();
-  }
+    public interface Resources extends ClientBundle {
 
-  /**
-   * The View for the EditableContentArea.
-   */
-  public static class View extends CompositeView<Void> {
-//    private DivElement header;
-    private DivElement content;
-//    private final WorkspaceLocationBreadcrumbs.View breadcrumbsView;
+        @Source({"com/google/collide/client/common/constants.css", "EditableContentArea.css"})
+        Css editableContentAreaCss();
+    }
+
+    /** The View for the EditableContentArea. */
+    public static class View extends CompositeView<Void> {
+        //    private DivElement header;
+        private       DivElement content;
+        //    private final WorkspaceLocationBreadcrumbs.View breadcrumbsView;
 //    private final EditorToolBar.View editorToolBarView;
-    private final Css css;
+        private final Css        css;
 
-    public View(Resources res) {
-      super(Elements.createDivElement(res.editableContentAreaCss().base()));
-      this.css = res.editableContentAreaCss();
+        public View(Resources res) {
+            super(Elements.createDivElement(res.editableContentAreaCss().base()));
+            this.css = res.editableContentAreaCss();
 
 //      // Instantiate sub-views.
 //      this.breadcrumbsView = new WorkspaceLocationBreadcrumbs.View(res);
 //      this.editorToolBarView = new EditorToolBar.View(res);
 
-      createDom();
-    }
+            createDom();
+        }
 
-    public Element getContentElement() {
-      return content;
-    }
+        public Element getContentElement() {
+            return content;
+        }
 
 //    public Element getHeaderElement() {
 //      return header;
@@ -120,75 +108,78 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
 //      return breadcrumbsView;
 //    }
 
-    public int getDefaultEditableContentAreaRight() {
-      return css.editableContentAreaRight();
-    }
+        public int getDefaultEditableContentAreaRight() {
+            return css.editableContentAreaRight();
+        }
 
-    private void createDom() {
-      Element elem = getElement();
+        private void createDom() {
+            Element elem = getElement();
 //      header = Elements.createDivElement(css.contentHeader());
-      content = Elements.createDivElement(css.contentContainer());
+            content = Elements.createDivElement(css.contentContainer());
 
 //      elem.appendChild(header);
-      elem.appendChild(content);
+            elem.appendChild(content);
 //      header.appendChild(breadcrumbsView.getElement());
 //      header.appendChild(editorToolBarView.getElement());
+        }
     }
-  }
 
-  private Content currentContent;
+    private Content currentContent;
 //  private final EditorToolBar toolBar;
 
-  EditableContentArea(View view) {
-    super(view);
+    EditableContentArea(View view) {
+        super(view);
 //    this.toolBar = toolBar;
-  }
+    }
 
 //  public EditorToolBar getEditorToolBar() {
 //    return toolBar;
 //  }
 
-  public Content getCurrentContent() {
-    return currentContent;
-  }
-
-  /**
-   * Sets the contents of the content area under the header.
-   * 
-   * @param content the content to display, or null to clear content
-   * @param showHistoryIcon whether or not to show the history button for this content.
-   */
-  public void setContent(Content content, boolean showHistoryIcon) {
-    if (currentContent == content) {
-      return;
+    public Content getCurrentContent() {
+        return currentContent;
     }
 
-    if (currentContent != null) {
-      currentContent.getContentElement().removeFromParent();
-    }
+    /**
+     * Sets the contents of the content area under the header.
+     *
+     * @param content
+     *         the content to display, or null to clear content
+     * @param showHistoryIcon
+     *         whether or not to show the history button for this content.
+     */
+    public void setContent(Content content, boolean showHistoryIcon) {
+        if (currentContent == content) {
+            return;
+        }
 
-    getView().getContentElement().setInnerHTML("");
-    if (content != null) {
-      getView().getContentElement().appendChild(content.getContentElement());
-    }
-    currentContent = content;
-    currentContent.onContentDisplayed();
+        if (currentContent != null) {
+            currentContent.getContentElement().removeFromParent();
+        }
+
+        getView().getContentElement().setInnerHTML("");
+        if (content != null) {
+            getView().getContentElement().appendChild(content.getContentElement());
+        }
+        currentContent = content;
+        currentContent.onContentDisplayed();
 
 //    getEditorToolBar().getView().setHistoryButtonVisible(showHistoryIcon);
 
 //    setLocationBreadcrumbsVisibility(true);
-  }
+    }
 
-  /**
-   * Sets the contents of the content area under the header. Assumes content can
-   * display history and shows history icon. (Use
-   * {@link #setContent(Content, boolean)} to customize).
-   * 
-   * @param content the content to display, or null to clear content
-   */
-  public void setContent(Content content) {
-    setContent(content, true);
-  }
+    /**
+     * Sets the contents of the content area under the header. Assumes content can
+     * display history and shows history icon. (Use
+     * {@link #setContent(Content, boolean)} to customize).
+     *
+     * @param content
+     *         the content to display, or null to clear content
+     */
+    public void setContent(Content content) {
+        setContent(content, true);
+    }
 
 //  public void setLocationBreadcrumbsVisibility(boolean visible) {
 //    CssUtils.setDisplayVisibility2(getView().breadcrumbsView.getElement(), visible);

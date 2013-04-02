@@ -18,12 +18,8 @@ import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Encapsulates a list of LogMetric objects.
- *
- *
- */
+/** Encapsulates a list of LogMetric objects. */
 @RoutingType(type = RoutingTypes.LOGMETRICS)
 public interface LogMetrics extends ClientToServerDto {
-  JsonArray<LogMetric> getMetrics();
+    JsonArray<LogMetric> getMetrics();
 }

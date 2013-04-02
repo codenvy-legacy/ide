@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * Implementation of sorted multiset of strings based
  * on {@link SkipListStringSet}.
- *
+ * <p/>
  * <p>This collection allows storing Strings so that <ul>
  * <li>adding / removing item is performed in {@code O(1)} if there is no equal
  * item in collection, otherwise {@code O(lg N)}
@@ -34,79 +34,78 @@ import javax.annotation.Nonnull;
  * <li>every unique item appears only once when iterating
  * <li>iterator returns items in the sorted order
  * </ul>
- *
+ * <p/>
  * <p>Actually this object is composed of skip list (for sorted search result)
  * and map (for better performance).
- *
+ * <p/>
  * <p>{@link #remove} will fail in situation then item counter should become
  * less than zero.
- *
+ * <p/>
  * <p>{@link #search} is delegated to {@link SkipListStringSet} instance.
- *
+ * <p/>
  * <p>{@code null} items should not be passed to add / remove / search.
- *
  */
 public final class SkipListStringBag implements StringMultiset {
 
-  private JsonStringMap<Counter> itemCounters;
+    private JsonStringMap<Counter> itemCounters;
 
-  private SkipListStringSet itemsSet;
+    private SkipListStringSet itemsSet;
 
-  public SkipListStringBag() {
-    clear();
-  }
-
-  @Override
-  public final void addAll(@Nonnull JsonArray<String> items) {
-    // TODO: Check if iterate is faster.
-    for (int i = 0, l = items.size(); i < l; i++) {
-      add(items.get(i));
+    public SkipListStringBag() {
+        clear();
     }
-  }
 
-  @Override
-  public final void add(@Nonnull String item) {
-    Counter counter = itemCounters.get(item);
-    if (counter == null) {
-      counter = new Counter();
-      itemCounters.put(item, counter);
-      itemsSet.add(item);
-    } else {
-      counter.increment();
+    @Override
+    public final void addAll(@Nonnull JsonArray<String> items) {
+        // TODO: Check if iterate is faster.
+        for (int i = 0, l = items.size(); i < l; i++) {
+            add(items.get(i));
+        }
     }
-  }
 
-  @Override
-  public final void removeAll(@Nonnull JsonArray<String> items) {
-    // TODO: Check if iterate is faster.
-    for (int i = 0, l = items.size(); i < l; i++) {
-      remove(items.get(i));
+    @Override
+    public final void add(@Nonnull String item) {
+        Counter counter = itemCounters.get(item);
+        if (counter == null) {
+            counter = new Counter();
+            itemCounters.put(item, counter);
+            itemsSet.add(item);
+        } else {
+            counter.increment();
+        }
     }
-  }
 
-  @Override
-  public final void remove(@Nonnull String item) {
-    Counter counter = itemCounters.get(item);
-    // TODO: Remove this precondition.
-    Preconditions.checkNotNull(counter, "trying to remove absent item: %s", item);
-    if (counter.decrement()) {
-      itemCounters.remove(item);
-      itemsSet.remove(item);
+    @Override
+    public final void removeAll(@Nonnull JsonArray<String> items) {
+        // TODO: Check if iterate is faster.
+        for (int i = 0, l = items.size(); i < l; i++) {
+            remove(items.get(i));
+        }
     }
-  }
 
-  @Override
-  public boolean contains(@Nonnull String item) {
-    return itemCounters.containsKey(item);
-  }
+    @Override
+    public final void remove(@Nonnull String item) {
+        Counter counter = itemCounters.get(item);
+        // TODO: Remove this precondition.
+        Preconditions.checkNotNull(counter, "trying to remove absent item: %s", item);
+        if (counter.decrement()) {
+            itemCounters.remove(item);
+            itemsSet.remove(item);
+        }
+    }
 
-  public final Iterable<String> search(@Nonnull String item) {
-    return itemsSet.search(item);
-  }
+    @Override
+    public boolean contains(@Nonnull String item) {
+        return itemCounters.containsKey(item);
+    }
 
-  @Override
-  public void clear() {
-    itemCounters = ClientStringMap.create();
-    itemsSet = SkipListStringSet.create();
-  }
+    public final Iterable<String> search(@Nonnull String item) {
+        return itemsSet.search(item);
+    }
+
+    @Override
+    public void clear() {
+        itemCounters = ClientStringMap.create();
+        itemsSet = SkipListStringSet.create();
+    }
 }

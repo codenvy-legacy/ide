@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface DownloadItemHandler extends EventHandler
-{
+public interface DownloadItemHandler extends EventHandler {
 
-   void onDownloadItem(DownloadItemEvent event);
+    void onDownloadItem(DownloadItemEvent event);
 
 }

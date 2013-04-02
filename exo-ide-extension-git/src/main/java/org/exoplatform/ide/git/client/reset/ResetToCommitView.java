@@ -38,166 +38,127 @@ import org.exoplatform.ide.git.shared.Revision;
 
 /**
  * View for reseting head to the commit. Must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 12:00:39 PM anya $
- * 
  */
-public class ResetToCommitView extends ViewImpl implements ResetToCommitPresenter.Display
-{
+public class ResetToCommitView extends ViewImpl implements ResetToCommitPresenter.Display {
 
-   private static final int HEIGHT = 345;
+    private static final int HEIGHT = 345;
 
-   private static final int WIDTH = 610;
+    private static final int WIDTH = 610;
 
-   public static final String ID = "ideResetToCommitView";
+    public static final String ID = "ideResetToCommitView";
 
    /* Elements IDs */
 
-   private static final String RESET_BUTTON_ID = "ideRevertToCommitViewRevertButton";
+    private static final String RESET_BUTTON_ID = "ideRevertToCommitViewRevertButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRevertToCommitViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideRevertToCommitViewCancelButton";
 
-   /**
-    * Revert button.
-    */
-   @UiField
-   ImageButton resetButton;
+    /** Revert button. */
+    @UiField
+    ImageButton resetButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   /**
-    * Grid with revisions.
-    */
-   @UiField
-   RevisionGrid revisionGrid;
+    /** Grid with revisions. */
+    @UiField
+    RevisionGrid revisionGrid;
 
-   /**
-    * Mixed mode radio button.
-    */
-   @UiField
-   RadioButton mixedMode;
+    /** Mixed mode radio button. */
+    @UiField
+    RadioButton mixedMode;
 
-   /**
-    * Soft mode radio button.
-    */
-   @UiField
-   RadioButton softMode;
+    /** Soft mode radio button. */
+    @UiField
+    RadioButton softMode;
 
-   /**
-    * Hard mode radio button.
-    */
-   @UiField
-   RadioButton hardMode;
+    /** Hard mode radio button. */
+    @UiField
+    RadioButton hardMode;
 
-   interface ResetToCommitViewUiBinder extends UiBinder<Widget, ResetToCommitView>
-   {
-   }
+    interface ResetToCommitViewUiBinder extends UiBinder<Widget, ResetToCommitView> {
+    }
 
-   private static ResetToCommitViewUiBinder uiBinder = GWT.create(ResetToCommitViewUiBinder.class);
+    private static ResetToCommitViewUiBinder uiBinder = GWT.create(ResetToCommitViewUiBinder.class);
 
-   public ResetToCommitView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.resetCommitViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      // GitExtension.MESSAGES.resetSoftTypeTitle());
-      addDescription(softMode, GitExtension.MESSAGES.resetSoftTypeDescription());
-      // GitExtension.MESSAGES.resetMixedTypeTitle());
-      addDescription(mixedMode, GitExtension.MESSAGES.resetMixedTypeDescription());
-      // GitExtension.MESSAGES.resetHardTypeTitle());
-      addDescription(hardMode, GitExtension.MESSAGES.resetHardTypeDescription());
+    public ResetToCommitView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.resetCommitViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        // GitExtension.MESSAGES.resetSoftTypeTitle());
+        addDescription(softMode, GitExtension.MESSAGES.resetSoftTypeDescription());
+        // GitExtension.MESSAGES.resetMixedTypeTitle());
+        addDescription(mixedMode, GitExtension.MESSAGES.resetMixedTypeDescription());
+        // GitExtension.MESSAGES.resetHardTypeTitle());
+        addDescription(hardMode, GitExtension.MESSAGES.resetHardTypeDescription());
 
-      resetButton.setButtonId(RESET_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        resetButton.setButtonId(RESET_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * Add description to radio button title.
-    * 
-    * @param radioItem radio button
-    * @param description description to add
-    */
-   private void addDescription(RadioButton radioItem, String description)
-   {
-      Element descElement = DOM.createSpan();
-      descElement.setInnerText(description);
-      DOM.setStyleAttribute(descElement, "color", "#555");
-      radioItem.getElement().appendChild(descElement);
-   }
+    /**
+     * Add description to radio button title.
+     *
+     * @param radioItem
+     *         radio button
+     * @param description
+     *         description to add
+     */
+    private void addDescription(RadioButton radioItem, String description) {
+        Element descElement = DOM.createSpan();
+        descElement.setInnerText(description);
+        DOM.setStyleAttribute(descElement, "color", "#555");
+        radioItem.getElement().appendChild(descElement);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getResetButton()
-    */
-   @Override
-   public HasClickHandlers getResetButton()
-   {
-      return resetButton;
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getResetButton() */
+    @Override
+    public HasClickHandlers getResetButton() {
+        return resetButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getRevisionGrid()
-    */
-   @Override
-   public ListGridItem<Revision> getRevisionGrid()
-   {
-      return revisionGrid;
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getRevisionGrid() */
+    @Override
+    public ListGridItem<Revision> getRevisionGrid() {
+        return revisionGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getSelectedRevision()
-    */
-   @Override
-   public Revision getSelectedRevision()
-   {
-      return revisionGrid.getSelectedRevision();
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getSelectedRevision() */
+    @Override
+    public Revision getSelectedRevision() {
+        return revisionGrid.getSelectedRevision();
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getSoftMode()
-    */
-   @Override
-   public HasValue<Boolean> getSoftMode()
-   {
-      return softMode;
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getSoftMode() */
+    @Override
+    public HasValue<Boolean> getSoftMode() {
+        return softMode;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getMixMode()
-    */
-   @Override
-   public HasValue<Boolean> getMixMode()
-   {
-      return mixedMode;
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getMixMode() */
+    @Override
+    public HasValue<Boolean> getMixMode() {
+        return mixedMode;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getHardMode()
-    */
-   @Override
-   public HasValue<Boolean> getHardMode()
-   {
-      return hardMode;
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getHardMode() */
+    @Override
+    public HasValue<Boolean> getHardMode() {
+        return hardMode;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#enableResetButon(boolean)
-    */
-   @Override
-   public void enableResetButon(boolean enabled)
-   {
-      resetButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#enableResetButon(boolean) */
+    @Override
+    public void enableResetButon(boolean enabled) {
+        resetButton.setEnabled(enabled);
+    }
 }

@@ -24,38 +24,35 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface S3Owner
-{
-   /**
-    * Get owner ID
-    *
-    * @return
-    *    id of S3 bucket owner
-    */
-   String getId();
+public interface S3Owner {
+    /**
+     * Get owner ID
+     *
+     * @return id of S3 bucket owner
+     */
+    String getId();
 
-   /**
-    * Set owner ID
-    *
-    * @param id
-    *    id of S3 bucket owner
-    */
-   void setId(String id);
+    /**
+     * Set owner ID
+     *
+     * @param id
+     *         id of S3 bucket owner
+     */
+    void setId(String id);
 
-   /**
-    * Get S3 bucket owner display name
-    *
-    * @return
-    *    display name of S3 bucket owner
-    */
-   String getName();
+    /**
+     * Get S3 bucket owner display name
+     *
+     * @return display name of S3 bucket owner
+     */
+    String getName();
 
 
-   /**
-    * Set S3 bucket owner display name
-    *
-    * @param name
-    *    display name of S3 bucket owner
-    */
-   void setName(String name);
+    /**
+     * Set S3 bucket owner display name
+     *
+     * @param name
+     *         display name of S3 bucket owner
+     */
+    void setName(String name);
 }

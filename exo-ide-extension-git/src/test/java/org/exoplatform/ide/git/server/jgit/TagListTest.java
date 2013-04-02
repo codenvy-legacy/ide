@@ -33,47 +33,42 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagListTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class TagListTest extends BaseTest
-{
-   private RevTag bugfixTag;
+public class TagListTest extends BaseTest {
+    private RevTag bugfixTag;
 
-   private RevTag featureTag;
+    private RevTag featureTag;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      Repository repo = getDefaultRepository();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        Repository repo = getDefaultRepository();
 
-      RevWalk revWalker = new RevWalk(repo);
-      Git git = new Git(repo);
+        RevWalk revWalker = new RevWalk(repo);
+        Git git = new Git(repo);
 
-      Ref bugfixRef = git.tag().setName("bugfix-tag").setMessage("bugfix-tag").call();
-      Ref featureRef = git.tag().setName("feature-tag").setMessage("feature-tag").call();
+        Ref bugfixRef = git.tag().setName("bugfix-tag").setMessage("bugfix-tag").call();
+        Ref featureRef = git.tag().setName("feature-tag").setMessage("feature-tag").call();
 
-      bugfixTag = revWalker.parseTag(bugfixRef.getLeaf().getObjectId());
-      featureTag = revWalker.parseTag(featureRef.getLeaf().getObjectId());
-   }
+        bugfixTag = revWalker.parseTag(bugfixRef.getLeaf().getObjectId());
+        featureTag = revWalker.parseTag(featureRef.getLeaf().getObjectId());
+    }
 
-   public void testListAllTag() throws Exception
-   {
-      List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest());
-      validateTags(tagList, bugfixTag.getTagName(), featureTag.getTagName());
-   }
+    public void testListAllTag() throws Exception {
+        List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest());
+        validateTags(tagList, bugfixTag.getTagName(), featureTag.getTagName());
+    }
 
-   public void testListTagPattern() throws Exception
-   {
-      List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest("feature*"));
-      validateTags(tagList, featureTag.getTagName());
-   }
+    public void testListTagPattern() throws Exception {
+        List<Tag> tagList = getDefaultConnection().tagList(new TagListRequest("feature*"));
+        validateTags(tagList, featureTag.getTagName());
+    }
 
-   private void validateTags(List<Tag> tagList, String... expNames)
-   {
-      assertEquals(expNames.length, tagList.size());
-      List<String> names = new ArrayList<String>(tagList.size());
-      for (Tag t : tagList)
-         names.add(t.getName());
-      for (String name : expNames)
-         assertTrue("Expected tag " + name + " not found in result. ", names.contains(name));
-   }
+    private void validateTags(List<Tag> tagList, String... expNames) {
+        assertEquals(expNames.length, tagList.size());
+        List<String> names = new ArrayList<String>(tagList.size());
+        for (Tag t : tagList)
+            names.add(t.getName());
+        for (String name : expNames)
+            assertTrue("Expected tag " + name + " not found in result. ", names.contains(name));
+    }
 }

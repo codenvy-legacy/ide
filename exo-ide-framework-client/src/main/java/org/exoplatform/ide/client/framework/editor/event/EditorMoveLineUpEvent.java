@@ -23,23 +23,19 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class EditorMoveLineUpEvent extends GwtEvent<EditorMoveLineUpHandler>
-{
+public class EditorMoveLineUpEvent extends GwtEvent<EditorMoveLineUpHandler> {
 
-   public static final GwtEvent.Type<EditorMoveLineUpHandler> TYPE = new GwtEvent.Type<EditorMoveLineUpHandler>();
+    public static final GwtEvent.Type<EditorMoveLineUpHandler> TYPE = new GwtEvent.Type<EditorMoveLineUpHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorMoveLineUpHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorMoveLineUpHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(EditorMoveLineUpHandler handler)
-   {
-      handler.onEditorMoveLineUp(this);
-   }
+    @Override
+    protected void dispatch(EditorMoveLineUpHandler handler) {
+        handler.onEditorMoveLineUp(this);
+    }
 
 }

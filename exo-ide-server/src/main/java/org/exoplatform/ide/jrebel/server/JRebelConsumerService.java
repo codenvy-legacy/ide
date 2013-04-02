@@ -27,80 +27,65 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: JRebelProfilerService.java 34027 19.12.12 17:02Z vzhukovskii $
  */
 @Path("ide/jrebel")
-public class JRebelConsumerService
-{
-   @Inject
-   UserManager userManager;
+public class JRebelConsumerService {
+    @Inject
+    UserManager userManager;
 
-   private static final Log LOG = ExoLogger.getLogger("JRebel");
+    private static final Log LOG = ExoLogger.getLogger("JRebel");
 
-   @Path("profile/send")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void sendProfileInfo(Map<String, String> values) throws JRebelConsumerException
-   {
-      String userId = ConversationState.getCurrent().getIdentity().getUserId();
-      try
-      {
-         User user = userManager.getUserByAlias(userId);
-         if (user.getProfile().getAttribute("firstName") != null && user.getProfile().getAttribute("lastName") != null
-            && user.getProfile().getAttribute("phone") != null)
-         {
-            return; //no need to send already filled profile to ZTA
-         }
-         user.getProfile().setAttributes(values);
-         userManager.updateUser(user);
+    @Path("profile/send")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void sendProfileInfo(Map<String, String> values) throws JRebelConsumerException {
+        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        try {
+            User user = userManager.getUserByAlias(userId);
+            if (user.getProfile().getAttribute("firstName") != null && user.getProfile().getAttribute("lastName") != null
+                && user.getProfile().getAttribute("phone") != null) {
+                return; //no need to send already filled profile to ZTA
+            }
+            user.getProfile().setAttributes(values);
+            userManager.updateUser(user);
 
-         String formatted =
-            String.format("\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"", userId,
-               values.get("firstName").replaceAll("\"", "'"), values.get("lastName").replaceAll("\"", "'"),
-               values.get("phone"));
+            String formatted =
+                    String.format("\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"", userId,
+                                  values.get("firstName").replaceAll("\"", "'"), values.get("lastName").replaceAll("\"", "'"),
+                                  values.get("phone"));
 
-         LOG.error(formatted);
-      }
-      catch (OrganizationServiceException e)
-      {
-         throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
-      }
-   }
+            LOG.error(formatted);
+        } catch (OrganizationServiceException e) {
+            throw new JRebelConsumerException("Unable to register profile info. Please contact support.", e);
+        }
+    }
 
-   @Path("profile/get")
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> getProfileInfo() throws JRebelConsumerException
-   {
-      String userId = ConversationState.getCurrent().getIdentity().getUserId();
-      try
-      {
-         Profile profile = userManager.getUserByAlias(userId).getProfile();
-         Map<String, String> values = new HashMap<String, String>();
-         if (profile.getAttribute("firstName") != null)
-            values.put("firstName", profile.getAttribute("firstName"));
-         if (profile.getAttribute("lastName") != null)
-            values.put("lastName", profile.getAttribute("lastName"));
-         if (profile.getAttribute("phone") != null)
-            values.put("phone", profile.getAttribute("phone"));
-         return values;
-      }
-      catch (OrganizationServiceException e)
-      {
-         throw new JRebelConsumerException("Unable to get profile info. Please contact support.", e);
-      }
-   }
+    @Path("profile/get")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, String> getProfileInfo() throws JRebelConsumerException {
+        String userId = ConversationState.getCurrent().getIdentity().getUserId();
+        try {
+            Profile profile = userManager.getUserByAlias(userId).getProfile();
+            Map<String, String> values = new HashMap<String, String>();
+            if (profile.getAttribute("firstName") != null)
+                values.put("firstName", profile.getAttribute("firstName"));
+            if (profile.getAttribute("lastName") != null)
+                values.put("lastName", profile.getAttribute("lastName"));
+            if (profile.getAttribute("phone") != null)
+                values.put("phone", profile.getAttribute("phone"));
+            return values;
+        } catch (OrganizationServiceException e) {
+            throw new JRebelConsumerException("Unable to get profile info. Please contact support.", e);
+        }
+    }
 }

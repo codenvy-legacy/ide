@@ -48,100 +48,85 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for managing project, deployed on CloudBeess.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 9:42:32 AM anya $
- * 
  */
-public class CloudBeesProjectPresenter extends GitPresenter implements 
-   ManageCloudBeesProjectHandler, ViewClosedHandler, ApplicationDeletedHandler
+public class CloudBeesProjectPresenter extends GitPresenter implements
+                                                            ManageCloudBeesProjectHandler, ViewClosedHandler, ApplicationDeletedHandler
 //   , ActiveProjectChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
-   interface Display extends IsView
-   {
-      HasClickHandlers getCloseButton();
+    interface Display extends IsView {
+        HasClickHandlers getCloseButton();
 
-      HasClickHandlers getUpdateButton();
+        HasClickHandlers getUpdateButton();
 
-      HasClickHandlers getDeleteButton();
+        HasClickHandlers getDeleteButton();
 
-      HasValue<String> getApplicationName();
+        HasValue<String> getApplicationName();
 
-      void setApplicationURL(String URL);
+        void setApplicationURL(String URL);
 
-      HasValue<String> getApplicationStatus();
+        HasValue<String> getApplicationStatus();
 
-      HasValue<String> getApplicationInstances();
+        HasValue<String> getApplicationInstances();
 
-      HasClickHandlers getInfoButton();
-   }
+        HasClickHandlers getInfoButton();
+    }
 
-   /**
-    * Presenter's display.
-    */
-   private Display display;
+    /** Presenter's display. */
+    private Display display;
 
 //   /**
 //    * Opened project.
 //    */
 //   private ProjectModel openedProject;
 
-   public CloudBeesProjectPresenter()
-   {
-      IDE.getInstance().addControl(new CloudBeesControl());
+    public CloudBeesProjectPresenter() {
+        IDE.getInstance().addControl(new CloudBeesControl());
 
 //      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
 //      IDE.addHandler(ProjectClosedEvent.TYPE, this);
 //      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      IDE.addHandler(ManageCloudBeesProjectEvent.TYPE, this);
-      IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(ManageCloudBeesProjectEvent.TYPE, this);
+        IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Bind presenter with display.
-    */
-   public void bindDisplay()
-   {
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new DeleteApplicationEvent());
-         }
-      });
+    /** Bind presenter with display. */
+    public void bindDisplay() {
+        display.getDeleteButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new DeleteApplicationEvent());
+            }
+        });
 
-      display.getUpdateButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new UpdateApplicationEvent());
-         }
-      });
+        display.getUpdateButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new UpdateApplicationEvent());
+            }
+        });
 
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getInfoButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.eventBus().fireEvent(new ApplicationInfoEvent());
-         }
-      });
-   }
+        display.getInfoButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.eventBus().fireEvent(new ApplicationInfoEvent());
+            }
+        });
+    }
 
 //   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+// .project.ProjectOpenedEvent)
 //    */
 //   @Override
 //   public void onProjectOpened(ProjectOpenedEvent event)
@@ -155,86 +140,73 @@ public class CloudBeesProjectPresenter extends GitPresenter implements
 //      openedProject = event.getProject();
 //   }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.ManageCloudBeesProjectHandler#onManageCloudBeesProject(org.exoplatform.ide.extension.cloudbees.client.project.ManageCloudBeesProjectEvent)
-    */
-   @Override
-   public void onManageCloudBeesProject(ManageCloudBeesProjectEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-      }
-      //getApplicationInfo(openedProject);
-      getApplicationInfo(getSelectedProject());
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.ManageCloudBeesProjectHandler#onManageCloudBeesProject(org
+     * .exoplatform.ide.extension.cloudbees.client.project.ManageCloudBeesProjectEvent) */
+    @Override
+    public void onManageCloudBeesProject(ManageCloudBeesProjectEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+        }
+        //getApplicationInfo(openedProject);
+        getApplicationInfo(getSelectedProject());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * Get application's properties.
-    * 
-    * @param project project deployed to CloudBees
-    */
-   private void getApplicationInfo(final ProjectModel project)
-   {
-      try
-      {
-         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
-         CloudBeesClientService.getInstance().getApplicationInfo(
-            null,
-            vfs.getId(),
-            project.getId(),
-            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
-               new LoggedInHandler()
-               {
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     getApplicationInfo(project);
-                  }
-               }, null)
-            {
-               @Override
-               protected void onSuccess(ApplicationInfo appInfo)
-               {
-                  showAppInfo(appInfo);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    /**
+     * Get application's properties.
+     *
+     * @param project
+     *         project deployed to CloudBees
+     */
+    private void getApplicationInfo(final ProjectModel project) {
+        try {
+            AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+            CloudBeesClientService.getInstance().getApplicationInfo(
+                    null,
+                    vfs.getId(),
+                    project.getId(),
+                    new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+                                                                       new LoggedInHandler() {
+                                                                           @Override
+                                                                           public void onLoggedIn() {
+                                                                               getApplicationInfo(project);
+                                                                           }
+                                                                       }, null) {
+                        @Override
+                        protected void onSuccess(ApplicationInfo appInfo) {
+                            showAppInfo(appInfo);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * Show application's properties.
-    * 
-    * @param map
-    */
-   private void showAppInfo(ApplicationInfo appInfo)
-   {
-      display.getApplicationName().setValue(appInfo.getTitle());
-      display.getApplicationStatus().setValue(appInfo.getStatus());
-      display.getApplicationInstances().setValue(appInfo.getClusterSize());
-      display.setApplicationURL(appInfo.getUrl());
-   }
+    /**
+     * Show application's properties.
+     *
+     * @param map
+     */
+    private void showAppInfo(ApplicationInfo appInfo) {
+        display.getApplicationName().setValue(appInfo.getTitle());
+        display.getApplicationStatus().setValue(appInfo.getStatus());
+        display.getApplicationInstances().setValue(appInfo.getClusterSize());
+        display.setApplicationURL(appInfo.getUrl());
+    }
 
 //   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+// .project.ProjectClosedEvent)
 //    */
 //   @Override
 //   public void onProjectClosed(ProjectClosedEvent event)
@@ -242,12 +214,10 @@ public class CloudBeesProjectPresenter extends GitPresenter implements
 //      openedProject = null;
 //   }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedEvent)
-    */
-   @Override
-   public void onApplicationDeleted(ApplicationDeletedEvent event)
-   {
+    /** @see org.exoplatform.ide.extension.cloudbees.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide
+     * .extension.cloudbees.client.delete.ApplicationDeletedEvent) */
+    @Override
+    public void onApplicationDeleted(ApplicationDeletedEvent event) {
 //      if (event.getApplicationId() != null && openedProject != null
 //         && event.getApplicationId().equals((String)openedProject.getPropertyValue("cloudbees-application")))
 //      {
@@ -257,15 +227,13 @@ public class CloudBeesProjectPresenter extends GitPresenter implements
 //         }
 //         IDE.fireEvent(new RefreshBrowserEvent(openedProject));
 //      }
-      ProjectModel project = getSelectedProject();
-      if (event.getApplicationId() != null && project != null
-               && event.getApplicationId().equals((String)project.getPropertyValue("cloudbees-application")))
-            {
-               if (display != null)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-               }
-               IDE.fireEvent(new RefreshBrowserEvent(project));
+        ProjectModel project = getSelectedProject();
+        if (event.getApplicationId() != null && project != null
+            && event.getApplicationId().equals((String)project.getPropertyValue("cloudbees-application"))) {
+            if (display != null) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-   }
+            IDE.fireEvent(new RefreshBrowserEvent(project));
+        }
+    }
 }

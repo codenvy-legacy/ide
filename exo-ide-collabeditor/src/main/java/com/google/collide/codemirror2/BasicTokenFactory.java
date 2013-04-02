@@ -16,15 +16,13 @@ package com.google.collide.codemirror2;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Token factory that do not use information from {@link State}.
- */
+/** Token factory that do not use information from {@link State}. */
 class BasicTokenFactory implements TokenFactory<State> {
 
-  @Override
-  public void push(String stylePrefix, State state, String tokenType, String tokenValue,
-      JsonArray<Token> tokens) {
-    tokens.add(new Token(
-        stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue));
-  }
+    @Override
+    public void push(String stylePrefix, State state, String tokenType, String tokenValue,
+                     JsonArray<Token> tokens) {
+        tokens.add(new Token(
+                stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue));
+    }
 }

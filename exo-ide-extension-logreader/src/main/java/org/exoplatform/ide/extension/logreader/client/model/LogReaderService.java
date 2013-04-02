@@ -28,91 +28,85 @@ import org.exoplatform.ide.extension.logreader.shared.LogEntry;
 
 /**
  * This service provides access to information stored in the logs created on current tenant.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class LogReaderService
-{
+public class LogReaderService {
 
-   private String restContext;
+    private String restContext;
 
-   private Loader loader;
+    private Loader loader;
 
-   private static LogReaderService instance;
+    private static LogReaderService instance;
 
-   public static LogReaderService get()
-   {
-      return instance;
-   }
+    public static LogReaderService get() {
+        return instance;
+    }
 
-   /**
-    * @param restContext
-    * @param loader
-    */
-   public LogReaderService(String restContext, Loader loader)
-   {
-      super();
-      this.restContext = restContext;
-      this.loader = loader;
-      instance = this;
-   }
+    /**
+     * @param restContext
+     * @param loader
+     */
+    public LogReaderService(String restContext, Loader loader) {
+        super();
+        this.restContext = restContext;
+        this.loader = loader;
+        instance = this;
+    }
 
-   /**
-    * Get last log file
-    * 
-    * @param callback
-    * @throws RequestException 
-    */
-   public void getLastLog(AsyncRequestCallback<LogEntry> callback) throws RequestException
-   {
-      String url = restContext + "/log-reader-service/last-log";
-      sendRequest(url, callback);
-   }
+    /**
+     * Get last log file
+     *
+     * @param callback
+     * @throws RequestException
+     */
+    public void getLastLog(AsyncRequestCallback<LogEntry> callback) throws RequestException {
+        String url = restContext + "/log-reader-service/last-log";
+        sendRequest(url, callback);
+    }
 
-   /**
-    * Get previous log file for current log file
-    * 
-    * @param token of current log
-    * @param callback
-    * @throws RequestException 
-    */
-   public void getPrevLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException
-   {
-      String url = restContext + "/log-reader-service/prev-log?token=" + token;
-      sendRequest(url, callback);
-   }
+    /**
+     * Get previous log file for current log file
+     *
+     * @param token
+     *         of current log
+     * @param callback
+     * @throws RequestException
+     */
+    public void getPrevLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException {
+        String url = restContext + "/log-reader-service/prev-log?token=" + token;
+        sendRequest(url, callback);
+    }
 
-   /**
-    * Get next log file for current log
-    * 
-    * @param token of current log
-    * @param callback
-    * @throws RequestException 
-    */
-   public void getNextLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException
-   {
-      String url = restContext + "/log-reader-service/next-log?token=" + token;
-      sendRequest(url, callback);
-   }
+    /**
+     * Get next log file for current log
+     *
+     * @param token
+     *         of current log
+     * @param callback
+     * @throws RequestException
+     */
+    public void getNextLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException {
+        String url = restContext + "/log-reader-service/next-log?token=" + token;
+        sendRequest(url, callback);
+    }
 
-   /**
-    * Update log
-    * 
-    * @param token of log
-    * @param callback
-    * @throws RequestException 
-    */
-   public void getLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException
-   {
-      String url = restContext + "/log-reader-service/log?token=" + token;
-      sendRequest(url, callback);
-   }
+    /**
+     * Update log
+     *
+     * @param token
+     *         of log
+     * @param callback
+     * @throws RequestException
+     */
+    public void getLog(String token, AsyncRequestCallback<LogEntry> callback) throws RequestException {
+        String url = restContext + "/log-reader-service/log?token=" + token;
+        sendRequest(url, callback);
+    }
 
-   private void sendRequest(String url, AsyncRequestCallback<LogEntry> callback) throws RequestException
-   {
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
-   }
+    private void sendRequest(String url, AsyncRequestCallback<LogEntry> callback) throws RequestException {
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+    }
 
 }

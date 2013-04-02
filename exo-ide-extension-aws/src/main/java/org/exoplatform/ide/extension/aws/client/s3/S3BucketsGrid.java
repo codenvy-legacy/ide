@@ -29,49 +29,37 @@ import java.util.List;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: S3BucketsGrid.java Oct 3, 2012 vetal $
- *
  */
-public class S3BucketsGrid extends ListGrid<S3Bucket>
-{
-   private static final String ID = "ideS3BucketsGrid";
+public class S3BucketsGrid extends ListGrid<S3Bucket> {
+    private static final String ID = "ideS3BucketsGrid";
 
-   public S3BucketsGrid()
-   {
-      setID(ID);
-      initColumns();
-   }
+    public S3BucketsGrid() {
+        setID(ID);
+        initColumns();
+    }
 
-   /**
-    * Initialize columns.
-    */
-   private void initColumns()
-   {
-      Column<S3Bucket, String> keyCol = new Column<S3Bucket, String>(new TextCell())
-      {
+    /** Initialize columns. */
+    private void initColumns() {
+        Column<S3Bucket, String> keyCol = new Column<S3Bucket, String>(new TextCell()) {
 
-         @Override
-         public String getValue(S3Bucket S3Bucket)
-         {
-            return S3Bucket.getName();
-         }
-      };
-      getCellTable().addColumn(keyCol);
-      getCellTable().setColumnWidth(keyCol, "100%");
-   }
+            @Override
+            public String getValue(S3Bucket S3Bucket) {
+                return S3Bucket.getName();
+            }
+        };
+        getCellTable().addColumn(keyCol);
+        getCellTable().setColumnWidth(keyCol, "100%");
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)
-    */
-   @Override
-   public void setValue(List<S3Bucket> value)
-   {
-      super.setValue(value);
-      if (value != null && value.size() > 0)
-      {
-         selectItem(value.get(0));
-      }
-      getCellTable().redraw();
-   }
+    /** @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List) */
+    @Override
+    public void setValue(List<S3Bucket> value) {
+        super.setValue(value);
+        if (value != null && value.size() > 0) {
+            selectItem(value.get(0));
+        }
+        getCellTable().redraw();
+    }
 
-   
+
 }

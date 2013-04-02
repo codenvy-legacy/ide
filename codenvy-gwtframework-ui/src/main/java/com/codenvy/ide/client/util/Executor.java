@@ -14,20 +14,15 @@
 
 package com.codenvy.ide.client.util;
 
-/**
- * Mimics {@code java.util.concurrent.Executor} (which isn't available in GWT).
- */
-public interface Executor
-{
+/** Mimics {@code java.util.concurrent.Executor} (which isn't available in GWT). */
+public interface Executor {
 
-   public final static Executor SYNC_EXECUTOR = new Executor()
-   {
-      @Override
-      public void execute(Runnable command)
-      {
-         command.run();
-      }
-   };
+    public final static Executor SYNC_EXECUTOR = new Executor() {
+        @Override
+        public void execute(Runnable command) {
+            command.run();
+        }
+    };
 
-   void execute(Runnable command);
+    void execute(Runnable command);
 }

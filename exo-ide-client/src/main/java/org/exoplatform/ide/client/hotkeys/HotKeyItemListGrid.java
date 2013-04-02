@@ -31,144 +31,118 @@ import org.exoplatform.ide.client.IDE;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class HotKeyItemListGrid extends ListGrid<HotKeyItem>
-{
+public class HotKeyItemListGrid extends ListGrid<HotKeyItem> {
 
-   public interface Style
-   {
+    public interface Style {
 
-      final static String GROUP = "exo-customizeToolbar-commandGroup";
+        final static String GROUP = "exo-customizeToolbar-commandGroup";
 
-   }
+    }
 
-   private final static String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridCommand();
+    private final static String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridCommand();
 
-   private final static String CONTROL = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridBinding();
+    private final static String CONTROL = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridBinding();
 
-   private final static String POPUP = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridPopup();
+    private final static String POPUP = IDE.PREFERENCES_CONSTANT.customizeHotkeysListGridPopup();
 
-   private final static String ID = "ideCustomizeHotKeysListGrid";
+    private final static String ID = "ideCustomizeHotKeysListGrid";
 
-   public HotKeyItemListGrid()
-   {
-      setID(ID);
-      initColumns();
-   }
+    public HotKeyItemListGrid() {
+        setID(ID);
+        initColumns();
+    }
 
-   private void initColumns()
-   {
-      Column<HotKeyItem, SafeHtml> titleColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
-      {
+    private void initColumns() {
+        Column<HotKeyItem, SafeHtml> titleColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final HotKeyItem item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final HotKeyItem item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  return getItemTitle(item);
-               }
-            };
-            return html;
-         }
+                    @Override
+                    public String asString() {
+                        return getItemTitle(item);
+                    }
+                };
+                return html;
+            }
 
-      };
-      getCellTable().addColumn(titleColumn, TITLE);
-      getCellTable().setColumnWidth(titleColumn, 50, Unit.PCT);
+        };
+        getCellTable().addColumn(titleColumn, TITLE);
+        getCellTable().setColumnWidth(titleColumn, 50, Unit.PCT);
 
-      Column<HotKeyItem, SafeHtml> controlColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell())
-      {
+        Column<HotKeyItem, SafeHtml> controlColumn = new Column<HotKeyItem, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final HotKeyItem item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final HotKeyItem item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  return item.getHotKey() == null ? "" : item.getHotKey();
-               }
-            };
-            return html;
-         }
+                    @Override
+                    public String asString() {
+                        return item.getHotKey() == null ? "" : item.getHotKey();
+                    }
+                };
+                return html;
+            }
 
-      };
-      getCellTable().addColumn(controlColumn, CONTROL);
-      getCellTable().setColumnWidth(controlColumn, 100, Unit.PCT);
-   }
+        };
+        getCellTable().addColumn(controlColumn, CONTROL);
+        getCellTable().setColumnWidth(controlColumn, 100, Unit.PCT);
+    }
 
-   private String getItemTitle(HotKeyItem item)
-   {
-      if (item.isGroup())
-      {
-         String title = item.getTitle();
-         title = title.replace("/", "&nbsp;/&nbsp;");
-         title = getDivider(title);
-         return title;
-      }
-      else
-      {
-         String title = "";
-         if (item.getCommand() == null)
-         {
-            return item.getTitle();
-         }
-         String commandName = item.getCommand().getId();
-         if (commandName.indexOf("/") >= 0)
-         {
-            commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
-         }
+    private String getItemTitle(HotKeyItem item) {
+        if (item.isGroup()) {
+            String title = item.getTitle();
+            title = title.replace("/", "&nbsp;/&nbsp;");
+            title = getDivider(title);
+            return title;
+        } else {
+            String title = "";
+            if (item.getCommand() == null) {
+                return item.getTitle();
+            }
+            String commandName = item.getCommand().getId();
+            if (commandName.indexOf("/") >= 0) {
+                commandName = commandName.substring(commandName.lastIndexOf("/") + 1);
+            }
 
-         while (commandName.indexOf("\\") >= 0)
-         {
-            commandName = commandName.replace("\\", "/");
-         }
+            while (commandName.indexOf("\\") >= 0) {
+                commandName = commandName.replace("\\", "/");
+            }
 
-         if (item.getCommand() instanceof PopupMenuControl)
-         {
-            commandName += "&nbsp;[" + POPUP + "]";
-         }
+            if (item.getCommand() instanceof PopupMenuControl) {
+                commandName += "&nbsp;[" + POPUP + "]";
+            }
 
-         if (item.getCommand().getNormalImage() != null)
-         {
-            Image image = new Image(item.getCommand().getNormalImage());
-            String imageHTML = ImageHelper.getImageHTML(image);
-            title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
-         }
-         else if (item.getCommand().getIcon() != null)
-         {
-            title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
-         }
-         else
-         {
-            title = "<span>" + commandName + "</span>";
-         }
+            if (item.getCommand().getNormalImage() != null) {
+                Image image = new Image(item.getCommand().getNormalImage());
+                String imageHTML = ImageHelper.getImageHTML(image);
+                title = "<span>" + imageHTML + "&nbsp;" + commandName + "</span>";
+            } else if (item.getCommand().getIcon() != null) {
+                title = "<span><img src = \"" + item.getCommand().getIcon() + "\"/>&nbsp;" + commandName + "</span>";
+            } else {
+                title = "<span>" + commandName + "</span>";
+            }
 
-         return title;
-      }
-   }
+            return title;
+        }
+    }
 
-   private String getDivider(String title)
-   {
-      String divider =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
-            + "<tr><td></td><td>&nbsp;" + "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 15px\">"
-            + title + "</font></b>" + "&nbsp;</td><td></td></tr>" + "</table>";
+    private String getDivider(String title) {
+        String divider =
+                "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:20px;\">"
+                + "<tr><td></td><td>&nbsp;" + "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 15px\">"
+                + title + "</font></b>" + "&nbsp;</td><td></td></tr>" + "</table>";
 
-      return divider;
-      // return "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 20px\">" + title + "</font></b>";
-   }
+        return divider;
+        // return "<b><font color=\"#3764A3\" style=\"font-size: 12px; margin-left: 20px\">" + title + "</font></b>";
+    }
 
 }

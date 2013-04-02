@@ -42,91 +42,75 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class SaveAllFilesCommandHandler implements SaveAllFilesHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler
-{
+                                                   EditorFileClosedHandler {
 
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   public SaveAllFilesCommandHandler()
-   {
-      IDE.getInstance().addControl(new SaveAllFilesControl());
+    public SaveAllFilesCommandHandler() {
+        IDE.getInstance().addControl(new SaveAllFilesControl());
 
-      IDE.addHandler(SaveAllFilesEvent.TYPE, this);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(SaveAllFilesEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+    }
 
-   private List<FileModel> savedFiles = new ArrayList<FileModel>();
+    private List<FileModel> savedFiles = new ArrayList<FileModel>();
 
-   public void onSaveAllFiles(SaveAllFilesEvent event)
-   {
-      savedFiles.clear();
-      saveNextFile();
-   }
+    public void onSaveAllFiles(SaveAllFilesEvent event) {
+        savedFiles.clear();
+        saveNextFile();
+    }
 
-   private void saveNextFile()
-   {
-      final FileModel fileToSave = getUnsavedFile();
-      if (fileToSave == null)
-      {
-         IDE.fireEvent(new AllFilesSavedEvent());
-         return;
-      }
+    private void saveNextFile() {
+        final FileModel fileToSave = getUnsavedFile();
+        if (fileToSave == null) {
+            IDE.fireEvent(new AllFilesSavedEvent());
+            return;
+        }
 
-      try
-      {
-         VirtualFileSystem.getInstance().updateContent(fileToSave, new AsyncRequestCallback<FileModel>()
-         {
-            @Override
-            protected void onSuccess(FileModel result)
-            {
-               savedFiles.add(fileToSave);
-               fileToSave.setContentChanged(false);
-               IDE.fireEvent(new FileSavedEvent(fileToSave, null));
-               saveNextFile();
+        try {
+            VirtualFileSystem.getInstance().updateContent(fileToSave, new AsyncRequestCallback<FileModel>() {
+                @Override
+                protected void onSuccess(FileModel result) {
+                    savedFiles.add(fileToSave);
+                    fileToSave.setContentChanged(false);
+                    IDE.fireEvent(new FileSavedEvent(fileToSave, null));
+                    saveNextFile();
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
+        }
+
+    }
+
+    private FileModel getUnsavedFile() {
+        for (FileModel file : openedFiles.values()) {
+            if (file.isContentChanged() && file.isPersisted()) {
+                return file;
             }
+        }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception, "Service is not deployed.<br>Resource not found."));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e, "Service is not deployed.<br>Resource not found."));
-      }
+        return null;
+    }
 
-   }
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedFiles = event.getOpenedFiles();
+    }
 
-   private FileModel getUnsavedFile()
-   {
-      for (FileModel file : openedFiles.values())
-      {
-         if (file.isContentChanged() && file.isPersisted())
-         {
-            return file;
-         }
-      }
-
-      return null;
-   }
-
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        openedFiles = event.getOpenedFiles();
+    }
 
 }

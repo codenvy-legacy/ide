@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link RunApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 3:49:27 PM anya $
- * 
  */
-public interface RunApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to run Python application.
-    * 
-    * @param event
-    */
-   void onRunApplication(RunApplicationEvent event);
+public interface RunApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to run Python application.
+     *
+     * @param event
+     */
+    void onRunApplication(RunApplicationEvent event);
 }

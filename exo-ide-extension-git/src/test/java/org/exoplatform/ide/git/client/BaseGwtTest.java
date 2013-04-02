@@ -24,32 +24,28 @@ import com.google.gwt.junit.client.GWTTestCase;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 27, 2011 11:42:28 AM anya $
- * 
  */
-public class BaseGwtTest extends GWTTestCase
-{
+public class BaseGwtTest extends GWTTestCase {
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ide.git.GitTest";
-   }
+    /** @see com.google.gwt.junit.client.GWTTestCase#getModuleName() */
+    @Override
+    public String getModuleName() {
+        return "org.exoplatform.ide.git.GitTest";
+    }
 
-   /**
-    * Build {@link JavaScriptObject} from string.
-    * 
-    * @param json string that contains object
-    * @return {@link JavaScriptObject}
-    */
-   protected static native JavaScriptObject build(String json) /*-{
-                                                               try {
-                                                               var object = eval('(' + json + ')');
-                                                               return object;
-                                                               } catch (e) {
-                                                               return null;
-                                                               }
-                                                               }-*/;
+    /**
+     * Build {@link JavaScriptObject} from string.
+     *
+     * @param json
+     *         string that contains object
+     * @return {@link JavaScriptObject}
+     */
+    protected static native JavaScriptObject build(String json) /*-{
+        try {
+            var object = eval('(' + json + ')');
+            return object;
+        } catch (e) {
+            return null;
+        }
+    }-*/;
 }

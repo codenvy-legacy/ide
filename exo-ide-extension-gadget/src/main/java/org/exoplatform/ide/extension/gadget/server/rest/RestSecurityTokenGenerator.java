@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.server.rest;
 
-import org.apache.shindig.auth.BlobCrypterSecurityToken;
 import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenRequest;
 import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenResponse;
 
@@ -30,20 +29,18 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 @Path("/ide/shindig/securitytoken")
-public class RestSecurityTokenGenerator
-{
-  
-   @POST
-   @Path("/createToken")
-   @Produces(MediaType.APPLICATION_JSON)
-   @Consumes(MediaType.APPLICATION_JSON)
-   public TokenResponse createToken(TokenRequest tokenRequest)
-   {
+public class RestSecurityTokenGenerator {
+
+    @POST
+    @Path("/createToken")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public TokenResponse createToken(TokenRequest tokenRequest) {
 
 //       BlobCrypter blobCrypter = getBlobCrypter();
 //       BlobCrypterSecurityToken t = new BlobCrypterSecurityToken(blobCrypter, container, null);
@@ -54,12 +51,12 @@ public class RestSecurityTokenGenerator
 //       t.setViewerId(viewer);
 //       t.setTrustedJson("trusted");
 
-       //TODO : need study more detail hoe to work with token in 2.5.x version
-      // currently allow anonymous access (tokens don't check)
-      TokenResponse response = new TokenResponse();
-      response.setModuleId(tokenRequest.getModuleId());
-      response.setGadgetURL(tokenRequest.getGadgetURL());
-      return new TokenResponse();
-   }
+        //TODO : need study more detail hoe to work with token in 2.5.x version
+        // currently allow anonymous access (tokens don't check)
+        TokenResponse response = new TokenResponse();
+        response.setModuleId(tokenRequest.getModuleId());
+        response.setGadgetURL(tokenRequest.getGadgetURL());
+        return new TokenResponse();
+    }
 
 }

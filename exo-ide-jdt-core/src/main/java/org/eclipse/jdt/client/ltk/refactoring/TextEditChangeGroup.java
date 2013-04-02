@@ -19,34 +19,31 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
  * Note: this class is not intended to be extended by clients.
  * </p>
  *
- * @see TextEditGroup
- *
- * @since 3.0
- *
  * @noextend This class is not intended to be subclassed by clients.
+ * @see TextEditGroup
+ * @since 3.0
  */
-public class TextEditChangeGroup extends TextEditBasedChangeGroup
-{
+public class TextEditChangeGroup extends TextEditBasedChangeGroup {
 
-   /**
-    * Creates new <code>TextEditChangeGroup</code> for the given <code>
-    * TextChange</code> and <code>TextEditGroup</code>.
-    *
-    * @param change the change owning this text edit change group
-    * @param group the underlying text edit group
-    */
-   public TextEditChangeGroup(TextChange change, TextEditGroup group)
-   {
-      super(change, group);
-   }
+    /**
+     * Creates new <code>TextEditChangeGroup</code> for the given <code>
+     * TextChange</code> and <code>TextEditGroup</code>.
+     *
+     * @param change
+     *         the change owning this text edit change group
+     * @param group
+     *         the underlying text edit group
+     */
+    public TextEditChangeGroup(TextChange change, TextEditGroup group) {
+        super(change, group);
+    }
 
-   /**
-    * Returns the text change this group belongs to.
-    *
-    * @return the text change this group belongs to
-    */
-   public TextChange getTextChange()
-   {
-      return (TextChange)getTextEditChange();
-   }
+    /**
+     * Returns the text change this group belongs to.
+     *
+     * @return the text change this group belongs to
+     */
+    public TextChange getTextChange() {
+        return (TextChange)getTextEditChange();
+    }
 }

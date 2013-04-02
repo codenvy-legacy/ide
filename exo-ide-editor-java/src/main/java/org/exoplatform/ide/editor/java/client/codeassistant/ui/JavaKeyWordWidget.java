@@ -18,69 +18,57 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.ui;
 
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 16, 2010 11:33:46 AM evgen $
- * 
  */
-public class JavaKeyWordWidget extends JavaTokenWidgetBase
-{
+public class JavaKeyWordWidget extends JavaTokenWidgetBase {
 
-   private Grid grid;
+    private Grid grid;
 
-   /**
-    * @param token
-    * @param restContext
-    */
-   public JavaKeyWordWidget(Token token)
-   {
-      super(token, "", "");
-      grid = new Grid(1, 2);
-      grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
-      grid.setWidth("100%");
+    /**
+     * @param token
+     * @param restContext
+     */
+    public JavaKeyWordWidget(Token token) {
+        super(token, "", "");
+        grid = new Grid(1, 2);
+        grid.setStyleName(JavaClientBundle.INSTANCE.css().item());
+        grid.setWidth("100%");
 
-      Image i = new Image(JavaClientBundle.INSTANCE.blankImage());
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+        Image i = new Image(JavaClientBundle.INSTANCE.blankImage());
+        i.setHeight("16px");
+        grid.setWidget(0, 0, i);
 
-      Label nameLabel = new Label(token.getName(), false);
-      // nameLabel.setStyleName(GroovyPluginImageBundle.INSTANCE.css().keywordStyle());
-      grid.setWidget(0, 1, nameLabel);
+        Label nameLabel = new Label(token.getName(), false);
+        // nameLabel.setStyleName(GroovyPluginImageBundle.INSTANCE.css().keywordStyle());
+        grid.setWidget(0, 1, nameLabel);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
 
-      initWidget(grid);
+        initWidget(grid);
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenValue()
-    */
-   @Override
-   public String getTokenValue()
-   {
-      return token.getName();
-   }
+    /** @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenValue() */
+    @Override
+    public String getTokenValue() {
+        return token.getName();
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaTokenWidgetBase.module.groovy.codeassistant.ui.GroovyTokenWidgetBase#getTokenDecription()
-    */
-   @Override
-   public Widget getTokenDecription()
-   {
-      return null;
-   }
+    /** @see org.exoplatform.ide.editor.java.client.codeassistant.ui.JavaTokenWidgetBase.module.groovy.codeassistant.ui
+     * .GroovyTokenWidgetBase#getTokenDecription() */
+    @Override
+    public Widget getTokenDecription() {
+        return null;
+    }
 }

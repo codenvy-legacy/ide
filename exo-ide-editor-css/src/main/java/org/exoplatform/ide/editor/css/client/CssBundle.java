@@ -24,27 +24,25 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface CssBundle extends ClientBundle
-{
+public interface CssBundle extends ClientBundle {
 
-   @Source("org/exoplatform/ide/editor/css/client/styles/CSS.css")
-   CssResources css();
+    @Source("org/exoplatform/ide/editor/css/client/styles/CSS.css")
+    CssResources css();
 
-   @Source("org/exoplatform/ide/editor/css/client/images/property-item.png")
-   ImageResource propertyItem();
+    @Source("org/exoplatform/ide/editor/css/client/images/property-item.png")
+    ImageResource propertyItem();
 
-   @Source("org/exoplatform/ide/editor/css/client/images/row-selected.png")
-   ImageResource itemSelected();
+    @Source("org/exoplatform/ide/editor/css/client/images/row-selected.png")
+    ImageResource itemSelected();
 
-   @Source("org/exoplatform/ide/editor/css/client/images/tag.png")
-   ImageResource tag();
+    @Source("org/exoplatform/ide/editor/css/client/images/tag.png")
+    ImageResource tag();
 
-   @Source("org/exoplatform/ide/editor/css/public/images/css/css.png")
-   ImageResource cssImage();
+    @Source("org/exoplatform/ide/editor/css/public/images/css/css.png")
+    ImageResource cssImage();
 
-   @Source("org/exoplatform/ide/editor/css/client/images/css-property.png")
-   ImageResource cssProperty();
+    @Source("org/exoplatform/ide/editor/css/client/images/css-property.png")
+    ImageResource cssProperty();
 
 }

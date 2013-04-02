@@ -25,121 +25,107 @@ import com.codenvy.eclipse.ltk.internal.core.refactoring.history.RefactoringHist
  *
  * @since 3.0
  */
-public class RefactoringCore
-{
+public class RefactoringCore {
 
-   /**
-    * The id of the Refactoring plug-in (value <code>"org.eclipse.ltk.core.refactoring"</code>).
-    *
-    * @since 3.2
-    */
-   public static final String ID_PLUGIN = "org.eclipse.ltk.core.refactoring"; //$NON-NLS-1$
+    /**
+     * The id of the Refactoring plug-in (value <code>"org.eclipse.ltk.core.refactoring"</code>).
+     *
+     * @since 3.2
+     */
+    public static final String ID_PLUGIN = "org.eclipse.ltk.core.refactoring"; //$NON-NLS-1$
 
-   private static IValidationCheckResultQueryFactory fQueryFactory = new DefaultQueryFactory();
+    private static IValidationCheckResultQueryFactory fQueryFactory = new DefaultQueryFactory();
 
-   private static class NullQuery implements IValidationCheckResultQuery
-   {
-      public boolean proceed(RefactoringStatus status)
-      {
-         return true;
-      }
+    private static class NullQuery implements IValidationCheckResultQuery {
+        public boolean proceed(RefactoringStatus status) {
+            return true;
+        }
 
-      public void stopped(RefactoringStatus status)
-      {
-         // do nothing
-      }
-   }
+        public void stopped(RefactoringStatus status) {
+            // do nothing
+        }
+    }
 
-   private static class DefaultQueryFactory implements IValidationCheckResultQueryFactory
-   {
-      public IValidationCheckResultQuery create(IAdaptable context)
-      {
-         return new NullQuery();
-      }
-   }
+    private static class DefaultQueryFactory implements IValidationCheckResultQueryFactory {
+        public IValidationCheckResultQuery create(IAdaptable context) {
+            return new NullQuery();
+        }
+    }
 
-   private RefactoringCore()
-   {
-      // no instance
-   }
+    private RefactoringCore() {
+        // no instance
+    }
 
-   /**
-    * Returns the singleton undo manager for the refactoring undo stack.
-    *
-    * @return the refactoring undo manager.
-    */
-   public static IUndoManager getUndoManager()
-   {
-      return RefactoringCorePlugin.getUndoManager();
-   }
+    /**
+     * Returns the singleton undo manager for the refactoring undo stack.
+     *
+     * @return the refactoring undo manager.
+     */
+    public static IUndoManager getUndoManager() {
+        return RefactoringCorePlugin.getUndoManager();
+    }
 
-   /**
-    * Returns the singleton refactoring history service.
-    *
-    * @return the refactoring history service
-    * @since 3.2
-    */
-   public static IRefactoringHistoryService getHistoryService()
-   {
-      return RefactoringHistoryService.getInstance();
-   }
+    /**
+     * Returns the singleton refactoring history service.
+     *
+     * @return the refactoring history service
+     * @since 3.2
+     */
+    public static IRefactoringHistoryService getHistoryService() {
+        return RefactoringHistoryService.getInstance();
+    }
 
-   /**
-    * Returns the refactoring contribution with the specified unique id.
-    *
-    * @param id the unique id of the contribution
-    * @return the refactoring contribution, or <code>null</code> if in
-    *         contribution is registered with for this id
-    * @since 3.2
-    */
-   public static RefactoringContribution getRefactoringContribution(String id)
-   {
-      return RefactoringContributionManager.getInstance().getRefactoringContribution(id);
-   }
+    /**
+     * Returns the refactoring contribution with the specified unique id.
+     *
+     * @param id
+     *         the unique id of the contribution
+     * @return the refactoring contribution, or <code>null</code> if in
+     *         contribution is registered with for this id
+     * @since 3.2
+     */
+    public static RefactoringContribution getRefactoringContribution(String id) {
+        return RefactoringContributionManager.getInstance().getRefactoringContribution(id);
+    }
 
-   /**
-    * When condition checking is performed for a refactoring then the
-    * condition check is interpreted as failed if the refactoring status
-    * severity return from the condition checking operation is equal
-    * or greater than the value returned by this method.
-    *
-    * @return the condition checking failed severity
-    */
-   public static int getConditionCheckingFailedSeverity()
-   {
-      return RefactoringStatus.WARNING;
-   }
+    /**
+     * When condition checking is performed for a refactoring then the
+     * condition check is interpreted as failed if the refactoring status
+     * severity return from the condition checking operation is equal
+     * or greater than the value returned by this method.
+     *
+     * @return the condition checking failed severity
+     */
+    public static int getConditionCheckingFailedSeverity() {
+        return RefactoringStatus.WARNING;
+    }
 
-   /**
-    * Returns the query factory.
-    *
-    * @return the query factory
-    * @since 3.1
-    */
-   public static IValidationCheckResultQueryFactory getQueryFactory()
-   {
-      return fQueryFactory;
-   }
+    /**
+     * Returns the query factory.
+     *
+     * @return the query factory
+     * @since 3.1
+     */
+    public static IValidationCheckResultQueryFactory getQueryFactory() {
+        return fQueryFactory;
+    }
 
-   /**
-    * An internal method to set the query factory.
-    * <p>
-    * This method is NOT official API. It is a special method for the refactoring UI
-    * plug-in to set a dialog based query factory.
-    * </p>
-    *
-    * @param factory the factory to set or <code>null</code>
-    * @since 3.1
-    */
-   public static void internalSetQueryFactory(IValidationCheckResultQueryFactory factory)
-   {
-      if (factory == null)
-      {
-         fQueryFactory = new DefaultQueryFactory();
-      }
-      else
-      {
-         fQueryFactory = factory;
-      }
-   }
+    /**
+     * An internal method to set the query factory.
+     * <p>
+     * This method is NOT official API. It is a special method for the refactoring UI
+     * plug-in to set a dialog based query factory.
+     * </p>
+     *
+     * @param factory
+     *         the factory to set or <code>null</code>
+     * @since 3.1
+     */
+    public static void internalSetQueryFactory(IValidationCheckResultQueryFactory factory) {
+        if (factory == null) {
+            fQueryFactory = new DefaultQueryFactory();
+        } else {
+            fQueryFactory = factory;
+        }
+    }
 }

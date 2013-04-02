@@ -28,32 +28,23 @@ import javax.servlet.http.HttpSessionListener;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class WatcherSessionCleaner implements HttpSessionListener
-{
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void sessionCreated(HttpSessionEvent httpSessionEvent)
-   {
-   }
+public class WatcherSessionCleaner implements HttpSessionListener {
+    /** {@inheritDoc} */
+    @Override
+    public void sessionCreated(HttpSessionEvent httpSessionEvent) {
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void sessionDestroyed(HttpSessionEvent httpSessionEvent)
-   {
-      ExoContainer container = getContainer();
-      if (container != null)
-      {
-         VfsWatcher vfsWatcher = (VfsWatcher)container.getComponentInstanceOfType(VfsWatcher.class);
-         vfsWatcher.sessionDestroyed(httpSessionEvent.getSession().getId());
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
+        ExoContainer container = getContainer();
+        if (container != null) {
+            VfsWatcher vfsWatcher = (VfsWatcher)container.getComponentInstanceOfType(VfsWatcher.class);
+            vfsWatcher.sessionDestroyed(httpSessionEvent.getSession().getId());
+        }
+    }
 
-   protected ExoContainer getContainer()
-   {
-      return ExoContainerContext.getCurrentContainerIfPresent();
-   }
+    protected ExoContainer getContainer() {
+        return ExoContainerContext.getCurrentContainerIfPresent();
+    }
 }

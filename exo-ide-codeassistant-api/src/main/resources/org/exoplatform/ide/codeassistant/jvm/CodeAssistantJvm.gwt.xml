@@ -20,8 +20,8 @@
 -->
 
 <module>
-       <!-- Inherit the core Web Toolkit stuff.                        -->
-      <inherits name='com.google.gwt.user.User'/>  
-      <source path="shared" />
-      <source path="client" />
+    <!-- Inherit the core Web Toolkit stuff.                        -->
+    <inherits name='com.google.gwt.user.User'/>
+    <source path="shared"/>
+    <source path="client"/>
 </module>

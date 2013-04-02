@@ -14,18 +14,16 @@
 
 package com.google.collide.shared;
 
-/**
- * Abstraction of a line of code that can have tags associated with it.
- */
+/** Abstraction of a line of code that can have tags associated with it. */
 public interface TaggableLine {
 
-  <T> T getTag(String key);
+    <T> T getTag(String key);
 
-  <T> void putTag(String key, T value);
+    <T> void putTag(String key, T value);
 
-  TaggableLine getPreviousLine();
+    TaggableLine getPreviousLine();
 
-  boolean isFirstLine();
+    boolean isFirstLine();
 
-  boolean isLastLine();
+    boolean isLastLine();
 }

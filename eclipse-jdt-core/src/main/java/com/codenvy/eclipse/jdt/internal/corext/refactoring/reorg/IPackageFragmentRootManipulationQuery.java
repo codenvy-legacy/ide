@@ -19,8 +19,7 @@ import com.codenvy.eclipse.jdt.core.IPackageFragmentRoot;
  * determine whether, for example, the package fragment root is to be deleted or
  * not or if the classpath of the referencing projects is to be updated.
  */
-public interface IPackageFragmentRootManipulationQuery
-{
+public interface IPackageFragmentRootManipulationQuery {
 
-   public boolean confirmManipulation(IPackageFragmentRoot root, IJavaProject[] referencingProjects);
+    public boolean confirmManipulation(IPackageFragmentRoot root, IJavaProject[] referencingProjects);
 }

@@ -26,48 +26,41 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 
 /**
  * Control for switching between accounts.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Aug 16, 2011 12:54:05 PM anya $
- *
  */
-public class SwitchAccountControl extends AbstractCloudFoundryControl
-{
+public class SwitchAccountControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.switchAccountControlPrompt();
 
-   /**
-    * 
-    */
-   public SwitchAccountControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.switchAccount(),
-         CloudFoundryClientBundle.INSTANCE.switchAccountDisabled());
-      setEvent(new LoginEvent(null, null));
-   }
+    /**
+     *
+     */
+    public SwitchAccountControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.switchAccount(),
+                  CloudFoundryClientBundle.INSTANCE.switchAccountDisabled());
+        setEvent(new LoginEvent(null, null));
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#refresh()
-    */
-   @Override
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#refresh() */
+    @Override
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 
 }

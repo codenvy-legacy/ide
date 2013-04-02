@@ -40,121 +40,102 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class RenameItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler
-{
+                                                                ViewActivatedHandler {
 
-   private static final String ID = "File/Rename...";
+    private static final String ID = "File/Rename...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.renameTitleControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.renameTitleControl();
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.renamePromptControl();
+    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.renamePromptControl();
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   /**
-    * Current workspace's href.
-    */
-   private VirtualFileSystemInfo vfsInfo = null;
-   
-   private boolean navigationViewSelected = false;
+    /** Current workspace's href. */
+    private VirtualFileSystemInfo vfsInfo = null;
 
-   /**
-    * 
-    */
-   public RenameItemControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      //      setDelimiterBefore(true);
-      setShowInContextMenu(true);
-      setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
-      setEvent(new RenameItemEvent());
-   }
+    private boolean navigationViewSelected = false;
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public RenameItemControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        //      setDelimiterBefore(true);
+        setShowInContextMenu(true);
+        setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
+        setEvent(new RenameItemEvent());
+    }
 
-   /**
-    * Update control's state.
-    */
-   private void updateState()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         setShowInContextMenu(false);
-         return;
-      }
-      setVisible(true);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+    }
 
-      if (!navigationViewSelected)
-      {
-         setEnabled(false);
-         setShowInContextMenu(false);
-         return;
-      }
-         
-      setShowInContextMenu(navigationViewSelected);
-      
-      if (selectedItems.size() != 1 || vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId()))
-      {
-         setEnabled(false);
-         return;
-      }
-      
-      setEnabled(true);
-   }
+    /** Update control's state. */
+    private void updateState() {
+        if (vfsInfo == null) {
+            setVisible(false);
+            setShowInContextMenu(false);
+            return;
+        }
+        setVisible(true);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      navigationViewSelected = event.getView() instanceof NavigatorDisplay || 
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerDisplay;
-      selectedItems = event.getSelectedItems();
+        if (!navigationViewSelected) {
+            setEnabled(false);
+            setShowInContextMenu(false);
+            return;
+        }
 
-      updateState();
-   }
+        setShowInContextMenu(navigationViewSelected);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateState();
-   }
+        if (selectedItems.size() != 1 || vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId())) {
+            setEnabled(false);
+            return;
+        }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      navigationViewSelected = event.getView() instanceof NavigatorDisplay || 
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerDisplay;
-      
-      updateState();
-   }
+        setEnabled(true);
+    }
+
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        navigationViewSelected = event.getView() instanceof NavigatorDisplay ||
+                                 event.getView() instanceof ProjectExplorerDisplay ||
+                                 event.getView() instanceof PackageExplorerDisplay;
+        selectedItems = event.getSelectedItems();
+
+        updateState();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateState();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        navigationViewSelected = event.getView() instanceof NavigatorDisplay ||
+                                 event.getView() instanceof ProjectExplorerDisplay ||
+                                 event.getView() instanceof PackageExplorerDisplay;
+
+        updateState();
+    }
 
 }

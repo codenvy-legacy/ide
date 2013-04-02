@@ -22,17 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link StopInstanceEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: StopInstanceHandler.java Sep 28, 2012 3:48:36 PM azatsarynnyy $
- *
  */
-public interface StopInstanceHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to stop an EC2 insatnce.
-    * 
-    * @param event {@link StopInstanceEvent}
-    */
-   void onStopInstance(StopInstanceEvent event);
+public interface StopInstanceHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to stop an EC2 insatnce.
+     *
+     * @param event
+     *         {@link StopInstanceEvent}
+     */
+    void onStopInstance(StopInstanceEvent event);
 }

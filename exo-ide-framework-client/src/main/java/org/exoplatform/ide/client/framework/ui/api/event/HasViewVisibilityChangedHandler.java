@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface HasViewVisibilityChangedHandler
-{
+public interface HasViewVisibilityChangedHandler {
 
-   HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler);
+    HandlerRegistration addViewVisibilityChangedHandler(ViewVisibilityChangedHandler viewVisibilityChangedHandler);
 
 }

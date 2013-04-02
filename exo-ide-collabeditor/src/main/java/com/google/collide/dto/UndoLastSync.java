@@ -21,12 +21,11 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  * Reset the head of the workspace to point at the root prior to the most recent
  * sync. This operation will only succeed if the workspace is currently in
  * conflict.
- *
  */
 @RoutingType(type = RoutingTypes.UNDOLASTSYNC)
 public interface UndoLastSync extends ClientToServerDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getClientId();
+    String getClientId();
 }

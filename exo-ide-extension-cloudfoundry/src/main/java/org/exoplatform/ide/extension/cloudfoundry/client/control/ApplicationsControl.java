@@ -27,37 +27,30 @@ import org.exoplatform.ide.extension.cloudfoundry.client.apps.ShowApplicationsEv
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
- *
  */
-public class ApplicationsControl extends AbstractCloudFoundryControl
-{
+public class ApplicationsControl extends AbstractCloudFoundryControl {
 
-   /**
-    * 
-    */
-   public ApplicationsControl()
-   {
-      super(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlId());
-      setTitle(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlTitle());
-      setPrompt(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlPrompt());
-      setEvent(new ShowApplicationsEvent());
-      setImages(CloudFoundryClientBundle.INSTANCE.appsList(), CloudFoundryClientBundle.INSTANCE.appsListDisabled());
-   }
+    /**
+     *
+     */
+    public ApplicationsControl() {
+        super(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlId());
+        setTitle(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlTitle());
+        setPrompt(CloudFoundryExtension.LOCALIZATION_CONSTANT.appsControlPrompt());
+        setEvent(new ShowApplicationsEvent());
+        setImages(CloudFoundryClientBundle.INSTANCE.appsList(), CloudFoundryClientBundle.INSTANCE.appsListDisabled());
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
-   
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#refresh()
-    */
-   @Override
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+        setVisible(true);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#refresh() */
+    @Override
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 }

@@ -22,98 +22,82 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface ITypeInfo extends IShortType
-{
+ */
+public interface ITypeInfo extends IShortType {
 
-   /**
-    * @return the methods
-    */
-   List<IMethodInfo> getMethods();
+    /** @return the methods */
+    List<IMethodInfo> getMethods();
 
-   /**
-    * @param methods
-    *           the methods to set
-    */
-   void setMethods(List<IMethodInfo> methods);
+    /**
+     * @param methods
+     *         the methods to set
+     */
+    void setMethods(List<IMethodInfo> methods);
 
-   /**
-    * @return the declaredMethods
-    */
-   List<IMethodInfo> getDeclaredMethods();
+    /** @return the declaredMethods */
+    List<IMethodInfo> getDeclaredMethods();
 
-   /**
-    * @param declaredMethods
-    *           the declaredMethods to set
-    */
-   void setDeclaredMethods(List<IMethodInfo> declaredMethods);
+    /**
+     * @param declaredMethods
+     *         the declaredMethods to set
+     */
+    void setDeclaredMethods(List<IMethodInfo> declaredMethods);
 
-   /**
-    * @return the constructors
-    */
-   List<IRoutineInfo> getConstructors();
+    /** @return the constructors */
+    List<IRoutineInfo> getConstructors();
 
-   /**
-    * @param constructors
-    *           the constructors to set
-    */
-   void setConstructors(List<IRoutineInfo> constructors);
+    /**
+     * @param constructors
+     *         the constructors to set
+     */
+    void setConstructors(List<IRoutineInfo> constructors);
 
-   /**
-    * @return the declaredConstructors
-    */
-   List<IRoutineInfo> getDeclaredConstructors();
+    /** @return the declaredConstructors */
+    List<IRoutineInfo> getDeclaredConstructors();
 
-   /**
-    * @param declaredConstructors
-    *           the declaredConstructors to set
-    */
-   void setDeclaredConstructors(List<IRoutineInfo> declaredConstructors);
+    /**
+     * @param declaredConstructors
+     *         the declaredConstructors to set
+     */
+    void setDeclaredConstructors(List<IRoutineInfo> declaredConstructors);
 
-   /**
-    * @return the fields
-    */
-   List<IFieldInfo> getFields();
+    /** @return the fields */
+    List<IFieldInfo> getFields();
 
-   /**
-    * @param fields
-    *           the fields to set
-    */
-   void setFields(List<IFieldInfo> fields);
+    /**
+     * @param fields
+     *         the fields to set
+     */
+    void setFields(List<IFieldInfo> fields);
 
-   /**
-    * @return the declaredFields
-    */
-   List<IFieldInfo> getDeclaredFields();
+    /** @return the declaredFields */
+    List<IFieldInfo> getDeclaredFields();
 
-   /**
-    * @param declaredFields
-    *           the declaredFields to set
-    */
-   void setDeclaredFields(List<IFieldInfo> declaredFields);
+    /**
+     * @param declaredFields
+     *         the declaredFields to set
+     */
+    void setDeclaredFields(List<IFieldInfo> declaredFields);
 
-   /**
-    * @return the superClass
-    */
-   String getSuperClass();
+    /** @return the superClass */
+    String getSuperClass();
 
-   /**
-    * @param superClass
-    *           the superClass to set
-    */
-   void setSuperClass(String superClass);
+    /**
+     * @param superClass
+     *         the superClass to set
+     */
+    void setSuperClass(String superClass);
 
-   /**
-    * @return the interfaces
-    */
-   List<String> getInterfaces();
+    /** @return the interfaces */
+    List<String> getInterfaces();
 
-   /**
-    * @param interfaces
-    *           the interfaces to set
-    */
-   void setInterfaces(List<String> interfaces);
+    /**
+     * @param interfaces
+     *         the interfaces to set
+     */
+    void setInterfaces(List<String> interfaces);
 
 }

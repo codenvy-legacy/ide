@@ -17,55 +17,45 @@ import com.codenvy.eclipse.resources.WorkspaceResource;
 
 import java.util.Map;
 
-public class ResourceDeltaInfo
-{
-   protected WorkspaceResource workspace;
+public class ResourceDeltaInfo {
+    protected WorkspaceResource workspace;
 
-   protected Map<IPath, MarkerSet> allMarkerDeltas;
+    protected Map<IPath, MarkerSet> allMarkerDeltas;
 
-   protected NodeIDMap nodeIDMap;
+    protected NodeIDMap nodeIDMap;
 
-   protected ResourceComparator comparator;
+    protected ResourceComparator comparator;
 
-   public ResourceDeltaInfo(WorkspaceResource workspace, Map<IPath, MarkerSet> markerDeltas,
-      ResourceComparator comparator)
-   {
-      super();
-      this.workspace = workspace;
-      this.allMarkerDeltas = markerDeltas;
-      this.comparator = comparator;
-   }
+    public ResourceDeltaInfo(WorkspaceResource workspace, Map<IPath, MarkerSet> markerDeltas,
+                             ResourceComparator comparator) {
+        super();
+        this.workspace = workspace;
+        this.allMarkerDeltas = markerDeltas;
+        this.comparator = comparator;
+    }
 
-   public ResourceComparator getComparator()
-   {
-      return comparator;
-   }
+    public ResourceComparator getComparator() {
+        return comparator;
+    }
 
-   /**
-    * Table of all marker deltas, IPath -> MarkerSet
-    */
-   public Map<IPath, MarkerSet> getMarkerDeltas()
-   {
-      return allMarkerDeltas;
-   }
+    /** Table of all marker deltas, IPath -> MarkerSet */
+    public Map<IPath, MarkerSet> getMarkerDeltas() {
+        return allMarkerDeltas;
+    }
 
-   public NodeIDMap getNodeIDMap()
-   {
-      return nodeIDMap;
-   }
+    public NodeIDMap getNodeIDMap() {
+        return nodeIDMap;
+    }
 
-   public WorkspaceResource getWorkspace()
-   {
-      return workspace;
-   }
+    public WorkspaceResource getWorkspace() {
+        return workspace;
+    }
 
-   public void setMarkerDeltas(Map<IPath, MarkerSet> value)
-   {
-      allMarkerDeltas = value;
-   }
+    public void setMarkerDeltas(Map<IPath, MarkerSet> value) {
+        allMarkerDeltas = value;
+    }
 
-   public void setNodeIDMap(NodeIDMap map)
-   {
-      nodeIDMap = map;
-   }
+    public void setNodeIDMap(NodeIDMap map) {
+        nodeIDMap = map;
+    }
 }

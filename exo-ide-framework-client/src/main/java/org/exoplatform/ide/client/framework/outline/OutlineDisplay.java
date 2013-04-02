@@ -23,9 +23,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Feb 23, 2012 4:07:22 PM anya $
- *
  */
-public interface OutlineDisplay extends IsView
-{
+public interface OutlineDisplay extends IsView {
 
 }

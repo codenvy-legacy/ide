@@ -25,38 +25,32 @@ import java.util.Date;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public final class S3Content
-{
-   private final InputStream stream;
-   private final String contentType;
-   private final Date lastModificationDate;
-   private final long length;
+public final class S3Content {
+    private final InputStream stream;
+    private final String      contentType;
+    private final Date        lastModificationDate;
+    private final long        length;
 
-   public S3Content(InputStream stream, String contentType, Date lastModificationDate, long length)
-   {
-      this.stream = stream;
-      this.contentType = contentType;
-      this.lastModificationDate = lastModificationDate;
-      this.length = length;
-   }
+    public S3Content(InputStream stream, String contentType, Date lastModificationDate, long length) {
+        this.stream = stream;
+        this.contentType = contentType;
+        this.lastModificationDate = lastModificationDate;
+        this.length = length;
+    }
 
-   public InputStream getStream()
-   {
-      return stream;
-   }
+    public InputStream getStream() {
+        return stream;
+    }
 
-   public String getContentType()
-   {
-      return contentType;
-   }
+    public String getContentType() {
+        return contentType;
+    }
 
-   public Date getLastModificationDate()
-   {
-      return lastModificationDate;
-   }
+    public Date getLastModificationDate() {
+        return lastModificationDate;
+    }
 
-   public long getLength()
-   {
-      return length;
-   }
+    public long getLength() {
+        return length;
+    }
 }

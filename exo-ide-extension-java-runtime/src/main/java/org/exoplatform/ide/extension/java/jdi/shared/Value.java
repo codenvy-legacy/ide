@@ -24,13 +24,12 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Value
-{
-   List<Variable> getVariables();
+public interface Value {
+    List<Variable> getVariables();
 
-   void setVariables(List<Variable> variables);
+    void setVariables(List<Variable> variables);
 
-   String getValue();
+    String getValue();
 
-   void setValue(String value);
+    void setValue(String value);
 }

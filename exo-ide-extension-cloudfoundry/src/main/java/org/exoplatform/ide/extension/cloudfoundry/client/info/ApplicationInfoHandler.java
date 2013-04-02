@@ -22,14 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ApplicationInfoEvent}.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationInfoHandler.java Jun 30, 2011 4:57:20 PM vereshchaka $
- *
  */
-public interface ApplicationInfoHandler extends EventHandler
-{
-   
-   void onShowApplicationInfo(ApplicationInfoEvent event);
+public interface ApplicationInfoHandler extends EventHandler {
+
+    void onShowApplicationInfo(ApplicationInfoEvent event);
 
 }

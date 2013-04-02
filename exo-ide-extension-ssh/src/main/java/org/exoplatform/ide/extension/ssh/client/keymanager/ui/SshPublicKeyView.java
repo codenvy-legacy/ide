@@ -35,60 +35,47 @@ import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: SshPublicKeyView May 19, 2011 12:40:06 PM evgen $
- * 
  */
-public class SshPublicKeyView extends ViewImpl implements Display
-{
+public class SshPublicKeyView extends ViewImpl implements Display {
 
-   private static final String ID = "ideSshPublicKeyView";
+    private static final String ID = "ideSshPublicKeyView";
 
-   private static final String TITLE = "Public Ssh Key: ";
+    private static final String TITLE = "Public Ssh Key: ";
 
-   private static SshPublicKeyViewUiBinder uiBinder = GWT.create(SshPublicKeyViewUiBinder.class);
+    private static SshPublicKeyViewUiBinder uiBinder = GWT.create(SshPublicKeyViewUiBinder.class);
 
-   interface SshPublicKeyViewUiBinder extends UiBinder<Widget, SshPublicKeyView>
-   {
-   }
+    interface SshPublicKeyViewUiBinder extends UiBinder<Widget, SshPublicKeyView> {
+    }
 
-   @UiField
-   TextArea publicSshKeyField;
+    @UiField
+    TextArea publicSshKeyField;
 
-   @UiField
-   ImageButton closeButton;
+    @UiField
+    ImageButton closeButton;
 
-   public SshPublicKeyView()
-   {
-      super(ID, ViewType.MODAL, TITLE, null, 400, 350, false);
-      add(uiBinder.createAndBindUi(this));
-      UIHelper.setAsReadOnly("exoSshPublicKeyField");
-   }
+    public SshPublicKeyView() {
+        super(ID, ViewType.MODAL, TITLE, null, 400, 350, false);
+        add(uiBinder.createAndBindUi(this));
+        UIHelper.setAsReadOnly("exoSshPublicKeyField");
+    }
 
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getKeyField()
-    */
-   @Override
-   public HasValue<String> getKeyField()
-   {
-      return publicSshKeyField;
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getKeyField() */
+    @Override
+    public HasValue<String> getKeyField() {
+        return publicSshKeyField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#addHostToTitle(java.lang.String)
-    */
-   @Override
-   public void addHostToTitle(String host)
-   {
-      setTitle(TITLE + host);
-   }
+    /** @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#addHostToTitle(java.lang.String) */
+    @Override
+    public void addHostToTitle(String host) {
+        setTitle(TITLE + host);
+    }
 
 }

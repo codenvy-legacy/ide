@@ -22,12 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface VacuumIndexesHandler extends EventHandler
-{
+ */
+public interface VacuumIndexesHandler extends EventHandler {
 
-   void onVacuumIndexes(VacuumIndexesEvent vacuumIndexesEvent);
+    void onVacuumIndexes(VacuumIndexesEvent vacuumIndexesEvent);
 
 }

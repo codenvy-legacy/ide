@@ -20,24 +20,21 @@ package org.exoplatform.ide.vfs.server.exceptions;
 
 /**
  * This exception occurs in case LocalPathResolver in some reason can't resolve the path.
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class GitUrlResolveException extends VirtualFileSystemException
-{
+public class GitUrlResolveException extends VirtualFileSystemException {
 
-   public GitUrlResolveException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public GitUrlResolveException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   public GitUrlResolveException(String message)
-   {
-      super(message);
-   }
+    public GitUrlResolveException(String message) {
+        super(message);
+    }
 
 }

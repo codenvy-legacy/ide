@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link BucketCreatedEvent}.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 14, 2012 3:04:53 PM anya $
- * 
  */
-public interface BucketCreatedHandler extends EventHandler
-{
-   /**
-    * Perform login operations.
-    * 
-    * @param event
-    */
-   void onBucketCreated(BucketCreatedEvent event);
+public interface BucketCreatedHandler extends EventHandler {
+    /**
+     * Perform login operations.
+     *
+     * @param event
+     */
+    void onBucketCreated(BucketCreatedEvent event);
 }

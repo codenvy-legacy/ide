@@ -29,65 +29,57 @@ import java.io.InputStream;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-final class Result
-{
-   /** Stream that contains result ot task, e.g. binary stream of maven artifact. */
-   private final InputStream stream;
+final class Result {
+    /** Stream that contains result ot task, e.g. binary stream of maven artifact. */
+    private final InputStream stream;
 
-   /** File that contains result of task. */
-   private final File file;
+    /** File that contains result of task. */
+    private final File file;
 
-   /** Media type of result. This value is sent to the client. */
-   private final String mediaType;
+    /** Media type of result. This value is sent to the client. */
+    private final String mediaType;
 
-   /** Time when task was done. */
-   private final long time;
-   
+    /** Time when task was done. */
+    private final long time;
 
-   /**
-    * This value may be sent to the client in Content-Disposition header. It may be useful to prevent some clients (e.g.
-    * browsers) to open file but download it.
-    */
-   private final String fileName;
 
-   Result(InputStream stream, String mediaType, String fileName, long time)
-   {
-      this.stream = stream;
-      this.file = null;
-      this.mediaType = mediaType;
-      this.fileName = fileName;
-      this.time = time;
-   }
+    /**
+     * This value may be sent to the client in Content-Disposition header. It may be useful to prevent some clients (e.g.
+     * browsers) to open file but download it.
+     */
+    private final String fileName;
 
-   Result(File file, String mediaType, String fileName, long time)
-   {
-      this.file = file;
-      this.stream = null;
-      this.mediaType = mediaType;
-      this.fileName = fileName;
-      this.time = time;
-   }
-   
-  
+    Result(InputStream stream, String mediaType, String fileName, long time) {
+        this.stream = stream;
+        this.file = null;
+        this.mediaType = mediaType;
+        this.fileName = fileName;
+        this.time = time;
+    }
 
-   String getMediaType()
-   {
-      return mediaType;
-   }
+    Result(File file, String mediaType, String fileName, long time) {
+        this.file = file;
+        this.stream = null;
+        this.mediaType = mediaType;
+        this.fileName = fileName;
+        this.time = time;
+    }
 
-   InputStream getStream() throws IOException
-   {
-      return stream != null ? stream : new FileInputStream(file);
-   }
 
-   String getFileName()
-   {
-      return fileName;
-   }
+    String getMediaType() {
+        return mediaType;
+    }
 
-   long getTime()
-   {
-      return time;
-   }
-   
+    InputStream getStream() throws IOException {
+        return stream != null ? stream : new FileInputStream(file);
+    }
+
+    String getFileName() {
+        return fileName;
+    }
+
+    long getTime() {
+        return time;
+    }
+
 }

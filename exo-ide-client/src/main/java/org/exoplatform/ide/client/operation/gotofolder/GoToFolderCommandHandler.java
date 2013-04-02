@@ -23,18 +23,16 @@ import org.exoplatform.ide.client.IDE;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 // TODO IDE-1234
-public class GoToFolderCommandHandler
-{
+public class GoToFolderCommandHandler {
 
-   public GoToFolderCommandHandler()
-   {
-      IDE.getInstance().addControl(new GoToFolderControl());
-   }
+    public GoToFolderCommandHandler() {
+        IDE.getInstance().addControl(new GoToFolderControl());
+    }
 
 }

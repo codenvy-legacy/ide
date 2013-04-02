@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  12:19:21 PM Mar 28, 2012 evgen $
- *
  */
-public interface DebuggerDisconnectedHandler extends EventHandler
-{
-   
-   void onDebuggerDisconnected(DebuggerDisconnectedEvent event);
-   
+public interface DebuggerDisconnectedHandler extends EventHandler {
+
+    void onDebuggerDisconnected(DebuggerDisconnectedEvent event);
+
 }

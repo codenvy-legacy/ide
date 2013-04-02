@@ -18,542 +18,439 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant.ui;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is UI component that represent autocompletion form. This form works with any bean, but also required implementation
  * of {@link TokenWidgetFactory} to build {@link TokenWidget}
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 4:18:55 PM evgen $
- * 
  */
-public class AutocompletionForm extends Composite implements ChangeHandler, ResizeHandler
-{
-   private static final String PANEL_ID = "exo-ide-autocomplete-panel";
+public class AutocompletionForm extends Composite implements ChangeHandler, ResizeHandler {
+    private static final String PANEL_ID = "exo-ide-autocomplete-panel";
 
-   private static final String INPUT_ID = "exo-ide-autocomplete-edit";
+    private static final String INPUT_ID = "exo-ide-autocomplete-edit";
 
-   private static final String DOC_ID = "exo-ide-autocomplete-doc-panel";
+    private static final String DOC_ID = "exo-ide-autocomplete-doc-panel";
 
-   private AbsolutePanel absolutePanel;
+    private AbsolutePanel absolutePanel;
 
-   private AbsolutePanel lockLayer;
+    private AbsolutePanel lockLayer;
 
-   private Widget descriptionPanel;
+    private Widget descriptionPanel;
 
-   private LockLayer blockMouseEventsPanel;
+    private LockLayer blockMouseEventsPanel;
 
-   private AutoCompleteScrollPanel scrollPanel;
+    private AutoCompleteScrollPanel scrollPanel;
 
-   private FlowPanel flowPanel;
+    private FlowPanel flowPanel;
 
-   private MousHandler mousHandler;
+    private MousHandler mousHandler;
 
-   private TextBox textBox;
+    private TextBox textBox;
 
-   private TokenWidget selectedWidget;
+    private TokenWidget selectedWidget;
 
-   private AutoCompleteFormKeyboardManager keyboardManager;
+    private AutoCompleteFormKeyboardManager keyboardManager;
 
-   private HandlerRegistration keyboardManagerRegistration;
+    private HandlerRegistration keyboardManagerRegistration;
 
-   private VerticalPanel panel;
+    private VerticalPanel panel;
 
-   private TokenSelectedHandler handler;
+    private TokenSelectedHandler handler;
 
-   private List<TokenWidget> widgets;
+    private List<TokenWidget> widgets;
 
-   private List<TokenWidget> allWidgets;
+    private List<TokenWidget> allWidgets;
 
-   private HandlerRegistration resizeHandler;
+    private HandlerRegistration resizeHandler;
 
-   private boolean isTextBoxHasFocus = true;
+    private boolean isTextBoxHasFocus = true;
 
-   public AutocompletionForm(int left, int top, String prefix, List<Token> items, TokenWidgetFactory widgetFactory,
-      TokenSelectedHandler handler)
-   {
-      this.handler = handler;
+    public AutocompletionForm(int left, int top, String prefix, List<Token> items, TokenWidgetFactory widgetFactory,
+                              TokenSelectedHandler handler) {
+        this.handler = handler;
 
-      resizeHandler = Window.addResizeHandler(this);
+        resizeHandler = Window.addResizeHandler(this);
 
-      absolutePanel = new AbsolutePanel();
-      initWidget(absolutePanel);
+        absolutePanel = new AbsolutePanel();
+        initWidget(absolutePanel);
 
-      lockLayer = new AbsolutePanel();
-      RootPanel.get().add(lockLayer, 0, 0);
+        lockLayer = new AbsolutePanel();
+        RootPanel.get().add(lockLayer, 0, 0);
 
-      lockLayer.setWidth("" + Window.getClientWidth() + "px");
-      lockLayer.setHeight("" + Window.getClientHeight() + "px");
-      DOM.setElementAttribute(lockLayer.getElement(), "id", "menu-lock-layer-id");
-      DOM.setStyleAttribute(lockLayer.getElement(), "zIndex", "" + (Integer.MAX_VALUE));
+        lockLayer.setWidth("" + Window.getClientWidth() + "px");
+        lockLayer.setHeight("" + Window.getClientHeight() + "px");
+        DOM.setElementAttribute(lockLayer.getElement(), "id", "menu-lock-layer-id");
+        DOM.setStyleAttribute(lockLayer.getElement(), "zIndex", "" + (Integer.MAX_VALUE));
 
-      blockMouseEventsPanel = new LockLayer();
-      // blockMouseEventsPanel.setStyleName("exo-lockLayer");
-      blockMouseEventsPanel.setWidth("" + Window.getClientWidth() + "px");
-      blockMouseEventsPanel.setHeight("" + Window.getClientHeight() + "px");
-      lockLayer.add(blockMouseEventsPanel, 0, 0);
+        blockMouseEventsPanel = new LockLayer();
+        // blockMouseEventsPanel.setStyleName("exo-lockLayer");
+        blockMouseEventsPanel.setWidth("" + Window.getClientWidth() + "px");
+        blockMouseEventsPanel.setHeight("" + Window.getClientHeight() + "px");
+        lockLayer.add(blockMouseEventsPanel, 0, 0);
 
-      textBox = new TextBox();
-      textBox.setWidth("100%");
-      textBox.setText(prefix);
-      textBox.setStyleName(CodeAssistantClientBundle.INSTANCE.css().edit());
-      textBox.getElement().setId(INPUT_ID);
+        textBox = new TextBox();
+        textBox.setWidth("100%");
+        textBox.setText(prefix);
+        textBox.setStyleName(CodeAssistantClientBundle.INSTANCE.css().edit());
+        textBox.getElement().setId(INPUT_ID);
 
-      textBox.addFocusHandler(new FocusHandler()
-      {
+        textBox.addFocusHandler(new FocusHandler() {
 
-         public void onFocus(FocusEvent event)
-         {
-            isTextBoxHasFocus = true;
-         }
-      });
+            public void onFocus(FocusEvent event) {
+                isTextBoxHasFocus = true;
+            }
+        });
 
-      textBox.addBlurHandler(new BlurHandler()
-      {
+        textBox.addBlurHandler(new BlurHandler() {
 
-         public void onBlur(BlurEvent event)
-         {
-            isTextBoxHasFocus = false;
-         }
-      });
+            public void onBlur(BlurEvent event) {
+                isTextBoxHasFocus = false;
+            }
+        });
 
-      flowPanel = new FlowPanel();
+        flowPanel = new FlowPanel();
 
-      scrollPanel = new AutoCompleteScrollPanel();
-      scrollPanel.setAlwaysShowScrollBars(true);
-      scrollPanel.add(flowPanel);
+        scrollPanel = new AutoCompleteScrollPanel();
+        scrollPanel.setAlwaysShowScrollBars(true);
+        scrollPanel.add(flowPanel);
 
-      mousHandler = new MousHandler();
-      flowPanel.setWidth("100%");
+        mousHandler = new MousHandler();
+        flowPanel.setWidth("100%");
 
-      // scrollPanel.addMouseOutHandler(mousHandler);
+        // scrollPanel.addMouseOutHandler(mousHandler);
 
-      scrollPanel.setHeight("195px");
-      scrollPanel.setWidth("300px");
+        scrollPanel.setHeight("195px");
+        scrollPanel.setWidth("300px");
 
-      panel = new VerticalPanel();
-      panel.getElement().setId(PANEL_ID);
+        panel = new VerticalPanel();
+        panel.getElement().setId(PANEL_ID);
 
-      int clientHeight = Window.getClientHeight();
-      if (top + 220 < clientHeight)
-      {
-         panel.add(textBox);
-         panel.add(scrollPanel);
-      }
-      else
-      {
-         panel.add(scrollPanel);
-         panel.add(textBox);
-         top = top - 200;
-      }
+        int clientHeight = Window.getClientHeight();
+        if (top + 220 < clientHeight) {
+            panel.add(textBox);
+            panel.add(scrollPanel);
+        } else {
+            panel.add(scrollPanel);
+            panel.add(textBox);
+            top = top - 200;
+        }
 
-      panel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().panelStyle());
+        panel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().panelStyle());
 
-      lockLayer.add(panel, left, top);
+        lockLayer.add(panel, left, top);
 
-      keyboardManager = new AutoCompleteFormKeyboardManager();
+        keyboardManager = new AutoCompleteFormKeyboardManager();
 
-      keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
+        keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
 
-      widgets = new ArrayList<TokenWidget>();
-      allWidgets = new ArrayList<TokenWidget>();
-      for (Token t : items)
-      {
-         TokenWidget w = widgetFactory.buildTokenWidget(t);
-         w.addClickHandler(mousHandler);
-         // w.addMouseOverHandler(mousHandler);
-         w.addDoubleClickHandler(mousHandler);
-         allWidgets.add(w);
-      }
-      flowPanel.add(new Label("No Proposals"));
+        widgets = new ArrayList<TokenWidget>();
+        allWidgets = new ArrayList<TokenWidget>();
+        for (Token t : items) {
+            TokenWidget w = widgetFactory.buildTokenWidget(t);
+            w.addClickHandler(mousHandler);
+            // w.addMouseOverHandler(mousHandler);
+            w.addDoubleClickHandler(mousHandler);
+            allWidgets.add(w);
+        }
+        flowPanel.add(new Label("No Proposals"));
 
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
-         @Override
-         public void execute()
-         {
-            textBox.setFocus(true);
-            textBox.setCursorPos(textBox.getText().length());
-            filterListToken();
-         }
-      });
+            @Override
+            public void execute() {
+                textBox.setFocus(true);
+                textBox.setCursorPos(textBox.getText().length());
+                filterListToken();
+            }
+        });
 
-   }
+    }
 
-   private void filterListToken()
-   {
-      if (allWidgets.isEmpty())
-      {
-         return;
-      }
-      String editText = textBox.getText();
-      editText = editText.substring(0, textBox.getCursorPos());
+    private void filterListToken() {
+        if (allWidgets.isEmpty()) {
+            return;
+        }
+        String editText = textBox.getText();
+        editText = editText.substring(0, textBox.getCursorPos());
 
-      widgets.clear();
-      flowPanel.clear();
-      for (TokenWidget w : allWidgets)
-      {
-         if (w.getTokenName().toLowerCase().startsWith(editText.toLowerCase()))
-         {
-            widgets.add(w);
-            flowPanel.add(w);
-         }
-      }
-      if (!widgets.isEmpty())
-      {
-         selectWidget(0);
-      }
-      else
-      {
-         selectedWidget = null;
-         if (descriptionPanel != null)
-         {
+        widgets.clear();
+        flowPanel.clear();
+        for (TokenWidget w : allWidgets) {
+            if (w.getTokenName().toLowerCase().startsWith(editText.toLowerCase())) {
+                widgets.add(w);
+                flowPanel.add(w);
+            }
+        }
+        if (!widgets.isEmpty()) {
+            selectWidget(0);
+        } else {
+            selectedWidget = null;
+            if (descriptionPanel != null) {
+                descriptionPanel.removeFromParent();
+                descriptionPanel = null;
+            }
+        }
+    }
+
+    /** @see com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt.event.dom.client.ChangeEvent) */
+    public void onChange(ChangeEvent event) {
+        if (widgets.size() > 0) {
+            textBox.setValue(selectedWidget.getTokenName());
+        }
+    }
+
+    /**
+     *
+     */
+    public void listBoxDown() {
+        if (selectedWidget == null)
+            return;
+        int i = widgets.indexOf(selectedWidget);
+        if (widgets.size() - 1 > i) {
+            selectWidget(i + 1);
+        } else {
+            selectWidget(0);
+        }
+    }
+
+    /**
+     *
+     */
+    public void listBoxUP() {
+        if (selectedWidget == null)
+            return;
+
+        int i = widgets.indexOf(selectedWidget);
+        if (0 < i) {
+            selectWidget(i - 1);
+        } else {
+            selectWidget(widgets.size() - 1);
+        }
+    }
+
+    private native void scroll(Element scroll, int pos)/*-{
+        scroll.scrollTop = scroll.scrollTop + pos;
+    }-*/;
+
+    private void selectWidget(int i) {
+
+        Element scroll = scrollPanel.getElement();
+        Element item = widgets.get(i).getElement();
+        if (i == 0) {
+            scroll(scroll, -scroll.getScrollTop());
+        } else if (item.getAbsoluteTop() < scroll.getAbsoluteTop()) {
+            scroll(scroll, -item.getOffsetHeight());
+        } else if (item.getAbsoluteBottom() + 15 > scroll.getAbsoluteBottom()) {
+            scroll(scroll, item.getAbsoluteBottom() - scroll.getAbsoluteBottom() + 15);
+        }
+
+        selectToken(widgets.get(i));
+    }
+
+    /** @param widget */
+    public void selectToken(TokenWidget widget) {
+        if (widget.equals(selectedWidget)) {
+            return;
+        }
+
+        if (selectedWidget != null) {
+            selectedWidget.setDefaultStyle();
+        }
+
+        selectedWidget = widget;
+
+        selectedWidget.setSelectedStyle();
+
+        timer.cancel();
+        if (descriptionPanel != null) {
             descriptionPanel.removeFromParent();
             descriptionPanel = null;
-         }
-      }
-   }
+        }
+        if (selectedWidget != null && selectedWidget.getTokenDecription() != null) {
+            timer.schedule(1000);
+        }
 
-   /**
-    * @see com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt.event.dom.client.ChangeEvent)
-    */
-   public void onChange(ChangeEvent event)
-   {
-      if (widgets.size() > 0)
-      {
-         textBox.setValue(selectedWidget.getTokenName());
-      }
-   }
+    }
 
-   /**
-    * 
-    */
-   public void listBoxDown()
-   {
-      if (selectedWidget == null)
-         return;
-      int i = widgets.indexOf(selectedWidget);
-      if (widgets.size() - 1 > i)
-      {
-         selectWidget(i + 1);
-      }
-      else
-      {
-         selectWidget(0);
-      }
-   }
+    private Timer timer = new Timer() {
 
-   /**
-    * 
-    */
-   public void listBoxUP()
-   {
-      if (selectedWidget == null)
-         return;
+        @Override
+        public void run() {
+            if (descriptionPanel != null) {
+                descriptionPanel.removeFromParent();
+            }
+            if (selectedWidget != null) {
+                descriptionPanel = selectedWidget.getTokenDecription();
+                if (descriptionPanel == null) {
+                    return;
+                }
 
-      int i = widgets.indexOf(selectedWidget);
-      if (0 < i)
-      {
-         selectWidget(i - 1);
-      }
-      else
-      {
-         selectWidget(widgets.size() - 1);
-      }
-   }
+                int width = 300;
+                descriptionPanel.getElement().setId(DOC_ID);
+                descriptionPanel.setWidth(width + "px");
+                descriptionPanel.setHeight((panel.getOffsetHeight() - 2) + "px");
 
-   private native void scroll(Element scroll, int pos)/*-{
-                                                      scroll.scrollTop = scroll.scrollTop + pos;
-                                                      }-*/;
+                descriptionPanel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().description());
+                int clientWidth = Window.getClientWidth();
 
-   private void selectWidget(int i)
-   {
+                if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
+                    lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
+                else
+                    lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
+                                  panel.getAbsoluteTop());
+            }
+        }
+    };
 
-      Element scroll = scrollPanel.getElement();
-      Element item = widgets.get(i).getElement();
-      if (i == 0)
-      {
-         scroll(scroll, -scroll.getScrollTop());
-      }
-      else if (item.getAbsoluteTop() < scroll.getAbsoluteTop())
-      {
-         scroll(scroll, -item.getOffsetHeight());
-      }
-      else if (item.getAbsoluteBottom() + 15 > scroll.getAbsoluteBottom())
-      {
-         scroll(scroll, item.getAbsoluteBottom() - scroll.getAbsoluteBottom() + 15);
-      }
+    /**
+     *
+     */
+    private void cancelAutocomplete() {
+        timer.cancel();
+        removeHandlers();
+        handler.onAutoCompleteCanceled();
+        lockLayer.removeFromParent();
+    }
 
-      selectToken(widgets.get(i));
-   }
+    /**
+     *
+     */
+    public void tokenSelected() {
+        timer.cancel();
+        removeHandlers();
+        if (selectedWidget == null) {
+            handler.onStringValueEntered(textBox.getText());
+        } else {
+            handler.onTokenSelected(selectedWidget);
+        }
+        lockLayer.removeFromParent();
+    }
 
-   /**
-    * @param widget
-    */
-   public void selectToken(TokenWidget widget)
-   {
-      if (widget.equals(selectedWidget))
-      {
-         return;
-      }
+    /**
+     *
+     */
+    private void removeHandlers() {
 
-      if (selectedWidget != null)
-      {
-         selectedWidget.setDefaultStyle();
-      }
+        if (keyboardManagerRegistration != null) {
+            keyboardManagerRegistration.removeHandler();
+            keyboardManagerRegistration = null;
+        }
+        resizeHandler.removeHandler();
+    }
 
-      selectedWidget = widget;
+    protected class AutoCompleteFormKeyboardManager implements Event.NativePreviewHandler {
 
-      selectedWidget.setSelectedStyle();
+        /** @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event
+         * .NativePreviewEvent) */
+        public void onPreviewNativeEvent(NativePreviewEvent event) {
+            NativeEvent nativeEvent = event.getNativeEvent();
 
-      timer.cancel();
-      if (descriptionPanel != null)
-      {
-         descriptionPanel.removeFromParent();
-         descriptionPanel = null;
-      }
-      if (selectedWidget != null && selectedWidget.getTokenDecription() != null)
-      {
-         timer.schedule(1000);
-      }
-
-   }
-
-   private Timer timer = new Timer()
-   {
-
-      @Override
-      public void run()
-      {
-         if (descriptionPanel != null)
-         {
-            descriptionPanel.removeFromParent();
-         }
-         if (selectedWidget != null)
-         {
-            descriptionPanel = selectedWidget.getTokenDecription();
-            if (descriptionPanel == null)
-            {
-               return;
+            int type = event.getTypeInt();
+            int typeEvent = Event.ONKEYDOWN;
+            if (BrowserResolver.CURRENT_BROWSER.equals(Browser.FIREFOX)) {
+                typeEvent = Event.ONKEYPRESS;
             }
 
-            int width = 300;
-            descriptionPanel.getElement().setId(DOC_ID);
-            descriptionPanel.setWidth(width + "px");
-            descriptionPanel.setHeight((panel.getOffsetHeight() - 2) + "px");
+            if (type == typeEvent) {
+                switch (nativeEvent.getKeyCode()) {
+                    case KeyCodes.KEY_DOWN:
+                        event.cancel();
+                        listBoxDown();
+                        break;
 
-            descriptionPanel.setStyleName(CodeAssistantClientBundle.INSTANCE.css().description());
-            int clientWidth = Window.getClientWidth();
+                    case KeyCodes.KEY_UP:
+                        event.cancel();
+                        listBoxUP();
+                        break;
 
-            if (clientWidth < panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3 + width)
-               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() - width - 4, panel.getAbsoluteTop());
-            else
-               lockLayer.add(descriptionPanel, panel.getAbsoluteLeft() + panel.getOffsetWidth() + 3,
-                  panel.getAbsoluteTop());
-         }
-      }
-   };
+                    case KeyCodes.KEY_ENTER:
+                        event.cancel();
+                        tokenSelected();
+                        break;
 
-   /**
-    * 
-    */
-   private void cancelAutocomplete()
-   {
-      timer.cancel();
-      removeHandlers();
-      handler.onAutoCompleteCanceled();
-      lockLayer.removeFromParent();
-   }
+                    case KeyCodes.KEY_ESCAPE:
+                        cancelAutocomplete();
+                        break;
 
-   /**
-    * 
-    */
-   public void tokenSelected()
-   {
-      timer.cancel();
-      removeHandlers();
-      if (selectedWidget == null)
-      {
-         handler.onStringValueEntered(textBox.getText());
-      }
-      else
-      {
-         handler.onTokenSelected(selectedWidget);
-      }
-      lockLayer.removeFromParent();
-   }
+                    case KeyCodes.KEY_LEFT:
+                    case KeyCodes.KEY_RIGHT:
+                        if (!isTextBoxHasFocus)
+                            break;
 
-   /**
-    * 
-    */
-   private void removeHandlers()
-   {
+                    default:
+                        new Timer() {
 
-      if (keyboardManagerRegistration != null)
-      {
-         keyboardManagerRegistration.removeHandler();
-         keyboardManagerRegistration = null;
-      }
-      resizeHandler.removeHandler();
-   }
-
-   protected class AutoCompleteFormKeyboardManager implements Event.NativePreviewHandler
-   {
-
-      /**
-       * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
-       */
-      public void onPreviewNativeEvent(NativePreviewEvent event)
-      {
-         NativeEvent nativeEvent = event.getNativeEvent();
-
-         int type = event.getTypeInt();
-         int typeEvent = Event.ONKEYDOWN;
-         if (BrowserResolver.CURRENT_BROWSER.equals(Browser.FIREFOX))
-         {
-            typeEvent = Event.ONKEYPRESS;
-         }
-
-         if (type == typeEvent)
-         {
-            switch (nativeEvent.getKeyCode())
-            {
-               case KeyCodes.KEY_DOWN :
-                  event.cancel();
-                  listBoxDown();
-                  break;
-
-               case KeyCodes.KEY_UP :
-                  event.cancel();
-                  listBoxUP();
-                  break;
-
-               case KeyCodes.KEY_ENTER :
-                  event.cancel();
-                  tokenSelected();
-                  break;
-
-               case KeyCodes.KEY_ESCAPE :
-                  cancelAutocomplete();
-                  break;
-
-               case KeyCodes.KEY_LEFT :
-               case KeyCodes.KEY_RIGHT :
-                  if (!isTextBoxHasFocus)
-                     break;
-
-               default :
-                  new Timer()
-                  {
-
-                     @Override
-                     public void run()
-                     {
-                        filterListToken();
-                     }
-                  }.schedule(10);
-                  break;
+                            @Override
+                            public void run() {
+                                filterListToken();
+                            }
+                        }.schedule(10);
+                        break;
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   protected class MousHandler implements ClickHandler, DoubleClickHandler
-   {
+    protected class MousHandler implements ClickHandler, DoubleClickHandler {
 
-      /**
-       * @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent)
-       */
-      public void onClick(ClickEvent event)
-      {
-         TokenWidget t = (TokenWidget)event.getSource();
-         selectToken(t);
-      }
+        /** @see com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event.dom.client.ClickEvent) */
+        public void onClick(ClickEvent event) {
+            TokenWidget t = (TokenWidget)event.getSource();
+            selectToken(t);
+        }
 
-      /**
-       * @see com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.google.gwt.event.dom.client.DoubleClickEvent)
-       */
-      public void onDoubleClick(DoubleClickEvent event)
-      {
-         tokenSelected();
-      }
+        /** @see com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.google.gwt.event.dom.client.DoubleClickEvent) */
+        public void onDoubleClick(DoubleClickEvent event) {
+            tokenSelected();
+        }
 
-   }
+    }
 
-   /**
-    * Lock Layer uses for locking of screen. Uses for hiding popups.
-    */
-   private class LockLayer extends AbsolutePanel
-   {
+    /** Lock Layer uses for locking of screen. Uses for hiding popups. */
+    private class LockLayer extends AbsolutePanel {
 
-      public LockLayer()
-      {
-         sinkEvents(Event.ONMOUSEDOWN);
-      }
+        public LockLayer() {
+            sinkEvents(Event.ONMOUSEDOWN);
+        }
 
-      @Override
-      public void onBrowserEvent(Event event)
-      {
-         switch (DOM.eventGetType(event))
-         {
-            case Event.ONMOUSEDOWN :
-               cancelAutocomplete();
-               break;
+        @Override
+        public void onBrowserEvent(Event event) {
+            switch (DOM.eventGetType(event)) {
+                case Event.ONMOUSEDOWN:
+                    cancelAutocomplete();
+                    break;
 
-         }
-      }
+            }
+        }
 
-   }
+    }
 
-   /**
-    * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)
-    */
-   @Override
-   public void onResize(ResizeEvent event)
-   {
-      cancelAutocomplete();
-   }
+    /** @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent) */
+    @Override
+    public void onResize(ResizeEvent event) {
+        cancelAutocomplete();
+    }
 
 }

@@ -20,17 +20,13 @@ package org.exoplatform.gwtframework.ui.client.api;
 
 /**
  * Interface for callbacks, which return {@link Boolean} value.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Feb 14, 2011 11:17:13 AM anya $
- *
  */
-public interface BooleanCallback
-{
-   
-   /**
-    * @param value
-    */
-   void execute(Boolean value);
-   
+public interface BooleanCallback {
+
+    /** @param value */
+    void execute(Boolean value);
+
 }

@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to fetch data from remote repository. Implement {@link FetchHandler} to process event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 11:45:47 AM anya $
- * 
  */
-public class FetchEvent extends GwtEvent<FetchHandler>
-{
+public class FetchEvent extends GwtEvent<FetchHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<FetchHandler> TYPE = new GwtEvent.Type<FetchHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<FetchHandler> TYPE = new GwtEvent.Type<FetchHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FetchHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<FetchHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(FetchHandler handler)
-   {
-      handler.onFetch(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(FetchHandler handler) {
+        handler.onFetch(this);
+    }
 }

@@ -13,25 +13,24 @@ package com.codenvy.eclipse.jdt.core.util;
 /**
  * Description of a runtime invisible parameter annotations attribute as described in the JVM specifications
  * (added in J2SE 1.5).
- *
+ * <p/>
  * This interface may be implemented by clients.
  *
  * @since 3.0
  */
-public interface IRuntimeInvisibleParameterAnnotationsAttribute extends IClassFileAttribute
-{
+public interface IRuntimeInvisibleParameterAnnotationsAttribute extends IClassFileAttribute {
 
-   /**
-    * Answer back the number of parameters as described in the JVM specifications.
-    *
-    * @return the number of parameters
-    */
-   int getParametersNumber();
+    /**
+     * Answer back the number of parameters as described in the JVM specifications.
+     *
+     * @return the number of parameters
+     */
+    int getParametersNumber();
 
-   /**
-    * Answer back the parameter annotations. Answers an empty collection if none.
-    *
-    * @return the parameter annotations. Answers an empty collection if none.
-    */
-   IParameterAnnotation[] getParameterAnnotations();
+    /**
+     * Answer back the parameter annotations. Answers an empty collection if none.
+     *
+     * @return the parameter annotations. Answers an empty collection if none.
+     */
+    IParameterAnnotation[] getParameterAnnotations();
 }

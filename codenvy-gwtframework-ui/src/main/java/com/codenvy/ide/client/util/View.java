@@ -20,26 +20,26 @@ package com.codenvy.ide.client.util;
 /**
  * Base View interface.
  *
- * @param <L> listener interface for this view.
+ * @param <L>
+ *         listener interface for this view.
  */
-public interface View<L>
-{
+public interface View<L> {
 
-   interface Factory<V extends View<?>> extends com.codenvy.ide.client.util.Factory<V>
-   {
-   }
+    interface Factory<V extends View<?>> extends com.codenvy.ide.client.util.Factory<V> {
+    }
 
-   /**
-    * Initializes this view. The view is considered to be used until
-    * {@link #reset()}.
-    *
-    * @param listener listener for events broadcast by this view
-    */
-   void init(L listener);
+    /**
+     * Initializes this view. The view is considered to be used until
+     * {@link #reset()}.
+     *
+     * @param listener
+     *         listener for events broadcast by this view
+     */
+    void init(L listener);
 
-   /**
-    * Releases this view from being used. It is up to each implementation type to
-    * define if this view is reusable after this method is called.
-    */
-   void reset();
+    /**
+     * Releases this view from being used. It is up to each implementation type to
+     * define if this view is reusable after this method is called.
+     */
+    void reset();
 }

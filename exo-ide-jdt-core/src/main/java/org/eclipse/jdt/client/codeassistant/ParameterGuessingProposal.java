@@ -16,11 +16,7 @@ import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
-import org.exoplatform.ide.editor.shared.text.BadPositionCategoryException;
-import org.exoplatform.ide.editor.shared.text.IDocument;
-import org.exoplatform.ide.editor.shared.text.IPositionUpdater;
-import org.exoplatform.ide.editor.shared.text.IRegion;
-import org.exoplatform.ide.editor.shared.text.Position;
+import org.exoplatform.ide.editor.shared.text.*;
 
 /**
  * This is a which includes templates that represent the best guess completion for each parameter of a method.

@@ -28,53 +28,44 @@ import org.exoplatform.ide.vfs.shared.Property;
 import java.util.List;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-public class PropertiesListGrid extends ListGrid<Property>
-{
+public class PropertiesListGrid extends ListGrid<Property> {
 
-   public PropertiesListGrid()
-   {
+    public PropertiesListGrid() {
 
-      Column<Property, String> nameColumn = new Column<Property, String>(new TextCell())
-      {
-         @Override
-         public String getValue(Property object)
-         {
-            return PropertyUtil.getHumanReadableName(object.getName());
-         }
-      };
-
-      Column<Property, String> valueColumn = new Column<Property, String>(new TextCell())
-      {
-         @Override
-         public String getValue(Property object)
-         {
-            String value = "";
-            List values = object.getValue();
-            for (Object v : values)
-            {
-               if (!value.isEmpty())
-               {
-                  value += "<br>";
-               }
-
-               value += v;
+        Column<Property, String> nameColumn = new Column<Property, String>(new TextCell()) {
+            @Override
+            public String getValue(Property object) {
+                return PropertyUtil.getHumanReadableName(object.getName());
             }
+        };
 
-            return value;
-         }
-      };
+        Column<Property, String> valueColumn = new Column<Property, String>(new TextCell()) {
+            @Override
+            public String getValue(Property object) {
+                String value = "";
+                List values = object.getValue();
+                for (Object v : values) {
+                    if (!value.isEmpty()) {
+                        value += "<br>";
+                    }
 
-      nameColumn.setCellStyleNames("default-cursor");
-      valueColumn.setCellStyleNames("default-cursor");
+                    value += v;
+                }
 
-      getCellTable().addColumn(nameColumn, "Name");
-      getCellTable().addColumn(valueColumn, "Value");
-   }
+                return value;
+            }
+        };
+
+        nameColumn.setCellStyleNames("default-cursor");
+        valueColumn.setCellStyleNames("default-cursor");
+
+        getCellTable().addColumn(nameColumn, "Name");
+        getCellTable().addColumn(valueColumn, "Value");
+    }
 
 }

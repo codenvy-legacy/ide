@@ -22,77 +22,57 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to update backend(s).
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 29, 2012 5:22:37 PM anya $
- * 
  */
-public class UpdateBackendsEvent extends GwtEvent<UpdateBackendsHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<UpdateBackendsHandler> TYPE = new GwtEvent.Type<UpdateBackendsHandler>();
+public class UpdateBackendsEvent extends GwtEvent<UpdateBackendsHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<UpdateBackendsHandler> TYPE = new GwtEvent.Type<UpdateBackendsHandler>();
 
-   /**
-    * Update all backends.
-    */
-   private boolean all;
+    /** Update all backends. */
+    private boolean all;
 
-   /**
-    * Name of backend to update.
-    */
-   private String backendName;
+    /** Name of backend to update. */
+    private String backendName;
 
-   /**
-    * @param all update all backends
-    */
-   public UpdateBackendsEvent(boolean all)
-   {
-      this.all = all;
-      backendName = null;
-   }
+    /**
+     * @param all
+     *         update all backends
+     */
+    public UpdateBackendsEvent(boolean all) {
+        this.all = all;
+        backendName = null;
+    }
 
-   /**
-    * @param backendName name of backend to update
-    */
-   public UpdateBackendsEvent(String backendName)
-   {
-      this.backendName = backendName;
-      this.all = false;
-   }
+    /**
+     * @param backendName
+     *         name of backend to update
+     */
+    public UpdateBackendsEvent(String backendName) {
+        this.backendName = backendName;
+        this.all = false;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateBackendsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateBackendsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateBackendsHandler handler)
-   {
-      handler.onUpdateBackend(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateBackendsHandler handler) {
+        handler.onUpdateBackend(this);
+    }
 
-   /**
-    * @return the all
-    */
-   public boolean isAll()
-   {
-      return all;
-   }
+    /** @return the all */
+    public boolean isAll() {
+        return all;
+    }
 
-   /**
-    * @return the backendName
-    */
-   public String getBackendName()
-   {
-      return backendName;
-   }
+    /** @return the backendName */
+    public String getBackendName() {
+        return backendName;
+    }
 }

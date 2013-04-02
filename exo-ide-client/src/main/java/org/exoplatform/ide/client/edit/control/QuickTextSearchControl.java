@@ -26,39 +26,34 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 @RolesAllowed({"developer"})
-public class QuickTextSearchControl extends TextInputControl implements IDEControl
-{
+public class QuickTextSearchControl extends TextInputControl implements IDEControl {
 
-   public static final String ID = "Quick search";
+    public static final String ID = "Quick search";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.quickTextSearchControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.quickTextSearchControl();
 
-   /**
-    * 
-    */
-   public QuickTextSearchControl()
-   {
-      super(ID);
-      setPrompt(TITLE);
-      setNormalImage(IDEImageBundle.INSTANCE.findText());
-      setDisabledImage(IDEImageBundle.INSTANCE.findTextDisabled());
-      setSize(150);
-   }
+    /**
+     *
+     */
+    public QuickTextSearchControl() {
+        super(ID);
+        setPrompt(TITLE);
+        setNormalImage(IDEImageBundle.INSTANCE.findText());
+        setDisabledImage(IDEImageBundle.INSTANCE.findTextDisabled());
+        setSize(150);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setEnabled(true);
-      setVisible(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setEnabled(true);
+        setVisible(true);
+    }
 
 }

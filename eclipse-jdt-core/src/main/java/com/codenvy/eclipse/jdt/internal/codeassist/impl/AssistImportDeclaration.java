@@ -19,13 +19,14 @@ import java.util.Map;
 
 
 public class AssistImportDeclaration extends ImportDeclaration {
-	private Map infoCache;
-	public AssistImportDeclaration(ImportContainer parent, String name, boolean isOnDemand, Map infoCache) {
-		super(parent, name, isOnDemand);
-		this.infoCache = infoCache;
-	}
+    private Map infoCache;
 
-	public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
-		return this.infoCache.get(this);
-	}
+    public AssistImportDeclaration(ImportContainer parent, String name, boolean isOnDemand, Map infoCache) {
+        super(parent, name, isOnDemand);
+        this.infoCache = infoCache;
+    }
+
+    public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
+        return this.infoCache.get(this);
+    }
 }

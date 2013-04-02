@@ -22,14 +22,13 @@ package org.exoplatform.gwtframework.ui.client.command;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface TextInputControlStateListener extends ControlStateListener
-{
-   
-   void updateControlText(String text);
+public interface TextInputControlStateListener extends ControlStateListener {
+
+    void updateControlText(String text);
 
 }

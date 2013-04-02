@@ -1,24 +1,24 @@
 /**
  * Copyright (c) 2009, Timothy Farrell
  * All rights reserved.
- * 
+ *
  * This software is provided for use in connection with the
  * CodeMirror suite of modules and utilities, hosted and maintained
  * at http://codemirror.net/.
- * 
+ *
  * Redistribution and use of this software in source and binary forms,
  * with or without modification, are permitted provided that the
  * following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above
  *   copyright notice, this list of conditions and the
  *   following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above
  *   copyright notice, this list of conditions and the
  *   following disclaimer in the documentation and/or other
  *   materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -32,10 +32,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-var PythonParser = Editor.Parser = (function() {
+var PythonParser = Editor.Parser = (function () {
     function wordRegexp(words) {
         return new RegExp("^(?:" + words.join("|") + ")$");
     }
+
     var DELIMITERCLASS = 'py-delimiter';
     var LITERALCLASS = 'py-literal';
     var ERRORCLASS = 'py-error';
@@ -49,33 +50,33 @@ var PythonParser = Editor.Parser = (function() {
     var STRINGCONTEXT = 'string';
     var singleOperators = '+-*/%&|^~<>';
     var doubleOperators = wordRegexp(['==', '!=', '\\<=', '\\>=', '\\<\\>',
-                                      '\\<\\<', '\\>\\>', '\\/\\/', '\\*\\*']);
+        '\\<\\<', '\\>\\>', '\\/\\/', '\\*\\*']);
     var singleDelimiters = '()[]{}@,:`=;';
     var baseDoubleDelimiters = ['\\+=', '\\-=', '\\*=', '/=', '%=', '&=', '\\|=',
-                            '\\^='];
-    var tripleDelimiters = wordRegexp(['//=','\\>\\>=','\\<\\<=','\\*\\*=']);
+        '\\^='];
+    var tripleDelimiters = wordRegexp(['//=', '\\>\\>=', '\\<\\<=', '\\*\\*=']);
     var singleStarters = singleOperators + singleDelimiters + '=!';
     var doubleStarters = '=<>*/';
     var identifierStarters = /[_A-Za-z]/;
 
     var wordOperators = wordRegexp(['and', 'or', 'not', 'is', 'in']);
     var commonkeywords = ['as', 'assert', 'break', 'class', 'continue',
-                          'def', 'del', 'elif', 'else', 'except', 'finally',
-                          'for', 'from', 'global', 'if', 'import',
-                          'lambda', 'pass', 'raise', 'return',
-                          'try', 'while', 'with', 'yield'];
+        'def', 'del', 'elif', 'else', 'except', 'finally',
+        'for', 'from', 'global', 'if', 'import',
+        'lambda', 'pass', 'raise', 'return',
+        'try', 'while', 'with', 'yield'];
     var commontypes = ['bool', 'classmethod', 'complex', 'dict', 'enumerate',
-                       'float', 'frozenset', 'int', 'list', 'object',
-                       'property', 'reversed', 'set', 'slice', 'staticmethod',
-                       'str', 'super', 'tuple', 'type'];
+        'float', 'frozenset', 'int', 'list', 'object',
+        'property', 'reversed', 'set', 'slice', 'staticmethod',
+        'str', 'super', 'tuple', 'type'];
     var py2 = {'types': ['basestring', 'buffer', 'file', 'long', 'unicode',
-                         'xrange'],
-               'keywords': ['exec', 'print'],
-               'version': 2 };
+        'xrange'],
+        'keywords': ['exec', 'print'],
+        'version': 2 };
     var py3 = {'types': ['bytearray', 'bytes', 'filter', 'map', 'memoryview',
-                         'open', 'range', 'zip'],
-               'keywords': ['nonlocal'],
-               'version': 3};
+        'open', 'range', 'zip'],
+        'keywords': ['nonlocal'],
+        'version': 3};
 
     var py, keywords, types, stringStarters, stringTypes, config;
 
@@ -88,8 +89,8 @@ var PythonParser = Editor.Parser = (function() {
         }
         if (conf.pythonVersion != 2 && conf.pythonVersion != 3) {
             alert('CodeMirror: Unknown Python Version "' +
-                  conf.pythonVersion +
-                  '", defaulting to Python 2.x.');
+                conf.pythonVersion +
+                '", defaulting to Python 2.x.');
             conf.pythonVersion = 2;
         }
         if (conf.pythonVersion == 3) {
@@ -108,11 +109,11 @@ var PythonParser = Editor.Parser = (function() {
         doubleDelimiters = wordRegexp(baseDoubleDelimiters);
     }
 
-    var tokenizePython = (function() {
+    var tokenizePython = (function () {
         function normal(source, setState) {
             var stringDelim, threeStr, temp, type, word, possible = {};
             var ch = source.next();
-            
+
             function filterPossible(token, styleIfPossible) {
                 if (!possible.style && !possible.content) {
                     return token;
@@ -141,7 +142,7 @@ var PythonParser = Editor.Parser = (function() {
                 if (!source.endOfLine()) {
                     var whitespace = true;
                     while (!source.endOfLine()) {
-                        if(!(/[\s\u00a0]/.test(source.next()))) {
+                        if (!(/[\s\u00a0]/.test(source.next()))) {
                             whitespace = false;
                         }
                     }
@@ -176,8 +177,8 @@ var PythonParser = Editor.Parser = (function() {
                 } else if (singleDelimiters.indexOf(ch) != -1) {
                     if (ch == '@' && source.matches(/\w/)) {
                         source.nextWhileMatches(/[\w\d_]/);
-                        return {style:'py-decorator',
-                                content: source.get()};
+                        return {style: 'py-decorator',
+                            content: source.get()};
                     } else {
                         return DELIMITERCLASS;
                     }
@@ -315,7 +316,7 @@ var PythonParser = Editor.Parser = (function() {
         }
 
         function inString(style, terminator) {
-            return function(source, setState) {
+            return function (source, setState) {
                 var matches = [];
                 var found = false;
                 while (!found && !source.endOfLine()) {
@@ -348,7 +349,7 @@ var PythonParser = Editor.Parser = (function() {
             };
         }
 
-        return function(source, startState) {
+        return function (source, startState) {
             return tokenizer(source, startState || normal);
         };
     })();
@@ -363,22 +364,22 @@ var PythonParser = Editor.Parser = (function() {
         var lastToken = null;
         var column = basecolumn;
         var context = {prev: null,
-                       endOfScope: false,
-                       startNewScope: false,
-                       level: basecolumn,
-                       next: null,
-                       type: NORMALCONTEXT
-                       };
+            endOfScope: false,
+            startNewScope: false,
+            level: basecolumn,
+            next: null,
+            type: NORMALCONTEXT
+        };
 
         function pushContext(level, type) {
             type = type ? type : NORMALCONTEXT;
             context = {prev: context,
-                       endOfScope: false,
-                       startNewScope: false,
-                       level: level,
-                       next: null,
-                       type: type
-                       };
+                endOfScope: false,
+                startNewScope: false,
+                level: level,
+                next: null,
+                type: type
+            };
         }
 
         function popContext(remove) {
@@ -396,7 +397,7 @@ var PythonParser = Editor.Parser = (function() {
 
         function indentPython(context) {
             var temp;
-            return function(nextChars, currentLevel, direction) {
+            return function (nextChars, currentLevel, direction) {
                 if (direction === null || direction === undefined) {
                     if (nextChars) {
                         while (context.next) {
@@ -439,7 +440,7 @@ var PythonParser = Editor.Parser = (function() {
         }
 
         var iter = {
-            next: function() {
+            next: function () {
                 var token = tokens.next();
                 var type = token.style;
                 var content = token.content;
@@ -467,7 +468,7 @@ var PythonParser = Editor.Parser = (function() {
                                 }
                             }
                         } else if (context.level !== basecolumn &&
-                                   context.type == NORMALCONTEXT) {
+                            context.type == NORMALCONTEXT) {
                             while (basecolumn !== context.level) {
                                 popContext();
                             }
@@ -483,7 +484,7 @@ var PythonParser = Editor.Parser = (function() {
                 }
 
                 // Handle Scope Changes
-                switch(type) {
+                switch (type) {
                     case STRINGCLASS:
                     case BYTESCLASS:
                     case RAWCLASS:
@@ -498,7 +499,7 @@ var PythonParser = Editor.Parser = (function() {
                         }
                         break;
                 }
-                switch(content) {
+                switch (content) {
                     case '.':
                     case '@':
                         // These delimiters don't appear by themselves
@@ -509,7 +510,7 @@ var PythonParser = Editor.Parser = (function() {
                     case ':':
                         // Colons only delimit scope inside a normal scope
                         if (context.type === NORMALCONTEXT) {
-                            context.startNewScope = context.level+indentUnit;
+                            context.startNewScope = context.level + indentUnit;
                         }
                         break;
                     case '(':
@@ -557,9 +558,9 @@ var PythonParser = Editor.Parser = (function() {
                 return token;
             },
 
-            copy: function() {
+            copy: function () {
                 var _context = context, _tokenState = tokens.state;
-                return function(source) {
+                return function (source) {
                     tokens = tokenizePython(source, _tokenState);
                     context = _context;
                     return iter;
@@ -570,6 +571,6 @@ var PythonParser = Editor.Parser = (function() {
     }
 
     return {make: parsePython,
-            electricChars: "",
-            configure: configure};
+        electricChars: "",
+        configure: configure};
 })();

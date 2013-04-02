@@ -23,38 +23,33 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CreateNewFileEvent extends GwtEvent<CreateNewFileHandler>
-{
+public class CreateNewFileEvent extends GwtEvent<CreateNewFileHandler> {
 
-   public static final GwtEvent.Type<CreateNewFileHandler> TYPE = new GwtEvent.Type<CreateNewFileHandler>();
+    public static final GwtEvent.Type<CreateNewFileHandler> TYPE = new GwtEvent.Type<CreateNewFileHandler>();
 
-   private String mimeType;
+    private String mimeType;
 
-   public CreateNewFileEvent(String mimeType)
-   {
-      this.mimeType = mimeType;
-   }
+    public CreateNewFileEvent(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-   @Override
-   protected void dispatch(CreateNewFileHandler handler)
-   {
-      handler.onCreateNewFile(this);
-   }
+    @Override
+    protected void dispatch(CreateNewFileHandler handler) {
+        handler.onCreateNewFile(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateNewFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateNewFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    public String getMimeType() {
+        return mimeType;
+    }
 
 }

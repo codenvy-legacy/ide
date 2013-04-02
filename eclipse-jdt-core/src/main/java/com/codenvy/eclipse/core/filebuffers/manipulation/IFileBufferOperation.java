@@ -18,7 +18,7 @@ import com.codenvy.eclipse.core.runtime.OperationCanceledException;
 
 /**
  * A file buffer operation performs changes of the contents of a file buffer.
- * <p>
+ * <p/>
  * File buffer operations can be executed by a
  * {@link com.codenvy.eclipse.core.filebuffers.manipulation.FileBufferOperationRunner} or
  * a {@link com.codenvy.eclipse.core.filebuffers.manipulation.GenericFileBufferOperationRunner}.
@@ -30,26 +30,29 @@ import com.codenvy.eclipse.core.runtime.OperationCanceledException;
  * @see com.codenvy.eclipse.core.filebuffers.manipulation.FileBufferOperationRunner
  * @since 3.1
  */
-public interface IFileBufferOperation
-{
+public interface IFileBufferOperation {
 
-   /**
-    * Returns the name of this file buffer operation. The operation name is
-    * used by the <code>FileBufferOperationRunner</code> while reporting
-    * progress.
-    *
-    * @return the operation name or <code>null</code>
-    */
-   String getOperationName();
+    /**
+     * Returns the name of this file buffer operation. The operation name is
+     * used by the <code>FileBufferOperationRunner</code> while reporting
+     * progress.
+     *
+     * @return the operation name or <code>null</code>
+     */
+    String getOperationName();
 
-   /**
-    * Runs this operation, that is manipulates the content of the given file
-    * buffer.
-    *
-    * @param fileBuffer the file buffer
-    * @param monitor    the progress monitor
-    * @throws CoreException              in case the content manipulation failed
-    * @throws OperationCanceledException in case the monitor has been set to canceled
-    */
-   void run(IFileBuffer fileBuffer, IProgressMonitor monitor) throws CoreException, OperationCanceledException;
+    /**
+     * Runs this operation, that is manipulates the content of the given file
+     * buffer.
+     *
+     * @param fileBuffer
+     *         the file buffer
+     * @param monitor
+     *         the progress monitor
+     * @throws CoreException
+     *         in case the content manipulation failed
+     * @throws OperationCanceledException
+     *         in case the monitor has been set to canceled
+     */
+    void run(IFileBuffer fileBuffer, IProgressMonitor monitor) throws CoreException, OperationCanceledException;
 }

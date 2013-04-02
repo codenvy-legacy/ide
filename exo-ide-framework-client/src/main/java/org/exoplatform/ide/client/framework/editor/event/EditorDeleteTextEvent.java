@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to delete selected text from editor.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 4, 2012 9:54:15 AM anya $
- * 
  */
-public class EditorDeleteTextEvent extends GwtEvent<EditorDeleteTextHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<EditorDeleteTextHandler> TYPE = new GwtEvent.Type<EditorDeleteTextHandler>();
+public class EditorDeleteTextEvent extends GwtEvent<EditorDeleteTextHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<EditorDeleteTextHandler> TYPE = new GwtEvent.Type<EditorDeleteTextHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorDeleteTextHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorDeleteTextHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorDeleteTextHandler handler)
-   {
-      handler.onEditorDeleteText(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorDeleteTextHandler handler) {
+        handler.onEditorDeleteText(this);
+    }
 
 }

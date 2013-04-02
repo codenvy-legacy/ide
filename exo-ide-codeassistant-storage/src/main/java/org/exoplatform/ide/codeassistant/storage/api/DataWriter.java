@@ -27,42 +27,32 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface DataWriter
-{
+public interface DataWriter {
 
-   /**
-    * @param typeInfos
-    */
-   void addTypeInfo(List<TypeInfo> typeInfos, String artifact);
+    /** @param typeInfos */
+    void addTypeInfo(List<TypeInfo> typeInfos, String artifact);
 
-   /**
-    * @param packages
-    */
-   void addPackages(Set<String> packages, String artifact);
+    /** @param packages */
+    void addPackages(Set<String> packages, String artifact);
 
-   /**
-    * @param javaDocs
-    * @param artifact
-    */
-   void addJavaDocs(Map<String, String> javaDocs, String artifact);
-   
-   
-   /**
-    * @param typeInfos
-    */
-   void removeTypeInfo(String artifact);
+    /**
+     * @param javaDocs
+     * @param artifact
+     */
+    void addJavaDocs(Map<String, String> javaDocs, String artifact);
 
-   /**
-    * @param packages
-    */
-   void removePackages(String artifact);
 
-   /**
-    * @param javaDocs
-    * @param artifact
-    */
-   void removeJavaDocs(String artifact);
+    /** @param typeInfos */
+    void removeTypeInfo(String artifact);
+
+    /** @param packages */
+    void removePackages(String artifact);
+
+    /**
+     * @param javaDocs
+     * @param artifact
+     */
+    void removeJavaDocs(String artifact);
 
 }

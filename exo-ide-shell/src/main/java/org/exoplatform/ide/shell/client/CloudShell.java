@@ -28,37 +28,29 @@ import org.exoplatform.ide.shell.shared.CLIResource;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
-public class CloudShell implements EntryPoint
-{
-   public static final ShellAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(ShellAutoBeanFactory.class);
-   
-   public static final Messages messages = GWT.create(Messages.class);
+/** Entry point classes define <code>onModuleLoad()</code>. */
+public class CloudShell implements EntryPoint {
+    public static final ShellAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(ShellAutoBeanFactory.class);
 
-   static ConsoleWriter consoleWriter;
+    public static final Messages messages = GWT.create(Messages.class);
 
-   private static Set<CLIResource> commands = new HashSet<CLIResource>();
+    static ConsoleWriter consoleWriter;
 
-   public static final HandlerManager EVENT_BUS = new HandlerManager(null);
+    private static Set<CLIResource> commands = new HashSet<CLIResource>();
 
-   public void onModuleLoad()
-   {
-      new ShellInitializer().init();
-   }
+    public static final HandlerManager EVENT_BUS = new HandlerManager(null);
 
-   /**
-    * @return {@link ConsoleWriter}
-    */
-   public static ConsoleWriter console()
-   {
-      return consoleWriter;
-   }
+    public void onModuleLoad() {
+        new ShellInitializer().init();
+    }
 
-   public static Set<CLIResource> getCommands()
-   {
-      return commands;
-   }
+    /** @return {@link ConsoleWriter} */
+    public static ConsoleWriter console() {
+        return consoleWriter;
+    }
+
+    public static Set<CLIResource> getCommands() {
+        return commands;
+    }
 
 }

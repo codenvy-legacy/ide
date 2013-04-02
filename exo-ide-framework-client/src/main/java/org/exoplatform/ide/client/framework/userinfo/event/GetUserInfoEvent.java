@@ -22,24 +22,21 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class GetUserInfoEvent extends GwtEvent<GetUserInfoHandler>
-{
+public class GetUserInfoEvent extends GwtEvent<GetUserInfoHandler> {
 
-   public static final GwtEvent.Type<GetUserInfoHandler> TYPE = new GwtEvent.Type<GetUserInfoHandler>();
+    public static final GwtEvent.Type<GetUserInfoHandler> TYPE = new GwtEvent.Type<GetUserInfoHandler>();
 
-   protected void dispatch(GetUserInfoHandler handler)
-   {
-      handler.onGetUserInfo(this);
-   }
+    protected void dispatch(GetUserInfoHandler handler) {
+        handler.onGetUserInfo(this);
+    }
 
-   public com.google.gwt.event.shared.GwtEvent.Type<GetUserInfoHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    public com.google.gwt.event.shared.GwtEvent.Type<GetUserInfoHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

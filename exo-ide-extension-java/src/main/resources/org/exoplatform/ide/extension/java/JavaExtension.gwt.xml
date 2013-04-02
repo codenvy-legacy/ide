@@ -20,15 +20,15 @@
 -->
 
 <module>
-   <inherits name="com.google.gwt.user.User" />
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.xml.XML' />
-   <inherits name='com.google.gwt.json.JSON' />
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   
-   <inherits name='org.exoplatform.ide.extension.java.Views' />
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name='com.google.gwt.json.JSON'/>
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
 
-   <source path="client"/>
-   <source path="shared"/>
-   <entry-point class='org.exoplatform.ide.extension.java.client.JavaExtension' />
+    <inherits name='org.exoplatform.ide.extension.java.Views'/>
+
+    <source path="client"/>
+    <source path="shared"/>
+    <entry-point class='org.exoplatform.ide.extension.java.client.JavaExtension'/>
 </module>

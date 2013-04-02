@@ -22,7 +22,6 @@ package org.exoplatform.ide.extension.samples.client.inviting.manage;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface RevokeInviteHandler
-{
-   public void onRevokeInvite(Invite invite);
+public interface RevokeInviteHandler {
+    public void onRevokeInvite(Invite invite);
 }

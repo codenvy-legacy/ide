@@ -26,39 +26,37 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface ChatResources extends ClientBundle
-{
-   public interface ChatCss extends CssResource
-   {
-      String chatMessage();
+public interface ChatResources extends ClientBundle {
+    public interface ChatCss extends CssResource {
+        String chatMessage();
 
-      String chatName();
+        String chatName();
 
-      String chatTime();
+        String chatTime();
 
-      String messageNotDelivered();
+        String messageNotDelivered();
 
-      String chatNotification();
+        String chatNotification();
 
-      String link();
+        String link();
 
-   }
+    }
 
-   @Source("Chat.css")
-   ChatCss chatCss();
+    @Source("Chat.css")
+    ChatCss chatCss();
 
-   @Source("notDelivered.png")
-   ImageResource notDelivered();
+    @Source("notDelivered.png")
+    ImageResource notDelivered();
 
-   @Source("collaborators.png")
-   ImageResource collaborators();
+    @Source("collaborators.png")
+    ImageResource collaborators();
 
-   @Source("collaboratorsDisabled.png")
-   ImageResource collaboratorsDisabled();
+    @Source("collaboratorsDisabled.png")
+    ImageResource collaboratorsDisabled();
 
-   @Source("animation.gif")
-   ImageResource collaboratorsAnimation();
+    @Source("animation.gif")
+    ImageResource collaboratorsAnimation();
 
-   @Source("blank.png")
-   ImageResource blank();
+    @Source("blank.png")
+    ImageResource blank();
 }

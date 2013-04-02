@@ -20,55 +20,44 @@
 package org.exoplatform.ide.client.project.properties;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class PropertyUtil
-{
+public class PropertyUtil {
 
-   public static String getHumanReadableName(String name)
-   {
-      String result = "";
+    public static String getHumanReadableName(String name) {
+        String result = "";
 
-      if (name.indexOf(":") >= 0)
-      {
-         name = name.substring(name.indexOf(":") + 1);
-      }
+        if (name.indexOf(":") >= 0) {
+            name = name.substring(name.indexOf(":") + 1);
+        }
 
-      String upper = name.toUpperCase();
-      String lower = name.toLowerCase();
+        String upper = name.toUpperCase();
+        String lower = name.toLowerCase();
 
-      boolean up = true;
-      for (int i = 0; i < name.length(); i++)
-      {
-         if (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z')
-         {
-            result += " ";
-            up = true;
-         }
-         else if (name.charAt(i) == '-')
-         {
-            result += " ";
-            up = true;
-            continue;
-         }
+        boolean up = true;
+        for (int i = 0; i < name.length(); i++) {
+            if (name.charAt(i) >= 'A' && name.charAt(i) <= 'Z') {
+                result += " ";
+                up = true;
+            } else if (name.charAt(i) == '-') {
+                result += " ";
+                up = true;
+                continue;
+            }
 
-         if (up)
-         {
-            result += upper.charAt(i);
-            up = false;
-         }
-         else
-         {
-            result += lower.charAt(i);
-         }
-      }
+            if (up) {
+                result += upper.charAt(i);
+                up = false;
+            } else {
+                result += lower.charAt(i);
+            }
+        }
 
-      return result;
-   }
+        return result;
+    }
 
 }

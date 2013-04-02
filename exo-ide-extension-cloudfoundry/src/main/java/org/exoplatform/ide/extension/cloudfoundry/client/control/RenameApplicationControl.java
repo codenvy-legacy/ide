@@ -24,28 +24,25 @@ import org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicatio
 
 /**
  * Control for renaming application on CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RenameApplicationControl.java Jul 15, 2011 11:40:43 AM vereshchaka $
- *
  */
-public class RenameApplicationControl extends AbstractCloudFoundryControl
-{
+public class RenameApplicationControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.renameAppControlPrompt();
 
-   public RenameApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.renameApplication(),
-         CloudFoundryClientBundle.INSTANCE.renameApplicationDisabled());
-      setEvent(new RenameApplicationEvent());
-   }
+    public RenameApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.renameApplication(),
+                  CloudFoundryClientBundle.INSTANCE.renameApplicationDisabled());
+        setEvent(new RenameApplicationEvent());
+    }
 
 }

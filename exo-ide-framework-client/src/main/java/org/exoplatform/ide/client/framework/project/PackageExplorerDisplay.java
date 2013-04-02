@@ -18,17 +18,13 @@
  */
 package org.exoplatform.ide.client.framework.project;
 
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.resources.client.ImageResource;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -37,10 +33,8 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface PackageExplorerDisplay extends IsView
-{
+public interface PackageExplorerDisplay extends IsView {
 
 //   /**
 //    * Change tree visibility.
@@ -48,50 +42,52 @@ public interface PackageExplorerDisplay extends IsView
 //    * @param visible <code>true</code> if visible
 //    */
 //   void setPackageExplorerTreeVisible(boolean visible);
-   
-   void setProject(IDEProject project);
+
+    void setProject(IDEProject project);
 
 //   /**
 //    * @return {@link TreeGridItem}
 //    */
 //   TreeGridItem<Item> getBrowserTree();
-   
-   boolean selectItem(Item item);
-   
-   Item getSelectedItem();
+
+    boolean selectItem(Item item);
+
+    Item getSelectedItem();
 
 //   void goToItem(List<Object> itemList, boolean collapseBranches);
-   
-   List<Item> getTreeChildren(FolderModel folder);
-   
-   List<Item> getVisibleItems();
-   
-   void refreshTree();
+
+    List<Item> getTreeChildren(FolderModel folder);
+
+    List<Item> getVisibleItems();
+
+    void refreshTree();
 
    /*
     * Link with Editor
     */
 
-   /**
-    * Returns Link with Editor button.
-    * 
-    * @return Link with Editor button
-    */
-   HasClickHandlers getLinkWithEditorButton();
+    /**
+     * Returns Link with Editor button.
+     *
+     * @return Link with Editor button
+     */
+    HasClickHandlers getLinkWithEditorButton();
 
-   /**
-    * Enables or disables Link with Editor button.
-    * 
-    * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
-    */
-   void setLinkWithEditorButtonEnabled(boolean enabled);
+    /**
+     * Enables or disables Link with Editor button.
+     *
+     * @param enabled
+     *         <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
+     */
+    void setLinkWithEditorButtonEnabled(boolean enabled);
 
-   /**
-    * Adds or removes selection of Link with Editor button.
-    * 
-    * @param selected <b>true</b> makes button selected, <b>false</b> otherwise
-    */
-   void setLinkWithEditorButtonSelected(boolean selected);
+    /**
+     * Adds or removes selection of Link with Editor button.
+     *
+     * @param selected
+     *         <b>true</b> makes button selected, <b>false</b> otherwise
+     */
+    void setLinkWithEditorButtonSelected(boolean selected);
 
 //   /**
 //    * Update the state of the item in the tree.
@@ -106,15 +102,11 @@ public interface PackageExplorerDisplay extends IsView
 //    * @param locktokens
 //    */
 //   void setLockTokens(Map<String, String> locktokens);
-   
-   /**
-    * Add info icons to main item icon.
-    */
-   void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
-   
-   /**
-    * Remove additional icons from items.
-    */
-   void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
-   
+
+    /** Add info icons to main item icon. */
+    void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
+
+    /** Remove additional icons from items. */
+    void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
+
 }

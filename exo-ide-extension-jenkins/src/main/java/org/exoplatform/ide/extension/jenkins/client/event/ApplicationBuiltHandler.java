@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface ApplicationBuiltHandler extends EventHandler
-{
+public interface ApplicationBuiltHandler extends EventHandler {
 
-   void onApplicationBuilt(ApplicationBuiltEvent event);
+    void onApplicationBuilt(ApplicationBuiltEvent event);
 
 }

@@ -24,37 +24,32 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class SearchResultReceivedEvent extends GwtEvent<SearchResultReceivedHandler>
-{
+public class SearchResultReceivedEvent extends GwtEvent<SearchResultReceivedHandler> {
 
-   public static final GwtEvent.Type<SearchResultReceivedHandler> TYPE = new Type<SearchResultReceivedHandler>();
+    public static final GwtEvent.Type<SearchResultReceivedHandler> TYPE = new Type<SearchResultReceivedHandler>();
 
-   private FolderModel folder;
+    private FolderModel folder;
 
-   public SearchResultReceivedEvent(FolderModel folder)
-   {
-      this.folder = folder;
-   }
+    public SearchResultReceivedEvent(FolderModel folder) {
+        this.folder = folder;
+    }
 
-   @Override
-   protected void dispatch(SearchResultReceivedHandler handler)
-   {
-      handler.onSearchResultReceived(this);
-   }
+    @Override
+    protected void dispatch(SearchResultReceivedHandler handler) {
+        handler.onSearchResultReceived(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SearchResultReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SearchResultReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public FolderModel getFolder()
-   {
-      return folder;
-   }
+    public FolderModel getFolder() {
+        return folder;
+    }
 
 }

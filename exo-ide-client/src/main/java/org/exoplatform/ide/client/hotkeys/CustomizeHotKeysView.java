@@ -36,144 +36,124 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class CustomizeHotKeysView extends ViewImpl implements
-   org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display
-{
+                                                   org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display {
 
-   public static final String ID = "ideCustomizeHotKeysView";
+    public static final String ID = "ideCustomizeHotKeysView";
 
-   public static final String MSG_LABEL_ID = "ideCustomizeHotKeysMessageLabel";
+    public static final String MSG_LABEL_ID = "ideCustomizeHotKeysMessageLabel";
 
-   private static final String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysTitle();
+    private static final String TITLE = IDE.PREFERENCES_CONSTANT.customizeHotkeysTitle();
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 725;
+    /** Initial width of this view */
+    private static final int WIDTH = 725;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 390;
+    /** Initial height of this view */
+    private static final int HEIGHT = 390;
 
-   private static CustomizeHotKeysViewUiBinder uiBinder = GWT.create(CustomizeHotKeysViewUiBinder.class);
+    private static CustomizeHotKeysViewUiBinder uiBinder = GWT.create(CustomizeHotKeysViewUiBinder.class);
 
-   interface CustomizeHotKeysViewUiBinder extends UiBinder<Widget, CustomizeHotKeysView>
-   {
-   }
+    interface CustomizeHotKeysViewUiBinder extends UiBinder<Widget, CustomizeHotKeysView> {
+    }
 
-   @UiField
-   ImageButton bindButton;
+    @UiField
+    ImageButton bindButton;
 
-   @UiField
-   ImageButton unbindButton;
+    @UiField
+    ImageButton unbindButton;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   @UiField
-   ImageButton defaultsButton;
+    @UiField
+    ImageButton defaultsButton;
 
-   @UiField
-   HotKeyItemListGrid hotKeyItemListGrid;
+    @UiField
+    HotKeyItemListGrid hotKeyItemListGrid;
 
-   @UiField
-   TextInput hotKeyField;
+    @UiField
+    TextInput hotKeyField;
 
-   @UiField
-   Label messageLabel;
+    @UiField
+    Label messageLabel;
 
-   public CustomizeHotKeysView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.customizeHotKeys()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      messageLabel.getElement().setId(MSG_LABEL_ID);
-      
-      hotKeyField.setReadOnly(true);
-   }
+    public CustomizeHotKeysView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.customizeHotKeys()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        messageLabel.getElement().setId(MSG_LABEL_ID);
 
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+        hotKeyField.setReadOnly(true);
+    }
 
-   @Override
-   public HasClickHandlers getDefaultsButton()
-   {
-      return defaultsButton;
-   }
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   @Override
-   public HasClickHandlers getBindButton()
-   {
-      return bindButton;
-   }
+    @Override
+    public HasClickHandlers getDefaultsButton() {
+        return defaultsButton;
+    }
 
-   @Override
-   public HasClickHandlers getUnbindButton()
-   {
-      return unbindButton;
-   }
+    @Override
+    public HasClickHandlers getBindButton() {
+        return bindButton;
+    }
 
-   @Override
-   public ListGridItem<HotKeyItem> getHotKeyItemListGrid()
-   {
-      return hotKeyItemListGrid;
-   }
+    @Override
+    public HasClickHandlers getUnbindButton() {
+        return unbindButton;
+    }
 
-   @Override
-   public HasValue<String> getHotKeyField()
-   {
-      return hotKeyField;
-   }
+    @Override
+    public ListGridItem<HotKeyItem> getHotKeyItemListGrid() {
+        return hotKeyItemListGrid;
+    }
 
-   @Override
-   public HotKeyItem getSelectedItem()
-   {
-      return hotKeyItemListGrid.getSelectedItems().get(0);
-   }
+    @Override
+    public HasValue<String> getHotKeyField() {
+        return hotKeyField;
+    }
 
-   @Override
-   public void setOkButtonEnabled(boolean enabled)
-   {
-      okButton.setEnabled(enabled);
-   }
+    @Override
+    public HotKeyItem getSelectedItem() {
+        return hotKeyItemListGrid.getSelectedItems().get(0);
+    }
 
-   @Override
-   public void setBindButtonEnabled(boolean enabled)
-   {
-      bindButton.setEnabled(enabled);
-   }
+    @Override
+    public void setOkButtonEnabled(boolean enabled) {
+        okButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void setUnbindButtonEnabled(boolean enabled)
-   {
-      unbindButton.setEnabled(enabled);
-   }
+    @Override
+    public void setBindButtonEnabled(boolean enabled) {
+        bindButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void setHotKeyFieldEnabled(boolean enabled)
-   {
-      hotKeyField.setEnabled(enabled);
-   }
+    @Override
+    public void setUnbindButtonEnabled(boolean enabled) {
+        unbindButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void focusOnHotKeyField()
-   {
-      hotKeyField.focus();
-   }
+    @Override
+    public void setHotKeyFieldEnabled(boolean enabled) {
+        hotKeyField.setEnabled(enabled);
+    }
 
-   @Override
-   public void showError(String text)
-   {
-      messageLabel.setText(text);
-   }
+    @Override
+    public void focusOnHotKeyField() {
+        hotKeyField.focus();
+    }
+
+    @Override
+    public void showError(String text) {
+        messageLabel.setText(text);
+    }
 
 }

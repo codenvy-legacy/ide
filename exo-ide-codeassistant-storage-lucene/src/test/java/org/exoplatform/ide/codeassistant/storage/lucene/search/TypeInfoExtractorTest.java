@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import test.classes.ATestClass2;
 
 import org.apache.lucene.document.Document;
@@ -44,57 +37,59 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TypeInfoExtractorTest
-{
-   @Mock
-   private IndexReader reader;
+public class TypeInfoExtractorTest {
+    @Mock
+    private IndexReader reader;
 
-   @Mock
-   private LuceneCodeAssistantStorage luceneCodeAssistantStorage;
+    @Mock
+    private LuceneCodeAssistantStorage luceneCodeAssistantStorage;
 
-   @InjectMocks
-   private TypeInfoExtractor extractor;
+    @InjectMocks
+    private TypeInfoExtractor extractor;
 
-   @Ignore
-   @Test
-   public void shouldReconstructTypeInfo() throws Exception
-   {
-      TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(ATestClass2.class));
-      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected, "rt");
+    @Ignore
+    @Test
+    public void shouldReconstructTypeInfo() throws Exception {
+        TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(ATestClass2.class));
+        Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected, "rt");
 
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
-      TypeInfo actual = extractor.getValue(reader, 5);
+        TypeInfo actual = extractor.getValue(reader, 5);
 
-      assertEquals(expected, actual);
-   }
+        assertEquals(expected, actual);
+    }
 
-   @Test
-   public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception
-   {
-      TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(ATestClass2.class));
-      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected,"rt");
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+    @Test
+    public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception {
+        TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(ATestClass2.class));
+        Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected, "rt");
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
-      extractor.getValue(reader, 5);
+        extractor.getValue(reader, 5);
 
-      ArgumentCaptor<FieldSelector> model = ArgumentCaptor.forClass(FieldSelector.class);
-      verify(reader).document(eq(5), model.capture());
+        ArgumentCaptor<FieldSelector> model = ArgumentCaptor.forClass(FieldSelector.class);
+        verify(reader).document(eq(5), model.capture());
 
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.MODIFIERS));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.CLASS_NAME));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.FQN));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.ENTITY_TYPE));
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.TYPE_INFO));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.MODIFIERS));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.CLASS_NAME));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.FQN));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.ENTITY_TYPE));
+        assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.TYPE_INFO));
 
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.SUPERCLASS));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.SUPERCLASS));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
 
-   }
+    }
 
 }

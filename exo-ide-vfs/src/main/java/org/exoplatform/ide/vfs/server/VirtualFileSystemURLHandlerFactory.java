@@ -29,56 +29,49 @@ import java.net.URLStreamHandlerFactory;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class VirtualFileSystemURLHandlerFactory implements URLStreamHandlerFactory
-{
-   private final URLStreamHandlerFactory delegate;
+public final class VirtualFileSystemURLHandlerFactory implements URLStreamHandlerFactory {
+    private final URLStreamHandlerFactory delegate;
 
-   private final VirtualFileSystemRegistry registry;
+    private final VirtualFileSystemRegistry registry;
 
-   private final EventListenerList listeners;
+    private final EventListenerList listeners;
 
-   /**
-    * @param delegate
-    *    factory which we should ask to create URLStreamHandler if current factory does not support
-    *    requested protocol.
-    * @param registry
-    *    set of all available virtual file systems
-    * @param listeners
-    *    EventListenerList
-    */
-   public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate,
-                                             VirtualFileSystemRegistry registry,
-                                             EventListenerList listeners)
-   {
-      this.delegate = delegate;
-      this.registry = registry;
-      this.listeners = listeners;
-   }
+    /**
+     * @param delegate
+     *         factory which we should ask to create URLStreamHandler if current factory does not support
+     *         requested protocol.
+     * @param registry
+     *         set of all available virtual file systems
+     * @param listeners
+     *         EventListenerList
+     */
+    public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate,
+                                              VirtualFileSystemRegistry registry,
+                                              EventListenerList listeners) {
+        this.delegate = delegate;
+        this.registry = registry;
+        this.listeners = listeners;
+    }
 
-   /**
-    * @param delegate
-    *    factory which we should ask to create URLStreamHandler if current factory does not support
-    *    requested protocol.
-    * @param registry
-    *    set of all available virtual file systems
-    */
-   public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate, VirtualFileSystemRegistry registry)
-   {
-      this(delegate, registry, null);
-   }
+    /**
+     * @param delegate
+     *         factory which we should ask to create URLStreamHandler if current factory does not support
+     *         requested protocol.
+     * @param registry
+     *         set of all available virtual file systems
+     */
+    public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate, VirtualFileSystemRegistry registry) {
+        this(delegate, registry, null);
+    }
 
-   /** @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String) */
-   @Override
-   public URLStreamHandler createURLStreamHandler(String protocol)
-   {
-      if ("ide+vfs".equals(protocol))
-      {
-         return new VirtualFileSystemResourceHandler(registry, listeners);
-      }
-      else if (delegate != null)
-      {
-         delegate.createURLStreamHandler(protocol);
-      }
-      return null;
-   }
+    /** @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String) */
+    @Override
+    public URLStreamHandler createURLStreamHandler(String protocol) {
+        if ("ide+vfs".equals(protocol)) {
+            return new VirtualFileSystemResourceHandler(registry, listeners);
+        } else if (delegate != null) {
+            delegate.createURLStreamHandler(protocol);
+        }
+        return null;
+    }
 }

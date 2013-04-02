@@ -1,53 +1,52 @@
 .editbox {
-  margin: .4em;
-  padding: 0;
-  font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
-  font-size: 10pt;
-  color: black;
-  background-color: transparent;
-  line-height: 16px;
+    margin: .4em;
+    padding: 0;
+    font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 10pt;
+    color: black;
+    background-color: transparent;
+    line-height: 16px;
 }
 
 span.java-punctuation {
-  color: black;
+    color: black;
 }
 
 span.java-operator {
-  color: purple;
+    color: purple;
 }
 
 span.java-keyword {
-  color: #7f0055;
-  font-weight:bold;
+    color: #7f0055;
+    font-weight: bold;
 }
 
 span.java-atom {
-  color: brown;
+    color: brown;
 }
 
 span.java-variable {
-  color: black;
+    color: black;
 }
 
-
 span.java-property {
-  color: black;
+    color: black;
 }
 
 span.java-comment {
-  color: green;
+    color: green;
 }
 
 span.javadoc-comment {
-  color: #3e5797;
-  font-weight:bold;
+    color: #3e5797;
+    font-weight: bold;
 }
 
 span.java-string {
-  color: blue;
+    color: blue;
 }
 
-span.java-annotation{
-  color: gray;  
+span.java-annotation {
+    color: gray;
 }
 

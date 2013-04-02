@@ -37,90 +37,85 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RemoteUpdateTest.java 70163 2011-06-03 13:37:45Z andrew00x $
  */
-public class RemoteUpdateTest extends BaseTest
-{
-   private Repository repo;
+public class RemoteUpdateTest extends BaseTest {
+    private Repository repo;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
 
-      // Create clean repository instead use default one.
-      URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
-      File target = new File(testCls.toURI()).getParentFile();
-      File repoDir = new File(target, "RemoteUpdateTest");
-      repoDir.mkdir();
-      forClean.add(repoDir);
-      repo = new FileRepository(new File(repoDir, ".git"));
+        // Create clean repository instead use default one.
+        URL testCls = Thread.currentThread().getContextClassLoader().getResource(".");
+        File target = new File(testCls.toURI()).getParentFile();
+        File repoDir = new File(target, "RemoteUpdateTest");
+        repoDir.mkdir();
+        forClean.add(repoDir);
+        repo = new FileRepository(new File(repoDir, ".git"));
       /* May be empty request in this impl. 
        * Working directory already specified but may be not initialized yet.
        * Directory .git does not exists yet. */
-      InitRequest request = new InitRequest();
-      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).init(request);
+        InitRequest request = new InitRequest();
+        new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).init(request);
 
-      StoredConfig config = repo.getConfig();
-      RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
-      String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
-      remoteConfig.addURI(new URIish(remoteUrl));
-      remoteConfig.addPushURI(new URIish(remoteUrl));
-      remoteConfig.addFetchRefSpec(new RefSpec("+refs/heads/*:refs/remotes/origin/*"));
-      remoteConfig.update(config);
-      config.save();
-   }
+        StoredConfig config = repo.getConfig();
+        RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
+        String remoteUrl = getDefaultRepository().getWorkTree().getAbsolutePath();
+        remoteConfig.addURI(new URIish(remoteUrl));
+        remoteConfig.addPushURI(new URIish(remoteUrl));
+        remoteConfig.addFetchRefSpec(new RefSpec("+refs/heads/*:refs/remotes/origin/*"));
+        remoteConfig.update(config);
+        config.save();
+    }
 
-   public void testUpdateBranches() throws Exception
-   {
-      RemoteUpdateRequest request =
-         new RemoteUpdateRequest("origin", new String[]{"test", "master"}, false, null, null, null, null);
-      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
-      
-      StoredConfig config = repo.getConfig();
-      RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
-      List<RefSpec> fetchRefSpecs = remoteConfig.getFetchRefSpecs();
-      assertEquals(2, fetchRefSpecs.size());
-      assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/test:refs/remotes/origin/test")));
-      assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/master:refs/remotes/origin/master")));
-   }
+    public void testUpdateBranches() throws Exception {
+        RemoteUpdateRequest request =
+                new RemoteUpdateRequest("origin", new String[]{"test", "master"}, false, null, null, null, null);
+        new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
 
-   public void testUpdateBranchesAdd() throws Exception
-   {
-      StoredConfig config = repo.getConfig();
-      RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
-      remoteConfig.setFetchRefSpecs(new ArrayList<RefSpec>());
-      remoteConfig.addFetchRefSpec(new RefSpec("+refs/heads/master:refs/remotes/origin/master"));
-      remoteConfig.update(config);
-      config.save();
+        StoredConfig config = repo.getConfig();
+        RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
+        List<RefSpec> fetchRefSpecs = remoteConfig.getFetchRefSpecs();
+        assertEquals(2, fetchRefSpecs.size());
+        assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/test:refs/remotes/origin/test")));
+        assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/master:refs/remotes/origin/master")));
+    }
 
-      RemoteUpdateRequest request =
-         new RemoteUpdateRequest("origin", new String[]{"test"}, true, null, null, null, null);
-      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
-      
-      config.load();
-      remoteConfig = new RemoteConfig(config, "origin");
-      List<RefSpec> fetchRefSpecs = remoteConfig.getFetchRefSpecs();
-      assertEquals(2, fetchRefSpecs.size());
-      assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/test:refs/remotes/origin/test")));
-      assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/master:refs/remotes/origin/master")));
-   }
+    public void testUpdateBranchesAdd() throws Exception {
+        StoredConfig config = repo.getConfig();
+        RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
+        remoteConfig.setFetchRefSpecs(new ArrayList<RefSpec>());
+        remoteConfig.addFetchRefSpec(new RefSpec("+refs/heads/master:refs/remotes/origin/master"));
+        remoteConfig.update(config);
+        config.save();
 
-   public void testUpdateBranchesReplace() throws Exception
-   {
-      StoredConfig config = repo.getConfig();
-      RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
-      remoteConfig.setFetchRefSpecs(new ArrayList<RefSpec>());
-      remoteConfig.addFetchRefSpec(new RefSpec("+refs/heads/master:refs/remotes/origin/master"));
-      remoteConfig.update(config);
-      config.save();
+        RemoteUpdateRequest request =
+                new RemoteUpdateRequest("origin", new String[]{"test"}, true, null, null, null, null);
+        new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
 
-      RemoteUpdateRequest request =
-         new RemoteUpdateRequest("origin", new String[]{"test"}, false, null, null, null, null);
-      new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
-      
-      config.load();
-      remoteConfig = new RemoteConfig(config, "origin");
-      List<RefSpec> fetchRefSpecs = remoteConfig.getFetchRefSpecs();
-      assertEquals(1, fetchRefSpecs.size());
-      assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/test:refs/remotes/origin/test")));
-   }
+        config.load();
+        remoteConfig = new RemoteConfig(config, "origin");
+        List<RefSpec> fetchRefSpecs = remoteConfig.getFetchRefSpecs();
+        assertEquals(2, fetchRefSpecs.size());
+        assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/test:refs/remotes/origin/test")));
+        assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/master:refs/remotes/origin/master")));
+    }
+
+    public void testUpdateBranchesReplace() throws Exception {
+        StoredConfig config = repo.getConfig();
+        RemoteConfig remoteConfig = new RemoteConfig(config, "origin");
+        remoteConfig.setFetchRefSpecs(new ArrayList<RefSpec>());
+        remoteConfig.addFetchRefSpec(new RefSpec("+refs/heads/master:refs/remotes/origin/master"));
+        remoteConfig.update(config);
+        config.save();
+
+        RemoteUpdateRequest request =
+                new RemoteUpdateRequest("origin", new String[]{"test"}, false, null, null, null, null);
+        new JGitConnection(repo, new GitUser("andrey", "andrey@mail.com")).remoteUpdate(request);
+
+        config.load();
+        remoteConfig = new RemoteConfig(config, "origin");
+        List<RefSpec> fetchRefSpecs = remoteConfig.getFetchRefSpecs();
+        assertEquals(1, fetchRefSpecs.size());
+        assertTrue(fetchRefSpecs.contains(new RefSpec("+refs/heads/test:refs/remotes/origin/test")));
+    }
 }

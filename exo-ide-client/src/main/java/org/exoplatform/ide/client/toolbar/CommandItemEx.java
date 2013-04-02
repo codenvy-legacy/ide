@@ -22,44 +22,38 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CommandItemEx
-{
+public class CommandItemEx {
 
-   private String title;
+    private String title;
 
-   private Control command;
+    private Control command;
 
-   private boolean group = false;
+    private boolean group = false;
 
-   public CommandItemEx(Control command)
-   {
-      this.command = command;
-   }
+    public CommandItemEx(Control command) {
+        this.command = command;
+    }
 
-   public CommandItemEx(String title)
-   {
-      this.title = title;
-      group = true;
-   }
+    public CommandItemEx(String title) {
+        this.title = title;
+        group = true;
+    }
 
-   public String getTitle()
-   {
-      return title;
-   }
+    public String getTitle() {
+        return title;
+    }
 
-   public Control getCommand()
-   {
-      return command;
-   }
+    public Control getCommand() {
+        return command;
+    }
 
-   public boolean isGroup()
-   {
-      return group;
-   }
+    public boolean isGroup() {
+        return group;
+    }
 
 }

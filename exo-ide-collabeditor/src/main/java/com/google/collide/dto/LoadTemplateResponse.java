@@ -17,17 +17,14 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Response for loading a template into a workspace.
- *
- */
+/** Response for loading a template into a workspace. */
 @RoutingType(type = RoutingTypes.LOADTEMPLATERESPONSE)
 public interface LoadTemplateResponse extends ServerToClientDto {
 
-  /**
-   * Retrieves the new runtargets of the workspace (if any) due to loading a
-   * template. These run targets are now the run targets of the workspace.
-   */
-  RunTarget getRunTarget();
-  
+    /**
+     * Retrieves the new runtargets of the workspace (if any) due to loading a
+     * template. These run targets are now the run targets of the workspace.
+     */
+    RunTarget getRunTarget();
+
 }

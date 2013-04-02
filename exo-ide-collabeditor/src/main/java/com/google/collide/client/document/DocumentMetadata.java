@@ -21,108 +21,97 @@ import com.google.collide.shared.document.Document;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Utility methods for retrieving metadata associated with a document.
- */
+/** Utility methods for retrieving metadata associated with a document. */
 public final class DocumentMetadata {
 
-  private static final String TAG_LINKED_TO_FILE = DocumentManager.class.getName()
-      + ":LinkedToFile";
-  private static final String TAG_FILE_EDIT_SESSION_KEY = DocumentManager.class.getName()
-      + ":FileEditSessionKey";
-  private static final String TAG_BEGIN_CC_REVISION = DocumentManager.class.getName()
-      + ":BeginCcRevision";
-  private static final String TAG_PATH = DocumentManager.class.getName() + ":Path";
-  
-  // TODO: move conflicts and conflict handle out of metadata.
-  private static final String TAG_CONFLICTS = DocumentManager.class.getName() + ":Conflicts";
-  private static final String TAG_CONFLICT_HANDLE =
-      DocumentManager.class.getName() + ":ConflictHandle";
-  
-  /**
-   * Returns whether the document is linked to a file.
-   * 
-   * If a document is not linked to a file, it is a client-only document.
-   * Metadata such as {@link #getFileEditSessionKey(com.google.collide.shared.document.Document)},
-   * {@link #getBeginCcRevision(com.google.collide.shared.document.Document)}, {@link #getConflicts(com.google.collide.shared.document.Document)},
-   * {@link #getPath(com.google.collide.shared.document.Document)} will be invalid.
-   */
-  public static boolean isLinkedToFile(Document document) {
-    return ((Boolean) document.getTag(TAG_LINKED_TO_FILE)).booleanValue();
-  }
+    private static final String TAG_LINKED_TO_FILE        = DocumentManager.class.getName()
+                                                            + ":LinkedToFile";
+    private static final String TAG_FILE_EDIT_SESSION_KEY = DocumentManager.class.getName()
+                                                            + ":FileEditSessionKey";
+    private static final String TAG_BEGIN_CC_REVISION     = DocumentManager.class.getName()
+                                                            + ":BeginCcRevision";
+    private static final String TAG_PATH                  = DocumentManager.class.getName() + ":Path";
 
-  static void putLinkedToFile(Document document, boolean isLinkedToFile) {
-    document.putTag(TAG_LINKED_TO_FILE, isLinkedToFile);
-  }
+    // TODO: move conflicts and conflict handle out of metadata.
+    private static final String TAG_CONFLICTS       = DocumentManager.class.getName() + ":Conflicts";
+    private static final String TAG_CONFLICT_HANDLE =
+            DocumentManager.class.getName() + ":ConflictHandle";
 
-  /**
-   * Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true.
-   */
-  public static String getFileEditSessionKey(Document document) {
-    ensureLinkedToFile(document);
-    return document.getTag(TAG_FILE_EDIT_SESSION_KEY);
-  }
-
-  static void putFileEditSessionKey(Document document, String fileEditSessionKey) {
-    document.putTag(TAG_FILE_EDIT_SESSION_KEY, fileEditSessionKey);
-  }
-
-  /**
-   * Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true.
-   */
-  public static int getBeginCcRevision(Document document) {
-    ensureLinkedToFile(document);
-    return ((Integer) document.getTag(TAG_BEGIN_CC_REVISION)).intValue();
-  }
-
-  static void putBeginCcRevision(Document document, int beginCcRevision) {
-    document.putTag(TAG_BEGIN_CC_REVISION, beginCcRevision);
-  }
-
-  /**
-   * Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true.
-   */
-  public static PathUtil getPath(Document document) {
-    ensureLinkedToFile(document);
-    return document.getTag(TAG_PATH);
-  }
-
-  static void putPath(Document document, PathUtil path) {
-    document.putTag(TAG_PATH, path);
-  }
-
-  /**
-   * Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true.
-   */
-  public static JsonArray<ConflictChunk> getConflicts(Document document) {
-    ensureLinkedToFile(document);
-    return document.getTag(TAG_CONFLICTS);
-  }
-
-  static void putConflicts(Document document, JsonArray<ConflictChunk> conflicts) {
-    document.putTag(TAG_CONFLICTS, conflicts);
-  }
-  
-  /**
-   * Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true.
-   */
-  public static ConflictHandle getConflictHandle(Document document) {
-    ensureLinkedToFile(document);
-    return document.getTag(TAG_CONFLICT_HANDLE);
-  }
-
-  static void putConflictHandle(Document document, ConflictHandle conflictHandle) {
-    document.putTag(TAG_CONFLICT_HANDLE, conflictHandle);
-  }  
-  
-  private static void ensureLinkedToFile(Document document) {
-    if (!isLinkedToFile(document)) {
-      throw new IllegalStateException("Document must be linked to file");
+    /**
+     * Returns whether the document is linked to a file.
+     * <p/>
+     * If a document is not linked to a file, it is a client-only document.
+     * Metadata such as {@link #getFileEditSessionKey(com.google.collide.shared.document.Document)},
+     * {@link #getBeginCcRevision(com.google.collide.shared.document.Document)}, {@link #getConflicts(com.google.collide.shared.document
+     * .Document)},
+     * {@link #getPath(com.google.collide.shared.document.Document)} will be invalid.
+     */
+    public static boolean isLinkedToFile(Document document) {
+        return ((Boolean)document.getTag(TAG_LINKED_TO_FILE)).booleanValue();
     }
-  }
 
-  public static void clearConflicts(Document document) {
-    document.putTag(TAG_CONFLICT_HANDLE, null);
-    document.putTag(TAG_CONFLICTS, null);
-  }
+    static void putLinkedToFile(Document document, boolean isLinkedToFile) {
+        document.putTag(TAG_LINKED_TO_FILE, isLinkedToFile);
+    }
+
+    /** Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true. */
+    public static String getFileEditSessionKey(Document document) {
+        ensureLinkedToFile(document);
+        return document.getTag(TAG_FILE_EDIT_SESSION_KEY);
+    }
+
+    static void putFileEditSessionKey(Document document, String fileEditSessionKey) {
+        document.putTag(TAG_FILE_EDIT_SESSION_KEY, fileEditSessionKey);
+    }
+
+    /** Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true. */
+    public static int getBeginCcRevision(Document document) {
+        ensureLinkedToFile(document);
+        return ((Integer)document.getTag(TAG_BEGIN_CC_REVISION)).intValue();
+    }
+
+    static void putBeginCcRevision(Document document, int beginCcRevision) {
+        document.putTag(TAG_BEGIN_CC_REVISION, beginCcRevision);
+    }
+
+    /** Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true. */
+    public static PathUtil getPath(Document document) {
+        ensureLinkedToFile(document);
+        return document.getTag(TAG_PATH);
+    }
+
+    static void putPath(Document document, PathUtil path) {
+        document.putTag(TAG_PATH, path);
+    }
+
+    /** Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true. */
+    public static JsonArray<ConflictChunk> getConflicts(Document document) {
+        ensureLinkedToFile(document);
+        return document.getTag(TAG_CONFLICTS);
+    }
+
+    static void putConflicts(Document document, JsonArray<ConflictChunk> conflicts) {
+        document.putTag(TAG_CONFLICTS, conflicts);
+    }
+
+    /** Only valid if {@link #isLinkedToFile(com.google.collide.shared.document.Document)} is true. */
+    public static ConflictHandle getConflictHandle(Document document) {
+        ensureLinkedToFile(document);
+        return document.getTag(TAG_CONFLICT_HANDLE);
+    }
+
+    static void putConflictHandle(Document document, ConflictHandle conflictHandle) {
+        document.putTag(TAG_CONFLICT_HANDLE, conflictHandle);
+    }
+
+    private static void ensureLinkedToFile(Document document) {
+        if (!isLinkedToFile(document)) {
+            throw new IllegalStateException("Document must be linked to file");
+        }
+    }
+
+    public static void clearConflicts(Document document) {
+        document.putTag(TAG_CONFLICT_HANDLE, null);
+        document.putTag(TAG_CONFLICTS, null);
+    }
 }

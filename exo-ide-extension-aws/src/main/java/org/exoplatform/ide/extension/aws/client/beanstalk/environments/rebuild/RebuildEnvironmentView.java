@@ -32,73 +32,59 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: RebuildEnvironmentView.java Sep 28, 2012 4:34:01 PM azatsarynnyy $
- *
  */
-public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironmentPresenter.Display
-{
-   private static final String ID = "ideRebuildEnvironmentView";
+public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironmentPresenter.Display {
+    private static final String ID = "ideRebuildEnvironmentView";
 
-   private static final int WIDTH = 460;
+    private static final int WIDTH = 460;
 
-   private static final int HEIGHT = 170;
+    private static final int HEIGHT = 170;
 
-   private static final String REBUILD_BUTTON_ID = "ideRebuildEnvironmentViewRebuildButton";
+    private static final String REBUILD_BUTTON_ID = "ideRebuildEnvironmentViewRebuildButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRebuildEnvironmentViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideRebuildEnvironmentViewCancelButton";
 
-   @UiField
-   Label questionLabel;
+    @UiField
+    Label questionLabel;
 
-   @UiField
-   ImageButton rebuildButton;
+    @UiField
+    ImageButton rebuildButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   private static StopEnvironmentViewUiBinder uiBinder = GWT.create(StopEnvironmentViewUiBinder.class);
+    private static StopEnvironmentViewUiBinder uiBinder = GWT.create(StopEnvironmentViewUiBinder.class);
 
-   interface StopEnvironmentViewUiBinder extends UiBinder<Widget, RebuildEnvironmentView>
-   {
-   }
+    interface StopEnvironmentViewUiBinder extends UiBinder<Widget, RebuildEnvironmentView> {
+    }
 
-   public RebuildEnvironmentView()
-   {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public RebuildEnvironmentView() {
+        super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      questionLabel.setIsHTML(true);
-      rebuildButton.setButtonId(REBUILD_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        questionLabel.setIsHTML(true);
+        rebuildButton.setButtonId(REBUILD_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildButton()
-    */
-   @Override
-   public HasClickHandlers getRebuildButton()
-   {
-      return rebuildButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildButton() */
+    @Override
+    public HasClickHandlers getRebuildButton() {
+        return rebuildButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildQuestion()
-    */
-   @Override
-   public HasValue<String> getRebuildQuestion()
-   {
-      return questionLabel;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildQuestion() */
+    @Override
+    public HasValue<String> getRebuildQuestion() {
+        return questionLabel;
+    }
 
 }

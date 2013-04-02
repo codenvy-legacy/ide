@@ -65,7 +65,7 @@ import java.util.LinkedHashMap;
 /**
  * Presenter for deploying samples imported from GitHub.
  * <p/>
- *
+ * <p/>
  * !!! Warn: temporary unused because we import repository from github and then automatically detect it type, that's why
  * we don't know what type of project will be imported and deploy ceases to be impossible. Leave for the consideration
  * this module in feature.
@@ -73,406 +73,311 @@ import java.util.LinkedHashMap;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeploySamplesPresenter.java Nov 22, 2011 10:35:16 AM vereshchaka $
  */
-public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleStep<ProjectData>, VfsChangedHandler
-{
+public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleStep<ProjectData>, VfsChangedHandler {
 
-   public interface Display extends IsView
-   {
-      HasClickHandlers getFinishButton();
+    public interface Display extends IsView {
+        HasClickHandlers getFinishButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasClickHandlers getBackButton();
+        HasClickHandlers getBackButton();
 
-      HasValue<String> getSelectPaasField();
+        HasValue<String> getSelectPaasField();
 
-      void enableFinishButton(boolean enable);
+        void enableFinishButton(boolean enable);
 
-      void setPaaSValues(LinkedHashMap<String, String> values);
+        void setPaaSValues(LinkedHashMap<String, String> values);
 
-      void setPaaSView(Composite composite);
+        void setPaaSView(Composite composite);
 
-      void hidePaas();
-   }
+        void hidePaas();
+    }
 
-   /**
-    * Default CloudFoundry target.
-    */
-   public static final String DEFAULT_CLOUDFOUNDRY_TARGET = "http://api.cloudfoundry.com";
+    /** Default CloudFoundry target. */
+    public static final String DEFAULT_CLOUDFOUNDRY_TARGET = "http://api.cloudfoundry.com";
 
-   public static final String DEFAULT_URL_PREFIX = "<name>.";
+    public static final String DEFAULT_URL_PREFIX = "<name>.";
 
-   private Display display;
+    private Display display;
 
-   private ImportSampleStep<ProjectData> prevStep;
+    private ImportSampleStep<ProjectData> prevStep;
 
-   /**
-    * project data received from previous step
-    */
-   private ProjectData data;
+    /** project data received from previous step */
+    private ProjectData data;
 
-   private VirtualFileSystemInfo vfs;
+    private VirtualFileSystemInfo vfs;
 
-   private PaaS selectedPaaS;
+    private PaaS selectedPaaS;
 
-   private FolderModel PROJECT_ROOT_FOLDER;
+    private FolderModel PROJECT_ROOT_FOLDER;
 
-   private DeployResultHandler deployResultHandler = new DeployResultHandler()
-   {
-      @Override
-      public void onProjectCreated(ProjectModel project)
-      {
-      }
+    private DeployResultHandler deployResultHandler = new DeployResultHandler() {
+        @Override
+        public void onProjectCreated(ProjectModel project) {
+        }
 
-      @Override
-      public void onDeployFinished(boolean success)
-      {
-         if (success && display != null)
-         {
+        @Override
+        public void onDeployFinished(boolean success) {
+            if (success && display != null) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        }
+    };
+
+    public DeploySamplesPresenter() {
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
+
+    private void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                closeView();
+            }
+        });
+
+        display.getFinishButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (selectedPaaS != null && !selectedPaaS.getPaaSActions().validate()) {
+                    Dialogs.getInstance().showError("Please, fill all required fields.");
+                } else {
+                    createFolder();
+                }
+            }
+        });
+
+        display.getBackButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                prevStep.onReturn();
+                closeView();
+            }
+        });
+
+        display.getSelectPaasField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String value = event.getValue();
+                if ("none".equals(value)) {
+                    display.hidePaas();
+                    selectedPaaS = null;
+                } else {
+                    for (PaaS paas : IDE.getInstance().getPaaSes()) {
+                        if (paas.getId().equals(value)) {
+                            selectedPaaS = paas;
+                            Composite view =
+                                    selectedPaaS.getPaaSActions().getDeployView(data.getName(),
+                                                                                ProjectType.fromValue(data.getType()));
+                            openView(view);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void openView(Composite view) {
+        if (view != null) {
+            display.setPaaSView(view);
+        } else {
+            selectedPaaS = null;
+            display.hidePaas();
+            display.getSelectPaasField().setValue("none");
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see ImportSampleStep#onOpen(java.lang.Object) */
+    @Override
+    public void onOpen(ProjectData value) {
+        this.data = value;
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+            display.setPaaSValues(getPaasValues(value));
+            selectedPaaS = null;
+            display.getSelectPaasField().setValue("none");
+            return;
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
+        }
+    }
+
+    private LinkedHashMap<String, String> getPaasValues(ProjectData project) {
+        LinkedHashMap<String, String> paases = new LinkedHashMap<String, String>();
+        paases.put("none", "None");
+        if (project.getTargets().isEmpty()) {
+            return paases;
+        }
+
+        for (String target : project.getTargets()) {
+            for (PaaS paas : IDE.getInstance().getPaaSes()) {
+                if (paas.getId().equals(target)) {
+                    paases.put(paas.getId(), paas.getTitle());
+                    break;
+                }
+            }
+        }
+        return paases;
+    }
+
+    /** @see ImportSampleStep#onReturn() */
+    @Override
+    public void onReturn() {
+        // the last step
+    }
+
+    /** @see ImportSampleStep#setNextStep(ImportSampleStep) */
+    @Override
+    public void setNextStep(ImportSampleStep<ProjectData> step) {
+        // has no step, it is the last step.
+    }
+
+    /** @see ImportSampleStep#setPreviousStep(ImportSampleStep) */
+    @Override
+    public void setPreviousStep(ImportSampleStep<ProjectData> step) {
+        this.prevStep = step;
+    }
+
+    private void closeView() {
+        if (display != null) {
             IDE.getInstance().closeView(display.asView().getId());
-         }
-      }
-   };
+        }
+    }
 
-   public DeploySamplesPresenter()
-   {
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    // ---------------projects creation------------------------
+    private void createFolder() {
+        FolderModel parent = (FolderModel)vfs.getRoot();
+        FolderModel model = new FolderModel();
+        model.setName(data.getName());
+        model.setParent(parent);
+        try {
+            VirtualFileSystem.getInstance().createFolder(parent,
+                                                         new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(model)) {
+                                                             @Override
+                                                             protected void onSuccess(FolderModel result) {
+                                                                 PROJECT_ROOT_FOLDER = result;
+                                                                 cloneFolder(data, result);
+                                                             }
 
-   private void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            closeView();
-         }
-      });
+                                                             @Override
+                                                             protected void onFailure(Throwable exception) {
+                                                                 IDE.fireEvent(new ExceptionThrownEvent(exception,
+                                                                                                        "Exception during creating " +
+                                                                                                        "project"));
+                                                             }
+                                                         });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during creating project"));
+        }
+    }
 
-      display.getFinishButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            if (selectedPaaS != null && !selectedPaaS.getPaaSActions().validate())
-            {
-               Dialogs.getInstance().showError("Please, fill all required fields.");
-            }
-            else
-            {
-               createFolder();
-            }
-         }
-      });
+    /** Get the necessary parameters values and call the clone repository method (over WebSocket or HTTP). */
+    private void cloneFolder(final ProjectData repo, final FolderModel folder) {
+        String remoteUri = repo.getRepositoryUrl();
+        if (!remoteUri.endsWith(".git")) {
+            remoteUri += ".git";
+        }
+        JobManager.get().showJobSeparated();
 
-      display.getBackButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            prevStep.onReturn();
-            closeView();
-         }
-      });
+        try {
+            GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
+                                                             new RequestCallback<RepoInfo>() {
+                                                                 @Override
+                                                                 protected void onSuccess(RepoInfo result) {
+                                                                     onRepositoryCloned();
+                                                                 }
 
-      display.getSelectPaasField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            String value = event.getValue();
-            if ("none".equals(value))
-            {
-               display.hidePaas();
-               selectedPaaS = null;
-            }
-            else
-            {
-               for (PaaS paas : IDE.getInstance().getPaaSes())
-               {
-                  if (paas.getId().equals(value))
-                  {
-                     selectedPaaS = paas;
-                     Composite view =
-                        selectedPaaS.getPaaSActions().getDeployView(data.getName(),
-                           ProjectType.fromValue(data.getType()));
-                     openView(view);
-                  }
-               }
-            }
-         }
-      });
-   }
+                                                                 @Override
+                                                                 protected void onFailure(Throwable exception) {
+                                                                     handleError(exception, repo.getRepositoryUrl());
+                                                                 }
+                                                             });
+        } catch (WebSocketException e) {
+            cloneFolderREST(repo, folder, remoteUri);
+        }
+    }
 
-   private void openView(Composite view)
-   {
-      if (view != null)
-      {
-         display.setPaaSView(view);
-      }
-      else
-      {
-         selectedPaaS = null;
-         display.hidePaas();
-         display.getSelectPaasField().setValue("none");
-      }
-   }
+    /** Get the necessary parameters values and call the clone repository method (over HTTP). */
+    private void cloneFolderREST(final ProjectData repo, final FolderModel folder, String remoteUri) {
+        try {
+            GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
+                                                           new AsyncRequestCallback<RepoInfo>() {
+                                                               @Override
+                                                               protected void onSuccess(RepoInfo result) {
+                                                                   onRepositoryCloned();
+                                                               }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+                                                               @Override
+                                                               protected void onFailure(Throwable exception) {
+                                                                   handleError(exception, repo.getRepositoryUrl());
+                                                               }
+                                                           });
+        } catch (RequestException e) {
+            handleError(e, repo.getRepositoryUrl());
+        }
+    }
 
-   /**
-    * @see ImportSampleStep#onOpen(java.lang.Object)
-    */
-   @Override
-   public void onOpen(ProjectData value)
-   {
-      this.data = value;
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-         display.setPaaSValues(getPaasValues(value));
-         selectedPaaS = null;
-         display.getSelectPaasField().setValue("none");
-         return;
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
-      }
-   }
+    private void convertToProject(FolderModel folderModel) {
+        String projectType = data.getType();
+        folderModel.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+        folderModel.getProperties().add(new PropertyImpl("vfs:projectType", projectType));
 
-   private LinkedHashMap<String, String> getPaasValues(ProjectData project)
-   {
-      LinkedHashMap<String, String> paases = new LinkedHashMap<String, String>();
-      paases.put("none", "None");
-      if (project.getTargets().isEmpty())
-      {
-         return paases;
-      }
+        ItemWrapper item = new ItemWrapper(new ProjectModel());
+        ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+        try {
+            VirtualFileSystem.getInstance().updateItem(folderModel, null,
+                                                       new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
 
-      for (String target : project.getTargets())
-      {
-         for (PaaS paas : IDE.getInstance().getPaaSes())
-         {
-            if (paas.getId().equals(target))
-            {
-               paases.put(paas.getId(), paas.getTitle());
-               break;
-            }
-         }
-      }
-      return paases;
-   }
+                                                           @Override
+                                                           protected void onSuccess(ItemWrapper result) {
+                                                               if (selectedPaaS != null) {
+                                                                   selectedPaaS.getPaaSActions()
+                                                                               .deploy((ProjectModel)result.getItem(), deployResultHandler);
+                                                               }
+                                                               IDE.getInstance().closeView(display.asView().getId());
+                                                               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
+                                                               IDE.fireEvent(new RefreshBrowserEvent(vfs.getRoot()));
+                                                           }
 
-   /**
-    * @see ImportSampleStep#onReturn()
-    */
-   @Override
-   public void onReturn()
-   {
-      // the last step
-   }
+                                                           @Override
+                                                           protected void onFailure(Throwable exception) {
+                                                               IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                           }
+                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see ImportSampleStep#setNextStep(ImportSampleStep)
-    */
-   @Override
-   public void setNextStep(ImportSampleStep<ProjectData> step)
-   {
-      // has no step, it is the last step.
-   }
+    /** Perform actions on project repository was cloned successfully. */
+    private void onRepositoryCloned() {
+        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(data.getRepositoryUrl()), Type.GIT));
+        convertToProject(PROJECT_ROOT_FOLDER);
+    }
 
-   /**
-    * @see ImportSampleStep#setPreviousStep(ImportSampleStep)
-    */
-   @Override
-   public void setPreviousStep(ImportSampleStep<ProjectData> step)
-   {
-      this.prevStep = step;
-   }
+    private void handleError(Throwable t, String remoteUri) {
+        String errorMessage =
+                (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES
+                                                                                                       .cloneFailed(remoteUri);
+        IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
 
-   private void closeView()
-   {
-      if (display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-   }
-
-   // ---------------projects creation------------------------
-   private void createFolder()
-   {
-      FolderModel parent = (FolderModel)vfs.getRoot();
-      FolderModel model = new FolderModel();
-      model.setName(data.getName());
-      model.setParent(parent);
-      try
-      {
-         VirtualFileSystem.getInstance().createFolder(parent,
-            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(model))
-            {
-               @Override
-               protected void onSuccess(FolderModel result)
-               {
-                  PROJECT_ROOT_FOLDER = result;
-                  cloneFolder(data, result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during creating project"));
-      }
-   }
-
-   /**
-    * Get the necessary parameters values and call the clone repository method (over WebSocket or HTTP).
-    */
-   private void cloneFolder(final ProjectData repo, final FolderModel folder)
-   {
-      String remoteUri = repo.getRepositoryUrl();
-      if (!remoteUri.endsWith(".git"))
-      {
-         remoteUri += ".git";
-      }
-      JobManager.get().showJobSeparated();
-
-      try
-      {
-         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
-            new RequestCallback<RepoInfo>()
-            {
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  onRepositoryCloned();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, repo.getRepositoryUrl());
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         cloneFolderREST(repo, folder, remoteUri);
-      }
-   }
-
-   /**
-    * Get the necessary parameters values and call the clone repository method (over HTTP).
-    */
-   private void cloneFolderREST(final ProjectData repo, final FolderModel folder, String remoteUri)
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
-            new AsyncRequestCallback<RepoInfo>()
-            {
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  onRepositoryCloned();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, repo.getRepositoryUrl());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleError(e, repo.getRepositoryUrl());
-      }
-   }
-
-   private void convertToProject(FolderModel folderModel)
-   {
-      String projectType = data.getType();
-      folderModel.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folderModel.getProperties().add(new PropertyImpl("vfs:projectType", projectType));
-
-      ItemWrapper item = new ItemWrapper(new ProjectModel());
-      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(folderModel, null,
-            new AsyncRequestCallback<ItemWrapper>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  if (selectedPaaS != null)
-                  {
-                     selectedPaaS.getPaaSActions().deploy((ProjectModel)result.getItem(), deployResultHandler);
-                  }
-                  IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
-                  IDE.fireEvent(new RefreshBrowserEvent(vfs.getRoot()));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Perform actions on project repository was cloned successfully.
-    */
-   private void onRepositoryCloned()
-   {
-      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(data.getRepositoryUrl()), Type.GIT));
-      convertToProject(PROJECT_ROOT_FOLDER);
-   }
-
-   private void handleError(Throwable t, String remoteUri)
-   {
-      String errorMessage =
-         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES
-            .cloneFailed(remoteUri);
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfs = event.getVfsInfo();
+    }
 
 }

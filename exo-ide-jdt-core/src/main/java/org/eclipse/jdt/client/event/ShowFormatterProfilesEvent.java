@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:46:25 AM Apr 4, 2012 evgen $
- *
  */
-public class ShowFormatterProfilesEvent extends GwtEvent<ShowFormatterProfilesHandler>
-{
+public class ShowFormatterProfilesEvent extends GwtEvent<ShowFormatterProfilesHandler> {
 
-   public static final GwtEvent.Type<ShowFormatterProfilesHandler> TYPE = new Type<ShowFormatterProfilesHandler>();
+    public static final GwtEvent.Type<ShowFormatterProfilesHandler> TYPE = new Type<ShowFormatterProfilesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowFormatterProfilesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowFormatterProfilesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowFormatterProfilesHandler handler)
-   {
-      handler.onShowFormatterProfiles(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowFormatterProfilesHandler handler) {
+        handler.onShowFormatterProfiles(this);
+    }
 
 }

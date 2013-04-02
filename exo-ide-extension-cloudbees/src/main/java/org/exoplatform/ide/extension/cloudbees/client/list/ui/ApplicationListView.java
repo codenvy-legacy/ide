@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.list.ui;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.google.gwt.uibinder.client.UiField;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -38,46 +36,36 @@ import org.exoplatform.ide.extension.cloudbees.client.list.HasApplicationListAct
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2011 evgen $
- * 
  */
-public class ApplicationListView extends ViewImpl implements Display
-{
+public class ApplicationListView extends ViewImpl implements Display {
 
-   private static ApplicationListViewUiBinder uiBinder = GWT.create(ApplicationListViewUiBinder.class);
+    private static ApplicationListViewUiBinder uiBinder = GWT.create(ApplicationListViewUiBinder.class);
 
-   interface ApplicationListViewUiBinder extends UiBinder<Widget, ApplicationListView>
-   {
-   }
+    interface ApplicationListViewUiBinder extends UiBinder<Widget, ApplicationListView> {
+    }
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   @UiField
-   ApplicationListGrid applicationGrid;
+    @UiField
+    ApplicationListGrid applicationGrid;
 
-   public ApplicationListView()
-   {
-      super(ID, ViewType.POPUP, CloudBeesExtension.LOCALIZATION_CONSTANT.appListViewTitle(), new Image(
-         CloudBeesClientBundle.INSTANCE.appList()), 775, 270);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public ApplicationListView() {
+        super(ID, ViewType.POPUP, CloudBeesExtension.LOCALIZATION_CONSTANT.appListViewTitle(), new Image(
+                CloudBeesClientBundle.INSTANCE.appList()), 775, 270);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter.Display#getOkButton()
-    */
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter.Display#getOkButton() */
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter.Display#getAppListGrid()
-    */
-   @Override
-   public HasApplicationListActions getAppListGrid()
-   {
-      return applicationGrid;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter.Display#getAppListGrid() */
+    @Override
+    public HasApplicationListActions getAppListGrid() {
+        return applicationGrid;
+    }
 
 }

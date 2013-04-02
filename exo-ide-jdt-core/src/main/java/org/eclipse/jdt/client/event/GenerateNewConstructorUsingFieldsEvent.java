@@ -23,30 +23,22 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class GenerateNewConstructorUsingFieldsEvent extends GwtEvent<GenerateNewConstructorUsingFieldsHandler>
-{
+public class GenerateNewConstructorUsingFieldsEvent extends GwtEvent<GenerateNewConstructorUsingFieldsHandler> {
 
-   public static final Type<GenerateNewConstructorUsingFieldsHandler> TYPE =
-      new Type<GenerateNewConstructorUsingFieldsHandler>();
+    public static final Type<GenerateNewConstructorUsingFieldsHandler> TYPE =
+            new Type<GenerateNewConstructorUsingFieldsHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GenerateNewConstructorUsingFieldsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<GenerateNewConstructorUsingFieldsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(GenerateNewConstructorUsingFieldsHandler handler)
-   {
-      handler.onGenerateNewConstructorUsingFields(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(GenerateNewConstructorUsingFieldsHandler handler) {
+        handler.onGenerateNewConstructorUsingFields(this);
+    }
 
 }

@@ -20,42 +20,42 @@
 
 -->
 <module rename-to='JavaDebugExtension'>
-   <!-- Inherit the core Web Toolkit stuff. -->
-   <inherits name='com.google.gwt.user.User' />
-   <inherits name='com.google.web.bindery.autobean.AutoBean'/>
-   <inherits name='com.google.gwt.json.JSON' />
+    <!-- Inherit the core Web Toolkit stuff. -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='com.google.web.bindery.autobean.AutoBean'/>
+    <inherits name='com.google.gwt.json.JSON'/>
 
-   <!-- We need the JUnit module in the main module, -->
-   <!-- otherwise eclipse complains (Google plugin bug?) -->
-   <!-- inherits name='com.google.gwt.junit.JUnit' /-->
+    <!-- We need the JUnit module in the main module, -->
+    <!-- otherwise eclipse complains (Google plugin bug?) -->
+    <!-- inherits name='com.google.gwt.junit.JUnit' /-->
 
-   <!-- Inherit the default GWT style sheet. You can change -->
-   <!-- the theme of your GWT application by uncommenting -->
-   <!-- any one of the following lines. -->
-   <inherits name='com.google.gwt.user.theme.standard.Standard' />
-   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
+    <!-- Inherit the default GWT style sheet. You can change -->
+    <!-- the theme of your GWT application by uncommenting -->
+    <!-- any one of the following lines. -->
+    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+    <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+    <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 
-   <!-- Other module inherits -->
-   <!-- load GWT Framework Libraries -->
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   <inherits name='org.exoplatform.gwtframework.ui.UI' />
-   
-   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-   
-   <inherits name="org.exoplatform.ide.editor.Editor" />
-   <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension" />
-   <inherits name="org.eclipse.jdt.IdeJdt" />
-   <inherits name="org.exoplatform.ide.extension.maven.BuilderExtension"/>
-   
+    <!-- Other module inherits -->
+    <!-- load GWT Framework Libraries -->
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
+    <inherits name='org.exoplatform.gwtframework.ui.UI'/>
 
-   <inherits name='org.exoplatform.ide.extension.java.jdi.Views' />
+    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework'/>
 
-   <!-- Specify the app entry point class. -->
-   <entry-point class='org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension' />
+    <inherits name="org.exoplatform.ide.editor.Editor"/>
+    <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension"/>
+    <inherits name="org.eclipse.jdt.IdeJdt"/>
+    <inherits name="org.exoplatform.ide.extension.maven.BuilderExtension"/>
 
-   <!-- Specify the paths for translatable code -->
-   <source path='client' />
-   <source path='shared' />
+
+    <inherits name='org.exoplatform.ide.extension.java.jdi.Views'/>
+
+    <!-- Specify the app entry point class. -->
+    <entry-point class='org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension'/>
+
+    <!-- Specify the paths for translatable code -->
+    <source path='client'/>
+    <source path='shared'/>
 
 </module>

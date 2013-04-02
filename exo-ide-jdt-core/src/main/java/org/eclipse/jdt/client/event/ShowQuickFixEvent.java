@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class ShowQuickFixEvent extends GwtEvent<ShowQuickFixHandler>
-{
+public class ShowQuickFixEvent extends GwtEvent<ShowQuickFixHandler> {
 
-   public static final Type<ShowQuickFixHandler> TYPE = new Type<ShowQuickFixHandler>();
+    public static final Type<ShowQuickFixHandler> TYPE = new Type<ShowQuickFixHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowQuickFixHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowQuickFixHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowQuickFixHandler handler)
-   {
-      handler.onShowQuickFix(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowQuickFixHandler handler) {
+        handler.onShowQuickFix(this);
+    }
 
 }

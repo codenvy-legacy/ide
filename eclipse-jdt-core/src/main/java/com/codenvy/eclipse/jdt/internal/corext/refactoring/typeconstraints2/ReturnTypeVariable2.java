@@ -19,59 +19,50 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types
  * A ReturnTypeVariable is a ConstraintVariable which stands for
  * the return type of a method.
  */
-public final class ReturnTypeVariable2 extends ConstraintVariable2 implements ISourceConstraintVariable
-{
+public final class ReturnTypeVariable2 extends ConstraintVariable2 implements ISourceConstraintVariable {
 
-   private final String fKey;
+    private final String fKey;
 
-   private ICompilationUnit fCompilationUnit;
+    private ICompilationUnit fCompilationUnit;
 
-   public ReturnTypeVariable2(TType type, IMethodBinding binding)
-   {
-      super(type);
-      fKey = binding.getKey();
-   }
+    public ReturnTypeVariable2(TType type, IMethodBinding binding) {
+        super(type);
+        fKey = binding.getKey();
+    }
 
-   public String getKey()
-   {
-      return fKey;
-   }
+    public String getKey() {
+        return fKey;
+    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      return getKey().hashCode();
-   }
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return getKey().hashCode();
+    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object other)
-   {
-      if (this == other)
-      {
-         return true;
-      }
-      if (other.getClass() != ReturnTypeVariable2.class)
-      {
-         return false;
-      }
+    /*
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other.getClass() != ReturnTypeVariable2.class) {
+            return false;
+        }
 
-      ReturnTypeVariable2 other2 = (ReturnTypeVariable2)other;
-      return getKey().equals(other2.getKey());
-   }
+        ReturnTypeVariable2 other2 = (ReturnTypeVariable2)other;
+        return getKey().equals(other2.getKey());
+    }
 
-   public void setCompilationUnit(ICompilationUnit unit)
-   {
-      fCompilationUnit = unit;
-   }
+    public void setCompilationUnit(ICompilationUnit unit) {
+        fCompilationUnit = unit;
+    }
 
-   public ICompilationUnit getCompilationUnit()
-   {
-      return fCompilationUnit;
-   }
+    public ICompilationUnit getCompilationUnit() {
+        return fCompilationUnit;
+    }
 }

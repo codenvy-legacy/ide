@@ -24,63 +24,48 @@ import org.exoplatform.ide.extension.googleappengine.client.model.State;
 
 /**
  * Event occurs, when user tries to update backend's state.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 2:59:42 PM anya $
- * 
  */
-public class UpdateBackendStateEvent extends GwtEvent<UpdateBackendStateHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<UpdateBackendStateHandler> TYPE = new GwtEvent.Type<UpdateBackendStateHandler>();
+public class UpdateBackendStateEvent extends GwtEvent<UpdateBackendStateHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<UpdateBackendStateHandler> TYPE = new GwtEvent.Type<UpdateBackendStateHandler>();
 
-   private String backendName;
+    private String backendName;
 
-   private State state;
+    private State state;
 
-   /**
-    * @param backendName backend's name
-    * @param state backend's state
-    */
-   public UpdateBackendStateEvent(String backendName, State state)
-   {
-      this.backendName = backendName;
-      this.state = state;
-   }
+    /**
+     * @param backendName
+     *         backend's name
+     * @param state
+     *         backend's state
+     */
+    public UpdateBackendStateEvent(String backendName, State state) {
+        this.backendName = backendName;
+        this.state = state;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateBackendStateHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateBackendStateHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateBackendStateHandler handler)
-   {
-      handler.onUpdateBackendState(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateBackendStateHandler handler) {
+        handler.onUpdateBackendState(this);
+    }
 
-   /**
-    * @return the backendName
-    */
-   public String getBackendName()
-   {
-      return backendName;
-   }
+    /** @return the backendName */
+    public String getBackendName() {
+        return backendName;
+    }
 
-   /**
-    * @return the state
-    */
-   public State getState()
-   {
-      return state;
-   }
+    /** @return the state */
+    public State getState() {
+        return state;
+    }
 }

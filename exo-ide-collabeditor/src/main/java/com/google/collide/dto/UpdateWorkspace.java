@@ -17,17 +17,14 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request to update the workspace description and title.
- *
- */
+/** Request to update the workspace description and title. */
 @RoutingType(type = RoutingTypes.UPDATEWORKSPACE)
 public interface UpdateWorkspace extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /** a {@link WorkspaceInfo} with just the field we want to change */
-  WorkspaceInfo getWorkspaceUpdates();
+    /** a {@link WorkspaceInfo} with just the field we want to change */
+    WorkspaceInfo getWorkspaceUpdates();
 
 }

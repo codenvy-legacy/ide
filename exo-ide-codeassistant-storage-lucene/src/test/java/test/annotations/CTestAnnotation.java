@@ -21,7 +21,6 @@ package test.annotations;
 /**
  *
  */
-public @interface CTestAnnotation
-{
+public @interface CTestAnnotation {
 
 }

@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.client.operation.search;
 
-import com.google.gwt.http.client.URL;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -54,190 +53,161 @@ import java.util.List;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: $
- * 
  */
 public class SearchFilesPresenter implements SearchFilesHandler, ViewOpenedHandler, ViewClosedHandler,
-   ItemsSelectedHandler
-{
+                                             ItemsSelectedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasClickHandlers getSearchButton();
+        HasClickHandlers getSearchButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasValue<String> getSearchContentItem();
+        HasValue<String> getSearchContentItem();
 
-      HasValue<String> getPathItem();
+        HasValue<String> getPathItem();
 
-      HasValue<String> getMimeTypeItem();
+        HasValue<String> getMimeTypeItem();
 
-      void setMimeTypeValues(String[] mimeTypes);
+        void setMimeTypeValues(String[] mimeTypes);
 
-   }
+    }
 
-   private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-      .searchFileSearchError();
+    private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+                                                                                     .searchFileSearchError();
 
-   private Display display;
+    private Display display;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   public SearchFilesPresenter()
-   {
-      IDE.getInstance().addControl(new SearchFilesControl(), Docking.TOOLBAR);
+    public SearchFilesPresenter() {
+        IDE.getInstance().addControl(new SearchFilesControl(), Docking.TOOLBAR);
 
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(SearchFilesEvent.TYPE, this);
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(SearchFilesEvent.TYPE, this);
+        IDE.addHandler(ViewOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getSearchButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            doSearch();
-         }
-      });
+    public void bindDisplay() {
+        display.getSearchButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                doSearch();
+            }
+        });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      setPath();
-      fillMimeTypes();
-   }
+        setPath();
+        fillMimeTypes();
+    }
 
-   private void setPath()
-   {
-      if (selectedItems.size() > 0)
-      {
-         Item selectedItem = selectedItems.get(0);
+    private void setPath() {
+        if (selectedItems.size() > 0) {
+            Item selectedItem = selectedItems.get(0);
 
-         String path = selectedItem.getPath();
-         if (selectedItem instanceof FileModel && ((FileModel)selectedItem).getParent() != null)
-         {
-            path = ((FileModel)selectedItem).getParent().getPath();
-         }
-         display.getPathItem().setValue(path);
-      }
-   }
+            String path = selectedItem.getPath();
+            if (selectedItem instanceof FileModel && ((FileModel)selectedItem).getParent() != null) {
+                path = ((FileModel)selectedItem).getParent().getPath();
+            }
+            display.getPathItem().setValue(path);
+        }
+    }
 
-   private void doSearch()
-   {
-      // TODO
-      HashMap<String, String> query = new HashMap<String, String>();
-      String content = display.getSearchContentItem().getValue();
-      String contentType = display.getMimeTypeItem().getValue();
-      query.put("text", URL.encode(content));
-      query.put("mediaType", contentType);
+    private void doSearch() {
+        // TODO
+        HashMap<String, String> query = new HashMap<String, String>();
+        String content = display.getSearchContentItem().getValue();
+        String contentType = display.getMimeTypeItem().getValue();
+        query.put("text", URL.encode(content));
+        query.put("mediaType", contentType);
 
-      Item item = selectedItems.get(0);
+        Item item = selectedItems.get(0);
 
-      String path = item.getPath();
-      if (item instanceof File)
-      {
-         path = path.substring(0, path.lastIndexOf("/"));
-      }
+        String path = item.getPath();
+        if (item instanceof File) {
+            path = path.substring(0, path.lastIndexOf("/"));
+        }
 
-      if (!"".equals(path) && !path.startsWith("/"))
-      {
-         path = "/" + path;
-      }
+        if (!"".equals(path) && !path.startsWith("/")) {
+            path = "/" + path;
+        }
 
-      query.put("path", path);
-      final FolderModel folder = new FolderModel();
-      folder.setId(path);
-      folder.setPath(path);
-      try
-      {
-         VirtualFileSystem.getInstance().search(
-            query,
-            -1,
-            0,
-            new AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
-            {
+        query.put("path", path);
+        final FolderModel folder = new FolderModel();
+        folder.setId(path);
+        folder.setPath(path);
+        try {
+            VirtualFileSystem.getInstance().search(
+                    query,
+                    -1,
+                    0,
+                    new AsyncRequestCallback<List<Item>>(
+                            new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-               @Override
-               protected void onSuccess(List<Item> result)
-               {
-                  folder.getChildren().setItems(result);
-                  IDE.fireEvent(new SearchResultReceivedEvent(folder));
-                  IDE.getInstance().closeView(display.asView().getId());
-               }
+                        @Override
+                        protected void onSuccess(List<Item> result) {
+                            folder.getChildren().setItems(result);
+                            IDE.fireEvent(new SearchResultReceivedEvent(folder));
+                            IDE.getInstance().closeView(display.asView().getId());
+                        }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
-      }
-   }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception, SEARCH_ERROR_MESSAGE));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e, SEARCH_ERROR_MESSAGE));
+        }
+    }
 
-   private void fillMimeTypes()
-   {
-      String[] mimeTypes = new String[10];
-      mimeTypes[0] = MimeType.TEXT_HTML;
-      mimeTypes[1] = MimeType.TEXT_CSS;
-      mimeTypes[2] = MimeType.TEXT_PLAIN;
-      mimeTypes[3] = MimeType.APPLICATION_X_JAVASCRIPT;
-      mimeTypes[4] = MimeType.APPLICATION_JAVASCRIPT;
-      mimeTypes[5] = MimeType.TEXT_JAVASCRIPT;
-      mimeTypes[6] = MimeType.TEXT_XML;
-      mimeTypes[7] = MimeType.GROOVY_SERVICE;
-      mimeTypes[8] = MimeType.APPLICATION_GROOVY;
-      mimeTypes[9] = MimeType.GOOGLE_GADGET;
-      display.setMimeTypeValues(mimeTypes);
-   }
+    private void fillMimeTypes() {
+        String[] mimeTypes = new String[10];
+        mimeTypes[0] = MimeType.TEXT_HTML;
+        mimeTypes[1] = MimeType.TEXT_CSS;
+        mimeTypes[2] = MimeType.TEXT_PLAIN;
+        mimeTypes[3] = MimeType.APPLICATION_X_JAVASCRIPT;
+        mimeTypes[4] = MimeType.APPLICATION_JAVASCRIPT;
+        mimeTypes[5] = MimeType.TEXT_JAVASCRIPT;
+        mimeTypes[6] = MimeType.TEXT_XML;
+        mimeTypes[7] = MimeType.GROOVY_SERVICE;
+        mimeTypes[8] = MimeType.APPLICATION_GROOVY;
+        mimeTypes[9] = MimeType.GOOGLE_GADGET;
+        display.setMimeTypeValues(mimeTypes);
+    }
 
-   public void onSearchFiles(SearchFilesEvent event)
-   {
-      if (display != null)
-      {
-         return;
-      }
+    public void onSearchFiles(SearchFilesEvent event) {
+        if (display != null) {
+            return;
+        }
 
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-   }
+        display = GWT.create(Display.class);
+        IDE.getInstance().openView(display.asView());
+        bindDisplay();
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-   }
+    @Override
+    public void onViewOpened(ViewOpenedEvent event) {
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      if (display != null)
-      {
-         setPath();
-      }
-   }
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        if (display != null) {
+            setPath();
+        }
+    }
 
 }

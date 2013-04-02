@@ -22,11 +22,10 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link WelcomePageOpenedEvent}.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomePageOpenedHandler.java Dec 19, 2011 11:44:14 AM vereshchaka $
  */
-public interface WelcomePageOpenedHandler extends EventHandler
-{
-   void onWelcomePageOpened(WelcomePageOpenedEvent event);
+public interface WelcomePageOpenedHandler extends EventHandler {
+    void onWelcomePageOpened(WelcomePageOpenedEvent event);
 }

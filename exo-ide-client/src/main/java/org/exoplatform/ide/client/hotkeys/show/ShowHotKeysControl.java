@@ -29,40 +29,30 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowHotKeysControl.java May 10, 2012 10:17:30 AM azatsarynnyy $
- *
  */
 @RolesAllowed({"developer"})
-public class ShowHotKeysControl extends SimpleControl implements IDEControl
-{
+public class ShowHotKeysControl extends SimpleControl implements IDEControl {
 
-   /**
-    * Control's identifier.
-    */
-   public static final String ID = IDE.IDE_LOCALIZATION_CONSTANT.showHotKeysIdControl();
+    /** Control's identifier. */
+    public static final String ID = IDE.IDE_LOCALIZATION_CONSTANT.showHotKeysIdControl();
 
-   /**
-    * Control's title.
-    */
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showHotKeysTitleControl();
+    /** Control's title. */
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showHotKeysTitleControl();
 
-   public ShowHotKeysControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setGroupName("Hotkeys & Dependencies");
-      setImages(IDEImageBundle.INSTANCE.showHotKeys(), IDEImageBundle.INSTANCE.showHotKeysDisabled());
-      setEvent(new ShowHotKeysEvent());
-   }
+    public ShowHotKeysControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setGroupName("Hotkeys & Dependencies");
+        setImages(IDEImageBundle.INSTANCE.showHotKeys(), IDEImageBundle.INSTANCE.showHotKeysDisabled());
+        setEvent(new ShowHotKeysEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setEnabled(true);
-      setVisible(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setEnabled(true);
+        setVisible(true);
+    }
 
 }

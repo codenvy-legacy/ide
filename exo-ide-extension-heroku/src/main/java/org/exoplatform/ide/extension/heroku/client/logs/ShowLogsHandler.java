@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowLogsEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 19, 2011 12:43:40 PM anya $
- * 
  */
-public interface ShowLogsHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to view logs of the Heroku application.
-    * 
-    * @param event
-    */
-   void onShowLogs(ShowLogsEvent event);
+public interface ShowLogsHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to view logs of the Heroku application.
+     *
+     * @param event
+     */
+    void onShowLogs(ShowLogsEvent event);
 }

@@ -29,26 +29,21 @@ import org.everrest.core.impl.provider.json.JsonParser;
  * @see JsonNameConvention
  * @see JsonNameConventions
  */
-public class NameConventionJsonParser extends JsonParser
-{
-   public NameConventionJsonParser(JsonNameConvention nameConvention)
-   {
-      super(new NameConventionJsonHandler(nameConvention));
-   }
+public class NameConventionJsonParser extends JsonParser {
+    public NameConventionJsonParser(JsonNameConvention nameConvention) {
+        super(new NameConventionJsonHandler(nameConvention));
+    }
 
-   private static class NameConventionJsonHandler extends JsonHandler
-   {
-      private final JsonNameConvention nameConvention;
+    private static class NameConventionJsonHandler extends JsonHandler {
+        private final JsonNameConvention nameConvention;
 
-      private NameConventionJsonHandler(JsonNameConvention nameConvention)
-      {
-         this.nameConvention = nameConvention;
-      }
+        private NameConventionJsonHandler(JsonNameConvention nameConvention) {
+            this.nameConvention = nameConvention;
+        }
 
-      @Override
-      public void key(String key)
-      {
-         super.key(nameConvention.toJavaName(key));
-      }
-   }
+        @Override
+        public void key(String key) {
+            super.key(nameConvention.toJavaName(key));
+        }
+    }
 }

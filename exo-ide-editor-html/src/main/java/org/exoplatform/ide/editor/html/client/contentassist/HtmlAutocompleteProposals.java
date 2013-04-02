@@ -21,40 +21,38 @@ import com.google.collide.codemirror2.SyntaxType;
 import org.exoplatform.ide.json.shared.JsonArray;
 //import com.google.common.base.Preconditions;
 
-/**
- * Html-specific implementation.
- */
+/** Html-specific implementation. */
 public class HtmlAutocompleteProposals extends AutocompleteProposals {
 
-  static class HtmlProposalWithContext extends ProposalWithContext {
+    static class HtmlProposalWithContext extends ProposalWithContext {
+
+        private final CompletionType type;
+
+        public HtmlProposalWithContext(
+                AutocompleteProposal proposal, Context context, CompletionType type) {
+            super(SyntaxType.HTML, proposal, context);
+            this.type = type;
+        }
+
+        public CompletionType getType() {
+            return type;
+        }
+    }
 
     private final CompletionType type;
 
-    public HtmlProposalWithContext(
-        AutocompleteProposal proposal, Context context, CompletionType type) {
-      super(SyntaxType.HTML, proposal, context);
-      this.type = type;
+    public HtmlAutocompleteProposals(
+            String context, JsonArray<AutocompleteProposal> items, CompletionType type) {
+        super(SyntaxType.HTML, context, items);
+        this.type = type;
     }
 
-    public CompletionType getType() {
-      return type;
-    }
-  }
-
-  private final CompletionType type;
-
-  public HtmlAutocompleteProposals(
-      String context, JsonArray<AutocompleteProposal> items, CompletionType type) {
-    super(SyntaxType.HTML, context, items);
-    this.type = type;
-  }
-
-  @Override
-  public ProposalWithContext select(AutocompleteProposal proposal) {
+    @Override
+    public ProposalWithContext select(AutocompleteProposal proposal) {
 //    Preconditions.checkState(items.contains(proposal));
-    if (!items.contains(proposal)) {
-      throw new IllegalStateException();
+        if (!items.contains(proposal)) {
+            throw new IllegalStateException();
+        }
+        return new HtmlProposalWithContext(proposal, context, type);
     }
-    return new HtmlProposalWithContext(proposal, context, type);
-  }
 }

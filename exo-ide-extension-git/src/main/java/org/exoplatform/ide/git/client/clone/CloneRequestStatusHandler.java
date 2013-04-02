@@ -28,42 +28,31 @@ import org.exoplatform.ide.git.client.GitExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 28, 2011 evgen $
- * 
  */
-public class CloneRequestStatusHandler extends RequestStatusHandlerBase
-{
+public class CloneRequestStatusHandler extends RequestStatusHandlerBase {
 
-   private String remoteUri;
+    private String remoteUri;
 
-   /**
-    * @param remoteUri
-    */
-   public CloneRequestStatusHandler(String projectName, String remoteUri)
-   {
-      super(projectName);
-      this.remoteUri = remoteUri;
-   }
+    /** @param remoteUri */
+    public CloneRequestStatusHandler(String projectName, String remoteUri) {
+        super(projectName);
+        this.remoteUri = remoteUri;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(GitExtension.MESSAGES.cloneStarted(projectName, remoteUri));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(GitExtension.MESSAGES.cloneStarted(projectName, remoteUri));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(GitExtension.MESSAGES.cloneFinished(projectName, remoteUri));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(GitExtension.MESSAGES.cloneFinished(projectName, remoteUri));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

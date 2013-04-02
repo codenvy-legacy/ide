@@ -22,62 +22,49 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Fire this to add documentation for specific media file. <br>
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RegisterDocumentationEvent Jan 24, 2011 11:11:39 AM evgen $
- * 
  */
-public class RegisterDocumentationEvent extends GwtEvent<RegisterDocumentationHandler>
-{
+public class RegisterDocumentationEvent extends GwtEvent<RegisterDocumentationHandler> {
 
-   public static GwtEvent.Type<RegisterDocumentationHandler> TYPE = new Type<RegisterDocumentationHandler>();
+    public static GwtEvent.Type<RegisterDocumentationHandler> TYPE = new Type<RegisterDocumentationHandler>();
 
-   private String mimeType;
+    private String mimeType;
 
-   private String url;
+    private String url;
 
-   /**
-    * @param mimeType type of file
-    * @param url to documentation
-    */
-   public RegisterDocumentationEvent(String mimeType, String url)
-   {
-      this.mimeType = mimeType;
-      this.url = url;
-   }
+    /**
+     * @param mimeType
+     *         type of file
+     * @param url
+     *         to documentation
+     */
+    public RegisterDocumentationEvent(String mimeType, String url) {
+        this.mimeType = mimeType;
+        this.url = url;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RegisterDocumentationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RegisterDocumentationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RegisterDocumentationHandler handler)
-   {
-      handler.onRegisterDocumentation(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RegisterDocumentationHandler handler) {
+        handler.onRegisterDocumentation(this);
+    }
 
-   /**
-    * @return the mimeType of file
-    */
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    /** @return the mimeType of file */
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   /**
-    * @return the url to the documentation
-    */
-   public String getUrl()
-   {
-      return url;
-   }
+    /** @return the url to the documentation */
+    public String getUrl() {
+        return url;
+    }
 
 }

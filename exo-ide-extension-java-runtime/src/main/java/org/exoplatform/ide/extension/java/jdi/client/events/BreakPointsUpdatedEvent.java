@@ -18,58 +18,44 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.events;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.ide.extension.java.jdi.client.EditorBreakPoint;
 
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 3:42:30 PM Mar 28, 2012 evgen $
- * 
  */
-public class BreakPointsUpdatedEvent extends GwtEvent<BreakPointsUpdatedHandler>
-{
+public class BreakPointsUpdatedEvent extends GwtEvent<BreakPointsUpdatedHandler> {
 
-   public static final GwtEvent.Type<BreakPointsUpdatedHandler> TYPE = new Type<BreakPointsUpdatedHandler>();
+    public static final GwtEvent.Type<BreakPointsUpdatedHandler> TYPE = new Type<BreakPointsUpdatedHandler>();
 
-   private Map<String, Set<EditorBreakPoint>> breakPoints;
+    private Map<String, Set<EditorBreakPoint>> breakPoints;
 
-   /**
-    * @param breakPoints
-    */
-   public BreakPointsUpdatedEvent(Map<String, Set<EditorBreakPoint>> breakPoints)
-   {
-      super();
-      this.breakPoints = breakPoints;
-   }
+    /** @param breakPoints */
+    public BreakPointsUpdatedEvent(Map<String, Set<EditorBreakPoint>> breakPoints) {
+        super();
+        this.breakPoints = breakPoints;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BreakPointsUpdatedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BreakPointsUpdatedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(BreakPointsUpdatedHandler handler)
-   {
-      handler.onBreakPointsUpdated(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(BreakPointsUpdatedHandler handler) {
+        handler.onBreakPointsUpdated(this);
+    }
 
-   /**
-    * @return the breakPoints
-    */
-   public Map<String, Set<EditorBreakPoint>> getBreakPoints()
-   {
-      return breakPoints;
-   }
+    /** @return the breakPoints */
+    public Map<String, Set<EditorBreakPoint>> getBreakPoints() {
+        return breakPoints;
+    }
 
 }

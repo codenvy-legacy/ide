@@ -26,20 +26,17 @@ import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: AutocompleteProposalWidget.java Sep 11, 2012 3:17:38 PM azatsarynnyy $
- *
  */
-public class ContentAssistProposalWidget extends Composite
-{
-   private CompletionProposal completionProposal;
+public class ContentAssistProposalWidget extends Composite {
+    private CompletionProposal completionProposal;
 
-   private Grid grid;
+    private Grid grid;
 
-   public ContentAssistProposalWidget(CompletionProposal completionProposal)
-   {
-      this.completionProposal = completionProposal;
-      grid = new Grid(1, 2);
-      grid.setWidget(0, 0, completionProposal.getImage());
-      initWidget(grid);
-   }
+    public ContentAssistProposalWidget(CompletionProposal completionProposal) {
+        this.completionProposal = completionProposal;
+        grid = new Grid(1, 2);
+        grid.setWidget(0, 0, completionProposal.getImage());
+        initWidget(grid);
+    }
 
 }

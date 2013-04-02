@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
@@ -35,43 +27,46 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
 /**
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class JavaDocExtractorTest
-{
-   @Mock
-   private IndexReader reader;
+public class JavaDocExtractorTest {
+    @Mock
+    private IndexReader reader;
 
-   private final JavaDocExtractor extractor = new JavaDocExtractor();
+    private final JavaDocExtractor extractor = new JavaDocExtractor();
 
-   @Test
-   public void shouldCallReaderGetDocumentWithSameIdAndFieldSelector() throws Exception
-   {
+    @Test
+    public void shouldCallReaderGetDocumentWithSameIdAndFieldSelector() throws Exception {
 
-      Document luceneDocument = new Document();
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+        Document luceneDocument = new Document();
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
-      extractor.getValue(reader, 5);
+        extractor.getValue(reader, 5);
 
-      verify(reader).document(eq(5), (FieldSelector)anyObject());
-      verifyNoMoreInteractions(reader);
-   }
+        verify(reader).document(eq(5), (FieldSelector)anyObject());
+        verifyNoMoreInteractions(reader);
+    }
 
-   @Test
-   public void shouldReconstructJavaDocInfo() throws Exception
-   {
-      final String fqn = "org.exoplatform.ide.codeassistant.test";
-      final String doc = "test javadoc";
+    @Test
+    public void shouldReconstructJavaDocInfo() throws Exception {
+        final String fqn = "org.exoplatform.ide.codeassistant.test";
+        final String doc = "test javadoc";
 
-      Document luceneDocument = new DataIndexer().createJavaDocDocument(fqn, doc,"rt");
+        Document luceneDocument = new DataIndexer().createJavaDocDocument(fqn, doc, "rt");
 
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
-      String actualJavaDoc = extractor.getValue(reader, 5);
+        String actualJavaDoc = extractor.getValue(reader, 5);
 
-      assertEquals(doc, actualJavaDoc);
-   }
+        assertEquals(doc, actualJavaDoc);
+    }
 
 }

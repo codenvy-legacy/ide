@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.complete;
 
-public interface CompletionOnKeyword
-{
+public interface CompletionOnKeyword {
 
-   char[] getToken();
+    char[] getToken();
 
-   char[][] getPossibleKeywords();
+    char[][] getPossibleKeywords();
 
-   boolean canCompleteEmptyToken();
+    boolean canCompleteEmptyToken();
 }

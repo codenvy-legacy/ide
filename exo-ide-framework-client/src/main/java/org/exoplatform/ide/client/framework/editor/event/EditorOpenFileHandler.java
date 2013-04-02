@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public interface EditorOpenFileHandler extends EventHandler
-{
+public interface EditorOpenFileHandler extends EventHandler {
 
-   void onEditorOpenFile(EditorOpenFileEvent event);
+    void onEditorOpenFile(EditorOpenFileEvent event);
 
 }

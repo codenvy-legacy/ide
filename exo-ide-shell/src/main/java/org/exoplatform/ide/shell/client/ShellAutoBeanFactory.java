@@ -27,31 +27,29 @@ import org.exoplatform.ide.shell.shared.ShellConfiguration;
 
 /**
  * The interface for the {@link AutoBean} generator.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShellAutoBeanFactory.java Mar 27, 2012 1:03:50 PM azatsarynnyy $
- * 
  */
-public interface ShellAutoBeanFactory extends AutoBeanFactory
-{
-   /**
-    * A factory method for a login command bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Login}
-    */
-   AutoBean<Login> login();
+public interface ShellAutoBeanFactory extends AutoBeanFactory {
+    /**
+     * A factory method for a login command bean.
+     *
+     * @return an {@link AutoBean} of type {@link Login}
+     */
+    AutoBean<Login> login();
 
-   /**
-    * A factory method for a shell configuration bean.
-    * 
-    * @return an {@link AutoBean} of type {@link ShellConfiguration}
-    */
-   AutoBean<ShellConfiguration> shellConfiguration();
-   
-   /**
-    * A factory method for a status bean.
-    * 
-    * @return an {@link AutoBean} of type {@link BuildStatus}
-    */
-   AutoBean<BuildStatus> buildStatus();
+    /**
+     * A factory method for a shell configuration bean.
+     *
+     * @return an {@link AutoBean} of type {@link ShellConfiguration}
+     */
+    AutoBean<ShellConfiguration> shellConfiguration();
+
+    /**
+     * A factory method for a status bean.
+     *
+     * @return an {@link AutoBean} of type {@link BuildStatus}
+     */
+    AutoBean<BuildStatus> buildStatus();
 }

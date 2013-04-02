@@ -34,133 +34,109 @@ import org.eclipse.jdt.client.internal.corext.refactoring.util.CodeAnalyzer;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
-public class SurroundWithAnalyzer extends CodeAnalyzer
-{
+public class SurroundWithAnalyzer extends CodeAnalyzer {
 
-   private VariableDeclaration[] fLocals;
+    private VariableDeclaration[] fLocals;
 
-   public SurroundWithAnalyzer(IDocument document, Selection selection) throws CoreException
-   {
-      super(document, selection, false);
-   }
+    public SurroundWithAnalyzer(IDocument document, Selection selection) throws CoreException {
+        super(document, selection, false);
+    }
 
-   public Statement[] getSelectedStatements()
-   {
-      if (hasSelectedNodes())
-      {
-         return internalGetSelectedNodes().toArray(new Statement[internalGetSelectedNodes().size()]);
-      }
-      else
-      {
-         return new Statement[0];
-      }
-   }
+    public Statement[] getSelectedStatements() {
+        if (hasSelectedNodes()) {
+            return internalGetSelectedNodes().toArray(new Statement[internalGetSelectedNodes().size()]);
+        } else {
+            return new Statement[0];
+        }
+    }
 
-   public VariableDeclaration[] getAffectedLocals()
-   {
-      return fLocals;
-   }
+    public VariableDeclaration[] getAffectedLocals() {
+        return fLocals;
+    }
 
-   public BodyDeclaration getEnclosingBodyDeclaration()
-   {
-      ASTNode node = getFirstSelectedNode();
-      if (node == null)
-         return null;
+    public BodyDeclaration getEnclosingBodyDeclaration() {
+        ASTNode node = getFirstSelectedNode();
+        if (node == null)
+            return null;
 
-      return ASTResolving.findParentBodyDeclaration(node);
-   }
+        return ASTResolving.findParentBodyDeclaration(node);
+    }
 
-   @Override
-   protected boolean handleSelectionEndsIn(ASTNode node)
-   {
-      return true;
-   }
+    @Override
+    protected boolean handleSelectionEndsIn(ASTNode node) {
+        return true;
+    }
 
-   @Override
-   public void endVisit(CompilationUnit node)
-   {
-      postProcessSelectedNodes(internalGetSelectedNodes());
-      BodyDeclaration enclosingNode = null;
-      superCall :
-      {
-         if (getStatus().hasFatalError())
-            break superCall;
-         if (!hasSelectedNodes())
-         {
-            ASTNode coveringNode = getLastCoveringNode();
-            if (coveringNode instanceof Block)
-            {
-               Block block = (Block)coveringNode;
-               Message[] messages = ASTNodes.getMessages(block, ASTNodes.NODE_ONLY);
-               if (messages.length > 0)
-               {
-                  invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_compile_errors());
-                  break superCall;
-               }
+    @Override
+    public void endVisit(CompilationUnit node) {
+        postProcessSelectedNodes(internalGetSelectedNodes());
+        BodyDeclaration enclosingNode = null;
+        superCall:
+        {
+            if (getStatus().hasFatalError())
+                break superCall;
+            if (!hasSelectedNodes()) {
+                ASTNode coveringNode = getLastCoveringNode();
+                if (coveringNode instanceof Block) {
+                    Block block = (Block)coveringNode;
+                    Message[] messages = ASTNodes.getMessages(block, ASTNodes.NODE_ONLY);
+                    if (messages.length > 0) {
+                        invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_compile_errors());
+                        break superCall;
+                    }
+                }
+                invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_doesNotCover());
+                break superCall;
             }
-            invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_doesNotCover());
-            break superCall;
-         }
-         enclosingNode = ASTResolving.findParentBodyDeclaration(getFirstSelectedNode());
-         if (!(enclosingNode instanceof MethodDeclaration) && !(enclosingNode instanceof Initializer))
-         {
-            invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_doesNotContain());
-            break superCall;
-         }
-         if (!onlyStatements())
-         {
-            invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_onlyStatements());
-         }
-         fLocals = LocalDeclarationAnalyzer.perform(enclosingNode, getSelection());
-      }
-      super.endVisit(node);
-   }
+            enclosingNode = ASTResolving.findParentBodyDeclaration(getFirstSelectedNode());
+            if (!(enclosingNode instanceof MethodDeclaration) && !(enclosingNode instanceof Initializer)) {
+                invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_doesNotContain());
+                break superCall;
+            }
+            if (!onlyStatements()) {
+                invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_onlyStatements());
+            }
+            fLocals = LocalDeclarationAnalyzer.perform(enclosingNode, getSelection());
+        }
+        super.endVisit(node);
+    }
 
-   @Override
-   public void endVisit(SuperConstructorInvocation node)
-   {
-      if (getSelection().getEndVisitSelectionMode(node) == Selection.SELECTED)
-      {
-         invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_cannotHandleSuper());
+    @Override
+    public void endVisit(SuperConstructorInvocation node) {
+        if (getSelection().getEndVisitSelectionMode(node) == Selection.SELECTED) {
+            invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_cannotHandleSuper());
 
-      }
-      super.endVisit(node);
-   }
+        }
+        super.endVisit(node);
+    }
 
-   @Override
-   public void endVisit(ConstructorInvocation node)
-   {
-      if (getSelection().getEndVisitSelectionMode(node) == Selection.SELECTED)
-      {
-         invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_cannotHandleThis());
-      }
-      super.endVisit(node);
-   }
+    @Override
+    public void endVisit(ConstructorInvocation node) {
+        if (getSelection().getEndVisitSelectionMode(node) == Selection.SELECTED) {
+            invalidSelection(RefactoringCoreMessages.INSTANCE.SurroundWithTryCatchAnalyzer_cannotHandleThis());
+        }
+        super.endVisit(node);
+    }
 
-   protected void postProcessSelectedNodes(List<ASTNode> selectedNodes)
-   {
-      if (selectedNodes == null || selectedNodes.size() == 0)
-         return;
-      if (selectedNodes.size() == 1)
-      {
-         ASTNode node = selectedNodes.get(0);
-         if (node instanceof Expression && node.getParent() instanceof ExpressionStatement)
-         {
-            selectedNodes.clear();
-            selectedNodes.add(node.getParent());
-         }
-      }
-   }
+    protected void postProcessSelectedNodes(List<ASTNode> selectedNodes) {
+        if (selectedNodes == null || selectedNodes.size() == 0)
+            return;
+        if (selectedNodes.size() == 1) {
+            ASTNode node = selectedNodes.get(0);
+            if (node instanceof Expression && node.getParent() instanceof ExpressionStatement) {
+                selectedNodes.clear();
+                selectedNodes.add(node.getParent());
+            }
+        }
+    }
 
-   private boolean onlyStatements()
-   {
-      ASTNode[] nodes = getSelectedNodes();
-      for (int i = 0; i < nodes.length; i++)
-      {
-         if (!(nodes[i] instanceof Statement))
-            return false;
-      }
-      return true;
-   }
+    private boolean onlyStatements() {
+        ASTNode[] nodes = getSelectedNodes();
+        for (int i = 0; i < nodes.length; i++) {
+            if (!(nodes[i] instanceof Statement))
+                return false;
+        }
+        return true;
+    }
 
 }

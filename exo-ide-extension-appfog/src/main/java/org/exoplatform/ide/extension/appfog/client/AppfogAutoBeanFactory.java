@@ -20,12 +20,8 @@ package org.exoplatform.ide.extension.appfog.client;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
-import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
-import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
-import org.exoplatform.ide.extension.appfog.shared.AppfogSystemService;
-import org.exoplatform.ide.extension.appfog.shared.CreateAppfogApplicationRequest;
-import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
+
+import org.exoplatform.ide.extension.appfog.shared.*;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
@@ -35,25 +31,24 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface AppfogAutoBeanFactory extends AutoBeanFactory
-{
-   AutoBean<AppfogApplication> appfogApplication();
+public interface AppfogAutoBeanFactory extends AutoBeanFactory {
+    AutoBean<AppfogApplication> appfogApplication();
 
-   AutoBean<SystemInfo> systemInfo();
+    AutoBean<SystemInfo> systemInfo();
 
-   AutoBean<SystemResources> systemResources();
+    AutoBean<SystemResources> systemResources();
 
-   AutoBean<Framework> framework();
+    AutoBean<Framework> framework();
 
-   AutoBean<Credentials> credentials();
+    AutoBean<Credentials> credentials();
 
-   AutoBean<CreateAppfogApplicationRequest> createAppfogApplicationRequest();
+    AutoBean<CreateAppfogApplicationRequest> createAppfogApplicationRequest();
 
-   AutoBean<AppfogServices> services();
+    AutoBean<AppfogServices> services();
 
-   AutoBean<AppfogSystemService> systemService();
+    AutoBean<AppfogSystemService> systemService();
 
-   AutoBean<AppfogProvisionedService> provisionedService();
+    AutoBean<AppfogProvisionedService> provisionedService();
 
-   AutoBean<InfraDetail> infraDetail();
+    AutoBean<InfraDetail> infraDetail();
 }

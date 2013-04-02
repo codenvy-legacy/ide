@@ -12,17 +12,19 @@ package com.codenvy.eclipse.jdt.internal.core.search.matching;
 
 public class PackageDeclarationLocator extends PatternLocator {
 
-protected PackageDeclarationPattern pattern;
+    protected PackageDeclarationPattern pattern;
 
-public PackageDeclarationLocator(PackageDeclarationPattern pattern) {
-	super(pattern);
+    public PackageDeclarationLocator(PackageDeclarationPattern pattern) {
+        super(pattern);
 
-	this.pattern = pattern;
-}
-protected int matchContainer() {
-	return 0;
-}
-public String toString() {
-	return "Locator for " + this.pattern.toString(); //$NON-NLS-1$
-}
+        this.pattern = pattern;
+    }
+
+    protected int matchContainer() {
+        return 0;
+    }
+
+    public String toString() {
+        return "Locator for " + this.pattern.toString(); //$NON-NLS-1$
+    }
 }

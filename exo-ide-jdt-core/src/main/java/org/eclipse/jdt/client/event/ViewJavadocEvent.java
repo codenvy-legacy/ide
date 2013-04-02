@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class ViewJavadocEvent extends GwtEvent<ViewJavadocHandler>
-{
+public class ViewJavadocEvent extends GwtEvent<ViewJavadocHandler> {
 
-   public static final Type<ViewJavadocHandler> TYPE = new Type<ViewJavadocHandler>();
+    public static final Type<ViewJavadocHandler> TYPE = new Type<ViewJavadocHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ViewJavadocHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ViewJavadocHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ViewJavadocHandler handler)
-   {
-      handler.onViewJavadoc(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ViewJavadocHandler handler) {
+        handler.onViewJavadoc(this);
+    }
 
 }

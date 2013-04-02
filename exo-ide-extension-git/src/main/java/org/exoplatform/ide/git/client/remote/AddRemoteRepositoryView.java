@@ -32,114 +32,87 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
  * View for adding new remote repository.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 5:48:04 PM anya $
- * 
  */
-public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteRepositoryPresenter.Display
-{
-   private static final int HEIGHT = 200;
+public class AddRemoteRepositoryView extends ViewImpl implements AddRemoteRepositoryPresenter.Display {
+    private static final int HEIGHT = 200;
 
-   private static final int WIDTH = 480;
+    private static final int WIDTH = 480;
 
-   public static final String ID = "ideAddRemoteRepositoryView";
+    public static final String ID = "ideAddRemoteRepositoryView";
 
    /* Elements IDs */
 
-   private static final String OK_BUTTON_ID = "ideAddRemoteRepositoryViewOkButton";
+    private static final String OK_BUTTON_ID = "ideAddRemoteRepositoryViewOkButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideAddRemoteRepositoryViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideAddRemoteRepositoryViewCancelButton";
 
-   private static final String NAME_FIELD_ID = "ideAddRemoteRepositoryViewNameField";
+    private static final String NAME_FIELD_ID = "ideAddRemoteRepositoryViewNameField";
 
-   private static final String URL_FIELD_ID = "ideAddRemoteRepositoryViewUrlField";
+    private static final String URL_FIELD_ID = "ideAddRemoteRepositoryViewUrlField";
 
-   /**
-    * Ok button.
-    */
-   @UiField
-   ImageButton okButton;
+    /** Ok button. */
+    @UiField
+    ImageButton okButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   /**
-    * Remote repository name field.
-    */
-   @UiField
-   TextInput nameField;
+    /** Remote repository name field. */
+    @UiField
+    TextInput nameField;
 
-   /**
-    * Remote repository URL field.
-    */
-   @UiField
-   TextInput urlField;
+    /** Remote repository URL field. */
+    @UiField
+    TextInput urlField;
 
-   interface AddRemoteRepositoryViewUiBinder extends UiBinder<Widget, AddRemoteRepositoryView>
-   {
-   }
+    interface AddRemoteRepositoryViewUiBinder extends UiBinder<Widget, AddRemoteRepositoryView> {
+    }
 
-   private static AddRemoteRepositoryViewUiBinder uiBinder = GWT.create(AddRemoteRepositoryViewUiBinder.class);
+    private static AddRemoteRepositoryViewUiBinder uiBinder = GWT.create(AddRemoteRepositoryViewUiBinder.class);
 
-   public AddRemoteRepositoryView(String title)
-   {
-      super(ID, ViewType.MODAL, title, null, WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public AddRemoteRepositoryView(String title) {
+        super(ID, ViewType.MODAL, title, null, WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      nameField.setName(NAME_FIELD_ID);
-      urlField.setName(URL_FIELD_ID);
-      okButton.setButtonId(OK_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        nameField.setName(NAME_FIELD_ID);
+        urlField.setName(URL_FIELD_ID);
+        okButton.setButtonId(OK_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getOkButton()
-    */
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getOkButton() */
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#enableOkButton(boolean)
-    */
-   @Override
-   public void enableOkButton(boolean enable)
-   {
-      okButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#enableOkButton(boolean) */
+    @Override
+    public void enableOkButton(boolean enable) {
+        okButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getName()
-    */
-   @Override
-   public HasValue<String> getName()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getName() */
+    @Override
+    public HasValue<String> getName() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getUrl()
-    */
-   @Override
-   public HasValue<String> getUrl()
-   {
-      return urlField;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.AddRemoteRepositoryPresenter.Display#getUrl() */
+    @Override
+    public HasValue<String> getUrl() {
+        return urlField;
+    }
 
 }

@@ -22,21 +22,20 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 
-public interface AssistDisplay extends IsWidget
-{
+public interface AssistDisplay extends IsWidget {
 
-   void moveSelectionUp();
+    void moveSelectionUp();
 
-   void moveSelectionDown();
+    void moveSelectionDown();
 
-   void moveSelectionToPreviousPage();
+    void moveSelectionToPreviousPage();
 
-   void moveSelectionToNextPage();
+    void moveSelectionToNextPage();
 
-   void proposalSelected();
+    void proposalSelected();
 
-   void cancelCodeAssistant();
+    void cancelCodeAssistant();
 
-   void setNewProposals(CompletionProposal[] proposals);
+    void setNewProposals(CompletionProposal[] proposals);
 
 }

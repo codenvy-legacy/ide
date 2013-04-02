@@ -18,21 +18,18 @@
  */
 package org.exoplatform.ide.codeassistant.asm.test;
 
-/**
- * Created by The eXo Platform SAS.
- * 
- */
-public class Address
-{
-   public String address;
+/** Created by The eXo Platform SAS. */
+public class Address {
+    public String address;
 
-   private final String city = "city";
+    private final String city = "city";
 
-   public String state;
+    public String state;
 
-   public String getCity()
-   {
-      return city;
-   };
+    public String getCity() {
+        return city;
+    }
+
+    ;
 
 }

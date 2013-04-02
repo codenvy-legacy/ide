@@ -23,54 +23,50 @@ package com.codenvy.ide.client.util;
  *
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public final class SimpleDoubleToIntMap extends JsoMapBase
-{
+public final class SimpleDoubleToIntMap extends JsoMapBase {
 
-   protected SimpleDoubleToIntMap()
-   {
-   }
+    protected SimpleDoubleToIntMap() {
+    }
 
-   /**
-    * Construct an empty SimpleDoubleMap
-    */
-   public static native SimpleDoubleToIntMap create() /*-{
-      return {};
-   }-*/;
+    /** Construct an empty SimpleDoubleMap */
+    public static native SimpleDoubleToIntMap create() /*-{
+        return {};
+    }-*/;
 
-   /**
-    * @param key
-    * @return true if a value indexed by the given key is in the map
-    */
-   public native boolean has(double key) /*-{
-      return this[key] !== undefined;
-   }-*/;
+    /**
+     * @param key
+     * @return true if a value indexed by the given key is in the map
+     */
+    public native boolean has(double key) /*-{
+        return this[key] !== undefined;
+    }-*/;
 
-   /**
-    * @param key
-    * @return The value with the given key, or null if not present
-    */
-   public native int get(double key) /*-{
-      return this[key];
-   }-*/;
+    /**
+     * @param key
+     * @return The value with the given key, or null if not present
+     */
+    public native int get(double key) /*-{
+        return this[key];
+    }-*/;
 
-   /**
-    * Put the value in the map at the given key. Note: Does not return the old
-    * value.
-    *
-    * @param key
-    * @param value
-    */
-   public native void put(double key, int value) /*-{
-      this[key] = value;
-   }-*/;
+    /**
+     * Put the value in the map at the given key. Note: Does not return the old
+     * value.
+     *
+     * @param key
+     * @param value
+     */
+    public native void put(double key, int value) /*-{
+        this[key] = value;
+    }-*/;
 
-   /**
-    * Remove the value with the given key from the map. Note: does not return the
-    * old value.
-    *
-    * @param key
-    */
-   public native void remove(double key) /*-{
-      delete this[key];
-   }-*/;
+    /**
+     * Remove the value with the given key from the map. Note: does not return the
+     * old value.
+     *
+     * @param key
+     */
+    public native void remove(double key) /*-{
+        delete this[key];
+    }-*/;
 }

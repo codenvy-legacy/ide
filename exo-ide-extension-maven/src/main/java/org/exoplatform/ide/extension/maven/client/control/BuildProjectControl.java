@@ -27,26 +27,23 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 
 /**
  * Control for build project by maven builder.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
- * 
  */
 public class BuildProjectControl extends BuildProjectControlAbstract implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler
-{
-   public static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlId();
+                                                                                ProjectOpenedHandler {
+    public static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlId();
 
-   private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlTitle();
+    private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlTitle();
 
-   private static final String PROMPT = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlPrompt();
+    private static final String PROMPT = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlPrompt();
 
-   public BuildProjectControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(BuilderClientBundle.INSTANCE.build(), BuilderClientBundle.INSTANCE.buildDisabled());
-      setEvent(new BuildProjectEvent(false, true));
-   }
+    public BuildProjectControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(BuilderClientBundle.INSTANCE.build(), BuilderClientBundle.INSTANCE.buildDisabled());
+        setEvent(new BuildProjectEvent(false, true));
+    }
 }

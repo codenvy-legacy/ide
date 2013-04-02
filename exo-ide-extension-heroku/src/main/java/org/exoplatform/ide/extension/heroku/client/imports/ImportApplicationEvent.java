@@ -22,54 +22,39 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to import application from Heroku.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 19, 2012 10:39:02 AM anya $
- * 
  */
-public class ImportApplicationEvent extends GwtEvent<ImportApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ImportApplicationHandler> TYPE = new GwtEvent.Type<ImportApplicationHandler>();
+public class ImportApplicationEvent extends GwtEvent<ImportApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ImportApplicationHandler> TYPE = new GwtEvent.Type<ImportApplicationHandler>();
 
-   /**
-    * Application to import.
-    */
-   private String application;
+    /** Application to import. */
+    private String application;
 
-   /**
-    * @param application application to import
-    */
-   public ImportApplicationEvent(String application)
-   {
-      this.application = application;
-   }
+    /**
+     * @param application
+     *         application to import
+     */
+    public ImportApplicationEvent(String application) {
+        this.application = application;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ImportApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ImportApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ImportApplicationHandler handler)
-   {
-      handler.onImportApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ImportApplicationHandler handler) {
+        handler.onImportApplication(this);
+    }
 
-   /**
-    * @return the application to import
-    */
-   public String getApplication()
-   {
-      return application;
-   }
+    /** @return the application to import */
+    public String getApplication() {
+        return application;
+    }
 }

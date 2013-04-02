@@ -32,132 +32,116 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- *  This component combines two buttons for scrolling TabBar at the left and at the right.
- * 
+ * This component combines two buttons for scrolling TabBar at the left and at the right.
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TabScroller extends Composite
-{
+public class TabScroller extends Composite {
 
-   private static final String SCROLLER_LEFT_OVER = "tabPanelScrollerLeftOver";
+    private static final String SCROLLER_LEFT_OVER = "tabPanelScrollerLeftOver";
 
-   private static final String SCROLLER_RIGHT_OVER = "tabPanelScrollerRightOver";
+    private static final String SCROLLER_RIGHT_OVER = "tabPanelScrollerRightOver";
 
-   /**
-    * TabScroller UI Binder
-    */
-   interface ScrollButtonUiBinder extends UiBinder<Widget, TabScroller>
-   {
-   }
+    /** TabScroller UI Binder */
+    interface ScrollButtonUiBinder extends UiBinder<Widget, TabScroller> {
+    }
 
-   /**
-    * TabScroller UI Binder instance
-    */
-   private static ScrollButtonUiBinder uiBinder = GWT.create(ScrollButtonUiBinder.class);
+    /** TabScroller UI Binder instance */
+    private static ScrollButtonUiBinder uiBinder = GWT.create(ScrollButtonUiBinder.class);
 
-   /**
-    * Scroll Left Button
-    */
-   @UiField
-   HTML scrollLeft;
+    /** Scroll Left Button */
+    @UiField
+    HTML scrollLeft;
 
-   /**
-    * Scroll Right Button
-    */
-   @UiField
-   HTML scrollRight;
+    /** Scroll Right Button */
+    @UiField
+    HTML scrollRight;
 
-   /**
-    * Scrollable panel
-    */
-   private Scrollable scrollable;
+    /** Scrollable panel */
+    private Scrollable scrollable;
 
-   /**
-    * Creates new instance of TabScroller.
-    * 
-    * @param scrollable Scrollable panel
-    */
-   public TabScroller(Scrollable scrollable)
-   {
-      this.scrollable = scrollable;
+    /**
+     * Creates new instance of TabScroller.
+     *
+     * @param scrollable
+     *         Scrollable panel
+     */
+    public TabScroller(Scrollable scrollable) {
+        this.scrollable = scrollable;
 
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * Mouse Click handler on ScrollLeft button.
-    * 
-    * @param e event
-    */
-   @UiHandler("scrollLeft")
-   void onClickLeft(ClickEvent e)
-   {
-      if (scrollable != null)
-      {
-         scrollable.scrollLeft();
-      }
-   }
+    /**
+     * Mouse Click handler on ScrollLeft button.
+     *
+     * @param e
+     *         event
+     */
+    @UiHandler("scrollLeft")
+    void onClickLeft(ClickEvent e) {
+        if (scrollable != null) {
+            scrollable.scrollLeft();
+        }
+    }
 
-   /**
-    * Mouse Click handler on ScrollRight button.
-    * 
-    * @param e event
-    */
-   @UiHandler("scrollRight")
-   void onClickRight(ClickEvent e)
-   {
-      if (scrollable != null)
-      {
-         scrollable.scrollRight();
-      }
-   }
+    /**
+     * Mouse Click handler on ScrollRight button.
+     *
+     * @param e
+     *         event
+     */
+    @UiHandler("scrollRight")
+    void onClickRight(ClickEvent e) {
+        if (scrollable != null) {
+            scrollable.scrollRight();
+        }
+    }
 
-   /**
-    * Mouse Out handler on ScrollLeft button.
-    * 
-    * @param e event
-    */
-   @UiHandler("scrollLeft")
-   void onMouseOutLeft(MouseOutEvent e)
-   {
-      scrollLeft.removeStyleName(SCROLLER_LEFT_OVER);
-   }
+    /**
+     * Mouse Out handler on ScrollLeft button.
+     *
+     * @param e
+     *         event
+     */
+    @UiHandler("scrollLeft")
+    void onMouseOutLeft(MouseOutEvent e) {
+        scrollLeft.removeStyleName(SCROLLER_LEFT_OVER);
+    }
 
-   /**
-    * Mouse Out handler on ScrollRight button.
-    * 
-    * @param e event
-    */
-   @UiHandler("scrollRight")
-   void onMouseOutRight(MouseOutEvent e)
-   {
-      scrollRight.removeStyleName(SCROLLER_RIGHT_OVER);
-   }
+    /**
+     * Mouse Out handler on ScrollRight button.
+     *
+     * @param e
+     *         event
+     */
+    @UiHandler("scrollRight")
+    void onMouseOutRight(MouseOutEvent e) {
+        scrollRight.removeStyleName(SCROLLER_RIGHT_OVER);
+    }
 
-   /**
-    * Mouse Over handler on ScrollLeft button.
-    * 
-    * @param e
-    */
-   @UiHandler("scrollLeft")
-   void onMouseOverLeft(MouseOverEvent e)
-   {
-      scrollLeft.addStyleName(SCROLLER_LEFT_OVER);
-   }
+    /**
+     * Mouse Over handler on ScrollLeft button.
+     *
+     * @param e
+     */
+    @UiHandler("scrollLeft")
+    void onMouseOverLeft(MouseOverEvent e) {
+        scrollLeft.addStyleName(SCROLLER_LEFT_OVER);
+    }
 
-   /**
-    * Mouse Over handler on ScrollRight button.
-    * 
-    * @param e
-    */
-   @UiHandler("scrollRight")
-   void onMouseOverRight(MouseOverEvent e)
-   {
-      scrollRight.addStyleName(SCROLLER_RIGHT_OVER);
-   }
+    /**
+     * Mouse Over handler on ScrollRight button.
+     *
+     * @param e
+     */
+    @UiHandler("scrollRight")
+    void onMouseOverRight(MouseOverEvent e) {
+        scrollRight.addStyleName(SCROLLER_RIGHT_OVER);
+    }
 
 }

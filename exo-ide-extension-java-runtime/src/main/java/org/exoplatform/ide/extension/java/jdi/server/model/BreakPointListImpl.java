@@ -28,28 +28,23 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BreakPointListImpl implements BreakPointList
-{
-   private List<BreakPoint> breakPoints;
+public class BreakPointListImpl implements BreakPointList {
+    private List<BreakPoint> breakPoints;
 
-   public BreakPointListImpl(List<BreakPoint> breakPoints)
-   {
-      this.breakPoints = breakPoints;
-   }
+    public BreakPointListImpl(List<BreakPoint> breakPoints) {
+        this.breakPoints = breakPoints;
+    }
 
-   @Override
-   public List<BreakPoint> getBreakPoints()
-   {
-      if (breakPoints == null)
-      {
-         breakPoints = new ArrayList<BreakPoint>();
-      }
-      return breakPoints;
-   }
+    @Override
+    public List<BreakPoint> getBreakPoints() {
+        if (breakPoints == null) {
+            breakPoints = new ArrayList<BreakPoint>();
+        }
+        return breakPoints;
+    }
 
-   @Override
-   public void setBreakPoints(List<BreakPoint> breakPoints)
-   {
-      this.breakPoints = breakPoints;
-   }
+    @Override
+    public void setBreakPoints(List<BreakPoint> breakPoints) {
+        this.breakPoints = breakPoints;
+    }
 }

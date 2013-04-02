@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface CloudfoundryServices
-{
-   SystemService[] getSystem();
+public interface CloudfoundryServices {
+    SystemService[] getSystem();
 
-   void setSystem(SystemService[] system);
+    void setSystem(SystemService[] system);
 
-   ProvisionedService[] getProvisioned();
+    ProvisionedService[] getProvisioned();
 
-   void setProvisioned(ProvisionedService[] provisioned);
+    void setProvisioned(ProvisionedService[] provisioned);
 }

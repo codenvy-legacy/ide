@@ -23,15 +23,13 @@ import test.classes2.ITestClass;
 /**
  *
  */
-public class BTestClass
-{
+public class BTestClass {
 
-   public void method1()
-   {
-      ATestClass2 aTestClass2 = new ATestClass2();
+    public void method1() {
+        ATestClass2 aTestClass2 = new ATestClass2();
 
-      ITestClass testClass = new ITestClass();
+        ITestClass testClass = new ITestClass();
 
-   }
+    }
 
 }

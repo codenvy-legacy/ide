@@ -21,19 +21,11 @@ package org.exoplatform.ide.vfs.server;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -44,192 +36,155 @@ import java.net.URLConnection;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class VirtualFileSystemURLConnection extends URLConnection
-{
-   private static final Log LOG = ExoLogger.getLogger(VirtualFileSystemURLConnection.class);
+public final class VirtualFileSystemURLConnection extends URLConnection {
+    private static final Log LOG = ExoLogger.getLogger(VirtualFileSystemURLConnection.class);
 
-   private final VirtualFileSystemRegistry registry;
+    private final VirtualFileSystemRegistry registry;
 
-   private final EventListenerList listeners;
+    private final EventListenerList listeners;
 
-   private VirtualFileSystem vfs;
+    private VirtualFileSystem vfs;
 
-   private Item item;
+    private Item item;
 
-   /**
-    * @param url the URL
-    * @param registry virtual file system registry
-    */
-   public VirtualFileSystemURLConnection(URL url,
-                                         VirtualFileSystemRegistry registry,
-                                         EventListenerList listeners)
-   {
-      super(check(url)); // Be sure URL is correct.
-      this.registry = registry;
-      this.listeners = listeners;
-   }
+    /**
+     * @param url
+     *         the URL
+     * @param registry
+     *         virtual file system registry
+     */
+    public VirtualFileSystemURLConnection(URL url,
+                                          VirtualFileSystemRegistry registry,
+                                          EventListenerList listeners) {
+        super(check(url)); // Be sure URL is correct.
+        this.registry = registry;
+        this.listeners = listeners;
+    }
 
-   private static URL check(URL url)
-   {
-      if (!"ide+vfs".equals(url.getProtocol()))
-      {
-         throw new IllegalArgumentException("Invalid URL: " + url);
-      }
-      return url;
-   }
+    private static URL check(URL url) {
+        if (!"ide+vfs".equals(url.getProtocol())) {
+            throw new IllegalArgumentException("Invalid URL: " + url);
+        }
+        return url;
+    }
 
-   /** @see java.net.URLConnection#connect() */
-   @Override
-   public void connect() throws IOException
-   {
-      final URI theUri = URI.create(getURL().toString());
-      final String path = theUri.getPath();
-      final String vfsId =
-         (path == null || "/".equals(path)) ? null : (path.startsWith("/")) ? path.substring(1) : path;
-      try
-      {
-         vfs = registry.getProvider(vfsId).newInstance(null, listeners);
-         final String itemIdentifier = theUri.getFragment();
-         item = (itemIdentifier.startsWith("/")) //
-            ? vfs.getItemByPath(itemIdentifier, null, PropertyFilter.NONE_FILTER) //
-            : vfs.getItem(itemIdentifier, PropertyFilter.NONE_FILTER);
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new IOException(e.getMessage(), e);
-      }
-      connected = true;
-   }
+    /** @see java.net.URLConnection#connect() */
+    @Override
+    public void connect() throws IOException {
+        final URI theUri = URI.create(getURL().toString());
+        final String path = theUri.getPath();
+        final String vfsId =
+                (path == null || "/".equals(path)) ? null : (path.startsWith("/")) ? path.substring(1) : path;
+        try {
+            vfs = registry.getProvider(vfsId).newInstance(null, listeners);
+            final String itemIdentifier = theUri.getFragment();
+            item = (itemIdentifier.startsWith("/")) //
+                   ? vfs.getItemByPath(itemIdentifier, null, PropertyFilter.NONE_FILTER) //
+                   : vfs.getItem(itemIdentifier, PropertyFilter.NONE_FILTER);
+        } catch (VirtualFileSystemException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+        connected = true;
+    }
 
-   public void disconnect()
-   {
-      item = null;
-      vfs = null;
-      connected = false;
-   }
+    public void disconnect() {
+        item = null;
+        vfs = null;
+        connected = false;
+    }
 
-   /** @see java.net.URLConnection#getContentLength() */
-   @Override
-   public int getContentLength()
-   {
-      try
-      {
-         if (!connected)
-         {
+    /** @see java.net.URLConnection#getContentLength() */
+    @Override
+    public int getContentLength() {
+        try {
+            if (!connected) {
+                connect();
+            }
+            if (item.getItemType() == ItemType.FILE) {
+                return (int)((File)item).getLength();
+            }
+        } catch (IOException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(e.getMessage(), e);
+            }
+        }
+        return -1;
+    }
+
+    /** @see java.net.URLConnection#getContentType() */
+    @Override
+    public String getContentType() {
+        try {
+            if (!connected) {
+                connect();
+            }
+            return item.getMimeType();
+        } catch (IOException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(e.getMessage(), e);
+            }
+        }
+        return null;
+    }
+
+    /** @see java.net.URLConnection#getLastModified() */
+    @Override
+    public long getLastModified() {
+        try {
+            if (!connected) {
+                connect();
+            }
+            if (item.getItemType() == ItemType.FILE) {
+                return ((File)item).getLastModificationDate();
+            }
+        } catch (IOException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(e.getMessage(), e);
+            }
+        }
+        return 0;
+    }
+
+    /** @see java.net.URLConnection#getContent() */
+    @Override
+    public Object getContent() throws IOException {
+        if (!connected) {
             connect();
-         }
-         if (item.getItemType() == ItemType.FILE)
-         {
-            return (int)((File)item).getLength();
-         }
-      }
-      catch (IOException e)
-      {
-         if (LOG.isDebugEnabled())
-         {
-            LOG.debug(e.getMessage(), e);
-         }
-      }
-      return -1;
-   }
+        }
+        return item;
+    }
 
-   /** @see java.net.URLConnection#getContentType() */
-   @Override
-   public String getContentType()
-   {
-      try
-      {
-         if (!connected)
-         {
+    /** @see java.net.URLConnection#getContent(java.lang.Class[]) */
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Object getContent(Class[] classes) throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    /** @see java.net.URLConnection#getInputStream() */
+    @Override
+    public InputStream getInputStream() throws IOException {
+        if (!connected) {
             connect();
-         }
-         return item.getMimeType();
-      }
-      catch (IOException e)
-      {
-         if (LOG.isDebugEnabled())
-         {
-            LOG.debug(e.getMessage(), e);
-         }
-      }
-      return null;
-   }
-
-   /** @see java.net.URLConnection#getLastModified() */
-   @Override
-   public long getLastModified()
-   {
-      try
-      {
-         if (!connected)
-         {
-            connect();
-         }
-         if (item.getItemType() == ItemType.FILE)
-         {
-            return ((File)item).getLastModificationDate();
-         }
-      }
-      catch (IOException e)
-      {
-         if (LOG.isDebugEnabled())
-         {
-            LOG.debug(e.getMessage(), e);
-         }
-      }
-      return 0;
-   }
-
-   /** @see java.net.URLConnection#getContent() */
-   @Override
-   public Object getContent() throws IOException
-   {
-      if (!connected)
-      {
-         connect();
-      }
-      return item;
-   }
-
-   /** @see java.net.URLConnection#getContent(java.lang.Class[]) */
-   @SuppressWarnings("rawtypes")
-   @Override
-   public Object getContent(Class[] classes) throws IOException
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   /** @see java.net.URLConnection#getInputStream() */
-   @Override
-   public InputStream getInputStream() throws IOException
-   {
-      if (!connected)
-      {
-         connect();
-      }
-      try
-      {
-         if (item.getItemType() == ItemType.FILE)
-         {
-            ContentStream content = vfs.getContent(item.getId());
-            return content.getStream();
-         }
-         // Folder. Show plain list of child.
-         ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
-         ByteArrayOutputStream out = new ByteArrayOutputStream();
-         Writer w = new OutputStreamWriter(out);
-         for (Item i : children.getItems())
-         {
-            w.write(i.getName());
-            w.write('\n');
-         }
-         w.flush();
-         w.close();
-         return new ByteArrayInputStream(out.toByteArray());
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new IOException(e.getMessage(), e);
-      }
-   }
+        }
+        try {
+            if (item.getItemType() == ItemType.FILE) {
+                ContentStream content = vfs.getContent(item.getId());
+                return content.getStream();
+            }
+            // Folder. Show plain list of child.
+            ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Writer w = new OutputStreamWriter(out);
+            for (Item i : children.getItems()) {
+                w.write(i.getName());
+                w.write('\n');
+            }
+            w.flush();
+            w.close();
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch (VirtualFileSystemException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
 }

@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 19, 2011 evgen $
- * 
  */
-public class ShowProgressEvent extends GwtEvent<ShowProgressHandler>
-{
+public class ShowProgressEvent extends GwtEvent<ShowProgressHandler> {
 
-   public static final GwtEvent.Type<ShowProgressHandler> TYPE = new Type<ShowProgressHandler>();
+    public static final GwtEvent.Type<ShowProgressHandler> TYPE = new Type<ShowProgressHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowProgressHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowProgressHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowProgressHandler handler)
-   {
-      handler.onShowProgress(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowProgressHandler handler) {
+        handler.onShowProgress(this);
+    }
 
 }

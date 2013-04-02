@@ -33,54 +33,48 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for initializing the repository.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 10:35:37 AM anya $
- * 
  */
-public class ShowProjectGitReadOnlyUrlView extends ViewImpl implements ShowProjectGitReadOnlyUrlPresenter.Display
-{
+public class ShowProjectGitReadOnlyUrlView extends ViewImpl implements ShowProjectGitReadOnlyUrlPresenter.Display {
 
-   public static final String ID = "ideGitUrlView";
+    public static final String ID = "ideGitUrlView";
 
    /* Elements IDs */
 
-   private static final String OK_BUTTON_ID = "ideGitUrlOkButton";
+    private static final String OK_BUTTON_ID = "ideGitUrlOkButton";
 
-   private static final String GIT_URL_FIELD_ID = "ideGitUrlField";
+    private static final String GIT_URL_FIELD_ID = "ideGitUrlField";
 
-   @UiField
-   TextInput gitUrl;
+    @UiField
+    TextInput gitUrl;
 
-   @UiField
-   ImageButton closeButton;
+    @UiField
+    ImageButton closeButton;
 
-   interface ShowGitUrlViewUiBinder extends UiBinder<Widget, ShowProjectGitReadOnlyUrlView>
-   {
-   }
+    interface ShowGitUrlViewUiBinder extends UiBinder<Widget, ShowProjectGitReadOnlyUrlView> {
+    }
 
-   private static ShowGitUrlViewUiBinder uiBinder = GWT.create(ShowGitUrlViewUiBinder.class);
+    private static ShowGitUrlViewUiBinder uiBinder = GWT.create(ShowGitUrlViewUiBinder.class);
 
-   public ShowProjectGitReadOnlyUrlView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.projectReadOnlyGitUrlPrompt(), null, 475, 125, false);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public ShowProjectGitReadOnlyUrlView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.projectReadOnlyGitUrlPrompt(), null, 475, 125, false);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      gitUrl.setName(GIT_URL_FIELD_ID);
-      closeButton.setButtonId(OK_BUTTON_ID);
-   }
+        gitUrl.setName(GIT_URL_FIELD_ID);
+        closeButton.setButtonId(OK_BUTTON_ID);
+    }
 
-   @Override
-   public HasValue<String> getGitUrl()
-   {
-      return gitUrl;
-   }
+    @Override
+    public HasValue<String> getGitUrl() {
+        return gitUrl;
+    }
 
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
 }

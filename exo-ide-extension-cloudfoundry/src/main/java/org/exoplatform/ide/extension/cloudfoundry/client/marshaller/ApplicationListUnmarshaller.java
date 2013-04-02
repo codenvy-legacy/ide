@@ -35,64 +35,47 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
- *
  */
-public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFoundryApplication>>
-{
+public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFoundryApplication>> {
 
-   private List<CloudFoundryApplication> apps;
+    private List<CloudFoundryApplication> apps;
 
-   /**
-    * @param apps
-    */
-   public ApplicationListUnmarshaller(List<CloudFoundryApplication> apps)
-   {
-      this.apps = apps;
-   }
+    /** @param apps */
+    public ApplicationListUnmarshaller(List<CloudFoundryApplication> apps) {
+        this.apps = apps;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         if (response.getText() == null || response.getText().isEmpty())
-         {
-            return;
-         }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            if (response.getText() == null || response.getText().isEmpty()) {
+                return;
+            }
 
-         JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
+            JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
 
-         if (array == null)
-         {
-            return;
-         }
+            if (array == null) {
+                return;
+            }
 
-         for (int i = 0; i < array.size(); i++)
-         {
-            JSONObject jsonObject = array.get(i).isObject();
-            String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
+            for (int i = 0; i < array.size(); i++) {
+                JSONObject jsonObject = array.get(i).isObject();
+                String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
 
-            AutoBean<CloudFoundryApplication> appInfoBean =
-               AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, CloudFoundryApplication.class, value);
-            apps.add(appInfoBean.as());
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse applications information.");
-      }
-   }
+                AutoBean<CloudFoundryApplication> appInfoBean =
+                        AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, CloudFoundryApplication.class, value);
+                apps.add(appInfoBean.as());
+            }
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't parse applications information.");
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<CloudFoundryApplication> getPayload()
-   {
-      return apps;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<CloudFoundryApplication> getPayload() {
+        return apps;
+    }
 
 }

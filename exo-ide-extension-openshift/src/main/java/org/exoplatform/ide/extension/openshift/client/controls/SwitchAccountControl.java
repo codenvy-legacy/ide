@@ -26,40 +26,33 @@ import org.exoplatform.ide.extension.openshift.client.login.SwitchAccountEvent;
 
 /**
  * Control to switch OpenShift account.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: SwitchAccountControl.java Feb 7, 2012 2:11:44 PM azatsarynnyy $
- *
  */
-public class SwitchAccountControl extends AbstractOpenShiftControl
-{
+public class SwitchAccountControl extends AbstractOpenShiftControl {
 
-   public SwitchAccountControl()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.switchAccountControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt());
-      setEvent(new SwitchAccountEvent());
-      setImages(OpenShiftClientBundle.INSTANCE.switchAccount(), OpenShiftClientBundle.INSTANCE.switchAccountDisabled());
-   }
+    public SwitchAccountControl() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.switchAccountControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt());
+        setEvent(new SwitchAccountEvent());
+        setImages(OpenShiftClientBundle.INSTANCE.switchAccount(), OpenShiftClientBundle.INSTANCE.switchAccountDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * 
-    */
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
-   
+    /**
+     *
+     */
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
+
 }

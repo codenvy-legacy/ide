@@ -27,15 +27,12 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @see Debugger#addBreakPoint(org.exoplatform.ide.extension.java.jdi.shared.BreakPoint)
  */
 @SuppressWarnings("serial")
-public final class InvalidBreakPointException extends DebuggerException
-{
-   public InvalidBreakPointException(String message)
-   {
-      super(message);
-   }
+public final class InvalidBreakPointException extends DebuggerException {
+    public InvalidBreakPointException(String message) {
+        super(message);
+    }
 
-   public InvalidBreakPointException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public InvalidBreakPointException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

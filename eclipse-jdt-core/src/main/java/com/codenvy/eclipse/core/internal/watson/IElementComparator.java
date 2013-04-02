@@ -17,10 +17,7 @@ import com.codenvy.eclipse.core.internal.dtree.IComparator;
  * how element infos are compared, and thus how element tree deltas
  * are created.
  */
-public interface IElementComparator extends IComparator
-{
-   /**
-    * The kinds of changes
-    */
-   public int K_NO_CHANGE = 0;
+public interface IElementComparator extends IComparator {
+    /** The kinds of changes */
+    public int K_NO_CHANGE = 0;
 }

@@ -22,25 +22,24 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Variable
-{
-   String getName();
+public interface Variable {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getValue();
+    String getValue();
 
-   void setValue(String value);
+    void setValue(String value);
 
-   String getType();
+    String getType();
 
-   void setType(String type);
+    void setType(String type);
 
-   VariablePath getVariablePath();
+    VariablePath getVariablePath();
 
-   void setVariablePath(VariablePath variablePath);
+    void setVariablePath(VariablePath variablePath);
 
-   boolean isPrimitive();
+    boolean isPrimitive();
 
-   void setPrimitive(boolean primitive);
+    void setPrimitive(boolean primitive);
 }

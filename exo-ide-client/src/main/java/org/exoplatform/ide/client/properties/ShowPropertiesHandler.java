@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Anna Zhuleva</a>
  * @version $Id:
  */
 
-public interface ShowPropertiesHandler extends EventHandler
-{
+public interface ShowPropertiesHandler extends EventHandler {
 
-   void onShowProperties(ShowPropertiesEvent event);
+    void onShowProperties(ShowPropertiesEvent event);
 
 }

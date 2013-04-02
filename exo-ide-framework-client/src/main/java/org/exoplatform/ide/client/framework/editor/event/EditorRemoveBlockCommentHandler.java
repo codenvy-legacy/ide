@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorRemoveBlockCommentEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 11:29:43 AM anya $
- * 
  */
-public interface EditorRemoveBlockCommentHandler extends EventHandler
-{
-   /**
-    * Perform removing block comment from source code.
-    * 
-    * @param event
-    */
-   void onEditorRemoveBlockComment(EditorRemoveBlockCommentEvent event);
+public interface EditorRemoveBlockCommentHandler extends EventHandler {
+    /**
+     * Perform removing block comment from source code.
+     *
+     * @param event
+     */
+    void onEditorRemoveBlockComment(EditorRemoveBlockCommentEvent event);
 }

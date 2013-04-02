@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class UploadZipEvent extends GwtEvent<UploadZipHandler>
-{
+public class UploadZipEvent extends GwtEvent<UploadZipHandler> {
 
-   public static final GwtEvent.Type<UploadZipHandler> TYPE = new GwtEvent.Type<UploadZipHandler>();
+    public static final GwtEvent.Type<UploadZipHandler> TYPE = new GwtEvent.Type<UploadZipHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UploadZipHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UploadZipHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(UploadZipHandler handler)
-   {
-      handler.onUploadZip(this);
-   }
+    @Override
+    protected void dispatch(UploadZipHandler handler) {
+        handler.onUploadZip(this);
+    }
 
 }

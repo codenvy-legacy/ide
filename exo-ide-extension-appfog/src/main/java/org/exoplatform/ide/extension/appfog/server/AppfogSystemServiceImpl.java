@@ -25,96 +25,82 @@ import org.exoplatform.ide.extension.appfog.shared.Infra;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class AppfogSystemServiceImpl implements AppfogSystemService
-{
-   private String vendor;
-   private String type;
-   private String version;
-   private String description;
-   private Infra infra;
+public class AppfogSystemServiceImpl implements AppfogSystemService {
+    private String vendor;
+    private String type;
+    private String version;
+    private String description;
+    private Infra  infra;
 
-   public AppfogSystemServiceImpl()
-   {
-   }
+    public AppfogSystemServiceImpl() {
+    }
 
-   public AppfogSystemServiceImpl(String vendor, String type, String version, String description, Infra infra)
-   {
-      this.vendor = vendor;
-      this.type = type;
-      this.version = version;
-      this.description = description;
-      this.infra = infra;
-   }
+    public AppfogSystemServiceImpl(String vendor, String type, String version, String description, Infra infra) {
+        this.vendor = vendor;
+        this.type = type;
+        this.version = version;
+        this.description = description;
+        this.infra = infra;
+    }
 
-   @Override
-   public String getVendor()
-   {
-      return vendor;
-   }
+    @Override
+    public String getVendor() {
+        return vendor;
+    }
 
-   @Override
-   public void setVendor(String vendor)
-   {
-      this.vendor = vendor;
-   }
+    @Override
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
 
-   @Override
-   public String getType()
-   {
-      return type;
-   }
+    @Override
+    public String getType() {
+        return type;
+    }
 
-   @Override
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   @Override
-   public String getVersion()
-   {
-      return version;
-   }
+    @Override
+    public String getVersion() {
+        return version;
+    }
 
-   @Override
-   public void setVersion(String version)
-   {
-      this.version = version;
-   }
+    @Override
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-   @Override
-   public String getDescription()
-   {
-      return description;
-   }
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-   @Override
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-   @Override
-   public Infra getInfra()
-   {
-      return infra;
-   }
+    @Override
+    public Infra getInfra() {
+        return infra;
+    }
 
-   @Override
-   public void setInfra(Infra infra)
-   {
-      this.infra = infra;
-   }
+    @Override
+    public void setInfra(Infra infra) {
+        this.infra = infra;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "AppfogSystemServiceImpl{" +
-         "vendor='" + vendor + '\'' +
-         ", type='" + type + '\'' +
-         ", version='" + version + '\'' +
-         ", description='" + description + '\'' +
-         ", infra=" + infra +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "AppfogSystemServiceImpl{" +
+               "vendor='" + vendor + '\'' +
+               ", type='" + type + '\'' +
+               ", version='" + version + '\'' +
+               ", description='" + description + '\'' +
+               ", infra=" + infra +
+               '}';
+    }
 }

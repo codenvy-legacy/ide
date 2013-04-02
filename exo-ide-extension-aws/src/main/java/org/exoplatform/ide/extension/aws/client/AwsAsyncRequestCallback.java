@@ -29,47 +29,35 @@ import org.exoplatform.ide.extension.aws.client.login.LoginEvent;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 18, 2012 11:07:50 AM anya $
- * 
  */
-public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T>
-{
-   private LoggedInHandler loggedInHandler;
+public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
+    private LoggedInHandler loggedInHandler;
 
-   public AwsAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn)
-   {
-      super(unmarshaller);
-      this.loggedInHandler = loggedIn;
-   }
+    public AwsAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn) {
+        super(unmarshaller);
+        this.loggedInHandler = loggedIn;
+    }
 
-   public AwsAsyncRequestCallback(LoggedInHandler loggedIn)
-   {
-      this.loggedInHandler = loggedIn;
-   }
+    public AwsAsyncRequestCallback(LoggedInHandler loggedIn) {
+        this.loggedInHandler = loggedIn;
+    }
 
-  
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof UnauthorizedException)
-      {
-         IDE.fireEvent(new LoginEvent(loggedInHandler));
-         return;
-      }
-      else if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (serverException.getMessage() != null && serverException.getMessage().contains("Authentication required"))
-         {
+    /** @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable) */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof UnauthorizedException) {
             IDE.fireEvent(new LoginEvent(loggedInHandler));
             return;
-         }
-      }
-      processFail(exception);
-   }
+        } else if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (serverException.getMessage() != null && serverException.getMessage().contains("Authentication required")) {
+                IDE.fireEvent(new LoginEvent(loggedInHandler));
+                return;
+            }
+        }
+        processFail(exception);
+    }
 
-   protected abstract void processFail(Throwable exception);
+    protected abstract void processFail(Throwable exception);
 }

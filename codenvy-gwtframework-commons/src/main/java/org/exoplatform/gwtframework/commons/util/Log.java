@@ -20,33 +20,27 @@ package org.exoplatform.gwtframework.commons.util;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public abstract class Log
-{
+public abstract class Log {
 
-   private static Log instance;
+    private static Log instance;
 
-   protected Log()
-   {
-      instance = this;
-   }
+    protected Log() {
+        instance = this;
+    }
 
-   public abstract void _info(String message);
+    public abstract void _info(String message);
 
-   public static void info(String message)
-   {
-      if (instance == null)
-      {
-         System.out.println("[INFO] " + message);
-      }
-      else
-      {
-         instance._info(message);
-      }
-   }
+    public static void info(String message) {
+        if (instance == null) {
+            System.out.println("[INFO] " + message);
+        } else {
+            instance._info(message);
+        }
+    }
 
 }

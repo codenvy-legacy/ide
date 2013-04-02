@@ -13,58 +13,52 @@ package com.codenvy.eclipse.jdt.internal.compiler.ast;
 import com.codenvy.eclipse.jdt.internal.compiler.ASTVisitor;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.BlockScope;
 
-public class PrefixExpression extends CompoundAssignment
-{
+public class PrefixExpression extends CompoundAssignment {
 
-   /**
-    * PrefixExpression constructor comment.
-    *
-    * @param lhs        org.eclipse.jdt.internal.compiler.ast.Expression
-    * @param expression org.eclipse.jdt.internal.compiler.ast.Expression
-    * @param operator   int
-    */
-   public PrefixExpression(Expression lhs, Expression expression, int operator, int pos)
-   {
-      super(lhs, expression, operator, lhs.sourceEnd);
-      this.sourceStart = pos;
-      this.sourceEnd = lhs.sourceEnd;
-   }
+    /**
+     * PrefixExpression constructor comment.
+     *
+     * @param lhs
+     *         org.eclipse.jdt.internal.compiler.ast.Expression
+     * @param expression
+     *         org.eclipse.jdt.internal.compiler.ast.Expression
+     * @param operator
+     *         int
+     */
+    public PrefixExpression(Expression lhs, Expression expression, int operator, int pos) {
+        super(lhs, expression, operator, lhs.sourceEnd);
+        this.sourceStart = pos;
+        this.sourceEnd = lhs.sourceEnd;
+    }
 
-   public boolean checkCastCompatibility()
-   {
-      return false;
-   }
+    public boolean checkCastCompatibility() {
+        return false;
+    }
 
-   public String operatorToString()
-   {
-      switch (this.operator)
-      {
-         case PLUS:
-            return "++"; //$NON-NLS-1$
-         case MINUS:
-            return "--"; //$NON-NLS-1$
-      }
-      return "unknown operator"; //$NON-NLS-1$
-   }
+    public String operatorToString() {
+        switch (this.operator) {
+            case PLUS:
+                return "++"; //$NON-NLS-1$
+            case MINUS:
+                return "--"; //$NON-NLS-1$
+        }
+        return "unknown operator"; //$NON-NLS-1$
+    }
 
-   public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
-   {
+    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output) {
 
-      output.append(operatorToString()).append(' ');
-      return this.lhs.printExpression(0, output);
-   }
+        output.append(operatorToString()).append(' ');
+        return this.lhs.printExpression(0, output);
+    }
 
-   public boolean restrainUsageToNumericTypes()
-   {
-      return true;
-   }
+    public boolean restrainUsageToNumericTypes() {
+        return true;
+    }
 
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      if (visitor.visit(this, scope))
-      {
-         this.lhs.traverse(visitor, scope);
-      }
-      visitor.endVisit(this, scope);
-   }
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        if (visitor.visit(this, scope)) {
+            this.lhs.traverse(visitor, scope);
+        }
+        visitor.endVisit(this, scope);
+    }
 }

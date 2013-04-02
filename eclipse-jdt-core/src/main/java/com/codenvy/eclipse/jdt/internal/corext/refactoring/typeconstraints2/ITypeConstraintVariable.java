@@ -12,8 +12,7 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2;
 
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.CompilationUnitRange;
 
-public interface ITypeConstraintVariable extends ISourceConstraintVariable
-{
+public interface ITypeConstraintVariable extends ISourceConstraintVariable {
 
-   public CompilationUnitRange getRange();
+    public CompilationUnitRange getRange();
 }

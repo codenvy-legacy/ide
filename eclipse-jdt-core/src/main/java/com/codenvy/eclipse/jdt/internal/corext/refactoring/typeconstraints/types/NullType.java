@@ -11,54 +11,45 @@
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types;
 
 
-public final class NullType extends TType
-{
+public final class NullType extends TType {
 
-   protected NullType(TypeEnvironment environment)
-   {
-      super(environment, "N"); //$NON-NLS-1$
-   }
+    protected NullType(TypeEnvironment environment) {
+        super(environment, "N"); //$NON-NLS-1$
+    }
 
-   @Override
-   public int getKind()
-   {
-      return NULL_TYPE;
-   }
+    @Override
+    public int getKind() {
+        return NULL_TYPE;
+    }
 
-   @Override
-   public TType[] getSubTypes()
-   {
-      throw new UnsupportedOperationException();
-   }
+    @Override
+    public TType[] getSubTypes() {
+        throw new UnsupportedOperationException();
+    }
 
-   @Override
-   protected boolean doEquals(TType type)
-   {
-      return true;
-   }
+    @Override
+    protected boolean doEquals(TType type) {
+        return true;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return 1234;
-   }
+    @Override
+    public int hashCode() {
+        return 1234;
+    }
 
-   @Override
-   public String getName()
-   {
-      return "null";  //$NON-NLS-1$
-   }
+    @Override
+    public String getName() {
+        return "null";  //$NON-NLS-1$
+    }
 
-   @Override
-   protected String getPlainPrettySignature()
-   {
-      return getName();
-   }
+    @Override
+    protected String getPlainPrettySignature() {
+        return getName();
+    }
 
-   @Override
-   protected boolean doCanAssignTo(TType lhs)
-   {
-      int kind = lhs.getKind();
-      return kind != PRIMITIVE_TYPE && kind != VOID_TYPE;
-   }
+    @Override
+    protected boolean doCanAssignTo(TType lhs) {
+        int kind = lhs.getKind();
+        return kind != PRIMITIVE_TYPE && kind != VOID_TYPE;
+    }
 }

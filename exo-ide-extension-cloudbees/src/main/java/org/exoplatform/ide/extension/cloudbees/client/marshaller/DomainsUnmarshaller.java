@@ -30,46 +30,35 @@ import java.util.List;
 
 /**
  * Unmarshaller for domains list.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DomainsUnmarshaller.java Jun 27, 2011 11:21:02 AM vereshchaka $
- * 
  */
-public class DomainsUnmarshaller implements Unmarshallable<List<String>>
-{
-   private List<String> domains;
+public class DomainsUnmarshaller implements Unmarshallable<List<String>> {
+    private List<String> domains;
 
-   public DomainsUnmarshaller(List<String> domains)
-   {
-      this.domains = domains;
-   }
+    public DomainsUnmarshaller(List<String> domains) {
+        this.domains = domains;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
-      
-      if (jsonArray == null)
-      {
-         return;
-      }
-      
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         JSONValue value = jsonArray.get(i);
-         domains.add(value.isString().stringValue());
-      }
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<String> getPayload()
-   {
-      return domains;
-   }
+        if (jsonArray == null) {
+            return;
+        }
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONValue value = jsonArray.get(i);
+            domains.add(value.isString().stringValue());
+        }
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<String> getPayload() {
+        return domains;
+    }
 }

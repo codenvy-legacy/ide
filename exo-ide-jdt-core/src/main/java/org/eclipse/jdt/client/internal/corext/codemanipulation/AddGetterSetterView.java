@@ -44,261 +44,202 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class AddGetterSetterView extends ViewImpl implements Display
-{
+public class AddGetterSetterView extends ViewImpl implements Display {
 
-   private CellTree.Resources res = GWT.create(CellTreeResource.class);
+    private CellTree.Resources res = GWT.create(CellTreeResource.class);
 
-   /**
-    * 
-    */
-   private static AddGetterSetterViewUiBinder uiBinder = GWT.create(AddGetterSetterViewUiBinder.class);
+    /**
+     *
+     */
+    private static AddGetterSetterViewUiBinder uiBinder = GWT.create(AddGetterSetterViewUiBinder.class);
 
-   @UiField
-   CellTree fieldTree;
+    @UiField
+    CellTree fieldTree;
 
-   @UiField
-   ImageButton selectAll;
+    @UiField
+    ImageButton selectAll;
 
-   @UiField
-   ImageButton deselectAll;
+    @UiField
+    ImageButton deselectAll;
 
-   @UiField
-   ImageButton selectGetters;
+    @UiField
+    ImageButton selectGetters;
 
-   @UiField
-   ImageButton selectSetters;
+    @UiField
+    ImageButton selectSetters;
 
-   @UiField
-   ListBox sortTypeBox;
+    @UiField
+    ListBox sortTypeBox;
 
-   @UiField
-   SimpleCheckBox generateComent;
+    @UiField
+    SimpleCheckBox generateComent;
 
-   @UiField
-   RadioButton publicRadio;
+    @UiField
+    RadioButton publicRadio;
 
-   @UiField
-   RadioButton protectedRadio;
+    @UiField
+    RadioButton protectedRadio;
 
-   @UiField
-   RadioButton defaultRadio;
+    @UiField
+    RadioButton defaultRadio;
 
-   @UiField
-   RadioButton privateRadio;
+    @UiField
+    RadioButton privateRadio;
 
-   @UiField
-   CheckBox finalBox;
+    @UiField
+    CheckBox finalBox;
 
-   @UiField
-   CheckBox syncBox;
+    @UiField
+    CheckBox syncBox;
 
-   @UiField
-   SimpleCheckBox allowFinalBox;
+    @UiField
+    SimpleCheckBox allowFinalBox;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   private final GetterSetterTreeModel model;
+    private final GetterSetterTreeModel model;
 
-   interface AddGetterSetterViewUiBinder extends UiBinder<Widget, AddGetterSetterView>
-   {
-   }
+    interface AddGetterSetterViewUiBinder extends UiBinder<Widget, AddGetterSetterView> {
+    }
 
-   @Inject
-   public AddGetterSetterView(GetterSetterTreeModel model)
-   {
-      super(ID, ViewType.POPUP, "Generate Getters and Setters", null, 550, 500, false);
-      this.model = model;
-      add(uiBinder.createAndBindUi(this));
-   }
+    @Inject
+    public AddGetterSetterView(GetterSetterTreeModel model) {
+        super(ID, ViewType.POPUP, "Generate Getters and Setters", null, 550, 500, false);
+        this.model = model;
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @UiFactory
-   CellTree createFieldTree()
-   {
-      CellTree cellTree = new CellTree(model, null, res);
-      return cellTree;
-   }
+    @UiFactory
+    CellTree createFieldTree() {
+        CellTree cellTree = new CellTree(model, null, res);
+        return cellTree;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getOkButton()
-    */
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getOkButton() */
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSelectAllButton()
-    */
-   @Override
-   public HasClickHandlers getSelectAllButton()
-   {
-      return selectAll;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSelectAllButton() */
+    @Override
+    public HasClickHandlers getSelectAllButton() {
+        return selectAll;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getDeselectAllButton()
-    */
-   @Override
-   public HasClickHandlers getDeselectAllButton()
-   {
-      return deselectAll;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getDeselectAllButton() */
+    @Override
+    public HasClickHandlers getDeselectAllButton() {
+        return deselectAll;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSelectGettersButton()
-    */
-   @Override
-   public HasClickHandlers getSelectGettersButton()
-   {
-      return selectGetters;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSelectGettersButton() */
+    @Override
+    public HasClickHandlers getSelectGettersButton() {
+        return selectGetters;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSelectSettersButton()
-    */
-   @Override
-   public HasClickHandlers getSelectSettersButton()
-   {
-      return selectSetters;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSelectSettersButton() */
+    @Override
+    public HasClickHandlers getSelectSettersButton() {
+        return selectSetters;
+    }
 
-   @Override
-   public HasClickHandlers getAllowFinalSettersBox()
-   {
-      return allowFinalBox;
-   }
+    @Override
+    public HasClickHandlers getAllowFinalSettersBox() {
+        return allowFinalBox;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getTreeModel()
-    */
-   @Override
-   public GetterSetterTreeModel getTreeModel()
-   {
-      return model;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getTreeModel() */
+    @Override
+    public GetterSetterTreeModel getTreeModel() {
+        return model;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSortOrder()
-    */
-   @Override
-   public int getSortOrder()
-   {
-      return sortTypeBox.getSelectedIndex();
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSortOrder() */
+    @Override
+    public int getSortOrder() {
+        return sortTypeBox.getSelectedIndex();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#setSortVariants(java.lang.String[])
-    */
-   @Override
-   public void setSortVariants(String[] var)
-   {
-      for (String s : var)
-         sortTypeBox.addItem(s);
-      sortTypeBox.setSelectedIndex(0);
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#setSortVariants(java.lang.String[]) */
+    @Override
+    public void setSortVariants(String[] var) {
+        for (String s : var)
+            sortTypeBox.addItem(s);
+        sortTypeBox.setSelectedIndex(0);
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getGenerateComment()
-    */
-   @Override
-   public TakesValue<Boolean> getGenerateComment()
-   {
-      return generateComent;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getGenerateComment() */
+    @Override
+    public TakesValue<Boolean> getGenerateComment() {
+        return generateComent;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getFinal()
-    */
-   @Override
-   public TakesValue<Boolean> getFinal()
-   {
-      return finalBox;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getFinal() */
+    @Override
+    public TakesValue<Boolean> getFinal() {
+        return finalBox;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSynchronized()
-    */
-   @Override
-   public TakesValue<Boolean> getSynchronized()
-   {
-      return syncBox;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getSynchronized() */
+    @Override
+    public TakesValue<Boolean> getSynchronized() {
+        return syncBox;
+    }
 
-   @Override
-   public TakesValue<Boolean> getAllowSettersFinal()
-   {
-      return allowFinalBox;
-   }
+    @Override
+    public TakesValue<Boolean> getAllowSettersFinal() {
+        return allowFinalBox;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getPublic()
-    */
-   @Override
-   public HasValue<Boolean> getPublic()
-   {
-      return publicRadio;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getPublic() */
+    @Override
+    public HasValue<Boolean> getPublic() {
+        return publicRadio;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getProtected()
-    */
-   @Override
-   public HasValue<Boolean> getProtected()
-   {
-      return protectedRadio;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getProtected() */
+    @Override
+    public HasValue<Boolean> getProtected() {
+        return protectedRadio;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getDefault()
-    */
-   @Override
-   public HasValue<Boolean> getDefault()
-   {
-      return defaultRadio;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getDefault() */
+    @Override
+    public HasValue<Boolean> getDefault() {
+        return defaultRadio;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getPrivate()
-    */
-   @Override
-   public HasValue<Boolean> getPrivate()
-   {
-      return privateRadio;
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#getPrivate() */
+    @Override
+    public HasValue<Boolean> getPrivate() {
+        return privateRadio;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#openField(org.eclipse.jdt.client.core.dom.IVariableBinding)
-    */
-   @Override
-   public void openField(IVariableBinding field)
-   {
-      TreeNode root = fieldTree.getRootTreeNode();
-      for (int i = 0; i < root.getChildCount(); i++)
-      {
-         Object childValue = root.getChildValue(i);
-         if (childValue.equals(field))
-         {
-            root.setChildOpen(i, true);
-            return;
-         }
-      }
-   }
+    /** @see org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display#openField(org.eclipse.jdt.client
+     * .core.dom.IVariableBinding) */
+    @Override
+    public void openField(IVariableBinding field) {
+        TreeNode root = fieldTree.getRootTreeNode();
+        for (int i = 0; i < root.getChildCount(); i++) {
+            Object childValue = root.getChildValue(i);
+            if (childValue.equals(field)) {
+                root.setChildOpen(i, true);
+                return;
+            }
+        }
+    }
 
 }

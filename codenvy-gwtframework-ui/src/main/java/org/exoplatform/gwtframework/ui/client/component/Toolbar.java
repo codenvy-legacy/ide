@@ -20,240 +20,202 @@
 
 package org.exoplatform.gwtframework.ui.client.component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class Toolbar extends FlowPanel
-{
+public class Toolbar extends FlowPanel {
 
-   private String id;
+    private String id;
 
-   /**
-    * List of items docked at the left side.
-    */
-   private List<ToolbarItem> leftItems = new ArrayList<ToolbarItem>();
+    /** List of items docked at the left side. */
+    private List<ToolbarItem> leftItems = new ArrayList<ToolbarItem>();
 
-   /**
-    * List of items docked at the right side.
-    */
-   private List<ToolbarItem> rightItems = new ArrayList<ToolbarItem>();
+    /** List of items docked at the right side. */
+    private List<ToolbarItem> rightItems = new ArrayList<ToolbarItem>();
 
-   /**
-    * Item's padding from the top of toolbar.
-    */
-   private int topItemsPadding = 4;
+    /** Item's padding from the top of toolbar. */
+    private int topItemsPadding = 4;
 
-   /**
-    * Create instance of this Toolbar.
-    */
-   public Toolbar()
-   {
-      this(null);
-   }
+    /** Create instance of this Toolbar. */
+    public Toolbar() {
+        this(null);
+    }
 
-   /**
-    * Create instance of Toolbar with specified ID.
-    * 
-    * @param id toolbar's id
-    */
-   public Toolbar(String id)
-   {
-      this.id = id;
+    /**
+     * Create instance of Toolbar with specified ID.
+     *
+     * @param id
+     *         toolbar's id
+     */
+    public Toolbar(String id) {
+        this.id = id;
 
-      setStyleName("exoToolbarPanel");
-      if (id != null && !id.isEmpty())
-      {
-         getElement().setId(id);
-      }
-   }
+        setStyleName("exoToolbarPanel");
+        if (id != null && !id.isEmpty()) {
+            getElement().setId(id);
+        }
+    }
 
-   /**
-    * Add delimiter to the left
-    * 
-    * @return new instance of ToolbarItem, which represents an toolbar delimiter.
-    */
-   public ToolbarItem addDelimiter()
-   {
-      return addItem(null, false);
-   }
+    /**
+     * Add delimiter to the left
+     *
+     * @return new instance of ToolbarItem, which represents an toolbar delimiter.
+     */
+    public ToolbarItem addDelimiter() {
+        return addItem(null, false);
+    }
 
-   /**
-    * Add delimiter to the specified side. 
-    * 
-    * @param rightDocking <code>true</code> to add delimiter to the right,
-    *          <code>false</code> to add delimiter to the left. 
-    * @return new instance of ToolbarItem, which represents an toolbar delimiter.
-    */
-   public ToolbarItem addDelimiter(boolean rightDocking)
-   {
-      return addItem(null, rightDocking);
-   }
+    /**
+     * Add delimiter to the specified side.
+     *
+     * @param rightDocking
+     *         <code>true</code> to add delimiter to the right,
+     *         <code>false</code> to add delimiter to the left.
+     * @return new instance of ToolbarItem, which represents an toolbar delimiter.
+     */
+    public ToolbarItem addDelimiter(boolean rightDocking) {
+        return addItem(null, rightDocking);
+    }
 
-   /**
-    * Adds a new item to the left of the toolbar. 
-    * 
-    * @param widget widget of new item 
-    * @return new instance of ToolbarItem, which is represents a wrapper over added widget.
-    */
-   public ToolbarItem addItem(Widget widget)
-   {
-      ToolbarItem item = new ToolbarItem(widget, topItemsPadding);
-      leftItems.add(item);
-      add(item);
+    /**
+     * Adds a new item to the left of the toolbar.
+     *
+     * @param widget
+     *         widget of new item
+     * @return new instance of ToolbarItem, which is represents a wrapper over added widget.
+     */
+    public ToolbarItem addItem(Widget widget) {
+        ToolbarItem item = new ToolbarItem(widget, topItemsPadding);
+        leftItems.add(item);
+        add(item);
 
-      return item;
-   }
+        return item;
+    }
 
-   /**
-    * Adds a new item to the specified side of the toolbar.
-    *  
-    * @param widget widget of new item 
-    * @param rightDocking <code>true</code> to add new item to the right,
-    *          <code>false</code> to add new item to the left. 
-    * @return new instance of ToolbarItem, which is represents a wrapper over added widget.
-    */
-   public ToolbarItem addItem(Widget widget, boolean rightDocking)
-   {
-      ToolbarItem item = new ToolbarItem(widget, rightDocking, topItemsPadding);
-      if (rightDocking)
-      {
-         rightItems.add(item);
-      }
-      else
-      {
-         leftItems.add(item);
-      }
+    /**
+     * Adds a new item to the specified side of the toolbar.
+     *
+     * @param widget
+     *         widget of new item
+     * @param rightDocking
+     *         <code>true</code> to add new item to the right,
+     *         <code>false</code> to add new item to the left.
+     * @return new instance of ToolbarItem, which is represents a wrapper over added widget.
+     */
+    public ToolbarItem addItem(Widget widget, boolean rightDocking) {
+        ToolbarItem item = new ToolbarItem(widget, rightDocking, topItemsPadding);
+        if (rightDocking) {
+            rightItems.add(item);
+        } else {
+            leftItems.add(item);
+        }
 
-      add(item);
-      return item;
-   }
+        add(item);
+        return item;
+    }
 
-   /**
-    * Add {@link ToolbarItem} to this {@link Toolbar}.
-    * 
-    * @param item
-    */
-   public void add(ToolbarItem item)
-   {
-      super.add(item);
-   }
+    /**
+     * Add {@link ToolbarItem} to this {@link Toolbar}.
+     *
+     * @param item
+     */
+    public void add(ToolbarItem item) {
+        super.add(item);
+    }
 
-   /**
-    * Remove all items from toolbar.
-    */
-   public void clear()
-   {
-      super.clear();
-      leftItems.clear();
-      rightItems.clear();
-   }
+    /** Remove all items from toolbar. */
+    public void clear() {
+        super.clear();
+        leftItems.clear();
+        rightItems.clear();
+    }
 
-   /**
-    * Get toolbar's id.
-    * 
-    * @return toolbar's id
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /**
+     * Get toolbar's id.
+     *
+     * @return toolbar's id
+     */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * Hide duplicated delimiters in the list of Toolbar Item.
-    * 
-    * @param items list of Toolbar Items
-    */
-   private void hideDelimiters(List<ToolbarItem> items)
-   {
-      boolean finded = false;
+    /**
+     * Hide duplicated delimiters in the list of Toolbar Item.
+     *
+     * @param items
+     *         list of Toolbar Items
+     */
+    private void hideDelimiters(List<ToolbarItem> items) {
+        boolean finded = false;
 
-      for (ToolbarItem item : items)
-      {
-         if (item.isDelimiter())
-         {
+        for (ToolbarItem item : items) {
+            if (item.isDelimiter()) {
+                item.setVisible(true);
+            }
+        }
+
+        for (ToolbarItem item : items) {
+            if (item.isDelimiter()) {
+                if (finded) {
+                    item.setVisible(false);
+                } else {
+                    finded = true;
+                }
+            } else {
+                if (item.isVisible()) {
+                    finded = false;
+                }
+            }
+        }
+
+    }
+
+    /** Hide duplicated delimiters. */
+    public void hideDuplicatedDelimiters() {
+        hideDelimiters(leftItems);
+        hideDelimiters(rightItems);
+    }
+
+    /**
+     * Set background image URL.
+     *
+     * @param imageURL
+     *         background image URL
+     */
+    public void setBackgroundImage(String imageURL) {
+        DOM.setStyleAttribute(getElement(), "background", "url(" + imageURL + ") repeat-x");
+    }
+
+    /**
+     * Set padding of toolbar items from the top.
+     *
+     * @param itemsTopPadding
+     *         padding of toolbar items from the top.
+     */
+    public void setItemsTopPadding(int itemsTopPadding) {
+        this.topItemsPadding = itemsTopPadding;
+    }
+
+    /** Show all items. */
+    public void showAllItems() {
+        for (ToolbarItem item : leftItems) {
             item.setVisible(true);
-         }
-      }
+        }
 
-      for (ToolbarItem item : items)
-      {
-         if (item.isDelimiter())
-         {
-            if (finded)
-            {
-               item.setVisible(false);
-            }
-            else
-            {
-               finded = true;
-            }
-         }
-         else
-         {
-            if (item.isVisible())
-            {
-               finded = false;
-            }
-         }
-      }
-
-   }
-
-   /**
-    * Hide duplicated delimiters.
-    */
-   public void hideDuplicatedDelimiters()
-   {
-      hideDelimiters(leftItems);
-      hideDelimiters(rightItems);
-   }
-
-   /**
-    * Set background image URL.
-    * 
-    * @param imageURL background image URL
-    */
-   public void setBackgroundImage(String imageURL)
-   {
-      DOM.setStyleAttribute(getElement(), "background", "url(" + imageURL + ") repeat-x");
-   }
-
-   /**
-    * Set padding of toolbar items from the top.
-    * 
-    * @param itemsTopPadding padding of toolbar items from the top.
-    */
-   public void setItemsTopPadding(int itemsTopPadding)
-   {
-      this.topItemsPadding = itemsTopPadding;
-   }
-
-   /**
-    * Show all items.
-    */
-   public void showAllItems()
-   {
-      for (ToolbarItem item : leftItems)
-      {
-         item.setVisible(true);
-      }
-
-      for (ToolbarItem item : rightItems)
-      {
-         item.setVisible(true);
-      }
-   }
+        for (ToolbarItem item : rightItems) {
+            item.setVisible(true);
+        }
+    }
 
 }

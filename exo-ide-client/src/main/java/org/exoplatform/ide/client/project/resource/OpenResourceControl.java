@@ -29,51 +29,46 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OpenResourceControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
-{
-   
-   public static final String ID = "Project/Open Resource...";
+public class OpenResourceControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler {
 
-   private static final String TITLE = "Open Resource...";
+    public static final String ID = "Project/Open Resource...";
 
-   private static final String PROMPT = "Open Resource...";
-   
-   public OpenResourceControl() {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.openResource(), IDEImageBundle.INSTANCE.openResourceDisabled());
-      setEvent(new OpenResourceEvent());
-      setHotKey("Ctrl+Shift+R");
-      setIgnoreDisable(true);
-   }
+    private static final String TITLE = "Open Resource...";
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      
-      setVisible(true);
-   }
+    private static final String PROMPT = "Open Resource...";
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    public OpenResourceControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.openResource(), IDEImageBundle.INSTANCE.openResourceDisabled());
+        setEvent(new OpenResourceEvent());
+        setHotKey("Ctrl+Shift+R");
+        setIgnoreDisable(true);
+    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(true);
-   }
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
+
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(true);
+    }
 
 }

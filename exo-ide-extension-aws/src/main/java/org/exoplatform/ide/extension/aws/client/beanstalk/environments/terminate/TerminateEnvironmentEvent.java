@@ -24,60 +24,45 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
  * Event occurs, when user tries to terminate application's environment.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 4:52:19 PM anya $
- * 
  */
-public class TerminateEnvironmentEvent extends GwtEvent<TerminateEnvironmentHandler>
-{
+public class TerminateEnvironmentEvent extends GwtEvent<TerminateEnvironmentHandler> {
 
-   /**
-    * Type, used to register event.
-    */
-   public static final GwtEvent.Type<TerminateEnvironmentHandler> TYPE =
-      new GwtEvent.Type<TerminateEnvironmentHandler>();
+    /** Type, used to register event. */
+    public static final GwtEvent.Type<TerminateEnvironmentHandler> TYPE =
+            new GwtEvent.Type<TerminateEnvironmentHandler>();
 
-   private EnvironmentInfo environmentInfo;
+    private EnvironmentInfo environmentInfo;
 
-   private TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler;
+    private TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler;
 
-   public TerminateEnvironmentEvent(EnvironmentInfo environmentInfo,
-      TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler)
-   {
-      this.environmentInfo = environmentInfo;
-      this.terminateEnvironmentStartedHandler = terminateEnvironmentStartedHandler;
-   }
+    public TerminateEnvironmentEvent(EnvironmentInfo environmentInfo,
+                                     TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler) {
+        this.environmentInfo = environmentInfo;
+        this.terminateEnvironmentStartedHandler = terminateEnvironmentStartedHandler;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<TerminateEnvironmentHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<TerminateEnvironmentHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(TerminateEnvironmentHandler handler)
-   {
-      handler.onTerminateEnvironment(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(TerminateEnvironmentHandler handler) {
+        handler.onTerminateEnvironment(this);
+    }
 
-   public EnvironmentInfo getEnvironmentInfo()
-   {
-      return environmentInfo;
-   }
+    public EnvironmentInfo getEnvironmentInfo() {
+        return environmentInfo;
+    }
 
-   /**
-    * @return the terminateEnvironmentStartedHandler
-    */
-   public TerminateEnvironmentStartedHandler getTerminateEnvironmentStartedHandler()
-   {
-      return terminateEnvironmentStartedHandler;
-   }
+    /** @return the terminateEnvironmentStartedHandler */
+    public TerminateEnvironmentStartedHandler getTerminateEnvironmentStartedHandler() {
+        return terminateEnvironmentStartedHandler;
+    }
 
 }

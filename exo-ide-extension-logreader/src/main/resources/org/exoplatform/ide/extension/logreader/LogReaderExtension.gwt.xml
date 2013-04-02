@@ -19,23 +19,23 @@
 
 -->
 <module>
-   <!-- Inherit the core Web Toolkit stuff.                        -->
-   <inherits name='com.google.gwt.user.User' />
+    <!-- Inherit the core Web Toolkit stuff.                        -->
+    <inherits name='com.google.gwt.user.User'/>
 
-   <!-- Inherit the default GWT style sheet.  You can change       -->
-   <!-- the theme of your GWT application by uncommenting          -->
-   <!-- any one of the following lines.                            -->
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.xml.XML' />
-   <inherits name='com.google.gwt.json.JSON' />
-   <inherits name="com.google.gwt.resources.Resources" />
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-  
-  <inherits name='org.exoplatform.ide.extension.logreader.Views' />
-   
-    <entry-point class='org.exoplatform.ide.extension.logreader.client.LogReaderExtension' />
-   
-   <source path="client" />
-   <source path="shared" />
+    <!-- Inherit the default GWT style sheet.  You can change       -->
+    <!-- the theme of your GWT application by uncommenting          -->
+    <!-- any one of the following lines.                            -->
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name='com.google.gwt.json.JSON'/>
+    <inherits name="com.google.gwt.resources.Resources"/>
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
+    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework'/>
+
+    <inherits name='org.exoplatform.ide.extension.logreader.Views'/>
+
+    <entry-point class='org.exoplatform.ide.extension.logreader.client.LogReaderExtension'/>
+
+    <source path="client"/>
+    <source path="shared"/>
 </module>

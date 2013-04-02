@@ -21,16 +21,13 @@ package test.classes;
 /**
  *
  */
-public class ATestClass2 extends ATestClass
-{
+public class ATestClass2 extends ATestClass {
 
-   @Override
-   public void method1()
-   {
-   }
+    @Override
+    public void method1() {
+    }
 
-   protected void method3()
-   {
-   }
+    protected void method3() {
+    }
 
 }

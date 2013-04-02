@@ -23,35 +23,33 @@ package org.exoplatform.ide.editor.shared.text;
  * <p>
  * This class is not intended to be serialized.
  * </p>
- * 
+ *
  * @see org.eclipse.jface.text.IDocument
  */
-public class BadPositionCategoryException extends Exception
-{
+public class BadPositionCategoryException extends Exception {
 
-   /**
-    * Serial version UID for this class.
-    * <p>
-    * Note: This class is not intended to be serialized.
-    * </p>
-    * 
-    * @since 3.1
-    */
-   private static final long serialVersionUID = 3761405300745713206L;
+    /**
+     * Serial version UID for this class.
+     * <p>
+     * Note: This class is not intended to be serialized.
+     * </p>
+     *
+     * @since 3.1
+     */
+    private static final long serialVersionUID = 3761405300745713206L;
 
-   /** Creates a new bad position category exception. */
-   public BadPositionCategoryException()
-   {
-      super();
-   }
+    /** Creates a new bad position category exception. */
+    public BadPositionCategoryException() {
+        super();
+    }
 
-   /**
-    * Creates a new bad position category exception.
-    * 
-    * @param message the exception's message
-    */
-   public BadPositionCategoryException(String message)
-   {
-      super(message);
-   }
+    /**
+     * Creates a new bad position category exception.
+     *
+     * @param message
+     *         the exception's message
+     */
+    public BadPositionCategoryException(String message) {
+        super(message);
+    }
 }

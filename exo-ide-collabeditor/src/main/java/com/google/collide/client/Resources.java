@@ -31,35 +31,32 @@ import com.google.gwt.resources.client.ImageResource;
  * add your resource to  {@link CollabEditorExtension}
  */
 public interface Resources extends
-    BaseResources.Resources,
+                           BaseResources.Resources,
 //    StatusPresenter.Resources,
-    Editor.Resources,
-    LineNumberRenderer.Resources,
-    com.google.collide.client.code.EditableContentArea.Resources,
-    com.google.collide.client.syntaxhighlighter.SyntaxHighlighterRenderer.Resources,
-    GutterNotificationResources,
-    com.google.collide.client.code.autocomplete.integration.AutocompleteUiController.Resources,
-    ParticipantList.Resources,
-    // TODO: Once we have actual consumers of the Tooltip class, we
-    // can just have them extend it instead of doing it on the base interface.
+                           Editor.Resources,
+                           LineNumberRenderer.Resources,
+                           com.google.collide.client.code.EditableContentArea.Resources,
+                           com.google.collide.client.syntaxhighlighter.SyntaxHighlighterRenderer.Resources,
+                           GutterNotificationResources,
+                           com.google.collide.client.code.autocomplete.integration.AutocompleteUiController.Resources,
+                           ParticipantList.Resources,
+                                   // TODO: Once we have actual consumers of the Tooltip class, we
+                                   // can just have them extend it instead of doing it on the base interface.
 //    Tooltip.Resources,
-    Popup.Resources, CenterPanel.Resources, StatusPresenter.Resources
-{
+                           Popup.Resources, CenterPanel.Resources, StatusPresenter.Resources {
 
-  /**
-   * Interface for css resources.
-   */
-  public interface AppCss extends CssResource {
-  }
+    /** Interface for css resources. */
+    public interface AppCss extends CssResource {
+    }
 
-  @Source({"app.css", "com/google/collide/client/common/constants.css"})
-  @NotStrict
-  AppCss appCss();
+    @Source({"app.css", "com/google/collide/client/common/constants.css"})
+    @NotStrict
+    AppCss appCss();
 
-  @Source("com/google/collide/client/collaboration/delta_icon.png")
-  ImageResource getCollaborationImage();
+    @Source("com/google/collide/client/collaboration/delta_icon.png")
+    ImageResource getCollaborationImage();
 
-  @Source("com/google/collide/client/collaboration/delta_icon_Disabled.png")
-  ImageResource getCollaborationImageDisabled();
+    @Source("com/google/collide/client/collaboration/delta_icon_Disabled.png")
+    ImageResource getCollaborationImageDisabled();
 
 }

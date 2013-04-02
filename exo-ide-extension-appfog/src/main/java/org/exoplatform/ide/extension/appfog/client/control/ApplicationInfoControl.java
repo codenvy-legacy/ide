@@ -28,22 +28,20 @@ import org.exoplatform.ide.extension.appfog.client.info.ApplicationInfoEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ApplicationInfoControl extends AbstractAppfogControl
-{
+public class ApplicationInfoControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.applicationInfoControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.applicationInfoControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.applicationInfoControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.applicationInfoControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.applicationInfoControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.applicationInfoControlPrompt();
 
-   public ApplicationInfoControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.applicationInfo(), AppfogClientBundle.INSTANCE.applicationInfoDisabled());
-      setEvent(new ApplicationInfoEvent());
-   }
+    public ApplicationInfoControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.applicationInfo(), AppfogClientBundle.INSTANCE.applicationInfoDisabled());
+        setEvent(new ApplicationInfoEvent());
+    }
 
 }

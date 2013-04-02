@@ -19,58 +19,43 @@
 package org.exoplatform.ide.client.outline;
 
 import com.google.gwt.user.client.DOM;
-
 import com.google.gwt.user.client.ui.Image;
 
 /**
  * Is used to set empty tree message.
  * CellTree has hard coded empty message, which cannot be changed.
  * So this node is added instead of the empty message.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Feb 24, 2012 9:16:16 AM anya $
- * 
  */
-public class EmptyTreeMessage
-{
-   /**
-    * Image to display (loader for example).
-    */
-   private Image image;
+public class EmptyTreeMessage {
+    /** Image to display (loader for example). */
+    private Image image;
 
-   /**
-    * Message to display.
-    */
-   private String message;
+    /** Message to display. */
+    private String message;
 
-   /**
-    * @param image 
-    * @param message
-    */
-   public EmptyTreeMessage(Image image, String message)
-   {
-      this.message = message;
-      this.image = image;
-      if (image != null)
-      {
-         DOM.setStyleAttribute(image.getElement(), "cssFloat", "left");
-         DOM.setStyleAttribute(image.getElement(), "marginRight", "5px");
-      }
-   }
+    /**
+     * @param image
+     * @param message
+     */
+    public EmptyTreeMessage(Image image, String message) {
+        this.message = message;
+        this.image = image;
+        if (image != null) {
+            DOM.setStyleAttribute(image.getElement(), "cssFloat", "left");
+            DOM.setStyleAttribute(image.getElement(), "marginRight", "5px");
+        }
+    }
 
-   /**
-    * @return the image
-    */
-   public Image getImage()
-   {
-      return image;
-   }
+    /** @return the image */
+    public Image getImage() {
+        return image;
+    }
 
-   /**
-    * @return the message
-    */
-   public String getMessage()
-   {
-      return message;
-   }
+    /** @return the message */
+    public String getMessage() {
+        return message;
+    }
 }

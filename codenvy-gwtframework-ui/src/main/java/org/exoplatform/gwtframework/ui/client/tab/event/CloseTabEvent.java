@@ -22,84 +22,64 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * This event fires before closing tab.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CloseTabEvent extends GwtEvent<CloseTabHandler>
-{
+public class CloseTabEvent extends GwtEvent<CloseTabHandler> {
 
-   /**
-    * Event type.
-    */
-   public static final GwtEvent.Type<CloseTabHandler> TYPE = new GwtEvent.Type<CloseTabHandler>();
+    /** Event type. */
+    public static final GwtEvent.Type<CloseTabHandler> TYPE = new GwtEvent.Type<CloseTabHandler>();
 
-   /**
-    * Id of tab to be closed.
-    */
-   private String tabId;
+    /** Id of tab to be closed. */
+    private String tabId;
 
-   /**
-    * 
-    */
-   private boolean closingCanceled = false;
+    /**
+     *
+     */
+    private boolean closingCanceled = false;
 
-   /**
-    * Creates a new instance of this event.
-    * 
-    * @param tabId
-    */
-   public CloseTabEvent(String tabId)
-   {
-      this.tabId = tabId;
-   }
+    /**
+     * Creates a new instance of this event.
+     *
+     * @param tabId
+     */
+    public CloseTabEvent(String tabId) {
+        this.tabId = tabId;
+    }
 
-   /**
-    * Gets ID of tab to be closed.
-    * 
-    * @return
-    */
-   public String getTabId()
-   {
-      return tabId;
-   }
+    /**
+     * Gets ID of tab to be closed.
+     *
+     * @return
+     */
+    public String getTabId() {
+        return tabId;
+    }
 
-   /**
-    * Cancels closing the tab.
-    */
-   public void cancelClosing()
-   {
-      closingCanceled = true;
-   }
+    /** Cancels closing the tab. */
+    public void cancelClosing() {
+        closingCanceled = true;
+    }
 
-   /**
-    * 
-    * @return
-    */
-   public boolean isClosingCanceled()
-   {
-      return closingCanceled;
-   }
+    /** @return  */
+    public boolean isClosingCanceled() {
+        return closingCanceled;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CloseTabHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CloseTabHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CloseTabHandler handler)
-   {
-      handler.onCloseTab(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CloseTabHandler handler) {
+        handler.onCloseTab(this);
+    }
 
 }

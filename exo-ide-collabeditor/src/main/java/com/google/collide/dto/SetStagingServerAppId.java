@@ -17,15 +17,10 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- *
- * DTO for setting the user's mimic app id.
- *
- *
- */
+/** DTO for setting the user's mimic app id. */
 @RoutingType(type = RoutingTypes.SETSTAGINGSERVERAPPID)
 public interface SetStagingServerAppId extends ClientToServerDto {
 
-  String getStagingServerAppId();
+    String getStagingServerAppId();
 
 }

@@ -26,27 +26,24 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class SupportControl extends SimpleControl implements IDEControl
-{
-   private static final String ID = "Help/Contact Support";
+public class SupportControl extends SimpleControl implements IDEControl {
+    private static final String ID = "Help/Contact Support";
 
-   private static final String TITLE = "Contact Support";
+    private static final String TITLE = "Contact Support";
 
-   public SupportControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setGroupName(DocumentationControl.SUPPORT_GROUP_ID);
-      setVisible(true);
-      setEnabled(true);
-      setImages(SamplesClientBundle.INSTANCE.contact(), SamplesClientBundle.INSTANCE.contactDisabled());
+    public SupportControl() {
+        super(ID);
+        setTitle(TITLE);
+        setGroupName(DocumentationControl.SUPPORT_GROUP_ID);
+        setVisible(true);
+        setEnabled(true);
+        setImages(SamplesClientBundle.INSTANCE.contact(), SamplesClientBundle.INSTANCE.contactDisabled());
 
-      getAttributes().put("onClick", "javascript:UserVoice.showPopupWidget({mode:'support'});");
-   }
+        getAttributes().put("onClick", "javascript:UserVoice.showPopupWidget({mode:'support'});");
+    }
 
 
-   @Override
-   public void initialize()
-   {
-   }
+    @Override
+    public void initialize() {
+    }
 }

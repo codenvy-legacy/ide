@@ -22,51 +22,43 @@ import org.exoplatform.ide.json.shared.JsonIntegerMap;
  * Class responsible for routing JsonMessages based on the message type that get
  * sent to the client from the server.
  */
-public class MessageFilter
-{
-   /**
-    * Interface for receiving JSON messages.
-    */
-   public interface MessageRecipient<T extends ServerToClientDto>
-   {
-      void onMessageReceived(T message);
-   }
+public class MessageFilter {
+    /** Interface for receiving JSON messages. */
+    public interface MessageRecipient<T extends ServerToClientDto> {
+        void onMessageReceived(T message);
+    }
 
-   private final JsonIntegerMap<MessageRecipient<? extends ServerToClientDto>> messageRecipients = JsonCollections.createIntegerMap();
+    private final JsonIntegerMap<MessageRecipient<? extends ServerToClientDto>> messageRecipients = JsonCollections.createIntegerMap();
 
-   /**
-    * Dispatches an incoming DTO message to a registered recipient.
-    *
-    * @param message
-    */
-   public <T extends ServerToClientDto> void dispatchMessage(T message)
-   {
-      @SuppressWarnings("unchecked") MessageRecipient<T> recipient = (MessageRecipient<T>)messageRecipients.get(
-         message.getType());
-      if (recipient != null)
-      {
-         recipient.onMessageReceived(message);
-      }
-   }
+    /**
+     * Dispatches an incoming DTO message to a registered recipient.
+     *
+     * @param message
+     */
+    public <T extends ServerToClientDto> void dispatchMessage(T message) {
+        @SuppressWarnings("unchecked") MessageRecipient<T> recipient = (MessageRecipient<T>)messageRecipients.get(
+                message.getType());
+        if (recipient != null) {
+            recipient.onMessageReceived(message);
+        }
+    }
 
-   /**
-    * Adds a MessageRecipient for a given message type.
-    *
-    * @param messageType
-    * @param recipient
-    */
-   public void registerMessageRecipient(int messageType, MessageRecipient<? extends ServerToClientDto> recipient)
-   {
-      messageRecipients.put(messageType, recipient);
-   }
+    /**
+     * Adds a MessageRecipient for a given message type.
+     *
+     * @param messageType
+     * @param recipient
+     */
+    public void registerMessageRecipient(int messageType, MessageRecipient<? extends ServerToClientDto> recipient) {
+        messageRecipients.put(messageType, recipient);
+    }
 
-   /**
-    * Removes any MessageRecipient registered for a given type.
-    *
-    * @param messageType
-    */
-   public void removeMessageRecipient(int messageType)
-   {
-      messageRecipients.erase(messageType);
-   }
+    /**
+     * Removes any MessageRecipient registered for a given type.
+     *
+     * @param messageType
+     */
+    public void removeMessageRecipient(int messageType) {
+        messageRecipients.erase(messageType);
+    }
 }

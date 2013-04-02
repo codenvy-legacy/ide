@@ -19,6 +19,7 @@
 package org.exoplatform.ide.maven;
 
 import junit.framework.TestCase;
+
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.impl.EverrestConfiguration;
@@ -38,47 +39,43 @@ import java.util.Map;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public abstract class BaseTest extends TestCase
-{
-   ResourceBinder resources;
-   ResourceLauncher launcher;
-   DependencySupplierImpl dependencies;
-   File repository;
-   BuildService tasks;
+public abstract class BaseTest extends TestCase {
+    ResourceBinder         resources;
+    ResourceLauncher       launcher;
+    DependencySupplierImpl dependencies;
+    File                   repository;
+    BuildService           tasks;
 
-   @Override
-   public void setUp() throws Exception
-   {
-      super.setUp();
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
-      tasks = new BuildService(getConfig());
+        tasks = new BuildService(getConfig());
 
-      resources = new ResourceBinderImpl();
-      resources.addResource(Builder.class, null);
+        resources = new ResourceBinderImpl();
+        resources.addResource(Builder.class, null);
 
-      dependencies = new DependencySupplierImpl();
-      dependencies.addComponent(BuildService.class, tasks);
+        dependencies = new DependencySupplierImpl();
+        dependencies.addComponent(BuildService.class, tasks);
 
-      RequestHandler handler =
-         new RequestHandlerImpl(new RequestDispatcher(resources), dependencies, new EverrestConfiguration());
-      launcher = new ResourceLauncher(handler);
-   }
+        RequestHandler handler =
+                new RequestHandlerImpl(new RequestDispatcher(resources), dependencies, new EverrestConfiguration());
+        launcher = new ResourceLauncher(handler);
+    }
 
-   Map<String, Object> getConfig()
-   {
-      URL url = Thread.currentThread().getContextClassLoader().getResource(".");
-      File target = new File(URI.create(url.toString())).getParentFile();
-      repository = new File(target, "repository");
-      repository.mkdir();
-      Map<String, Object> config = new HashMap<String, Object>();
-      config.put(BuildService.BUILDER_REPOSITORY, repository.getAbsolutePath());
-      return config;
-   }
+    Map<String, Object> getConfig() {
+        URL url = Thread.currentThread().getContextClassLoader().getResource(".");
+        File target = new File(URI.create(url.toString())).getParentFile();
+        repository = new File(target, "repository");
+        repository.mkdir();
+        Map<String, Object> config = new HashMap<String, Object>();
+        config.put(BuildService.BUILDER_REPOSITORY, repository.getAbsolutePath());
+        return config;
+    }
 
-   @Override
-   public void tearDown() throws Exception
-   {
-      tasks.shutdown();
-      super.tearDown();
-   }
+    @Override
+    public void tearDown() throws Exception {
+        tasks.shutdown();
+        super.tearDown();
+    }
 }

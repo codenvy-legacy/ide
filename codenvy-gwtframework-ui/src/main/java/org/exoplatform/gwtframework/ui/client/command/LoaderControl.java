@@ -23,30 +23,26 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class LoaderControl extends Control<LoaderControl>
-{
+public class LoaderControl extends Control<LoaderControl> {
 
-   private GwtEvent<?> event;
+    private GwtEvent<?> event;
 
-   public LoaderControl(String id)
-   {
-      super(id);
-   }
+    public LoaderControl(String id) {
+        super(id);
+    }
 
-   public GwtEvent<?> getEvent()
-   {
-      return event;
-   }
+    public GwtEvent<?> getEvent() {
+        return event;
+    }
 
-   public LoaderControl setEvent(GwtEvent<?> event)
-   {
-      this.event = event;
-      return this;
-   }
+    public LoaderControl setEvent(GwtEvent<?> event) {
+        this.event = event;
+        return this;
+    }
 
 }

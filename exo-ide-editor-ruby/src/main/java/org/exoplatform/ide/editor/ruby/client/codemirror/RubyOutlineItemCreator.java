@@ -18,70 +18,63 @@
  */
 package org.exoplatform.ide.editor.ruby.client.codemirror;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.ruby.client.RubyClientBundle;
 
-import com.google.gwt.resources.client.ImageResource;
-
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- * 
  */
-public class RubyOutlineItemCreator extends OutlineItemCreatorImpl
-{
-   @Override
-   public ImageResource getTokenIcon(TokenBeenImpl token)
-   {
-      switch (token.getType())
-      {
-         case LOCAL_VARIABLE :
-            return RubyClientBundle.INSTANCE.variable();
+public class RubyOutlineItemCreator extends OutlineItemCreatorImpl {
+    @Override
+    public ImageResource getTokenIcon(TokenBeenImpl token) {
+        switch (token.getType()) {
+            case LOCAL_VARIABLE:
+                return RubyClientBundle.INSTANCE.variable();
 
-         case GLOBAL_VARIABLE :
-            return RubyClientBundle.INSTANCE.rubyGlobalVariable();
+            case GLOBAL_VARIABLE:
+                return RubyClientBundle.INSTANCE.rubyGlobalVariable();
 
-         case CLASS_VARIABLE :
-            return RubyClientBundle.INSTANCE.rubyClassVariable();
+            case CLASS_VARIABLE:
+                return RubyClientBundle.INSTANCE.rubyClassVariable();
 
-         case INSTANCE_VARIABLE :
-            return RubyClientBundle.INSTANCE.rubyObjectVariable();
+            case INSTANCE_VARIABLE:
+                return RubyClientBundle.INSTANCE.rubyObjectVariable();
 
-         case CONSTANT :
-            return RubyClientBundle.INSTANCE.rubyConstant();
+            case CONSTANT:
+                return RubyClientBundle.INSTANCE.rubyConstant();
 
-         case MODULE :
-            return RubyClientBundle.INSTANCE.module();
+            case MODULE:
+                return RubyClientBundle.INSTANCE.module();
 
-         case CLASS :
-            return RubyClientBundle.INSTANCE.classItem();
+            case CLASS:
+                return RubyClientBundle.INSTANCE.classItem();
 
-         case METHOD :
-            return RubyClientBundle.INSTANCE.publicMethod();
+            case METHOD:
+                return RubyClientBundle.INSTANCE.publicMethod();
 
-         default :
-            return null;
-      }
-   }
+            default:
+                return null;
+        }
+    }
 
-   @Override
-   public String getTokenDisplayTitle(TokenBeenImpl token)
-   {
-      String label = token.getName();
+    @Override
+    public String getTokenDisplayTitle(TokenBeenImpl token) {
+        String label = token.getName();
 
-      // Add "()" to the end of method's label
-      if (TokenType.METHOD.equals(token.getType()))
-      {
-         label += "()";
-      }
+        // Add "()" to the end of method's label
+        if (TokenType.METHOD.equals(token.getType())) {
+            label += "()";
+        }
 
-      if (token.getElementType() != null)
-      {
-         label += getElementType(token);
-      }
+        if (token.getElementType() != null) {
+            label += getElementType(token);
+        }
 
-      return label;
-   }
+        return label;
+    }
 }

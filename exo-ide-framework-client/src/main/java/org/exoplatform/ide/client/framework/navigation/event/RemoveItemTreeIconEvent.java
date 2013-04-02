@@ -28,48 +28,34 @@ import java.util.Map;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: RemoveItemTreeIconEvent Apr 6, 2011 9:50:25 AM evgen $
- * 
  */
-public class RemoveItemTreeIconEvent extends GwtEvent<RemoveItemTreeIconHandler>
-{
+public class RemoveItemTreeIconEvent extends GwtEvent<RemoveItemTreeIconHandler> {
 
-   public static GwtEvent.Type<RemoveItemTreeIconHandler> TYPE = new Type<RemoveItemTreeIconHandler>();
+    public static GwtEvent.Type<RemoveItemTreeIconHandler> TYPE = new Type<RemoveItemTreeIconHandler>();
 
-   private Map<Item, TreeIconPosition> iconsToRemove;
+    private Map<Item, TreeIconPosition> iconsToRemove;
 
-   /**
-    * @param iconsToRemove
-    */
-   public RemoveItemTreeIconEvent(Map<Item, TreeIconPosition> iconsToRemove)
-   {
-      super();
-      this.iconsToRemove = iconsToRemove;
-   }
+    /** @param iconsToRemove */
+    public RemoveItemTreeIconEvent(Map<Item, TreeIconPosition> iconsToRemove) {
+        super();
+        this.iconsToRemove = iconsToRemove;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RemoveItemTreeIconHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RemoveItemTreeIconHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RemoveItemTreeIconHandler handler)
-   {
-      handler.onRemoveItemTreeIcon(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RemoveItemTreeIconHandler handler) {
+        handler.onRemoveItemTreeIcon(this);
+    }
 
-   /**
-    * @return the iconsToRemove
-    */
-   public Map<Item, TreeIconPosition> getIconsToRemove()
-   {
-      return iconsToRemove;
-   }
+    /** @return the iconsToRemove */
+    public Map<Item, TreeIconPosition> getIconsToRemove() {
+        return iconsToRemove;
+    }
 
 }

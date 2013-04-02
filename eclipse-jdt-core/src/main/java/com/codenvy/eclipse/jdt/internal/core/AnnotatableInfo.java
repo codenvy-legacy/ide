@@ -14,66 +14,60 @@ import com.codenvy.eclipse.jdt.core.IAnnotation;
 import com.codenvy.eclipse.jdt.core.ISourceRange;
 import com.codenvy.eclipse.jdt.core.SourceRange;
 
-public class AnnotatableInfo extends MemberElementInfo
-{
+public class AnnotatableInfo extends MemberElementInfo {
 
-   /*
-    * The annotations of this annotatble. Empty if none.
-    */
-   protected IAnnotation[] annotations = Annotation.NO_ANNOTATIONS;
+    /*
+     * The annotations of this annotatble. Empty if none.
+     */
+    protected IAnnotation[] annotations = Annotation.NO_ANNOTATIONS;
 
-   /**
-    * The start position of this member's name in the its
-    * openable's buffer.
-    */
-   protected int nameStart = -1;
+    /**
+     * The start position of this member's name in the its
+     * openable's buffer.
+     */
+    protected int nameStart = -1;
 
-   /**
-    * The last position of this member's name in the its
-    * openable's buffer.
-    */
-   protected int nameEnd = -1;
+    /**
+     * The last position of this member's name in the its
+     * openable's buffer.
+     */
+    protected int nameEnd = -1;
 
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getNameSourceEnd()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getNameSourceEnd()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getNameSourceEnd()
-    */
-   public int getNameSourceEnd()
-   {
-      return this.nameEnd;
-   }
+    /**
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getNameSourceEnd()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getNameSourceEnd()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getNameSourceEnd()
+     */
+    public int getNameSourceEnd() {
+        return this.nameEnd;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getNameSourceStart()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getNameSourceStart()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getNameSourceStart()
-    */
-   public int getNameSourceStart()
-   {
-      return this.nameStart;
-   }
+    /**
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getNameSourceStart()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getNameSourceStart()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getNameSourceStart()
+     */
+    public int getNameSourceStart() {
+        return this.nameStart;
+    }
 
-   /**
-    * Sets the last position of this member's name, relative
-    * to its openable's source buffer.
-    */
-   protected void setNameSourceEnd(int end)
-   {
-      this.nameEnd = end;
-   }
+    /**
+     * Sets the last position of this member's name, relative
+     * to its openable's source buffer.
+     */
+    protected void setNameSourceEnd(int end) {
+        this.nameEnd = end;
+    }
 
-   /**
-    * Sets the start position of this member's name, relative
-    * to its openable's source buffer.
-    */
-   protected void setNameSourceStart(int start)
-   {
-      this.nameStart = start;
-   }
+    /**
+     * Sets the start position of this member's name, relative
+     * to its openable's source buffer.
+     */
+    protected void setNameSourceStart(int start) {
+        this.nameStart = start;
+    }
 
-   protected ISourceRange getNameRange()
-   {
-      return new SourceRange(this.nameStart, this.nameEnd - this.nameStart + 1);
-   }
+    protected ISourceRange getNameRange() {
+        return new SourceRange(this.nameStart, this.nameEnd - this.nameStart + 1);
+    }
 }

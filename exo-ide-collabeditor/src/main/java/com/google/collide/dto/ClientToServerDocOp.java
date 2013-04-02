@@ -20,54 +20,52 @@ import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Serialized doc op (and related data) sent from the client to the server.
- *
- * <p>
+ * <p/>
+ * <p/>
  * Note that this message is sent/received on our BrowserChannel, NOT on the
  * REST API for our frontend.
  */
 @RoutingType(type = RoutingTypes.CLIENTTOSERVERDOCOP)
 public interface ClientToServerDocOp extends ClientToServerDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getFileEditSessionKey();
+    String getFileEditSessionKey();
 
-  /**
-   * @return the (concurrency control) revision of the document that the
-   *         client's doc op applies to
-   */
-  int getCcRevision();
+    /**
+     * @return the (concurrency control) revision of the document that the
+     *         client's doc op applies to
+     */
+    int getCcRevision();
 
-  /**
-   * @return the author of this doc op
-   */
-  String getClientId();
+    /** @return the author of this doc op */
+    String getClientId();
 
-  /**
-   * Serialized DTOs. This needs to be a String since we have a custom deserializer on the server.
-   * 
-   * {@link DocOp} DTOs.
-   */
-  JsonArray<String> getDocOps2();
+    /**
+     * Serialized DTOs. This needs to be a String since we have a custom deserializer on the server.
+     * <p/>
+     * {@link DocOp} DTOs.
+     */
+    JsonArray<String> getDocOps2();
 
-  /**
-   * If the user has explicitly changed the selection since the last time this
-   * DTO was sent, this will return the selection of the user. The "explicit"
-   * distinction is important: In most cases while the user is typing, the
-   * cursor will be moved implicitly, and passing those incremental cursor
-   * position changes via this field is not required.
-   *
-   * <p>
-   * The positions inside the selection already account for the positional
-   * changes that may occur due to the document operations within this DTO.
-   *
-   * <p>
-   * For example imagine the document is empty prior to this DTO. The user types
-   * 'a', and then explicitly positions his cursor at column 0 again. The user
-   * then types 'b'. The position of the selection (both cursor and base
-   * positions) will be column 1.
-   *
-   * <p>   * 
-   * {@link DocumentSelection} DTO.
-   */
-  DocumentSelection getSelection();
+    /**
+     * If the user has explicitly changed the selection since the last time this
+     * DTO was sent, this will return the selection of the user. The "explicit"
+     * distinction is important: In most cases while the user is typing, the
+     * cursor will be moved implicitly, and passing those incremental cursor
+     * position changes via this field is not required.
+     * <p/>
+     * <p/>
+     * The positions inside the selection already account for the positional
+     * changes that may occur due to the document operations within this DTO.
+     * <p/>
+     * <p/>
+     * For example imagine the document is empty prior to this DTO. The user types
+     * 'a', and then explicitly positions his cursor at column 0 again. The user
+     * then types 'b'. The position of the selection (both cursor and base
+     * positions) will be column 1.
+     * <p/>
+     * <p>   *
+     * {@link DocumentSelection} DTO.
+     */
+    DocumentSelection getSelection();
 }

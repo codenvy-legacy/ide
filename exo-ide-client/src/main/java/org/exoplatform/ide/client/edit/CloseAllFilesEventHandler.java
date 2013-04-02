@@ -19,204 +19,158 @@
 
 package org.exoplatform.ide.client.edit;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosingHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
-import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
-import org.exoplatform.ide.client.framework.event.CloseAllFilesHandler;
-import org.exoplatform.ide.client.framework.event.FileSavedEvent;
-import org.exoplatform.ide.client.framework.event.FileSavedHandler;
-import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
-import org.exoplatform.ide.client.framework.event.SaveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.event.*;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class CloseAllFilesEventHandler implements CloseAllFilesHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, FileSavedHandler, ApplicationClosingHandler
-{
+                                                  EditorFileClosedHandler, FileSavedHandler, ApplicationClosingHandler {
 
-   private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
-      .workspaceCloseAllFilesDialogTitle();
+    private static final String ASK_DIALOG_TITLE = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+                                                                                 .workspaceCloseAllFilesDialogTitle();
 
-   private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
-      .workspaceCloseAllFilesDialogText();
+    private static final String ASK_DIALOG_TEXT = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+                                                                                .workspaceCloseAllFilesDialogText();
 
-   /**
-    * The message to display to user if he has unsaved files, that may be lost after refresh or close page.
-    */
-   private static final String UNSAVED_FILES_MAY_BE_LOST = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
-      .unsavedFilesMayBeLost();
+    /** The message to display to user if he has unsaved files, that may be lost after refresh or close page. */
+    private static final String UNSAVED_FILES_MAY_BE_LOST = org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT
+                                                                                          .unsavedFilesMayBeLost();
 
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   private FileModel fileToClose;
+    private FileModel fileToClose;
 
-   public CloseAllFilesEventHandler()
-   {
-      IDE.addHandler(CloseAllFilesEvent.TYPE, this);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(FileSavedEvent.TYPE, this);
-      IDE.addHandler(ApplicationClosingEvent.TYPE, this);
-   }
+    public CloseAllFilesEventHandler() {
+        IDE.addHandler(CloseAllFilesEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+        IDE.addHandler(FileSavedEvent.TYPE, this);
+        IDE.addHandler(ApplicationClosingEvent.TYPE, this);
+    }
 
-   @Override
-   public void onCloseAllFiles(CloseAllFilesEvent event)
-   {
-      if (openedFiles.size() == 0)
-      {
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-            @Override
-            public void execute()
-            {
-               IDE.fireEvent(new AllFilesClosedEvent());
+    @Override
+    public void onCloseAllFiles(CloseAllFilesEvent event) {
+        if (openedFiles.size() == 0) {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    IDE.fireEvent(new AllFilesClosedEvent());
+                }
+            });
+
+            return;
+        }
+
+        Dialogs.getInstance().ask(ASK_DIALOG_TITLE, ASK_DIALOG_TEXT, new BooleanValueReceivedHandler() {
+            public void booleanValueReceived(Boolean value) {
+                if (value == null) {
+                    return;
+                }
+                if (value) {
+                    closeNextFile();
+                }
             }
-         });
+        });
+    }
 
-         return;
-      }
+    /** Closing opened files. */
+    private void closeNextFile() {
+        fileToClose = null;
 
-      Dialogs.getInstance().ask(ASK_DIALOG_TITLE, ASK_DIALOG_TEXT, new BooleanValueReceivedHandler()
-      {
-         public void booleanValueReceived(Boolean value)
-         {
-            if (value == null)
-            {
-               return;
+        if (openedFiles.size() == 0) {
+            IDE.fireEvent(new AllFilesClosedEvent());
+            return;
+        }
+
+        String href = openedFiles.keySet().iterator().next();
+        final FileModel file = openedFiles.get(href);
+
+        if (file.isContentChanged()) {
+            final String fileName = Utils.unescape(file.getName());
+            final String message =
+                    org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.selectWorkspaceAskSaveFileBeforeClosing(fileName);
+            final String title =
+                    org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
+
+            Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler() {
+                public void booleanValueReceived(Boolean value) {
+                    if (value == null) {
+                        return;
+                    }
+
+                    if (value) {
+                        if (!file.isPersisted()) {
+                            fileToClose = file;
+                            IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+                        } else {
+                            fileToClose = file;
+                            IDE.fireEvent(new SaveFileEvent(file));
+                        }
+                    } else {
+                        IDE.fireEvent(new EditorCloseFileEvent(file, true));
+                        closeNextFile();
+                    }
+                }
+
+            });
+            return;
+        } else {
+            IDE.fireEvent(new EditorCloseFileEvent(file, true));
+            closeNextFile();
+        }
+    }
+
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedFiles = event.getOpenedFiles();
+    }
+
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        openedFiles = event.getOpenedFiles();
+    }
+
+    @Override
+    public void onFileSaved(FileSavedEvent event) {
+        if (fileToClose != null) {
+            EditorCloseFileEvent e = new EditorCloseFileEvent(fileToClose, true);
+            fileToClose = null;
+            IDE.fireEvent(e);
+            closeNextFile();
+        }
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.ApplicationClosingHandler#onApplicationClosing(
+     *org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent)
+     */
+    @Override
+    public void onApplicationClosing(ApplicationClosingEvent event) {
+        for (FileModel file : openedFiles.values()) {
+            if (file.isContentChanged()) {
+                event.setMessage(UNSAVED_FILES_MAY_BE_LOST);
+                break;
             }
-            if (value)
-            {
-               closeNextFile();
-            }
-         }
-      });
-   }
-
-   /**
-    * Closing opened files.
-    */
-   private void closeNextFile()
-   {
-      fileToClose = null;
-
-      if (openedFiles.size() == 0)
-      {
-         IDE.fireEvent(new AllFilesClosedEvent());
-         return;
-      }
-
-      String href = openedFiles.keySet().iterator().next();
-      final FileModel file = openedFiles.get(href);
-
-      if (file.isContentChanged())
-      {
-         final String fileName = Utils.unescape(file.getName());
-         final String message =
-            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.selectWorkspaceAskSaveFileBeforeClosing(fileName);
-         final String title =
-            org.exoplatform.ide.client.IDE.PREFERENCES_CONSTANT.selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
-
-         Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler()
-         {
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value == null)
-               {
-                  return;
-               }
-
-               if (value)
-               {
-                  if (!file.isPersisted())
-                  {
-                     fileToClose = file;
-                     IDE.fireEvent(new SaveFileAsEvent(file, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
-                  }
-                  else
-                  {
-                     fileToClose = file;
-                     IDE.fireEvent(new SaveFileEvent(file));
-                  }
-               }
-               else
-               {
-                  IDE.fireEvent(new EditorCloseFileEvent(file, true));
-                  closeNextFile();
-               }
-            }
-
-         });
-         return;
-      }
-      else
-      {
-         IDE.fireEvent(new EditorCloseFileEvent(file, true));
-         closeNextFile();
-      }
-   }
-
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   @Override
-   public void onFileSaved(FileSavedEvent event)
-   {
-      if (fileToClose != null)
-      {
-         EditorCloseFileEvent e = new EditorCloseFileEvent(fileToClose, true);
-         fileToClose = null;
-         IDE.fireEvent(e);
-         closeNextFile();
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.ApplicationClosingHandler#onApplicationClosing(
-    * org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent)
-    */
-   @Override
-   public void onApplicationClosing(ApplicationClosingEvent event)
-   {
-      for (FileModel file : openedFiles.values())
-      {
-         if (file.isContentChanged())
-         {
-            event.setMessage(UNSAVED_FILES_MAY_BE_LOST);
-            break;
-         }
-      }
-   }
+        }
+    }
 
 }

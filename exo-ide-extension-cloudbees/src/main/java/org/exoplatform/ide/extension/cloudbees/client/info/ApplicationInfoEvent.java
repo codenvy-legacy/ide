@@ -24,60 +24,44 @@ import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 
 /**
  * Event, which set to control to show application info.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationInfoEvent.java Jun 30, 2011 4:57:08 PM vereshchaka $
  */
-public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler>
-{
+public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler> {
 
-   private ApplicationInfo appInfo;
+    private ApplicationInfo appInfo;
 
-   /**
-    * 
-    */
-   public ApplicationInfoEvent()
-   {
-   }
+    /**
+     *
+     */
+    public ApplicationInfoEvent() {
+    }
 
-   /**
-    * @param appInfo
-    */
-   public ApplicationInfoEvent(ApplicationInfo appInfo)
-   {
-      super();
-      this.appInfo = appInfo;
-   }
+    /** @param appInfo */
+    public ApplicationInfoEvent(ApplicationInfo appInfo) {
+        super();
+        this.appInfo = appInfo;
+    }
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ApplicationInfoHandler> TYPE = new GwtEvent.Type<ApplicationInfoHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ApplicationInfoHandler> TYPE = new GwtEvent.Type<ApplicationInfoHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationInfoHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationInfoHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationInfoHandler handler)
-   {
-      handler.onShowApplicationInfo(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationInfoHandler handler) {
+        handler.onShowApplicationInfo(this);
+    }
 
-   /**
-    * @return the appInfo
-    */
-   public ApplicationInfo getAppInfo()
-   {
-      return appInfo;
-   }
+    /** @return the appInfo */
+    public ApplicationInfo getAppInfo() {
+        return appInfo;
+    }
 
 }

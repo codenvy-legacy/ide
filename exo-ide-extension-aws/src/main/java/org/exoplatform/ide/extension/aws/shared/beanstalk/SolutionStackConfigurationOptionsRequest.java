@@ -24,20 +24,19 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface SolutionStackConfigurationOptionsRequest
-{
-   /**
-    * Get name of amazon solution stack, e.g. '64bit Amazon Linux running Tomcat 6'.
-    *
-    * @return name of amazon solution stack
-    */
-   String getSolutionStackName();
+public interface SolutionStackConfigurationOptionsRequest {
+    /**
+     * Get name of amazon solution stack, e.g. '64bit Amazon Linux running Tomcat 6'.
+     *
+     * @return name of amazon solution stack
+     */
+    String getSolutionStackName();
 
-   /**
-    * Set name of amazon solution stack.
-    *
-    * @param solutionStackName
-    *    name of amazon solution stack
-    */
-   void setSolutionStackName(String solutionStackName);
+    /**
+     * Set name of amazon solution stack.
+     *
+     * @param solutionStackName
+     *         name of amazon solution stack
+     */
+    void setSolutionStackName(String solutionStackName);
 }

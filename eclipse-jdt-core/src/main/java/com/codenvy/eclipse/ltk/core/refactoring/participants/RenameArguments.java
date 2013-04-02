@@ -22,56 +22,53 @@ import com.codenvy.eclipse.core.runtime.Assert;
  *
  * @since 3.0
  */
-public class RenameArguments extends RefactoringArguments
-{
+public class RenameArguments extends RefactoringArguments {
 
-   private String fNewName;
+    private String fNewName;
 
-   private boolean fUpdateReferences;
+    private boolean fUpdateReferences;
 
-   /**
-    * Creates new rename arguments.
-    *
-    * @param newName          the new name of the element to be renamed
-    * @param updateReferences <code>true</code> if reference
-    *                         updating is requested; <code>false</code> otherwise
-    */
-   public RenameArguments(String newName, boolean updateReferences)
-   {
-      Assert.isNotNull(newName);
-      fNewName = newName;
-      fUpdateReferences = updateReferences;
-   }
+    /**
+     * Creates new rename arguments.
+     *
+     * @param newName
+     *         the new name of the element to be renamed
+     * @param updateReferences
+     *         <code>true</code> if reference
+     *         updating is requested; <code>false</code> otherwise
+     */
+    public RenameArguments(String newName, boolean updateReferences) {
+        Assert.isNotNull(newName);
+        fNewName = newName;
+        fUpdateReferences = updateReferences;
+    }
 
-   /**
-    * Returns the new element name.
-    *
-    * @return the new element name
-    */
-   public String getNewName()
-   {
-      return fNewName;
-   }
+    /**
+     * Returns the new element name.
+     *
+     * @return the new element name
+     */
+    public String getNewName() {
+        return fNewName;
+    }
 
-   /**
-    * Returns whether reference updating is requested or not.
-    *
-    * @return returns <code>true</code> if reference
-    *         updating is requested; <code>false</code> otherwise
-    */
-   public boolean getUpdateReferences()
-   {
-      return fUpdateReferences;
-   }
+    /**
+     * Returns whether reference updating is requested or not.
+     *
+     * @return returns <code>true</code> if reference
+     *         updating is requested; <code>false</code> otherwise
+     */
+    public boolean getUpdateReferences() {
+        return fUpdateReferences;
+    }
 
-   /**
-    * {@inheritDoc}
-    *
-    * @since 3.2
-    */
-   public String toString()
-   {
-      return "rename to " + fNewName //$NON-NLS-1$
-         + (fUpdateReferences ? " (update references)" : " (don't update references)"); //$NON-NLS-1$//$NON-NLS-2$
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @since 3.2
+     */
+    public String toString() {
+        return "rename to " + fNewName //$NON-NLS-1$
+               + (fUpdateReferences ? " (update references)" : " (don't update references)"); //$NON-NLS-1$//$NON-NLS-2$
+    }
 }

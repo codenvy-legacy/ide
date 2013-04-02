@@ -38,96 +38,75 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UnmapUrlView extends ViewImpl implements UnmapUrlPresenter.Display
-{
-   public static final String ID = "ideAppfogApplicationInfoView";
+public class UnmapUrlView extends ViewImpl implements UnmapUrlPresenter.Display {
+    public static final String ID = "ideAppfogApplicationInfoView";
 
-   public static final String LISTGRID_ID = "ideAppfogRegisteredUrlsGridView";
+    public static final String LISTGRID_ID = "ideAppfogRegisteredUrlsGridView";
 
-   private static final String MAP_URL_FIELD_ID = "applicationURLsURLField";
+    private static final String MAP_URL_FIELD_ID = "applicationURLsURLField";
 
-   private static final int HEIGHT = 305;
+    private static final int HEIGHT = 305;
 
-   private static final int WIDTH = 450;
+    private static final int WIDTH = 450;
 
-   private static UnmapUrlViewUiBinder uiBinder = GWT.create(UnmapUrlViewUiBinder.class);
+    private static UnmapUrlViewUiBinder uiBinder = GWT.create(UnmapUrlViewUiBinder.class);
 
-   @UiField
-   TextInput mapUrlField;
+    @UiField
+    TextInput mapUrlField;
 
-   @UiField
-   ImageButton mapUrlButton;
+    @UiField
+    ImageButton mapUrlButton;
 
-   @UiField
-   ImageButton closeButton;
+    @UiField
+    ImageButton closeButton;
 
-   @UiField
-   RegisteredUrlsGrid registeredUrlsGrid;
+    @UiField
+    RegisteredUrlsGrid registeredUrlsGrid;
 
-   interface UnmapUrlViewUiBinder extends UiBinder<Widget, UnmapUrlView>
-   {
-   }
+    interface UnmapUrlViewUiBinder extends UiBinder<Widget, UnmapUrlView> {
+    }
 
-   public UnmapUrlView()
-   {
-      super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      registeredUrlsGrid.setID(LISTGRID_ID);
-      mapUrlField.setName(MAP_URL_FIELD_ID);
-   }
+    public UnmapUrlView() {
+        super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.unmapUrlViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        registeredUrlsGrid.setID(LISTGRID_ID);
+        mapUrlField.setName(MAP_URL_FIELD_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getRegisteredUrlsGrid()
-    */
-   @Override
-   public ListGridItem<String> getRegisteredUrlsGrid()
-   {
-      return registeredUrlsGrid;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getRegisteredUrlsGrid() */
+    @Override
+    public ListGridItem<String> getRegisteredUrlsGrid() {
+        return registeredUrlsGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getUnmapUrlListGridButton()
-    */
-   @Override
-   public HasUnmapClickHandler getUnmapUrlListGridButton()
-   {
-      return registeredUrlsGrid;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getUnmapUrlListGridButton() */
+    @Override
+    public HasUnmapClickHandler getUnmapUrlListGridButton() {
+        return registeredUrlsGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlField()
-    */
-   @Override
-   public HasValue<String> getMapUrlField()
-   {
-      return mapUrlField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlField() */
+    @Override
+    public HasValue<String> getMapUrlField() {
+        return mapUrlField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlButton()
-    */
-   @Override
-   public HasClickHandlers getMapUrlButton()
-   {
-      return mapUrlButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlButton() */
+    @Override
+    public HasClickHandlers getMapUrlButton() {
+        return mapUrlButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#enableMapUrlButton(boolean)
-    */
-   @Override
-   public void enableMapUrlButton(boolean enable)
-   {
-      mapUrlButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#enableMapUrlButton(boolean) */
+    @Override
+    public void enableMapUrlButton(boolean enable) {
+        mapUrlButton.setEnabled(enable);
+    }
 
 }

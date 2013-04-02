@@ -23,25 +23,24 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-   
-  <component>
-      <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication</type>
-   </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.openshift.server.Express</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
-         </value-param>
-      </init-params>
-   </component>
- 
-  
-   
+    <component>
+        <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.openshift.server.Express</type>
+        <init-params>
+            <value-param>
+                <name>workspace</name>
+                <value>production</value>
+            </value-param>
+            <value-param>
+                <name>user-config</name>
+                <value>/ide-home/users/</value>
+            </value-param>
+        </init-params>
+    </component>
+
+
 </configuration>

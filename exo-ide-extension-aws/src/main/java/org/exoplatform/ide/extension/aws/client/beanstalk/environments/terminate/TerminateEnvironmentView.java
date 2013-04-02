@@ -32,73 +32,62 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: TerminateEnvironmentView.java Oct 1, 2012 10:59:10 AM azatsarynnyy $
- *
  */
-public class TerminateEnvironmentView extends ViewImpl implements TerminateEnvironmentPresenter.Display
-{
-   private static final String ID = "ideTerminateEnvironmentView";
+public class TerminateEnvironmentView extends ViewImpl implements TerminateEnvironmentPresenter.Display {
+    private static final String ID = "ideTerminateEnvironmentView";
 
-   private static final int WIDTH = 460;
+    private static final int WIDTH = 460;
 
-   private static final int HEIGHT = 170;
+    private static final int HEIGHT = 170;
 
-   private static final String TERMINATE_BUTTON_ID = "ideTerminateEnvironmentViewTerminateButton";
+    private static final String TERMINATE_BUTTON_ID = "ideTerminateEnvironmentViewTerminateButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideTerminateEnvironmentViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideTerminateEnvironmentViewCancelButton";
 
-   @UiField
-   Label questionLabel;
+    @UiField
+    Label questionLabel;
 
-   @UiField
-   ImageButton terminateButton;
+    @UiField
+    ImageButton terminateButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   private static TerminateEnvironmentViewUiBinder uiBinder = GWT.create(TerminateEnvironmentViewUiBinder.class);
+    private static TerminateEnvironmentViewUiBinder uiBinder = GWT.create(TerminateEnvironmentViewUiBinder.class);
 
-   interface TerminateEnvironmentViewUiBinder extends UiBinder<Widget, TerminateEnvironmentView>
-   {
-   }
+    interface TerminateEnvironmentViewUiBinder extends UiBinder<Widget, TerminateEnvironmentView> {
+    }
 
-   public TerminateEnvironmentView()
-   {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.terminateEnvironmentViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public TerminateEnvironmentView() {
+        super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.terminateEnvironmentViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      questionLabel.setIsHTML(true);
-      terminateButton.setButtonId(TERMINATE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        questionLabel.setIsHTML(true);
+        terminateButton.setButtonId(TERMINATE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter.Display#getTerminateButton()
-    */
-   @Override
-   public HasClickHandlers getTerminateButton()
-   {
-      return terminateButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter
+     * .Display#getTerminateButton() */
+    @Override
+    public HasClickHandlers getTerminateButton() {
+        return terminateButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter
+     * .Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter.Display#getTerminateQuestion()
-    */
-   @Override
-   public HasValue<String> getTerminateQuestion()
-   {
-      return questionLabel;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter
+     * .Display#getTerminateQuestion() */
+    @Override
+    public HasValue<String> getTerminateQuestion() {
+        return questionLabel;
+    }
 
 }

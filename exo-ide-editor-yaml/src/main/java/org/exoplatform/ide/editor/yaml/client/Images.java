@@ -25,12 +25,10 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Images.java May 29, 2012 3:23:38 PM azatsarynnyy $
- *
  */
-public interface Images extends ClientBundle
-{
-   Images INSTANCE = GWT.create(Images.class);
+public interface Images extends ClientBundle {
+    Images INSTANCE = GWT.create(Images.class);
 
-   @Source("org/exoplatform/ide/editor/yaml/public/images/yaml.png")
-   ImageResource yamlImage();
+    @Source("org/exoplatform/ide/editor/yaml/public/images/yaml.png")
+    ImageResource yamlImage();
 }

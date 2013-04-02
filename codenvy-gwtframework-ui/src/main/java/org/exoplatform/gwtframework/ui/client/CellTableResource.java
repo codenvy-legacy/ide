@@ -18,32 +18,27 @@
  */
 package org.exoplatform.gwtframework.ui.client;
 
-import com.google.gwt.resources.client.ImageResource.RepeatStyle;
-
-import com.google.gwt.resources.client.ImageResource.ImageOptions;
-
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ImageResource.ImageOptions;
+import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 import com.google.gwt.user.cellview.client.CellTable;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CellTableResource.java Mar 11, 2011 11:33:27 AM vereshchaka $
- *
  */
-public interface CellTableResource extends CellTable.Resources
-{
-   @Source({CellTable.Style.DEFAULT_CSS, "eXoStyle/skin/default/CellTable.css"})
-   TableStyle cellTableStyle();
-   
-   @Source("eXoStyle/skin/default/images/listGrid/header.png")
-   @ImageOptions(repeatStyle=RepeatStyle.Horizontal)
-   ImageResource header();
+public interface CellTableResource extends CellTable.Resources {
+    @Source({CellTable.Style.DEFAULT_CSS, "eXoStyle/skin/default/CellTable.css"})
+    TableStyle cellTableStyle();
 
-   interface TableStyle extends CellTable.Style
-   {
-      String cellTableBox();
-      
-      String scrollTable();
-   }
+    @Source("eXoStyle/skin/default/images/listGrid/header.png")
+    @ImageOptions(repeatStyle = RepeatStyle.Horizontal)
+    ImageResource header();
+
+    interface TableStyle extends CellTable.Style {
+        String cellTableBox();
+
+        String scrollTable();
+    }
 
 }

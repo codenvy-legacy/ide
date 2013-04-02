@@ -20,44 +20,39 @@ package org.exoplatform.ide.extension.cloudbees.server;
 
 import com.cloudbees.api.AccountKeysResponse;
 import com.cloudbees.api.BeesClient;
+
 import org.exoplatform.ide.security.paas.Credential;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudBeesAuthenticator
-{
-   public void login(BeesClient beesClient,
-                     String domain,
-                     String email,
-                     String password,
-                     Credential credential) throws Exception
-   {
-      AccountKeysResponse r = beesClient.accountKeys(domain, email, password);
-      credential.setAttribute("api_key", r.getKey());
-      credential.setAttribute("secret", r.getSecret());
-   }
+public class CloudBeesAuthenticator {
+    public void login(BeesClient beesClient,
+                      String domain,
+                      String email,
+                      String password,
+                      Credential credential) throws Exception {
+        AccountKeysResponse r = beesClient.accountKeys(domain, email, password);
+        credential.setAttribute("api_key", r.getKey());
+        credential.setAttribute("secret", r.getSecret());
+    }
 
-   public void login(BeesClient beesClient, Credential credential) throws Exception
-   {
-      login(beesClient, getDomain(), getEmail(), getPassword(), credential);
-   }
+    public void login(BeesClient beesClient, Credential credential) throws Exception {
+        login(beesClient, getDomain(), getEmail(), getPassword(), credential);
+    }
 
-   // For test.
+    // For test.
 
-   public String getEmail()
-   {
-      return null;
-   }
+    public String getEmail() {
+        return null;
+    }
 
-   public String getPassword()
-   {
-      return null;
-   }
+    public String getPassword() {
+        return null;
+    }
 
-   public String getDomain()
-   {
-      return null;
-   }
+    public String getDomain() {
+        return null;
+    }
 }

@@ -22,19 +22,16 @@ import org.exoplatform.ide.client.framework.module.Extension;
 
 /**
  * Java extension for IDE.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JavaExtension.java Jun 21, 2011 12:29:16 PM vereshchaka $
- * 
  */
-public class JavaExtension extends Extension 
-{
+public class JavaExtension extends Extension {
 
-   @Override
-   public void initialize()
-   {
-      
-   }
+    @Override
+    public void initialize() {
+
+    }
 
 
 }

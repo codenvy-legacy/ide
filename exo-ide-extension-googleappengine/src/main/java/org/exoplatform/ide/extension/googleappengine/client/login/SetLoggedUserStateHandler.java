@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link SetLoggedUserStateEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 23, 2012 10:27:44 AM anya $
- * 
  */
-public interface SetLoggedUserStateHandler extends EventHandler
-{
-   /**
-    * Set the state of the user.
-    * 
-    * @param event
-    */
-   void onSetLoggedUserState(SetLoggedUserStateEvent event);
+public interface SetLoggedUserStateHandler extends EventHandler {
+    /**
+     * Set the state of the user.
+     *
+     * @param event
+     */
+    void onSetLoggedUserState(SetLoggedUserStateEvent event);
 }

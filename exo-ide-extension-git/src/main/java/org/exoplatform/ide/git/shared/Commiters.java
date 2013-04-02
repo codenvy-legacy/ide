@@ -22,15 +22,14 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: Commiters.java Aug 3, 2012
  */
-public interface Commiters
-{
-   
-   List<GitUser> getCommiters();
-   
-   void setCommiters(List<GitUser> commiters);
+public interface Commiters {
+
+    List<GitUser> getCommiters();
+
+    void setCommiters(List<GitUser> commiters);
 
 }

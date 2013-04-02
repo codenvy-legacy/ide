@@ -28,44 +28,35 @@ import org.exoplatform.ide.git.shared.AddRequest;
 
 /**
  * Marshaller for add changes to index request.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 5:27:47 PM anya $
- * 
  */
-public class AddRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Add changes to index request.
-    */
-   private AddRequest addRequest;
+public class AddRequestMarshaller implements Marshallable, Constants {
+    /** Add changes to index request. */
+    private AddRequest addRequest;
 
-   /**
-    * @param addRequest add changes to index request
-    */
-   public AddRequestMarshaller(AddRequest addRequest)
-   {
-      this.addRequest = addRequest;
-   }
+    /**
+     * @param addRequest
+     *         add changes to index request
+     */
+    public AddRequestMarshaller(AddRequest addRequest) {
+        this.addRequest = addRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(UPDATE, JSONBoolean.getInstance(addRequest.isUpdate()));
-      if (addRequest.getFilepattern() != null && addRequest.getFilepattern().length > 0)
-      {
-         JSONArray filePatternArray = new JSONArray();
-         for (int i = 0; i < addRequest.getFilepattern().length; i++)
-         {
-            filePatternArray.set(i, new JSONString(addRequest.getFilepattern()[i]));
-         }
-         jsonObject.put(FILE_PATTERN, filePatternArray);
-      }
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(UPDATE, JSONBoolean.getInstance(addRequest.isUpdate()));
+        if (addRequest.getFilepattern() != null && addRequest.getFilepattern().length > 0) {
+            JSONArray filePatternArray = new JSONArray();
+            for (int i = 0; i < addRequest.getFilepattern().length; i++) {
+                filePatternArray.set(i, new JSONString(addRequest.getFilepattern()[i]));
+            }
+            jsonObject.put(FILE_PATTERN, filePatternArray);
+        }
+        return jsonObject.toString();
+    }
 
 }

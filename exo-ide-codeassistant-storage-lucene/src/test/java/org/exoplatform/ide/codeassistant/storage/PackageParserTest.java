@@ -28,26 +28,22 @@ import static org.fest.assertions.Assertions.assertThat;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 2:59:49 PM Mar 5, 2012 evgen $
- * 
  */
-public class PackageParserTest
-{
-   private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+public class PackageParserTest {
+    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-   private static final String PATH_TO_RT_JAR = System.getProperty("java.home") + FILE_SEPARATOR + "lib"
-      + FILE_SEPARATOR + "rt.jar";
-   
-   @Test
-   public void parseJar() throws Exception
-   {
-      Set<String> set = PackageParser.parse(new FileInputStream(PATH_TO_RT_JAR));
-      assertThat(set).contains("java","java.lang", "java.util", "java.io");
-   }
-   
-   @Test
-   public void noClass() throws Exception
-   {
-      Set<String> set = PackageParser.parse(new FileInputStream(PATH_TO_RT_JAR));
-      assertThat(set).excludes("java.lang.Object.java", "java.io.File");
-   }
+    private static final String PATH_TO_RT_JAR = System.getProperty("java.home") + FILE_SEPARATOR + "lib"
+                                                 + FILE_SEPARATOR + "rt.jar";
+
+    @Test
+    public void parseJar() throws Exception {
+        Set<String> set = PackageParser.parse(new FileInputStream(PATH_TO_RT_JAR));
+        assertThat(set).contains("java", "java.lang", "java.util", "java.io");
+    }
+
+    @Test
+    public void noClass() throws Exception {
+        Set<String> set = PackageParser.parse(new FileInputStream(PATH_TO_RT_JAR));
+        assertThat(set).excludes("java.lang.Object.java", "java.io.File");
+    }
 }

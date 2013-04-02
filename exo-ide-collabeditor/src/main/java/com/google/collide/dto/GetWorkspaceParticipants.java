@@ -18,20 +18,18 @@ import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Request the current participants of a workspace.
- */
+/** Request the current participants of a workspace. */
 @RoutingType(type = RoutingTypes.GETWORKSPACEPARTICIPANTS)
 public interface GetWorkspaceParticipants extends ClientToServerDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * An array of participant IDs to request. The client only requests
-   * participant info for participants that it has not seen.
-   * 
-   * <p>
-   * If the list of participants is null or not set, all participants are
-   * requested.
-   */
-  JsonArray<String> getParticipantIds();
+    /**
+     * An array of participant IDs to request. The client only requests
+     * participant info for participants that it has not seen.
+     * <p/>
+     * <p/>
+     * If the list of participants is null or not set, all participants are
+     * requested.
+     */
+    JsonArray<String> getParticipantIds();
 }

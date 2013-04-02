@@ -16,17 +16,11 @@ package com.google.collide.dto;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Returns the user details of a project members.
- */
+/** Returns the user details of a project members. */
 public interface ProjectMembersInfo {
-  /**
-   * Returns details about project members.
-   */
-  JsonArray<UserDetails> getMembers();
+    /** Returns details about project members. */
+    JsonArray<UserDetails> getMembers();
 
-  /**
-   * The number of users who are requesting membership to this project.
-   */
-  int pendingMembersCount();
+    /** The number of users who are requesting membership to this project. */
+    int pendingMembersCount();
 }

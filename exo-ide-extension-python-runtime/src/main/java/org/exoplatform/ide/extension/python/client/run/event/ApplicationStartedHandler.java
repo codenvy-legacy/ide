@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ApplicationStartedEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 21, 2012 10:29:45 AM anya $
- * 
  */
-public interface ApplicationStartedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when Python application has started.
-    * 
-    * @param event
-    */
-   void onApplicationStarted(ApplicationStartedEvent event);
+public interface ApplicationStartedHandler extends EventHandler {
+    /**
+     * Perform actions, when Python application has started.
+     *
+     * @param event
+     */
+    void onApplicationStarted(ApplicationStartedEvent event);
 }

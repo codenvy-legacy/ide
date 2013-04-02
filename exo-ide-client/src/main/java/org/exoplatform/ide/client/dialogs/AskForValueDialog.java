@@ -19,11 +19,7 @@
 package org.exoplatform.ide.client.dialogs;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
@@ -37,182 +33,152 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class AskForValueDialog implements ViewClosedHandler
-{
+public class AskForValueDialog implements ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasText getPromptLabel();
+        HasText getPromptLabel();
 
-      TextFieldItem getTextField();
+        TextFieldItem getTextField();
 
-      HasClickHandlers getYesButton();
+        HasClickHandlers getYesButton();
 
-      void setYesButtonEnabled(boolean enabled);
+        void setYesButtonEnabled(boolean enabled);
 
-      HasClickHandlers getNoButton();
+        HasClickHandlers getNoButton();
 
-      void setNoButtonEnabled(boolean enabled);
+        void setNoButtonEnabled(boolean enabled);
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-   }
+    }
 
-   private static AskForValueDialog instance;
+    private static AskForValueDialog instance;
 
-   public static AskForValueDialog getInstance()
-   {
-      return instance;
-   }
+    public static AskForValueDialog getInstance() {
+        return instance;
+    }
 
-   private Display display;
+    private Display display;
 
-   private ValueCallback callback;
+    private ValueCallback callback;
 
-   private ValueDiscardCallback discardCallback;
+    private ValueDiscardCallback discardCallback;
 
-   public AskForValueDialog()
-   {
-      instance = this;
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public AskForValueDialog() {
+        instance = this;
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void ask(String title, String prompt, String defaultValue, int dialogWidth, boolean selectAllText,
-      ValueCallback callback, ValueDiscardCallback discardCallback)
-   {
-      if (display != null)
-      {
-         Window.alert("Another Ask For Value Dialog is opened!");
-         return;
-      }
+    public void ask(String title, String prompt, String defaultValue, int dialogWidth, boolean selectAllText,
+                    ValueCallback callback, ValueDiscardCallback discardCallback) {
+        if (display != null) {
+            Window.alert("Another Ask For Value Dialog is opened!");
+            return;
+        }
 
-      this.callback = callback;
-      this.discardCallback = discardCallback;
+        this.callback = callback;
+        this.discardCallback = discardCallback;
 
-      display = GWT.create(Display.class);
+        display = GWT.create(Display.class);
 
-      display.asView().setTitle(title);
-      display.getPromptLabel().setText(prompt);
+        display.asView().setTitle(title);
+        display.getPromptLabel().setText(prompt);
 
-      display.getTextField().setValue(defaultValue);
+        display.getTextField().setValue(defaultValue);
 
-      display.getTextField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            checkYesButtonEnabled();
-         }
-      });
-      checkYesButtonEnabled();
-
-      display.getTextField().addKeyUpHandler(new KeyUpHandler()
-      {
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13)
-            {
-               if (display.getTextField().getValue() == null || display.getTextField().getValue().isEmpty())
-               {
-                  return;
-               }
-
-               yesButtonClicked();
+        display.getTextField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                checkYesButtonEnabled();
             }
-         }
-      });
+        });
+        checkYesButtonEnabled();
 
-      display.getYesButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            yesButtonClicked();
-         }
-      });
+        display.getTextField().addKeyUpHandler(new KeyUpHandler() {
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == 13) {
+                    if (display.getTextField().getValue() == null || display.getTextField().getValue().isEmpty()) {
+                        return;
+                    }
 
-      display.getNoButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            noButtonClicked();
-         }
-      });
+                    yesButtonClicked();
+                }
+            }
+        });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            cancelButtonClicked();
-         }
-      });
+        display.getYesButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                yesButtonClicked();
+            }
+        });
 
-      IDE.getInstance().openView(display.asView());
-   }
+        display.getNoButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                noButtonClicked();
+            }
+        });
 
-   private void checkYesButtonEnabled()
-   {
-      if (display.getTextField().getValue() == null || display.getTextField().getValue().isEmpty())
-      {
-         display.setYesButtonEnabled(false);
-      }
-      else
-      {
-         display.setYesButtonEnabled(true);
-      }
-   }
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                cancelButtonClicked();
+            }
+        });
 
-   public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
-      ValueDiscardCallback discardCallback)
-   {
-      ask(title, prompt, defaultValue, dialogWidth, false, callback, discardCallback);
-   }
+        IDE.getInstance().openView(display.asView());
+    }
 
-   public void ask(String title, String prompt, String defaultValue, int dialogWidth, boolean selectAllText, ValueCallback callback)
-   {
-      ask(title, prompt, defaultValue, dialogWidth, selectAllText, callback, null);
-   }
+    private void checkYesButtonEnabled() {
+        if (display.getTextField().getValue() == null || display.getTextField().getValue().isEmpty()) {
+            display.setYesButtonEnabled(false);
+        } else {
+            display.setYesButtonEnabled(true);
+        }
+    }
 
-   public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
-   {
-      ask(title, prompt, defaultValue, dialogWidth, false, callback, null);
-   }
+    public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
+                    ValueDiscardCallback discardCallback) {
+        ask(title, prompt, defaultValue, dialogWidth, false, callback, discardCallback);
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    public void ask(String title, String prompt, String defaultValue, int dialogWidth, boolean selectAllText, ValueCallback callback) {
+        ask(title, prompt, defaultValue, dialogWidth, selectAllText, callback, null);
+    }
 
-   private void yesButtonClicked()
-   {
-      String value = display.getTextField().getValue();
-      IDE.getInstance().closeView(display.asView().getId());
-      callback.execute(value);
-   }
+    public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback) {
+        ask(title, prompt, defaultValue, dialogWidth, false, callback, null);
+    }
 
-   private void noButtonClicked()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-      discardCallback.discard();
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   private void cancelButtonClicked()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-      callback.execute(null);
-   }
+    private void yesButtonClicked() {
+        String value = display.getTextField().getValue();
+        IDE.getInstance().closeView(display.asView().getId());
+        callback.execute(value);
+    }
+
+    private void noButtonClicked() {
+        IDE.getInstance().closeView(display.asView().getId());
+        discardCallback.discard();
+    }
+
+    private void cancelButtonClicked() {
+        IDE.getInstance().closeView(display.asView().getId());
+        callback.execute(null);
+    }
 
 }

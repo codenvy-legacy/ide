@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:57:15 AM Mar 5, 2012 evgen $
- *
  */
-public interface ReparseOpenedFilesHandler extends EventHandler
-{
+public interface ReparseOpenedFilesHandler extends EventHandler {
 
-   void onReparseOpenedFiles(ReparseOpenedFilesEvent event);
+    void onReparseOpenedFiles(ReparseOpenedFilesEvent event);
 
 }

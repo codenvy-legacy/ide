@@ -24,12 +24,11 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface ApplicationInfoChangedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when Appfog application information, properties were changed.
-    *
-    * @param event
-    */
-   void onApplicationInfoChanged(ApplicationInfoChangedEvent event);
+public interface ApplicationInfoChangedHandler extends EventHandler {
+    /**
+     * Perform actions, when Appfog application information, properties were changed.
+     *
+     * @param event
+     */
+    void onApplicationInfoChanged(ApplicationInfoChangedEvent event);
 }

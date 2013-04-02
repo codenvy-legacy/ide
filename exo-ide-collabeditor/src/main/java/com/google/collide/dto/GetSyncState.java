@@ -17,12 +17,9 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request the current sync state of a workspace.
- *
- */
+/** Request the current sync state of a workspace. */
 @RoutingType(type = RoutingTypes.GETSYNCSTATE)
 public interface GetSyncState extends ClientToServerDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 }

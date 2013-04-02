@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CustomizeToolbarEvent extends GwtEvent<CustomizeToolbarHandler>
-{
+public class CustomizeToolbarEvent extends GwtEvent<CustomizeToolbarHandler> {
 
-   public static final GwtEvent.Type<CustomizeToolbarHandler> TYPE = new GwtEvent.Type<CustomizeToolbarHandler>();
+    public static final GwtEvent.Type<CustomizeToolbarHandler> TYPE = new GwtEvent.Type<CustomizeToolbarHandler>();
 
-   @Override
-   protected void dispatch(CustomizeToolbarHandler handler)
-   {
-      handler.onCustomizeToolBar(this);
-   }
+    @Override
+    protected void dispatch(CustomizeToolbarHandler handler) {
+        handler.onCustomizeToolBar(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CustomizeToolbarHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CustomizeToolbarHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

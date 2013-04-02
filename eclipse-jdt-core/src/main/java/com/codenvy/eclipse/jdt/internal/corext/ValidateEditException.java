@@ -13,16 +13,12 @@ package com.codenvy.eclipse.jdt.internal.corext;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.IStatus;
 
-/**
- * Exception thrown if a valid edit failed.
- */
-public class ValidateEditException extends CoreException
-{
+/** Exception thrown if a valid edit failed. */
+public class ValidateEditException extends CoreException {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   public ValidateEditException(IStatus status)
-   {
-      super(status);
-   }
+    public ValidateEditException(IStatus status) {
+        super(status);
+    }
 }

@@ -19,9 +19,6 @@
 
 package org.exoplatform.ide.extension.appfog.client.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -35,65 +32,59 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHa
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public abstract class AbstractAppfogControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ItemsSelectedHandler, ViewVisibilityChangedHandler
-{
+                                                                             ItemsSelectedHandler, ViewVisibilityChangedHandler {
 
-   protected VirtualFileSystemInfo vfsInfo;
+    protected VirtualFileSystemInfo vfsInfo;
 
-   protected List<Item> selectedItems = new ArrayList<Item>();
+    protected List<Item> selectedItems = new ArrayList<Item>();
 
-   private boolean isProjectExplorerVisible;
+    private boolean isProjectExplorerVisible;
 
-   protected AbstractAppfogControl(String id)
-   {
-      super(id);
-   }
+    protected AbstractAppfogControl(String id) {
+        super(id);
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+    @Override
+    public void initialize() {
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      refresh();
-   }
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        refresh();
+    }
 
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      refresh();
-   }
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        refresh();
+    }
 
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0 && isProjectExplorerVisible);
-   }
+    protected void refresh() {
+        setEnabled(vfsInfo != null && selectedItems.size() > 0 && isProjectExplorerVisible);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof ProjectExplorerDisplay)
-      {
-         isProjectExplorerVisible = event.getView().isViewVisible();
-         refresh();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (event.getView() instanceof ProjectExplorerDisplay) {
+            isProjectExplorerVisible = event.getView().isViewVisible();
+            refresh();
+        }
+    }
 
 }

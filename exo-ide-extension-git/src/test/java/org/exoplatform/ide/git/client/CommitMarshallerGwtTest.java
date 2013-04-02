@@ -27,51 +27,43 @@ import org.exoplatform.ide.git.shared.CommitRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class CommitMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test add (modified and deleted) and commit request marshaller.
-    */
-   public void testCommitAllRequestMarshaller()
-   {
-      String message = "my test commit";
+public class CommitMarshallerGwtTest extends BaseGwtTest {
+    /** Test add (modified and deleted) and commit request marshaller. */
+    public void testCommitAllRequestMarshaller() {
+        String message = "my test commit";
 
-      CommitRequest commitRequest = new CommitRequest(message, true, false);
-      CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
-      String json = marshaller.marshal();
+        CommitRequest commitRequest = new CommitRequest(message, true, false);
+        CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.MESSAGE));
-      assertEquals(message, jsonObject.get(Constants.MESSAGE).isString().stringValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.MESSAGE));
+        assertEquals(message, jsonObject.get(Constants.MESSAGE).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.ALL));
-      assertTrue(jsonObject.get(Constants.ALL).isBoolean().booleanValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.ALL));
+        assertTrue(jsonObject.get(Constants.ALL).isBoolean().booleanValue());
+    }
 
-   /**
-    * Test commit request marshaller.
-    */
-   public void testCommitRequestMarshaller()
-   {
-      String message = "my test commit";
+    /** Test commit request marshaller. */
+    public void testCommitRequestMarshaller() {
+        String message = "my test commit";
 
-      CommitRequest commitRequest = new CommitRequest();
-      commitRequest.setMessage(message);
+        CommitRequest commitRequest = new CommitRequest();
+        commitRequest.setMessage(message);
 
-      CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
-      String json = marshaller.marshal();
+        CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.MESSAGE));
-      assertEquals(message, jsonObject.get(Constants.MESSAGE).isString().stringValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.MESSAGE));
+        assertEquals(message, jsonObject.get(Constants.MESSAGE).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.ALL));
-      assertFalse(jsonObject.get(Constants.ALL).isBoolean().booleanValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.ALL));
+        assertFalse(jsonObject.get(Constants.ALL).isBoolean().booleanValue());
+    }
 }

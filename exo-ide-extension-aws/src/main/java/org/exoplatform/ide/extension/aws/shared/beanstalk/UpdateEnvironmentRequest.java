@@ -26,65 +26,64 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface UpdateEnvironmentRequest
-{
-   /**
-    * Get configuration template for deploy to environment.
-    *
-    * @return name of configuration template for deploy to environment
-    */
-   String getTemplateName();
+public interface UpdateEnvironmentRequest {
+    /**
+     * Get configuration template for deploy to environment.
+     *
+     * @return name of configuration template for deploy to environment
+     */
+    String getTemplateName();
 
-   /**
-    * Set configuration template for deploy to environment.
-    *
-    * @param templateName
-    *    name of configuration template for deploy to environment
-    */
-   void setTemplateName(String templateName);
+    /**
+     * Set configuration template for deploy to environment.
+     *
+     * @param templateName
+     *         name of configuration template for deploy to environment
+     */
+    void setTemplateName(String templateName);
 
-   /**
-    * Get version of application to deploy.
-    *
-    * @return version of application to deploy
-    */
-   String getVersionLabel();
+    /**
+     * Get version of application to deploy.
+     *
+     * @return version of application to deploy
+     */
+    String getVersionLabel();
 
-   /**
-    * Set version of application to deploy.
-    *
-    * @param versionLabel
-    *    version of application to deploy
-    */
-   void setVersionLabel(String versionLabel);
+    /**
+     * Set version of application to deploy.
+     *
+     * @param versionLabel
+     *         version of application to deploy
+     */
+    void setVersionLabel(String versionLabel);
 
-   /**
-    * Get new environment description. Length: 0 - 200 characters.
-    *
-    * @return new environment description
-    */
-   String getDescription();
+    /**
+     * Get new environment description. Length: 0 - 200 characters.
+     *
+     * @return new environment description
+     */
+    String getDescription();
 
-   /**
-    * Set new environment description. Length: 0 - 200 characters.
-    *
-    * @param description
-    *    environment description
-    */
-   void setDescription(String description);
+    /**
+     * Set new environment description. Length: 0 - 200 characters.
+     *
+     * @param description
+     *         environment description
+     */
+    void setDescription(String description);
 
-   /**
-    * Get list of configuration options for environment.
-    *
-    * @return list of configuration options new environment
-    */
-   List<ConfigurationOption> getOptions();
+    /**
+     * Get list of configuration options for environment.
+     *
+     * @return list of configuration options new environment
+     */
+    List<ConfigurationOption> getOptions();
 
-   /**
-    * Set list of configuration options for environment.
-    *
-    * @param options
-    *    list of configuration options for environment
-    */
-   void setOptions(List<ConfigurationOption> options);
+    /**
+     * Set list of configuration options for environment.
+     *
+     * @param options
+     *         list of configuration options for environment
+     */
+    void setOptions(List<ConfigurationOption> options);
 }

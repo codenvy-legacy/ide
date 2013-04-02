@@ -18,81 +18,71 @@
  */
 package org.exoplatform.gwtframework.ui.client.dialog;
 
-import org.exoplatform.gwtframework.ui.client.window.Window;
-
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.window.Window;
+
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 16, 2011 12:30:27 PM anya $
- *
  */
-public class GWTDialogsWindow extends Window
-{
+public class GWTDialogsWindow extends Window {
 
-   private final String BUTTONS_PANEL_HEIGHT = "22px";
+    private final String BUTTONS_PANEL_HEIGHT = "22px";
 
-   private VerticalPanel mainLayout;
+    private VerticalPanel mainLayout;
 
-   private HorizontalPanel buttonsLayout;
+    private HorizontalPanel buttonsLayout;
 
-   /**
-    * 
-    */
-   public GWTDialogsWindow(String id, String title, int width, int height, Widget content)
-   {
-      super(title);
-      getElement().setId(id);
-      setModal(true);
-      setHeight(height);
-      setWidth(width);
+    /**
+     *
+     */
+    public GWTDialogsWindow(String id, String title, int width, int height, Widget content) {
+        super(title);
+        getElement().setId(id);
+        setModal(true);
+        setHeight(height);
+        setWidth(width);
 
-      mainLayout = new VerticalPanel();
-      mainLayout.setWidth("100%");
-      mainLayout.setHeight("100%");
-      mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      mainLayout.setSpacing(10);
+        mainLayout = new VerticalPanel();
+        mainLayout.setWidth("100%");
+        mainLayout.setHeight("100%");
+        mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        mainLayout.setSpacing(10);
 
-      mainLayout.add(content);
+        mainLayout.add(content);
 
-      buttonsLayout = createButtonsLayout();
-      mainLayout.add(buttonsLayout);
+        buttonsLayout = createButtonsLayout();
+        mainLayout.add(buttonsLayout);
 
-      setWidget(mainLayout);
-      //      center();
-   }
+        setWidget(mainLayout);
+        //      center();
+    }
 
-   /**
-    * Create layout for displaying buttons.
-    * 
-    * @return {@link HorizontalPanel} layout for buttons
-    */
-   public HorizontalPanel createButtonsLayout()
-   {
-      HorizontalPanel buttonsLayout = new HorizontalPanel();
-      buttonsLayout.setHeight(BUTTONS_PANEL_HEIGHT);
-      buttonsLayout.setSpacing(5);
-      buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      return buttonsLayout;
-   }
+    /**
+     * Create layout for displaying buttons.
+     *
+     * @return {@link HorizontalPanel} layout for buttons
+     */
+    public HorizontalPanel createButtonsLayout() {
+        HorizontalPanel buttonsLayout = new HorizontalPanel();
+        buttonsLayout.setHeight(BUTTONS_PANEL_HEIGHT);
+        buttonsLayout.setSpacing(5);
+        buttonsLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        return buttonsLayout;
+    }
 
-   /**
-    * @return the mainLayout
-    */
-   public VerticalPanel getMainLayout()
-   {
-      return mainLayout;
-   }
+    /** @return the mainLayout */
+    public VerticalPanel getMainLayout() {
+        return mainLayout;
+    }
 
-   /**
-    * @return the buttonsLayout
-    */
-   public HorizontalPanel getButtonsLayout()
-   {
-      return buttonsLayout;
-   }
+    /** @return the buttonsLayout */
+    public HorizontalPanel getButtonsLayout() {
+        return buttonsLayout;
+    }
 
 }

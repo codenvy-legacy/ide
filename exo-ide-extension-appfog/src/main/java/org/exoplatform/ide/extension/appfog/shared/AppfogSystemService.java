@@ -22,25 +22,24 @@ package org.exoplatform.ide.extension.appfog.shared;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface AppfogSystemService
-{
-   String getVendor();
+public interface AppfogSystemService {
+    String getVendor();
 
-   void setVendor(String vendor);
+    void setVendor(String vendor);
 
-   String getType();
+    String getType();
 
-   void setType(String type);
+    void setType(String type);
 
-   String getVersion();
+    String getVersion();
 
-   void setVersion(String version);
+    void setVersion(String version);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 
-   Infra getInfra();
+    Infra getInfra();
 
-   void setInfra(Infra infra);
+    void setInfra(Infra infra);
 }

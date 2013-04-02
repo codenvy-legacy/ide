@@ -21,7 +21,7 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  * instance of TypeAssociation is the association source. Association
  * target is a code block identified by a workspace-unique file ID and
  * file-unique local id.
- *
+ * <p/>
  * The semantics of the type association is "a source object has all
  * fields and methods defined in a target code block".
  */

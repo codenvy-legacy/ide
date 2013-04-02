@@ -20,16 +20,14 @@
 package org.exoplatform.ide.client.project.properties;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface EditCompleteHandler
-{
+public interface EditCompleteHandler {
 
-   void onEditComplete();
+    void onEditComplete();
 
 }

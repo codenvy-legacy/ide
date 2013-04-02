@@ -26,49 +26,41 @@ import com.sun.jdi.Value;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JdiLocalVariableImpl implements JdiLocalVariable
-{
-   private final LocalVariable variable;
-   private final StackFrame stackFrame;
+public class JdiLocalVariableImpl implements JdiLocalVariable {
+    private final LocalVariable variable;
+    private final StackFrame    stackFrame;
 
-   public JdiLocalVariableImpl(StackFrame stackFrame, LocalVariable variable)
-   {
-      this.stackFrame = stackFrame;
-      this.variable = variable;
-   }
+    public JdiLocalVariableImpl(StackFrame stackFrame, LocalVariable variable) {
+        this.stackFrame = stackFrame;
+        this.variable = variable;
+    }
 
-   @Override
-   public String getName()
-   {
-      return variable.name();
-   }
+    @Override
+    public String getName() {
+        return variable.name();
+    }
 
-   @Override
-   public boolean isArray() throws DebuggerException
-   {
-      return JdiType.isArray(variable.signature());
-   }
+    @Override
+    public boolean isArray() throws DebuggerException {
+        return JdiType.isArray(variable.signature());
+    }
 
-   @Override
-   public boolean isPrimitive() throws DebuggerException
-   {
-      return JdiType.isPrimitive(variable.signature());
-   }
+    @Override
+    public boolean isPrimitive() throws DebuggerException {
+        return JdiType.isPrimitive(variable.signature());
+    }
 
-   @Override
-   public JdiValue getValue()
-   {
-      Value value = stackFrame.getValue(variable);
-      if (value == null)
-      {
-         return new JdiNullValue();
-      }
-      return new JdiValueImpl(value);
-   }
+    @Override
+    public JdiValue getValue() {
+        Value value = stackFrame.getValue(variable);
+        if (value == null) {
+            return new JdiNullValue();
+        }
+        return new JdiValueImpl(value);
+    }
 
-   @Override
-   public String getTypeName()
-   {
-      return variable.typeName();
-   }
+    @Override
+    public String getTypeName() {
+        return variable.typeName();
+    }
 }

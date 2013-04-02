@@ -22,34 +22,29 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class SimpleAuthenticator extends CloudfoundryAuthenticator
-{
-   private final String cfTarget;
-   private final String cfUser;
-   private final String cfPassword;
+public final class SimpleAuthenticator extends CloudfoundryAuthenticator {
+    private final String cfTarget;
+    private final String cfUser;
+    private final String cfPassword;
 
-   public SimpleAuthenticator(String cfTarget, String cfUser, String cfPassword)
-   {
-      this.cfTarget = cfTarget;
-      this.cfUser = cfUser;
-      this.cfPassword = cfPassword;
-   }
+    public SimpleAuthenticator(String cfTarget, String cfUser, String cfPassword) {
+        this.cfTarget = cfTarget;
+        this.cfUser = cfUser;
+        this.cfPassword = cfPassword;
+    }
 
-   @Override
-   public String getEmail()
-   {
-      return cfUser;
-   }
+    @Override
+    public String getEmail() {
+        return cfUser;
+    }
 
-   @Override
-   public String getPassword()
-   {
-      return cfPassword;
-   }
+    @Override
+    public String getPassword() {
+        return cfPassword;
+    }
 
-   @Override
-   public String getTarget()
-   {
-      return cfTarget;
-   }
+    @Override
+    public String getTarget() {
+        return cfTarget;
+    }
 }

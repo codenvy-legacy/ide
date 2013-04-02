@@ -17,16 +17,13 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * DTO for setting the user's active project on the ProjectLanding page.
- * 
- */
+/** DTO for setting the user's active project on the ProjectLanding page. */
 @RoutingType(type = RoutingTypes.SETACTIVEPROJECT)
 public interface SetActiveProject extends ClientToServerDto {
 
-  /**
-   * Returns the project ID of the most recently activated project for the
-   * current user, or null if viewing the welcome page.
-   */
-  String getProjectId();
+    /**
+     * Returns the project ID of the most recently activated project for the
+     * current user, or null if viewing the welcome page.
+     */
+    String getProjectId();
 }

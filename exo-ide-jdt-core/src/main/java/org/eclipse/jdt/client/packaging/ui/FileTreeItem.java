@@ -29,38 +29,31 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class FileTreeItem extends PackageExplorerTreeItem
-{
+public class FileTreeItem extends PackageExplorerTreeItem {
 
-   public FileTreeItem(FileModel file)
-   {
-      super(file);
-   }
+    public FileTreeItem(FileModel file) {
+        super(file);
+    }
 
-   @Override
-   protected ImageResource getItemIcon()
-   {
-      return ImageUtil.getIcon(((FileModel)getUserObject()).getMimeType());
-   }
+    @Override
+    protected ImageResource getItemIcon() {
+        return ImageUtil.getIcon(((FileModel)getUserObject()).getMimeType());
+    }
 
-   @Override
-   protected String getItemTitle()
-   {
-      return ((FileModel)getUserObject()).getName();
-   }
+    @Override
+    protected String getItemTitle() {
+        return ((FileModel)getUserObject()).getName();
+    }
 
-   @Override
-   public List<Item> getItems()
-   {
-      return null;
-   }
+    @Override
+    public List<Item> getItems() {
+        return null;
+    }
 
-   @Override
-   public void refresh(boolean open)
-   {
-      render();
-   }
+    @Override
+    public void refresh(boolean open) {
+        render();
+    }
 
 }

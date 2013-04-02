@@ -18,21 +18,21 @@ package com.codenvy.eclipse.core.filebuffers;
  * <code>Runnable</code> is executed in a specific thread or environment or adhere to specific
  * timing constraints. The concrete characteristics of the policy is to be specified by the context
  * implementer.
- * <p>
+ * <p/>
  * This interface can be implemented by clients. Clients use
  * {@link com.codenvy.eclipse.core.filebuffers.IFileBufferManager#setSynchronizationContext(ISynchronizationContext)}
  * to install a particular synchronization context with a file buffer manager.
  *
  * @since 3.0
  */
-public interface ISynchronizationContext
-{
+public interface ISynchronizationContext {
 
-   /**
-    * Executes the given runnable according to the specified
-    * synchronization/execution policy.
-    *
-    * @param runnable the runnable to be executed
-    */
-   void run(Runnable runnable);
+    /**
+     * Executes the given runnable according to the specified
+     * synchronization/execution policy.
+     *
+     * @param runnable
+     *         the runnable to be executed
+     */
+    void run(Runnable runnable);
 }

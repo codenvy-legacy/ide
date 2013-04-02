@@ -27,30 +27,23 @@ import com.google.gwt.user.client.ui.Frame;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: PreviewFrame Feb 17, 2011 3:07:09 PM evgen $
- * 
  */
-public class PreviewFrame extends Frame implements HasLoadHandlers
-{
-   /**
-    * 
-    */
-   public PreviewFrame()
-   {
-      super();
-   }
+public class PreviewFrame extends Frame implements HasLoadHandlers {
+    /**
+     *
+     */
+    public PreviewFrame() {
+        super();
+    }
 
-   public PreviewFrame(String url)
-   {
-      super(url);
-   }
+    public PreviewFrame(String url) {
+        super(url);
+    }
 
-   /**
-    * @see com.google.gwt.event.dom.client.HasLoadHandlers#addLoadHandler(com.google.gwt.event.dom.client.LoadHandler)
-    */
-   @Override
-   public HandlerRegistration addLoadHandler(LoadHandler handler)
-   {
-      return addDomHandler(handler, LoadEvent.getType());
-   }
+    /** @see com.google.gwt.event.dom.client.HasLoadHandlers#addLoadHandler(com.google.gwt.event.dom.client.LoadHandler) */
+    @Override
+    public HandlerRegistration addLoadHandler(LoadHandler handler) {
+        return addDomHandler(handler, LoadEvent.getType());
+    }
 
 }

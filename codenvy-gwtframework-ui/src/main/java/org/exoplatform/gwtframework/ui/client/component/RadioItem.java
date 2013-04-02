@@ -26,55 +26,46 @@ import org.exoplatform.gwtframework.ui.client.GwtResources;
 
 /**
  * {@link RadioItem} differs from GWT {@link RadioButton} only with css style.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class RadioItem extends RadioButton
-{
-   /**
-    * @param name name of the form's element
-    */
-   public RadioItem(String name)
-   {
-      super(name);
-      initElement();
-   }
+public class RadioItem extends RadioButton {
+    /**
+     * @param name
+     *         name of the form's element
+     */
+    public RadioItem(String name) {
+        super(name);
+        initElement();
+    }
 
-   /**
-    * @param name name of the form's element 
-    * @param title title shown near radiobutton
-    */
-   public RadioItem(String name, String title)
-   {
-      super(name, title);
-      initElement();
-   }
+    /**
+     * @param name
+     *         name of the form's element
+     * @param title
+     *         title shown near radiobutton
+     */
+    public RadioItem(String name, String title) {
+        super(name, title);
+        initElement();
+    }
 
-   /**
-    * Set the CSS style to the element.
-    */
-   private void initElement()
-   {
-      GwtResources.INSTANCE.css().ensureInjected();
-      getElement().setClassName(GwtResources.INSTANCE.css().radioButton());
-   }
+    /** Set the CSS style to the element. */
+    private void initElement() {
+        GwtResources.INSTANCE.css().ensureInjected();
+        getElement().setClassName(GwtResources.INSTANCE.css().radioButton());
+    }
 
-   /**
-    * @see com.google.gwt.user.client.ui.CheckBox#setEnabled(boolean)
-    */
-   @Override
-   public void setEnabled(boolean enabled)
-   {
-      super.setEnabled(enabled);
-      if (enabled)
-      {
-         getElement().removeClassName(GwtResources.INSTANCE.css().radioButtonDisabled());
-      }
-      else
-      {
-         getElement().addClassName(GwtResources.INSTANCE.css().radioButtonDisabled());
-      }
-   }
+    /** @see com.google.gwt.user.client.ui.CheckBox#setEnabled(boolean) */
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (enabled) {
+            getElement().removeClassName(GwtResources.INSTANCE.css().radioButtonDisabled());
+        } else {
+            getElement().addClassName(GwtResources.INSTANCE.css().radioButtonDisabled());
+        }
+    }
 }

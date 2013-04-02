@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to view the history of commits.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 29, 2011 3:13:45 PM anya $
- * 
  */
-public class ShowInHistoryEvent extends GwtEvent<ShowInHistoryHandler>
-{
+public class ShowInHistoryEvent extends GwtEvent<ShowInHistoryHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ShowInHistoryHandler> TYPE = new GwtEvent.Type<ShowInHistoryHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ShowInHistoryHandler> TYPE = new GwtEvent.Type<ShowInHistoryHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowInHistoryHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowInHistoryHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowInHistoryHandler handler)
-   {
-      handler.onShowInHistory(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowInHistoryHandler handler) {
+        handler.onShowInHistory(this);
+    }
 
 }

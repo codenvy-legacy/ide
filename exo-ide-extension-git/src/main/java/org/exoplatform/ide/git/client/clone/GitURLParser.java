@@ -21,49 +21,39 @@ package org.exoplatform.ide.git.client.clone;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class GitURLParser
-{
-   
-   /**
-    * Parse GitHub url. Need extract "user" and "repository" name.
-    * If given Url its GitHub url return array of string first element will be user name, second repository name
-    * else return null.
-    * GitHub url formats:
-    * - https://github.com/user/repo.git
-    * - git@github.com:user/repo.git
-    * - git://github.com/user/repo.git
-    *
-    * @param gitUrl
-    * @return array of string 
-    */
-   public static String[] parseGitHubUrl(String gitUrl)
-   {
-      if (gitUrl.endsWith("/"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
-      }
-      if (gitUrl.endsWith(".git"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
-      }
-      if (gitUrl.startsWith("git@github.com:"))
-      {
-         gitUrl = gitUrl.split("git@github.com:")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("git://github.com/"))
-      {
-         gitUrl = gitUrl.split("git://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("https://github.com/"))
-      {
-         gitUrl = gitUrl.split("https://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      return null;
-   }   
+public class GitURLParser {
+
+    /**
+     * Parse GitHub url. Need extract "user" and "repository" name.
+     * If given Url its GitHub url return array of string first element will be user name, second repository name
+     * else return null.
+     * GitHub url formats:
+     * - https://github.com/user/repo.git
+     * - git@github.com:user/repo.git
+     * - git://github.com/user/repo.git
+     *
+     * @param gitUrl
+     * @return array of string
+     */
+    public static String[] parseGitHubUrl(String gitUrl) {
+        if (gitUrl.endsWith("/")) {
+            gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
+        }
+        if (gitUrl.endsWith(".git")) {
+            gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
+        }
+        if (gitUrl.startsWith("git@github.com:")) {
+            gitUrl = gitUrl.split("git@github.com:")[1];
+            return gitUrl.split("/");
+        } else if (gitUrl.startsWith("git://github.com/")) {
+            gitUrl = gitUrl.split("git://github.com/")[1];
+            return gitUrl.split("/");
+        } else if (gitUrl.startsWith("https://github.com/")) {
+            gitUrl = gitUrl.split("https://github.com/")[1];
+            return gitUrl.split("/");
+        }
+        return null;
+    }
 
 }

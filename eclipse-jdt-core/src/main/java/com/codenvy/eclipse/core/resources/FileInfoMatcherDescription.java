@@ -15,82 +15,65 @@ package com.codenvy.eclipse.core.resources;
  *
  * @since 3.6
  */
-public final class FileInfoMatcherDescription
-{
+public final class FileInfoMatcherDescription {
 
-   private String id;
+    private String id;
 
-   private Object arguments;
+    private Object arguments;
 
-   public FileInfoMatcherDescription(String id, Object arguments)
-   {
-      super();
-      this.id = id;
-      this.arguments = arguments;
-   }
+    public FileInfoMatcherDescription(String id, Object arguments) {
+        super();
+        this.id = id;
+        this.arguments = arguments;
+    }
 
-   public Object getArguments()
-   {
-      return arguments;
-   }
+    public Object getArguments() {
+        return arguments;
+    }
 
-   public String getId()
-   {
-      return id;
-   }
+    public String getId() {
+        return id;
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#hashCode()
-    */
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((arguments == null) ? 0 : arguments.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      return result;
-   }
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((arguments == null) ? 0 : arguments.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (obj == null)
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      FileInfoMatcherDescription other = (FileInfoMatcherDescription)obj;
-      if (arguments == null)
-      {
-         if (other.arguments != null)
-         {
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
-         }
-      }
-      else if (!arguments.equals(other.arguments))
-      {
-         return false;
-      }
-      if (id == null)
-      {
-         if (other.id != null)
-         {
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-         }
-      }
-      else if (!id.equals(other.id))
-      {
-         return false;
-      }
-      return true;
-   }
+        }
+        FileInfoMatcherDescription other = (FileInfoMatcherDescription)obj;
+        if (arguments == null) {
+            if (other.arguments != null) {
+                return false;
+            }
+        } else if (!arguments.equals(other.arguments)) {
+            return false;
+        }
+        if (id == null) {
+            if (other.id != null) {
+                return false;
+            }
+        } else if (!id.equals(other.id)) {
+            return false;
+        }
+        return true;
+    }
 }

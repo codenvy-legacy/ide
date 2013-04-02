@@ -13,50 +13,32 @@ package com.codenvy.eclipse.jdt.internal.core.eval;
 import com.codenvy.eclipse.jdt.core.eval.IGlobalVariable;
 import com.codenvy.eclipse.jdt.internal.eval.GlobalVariable;
 
-/**
- * A wrapper around the infrastructure global variable.
- */
-class GlobalVariableWrapper implements IGlobalVariable
-{
-   GlobalVariable variable;
+/** A wrapper around the infrastructure global variable. */
+class GlobalVariableWrapper implements IGlobalVariable {
+    GlobalVariable variable;
 
-   /**
-    * Creates a new wrapper around the given infrastructure global variable.
-    */
-   GlobalVariableWrapper(GlobalVariable variable)
-   {
-      this.variable = variable;
-   }
+    /** Creates a new wrapper around the given infrastructure global variable. */
+    GlobalVariableWrapper(GlobalVariable variable) {
+        this.variable = variable;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.core.eval.IGlobalVariable#getInitializer
-    */
-   public String getInitializer()
-   {
-      char[] initializer = this.variable.getInitializer();
-      if (initializer != null)
-      {
-         return new String(initializer);
-      }
-      else
-      {
-         return null;
-      }
-   }
+    /** @see com.codenvy.eclipse.jdt.core.eval.IGlobalVariable#getInitializer */
+    public String getInitializer() {
+        char[] initializer = this.variable.getInitializer();
+        if (initializer != null) {
+            return new String(initializer);
+        } else {
+            return null;
+        }
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.core.eval.IGlobalVariable#getName
-    */
-   public String getName()
-   {
-      return new String(this.variable.getName());
-   }
+    /** @see com.codenvy.eclipse.jdt.core.eval.IGlobalVariable#getName */
+    public String getName() {
+        return new String(this.variable.getName());
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.core.eval.IGlobalVariable#getTypeName
-    */
-   public String getTypeName()
-   {
-      return new String(this.variable.getTypeName());
-   }
+    /** @see com.codenvy.eclipse.jdt.core.eval.IGlobalVariable#getTypeName */
+    public String getTypeName() {
+        return new String(this.variable.getTypeName());
+    }
 }

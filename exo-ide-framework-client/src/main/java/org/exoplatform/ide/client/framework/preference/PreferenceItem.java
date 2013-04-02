@@ -26,68 +26,70 @@ import java.util.List;
  * Preference item describes the single preference, which can have sub-preferences and thus organize tree structure. Preference
  * items are registered as follows:<br>
  * <code>
- *    Preferences.get().addPreferenceItem(new SamplePreference());
+ * Preferences.get().addPreferenceItem(new SamplePreference());
  * </code>
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 18, 2012 3:24:39 PM anya $
- * 
  */
-public interface PreferenceItem
-{
-   /**
-    * Returns preference's name (title).
-    * 
-    * @return {@link String} preference's name
-    */
-   String getName();
+public interface PreferenceItem {
+    /**
+     * Returns preference's name (title).
+     *
+     * @return {@link String} preference's name
+     */
+    String getName();
 
-   /**
-    * Sets preference's name (title).
-    * 
-    * @param name preference's name (title)
-    */
-   void setName(String name);
+    /**
+     * Sets preference's name (title).
+     *
+     * @param name
+     *         preference's name (title)
+     */
+    void setName(String name);
 
-   /**
-    * Returns image associated with preference.
-    * 
-    * @return {@link Image} preference's image
-    */
-   Image getImage();
+    /**
+     * Returns image associated with preference.
+     *
+     * @return {@link Image} preference's image
+     */
+    Image getImage();
 
-   /**
-    * Sets image associated with preference.
-    * 
-    * @param image preference's image
-    */
-   void setImage(Image image);
+    /**
+     * Sets image associated with preference.
+     *
+     * @param image
+     *         preference's image
+     */
+    void setImage(Image image);
 
-   /**
-    * Returns the list of sub preferences.
-    * 
-    * @return {@link List} of {@link PreferenceItem} list of sub preferences
-    */
-   List<PreferenceItem> getChildren();
+    /**
+     * Returns the list of sub preferences.
+     *
+     * @return {@link List} of {@link PreferenceItem} list of sub preferences
+     */
+    List<PreferenceItem> getChildren();
 
-   /**
-    * Sets the list of sub preferences.
-    * 
-    * @param children list of sub preferences
-    */
-   void setChildren(List<PreferenceItem> children);
+    /**
+     * Sets the list of sub preferences.
+     *
+     * @param children
+     *         list of sub preferences
+     */
+    void setChildren(List<PreferenceItem> children);
 
-   /**
-    * Returns the preference's performer (which will do defined actions, when preference is called).
-    * 
-    * @return {@link PreferencePerformer} preference's performer
-    */
-   PreferencePerformer getPreferencePerformer();
+    /**
+     * Returns the preference's performer (which will do defined actions, when preference is called).
+     *
+     * @return {@link PreferencePerformer} preference's performer
+     */
+    PreferencePerformer getPreferencePerformer();
 
-   /**
-    * Sets the preference's performer (which will do defined actions, when preference is called).
-    * 
-    * @param preferencePerformer preference performer
-    */
-   void setPreferencePerformer(PreferencePerformer preferencePerformer);
+    /**
+     * Sets the preference's performer (which will do defined actions, when preference is called).
+     *
+     * @param preferencePerformer
+     *         preference performer
+     */
+    void setPreferencePerformer(PreferencePerformer preferencePerformer);
 }

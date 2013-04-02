@@ -14,129 +14,122 @@
 
 package com.google.collide.client.code;
 
+import elemental.html.DivElement;
+import elemental.html.SpanElement;
+
 import com.codenvy.ide.client.util.Elements;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import elemental.html.DivElement;
-import elemental.html.SpanElement;
 
 import org.exoplatform.ide.json.client.JsoStringMap;
 import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
-/**
- * Presenter for the participant list in the navigation bar.
- *
- */
+/** Presenter for the participant list in the navigation bar. */
 public class ParticipantList extends UiComponent<ParticipantList.View>
-    implements ParticipantModel.Listener {
+        implements ParticipantModel.Listener {
 
-  /**
-   * Static factory method for obtaining an instance of the ParticipantList.
-   */
-  public static ParticipantList create(View view, Resources res, ParticipantModel model) {
-    ParticipantList participantList = new ParticipantList(view, model);
-    participantList.init();
+    /** Static factory method for obtaining an instance of the ParticipantList. */
+    public static ParticipantList create(View view, Resources res, ParticipantModel model) {
+        ParticipantList participantList = new ParticipantList(view, model);
+        participantList.init();
 
-    return participantList;
-  }
-
-  /**
-   * CSS for the participant list.
-   *
-   */
-  public interface Css extends CssResource {
-    String name();
-
-    String root();
-
-    String row();
-
-    String swatch();
-  }
-
-  public interface Resources extends ClientBundle {
-    @Source("ParticipantList.css")
-    Css workspaceNavigationParticipantListCss();
-  }
-
-  public static class View extends CompositeView<Void> {
-    final Resources res;
-
-    final Css css;
-
-    private final JsoStringMap<DivElement> rows = JsoStringMap.create();
-
-    public View(Resources res) {
-      this.res = res;
-      this.css = res.workspaceNavigationParticipantListCss();
-
-      setElement(Elements.createDivElement(css.root()));
+        return participantList;
     }
 
-    private void addParticipant(String userId, String displayEmail, String name, String color) {
-      DivElement rowElement = Elements.createDivElement(css.row());
+    /** CSS for the participant list. */
+    public interface Css extends CssResource {
+        String name();
 
-      DivElement swatchElement = Elements.createDivElement(css.swatch());
-      swatchElement.setAttribute("style", "background-color: " + color);
-      rowElement.appendChild(swatchElement);
+        String root();
 
-      SpanElement nameElement = Elements.createSpanElement(css.name());
-      nameElement.setTextContent(name);
-      nameElement.setTitle(displayEmail);
-      rowElement.appendChild(nameElement);
+        String row();
 
-      getElement().appendChild(rowElement);
-      rows.put(userId, rowElement);
+        String swatch();
     }
 
-    private void removeParticipant(String userId) {
-      DivElement row = rows.get(userId);
-      if (row != null) {
-        row.removeFromParent();
-      }
+    public interface Resources extends ClientBundle {
+        @Source("ParticipantList.css")
+        Css workspaceNavigationParticipantListCss();
     }
-  }
 
-  private final ParticipantModel model;
+    public static class View extends CompositeView<Void> {
+        final Resources res;
 
-  private ParticipantList(View view, ParticipantModel model) {
-    super(view);
-    this.model = model;
-  }
+        final Css css;
 
-  @Override
-  public void participantAdded(Participant participant) {
-    addParticipantToView(participant);
-  }
+        private final JsoStringMap<DivElement> rows = JsoStringMap.create();
 
-  @Override
-  public void participantRemoved(Participant participant) {
-    getView().removeParticipant(participant.getUserId());
-  }
+        public View(Resources res) {
+            this.res = res;
+            this.css = res.workspaceNavigationParticipantListCss();
 
-  public ParticipantModel getModel() {
-    return model;
-  }
+            setElement(Elements.createDivElement(css.root()));
+        }
 
-  private void init() {
-    model.addListener(this);
-    populateViewFromModel();
-  }
+        private void addParticipant(String userId, String displayEmail, String name, String color) {
+            DivElement rowElement = Elements.createDivElement(css.row());
 
-  private void addParticipantToView(Participant participant) {
-    getView().addParticipant(participant.getUserId(),
-        participant.getDisplayEmail(), participant.getDisplayName(), participant.getColor());
-  }
+            DivElement swatchElement = Elements.createDivElement(css.swatch());
+            swatchElement.setAttribute("style", "background-color: " + color);
+            rowElement.appendChild(swatchElement);
 
-  private void populateViewFromModel() {
-    JsoStringMap<Participant> participants = getModel().getParticipants();
-    participants.iterate(new IterationCallback<Participant>() {
-      @Override
-      public void onIteration(String userId, Participant participant) {
+            SpanElement nameElement = Elements.createSpanElement(css.name());
+            nameElement.setTextContent(name);
+            nameElement.setTitle(displayEmail);
+            rowElement.appendChild(nameElement);
+
+            getElement().appendChild(rowElement);
+            rows.put(userId, rowElement);
+        }
+
+        private void removeParticipant(String userId) {
+            DivElement row = rows.get(userId);
+            if (row != null) {
+                row.removeFromParent();
+            }
+        }
+    }
+
+    private final ParticipantModel model;
+
+    private ParticipantList(View view, ParticipantModel model) {
+        super(view);
+        this.model = model;
+    }
+
+    @Override
+    public void participantAdded(Participant participant) {
         addParticipantToView(participant);
-      }
-    });
-  }
+    }
+
+    @Override
+    public void participantRemoved(Participant participant) {
+        getView().removeParticipant(participant.getUserId());
+    }
+
+    public ParticipantModel getModel() {
+        return model;
+    }
+
+    private void init() {
+        model.addListener(this);
+        populateViewFromModel();
+    }
+
+    private void addParticipantToView(Participant participant) {
+        getView().addParticipant(participant.getUserId(),
+                                 participant.getDisplayEmail(), participant.getDisplayName(), participant.getColor());
+    }
+
+    private void populateViewFromModel() {
+        JsoStringMap<Participant> participants = getModel().getParticipants();
+        participants.iterate(new IterationCallback<Participant>() {
+            @Override
+            public void onIteration(String userId, Participant participant) {
+                addParticipantToView(participant);
+            }
+        });
+    }
 }

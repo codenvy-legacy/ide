@@ -19,27 +19,27 @@
 
 -->
 <module rename-to="IDE">
-   <inherits name='com.google.gwt.user.User' />
-   
-   <inherits name="com.google.gwt.http.HTTP" />
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.xml.XML' />
-   <inherits name="com.google.gwt.i18n.I18N" />
+    <inherits name='com.google.gwt.user.User'/>
 
-   <!-- load GWT Framework Libraries -->
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   <inherits name='org.exoplatform.gwtframework.ui.UI' />
-   
-	<!-- IDE Client Framework -->
-   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name="com.google.gwt.i18n.I18N"/>
 
-   <!-- Initialise Virtual File System -->
-   <inherits name="org.exoplatform.ide.vfs.IDEVFS" />
-   
-   <inherits name='org.exoplatform.ide.Views' />
+    <!-- load GWT Framework Libraries -->
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
+    <inherits name='org.exoplatform.gwtframework.ui.UI'/>
 
-   <!-- Specify the application specific style sheet. -->
-   <stylesheet src="IDE.css" />
-   <stylesheet src="CellTree.css" />
+    <!-- IDE Client Framework -->
+    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework'/>
+
+    <!-- Initialise Virtual File System -->
+    <inherits name="org.exoplatform.ide.vfs.IDEVFS"/>
+
+    <inherits name='org.exoplatform.ide.Views'/>
+
+    <!-- Specify the application specific style sheet. -->
+    <stylesheet src="IDE.css"/>
+    <stylesheet src="CellTree.css"/>
 
 </module>

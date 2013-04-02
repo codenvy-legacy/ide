@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CloseAllFilesEvent extends GwtEvent<CloseAllFilesHandler>
-{
+public class CloseAllFilesEvent extends GwtEvent<CloseAllFilesHandler> {
 
-   public static final GwtEvent.Type<CloseAllFilesHandler> TYPE = new GwtEvent.Type<CloseAllFilesHandler>();
+    public static final GwtEvent.Type<CloseAllFilesHandler> TYPE = new GwtEvent.Type<CloseAllFilesHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CloseAllFilesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CloseAllFilesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(CloseAllFilesHandler handler)
-   {
-      handler.onCloseAllFiles(this);
-   }
+    @Override
+    protected void dispatch(CloseAllFilesHandler handler) {
+        handler.onCloseAllFiles(this);
+    }
 
 }

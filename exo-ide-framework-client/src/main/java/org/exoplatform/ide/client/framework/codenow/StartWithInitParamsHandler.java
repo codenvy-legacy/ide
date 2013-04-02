@@ -25,11 +25,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
- *
  */
-public interface StartWithInitParamsHandler extends EventHandler
-{
-   
-   void onStartWithInitParams(StartWithInitParamsEvent event);
+public interface StartWithInitParamsHandler extends EventHandler {
+
+    void onStartWithInitParams(StartWithInitParamsEvent event);
 
 }

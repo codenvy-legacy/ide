@@ -21,50 +21,38 @@ package org.exoplatform.ide.client.framework.editor.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: EditorCollapseFoldEvent.java Feb 28, 2013 5:08:29 PM azatsarynnyy $
- *
  */
-public class EditorCollapseFoldEvent extends GwtEvent<EditorCollapseFoldHandler>
-{
-   private boolean collapseAll;
+public class EditorCollapseFoldEvent extends GwtEvent<EditorCollapseFoldHandler> {
+    private boolean collapseAll;
 
-   public EditorCollapseFoldEvent()
-   {
-      super();
-   }
+    public EditorCollapseFoldEvent() {
+        super();
+    }
 
-   public EditorCollapseFoldEvent(boolean collapseAll)
-   {
-      super();
-      this.collapseAll = collapseAll;
-   }
+    public EditorCollapseFoldEvent(boolean collapseAll) {
+        super();
+        this.collapseAll = collapseAll;
+    }
 
-   public static final GwtEvent.Type<EditorCollapseFoldHandler> TYPE =
-      new GwtEvent.Type<EditorCollapseFoldHandler>();
+    public static final GwtEvent.Type<EditorCollapseFoldHandler> TYPE =
+            new GwtEvent.Type<EditorCollapseFoldHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorCollapseFoldHandler handler)
-   {
-      handler.onEditorCollapse(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorCollapseFoldHandler handler) {
+        handler.onEditorCollapse(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorCollapseFoldHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorCollapseFoldHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public boolean isCollapseAll()
-   {
-      return collapseAll;
-   }
+    public boolean isCollapseAll() {
+        return collapseAll;
+    }
 
 }

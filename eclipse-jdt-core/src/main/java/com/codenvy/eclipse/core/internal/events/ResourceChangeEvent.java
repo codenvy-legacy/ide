@@ -19,104 +19,82 @@ import com.codenvy.eclipse.core.resources.IResourceDelta;
 import java.util.ArrayList;
 import java.util.EventObject;
 
-public class ResourceChangeEvent extends EventObject implements IResourceChangeEvent
-{
+public class ResourceChangeEvent extends EventObject implements IResourceChangeEvent {
 
-   private static final IMarkerDelta[] NO_MARKER_DELTAS = new IMarkerDelta[0];
+    private static final IMarkerDelta[] NO_MARKER_DELTAS = new IMarkerDelta[0];
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   IResourceDelta delta;
+    IResourceDelta delta;
 
-   IResource resource;
+    IResource resource;
 
-   /**
-    * The build trigger for this event, or 0 if not applicable.
-    */
-   private int trigger = 0;
+    /** The build trigger for this event, or 0 if not applicable. */
+    private int trigger = 0;
 
-   int type;
+    int type;
 
-   protected ResourceChangeEvent(Object source, int type, IResource resource)
-   {
-      super(source);
-      this.resource = resource;
-      this.type = type;
-   }
+    protected ResourceChangeEvent(Object source, int type, IResource resource) {
+        super(source);
+        this.resource = resource;
+        this.type = type;
+    }
 
-   public ResourceChangeEvent(Object source, int type, int buildKind, IResourceDelta delta)
-   {
-      super(source);
-      this.delta = delta;
-      this.trigger = buildKind;
-      this.type = type;
-   }
+    public ResourceChangeEvent(Object source, int type, int buildKind, IResourceDelta delta) {
+        super(source);
+        this.delta = delta;
+        this.trigger = buildKind;
+        this.type = type;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#findMarkerDeltas(String, boolean)
-    */
-   public IMarkerDelta[] findMarkerDeltas(String findType, boolean includeSubtypes)
-   {
-      if (delta == null)
-      {
-         return NO_MARKER_DELTAS;
-      }
-      //		ResourceDeltaInfo info = ((ResourceDelta) delta).getDeltaInfo();
-      //		if (info == null)
-      //			return NO_MARKER_DELTAS;
-      //		//Map of IPath -> MarkerSet containing MarkerDelta objects
-      //		Map<IPath, MarkerSet> markerDeltas = info.getMarkerDeltas();
-      //		if (markerDeltas == null || markerDeltas.size() == 0)
-      //			return NO_MARKER_DELTAS;
-      ArrayList<IMarkerDelta> matching = new ArrayList<IMarkerDelta>();
-      //		Iterator<MarkerSet> deltaSets = markerDeltas.values().iterator();
-      //		while (deltaSets.hasNext()) {
-      //			MarkerSet deltas = deltaSets.next();
-      //			IMarkerSetElement[] elements = deltas.elements();
-      //			for (int i = 0; i < elements.length; i++) {
-      //				MarkerDelta markerDelta = (MarkerDelta) elements[i];
-      //				//our inclusion test depends on whether we are considering subtypes
-      //				if (findType == null || (includeSubtypes ? markerDelta.isSubtypeOf(findType) : markerDelta.getType().equals(findType)))
-      //					matching.add(markerDelta);
-      //			}
-      //		}
-      return matching.toArray(new IMarkerDelta[matching.size()]);
-   }
+    /** @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#findMarkerDeltas(String, boolean) */
+    public IMarkerDelta[] findMarkerDeltas(String findType, boolean includeSubtypes) {
+        if (delta == null) {
+            return NO_MARKER_DELTAS;
+        }
+        //		ResourceDeltaInfo info = ((ResourceDelta) delta).getDeltaInfo();
+        //		if (info == null)
+        //			return NO_MARKER_DELTAS;
+        //		//Map of IPath -> MarkerSet containing MarkerDelta objects
+        //		Map<IPath, MarkerSet> markerDeltas = info.getMarkerDeltas();
+        //		if (markerDeltas == null || markerDeltas.size() == 0)
+        //			return NO_MARKER_DELTAS;
+        ArrayList<IMarkerDelta> matching = new ArrayList<IMarkerDelta>();
+        //		Iterator<MarkerSet> deltaSets = markerDeltas.values().iterator();
+        //		while (deltaSets.hasNext()) {
+        //			MarkerSet deltas = deltaSets.next();
+        //			IMarkerSetElement[] elements = deltas.elements();
+        //			for (int i = 0; i < elements.length; i++) {
+        //				MarkerDelta markerDelta = (MarkerDelta) elements[i];
+        //				//our inclusion test depends on whether we are considering subtypes
+        //				if (findType == null || (includeSubtypes ? markerDelta.isSubtypeOf(findType) : markerDelta.getType().equals(findType)))
+        //					matching.add(markerDelta);
+        //			}
+        //		}
+        return matching.toArray(new IMarkerDelta[matching.size()]);
+    }
 
-   /**
-    * @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getBuildKind()
-    */
-   public int getBuildKind()
-   {
-      return trigger;
-   }
+    /** @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getBuildKind() */
+    public int getBuildKind() {
+        return trigger;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getDelta()
-    */
-   public IResourceDelta getDelta()
-   {
-      return delta;
-   }
+    /** @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getDelta() */
+    public IResourceDelta getDelta() {
+        return delta;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getResource()
-    */
-   public IResource getResource()
-   {
-      return resource;
-   }
+    /** @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getResource() */
+    public IResource getResource() {
+        return resource;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getType()
-    */
-   public int getType()
-   {
-      return type;
-   }
+    /** @see com.codenvy.eclipse.core.resources.IResourceChangeEvent#getType() */
+    public int getType() {
+        return type;
+    }
 
-   public void setDelta(IResourceDelta value)
-   {
-      delta = value;
-   }
+    public void setDelta(IResourceDelta value) {
+        delta = value;
+    }
 }

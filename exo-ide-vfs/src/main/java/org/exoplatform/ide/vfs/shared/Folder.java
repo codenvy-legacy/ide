@@ -22,9 +22,8 @@ package org.exoplatform.ide.vfs.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Folder extends Item
-{
-   String FOLDER_MIME_TYPE = "text/directory";
+public interface Folder extends Item {
+    String FOLDER_MIME_TYPE = "text/directory";
 
-   String createPath(String childName);
+    String createPath(String childName);
 }

@@ -20,44 +20,39 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Info about remote configuration.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Remote.java 67651 2011-03-25 16:15:36Z andrew00x $
  */
-public class Remote
-{
-   /** Remote name. */
-   private String name;
+public class Remote {
+    /** Remote name. */
+    private String name;
 
-   /** Remote repository url. */
-   private String url;
+    /** Remote repository url. */
+    private String url;
 
-   /**
-    * @param name remote name
-    * @param url repository url
-    */
-   public Remote(String name, String url)
-   {
-      this.name = name;
-      this.url = url;
-   }
+    /**
+     * @param name
+     *         remote name
+     * @param url
+     *         repository url
+     */
+    public Remote(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public String getUrl()
-   {
-      return url;
-   }
+    public String getUrl() {
+        return url;
+    }
 
-   /**
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return "Remote [name=" + name + ", url=" + url + "]";
-   }
+    /** @see java.lang.Object#toString() */
+    @Override
+    public String toString() {
+        return "Remote [name=" + name + ", url=" + url + "]";
+    }
 }

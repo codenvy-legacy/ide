@@ -14,11 +14,9 @@
 
 package com.google.collide.codemirror2;
 
-/**
- * Object that represents py-parser state.
- */
+/** Object that represents py-parser state. */
 public class PyState extends CmState {
 
-  protected PyState() {
-  }
+    protected PyState() {
+    }
 }

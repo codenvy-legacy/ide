@@ -27,51 +27,39 @@ import java.util.List;
 /**
  * Calls from {@link DiscoveryService} when list of REST Services received <br>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 21, 2010 4:54:55 PM evgen $
- * 
  */
-public class RestServicesReceivedEvent extends GwtEvent<RestServicesReceivedHandler>
-{
+public class RestServicesReceivedEvent extends GwtEvent<RestServicesReceivedHandler> {
 
-   public static GwtEvent.Type<RestServicesReceivedHandler> TYPE = new Type<RestServicesReceivedHandler>();
+    public static GwtEvent.Type<RestServicesReceivedHandler> TYPE = new Type<RestServicesReceivedHandler>();
 
-   private List<RestService> restServices;
+    private List<RestService> restServices;
 
-   /**
-    * @param services
-    */
-   public RestServicesReceivedEvent(List<RestService> services)
-   {
-      this.restServices = services;
-   }
+    /** @param services */
+    public RestServicesReceivedEvent(List<RestService> services) {
+        this.restServices = services;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RestServicesReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RestServicesReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RestServicesReceivedHandler handler)
-   {
-      handler.onRestServicesReceived(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RestServicesReceivedHandler handler) {
+        handler.onRestServicesReceived(this);
+    }
 
-   /**
-    * Get REST Services
-    * 
-    * @return the {@link List} of {@link RestService}
-    */
-   public List<RestService> getRestServices()
-   {
-      return restServices;
-   }
+    /**
+     * Get REST Services
+     *
+     * @return the {@link List} of {@link RestService}
+     */
+    public List<RestService> getRestServices() {
+        return restServices;
+    }
 }

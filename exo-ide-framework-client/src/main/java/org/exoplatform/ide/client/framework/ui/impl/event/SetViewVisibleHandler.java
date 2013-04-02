@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface SetViewVisibleHandler extends EventHandler
-{
+public interface SetViewVisibleHandler extends EventHandler {
 
-   void onSetViewVisible(SetViewVisibleEvent event);
+    void onSetViewVisible(SetViewVisibleEvent event);
 
 }

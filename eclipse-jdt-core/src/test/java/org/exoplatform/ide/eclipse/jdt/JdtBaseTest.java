@@ -35,48 +35,47 @@ import org.exoplatform.ide.eclipse.resources.ResourcesBaseTest;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public abstract class JdtBaseTest extends ResourcesBaseTest
-{
+public abstract class JdtBaseTest extends ResourcesBaseTest {
 
-   public IJavaProject createJavaProject(final String name) throws CoreException
-   {
-      IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      IProject project = root.getProject(name);
-      project.create(null);
-      project.open(null);
-      IProjectDescription description = project.getDescription();
-      description.setNatureIds(new String[]{JavaCore.NATURE_ID});
-      project.setDescription(description, null);
-      IJavaProject javaProject = JavaCore.create(project);
-      IFolder binFolder = project.getFolder("bin");
-      binFolder.create(false, true, null);
-      javaProject.setOutputLocation(binFolder.getFullPath(), null);
-      //      List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
-      //      IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-      //      LibraryLocation[] locations = JavaRuntime.getLibraryLocations(vmInstall);
-      //      for (LibraryLocation element : locations) {
-      //         entries.add(JavaCore.newLibraryEntry(element.getSystemLibraryPath(), null, null));
-      //      }
-      //add libs to project class path
-      //      javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), null);
+    public IJavaProject createJavaProject(final String name) throws CoreException {
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        IProject project = root.getProject(name);
+        project.create(null);
+        project.open(null);
+        IProjectDescription description = project.getDescription();
+        description.setNatureIds(new String[]{JavaCore.NATURE_ID});
+        project.setDescription(description, null);
+        IJavaProject javaProject = JavaCore.create(project);
+        IFolder binFolder = project.getFolder("bin");
+        binFolder.create(false, true, null);
+        javaProject.setOutputLocation(binFolder.getFullPath(), null);
+        //      List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
+        //      IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+        //      LibraryLocation[] locations = JavaRuntime.getLibraryLocations(vmInstall);
+        //      for (LibraryLocation element : locations) {
+        //         entries.add(JavaCore.newLibraryEntry(element.getSystemLibraryPath(), null, null));
+        //      }
+        //add libs to project class path
+        //      javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), null);
 
-      IFolder sourceFolder = project.getFolder("src");
-      sourceFolder.create(false, true, null);
-      IPackageFragmentRoot packageRoot = javaProject.getPackageFragmentRoot(sourceFolder);
-      IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-      IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
-      System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
-      newEntries[oldEntries.length] = JavaCore.newSourceEntry(packageRoot.getPath());
-      javaProject.setRawClasspath(newEntries, null);
-      javaProject.open(null);
-      packageRoot.open(null);
+        IFolder sourceFolder = project.getFolder("src");
+        sourceFolder.create(false, true, null);
+        IPackageFragmentRoot packageRoot = javaProject.getPackageFragmentRoot(sourceFolder);
+        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
+        System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+        newEntries[oldEntries.length] = JavaCore.newSourceEntry(packageRoot.getPath());
+        javaProject.setRawClasspath(newEntries, null);
+        javaProject.open(null);
+        packageRoot.open(null);
 
-      //      FileResource classPath = (FileResource)ws.newResource(new Path("/" + name + "/.classpath"), IResource.FILE);
-      //      classPath.create(new ByteArrayInputStream(
-      //         ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry kind=\"output\" path=\"bin\"/>" + "<classpathentry kind=\"src\" path=\"src\"/></classpath>").getBytes()),
-      //         true, new NullProgressMonitor());
+        //      FileResource classPath = (FileResource)ws.newResource(new Path("/" + name + "/.classpath"), IResource.FILE);
+        //      classPath.create(new ByteArrayInputStream(
+        //         ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry kind=\"output\" path=\"bin\"/>" +
+        // "<classpathentry kind=\"src\" path=\"src\"/></classpath>").getBytes()),
+        //         true, new NullProgressMonitor());
 
-      return javaProject;
-   }
+        return javaProject;
+    }
 
 }

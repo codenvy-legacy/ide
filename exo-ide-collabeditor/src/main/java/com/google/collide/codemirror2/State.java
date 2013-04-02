@@ -14,17 +14,16 @@
 
 package com.google.collide.codemirror2;
 
-/**
- * Interface that represents CodeMirror state.
- */
+/** Interface that represents CodeMirror state. */
 public interface State {
 
-  /**
-   * Clones the object.
-   *
-   * <p>Parser parameter is used by native CodeMirror implementation.
-   *
-   * @param codeMirrorParser parser that created this instance
-   */
-  State copy(Parser codeMirrorParser);
+    /**
+     * Clones the object.
+     * <p/>
+     * <p>Parser parameter is used by native CodeMirror implementation.
+     *
+     * @param codeMirrorParser
+     *         parser that created this instance
+     */
+    State copy(Parser codeMirrorParser);
 }

@@ -16,37 +16,35 @@ package com.google.collide.shared.document.anchor;
 
 import org.exoplatform.ide.shared.util.SortedList;
 
-/**
- * List for line anchors with specific optimizations for line anchors.
- */
+/** List for line anchors with specific optimizations for line anchors. */
 public class LineAnchorList extends SortedList<Anchor> {
 
-  private static class Comparator implements SortedList.Comparator<Anchor> {
-    @Override
-    public int compare(Anchor a, Anchor b) {
-      return a.getLineNumber() - b.getLineNumber();
+    private static class Comparator implements SortedList.Comparator<Anchor> {
+        @Override
+        public int compare(Anchor a, Anchor b) {
+            return a.getLineNumber() - b.getLineNumber();
+        }
     }
-  }
 
-  private static class OneWayComparator implements SortedList.OneWayComparator<Anchor> {
-    private int lineNumber;
+    private static class OneWayComparator implements SortedList.OneWayComparator<Anchor> {
+        private int lineNumber;
 
-    @Override
-    public int compareTo(Anchor o) {
-      return lineNumber - o.getLineNumber();
+        @Override
+        public int compareTo(Anchor o) {
+            return lineNumber - o.getLineNumber();
+        }
     }
-  }
 
-  private static final Comparator COMPARATOR = new Comparator();
+    private static final Comparator COMPARATOR = new Comparator();
 
-  private final OneWayComparator oneWayComparator = new OneWayComparator();
+    private final OneWayComparator oneWayComparator = new OneWayComparator();
 
-  public LineAnchorList() {
-    super(COMPARATOR);
-  }
+    public LineAnchorList() {
+        super(COMPARATOR);
+    }
 
-  public int findInsertionIndex(int lineNumber) {
-    oneWayComparator.lineNumber = lineNumber;
-    return findInsertionIndex(oneWayComparator);
-  }
+    public int findInsertionIndex(int lineNumber) {
+        oneWayComparator.lineNumber = lineNumber;
+        return findInsertionIndex(oneWayComparator);
+    }
 }

@@ -8,9 +8,8 @@ style prefix: exo-button-
 BUTTON x 20
 */
 
-.exo-button-table
-{
-	border-collapse: collapse;
+.exo-button-table {
+    border-collapse: collapse;
 }
 
 .exo-button-left-20,
@@ -21,9 +20,8 @@ BUTTON x 20
 .exo-button-middle-20-disabled,
 .exo-button-right-20,
 .exo-button-right-20-down,
-.exo-button-right-20-disabled
-{
-	height: 20px;
+.exo-button-right-20-disabled {
+    height: 20px;
 }
 
 .exo-button-left-20,
@@ -31,61 +29,50 @@ BUTTON x 20
 .exo-button-left-20-disabled,
 .exo-button-right-20,
 .exo-button-right-20-down,
-.exo-button-right-20-disabled
-{
-	width: 4px;
+.exo-button-right-20-disabled {
+    width: 4px;
 }
 
 .exo-button-middle-20,
 .exo-button-middle-20-down,
-.exo-button-middle-20-disabled
-{
-	text-align: center;
+.exo-button-middle-20-disabled {
+    text-align: center;
 }
 
-.exo-button-left-20
-{
-	background: url("images/button/20/button_left.png ") no-repeat;
+.exo-button-left-20 {
+    background: url("images/button/20/button_left.png ") no-repeat;
 }
 
-.exo-button-left-20-down
-{
-	background: url("images/button/20/button_Down_left.png ") no-repeat;
+.exo-button-left-20-down {
+    background: url("images/button/20/button_Down_left.png ") no-repeat;
 }
 
-.exo-button-left-20-disabled
-{
-	background: url("images/button/20/button_Disabled_left.png ") no-repeat;
+.exo-button-left-20-disabled {
+    background: url("images/button/20/button_Disabled_left.png ") no-repeat;
 }
 
-.exo-button-middle-20
-{
-	background: url("images/button/20/button_middle.png ") repeat-x;
+.exo-button-middle-20 {
+    background: url("images/button/20/button_middle.png ") repeat-x;
 }
 
-.exo-button-middle-20-down
-{
-	background: url("images/button/20/button_Down_middle.png ") repeat-x;
+.exo-button-middle-20-down {
+    background: url("images/button/20/button_Down_middle.png ") repeat-x;
 }
 
-.exo-button-middle-20-disabled
-{
-	background: url("images/button/20/button_middle.png ") repeat-x;
+.exo-button-middle-20-disabled {
+    background: url("images/button/20/button_middle.png ") repeat-x;
 }
 
-.exo-button-right-20
-{
-	background: url("images/button/20/button_right.png ") no-repeat;
+.exo-button-right-20 {
+    background: url("images/button/20/button_right.png ") no-repeat;
 }
 
-.exo-button-right-20-down
-{
-	background: url("images/button/20/button_Down_right.png ") no-repeat;
+.exo-button-right-20-down {
+    background: url("images/button/20/button_Down_right.png ") no-repeat;
 }
 
-.exo-button-right-20-disabled
-{
-	background: url("images/button/20/button_right.png ") no-repeat;
+.exo-button-right-20-disabled {
+    background: url("images/button/20/button_right.png ") no-repeat;
 }
 
 /*
@@ -100,9 +87,8 @@ BUTTON x 22
 .exo-button-middle-22-disabled,
 .exo-button-right-22,
 .exo-button-right-22-down,
-.exo-button-right-22-disabled
-{
-	height: 22px;
+.exo-button-right-22-disabled {
+    height: 22px;
 }
 
 .exo-button-left-22,
@@ -110,108 +96,91 @@ BUTTON x 22
 .exo-button-left-22-disabled,
 .exo-button-right-22,
 .exo-button-right-22-down,
-.exo-button-right-22-disabled
-{
-	width: 4px;
+.exo-button-right-22-disabled {
+    width: 4px;
 }
 
 .exo-button-middle-22,
 .exo-button-middle-22-down,
-.exo-button-middle-22-disabled
-{
-	text-align: center;
+.exo-button-middle-22-disabled {
+    text-align: center;
 }
 
-.exo-button-left-22
-{
-	background: url("images/button/22/button_left.png ") no-repeat;
+.exo-button-left-22 {
+    background: url("images/button/22/button_left.png ") no-repeat;
 }
 
-.exo-button-left-22-down
-{
-	background: url("images/button/22/button_Down_left.png ") no-repeat;
+.exo-button-left-22-down {
+    background: url("images/button/22/button_Down_left.png ") no-repeat;
 }
 
-.exo-button-left-22-disabled
-{
-	background: url("images/button/22/button_Disabled_left.png ") no-repeat;
+.exo-button-left-22-disabled {
+    background: url("images/button/22/button_Disabled_left.png ") no-repeat;
 }
 
-.exo-button-middle-22
-{
-	background: url("images/button/22/button_middle.png ") repeat-x;
+.exo-button-middle-22 {
+    background: url("images/button/22/button_middle.png ") repeat-x;
 }
 
-.exo-button-middle-22-down
-{
-	background: url("images/button/22/button_Down_middle.png ") repeat-x;
+.exo-button-middle-22-down {
+    background: url("images/button/22/button_Down_middle.png ") repeat-x;
 }
 
-.exo-button-middle-22-disabled
-{
-	background: url("images/button/22/button_middle.png ") repeat-x;
+.exo-button-middle-22-disabled {
+    background: url("images/button/22/button_middle.png ") repeat-x;
 }
 
-.exo-button-right-22
-{
-	background: url("images/button/22/button_right.png ") no-repeat;
+.exo-button-right-22 {
+    background: url("images/button/22/button_right.png ") no-repeat;
 }
 
-.exo-button-right-22-down
-{
-	background: url("images/button/22/button_Down_right.png ") no-repeat;
+.exo-button-right-22-down {
+    background: url("images/button/22/button_Down_right.png ") no-repeat;
 }
 
-.exo-button-right-22-disabled
-{
-	background: url("images/button/22/button_right.png ") no-repeat;
+.exo-button-right-22-disabled {
+    background: url("images/button/22/button_right.png ") no-repeat;
 }
 
 /*
 BUTTON TITLE
 */
 
-.exo-button-title-table
-{
-	border-collapse: collapse;
-	height: 100%;
-	margin: auto;
+.exo-button-title-table {
+    border-collapse: collapse;
+    height: 100%;
+    margin: auto;
 }
 
-.exo-button-title-icon
-{
-	width: 16px;
+.exo-button-title-icon {
+    width: 16px;
 }
 
 .exo-button-title-text,
 .exo-button-title-text-down,
-.exo-button-title-text-disabled
-{
-    font-family:Verdana,sans-serif;
-    font-size:11px;
-	color:#4C4C4C;
-    padding-left:2px;
-    padding-right:2px;
+.exo-button-title-text-disabled {
+    font-family: Verdana, sans-serif;
+    font-size: 11px;
+    color: #4C4C4C;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
-
-.exo-button-title-text
-{
-	color:#4C4C4C;
-	font-weight:bold;
+.exo-button-title-text {
+    color: #4C4C4C;
+    font-weight: bold;
 }
 
-.exo-button-title-text-down
-{
-	color:#4C4C4C;
-	font-weight:bold;
+.exo-button-title-text-down {
+    color: #4C4C4C;
+    font-weight: bold;
 }
 
-.exo-button-title-text-disabled
-{
-	color:#AAAAAA;
-	font-weight:normal;
+.exo-button-title-text-disabled {
+    color: #AAAAAA;
+    font-weight: normal;
 }
+
 /****************************************************************************************
 EXO - COMPONENTS - BUTTON
 ****************************************************************************************/
@@ -219,248 +188,233 @@ EXO - COMPONENTS - BUTTON
 .exoComponentButton,
 .exoComponentButtonOver,
 .exoComponentButtonDown,
-.exoComponentButtonDisabled
-{
-	height: 22px;
-	width: 150px;
+.exoComponentButtonDisabled {
+    height: 22px;
+    width: 150px;
 }
 
 .exoComponentButtonTable,
 .exoComponentButtonTableLeft,
 .exoComponentButtonTableStretch,
-.exoComponentButtonTableRight
-{
-	height: 22px;
+.exoComponentButtonTableRight {
+    height: 22px;
 }
 
-.exoComponentButtonTable
-{
-	border-collapse: collapse;
-	width: 100%;
-	margin: auto;
+.exoComponentButtonTable {
+    border-collapse: collapse;
+    width: 100%;
+    margin: auto;
 }
 
-.exoComponentButtonTableLeft
-{
-	background: url("images/component/button/button-left.png") no-repeat;
-	width: 1px;
+.exoComponentButtonTableLeft {
+    background: url("images/component/button/button-left.png") no-repeat;
+    width: 1px;
 }
 
-.exoComponentButtonTableStretch
-{
-	background: url("images/component/button/button-middle.png") repeat-x;
+.exoComponentButtonTableStretch {
+    background: url("images/component/button/button-middle.png") repeat-x;
 }
 
-.exoComponentButtonTableRight
-{
-	background: url("images/component/button/button-right.png") no-repeat;
-	width: 1px;
+.exoComponentButtonTableRight {
+    background: url("images/component/button/button-right.png") no-repeat;
+    width: 1px;
 }
 
-.exoComponentButtonTitleTable
-{
-	border-collapse: collapse;
-	height: 100%;
-	margin: auto;
+.exoComponentButtonTitleTable {
+    border-collapse: collapse;
+    height: 100%;
+    margin: auto;
 }
 
 .exoPopupButtonPanel,
 .exoPopupButtonPanelOver,
-.exoPopupButtonPanelDown
-{
-	height:24px;
-	width: 38px;
-	background: url(images/component/popup-button/popup-button.png);
-	overflow: hidden;
+.exoPopupButtonPanelDown {
+    height: 24px;
+    width: 38px;
+    background: url(images/component/popup-button/popup-button.png);
+    overflow: hidden;
 }
 
-.exoPopupButtonPanel
-{
-	background-position: 0px 0px;
+.exoPopupButtonPanel {
+    background-position: 0px 0px;
 }
 
-.exoPopupButtonPanelOver
-{
-	background-position: 0px -24px;
+.exoPopupButtonPanelOver {
+    background-position: 0px -24px;
 }
 
-.exoPopupButtonPanelDown
-{
-	background-position: 0px -48px;
+.exoPopupButtonPanelDown {
+    background-position: 0px -48px;
 }
 
-.exoPopupButtonIcon
-{
-	width:16px;
-	height:16px;
-	margin-left: 4px;
-	margin-top: 4px;
+.exoPopupButtonIcon {
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+    margin-top: 4px;
 }
-.exoToolbarPanel
-{
-	width:100%;
-	background: url(images/component/toolbar/toolbar_Background.png) repeat-x;
-	height:32px;
-	cursor: default;
+
+.exoToolbarPanel {
+    width: 100%;
+    background: url(images/component/toolbar/toolbar_Background.png) repeat-x;
+    height: 32px;
+    cursor: default;
 }
 
 .exoToolbarElementLeft,
-.exoToolbarElementRight
-{
-	height: 24px;
-	padding-top:4px;
+.exoToolbarElementRight {
+    height: 24px;
+    padding-top: 4px;
 }
 
-.exoToolbarElementLeft
-{
-	float: left;
-	padding-left: 4px;
+.exoToolbarElementLeft {
+    float: left;
+    padding-left: 4px;
 }
 
-.exoToolbarElementRight
-{
-	float: right;
-	padding-right: 4px;
+.exoToolbarElementRight {
+    float: right;
+    padding-right: 4px;
 }
 
-.exoToolbarDelimiter
-{
-	width: 1px;
-	height: 24px;
-	background: url(images/component/toolbar/delimiter.png);
+.exoToolbarDelimiter {
+    width: 1px;
+    height: 24px;
+    background: url(images/component/toolbar/delimiter.png);
 }
+
 @CHARSET "UTF-8";
 
 .center {
-	float: left;
-	height: 100%;
-	position: relative;
-	font-size: 12px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    float: left;
+    height: 100%;
+    position: relative;
+    font-size: 12px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
 }
 
-.centerImagePanel
-{
-	width:16px;
-	height:16px;
+.centerImagePanel {
+    width: 16px;
+    height: 16px;
 }
 
 .centerImage {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .left {
-	float: left;
-	width: 4px;
-	height: 100%;
+    float: left;
+    width: 4px;
+    height: 100%;
 }
 
 .right {
-	float: right;
-	width: 4px;
-	height: 100%;
+    float: right;
+    width: 4px;
+    height: 100%;
 }
 
 .title {
-	overflow: hidden;
-	white-space: nowrap;
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
-	height: 100%;
-	width: 100%;
-	vertical-align: middle;
-	position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    position: absolute;
 }
 
 .titleDisabled {
-	color: #AAAAAA;
+    color: #AAAAAA;
 }
 
 .centerSpan {
-	display: block;
-	vertical-align: middle;
-	margin-left: auto;
-	margin-right: auto;
-	top: 50%;
-	position: relative;
-	margin-top: -8px;
-}@CHARSET "UTF-8";
+    display: block;
+    vertical-align: middle;
+    margin-left: auto;
+    margin-right: auto;
+    top: 50%;
+    position: relative;
+    margin-top: -8px;
+}
+
+@CHARSET "UTF-8";
 
 .selectItem {
-	font-size: 11px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	display: table;
+    font-size: 11px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    display: table;
 }
 
 .selectItemDisabled {
-	color: #AAA;
+    color: #AAA;
 }
 
 .selectItemTitle {
-	white-space: nowrap;
-	visibility: visible;
+    white-space: nowrap;
+    visibility: visible;
 }
 
 .selectItemTitleHidden {
-	visibility: hidden;
-	display: none;
+    visibility: hidden;
+    display: none;
 }
 
 .labelOrientationTop {
-	margin-bottom: 2px;
-	float: left;
-	width: 100%;
+    margin-bottom: 2px;
+    float: left;
+    width: 100%;
 }
 
 .labelOrientationLeft {
-	margin-right: 5px;
-	float:left;
+    margin-right: 5px;
+    float: left;
 }
 
 .labelOrientationRight {
-	width: 100%;
-	margin-left: 5px;
+    width: 100%;
+    margin-left: 5px;
 }
 
 .labelAlignLeft {
-	text-align: left;
+    text-align: left;
 }
 
 .labelAlignRight {
-	text-align: right;
+    text-align: right;
 }
 
 .labelAlignCenter {
-	text-align: center;
+    text-align: center;
 }
 
 .editableSelect {
-  background: #FFF url(images/component/select/arrow-down.png) right center no-repeat;
-  padding-right: 13px;
+    background: #FFF url(images/component/select/arrow-down.png) right center no-repeat;
+    padding-right: 13px;
 }
+
 /****************************************************************************************
 SHADOW
 
 style prefix: exo-shadow-
 ****************************************************************************************/
 
-.exo-shadow-panel
-{
-	position: absolute;
-	z-index: 0;
+.exo-shadow-panel {
+    position: absolute;
+    z-index: 0;
 }
 
-.exo-shadow-table
-{
-	width: 100%;
-	height: 100%;
-	border-collapse: collapse;
+.exo-shadow-table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
 }
 
 .exo-shadow-tl,
@@ -468,9 +422,8 @@ style prefix: exo-shadow-
 .exo-shadow-tr,
 .exo-shadow-bl,
 .exo-shadow-b,
-.exo-shadow-br
-{
-	height: 10px;
+.exo-shadow-br {
+    height: 10px;
 }
 
 .exo-shadow-tl,
@@ -478,363 +431,318 @@ style prefix: exo-shadow-
 .exo-shadow-l,
 .exo-shadow-r,
 .exo-shadow-bl,
-.exo-shadow-br
-{
-	width: 10px;
+.exo-shadow-br {
+    width: 10px;
 }
 
-.exo-shadow-tl
-{
-	background: url("images/shadow/shadow_TL.png") no-repeat;
+.exo-shadow-tl {
+    background: url("images/shadow/shadow_TL.png") no-repeat;
 }
 
-.exo-shadow-t
-{
-	background: url("images/shadow/shadow_T.png") repeat-x;
+.exo-shadow-t {
+    background: url("images/shadow/shadow_T.png") repeat-x;
 }
 
-.exo-shadow-tr
-{
-	background: url("images/shadow/shadow_TR.png") no-repeat;
+.exo-shadow-tr {
+    background: url("images/shadow/shadow_TR.png") no-repeat;
 }
 
-.exo-shadow-l
-{
-	background: url("images/shadow/shadow_L.png") repeat-y;
+.exo-shadow-l {
+    background: url("images/shadow/shadow_L.png") repeat-y;
 }
 
-.exo-shadow-m
-{
+.exo-shadow-m {
 }
 
-.exo-shadow-r
-{
-	background: url("images/shadow/shadow_R.png") repeat-y;
+.exo-shadow-r {
+    background: url("images/shadow/shadow_R.png") repeat-y;
 }
 
-.exo-shadow-bl
-{
-	background: url("images/shadow/shadow_BL.png") no-repeat;
+.exo-shadow-bl {
+    background: url("images/shadow/shadow_BL.png") no-repeat;
 }
 
-.exo-shadow-b
-{
-	background: url("images/shadow/shadow_B.png") repeat-x;
+.exo-shadow-b {
+    background: url("images/shadow/shadow_B.png") repeat-x;
 }
 
-.exo-shadow-br
-{
-	background: url("images/shadow/shadow_BR.png") no-repeat;
-}
-.exo-blank
-{
-	width: 1px;
-	height: 1px;
+.exo-shadow-br {
+    background: url("images/shadow/shadow_BR.png") no-repeat;
 }
 
-.exo-lockLayer
-{
-	
- 	background: url("images/blank.png") repeat;
-						 	
- 	/*
- 	background: url("images/blank_alpha.png") repeat;
- 	*/
+.exo-blank {
+    width: 1px;
+    height: 1px;
 }
 
-.exo-icon-16
-{
-	width: 16px;
-	height: 16px;
+.exo-lockLayer {
+
+    background: url("images/blank.png") repeat;
+
+    /*
+    background: url("images/blank_alpha.png") repeat;
+    */
 }
 
-.exo-canvas
-{
-	position: absolute;	
+.exo-icon-16 {
+    width: 16px;
+    height: 16px;
 }
+
+.exo-canvas {
+    position: absolute;
+}
+
 @CHARSET "UTF-8";
 
 .textInput {
-	font-size: 12px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	display: table;
+    font-size: 12px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    display: table;
 }
 
 .textInputDisabled {
-	color: #AAA;
+    color: #AAA;
 }
 
 .textInputWithTopTitle {
-	clear: left;
+    clear: left;
 }
 
 .textInputTitle {
-	white-space: nowrap;
-	font-size: 11px;
-	visibility: visible;
+    white-space: nowrap;
+    font-size: 11px;
+    visibility: visible;
 }
 
 .textInputTitleHidden {
-	visibility: hidden;
-	display: none;
+    visibility: hidden;
+    display: none;
 }
 
 .textInputTitleTop {
-	margin-bottom: 4px;
-	float: left;
-}
-
-.textInputTitleLeft {
-	margin-right: 5px;
-	float: left;
-}
-
-.textInputTitleRight {
-	width: 100%;
-	margin-left: 5px;
-}
-
-.textAlignLeft {
-	text-align: left;
-}
-
-.textAlignRight {
-	text-align: right;
-}
-
-.textAlignCenter {
-	text-align: center;
-}/****************************************************************************************
-TREE
-****************************************************************************************/
-
-.exo-tree-panel
-{
-	width: 100%;
-}
-
-.exo-tree-row,
-
-.exo-tree-row-overed,
-.exo-tree-row-selected,
-.exo-tree-row-selected-overed,
-
-.exo-tree-control-image-panel,
-.exo-tree-control-icon-panel,
-.exo-tree-control-title-panel
-{
-	height: 20px;
-}
-
-.exo-tree-row-overed
-{
-	width: 100%;
-	background: url(images/tree/row_over.png) repeat-x;
-}
-
-.exo-tree-row-selected
-{
-	width: 100%;
-	background: url(images/tree/row-selected.png) repeat-x;
-}
-
-.exo-tree-row-selected-overed
-{
-	width: 100%;
-	background: url(images/tree/row-selected_over.png) repeat-x;
-}
-
-
-.exo-tree-row
-{
-	width: 100%;
-}
-
-.exo-tree-row-over
-{
-	background: url(images/tree/row_over.png) repeat-x;
-}
-
-.exo-tree-row-selected
-{
-	background: url(images/tree/row-selected.png) repeat-x;
-}
-
-.exo-tree-row-selected-over
-{
-	background: url(images/tree/row-selected_over.png) repeat-x;
-}
-
-.exo-tree-control-image-panel
-{
-	width: 20px;
-	float: left;
-	overflow: hidden;
-	cursor: default;
-}
-
-.exo-tree-control-image
-{
-	width: 16px;
-	height: 16px;
-	margin: 2px;
-	cursor: pointer;
-}
-
-.exo-tree-control-icon-panel
-{
-	width: 20px;
-	float: left;
-	cursor: default;
-}
-
-.exo-tree-control-icon-image
-{
-	width: 16px;
-	height: 16px;
-	margin: 2px;
-	float: left;
-	cursor: default;
-}
-
-.exo-tree-control-title-panel
-{
+    margin-bottom: 4px;
     float: left;
 }
 
-.exo-tree-control-title-table
-{
-	height: 100%;
-	border-collapse: collapse;
+.textInputTitleLeft {
+    margin-right: 5px;
+    float: left;
 }
 
-.exo-tree-control-title-table-tr
-{
-	vertical-align: middle;
+.textInputTitleRight {
+    width: 100%;
+    margin-left: 5px;
 }
 
-.exo-tree-control-title-table-td
-{
-	font-family:Verdana, Bitstream Vera Sans, sans-serif;
-    font-size:11px;
+.textAlignLeft {
+    text-align: left;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.textAlignCenter {
+    text-align: center;
+}
+
+/****************************************************************************************
+TREE
+****************************************************************************************/
+
+.exo-tree-panel {
+    width: 100%;
+}
+
+.exo-tree-row,
+.exo-tree-row-overed,
+.exo-tree-row-selected,
+.exo-tree-row-selected-overed,
+.exo-tree-control-image-panel,
+.exo-tree-control-icon-panel,
+.exo-tree-control-title-panel {
+    height: 20px;
+}
+
+.exo-tree-row-overed {
+    width: 100%;
+    background: url(images/tree/row_over.png) repeat-x;
+}
+
+.exo-tree-row-selected {
+    width: 100%;
+    background: url(images/tree/row-selected.png) repeat-x;
+}
+
+.exo-tree-row-selected-overed {
+    width: 100%;
+    background: url(images/tree/row-selected_over.png) repeat-x;
+}
+
+.exo-tree-row {
+    width: 100%;
+}
+
+.exo-tree-row-over {
+    background: url(images/tree/row_over.png) repeat-x;
+}
+
+.exo-tree-row-selected {
+    background: url(images/tree/row-selected.png) repeat-x;
+}
+
+.exo-tree-row-selected-over {
+    background: url(images/tree/row-selected_over.png) repeat-x;
+}
+
+.exo-tree-control-image-panel {
+    width: 20px;
+    float: left;
+    overflow: hidden;
+    cursor: default;
+}
+
+.exo-tree-control-image {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    cursor: pointer;
+}
+
+.exo-tree-control-icon-panel {
+    width: 20px;
+    float: left;
+    cursor: default;
+}
+
+.exo-tree-control-icon-image {
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    float: left;
+    cursor: default;
+}
+
+.exo-tree-control-title-panel {
+    float: left;
+}
+
+.exo-tree-control-title-table {
+    height: 100%;
+    border-collapse: collapse;
+}
+
+.exo-tree-control-title-table-tr {
+    vertical-align: middle;
+}
+
+.exo-tree-control-title-table-td {
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
     font-weight: normal;
     font-style: normal;
     font-size: 11px;
     cursor: default;
 }
+
 /****************************************************************************************
 WINDOW
 
 style prefix: exo-window-
 ****************************************************************************************/
 
-.exo-window-panel
-{
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	z-index: 1;
+.exo-window-panel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
 }
 
-.exo-window-table
-{
-	width: 100%;
-	height:100%;
-	border-collapse: collapse;
+.exo-window-table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
 }
 
 .exo-window-tl,
 .exo-window-t,
-.exo-window-tr
-{
-	height: 23px;
+.exo-window-tr {
+    height: 23px;
 }
 
 .exo-window-bl,
 .exo-window-b,
-.exo-window-br
-{
-	height: 6px;
+.exo-window-br {
+    height: 6px;
 }
 
 .exo-window-tr,
 .exo-window-tl,
 .exo-window-l,
-.exo-window-bl
-{
-	width: 6px;
+.exo-window-bl {
+    width: 6px;
 }
 
-.exo-window-tl
-{
-	background: url("images/window/window_TL.png") no-repeat;
+.exo-window-tl {
+    background: url("images/window/window_TL.png") no-repeat;
 }
 
-.exo-window-t
-{
-	background: url("images/window/window_T.png") repeat-x;
+.exo-window-t {
+    background: url("images/window/window_T.png") repeat-x;
 }
 
-.exo-window-tr
-{
-	background: url("images/window/window_TR.png") no-repeat;
+.exo-window-tr {
+    background: url("images/window/window_TR.png") no-repeat;
 }
 
-.exo-window-l
-{
-	background: url("images/window/window_L.png") repeat-y;
+.exo-window-l {
+    background: url("images/window/window_L.png") repeat-y;
 }
 
-.exo-window-r
-{
-	background: url("images/window/window_R.png") repeat-y;
+.exo-window-r {
+    background: url("images/window/window_R.png") repeat-y;
 }
 
-.exo-window-bl
-{
-	background: url("images/window/window_BL.png") no-repeat;
+.exo-window-bl {
+    background: url("images/window/window_BL.png") no-repeat;
 }
 
-.exo-window-b
-{
-	background: url("images/window/window_B.png") repeat-x;
+.exo-window-b {
+    background: url("images/window/window_B.png") repeat-x;
 }
 
-.exo-window-br
-{
-	background: url("images/window/window_BR.png") no-repeat;
+.exo-window-br {
+    background: url("images/window/window_BR.png") no-repeat;
 }
 
-.exo-window-m
-{
-	background: #FFFFFF;
+.exo-window-m {
+    background: #FFFFFF;
 }
 
 /****************************************************************************************
 WINDOW HEADER
 ****************************************************************************************/
 
-.exo-window-header-table
-{
-	width: 100%;
-	height:17px;
-	margin-top: 1px;
-	border-collapse: collapse;
+.exo-window-header-table {
+    width: 100%;
+    height: 17px;
+    margin-top: 1px;
+    border-collapse: collapse;
 }
 
 /****************************************************************************************
 WINDOW TITLE
 ****************************************************************************************/
 
-.exo-window-header-title
-{
-    font-family:Verdana,sans-serif;
-    font-size:11px;
-    font-weight:bold;
-	color:#4C4C4C;
-    padding-left:2px;
-    padding-right:2px;
-    padding-bottom:2px;
+.exo-window-header-title {
+    font-family: Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #4C4C4C;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
 }
 
 /****************************************************************************************
@@ -842,13 +750,11 @@ WINDOW ICON, BUTTONS
 ****************************************************************************************/
 
 .exo-window-icon,
-.exo-window-control-button
-{
-	width: 16px;
+.exo-window-control-button {
+    width: 16px;
 }
 
-.exo-window-control-image
-{
-	width: 16px;
-	height: 16px;
+.exo-window-control-image {
+    width: 16px;
+    height: 16px;
 }

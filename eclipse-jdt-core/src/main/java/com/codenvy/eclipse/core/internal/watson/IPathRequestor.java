@@ -16,9 +16,8 @@ import com.codenvy.eclipse.core.runtime.IPath;
  * Callback interface so visitors can request the path of the object they
  * are visiting. This avoids creating paths when they are not needed.
  */
-public interface IPathRequestor
-{
-   public IPath requestPath();
+public interface IPathRequestor {
+    public IPath requestPath();
 
-   public String requestName();
+    public String requestName();
 }

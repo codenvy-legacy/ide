@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link LoginEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  May 18, 2012 12:16:24 PM anya $
- *
  */
-public interface LoginHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to log in App Engine account.
-    * 
-    * @param event
-    */
-   void onLogin(LoginEvent event);
+public interface LoginHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to log in App Engine account.
+     *
+     * @param event
+     */
+    void onLogin(LoginEvent event);
 }

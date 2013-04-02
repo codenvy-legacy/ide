@@ -19,58 +19,51 @@
 
 package org.exoplatform.ide.editor.client.api.event;
 
-import org.exoplatform.ide.editor.client.api.Editor;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
  * Fires just after opened in editor content had been changed. Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorContentChangedEvent extends GwtEvent<EditorContentChangedHandler>
-{
+public class EditorContentChangedEvent extends GwtEvent<EditorContentChangedHandler> {
 
-   public static final GwtEvent.Type<EditorContentChangedHandler> TYPE =
-      new GwtEvent.Type<EditorContentChangedHandler>();
+    public static final GwtEvent.Type<EditorContentChangedHandler> TYPE =
+            new GwtEvent.Type<EditorContentChangedHandler>();
 
-   /**
-    * {@link org.exoplatform.ide.editor.client.api.Editor} instance.
-    */
-   private Editor editor;
+    /** {@link org.exoplatform.ide.editor.client.api.Editor} instance. */
+    private Editor editor;
 
-   /**
-    * Creates new instance of {@link EditorContentChangedEvent}.
-    * 
-    * @param editor
-    */
-   public EditorContentChangedEvent(Editor editor)
-   {
-      this.editor = editor;
-   }
+    /**
+     * Creates new instance of {@link EditorContentChangedEvent}.
+     *
+     * @param editor
+     */
+    public EditorContentChangedEvent(Editor editor) {
+        this.editor = editor;
+    }
 
-   /**
-    * Returns {@link Editor} instance.
-    * 
-    * @return
-    */
-   public Editor getEditor()
-   {
-      return editor;
-   }
+    /**
+     * Returns {@link Editor} instance.
+     *
+     * @return
+     */
+    public Editor getEditor() {
+        return editor;
+    }
 
-   @Override
-   protected void dispatch(EditorContentChangedHandler handler)
-   {
-      handler.onEditorContentChanged(this);
-   }
+    @Override
+    protected void dispatch(EditorContentChangedHandler handler) {
+        handler.onEditorContentChanged(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorContentChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorContentChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

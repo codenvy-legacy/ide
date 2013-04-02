@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to switch Heroku account. Implement {@link SwitchAccountHandler} to handle the event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SwitchAccountEvent.java Jun 17, 2011 5:04:47 PM vereshchaka $
- * 
  */
-public class SwitchAccountEvent extends GwtEvent<SwitchAccountHandler>
-{
+public class SwitchAccountEvent extends GwtEvent<SwitchAccountHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<SwitchAccountHandler> TYPE = new GwtEvent.Type<SwitchAccountHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<SwitchAccountHandler> TYPE = new GwtEvent.Type<SwitchAccountHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SwitchAccountHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SwitchAccountHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(SwitchAccountHandler handler)
-   {
-      handler.onSwitchAccount(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(SwitchAccountHandler handler) {
+        handler.onSwitchAccount(this);
+    }
 
 }

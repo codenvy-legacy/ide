@@ -22,24 +22,19 @@ package org.exoplatform.gwtframework.ui.client.tab;
 
 /**
  * This interface designates that its implementor can scroll its content.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Scrollable
-{
-   
-   /**
-    * Scrolls to the left.
-    */
-   void scrollLeft();
-   
-   /**
-    * Scrolls to the right.
-    */
-   void scrollRight();
+public interface Scrollable {
+
+    /** Scrolls to the left. */
+    void scrollLeft();
+
+    /** Scrolls to the right. */
+    void scrollRight();
 
 }

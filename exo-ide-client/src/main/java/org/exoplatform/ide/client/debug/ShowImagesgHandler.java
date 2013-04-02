@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ShowImagesgHandler extends EventHandler
-{
+public interface ShowImagesgHandler extends EventHandler {
 
-   void onShowImages(ShowImagesEvent event);
+    void onShowImages(ShowImagesEvent event);
 
 }

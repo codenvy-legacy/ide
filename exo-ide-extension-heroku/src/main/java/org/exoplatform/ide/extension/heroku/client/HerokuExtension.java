@@ -53,71 +53,61 @@ import java.util.List;
 
 /**
  * Heroku extension to be added to IDE Application.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 25, 2011 11:38:06 AM anya $
- * 
  */
-public class HerokuExtension extends Extension implements InitializeServicesHandler
-{
+public class HerokuExtension extends Extension implements InitializeServicesHandler {
 
-   /**
-    * The generator for an {@link AutoBean}
-    */
-   public static final HerokuAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(HerokuAutoBeanFactory.class);
+    /** The generator for an {@link AutoBean} */
+    public static final HerokuAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(HerokuAutoBeanFactory.class);
 
-   public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
+    public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
 
-   private static final String ID = "Heroku";
+    private static final String ID = "Heroku";
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new HerokuClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new HerokuClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().registerPaaS(
-         new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku48()), new Image(
-            HerokuClientBundle.INSTANCE.heroku48Disabled()), Arrays.asList(ProjectType.RUBY_ON_RAILS),
-            new DeployApplicationPresenter()));
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.getInstance().registerPaaS(
+                new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku48()), new Image(
+                        HerokuClientBundle.INSTANCE.heroku48Disabled()), Arrays.asList(ProjectType.RUBY_ON_RAILS),
+                         new DeployApplicationPresenter()));
 
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      // Add controls
-      IDE.getInstance().addControl(new HerokuControlsGroup());
-      IDE.getInstance().addControl(new CreateApplicationControl());
+        // Add controls
+        IDE.getInstance().addControl(new HerokuControlsGroup());
+        IDE.getInstance().addControl(new CreateApplicationControl());
 
-      // Add presenters
-      new CreateApplicationPresenter();
-      new ManageApplicationsPresenter();
-      new DeleteApplicationCommandHandler();
-      new ApplicationInfoPresenter();
-      new RenameApplicationPresenter();
-      new LoginPresenter();
-      new KeysPresenter();
-      new RakeCommandPresenter();
-      new ChangeStackPresenter();
-      new LogsPresenter();
+        // Add presenters
+        new CreateApplicationPresenter();
+        new ManageApplicationsPresenter();
+        new DeleteApplicationCommandHandler();
+        new ApplicationInfoPresenter();
+        new RenameApplicationPresenter();
+        new LoginPresenter();
+        new KeysPresenter();
+        new RakeCommandPresenter();
+        new ChangeStackPresenter();
+        new LogsPresenter();
 
-      new HerokuProjectPresenter();
-      new ImportApplicationPresenter();
+        new HerokuProjectPresenter();
+        new ImportApplicationPresenter();
 
-      IDE.getInstance().addControl(new AddKeyControl());
-      IDE.getInstance().addControl(new SwitchAccountControl());
-   }
+        IDE.getInstance().addControl(new AddKeyControl());
+        IDE.getInstance().addControl(new SwitchAccountControl());
+    }
 
-   public static boolean canBeDeployedToHeroku(ProjectModel project)
-   {
-      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
-      return (targets != null && targets.contains(ID));
-   }
+    public static boolean canBeDeployedToHeroku(ProjectModel project) {
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+        return (targets != null && targets.contains(ID));
+    }
 }

@@ -28,26 +28,22 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class ManyBuildTasksPolicy implements RejectedExecutionHandler
-{
-   private final RejectedExecutionHandler delegate;
+public final class ManyBuildTasksPolicy implements RejectedExecutionHandler {
+    private final RejectedExecutionHandler delegate;
 
-   public ManyBuildTasksPolicy(RejectedExecutionHandler delegate)
-   {
-      this.delegate = delegate;
-   }
+    public ManyBuildTasksPolicy(RejectedExecutionHandler delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * @see java.util.concurrent.RejectedExecutionHandler#rejectedExecution(Runnable,
-    *      java.util.concurrent.ThreadPoolExecutor)
-    */
-   @Override
-   public void rejectedExecution(Runnable r, ThreadPoolExecutor executor)
-   {
-      if (executor.getPoolSize() >= executor.getCorePoolSize())
-      {
-         throw new RejectedExecutionException("Too many builds in progress ");
-      }
-      delegate.rejectedExecution(r, executor);
-   }
+    /**
+     * @see java.util.concurrent.RejectedExecutionHandler#rejectedExecution(Runnable,
+     *      java.util.concurrent.ThreadPoolExecutor)
+     */
+    @Override
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+        if (executor.getPoolSize() >= executor.getCorePoolSize()) {
+            throw new RejectedExecutionException("Too many builds in progress ");
+        }
+        delegate.rejectedExecution(r, executor);
+    }
 }

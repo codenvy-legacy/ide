@@ -32,30 +32,22 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class GadgetExtension extends Extension implements InitializeServicesHandler
-{
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   public static final GadgetAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GadgetAutoBeanFactory.class);
+public class GadgetExtension extends Extension implements InitializeServicesHandler {
+    /** The generator of an {@link AutoBean}. */
+    public static final GadgetAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GadgetAutoBeanFactory.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager)
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().addControl(new ShowGadgetPreviewControl(), Docking.TOOLBAR_RIGHT);
-      new GadgetPluginEventHandler();
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize(com.google.gwt.event.shared.HandlerManager) */
+    @Override
+    public void initialize() {
+        IDE.getInstance().addControl(new ShowGadgetPreviewControl(), Docking.TOOLBAR_RIGHT);
+        new GadgetPluginEventHandler();
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+    }
 
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new GadgetService(event.getLoader(), event.getApplicationConfiguration().getContext(), event
-         .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
-   }
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new GadgetService(event.getLoader(), event.getApplicationConfiguration().getContext(), event
+                .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
+    }
 
 }

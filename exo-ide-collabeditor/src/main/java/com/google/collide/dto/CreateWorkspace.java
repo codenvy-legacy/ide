@@ -17,26 +17,24 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request to create a project.
- *
- */
+/** Request to create a project. */
 @RoutingType(type = RoutingTypes.CREATEWORKSPACE)
 public interface CreateWorkspace extends ClientToServerDto {
 
-  // TODO: we need a way to express derivation from a golden branch,
-  // or golden revision, not just tip-of-trunk
-  /**
-   * Returns either a workspace id in string form, or {@code null} to derive
-   * from the project's trunk.
-   *
-   * @return workspace id, or {@code null}.
-   */
-  String getBaseWorkspaceId();
+    // TODO: we need a way to express derivation from a golden branch,
+    // or golden revision, not just tip-of-trunk
 
-  String getProjectId();
+    /**
+     * Returns either a workspace id in string form, or {@code null} to derive
+     * from the project's trunk.
+     *
+     * @return workspace id, or {@code null}.
+     */
+    String getBaseWorkspaceId();
 
-  String getName();
-  
-  String getDescription();
+    String getProjectId();
+
+    String getName();
+
+    String getDescription();
 }

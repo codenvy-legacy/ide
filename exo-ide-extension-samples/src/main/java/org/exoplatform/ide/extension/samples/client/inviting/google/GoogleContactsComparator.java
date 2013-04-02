@@ -25,31 +25,23 @@ import java.util.List;
 
 /**
  * Comparator for ordering Google contacts list alphabetically, by first e-mail.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContactsComparator.java Oct 31, 2012 12:47:56 PM azatsarynnyy $
- *
  */
-final class GoogleContactsComparator implements Comparator<GoogleContact>
-{
-   /**
-    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-    */
-   @Override
-   public int compare(GoogleContact c1, GoogleContact c2)
-   {
-      List<String> emailAddresses1 = c1.getEmailAddresses();
-      List<String> emailAddresses2 = c2.getEmailAddresses();
+final class GoogleContactsComparator implements Comparator<GoogleContact> {
+    /** @see java.util.Comparator#compare(java.lang.Object, java.lang.Object) */
+    @Override
+    public int compare(GoogleContact c1, GoogleContact c2) {
+        List<String> emailAddresses1 = c1.getEmailAddresses();
+        List<String> emailAddresses2 = c2.getEmailAddresses();
 
-      if (emailAddresses1 == null || emailAddresses1.isEmpty())
-      {
-         return -1;
-      }
-      else if (emailAddresses2 == null || emailAddresses2.isEmpty())
-      {
-         return 1;
-      }
+        if (emailAddresses1 == null || emailAddresses1.isEmpty()) {
+            return -1;
+        } else if (emailAddresses2 == null || emailAddresses2.isEmpty()) {
+            return 1;
+        }
 
-      return emailAddresses1.get(0).compareTo(emailAddresses2.get(0));
-   }
+        return emailAddresses1.get(0).compareTo(emailAddresses2.get(0));
+    }
 }

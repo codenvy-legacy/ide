@@ -28,7 +28,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeExcepti
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface RequestValidator
-{
-   void validate(javax.servlet.http.HttpServletRequest request) throws VirtualFileSystemRuntimeException;
+public interface RequestValidator {
+    void validate(javax.servlet.http.HttpServletRequest request) throws VirtualFileSystemRuntimeException;
 }

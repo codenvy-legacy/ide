@@ -15,29 +15,28 @@
 package com.google.collide.client.editor.renderer;
 
 import com.codenvy.ide.client.util.Executor;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * An executor that will defer the commands given to {@link #execute(Runnable)}
  * until render-time.
- * 
  */
 public class RenderTimeExecutor implements Executor {
 
-  private final JsonArray<Runnable> commands = JsonCollections.createArray();
-  
-  @Override
-  public void execute(Runnable command) {
-    commands.add(command);
-  }
-  
-  void executeQueuedCommands() {
-    for (int i = 0, n = commands.size(); i < n; i++) {
-      commands.get(i).run();
+    private final JsonArray<Runnable> commands = JsonCollections.createArray();
+
+    @Override
+    public void execute(Runnable command) {
+        commands.add(command);
     }
-    
-    commands.clear();
-  }
+
+    void executeQueuedCommands() {
+        for (int i = 0, n = commands.size(); i < n; i++) {
+            commands.get(i).run();
+        }
+
+        commands.clear();
+    }
 }

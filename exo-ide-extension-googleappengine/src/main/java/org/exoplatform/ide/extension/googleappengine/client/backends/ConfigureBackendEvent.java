@@ -22,48 +22,34 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to configure backend.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 5:24:39 PM anya $
- * 
  */
-public class ConfigureBackendEvent extends GwtEvent<ConfigureBackendHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<ConfigureBackendHandler> TYPE = new GwtEvent.Type<ConfigureBackendHandler>();
+public class ConfigureBackendEvent extends GwtEvent<ConfigureBackendHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<ConfigureBackendHandler> TYPE = new GwtEvent.Type<ConfigureBackendHandler>();
 
-   private String backendName;
+    private String backendName;
 
-   public ConfigureBackendEvent(String backendName)
-   {
-      this.backendName = backendName;
-   }
+    public ConfigureBackendEvent(String backendName) {
+        this.backendName = backendName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ConfigureBackendHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ConfigureBackendHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ConfigureBackendHandler handler)
-   {
-      handler.onConfigureBackend(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ConfigureBackendHandler handler) {
+        handler.onConfigureBackend(this);
+    }
 
-   /**
-    * @return the backendName
-    */
-   public String getBackendName()
-   {
-      return backendName;
-   }
+    /** @return the backendName */
+    public String getBackendName() {
+        return backendName;
+    }
 }

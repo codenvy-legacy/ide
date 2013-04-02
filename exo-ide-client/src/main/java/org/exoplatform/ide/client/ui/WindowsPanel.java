@@ -43,140 +43,116 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 11, 2011 evgen $
- * 
  */
-public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingViewHandler
-{
+public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingViewHandler {
 
-   private List<ClosingViewHandler> closingViewHandlers = new ArrayList<ClosingViewHandler>();
+    private List<ClosingViewHandler> closingViewHandlers = new ArrayList<ClosingViewHandler>();
 
-   private boolean hasModalWindows = true;
+    private boolean hasModalWindows = true;
 
-   private Map<String, Widget> lockPanels = new HashMap<String, Widget>();
+    private Map<String, Widget> lockPanels = new HashMap<String, Widget>();
 
-   protected Map<String, Window> windows = new HashMap<String, Window>();
+    protected Map<String, Window> windows = new HashMap<String, Window>();
 
-   protected Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
+    protected Map<String, WindowController> windowControllers = new HashMap<String, WindowController>();
 
-   protected class WindowController implements CloseClickHandler
-   {
+    protected class WindowController implements CloseClickHandler {
 
-      private View view;
+        private View view;
 
-      public WindowController(View view, Window window)
-      {
-         this.view = view;
-         window.addCloseClickHandler(this);
-      }
+        public WindowController(View view, Window window) {
+            this.view = view;
+            window.addCloseClickHandler(this);
+        }
 
-      @Override
-      public void onCloseClick()
-      {
-         ClosingViewEvent event = new ClosingViewEvent(view);
-         for (ClosingViewHandler closingViewHandler : closingViewHandlers)
-         {
-            closingViewHandler.onClosingView(event);
-         }
-      }
+        @Override
+        public void onCloseClick() {
+            ClosingViewEvent event = new ClosingViewEvent(view);
+            for (ClosingViewHandler closingViewHandler : closingViewHandlers) {
+                closingViewHandler.onClosingView(event);
+            }
+        }
 
-   }
+    }
 
-   /**
-    * 
-    */
-   public WindowsPanel()
-   {
-   }
+    /**
+     *
+     */
+    public WindowsPanel() {
+    }
 
-   /**
-    * @param hasModalWindows
-    */
-   public WindowsPanel(boolean hasModalWindows)
-   {
-      super();
-      this.hasModalWindows = hasModalWindows;
-   }
+    /** @param hasModalWindows */
+    public WindowsPanel(boolean hasModalWindows) {
+        super();
+        this.hasModalWindows = hasModalWindows;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler#addClosingViewHandler(org.exoplatform.ide.client.framework.ui.api.event.ClosingViewHandler)
-    */
-   @Override
-   public HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler)
-   {
-      closingViewHandlers.add(closingViewHandler);
-      return new ListBasedHandlerRegistration(closingViewHandlers, closingViewHandler);
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler#addClosingViewHandler(org.exoplatform.ide.client
+     * .framework.ui.api.event.ClosingViewHandler) */
+    @Override
+    public HandlerRegistration addClosingViewHandler(ClosingViewHandler closingViewHandler) {
+        closingViewHandlers.add(closingViewHandler);
+        return new ListBasedHandlerRegistration(closingViewHandlers, closingViewHandler);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#addView(org.exoplatform.ide.client.framework.ui.api.View)
-    */
-   @Override
-   public void addView(View view)
-   {
-      if (hasModalWindows)
-      {
-         AbsolutePanel lockPanel = new AbsolutePanel();
-         lockPanel.getElement().getStyle().setBackgroundColor("#FFFFFF");
-         lockPanel.getElement().getStyle().setOpacity(0.5);
-         add(lockPanel);
-         lockPanels.put(view.getId(), lockPanel);
-      }
+    /** @see org.exoplatform.ide.client.framework.ui.api.HasViews#addView(org.exoplatform.ide.client.framework.ui.api.View) */
+    @Override
+    public void addView(View view) {
+        if (hasModalWindows) {
+            AbsolutePanel lockPanel = new AbsolutePanel();
+            lockPanel.getElement().getStyle().setBackgroundColor("#FFFFFF");
+            lockPanel.getElement().getStyle().setOpacity(0.5);
+            add(lockPanel);
+            lockPanels.put(view.getId(), lockPanel);
+        }
 
-      if (windows.size() == 0)
-      {
-         RootLayoutPanel.get().add(this);
-         RootLayoutPanel.get().setWidgetLeftWidth(this, 0, Unit.PX, 100, Unit.PCT);
-      }
+        if (windows.size() == 0) {
+            RootLayoutPanel.get().add(this);
+            RootLayoutPanel.get().setWidgetLeftWidth(this, 0, Unit.PX, 100, Unit.PCT);
+        }
 
-      Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
+        Window window = view.canResize() ? new ResizeableWindow(view.getTitle()) : new Window(view.getTitle());
 
-      window.getElement().setAttribute("id", view.getId() + "-window");
-      // window.getElement().getStyle().setProperty("zIndex", "auto");
-      window.setIcon(view.getIcon());
+        window.getElement().setAttribute("id", view.getId() + "-window");
+        // window.getElement().getStyle().setProperty("zIndex", "auto");
+        window.setIcon(view.getIcon());
 
-      window.setWidth(view.getDefaultWidth());
-      window.setHeight(view.getDefaultHeight());
-      window.setCanMaximize(view.canResize());
-      window.showCentered();
+        window.setWidth(view.getDefaultWidth());
+        window.setHeight(view.getDefaultHeight());
+        window.setCanMaximize(view.canResize());
+        window.showCentered();
 
-      windows.put(view.getId(), window);
-      window.add(view.asWidget());
+        windows.put(view.getId(), window);
+        window.add(view.asWidget());
 
-      WindowController controller = new WindowController(view, window);
-      windowControllers.put(view.getId(), controller);
-   }
+        WindowController controller = new WindowController(view, window);
+        windowControllers.put(view.getId(), controller);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.HasViews#removeView(org.exoplatform.ide.client.framework.ui.api.View)
-    */
-   @Override
-   public boolean removeView(View view)
-   {
-      if (hasModalWindows)
-      {
-         Widget lockPanel = lockPanels.get(view.getId());
-         if (lockPanel == null)
-         {
+    /** @see org.exoplatform.ide.client.framework.ui.api.HasViews#removeView(org.exoplatform.ide.client.framework.ui.api.View) */
+    @Override
+    public boolean removeView(View view) {
+        if (hasModalWindows) {
+            Widget lockPanel = lockPanels.get(view.getId());
+            if (lockPanel == null) {
+                return false;
+            }
+            lockPanel.removeFromParent();
+            lockPanels.remove(view.getId());
+        }
+
+        Window window = windows.get(view.getId());
+        if (window == null) {
             return false;
-         }
-         lockPanel.removeFromParent();
-         lockPanels.remove(view.getId());
-      }
+        }
 
-      Window window = windows.get(view.getId());
-      if (window == null)
-      {
-         return false;
-      }
-
-      windows.remove(view.getId());
-      window.destroy();
-      windowControllers.remove(view.getId());
-      if (windows.size() == 0)
-      {
-         RootLayoutPanel.get().remove(this);
-      }
-      return true;
-   }
+        windows.remove(view.getId());
+        window.destroy();
+        windowControllers.remove(view.getId());
+        if (windows.size() == 0) {
+            RootLayoutPanel.get().remove(this);
+        }
+        return true;
+    }
 
 }

@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to select all text in editor.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 3, 2012 3:34:28 PM anya $
- * 
  */
-public class EditorSelectAllEvent extends GwtEvent<EditorSelectAllHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<EditorSelectAllHandler> TYPE = new GwtEvent.Type<EditorSelectAllHandler>();
+public class EditorSelectAllEvent extends GwtEvent<EditorSelectAllHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<EditorSelectAllHandler> TYPE = new GwtEvent.Type<EditorSelectAllHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorSelectAllHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorSelectAllHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorSelectAllHandler handler)
-   {
-      handler.onEditorSelectAll(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorSelectAllHandler handler) {
+        handler.onEditorSelectAll(this);
+    }
 
 }

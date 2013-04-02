@@ -4,54 +4,50 @@ MENU BAR
 style prefix: exo-menuBar-
 ***********************************************************************************************/
 
-.exo-menuBarTable
-{
+.exo-menuBarTable {
 }
 
 .exo-menuBar,
 .exo-menuBarItem,
 .exo-menuBarItemOver,
 .exo-menuBarItemSelected,
-.exo-menuBarItemDisabled
-{
-	height: 20px;
+.exo-menuBarItemDisabled {
+    height: 20px;
 }
 
 .exo-menuBarItem,
 .exo-menuBarItemOver,
 .exo-menuBarItemSelected,
-.exo-menuBarItemDisabled
-{
-	padding-left: 8px;
-	padding-right: 8px;
-	cursor: default;	
-	
-	font-family:Verdana, Bitstream Vera Sans, sans-serif;
-    font-size:11px;
+.exo-menuBarItemDisabled {
+    padding-left: 8px;
+    padding-right: 8px;
+    cursor: default;
+
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
     font-weight: normal;
     font-style: normal;
 }
 
-.exo-menuBar
-{
-	width:100%;
-	background: #FFFFFF url(menu-background.png) repeat-x;
+.exo-menuBar {
+    width: 100%;
+    background: #FFFFFF url(menu-background.png) repeat-x;
 }
 
 .exo-menuBarItem {
-	color:#333333;
+    color: #333333;
 }
 
 .exo-menuBarItemOver {
-	color:#333333;
-	background-image: url("menu-item-over.png");
+    color: #333333;
+    background-image: url("menu-item-over.png");
 }
 
 .exo-menuBarItemSelected {
-	color:#333333;
-	background-image: url("menu-item-selected.png");
+    color: #333333;
+    background-image: url("menu-item-selected.png");
 }
 
 .exo-menuBarItemDisabled {
-	color:#AAAAAA;
+    color: #AAAAAA;
 }

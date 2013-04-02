@@ -24,31 +24,26 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class DebuggerActivityEvent extends GwtEvent<DebuggerActivityHandler>
-{
-   public static final GwtEvent.Type<DebuggerActivityHandler> TYPE = new GwtEvent.Type<DebuggerActivityHandler>();
+public class DebuggerActivityEvent extends GwtEvent<DebuggerActivityHandler> {
+    public static final GwtEvent.Type<DebuggerActivityHandler> TYPE = new GwtEvent.Type<DebuggerActivityHandler>();
 
-   boolean state;
+    boolean state;
 
-   public DebuggerActivityEvent(boolean state)
-   {
-      this.state = state;
-   }
+    public DebuggerActivityEvent(boolean state) {
+        this.state = state;
+    }
 
-   @Override
-   public Type<DebuggerActivityHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<DebuggerActivityHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(DebuggerActivityHandler handler)
-   {
-      handler.onDebuggerActivityChanged(this);
-   }
+    @Override
+    protected void dispatch(DebuggerActivityHandler handler) {
+        handler.onDebuggerActivityChanged(this);
+    }
 
-   public boolean getState()
-   {
-      return state;
-   }
+    public boolean getState() {
+        return state;
+    }
 }

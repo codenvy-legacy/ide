@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to remove block comment.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 11:25:39 AM anya $
- * 
  */
-public class EditorRemoveBlockCommentEvent extends GwtEvent<EditorRemoveBlockCommentHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<EditorRemoveBlockCommentHandler> TYPE =
-      new GwtEvent.Type<EditorRemoveBlockCommentHandler>();
+public class EditorRemoveBlockCommentEvent extends GwtEvent<EditorRemoveBlockCommentHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<EditorRemoveBlockCommentHandler> TYPE =
+            new GwtEvent.Type<EditorRemoveBlockCommentHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorRemoveBlockCommentHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorRemoveBlockCommentHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorRemoveBlockCommentHandler handler)
-   {
-      handler.onEditorRemoveBlockComment(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorRemoveBlockCommentHandler handler) {
+        handler.onEditorRemoveBlockComment(this);
+    }
 
 }

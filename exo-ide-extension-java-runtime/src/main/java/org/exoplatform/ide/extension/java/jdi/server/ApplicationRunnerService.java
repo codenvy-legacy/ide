@@ -20,19 +20,13 @@ package org.exoplatform.ide.extension.java.jdi.server;
 
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
-import java.net.URL;
-import java.util.Map;
-
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.net.URL;
+import java.util.Map;
 
 /**
  * Provide access to {@link ApplicationRunner} through HTTP.
@@ -41,69 +35,62 @@ import javax.ws.rs.core.UriInfo;
  * @version $Id: $
  */
 @Path("ide/java/runner")
-public class ApplicationRunnerService
-{
-   @Inject
-   private ApplicationRunner runner;
+public class ApplicationRunnerService {
+    @Inject
+    private ApplicationRunner runner;
 
-   @Path("run")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public ApplicationInstance runApplication(@QueryParam("war") URL war,
-                                             @Context UriInfo uriInfo,
-                                             Map<String, String> params)
-      throws ApplicationRunnerException
-   {
-      ApplicationInstance app = runner.runApplication(war, params);
-      app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
-         .queryParam("name", app.getName()).build().toString());
-      return app;
-   }
+    @Path("run")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ApplicationInstance runApplication(@QueryParam("war") URL war,
+                                              @Context UriInfo uriInfo,
+                                              Map<String, String> params)
+            throws ApplicationRunnerException {
+        ApplicationInstance app = runner.runApplication(war, params);
+        app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
+                              .queryParam("name", app.getName()).build().toString());
+        return app;
+    }
 
-   @Path("debug")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public ApplicationInstance debugApplication(@QueryParam("war") URL war,
-                                                    @QueryParam("suspend") boolean suspend,
-                                                    @Context UriInfo uriInfo,
-                                                    Map<String, String> params) throws ApplicationRunnerException
-   {
-      ApplicationInstance app = runner.debugApplication(war, suspend, params);
-      app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
-         .queryParam("name", app.getName()).build().toString());
-      return app;
-   }
+    @Path("debug")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ApplicationInstance debugApplication(@QueryParam("war") URL war,
+                                                @QueryParam("suspend") boolean suspend,
+                                                @Context UriInfo uriInfo,
+                                                Map<String, String> params) throws ApplicationRunnerException {
+        ApplicationInstance app = runner.debugApplication(war, suspend, params);
+        app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
+                              .queryParam("name", app.getName()).build().toString());
+        return app;
+    }
 
-   @GET
-   @Path("logs")
-   @Produces(MediaType.TEXT_PLAIN)
-   public String getLogs(@QueryParam("name") String name) throws ApplicationRunnerException
-   {
-      return runner.getLogs(name);
-   }
+    @GET
+    @Path("logs")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getLogs(@QueryParam("name") String name) throws ApplicationRunnerException {
+        return runner.getLogs(name);
+    }
 
-   @GET
-   @Path("stop")
-   public void stopApplication(@QueryParam("name") String name) throws ApplicationRunnerException
-   {
-      runner.stopApplication(name);
-   }
+    @GET
+    @Path("stop")
+    public void stopApplication(@QueryParam("name") String name) throws ApplicationRunnerException {
+        runner.stopApplication(name);
+    }
 
-   @GET
-   @Path("prolong")
-   public void prolongExpirationTime(@QueryParam("name") String name,
-                                     @QueryParam("time") long time) throws ApplicationRunnerException
-   {
-      runner.prolongExpirationTime(name, time);
-   }
+    @GET
+    @Path("prolong")
+    public void prolongExpirationTime(@QueryParam("name") String name,
+                                      @QueryParam("time") long time) throws ApplicationRunnerException {
+        runner.prolongExpirationTime(name, time);
+    }
 
-   @Path("update")
-   @GET
-   public void updateApplication(@QueryParam("name") String name,
-                                 @QueryParam("war") URL war) throws ApplicationRunnerException
-   {
-      runner.updateApplication(name, war);
-   }
+    @Path("update")
+    @GET
+    public void updateApplication(@QueryParam("name") String name,
+                                  @QueryParam("war") URL war) throws ApplicationRunnerException {
+        runner.updateApplication(name, war);
+    }
 }

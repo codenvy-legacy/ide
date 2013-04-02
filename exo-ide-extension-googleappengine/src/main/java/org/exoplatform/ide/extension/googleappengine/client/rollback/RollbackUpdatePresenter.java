@@ -32,46 +32,36 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 11:54:50 AM anya $
- * 
  */
-public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements RollbackUpdateHandler
-{
-   public RollbackUpdatePresenter()
-   {
-      IDE.addHandler(RollbackUpdateEvent.TYPE, this);
-   }
+public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements RollbackUpdateHandler {
+    public RollbackUpdatePresenter() {
+        IDE.addHandler(RollbackUpdateEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateHandler#onRollbackUpdate(org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent)
-    */
-   @Override
-   public void onRollbackUpdate(RollbackUpdateEvent event)
-   {
-      if (isAppEngineProject())
-      {
-         rollback();
-      }
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateHandler#onRollbackUpdate(org.exoplatform.ide
+     * .extension.googleappengine.client.rollback.RollbackUpdateEvent) */
+    @Override
+    public void onRollbackUpdate(RollbackUpdateEvent event) {
+        if (isAppEngineProject()) {
+            rollback();
+        }
+    }
 
-   public void rollback()
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().rollback(currentVfs.getId(), currentProject.getId(),
-            new GoogleAppEngineAsyncRequestCallback<Object>()
-            {
+    public void rollback() {
+        try {
+            GoogleAppEngineClientService.getInstance().rollback(currentVfs.getId(), currentProject.getId(),
+                                                                new GoogleAppEngineAsyncRequestCallback<Object>() {
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.rollbackUpdateSuccess(),
-                     Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                    @Override
+                                                                    protected void onSuccess(Object result) {
+                                                                        IDE.fireEvent(new OutputEvent(
+                                                                                GoogleAppEngineExtension.GAE_LOCALIZATION
+                                                                                                        .rollbackUpdateSuccess(),
+                                                                                Type.INFO));
+                                                                    }
+                                                                });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

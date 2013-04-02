@@ -16,52 +16,38 @@ package com.google.collide.client.code.autocomplete;
 
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 
-/**
- * Interface used to isolate {@link Autocompleter} from UI implementation.
- */
+/** Interface used to isolate {@link Autocompleter} from UI implementation. */
 public interface AutocompleteBox {
 
-  /**
-   * Interface that allows {@link AutocompleteBox} implementations
-   * to fire back (UI event based) notifications.
-   */
-  interface Events {
+    /**
+     * Interface that allows {@link AutocompleteBox} implementations
+     * to fire back (UI event based) notifications.
+     */
+    interface Events {
+
+        /** Performs autocompletion selected by user. */
+        void onSelect(CompletionProposal proposal);
+
+        /** Closes autocompletion box. */
+        void onCancel();
+    }
+
+    /** Tests if box is shown. */
+    boolean isShowing();
 
     /**
-     * Performs autocompletion selected by user.
+     * Reacts on keyboard event.
+     *
+     * @return {@code true} if event should not be processed further.
      */
-    void onSelect(CompletionProposal proposal);
+    boolean consumeKeySignal(SignalEventEssence signal);
 
-    /**
-     * Closes autocompletion box.
-     */
-    void onCancel();
-  }
+    /** Sets delegate instance that is notified on user actions. */
+    void setDelegate(Events delegate);
 
-  /**
-   * Tests if box is shown.
-   */
-  boolean isShowing();
+    /** Hides component. */
+    void dismiss();
 
-  /**
-   * Reacts on keyboard event.
-   *
-   * @return {@code true} if event should not be processed further.
-   */
-  boolean consumeKeySignal(SignalEventEssence signal);
-
-  /**
-   * Sets delegate instance that is notified on user actions.
-   */
-  void setDelegate(Events delegate);
-
-  /**
-   * Hides component.
-   */
-  void dismiss();
-
-  /**
-   * Shows component (if hidden) and updates proposals list.
-   */
-  void positionAndShow(CompletionProposal[] items);
+    /** Shows component (if hidden) and updates proposals list. */
+    void positionAndShow(CompletionProposal[] items);
 }

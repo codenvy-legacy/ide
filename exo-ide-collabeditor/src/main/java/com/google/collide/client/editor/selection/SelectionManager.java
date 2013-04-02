@@ -14,11 +14,10 @@
 
 package com.google.collide.client.editor.selection;
 
-import com.google.collide.client.editor.folding.FoldingManager;
-
 import com.google.collide.client.Resources;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.FocusManager;
+import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.renderer.Renderer;
 import com.google.collide.shared.document.Document;
 
@@ -26,41 +25,40 @@ import com.google.collide.shared.document.Document;
  * TODO: split SelectionModel into multiple components owned by
  * this class
  */
-/**
- * Manages and owns different components related to text selection.
- */
+
+/** Manages and owns different components related to text selection. */
 public class SelectionManager {
 
-  public static SelectionManager create(Document document, Buffer buffer,
-      FocusManager focusManager, FoldingManager foldingManager, Resources resources) {
-    SelectionModel selectionModel = SelectionModel.create(document, buffer, foldingManager);
-    SelectionLineRenderer selectionLineRenderer =
-        new SelectionLineRenderer(selectionModel, focusManager, resources);
+    public static SelectionManager create(Document document, Buffer buffer,
+                                          FocusManager focusManager, FoldingManager foldingManager, Resources resources) {
+        SelectionModel selectionModel = SelectionModel.create(document, buffer, foldingManager);
+        SelectionLineRenderer selectionLineRenderer =
+                new SelectionLineRenderer(selectionModel, focusManager, resources);
 
-    return new SelectionManager(selectionModel, selectionLineRenderer);
-  }
+        return new SelectionManager(selectionModel, selectionLineRenderer);
+    }
 
-  private Renderer renderer;
-  private final SelectionLineRenderer selectionLineRenderer;
-  private final SelectionModel selectionModel;
+    private       Renderer              renderer;
+    private final SelectionLineRenderer selectionLineRenderer;
+    private final SelectionModel        selectionModel;
 
-  private SelectionManager(SelectionModel selectionModel,
-      SelectionLineRenderer selectionLineRenderer) {
-    this.selectionModel = selectionModel;
-    this.selectionLineRenderer = selectionLineRenderer;
-  }
+    private SelectionManager(SelectionModel selectionModel,
+                             SelectionLineRenderer selectionLineRenderer) {
+        this.selectionModel = selectionModel;
+        this.selectionLineRenderer = selectionLineRenderer;
+    }
 
-  public void initialize(Renderer renderer) {
-    this.renderer = renderer;
-    renderer.addLineRenderer(selectionLineRenderer);
-  }
+    public void initialize(Renderer renderer) {
+        this.renderer = renderer;
+        renderer.addLineRenderer(selectionLineRenderer);
+    }
 
-  public void teardown() {
-    renderer.removeLineRenderer(selectionLineRenderer);
-    selectionModel.teardown();
-  }
+    public void teardown() {
+        renderer.removeLineRenderer(selectionLineRenderer);
+        selectionModel.teardown();
+    }
 
-  public SelectionModel getSelectionModel() {
-    return selectionModel;
-  }
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
+    }
 }

@@ -31,163 +31,144 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
 /**
  * Implementation of {@link BuilderClientService} service.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderClientServiceImpl.java Feb 21, 2012 12:44:05 PM azatsarynnyy $
- *
  */
-public class BuilderClientServiceImpl extends BuilderClientService
-{
+public class BuilderClientServiceImpl extends BuilderClientService {
 
-   /**
-    * Base url.
-    */
-   private static final String BASE_URL = "/ide/maven";
+    /** Base url. */
+    private static final String BASE_URL = "/ide/maven";
 
-   /**
-    * Build project method's path.
-    */
-   private static final String BUILD = BASE_URL + "/build";
+    /** Build project method's path. */
+    private static final String BUILD = BASE_URL + "/build";
 
-   /**
-    * Build project method's path.
-    */
-   private static final String DEPLOY = BASE_URL + "/deploy";
+    /** Build project method's path. */
+    private static final String DEPLOY = BASE_URL + "/deploy";
 
-   /**
-    * Cancel building project method's path.
-    */
-   private static final String CANCEL = BASE_URL + "/cancel";
+    /** Cancel building project method's path. */
+    private static final String CANCEL = BASE_URL + "/cancel";
 
-   /**
-    * Get status of build method's path.
-    */
-   private static final String STATUS = BASE_URL + "/status";
+    /** Get status of build method's path. */
+    private static final String STATUS = BASE_URL + "/status";
 
-   /**
-    * Get result of build method's path.
-    */
-   private static final String RESULT = BASE_URL + "/result";
+    /** Get result of build method's path. */
+    private static final String RESULT = BASE_URL + "/result";
 
-   /**
-    * Get build log method's path.
-    */
-   private static final String LOG = BASE_URL + "/log";
+    /** Get build log method's path. */
+    private static final String LOG = BASE_URL + "/log";
 
-   /**
-    * REST-service context.
-    */
-   private String restServiceContext;
+    /** REST-service context. */
+    private String restServiceContext;
 
-   /**
-    * Loader to be displayed.
-    */
-   private Loader loader;
+    /** Loader to be displayed. */
+    private Loader loader;
 
-   /**
-    * @param restContext REST-service context
-    * @param loader loader to show on server request
-    */
-   public BuilderClientServiceImpl(String restContext, Loader loader)
-   {
-      this.loader = loader;
-      this.restServiceContext = restContext;
-   }
+    /**
+     * @param restContext
+     *         REST-service context
+     * @param loader
+     *         loader to show on server request
+     */
+    public BuilderClientServiceImpl(String restContext, Loader loader) {
+        this.loader = loader;
+        this.restServiceContext = restContext;
+    }
 
-   /**
-    * Start new build.
-    * 
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException
-   {
-      final String requesrUrl = restServiceContext + BUILD;
+    /**
+     * Start new build.
+     *
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
+            throws RequestException {
+        final String requesrUrl = restServiceContext + BUILD;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
-      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
+        String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
+        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   @Override
-   public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException
-   {
-      final String requesrUrl = restServiceContext + DEPLOY;
+    @Override
+    public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
+                                AsyncRequestCallback<StringBuilder> callback)
+            throws RequestException {
+        final String requesrUrl = restServiceContext + DEPLOY;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
-      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
+        String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
+        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * Cancel previously launched build.
-    * 
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#cancel(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      final String requestUrl = restServiceContext + CANCEL + "/" + buildid;
+    /**
+     * Cancel previously launched build.
+     *
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#cancel(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        final String requestUrl = restServiceContext + CANCEL + "/" + buildid;
 
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * Check current status of previously launched build.
-    * 
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#status(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException
-   {
-      final String requestUrl = restServiceContext + STATUS + "/" + buildid;
-      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+    /**
+     * Check current status of previously launched build.
+     *
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#status(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException {
+        final String requestUrl = restServiceContext + STATUS + "/" + buildid;
+        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 
-   /**
-    * Get build log.
-    * 
-    * @throws RequestException
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#log(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      final String requestUrl = restServiceContext + LOG + "/" + buildid;
+    /**
+     * Get build log.
+     *
+     * @throws RequestException
+     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#log(java.lang.String,
+     * org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        final String requestUrl = restServiceContext + LOG + "/" + buildid;
 
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * Get result of previously launched build.
-    * 
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#result(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      final String requestUrl = restServiceContext + RESULT + "/" + buildid;
-      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+    /**
+     * Get result of previously launched build.
+     *
+     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#result(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        final String requestUrl = restServiceContext + RESULT + "/" + buildid;
+        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 
-   /**
-    * Check is URL for download artifact is valid.
-    * 
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#checkArtifactUrl(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
+    /**
+     * Check is URL for download artifact is valid.
+     *
+     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#checkArtifactUrl(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
 
-   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
-   {
-      final String requestUrl = restServiceContext + "/ide/maven/check_download_url?url=" + url;
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
-   }
+    public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException {
+        final String requestUrl = restServiceContext + "/ide/maven/check_download_url?url=" + url;
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
+    }
 }

@@ -18,163 +18,131 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
-import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
-import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
-import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
-import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
-import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.event.*;
 import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuEvent;
 import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuHandler;
 
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
 public class EditorEventHandler implements EditorInitializedHandler, EditorLineNumberContextMenuHandler,
-   EditorContentChangedHandler, EditorCursorActivityHandler, EditorHotKeyPressedHandler, EditorFocusReceivedHandler,
-   EditorContextMenuHandler, RunCodeAssistantHandler
-{
+                                           EditorContentChangedHandler, EditorCursorActivityHandler, EditorHotKeyPressedHandler,
+                                           EditorFocusReceivedHandler,
+                                           EditorContextMenuHandler, RunCodeAssistantHandler {
 
-   private Editor editor;
+    private Editor editor;
 
-   private List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
-   
-   private boolean handleEvents = false;
+    private List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
 
-   public EditorEventHandler(Editor editor)
-   {
-      this.editor = editor;
-      
-      handlers.add(editor.asWidget().addHandler(this, EditorInitializedEvent.TYPE));
-      handlers.add(editor.asWidget().addHandler(this, EditorLineNumberContextMenuEvent.TYPE));
-      handlers.add(editor.asWidget().addHandler(this, EditorContentChangedEvent.TYPE));
-      handlers.add(editor.asWidget().addHandler(this, EditorCursorActivityEvent.TYPE));
-      handlers.add(editor.asWidget().addHandler(this, EditorHotKeyPressedEvent.TYPE));
-      handlers.add(editor.asWidget().addHandler(this, EditorFocusReceivedEvent.TYPE));
-      handlers.add(editor.asWidget().addHandler(this, EditorContextMenuEvent.TYPE));
-      handlers.add(editor.asWidget().addHandler(this, RunCodeAssistantEvent.TYPE));
-   }
+    private boolean handleEvents = false;
 
-   public void removeHandlers()
-   {
-      for (HandlerRegistration handler : handlers)
-      {
-         handler.removeHandler();
-      }
+    public EditorEventHandler(Editor editor) {
+        this.editor = editor;
 
-      handlers.clear();
-   }
-   
-   public void enableHandling()
-   {
-      handleEvents = true;
-   }
-   
-   public void disableHandling()
-   {
-      handleEvents = false;
-   }
+        handlers.add(editor.asWidget().addHandler(this, EditorInitializedEvent.TYPE));
+        handlers.add(editor.asWidget().addHandler(this, EditorLineNumberContextMenuEvent.TYPE));
+        handlers.add(editor.asWidget().addHandler(this, EditorContentChangedEvent.TYPE));
+        handlers.add(editor.asWidget().addHandler(this, EditorCursorActivityEvent.TYPE));
+        handlers.add(editor.asWidget().addHandler(this, EditorHotKeyPressedEvent.TYPE));
+        handlers.add(editor.asWidget().addHandler(this, EditorFocusReceivedEvent.TYPE));
+        handlers.add(editor.asWidget().addHandler(this, EditorContextMenuEvent.TYPE));
+        handlers.add(editor.asWidget().addHandler(this, RunCodeAssistantEvent.TYPE));
+    }
 
-   @Override
-   public void onEditorInitialized(EditorInitializedEvent event)
-   {
-      IDE.fireEvent(event);
-      
-      enableHandling();
-   }
+    public void removeHandlers() {
+        for (HandlerRegistration handler : handlers) {
+            handler.removeHandler();
+        }
 
-   @Override
-   public void onEditorLineNumberContextMenu(EditorLineNumberContextMenuEvent event)
-   {
-      if (!handleEvents)
-      {
-         return;
-      }
-      
-      IDE.fireEvent(event);
-   }
+        handlers.clear();
+    }
 
-   @Override
-   public void onEditorContentChanged(EditorContentChangedEvent event)
-   {
-      if (!handleEvents)
-      {
-         return;
-      }
+    public void enableHandling() {
+        handleEvents = true;
+    }
 
-      IDE.fireEvent(event);
-   }
+    public void disableHandling() {
+        handleEvents = false;
+    }
 
-   @Override
-   public void onEditorCursorActivity(EditorCursorActivityEvent event)
-   {
-      if (!handleEvents)
-      {
-         return;
-      }
-      
-      IDE.fireEvent(event);
-   }
+    @Override
+    public void onEditorInitialized(EditorInitializedEvent event) {
+        IDE.fireEvent(event);
 
-   @Override
-   public void onEditorHotKeyPressed(EditorHotKeyPressedEvent event)
-   {
-      if (!handleEvents)
-      {
-         return;
-      }
-      
-      IDE.fireEvent(event);
-   }
+        enableHandling();
+    }
 
-   @Override
-   public void onEditorFocusReceived(EditorFocusReceivedEvent event)
-   {
-      if (!handleEvents)
-      {
-         return;
-      }
-      
-      IDE.fireEvent(event);
-   }
+    @Override
+    public void onEditorLineNumberContextMenu(EditorLineNumberContextMenuEvent event) {
+        if (!handleEvents) {
+            return;
+        }
 
-   @Override
-   public void onEditorContextMenu(EditorContextMenuEvent event)
-   {
-      if (!handleEvents)
-      {
-         return;
-      }
-      
-      IDE.fireEvent(event);
-   }
+        IDE.fireEvent(event);
+    }
 
-   @Override
-   public void onRunCodeAssistant(RunCodeAssistantEvent event)
-   {
-      if (!handleEvents)
-      {
-         return;
-      }
-      
-      IDE.fireEvent(event);
-   }
+    @Override
+    public void onEditorContentChanged(EditorContentChangedEvent event) {
+        if (!handleEvents) {
+            return;
+        }
+
+        IDE.fireEvent(event);
+    }
+
+    @Override
+    public void onEditorCursorActivity(EditorCursorActivityEvent event) {
+        if (!handleEvents) {
+            return;
+        }
+
+        IDE.fireEvent(event);
+    }
+
+    @Override
+    public void onEditorHotKeyPressed(EditorHotKeyPressedEvent event) {
+        if (!handleEvents) {
+            return;
+        }
+
+        IDE.fireEvent(event);
+    }
+
+    @Override
+    public void onEditorFocusReceived(EditorFocusReceivedEvent event) {
+        if (!handleEvents) {
+            return;
+        }
+
+        IDE.fireEvent(event);
+    }
+
+    @Override
+    public void onEditorContextMenu(EditorContextMenuEvent event) {
+        if (!handleEvents) {
+            return;
+        }
+
+        IDE.fireEvent(event);
+    }
+
+    @Override
+    public void onRunCodeAssistant(RunCodeAssistantEvent event) {
+        if (!handleEvents) {
+            return;
+        }
+
+        IDE.fireEvent(event);
+    }
 
 }

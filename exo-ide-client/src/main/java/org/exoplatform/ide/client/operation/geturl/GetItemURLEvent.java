@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class GetItemURLEvent extends GwtEvent<GetItemURLHandler>
-{
+public class GetItemURLEvent extends GwtEvent<GetItemURLHandler> {
 
-   public static final GwtEvent.Type<GetItemURLHandler> TYPE = new GwtEvent.Type<GetItemURLHandler>();
+    public static final GwtEvent.Type<GetItemURLHandler> TYPE = new GwtEvent.Type<GetItemURLHandler>();
 
-   @Override
-   protected void dispatch(GetItemURLHandler handler)
-   {
-      handler.onGetItemURL(this);
-   }
+    @Override
+    protected void dispatch(GetItemURLHandler handler) {
+        handler.onGetItemURL(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GetItemURLHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<GetItemURLHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

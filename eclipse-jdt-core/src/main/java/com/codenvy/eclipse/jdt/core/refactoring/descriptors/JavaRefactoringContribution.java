@@ -28,31 +28,29 @@ import java.util.Map;
  *
  * @since 1.1
  */
-public abstract class JavaRefactoringContribution extends RefactoringContribution
-{
+public abstract class JavaRefactoringContribution extends RefactoringContribution {
 
-   /**
-    * {@inheritDoc}
-    */
-   public final Map retrieveArgumentMap(final RefactoringDescriptor descriptor)
-   {
-      Assert.isNotNull(descriptor);
-      if (descriptor instanceof JavaRefactoringDescriptor)
-      {
-         return ((JavaRefactoringDescriptor)descriptor).getArguments();
-      }
-      return super.retrieveArgumentMap(descriptor);
-   }
+    /** {@inheritDoc} */
+    public final Map retrieveArgumentMap(final RefactoringDescriptor descriptor) {
+        Assert.isNotNull(descriptor);
+        if (descriptor instanceof JavaRefactoringDescriptor) {
+            return ((JavaRefactoringDescriptor)descriptor).getArguments();
+        }
+        return super.retrieveArgumentMap(descriptor);
+    }
 
-   /**
-    * Creates the a new refactoring instance.
-    *
-    * @param descriptor the refactoring descriptor
-    * @param status     the status used for the resulting status
-    * @return the refactoring, or <code>null</code>
-    * @throws CoreException if an error occurs while creating the refactoring
-    * @since 1.2
-    */
-   public abstract Refactoring createRefactoring(JavaRefactoringDescriptor descriptor,
-      RefactoringStatus status) throws CoreException;
+    /**
+     * Creates the a new refactoring instance.
+     *
+     * @param descriptor
+     *         the refactoring descriptor
+     * @param status
+     *         the status used for the resulting status
+     * @return the refactoring, or <code>null</code>
+     * @throws CoreException
+     *         if an error occurs while creating the refactoring
+     * @since 1.2
+     */
+    public abstract Refactoring createRefactoring(JavaRefactoringDescriptor descriptor,
+                                                  RefactoringStatus status) throws CoreException;
 }

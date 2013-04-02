@@ -23,33 +23,32 @@ package org.exoplatform.ide.extension.openshift.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class ExpressException extends Exception
-{
-   /** HTTP status of response. */
-   private final int responseStatus;
+public class ExpressException extends Exception {
+    /** HTTP status of response. */
+    private final int responseStatus;
 
-   /** Content type of response from openshift express server. */
-   private final String contentType;
+    /** Content type of response from openshift express server. */
+    private final String contentType;
 
-   /**
-    * @param responseStatus HTTP status of response from openshift express server
-    * @param message text message
-    * @param contentType content type of response from openshift express server
-    */
-   public ExpressException(int responseStatus, String message, String contentType)
-   {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.contentType = contentType;
-   }
+    /**
+     * @param responseStatus
+     *         HTTP status of response from openshift express server
+     * @param message
+     *         text message
+     * @param contentType
+     *         content type of response from openshift express server
+     */
+    public ExpressException(int responseStatus, String message, String contentType) {
+        super(message);
+        this.responseStatus = responseStatus;
+        this.contentType = contentType;
+    }
 
-   public int getResponseStatus()
-   {
-      return responseStatus;
-   }
+    public int getResponseStatus() {
+        return responseStatus;
+    }
 
-   public String getContentType()
-   {
-      return contentType;
-   }
+    public String getContentType() {
+        return contentType;
+    }
 }

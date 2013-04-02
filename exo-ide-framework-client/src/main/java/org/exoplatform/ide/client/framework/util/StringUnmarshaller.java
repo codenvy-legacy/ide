@@ -27,48 +27,37 @@ import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 
 /**
  * Unmarshaller for unmarshalling response as {@link String}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: StringUnmarshaller.java Aug 27, 2012 10:05:35 AM azatsarynnyy $
- *
  */
 public class StringUnmarshaller implements Unmarshallable<StringBuilder>,
-   org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>
-{
-   protected StringBuilder builder;
+                                           org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder> {
+    protected StringBuilder builder;
 
-   public StringUnmarshaller(StringBuilder builder)
-   {
-      this.builder = builder;
-   }
+    public StringUnmarshaller(StringBuilder builder) {
+        this.builder = builder;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage)
-    */
-   @Override
-   public void unmarshal(ResponseMessage response) throws UnmarshallerException
-   {
-      if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null)
-         builder.append(response.getBody());
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket
+     * .rest.ResponseMessage) */
+    @Override
+    public void unmarshal(ResponseMessage response) throws UnmarshallerException {
+        if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null)
+            builder.append(response.getBody());
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public StringBuilder getPayload()
-   {
-      return builder;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public StringBuilder getPayload() {
+        return builder;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getStatusCode() != HTTPStatus.NO_CONTENT && response.getText() != null)
-         builder.append(response.getText());
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getStatusCode() != HTTPStatus.NO_CONTENT && response.getText() != null)
+            builder.append(response.getText());
+    }
 
 }

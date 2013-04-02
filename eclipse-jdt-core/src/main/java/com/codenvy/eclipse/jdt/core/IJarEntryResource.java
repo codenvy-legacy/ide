@@ -21,57 +21,56 @@ import com.codenvy.eclipse.core.runtime.IPath;
  * Files don't have any children and the returned array is always empty.
  * </p><p>
  * Jar entry resources that refer to the same element are guaranteed to be equal, but not necessarily identical.
- * <p>
+ * <p/>
  *
  * @since 3.3
  */
-public interface IJarEntryResource extends IStorage
-{
+public interface IJarEntryResource extends IStorage {
 
-   /**
-    * Returns the list of children of this jar entry resource.
-    * Returns an empty array if this jar entry is a file, or if this jar entry is a directory and it has no children.
-    *
-    * @return the children of this jar entry resource
-    */
-   IJarEntryResource[] getChildren();
+    /**
+     * Returns the list of children of this jar entry resource.
+     * Returns an empty array if this jar entry is a file, or if this jar entry is a directory and it has no children.
+     *
+     * @return the children of this jar entry resource
+     */
+    IJarEntryResource[] getChildren();
 
-   /**
-    * Returns the full, absolute path of this jar entry resource relative to the archive this jar
-    * entry belongs to.
-    * <p>
-    * A jar entry resource's full path indicates the route from the root of the archive
-    * to the jar entry resource.  Within an archive, there is exactly one such path
-    * for any given jar entry resource. </p>
-    * <p>
-    * The returned path is absolute (i.e. it starts with a separator) and it never has a trailing separator.
-    * </p>
-    *
-    * @return the absolute path of this jar entry resource
-    */
-   IPath getFullPath();
+    /**
+     * Returns the full, absolute path of this jar entry resource relative to the archive this jar
+     * entry belongs to.
+     * <p>
+     * A jar entry resource's full path indicates the route from the root of the archive
+     * to the jar entry resource.  Within an archive, there is exactly one such path
+     * for any given jar entry resource. </p>
+     * <p>
+     * The returned path is absolute (i.e. it starts with a separator) and it never has a trailing separator.
+     * </p>
+     *
+     * @return the absolute path of this jar entry resource
+     */
+    IPath getFullPath();
 
-   /**
-    * Returns the parent of this jar entry resource. This is either an {@link IJarEntryResource}, an {@link IPackageFragment}
-    * or an {@link IPackageFragmentRoot}.
-    *
-    * @return the parent of this jar entry resource
-    */
-   Object getParent();
+    /**
+     * Returns the parent of this jar entry resource. This is either an {@link IJarEntryResource}, an {@link IPackageFragment}
+     * or an {@link IPackageFragmentRoot}.
+     *
+     * @return the parent of this jar entry resource
+     */
+    Object getParent();
 
-   /**
-    * Returns the package fragment root this jar entry resource belongs to.
-    *
-    * @return the package fragment root this jar entry resource belongs to.
-    */
-   IPackageFragmentRoot getPackageFragmentRoot();
+    /**
+     * Returns the package fragment root this jar entry resource belongs to.
+     *
+     * @return the package fragment root this jar entry resource belongs to.
+     */
+    IPackageFragmentRoot getPackageFragmentRoot();
 
-   /**
-    * Returns <code>true</code> if this jar entry represents a file.
-    * Returns <code>false</code> if it is a directory.
-    *
-    * @return whether this jar entry is a file
-    */
-   boolean isFile();
+    /**
+     * Returns <code>true</code> if this jar entry represents a file.
+     * Returns <code>false</code> if it is a directory.
+     *
+     * @return whether this jar entry is a file
+     */
+    boolean isFile();
 
 }

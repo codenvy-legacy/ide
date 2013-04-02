@@ -32,75 +32,57 @@ import org.exoplatform.gwtframework.ui.client.component.TextInput;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: DeployApplicationView.java Sep 25, 2012 12:56:56 PM azatsarynnyy $
- *
  */
-public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display
-{
-   interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView>
-   {
-   }
+public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display {
+    interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView> {
+    }
 
-   private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
+    private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
 
-   @UiField
-   TextInput nameField;
+    @UiField
+    TextInput nameField;
 
-   @UiField
-   TextInput envNameField;
+    @UiField
+    TextInput envNameField;
 
-   @UiField
-   SelectItem solutionStackField;
+    @UiField
+    SelectItem solutionStackField;
 
-   public DeployApplicationView()
-   {
-      super();
-      initWidget(uiBinder.createAndBindUi(this));
-      setHeight("260px");
-   }
+    public DeployApplicationView() {
+        super();
+        initWidget(uiBinder.createAndBindUi(this));
+        setHeight("260px");
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getNameField()
-    */
-   @Override
-   public TextFieldItem getNameField()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getNameField() */
+    @Override
+    public TextFieldItem getNameField() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getEnvNameField()
-    */
-   @Override
-   public TextFieldItem getEnvNameField()
-   {
-      return envNameField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getEnvNameField() */
+    @Override
+    public TextFieldItem getEnvNameField() {
+        return envNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getSolutionStackField()
-    */
-   @Override
-   public HasValue<String> getSolutionStackField()
-   {
-      return solutionStackField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getSolutionStackField() */
+    @Override
+    public HasValue<String> getSolutionStackField() {
+        return solutionStackField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getView()
-    */
-   @Override
-   public Composite getView()
-   {
-      return this;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#getView() */
+    @Override
+    public Composite getView() {
+        return this;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#setSolutionStackValues(java.lang.String[])
-    */
-   @Override
-   public void setSolutionStackValues(String[] values)
-   {
-      solutionStackField.setValueMap(values);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display#setSolutionStackValues(java.lang
+     * .String[]) */
+    @Override
+    public void setSolutionStackValues(String[] values) {
+        solutionStackField.setValueMap(values);
+    }
 
 }

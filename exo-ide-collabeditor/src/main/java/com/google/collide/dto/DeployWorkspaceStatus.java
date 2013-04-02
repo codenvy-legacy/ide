@@ -17,23 +17,18 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Status update for an App Engine deployment.
- *
- */
+/** Status update for an App Engine deployment. */
 @RoutingType(type = RoutingTypes.DEPLOYWORKSPACESTATUS)
 public interface DeployWorkspaceStatus extends ServerToClientDto {
 
-  public static final int STATUS_IN_PROGRESS = 0;
-  public static final int STATUS_SUCCESS = 1;
-  public static final int STATUS_FAILED = 2;
+    public static final int STATUS_IN_PROGRESS = 0;
+    public static final int STATUS_SUCCESS     = 1;
+    public static final int STATUS_FAILED      = 2;
 
-  int getStatus();
+    int getStatus();
 
-  String getMessage();
+    String getMessage();
 
-  /**
-   * Available only when status is STATUS_SUCCESS
-   */
-  String getAppUrl();
+    /** Available only when status is STATUS_SUCCESS */
+    String getAppUrl();
 }

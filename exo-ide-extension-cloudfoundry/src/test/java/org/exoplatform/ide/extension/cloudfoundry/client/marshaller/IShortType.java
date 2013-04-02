@@ -20,18 +20,18 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface IShortType extends IMember
-{
+ */
+public interface IShortType extends IMember {
 
-   void setQualifiedName(String qualifiedName);
+    void setQualifiedName(String qualifiedName);
 
-   String getQualifiedName();
+    String getQualifiedName();
 
-   String getType();
+    String getType();
 
-   void setType(String type);
+    void setType(String type);
 
 }

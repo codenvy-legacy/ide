@@ -26,55 +26,39 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class StopApplicationEvent extends GwtEvent<StopApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<StopApplicationHandler> TYPE = new GwtEvent.Type<StopApplicationHandler>();
+public class StopApplicationEvent extends GwtEvent<StopApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<StopApplicationHandler> TYPE = new GwtEvent.Type<StopApplicationHandler>();
 
-   private String applicationName;
+    private String applicationName;
 
-   /**
-    *
-    */
-   public StopApplicationEvent()
-   {
-   }
+    /**
+     *
+     */
+    public StopApplicationEvent() {
+    }
 
-   /**
-    * @param applicationName
-    */
-   public StopApplicationEvent(String applicationName)
-   {
-      super();
-      this.applicationName = applicationName;
-   }
+    /** @param applicationName */
+    public StopApplicationEvent(String applicationName) {
+        super();
+        this.applicationName = applicationName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StopApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<StopApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(StopApplicationHandler handler)
-   {
-      handler.onStopApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(StopApplicationHandler handler) {
+        handler.onStopApplication(this);
+    }
 
-   /**
-    * @return the applicationName
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
-   }
+    /** @return the applicationName */
+    public String getApplicationName() {
+        return applicationName;
+    }
 
 }

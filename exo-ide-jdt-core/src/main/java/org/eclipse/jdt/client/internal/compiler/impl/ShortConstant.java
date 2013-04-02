@@ -10,93 +10,75 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.impl;
 
-public class ShortConstant extends Constant
-{
+public class ShortConstant extends Constant {
 
-   private short value;
+    private short value;
 
-   public static Constant fromValue(short value)
-   {
-      return new ShortConstant(value);
-   }
+    public static Constant fromValue(short value) {
+        return new ShortConstant(value);
+    }
 
-   private ShortConstant(short value)
-   {
-      this.value = value;
-   }
+    private ShortConstant(short value) {
+        this.value = value;
+    }
 
-   public byte byteValue()
-   {
-      return (byte)this.value;
-   }
+    public byte byteValue() {
+        return (byte)this.value;
+    }
 
-   public char charValue()
-   {
-      return (char)this.value;
-   }
+    public char charValue() {
+        return (char)this.value;
+    }
 
-   public double doubleValue()
-   {
-      return this.value; // implicit cast to return type
-   }
+    public double doubleValue() {
+        return this.value; // implicit cast to return type
+    }
 
-   public float floatValue()
-   {
-      return this.value; // implicit cast to return type
-   }
+    public float floatValue() {
+        return this.value; // implicit cast to return type
+    }
 
-   public int intValue()
-   {
-      return this.value; // implicit cast to return type
-   }
+    public int intValue() {
+        return this.value; // implicit cast to return type
+    }
 
-   public long longValue()
-   {
-      return this.value; // implicit cast to return type
-   }
+    public long longValue() {
+        return this.value; // implicit cast to return type
+    }
 
-   public short shortValue()
-   {
-      return this.value;
-   }
+    public short shortValue() {
+        return this.value;
+    }
 
-   public String stringValue()
-   {
-      // spec 15.17.11
-      return String.valueOf(this.value);
-   }
+    public String stringValue() {
+        // spec 15.17.11
+        return String.valueOf(this.value);
+    }
 
-   public String toString()
-   {
+    public String toString() {
 
-      return "(short)" + this.value; //$NON-NLS-1$
-   }
+        return "(short)" + this.value; //$NON-NLS-1$
+    }
 
-   public int typeID()
-   {
-      return T_short;
-   }
+    public int typeID() {
+        return T_short;
+    }
 
-   public int hashCode()
-   {
-      return this.value;
-   }
+    public int hashCode() {
+        return this.value;
+    }
 
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (obj == null)
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      ShortConstant other = (ShortConstant)obj;
-      return this.value == other.value;
-   }
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ShortConstant other = (ShortConstant)obj;
+        return this.value == other.value;
+    }
 }

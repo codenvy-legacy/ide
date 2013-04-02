@@ -27,7 +27,6 @@ import com.sun.jdi.event.EventSet;
  * @version $Id: $
  * @see org.exoplatform.ide.extension.java.jdi.server.EventsCollector#run()
  */
-public interface EventsHandler
-{
-   void handleEvents(EventSet events) throws DebuggerException;
+public interface EventsHandler {
+    void handleEvents(EventSet events) throws DebuggerException;
 }

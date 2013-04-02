@@ -26,64 +26,53 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
 
-import java.lang.reflect.Method;
-import java.util.concurrent.Callable;
-
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
+import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodenvyAsynchronousJobPool.java Feb 28, 2013 vetal $
- *
  */
 @Provider
-public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements ContextResolver<AsynchronousJobPool>
-{
-   public CodenvyAsynchronousJobPool(EverrestConfiguration config)
-   {
-      super(config);
-   }
+public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements ContextResolver<AsynchronousJobPool> {
+    public CodenvyAsynchronousJobPool(EverrestConfiguration config) {
+        super(config);
+    }
 
-   /**
-    * @see org.everrest.core.impl.async.AsynchronousJobPool#newCallable(java.lang.Object, java.lang.reflect.Method,
-    *      java.lang.Object[])
-    */
-   @Override
-   protected Callable<Object> newCallable(Object resource, Method method, Object[] params)
-   {
-      return new CallableWrapper(super.newCallable(resource, method, params));
-   }
+    /**
+     * @see org.everrest.core.impl.async.AsynchronousJobPool#newCallable(java.lang.Object, java.lang.reflect.Method,
+     *      java.lang.Object[])
+     */
+    @Override
+    protected Callable<Object> newCallable(Object resource, Method method, Object[] params) {
+        return new CallableWrapper(super.newCallable(resource, method, params));
+    }
 
-   private static class CallableWrapper implements Callable<Object>
-   {
-      private final EnvironmentContext envContext;
-      private final ConversationState state;
-      private final Callable<Object> callable;
+    private static class CallableWrapper implements Callable<Object> {
+        private final EnvironmentContext envContext;
+        private final ConversationState  state;
+        private final Callable<Object>   callable;
 
-      public CallableWrapper(Callable<Object> callable)
-      {
-         this.callable = callable;
-         state = ConversationState.getCurrent();
-         envContext = EnvironmentContext.getCurrent();
-      }
+        public CallableWrapper(Callable<Object> callable) {
+            this.callable = callable;
+            state = ConversationState.getCurrent();
+            envContext = EnvironmentContext.getCurrent();
+        }
 
-      @Override
-      public Object call() throws Exception
-      {
-         ConversationState.setCurrent(state == null
-            ? new ConversationState(new Identity(IdentityConstants.ANONIM)) : state);
-         EnvironmentContext.setCurrent(envContext);
-         try
-         {
-            return callable.call();
-         }
-         finally
-         {
-            EnvironmentContext.setCurrent(null);
-            ConversationState.setCurrent(null);
-         }
-      }
-   }
+        @Override
+        public Object call() throws Exception {
+            ConversationState.setCurrent(state == null
+                                         ? new ConversationState(new Identity(IdentityConstants.ANONIM)) : state);
+            EnvironmentContext.setCurrent(envContext);
+            try {
+                return callable.call();
+            } finally {
+                EnvironmentContext.setCurrent(null);
+                ConversationState.setCurrent(null);
+            }
+        }
+    }
 }

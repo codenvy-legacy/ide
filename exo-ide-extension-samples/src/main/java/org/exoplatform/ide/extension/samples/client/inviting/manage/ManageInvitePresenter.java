@@ -40,127 +40,99 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ManageInvitePresenter implements ManageInviteHandler, ViewClosedHandler, RevokeInviteHandler
-{
-   interface Display extends IsView
-   {
-      public void setInvitedDevelopers(List<Invite> invites, RevokeInviteHandler revokeInviteHandler);
+public class ManageInvitePresenter implements ManageInviteHandler, ViewClosedHandler, RevokeInviteHandler {
+    interface Display extends IsView {
+        public void setInvitedDevelopers(List<Invite> invites, RevokeInviteHandler revokeInviteHandler);
 
-      public void clearInvitedDevelopers();
+        public void clearInvitedDevelopers();
 
-      public HasClickHandlers getCloseButton();
-   }
+        public HasClickHandlers getCloseButton();
+    }
 
-   private Display display;
-   private ManageInvitePresenter instance;
+    private Display               display;
+    private ManageInvitePresenter instance;
 
-   public ManageInvitePresenter()
-   {
-      IDE.addHandler(ManageInviteEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
+    public ManageInvitePresenter() {
+        IDE.addHandler(ManageInviteEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      instance = this;
-   }
+        instance = this;
+    }
 
-   public void bindDisplay()
-   {
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
-
-   @Override
-   public void onManageInvite(ManageInviteEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         getAccessList();
-         IDE.getInstance().openView(display.asView());
-      }
-   }
-
-   private void getAccessList()
-   {
-      try
-      {
-         display.clearInvitedDevelopers();
-         InvitedDeveloperUnmarshaller unmarshaller = new InvitedDeveloperUnmarshaller(new ArrayList<Invite>());
-         InviteClientService.getInstance().getInvitesList(new AsyncRequestCallback<List<Invite>>(unmarshaller)
-         {
+    public void bindDisplay() {
+        display.getCloseButton().addClickHandler(new ClickHandler() {
             @Override
-            protected void onSuccess(List<Invite> invites)
-            {
-               display.setInvitedDevelopers(invites, instance);
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
+        });
+    }
 
+    @Override
+    public void onManageInvite(ManageInviteEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            getAccessList();
+            IDE.getInstance().openView(display.asView());
+        }
+    }
+
+    private void getAccessList() {
+        try {
+            display.clearInvitedDevelopers();
+            InvitedDeveloperUnmarshaller unmarshaller = new InvitedDeveloperUnmarshaller(new ArrayList<Invite>());
+            InviteClientService.getInstance().getInvitesList(new AsyncRequestCallback<List<Invite>>(unmarshaller) {
+                @Override
+                protected void onSuccess(List<Invite> invites) {
+                    display.setInvitedDevelopers(invites, instance);
+                }
+
+                @Override
+                protected void onFailure(Throwable throwable) {
+                }
+            });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError("Can't get invite list.");
+        }
+    }
+
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    @Override
+    public void onRevokeInvite(final Invite invite) {
+        final String title = "Revoke invite";
+        final String message = "Revoke invite for user: <b>" + invite.getEmail() + "</b>?";
+        Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler() {
             @Override
-            protected void onFailure(Throwable throwable)
-            {
+            public void booleanValueReceived(Boolean value) {
+                if (value != null && value) {
+                    revokeInvite(invite);
+                }
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         Dialogs.getInstance().showError("Can't get invite list.");
-      }
-   }
+        });
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    private void revokeInvite(final Invite invite) {
+        try {
+            InviteClientService.getInstance().invalidateInvite(invite.getEmail(), new AsyncRequestCallback<Void>() {
+                @Override
+                protected void onSuccess(Void result) {
+                    getAccessList();
+                }
 
-   @Override
-   public void onRevokeInvite(final Invite invite)
-   {
-      final String title = "Revoke invite";
-      final String message = "Revoke invite for user: <b>" + invite.getEmail() + "</b>?";
-      Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler()
-      {
-         @Override
-         public void booleanValueReceived(Boolean value)
-         {
-            if (value != null && value)
-            {
-               revokeInvite(invite);
-            }
-         }
-      });
-   }
-
-   private void revokeInvite(final Invite invite)
-   {
-      try
-      {
-         InviteClientService.getInstance().invalidateInvite(invite.getEmail(), new AsyncRequestCallback<Void>()
-         {
-            @Override
-            protected void onSuccess(Void result)
-            {
-               getAccessList();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError("Can't revoke invite.");
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         Dialogs.getInstance().showError("Some error while trying to revoke invite.");
-      }
-   }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Dialogs.getInstance().showError("Can't revoke invite.");
+                }
+            });
+        } catch (RequestException e) {
+            Dialogs.getInstance().showError("Some error while trying to revoke invite.");
+        }
+    }
 }

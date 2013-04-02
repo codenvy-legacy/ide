@@ -30,32 +30,29 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssista
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyCodeAssist Apr 6, 2011 1:56:58 PM evgen $
- * 
  */
-public class GroovyCodeAssistant extends JavaCodeAssistant
-{
+public class GroovyCodeAssistant extends JavaCodeAssistant {
 
-   /**
-    * @param service
-    * @param factory
-    * @param errorHandler
-    */
-   public GroovyCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory,
-      JavaCodeAssistantErrorHandler errorHandler)
-   {
-      super(service, factory, errorHandler);
-   }
+    /**
+     * @param service
+     * @param factory
+     * @param errorHandler
+     */
+    public GroovyCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory,
+                               JavaCodeAssistantErrorHandler errorHandler) {
+        super(service, factory, errorHandler);
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#parseKeyWords(com.google.gwt.resources.client.TextResource)
-    */
-   @Override
-   protected void parseKeyWords(TextResource resource)
-   {
-      super.parseKeyWords(resource);
-      keywords.add(new TokenImpl("as", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("in", TokenType.KEYWORD));
-      keywords.add(new TokenImpl("def", TokenType.KEYWORD));
-   }
+    /**
+     * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#parseKeyWords(com.google.gwt.resources.client
+     *      .TextResource)
+     */
+    @Override
+    protected void parseKeyWords(TextResource resource) {
+        super.parseKeyWords(resource);
+        keywords.add(new TokenImpl("as", TokenType.KEYWORD));
+        keywords.add(new TokenImpl("in", TokenType.KEYWORD));
+        keywords.add(new TokenImpl("def", TokenType.KEYWORD));
+    }
 
 }

@@ -28,13 +28,12 @@ package org.exoplatform.ide.editor.shared.text;
  * Clients may implement this interface or use the standard implementation {@link org.eclipse.jface.text.TypedRegion}.
  * </p>
  */
-public interface ITypedRegion extends IRegion
-{
+public interface ITypedRegion extends IRegion {
 
-   /**
-    * Returns the content type of the region.
-    * 
-    * @return the content type of the region
-    */
-   String getType();
+    /**
+     * Returns the content type of the region.
+     *
+     * @return the content type of the region
+     */
+    String getType();
 }

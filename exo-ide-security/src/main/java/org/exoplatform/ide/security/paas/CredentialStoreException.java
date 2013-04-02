@@ -26,25 +26,22 @@ package org.exoplatform.ide.security.paas;
  * @see CredentialStore
  */
 @SuppressWarnings("serial")
-public final class CredentialStoreException extends Exception
-{
-   /**
-    * @param message
-    *    the detail message
-    * @param cause
-    *    the cause
-    */
-   public CredentialStoreException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+public final class CredentialStoreException extends Exception {
+    /**
+     * @param message
+     *         the detail message
+     * @param cause
+     *         the cause
+     */
+    public CredentialStoreException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   /**
-    * @param message
-    *    the detail message
-    */
-   public CredentialStoreException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     *         the detail message
+     */
+    public CredentialStoreException(String message) {
+        super(message);
+    }
 }

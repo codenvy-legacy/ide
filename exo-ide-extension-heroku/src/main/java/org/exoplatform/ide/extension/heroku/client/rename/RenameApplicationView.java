@@ -33,103 +33,78 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for renaming Heroku application. View must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 2, 2011 2:26:41 PM anya $
- * 
  */
-public class RenameApplicationView extends ViewImpl implements RenameApplicationPresenter.Display
-{
-   private static final String ID = "ideRenameApplicationView";
+public class RenameApplicationView extends ViewImpl implements RenameApplicationPresenter.Display {
+    private static final String ID = "ideRenameApplicationView";
 
-   private static final int WIDTH = 410;
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 107;
+    private static final int HEIGHT = 107;
 
-   private static final String RENAME_BUTTON_ID = "ideRenameApplicationViewRenameButton";
+    private static final String RENAME_BUTTON_ID = "ideRenameApplicationViewRenameButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRenameApplicationViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideRenameApplicationViewCancelButton";
 
-   private static final String NAME_FIELD_ID = "ideRenameApplicationViewNameField";
+    private static final String NAME_FIELD_ID = "ideRenameApplicationViewNameField";
 
-   /**
-    * Application name field.
-    */
-   @UiField
-   TextInput nameField;
+    /** Application name field. */
+    @UiField
+    TextInput nameField;
 
-   /**
-    * Rename button.
-    */
-   @UiField
-   ImageButton renameButton;
+    /** Rename button. */
+    @UiField
+    ImageButton renameButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   private static RenameApplicationViewUiBinder uiBinder = GWT.create(RenameApplicationViewUiBinder.class);
+    private static RenameApplicationViewUiBinder uiBinder = GWT.create(RenameApplicationViewUiBinder.class);
 
-   interface RenameApplicationViewUiBinder extends UiBinder<Widget, RenameApplicationView>
-   {
-   }
+    interface RenameApplicationViewUiBinder extends UiBinder<Widget, RenameApplicationView> {
+    }
 
-   public RenameApplicationView()
-   {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH,
-         HEIGHT, false);
-      add(uiBinder.createAndBindUi(this));
+    public RenameApplicationView() {
+        super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationViewTitle(), null, WIDTH,
+              HEIGHT, false);
+        add(uiBinder.createAndBindUi(this));
 
-      nameField.setName(NAME_FIELD_ID);
-      renameButton.setButtonId(RENAME_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        nameField.setName(NAME_FIELD_ID);
+        renameButton.setButtonId(RENAME_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getRenameField()
-    */
-   @Override
-   public TextFieldItem getRenameField()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getRenameField() */
+    @Override
+    public TextFieldItem getRenameField() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getRenameButton()
-    */
-   @Override
-   public HasClickHandlers getRenameButton()
-   {
-      return renameButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getRenameButton() */
+    @Override
+    public HasClickHandlers getRenameButton() {
+        return renameButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#selectValueInRenameField()
-    */
-   @Override
-   public void selectValueInRenameField()
-   {
-      nameField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#selectValueInRenameField() */
+    @Override
+    public void selectValueInRenameField() {
+        nameField.focus();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#enableRenameButton(boolean)
-    */
-   @Override
-   public void enableRenameButton(boolean isEnabled)
-   {
-      renameButton.setEnabled(isEnabled);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter.Display#enableRenameButton(boolean) */
+    @Override
+    public void enableRenameButton(boolean isEnabled) {
+        renameButton.setEnabled(isEnabled);
+    }
 
 }

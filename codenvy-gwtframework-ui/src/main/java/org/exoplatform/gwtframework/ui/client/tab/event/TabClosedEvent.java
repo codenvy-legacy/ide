@@ -22,38 +22,33 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TabClosedEvent extends GwtEvent<TabClosedHandler>
-{
+public class TabClosedEvent extends GwtEvent<TabClosedHandler> {
 
-   public static final GwtEvent.Type<TabClosedHandler> TYPE = new GwtEvent.Type<TabClosedHandler>();
+    public static final GwtEvent.Type<TabClosedHandler> TYPE = new GwtEvent.Type<TabClosedHandler>();
 
-   private String tabId;
+    private String tabId;
 
-   public TabClosedEvent(String tabId)
-   {
-      this.tabId = tabId;
-   }
+    public TabClosedEvent(String tabId) {
+        this.tabId = tabId;
+    }
 
-   public String getTabId()
-   {
-      return tabId;
-   }
+    public String getTabId() {
+        return tabId;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<TabClosedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<TabClosedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(TabClosedHandler handler)
-   {
-      handler.onTabClosed(this);
-   }
+    @Override
+    protected void dispatch(TabClosedHandler handler) {
+        handler.onTabClosed(this);
+    }
 
 }

@@ -18,42 +18,34 @@
  */
 package org.exoplatform.ide.jrebel.server;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: JRebelProfilerApplication.java 34027 19.12.12 16:58Z vzhukovskii $
  */
-public class JRebelConsumerApplication extends Application
-{
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
+public class JRebelConsumerApplication extends Application {
+    private Set<Class<?>> classes;
+    private Set<Object>   singletons;
 
-   public JRebelConsumerApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(JRebelConsumerService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new JRebelConsumerExceptionMapper());
-   }
+    public JRebelConsumerApplication() {
+        classes = new HashSet<Class<?>>(1);
+        classes.add(JRebelConsumerService.class);
+        singletons = new HashSet<Object>(1);
+        singletons.add(new JRebelConsumerExceptionMapper());
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
-   }
+    /** @see javax.ws.rs.core.Application#getSingletons() */
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 }

@@ -21,77 +21,61 @@ package org.exoplatform.ide.extension.googleappengine.client.deploy;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
 /**
  * Control for deploying application to Google App Engine.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 4:24:30 PM anya $
- * 
  */
 public class DeployApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, ActiveProjectChangedHandler
-{
-   private static final String ID = "PaaS/Google App Engine/Deploy";
+                                                                       ProjectClosedHandler, ActiveProjectChangedHandler {
+    private static final String ID = "PaaS/Google App Engine/Deploy";
 
-   private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationControlTitle();
+    private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationControlTitle();
 
-   private static final String PROMPT = GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationControlPrompt();
+    private static final String PROMPT = GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationControlPrompt();
 
-   public DeployApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new DeployApplicationEvent());
-      setImages(GAEClientBundle.INSTANCE.updateApplication(), GAEClientBundle.INSTANCE.updateApplicationDisabled());
-   }
+    public DeployApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setEvent(new DeployApplicationEvent());
+        setImages(GAEClientBundle.INSTANCE.updateApplication(), GAEClientBundle.INSTANCE.updateApplicationDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
 
-      setVisible(true);
-      setEnabled(false);
-   }
+        setVisible(true);
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
-      setEnabled(enabled);
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
-      setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
+        setEnabled(enabled);
+    }
+
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
+        setEnabled(enabled);
+    }
 }

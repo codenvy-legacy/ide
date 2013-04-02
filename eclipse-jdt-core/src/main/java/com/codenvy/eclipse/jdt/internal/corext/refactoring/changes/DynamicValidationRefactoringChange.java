@@ -23,50 +23,47 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringDescriptor;
  *
  * @since 3.2
  */
-public final class DynamicValidationRefactoringChange extends DynamicValidationStateChange
-{
+public final class DynamicValidationRefactoringChange extends DynamicValidationStateChange {
 
-   /**
-    * The refactoring descriptor
-    */
-   private final RefactoringDescriptor fDescriptor;
+    /** The refactoring descriptor */
+    private final RefactoringDescriptor fDescriptor;
 
-   /**
-    * Creates a new dynamic validation refactoring change.
-    *
-    * @param descriptor the refactoring descriptor
-    * @param name       the name of the change
-    */
-   public DynamicValidationRefactoringChange(final JavaRefactoringDescriptor descriptor, final String name)
-   {
-      super(name);
-      Assert.isNotNull(descriptor);
-      fDescriptor = descriptor;
-   }
+    /**
+     * Creates a new dynamic validation refactoring change.
+     *
+     * @param descriptor
+     *         the refactoring descriptor
+     * @param name
+     *         the name of the change
+     */
+    public DynamicValidationRefactoringChange(final JavaRefactoringDescriptor descriptor, final String name) {
+        super(name);
+        Assert.isNotNull(descriptor);
+        fDescriptor = descriptor;
+    }
 
-   /**
-    * Creates a new dynamic validation refactoring change.
-    *
-    * @param descriptor the refactoring descriptor
-    * @param name       the name of the change
-    * @param changes    the changes
-    */
-   public DynamicValidationRefactoringChange(final JavaRefactoringDescriptor descriptor, final String name,
-      final Change[] changes)
-   {
-      super(name, changes);
-      Assert.isNotNull(descriptor);
-      Assert.isTrue(!descriptor.validateDescriptor().hasFatalError(),
-         RefactoringCoreMessages.DynamicValidationRefactoringChange_fatal_error);
-      fDescriptor = descriptor;
-   }
+    /**
+     * Creates a new dynamic validation refactoring change.
+     *
+     * @param descriptor
+     *         the refactoring descriptor
+     * @param name
+     *         the name of the change
+     * @param changes
+     *         the changes
+     */
+    public DynamicValidationRefactoringChange(final JavaRefactoringDescriptor descriptor, final String name,
+                                              final Change[] changes) {
+        super(name, changes);
+        Assert.isNotNull(descriptor);
+        Assert.isTrue(!descriptor.validateDescriptor().hasFatalError(),
+                      RefactoringCoreMessages.DynamicValidationRefactoringChange_fatal_error);
+        fDescriptor = descriptor;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ChangeDescriptor getDescriptor()
-   {
-      return new RefactoringChangeDescriptor(fDescriptor);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ChangeDescriptor getDescriptor() {
+        return new RefactoringChangeDescriptor(fDescriptor);
+    }
 }

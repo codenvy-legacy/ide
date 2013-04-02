@@ -23,9 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: $
- * 
  */
-public interface SaveFileAsTemplateHandler extends EventHandler
-{
-   void onSaveFileAsTemplate(SaveFileAsTemplateEvent event);
+public interface SaveFileAsTemplateHandler extends EventHandler {
+    void onSaveFileAsTemplate(SaveFileAsTemplateEvent event);
 }

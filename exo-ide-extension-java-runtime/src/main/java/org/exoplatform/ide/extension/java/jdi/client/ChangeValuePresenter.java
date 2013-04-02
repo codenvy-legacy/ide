@@ -43,194 +43,159 @@ import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 /**
  * Presenter for change value view.
  * The view must implement {@link ChangeValuePresenter.Display} interface and pointed in Views.gwt.xml file.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ChangeValuePresenter.java Apr 28, 2012 9:47:01 AM azatsarynnyy $
- *
  */
-public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandler
-{
+public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
-      /**
-       * Get change button handler.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getChangeButton();
+    public interface Display extends IsView {
+        /**
+         * Get change button handler.
+         *
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getChangeButton();
 
-      /**
-       * Get cancel button handler.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCancelButton();
+        /**
+         * Get cancel button handler.
+         *
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Get expression field value.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getExpression();
+        /**
+         * Get expression field value.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<String> getExpression();
 
-      /**
-       * Set expression field value.
-       * 
-       * @param expression expression
-       */
-      void setExpression(String expression);
+        /**
+         * Set expression field value.
+         *
+         * @param expression
+         *         expression
+         */
+        void setExpression(String expression);
 
-      /**
-       * Change the enable state of the change button.
-       * 
-       * @param isEnable enabled or not
-       */
-      void setChangeButtonEnable(boolean isEnable);
+        /**
+         * Change the enable state of the change button.
+         *
+         * @param isEnable
+         *         enabled or not
+         */
+        void setChangeButtonEnable(boolean isEnable);
 
-      /**
-       * Give focus to expression field.
-       */
-      void focusInExpressionField();
+        /** Give focus to expression field. */
+        void focusInExpressionField();
 
-      /**
-       * Select all text in expression field.
-       */
-      void selectAllText();
+        /** Select all text in expression field. */
+        void selectAllText();
 
-      /**
-       * Set title for expression field.
-       * 
-       * @param title new title for expression field
-       */
-      void setExpressionFieldTitle(String title);
-   }
+        /**
+         * Set title for expression field.
+         *
+         * @param title
+         *         new title for expression field
+         */
+        void setExpressionFieldTitle(String title);
+    }
 
-   /**
-    * The display.
-    */
-   private Display display;
+    /** The display. */
+    private Display display;
 
-   /**
-    * Variable whose value need to change.
-    */
-   private Variable variable;
+    /** Variable whose value need to change. */
+    private Variable variable;
 
-   /**
-    * Connected debugger information.
-    */
-   private DebuggerInfo debuggerInfo;
+    /** Connected debugger information. */
+    private DebuggerInfo debuggerInfo;
 
-   public ChangeValuePresenter()
-   {
-      IDE.addHandler(ChangeValueEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public ChangeValuePresenter() {
+        IDE.addHandler(ChangeValueEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Bind display (view) with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getChangeButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doChangeValue();
-         }
-      });
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getExpression().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean isExpressionFieldNotEmpty = (event.getValue() != null && !event.getValue().trim().isEmpty());
-            display.setChangeButtonEnable(isExpressionFieldNotEmpty);
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueHandler#onChangeValue(org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent)
-    */
-   @Override
-   public void onChangeValue(ChangeValueEvent event)
-   {
-      variable = event.getVariable();
-      debuggerInfo = event.getDebuggerInfo();
-
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-
-         IDE.getInstance().openView(display.asView());
-
-         display.setExpressionFieldTitle(DebuggerExtension.LOCALIZATION_CONSTANT
-            .changeValueViewExpressionFieldTitle(variable.getName()));
-         display.setExpression(variable.getValue());
-         display.focusInExpressionField();
-         display.selectAllText();
-         display.setChangeButtonEnable(false);
-      }
-   }
-
-   /**
-    * Changes the variable value.
-    */
-   private void doChangeValue()
-   {
-      final String newValue = display.getExpression().getValue();
-      UpdateVariableRequest request = new UpdateVariableRequestImpl(variable.getVariablePath(), newValue);
-      try
-      {
-         DebuggerClientService.getInstance().setValue(debuggerInfo.getId(), request, new AsyncRequestCallback<String>()
-         {
+    /** Bind display (view) with presenter. */
+    public void bindDisplay() {
+        display.getChangeButton().addClickHandler(new ClickHandler() {
 
             @Override
-            protected void onSuccess(String result)
-            {
-               IDE.fireEvent(new UpdateVariableValueInTreeEvent(variable, newValue));
+            public void onClick(ClickEvent event) {
+                doChangeValue();
             }
+        });
+
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
             @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
-      }
+        });
 
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+        display.getExpression().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean isExpressionFieldNotEmpty = (event.getValue() != null && !event.getValue().trim().isEmpty());
+                display.setChangeButtonEnable(isExpressionFieldNotEmpty);
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueHandler#onChangeValue(org.exoplatform.ide.extension.java.jdi
+     * .client.events.ChangeValueEvent) */
+    @Override
+    public void onChangeValue(ChangeValueEvent event) {
+        variable = event.getVariable();
+        debuggerInfo = event.getDebuggerInfo();
+
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+
+            IDE.getInstance().openView(display.asView());
+
+            display.setExpressionFieldTitle(DebuggerExtension.LOCALIZATION_CONSTANT
+                                                             .changeValueViewExpressionFieldTitle(variable.getName()));
+            display.setExpression(variable.getValue());
+            display.focusInExpressionField();
+            display.selectAllText();
+            display.setChangeButtonEnable(false);
+        }
+    }
+
+    /** Changes the variable value. */
+    private void doChangeValue() {
+        final String newValue = display.getExpression().getValue();
+        UpdateVariableRequest request = new UpdateVariableRequestImpl(variable.getVariablePath(), newValue);
+        try {
+            DebuggerClientService.getInstance().setValue(debuggerInfo.getId(), request, new AsyncRequestCallback<String>() {
+
+                @Override
+                protected void onSuccess(String result) {
+                    IDE.fireEvent(new UpdateVariableValueInTreeEvent(variable, newValue));
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+        }
+
+        IDE.getInstance().closeView(display.asView().getId());
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

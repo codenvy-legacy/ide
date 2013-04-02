@@ -18,51 +18,46 @@
  */
 package org.exoplatform.ide.client.framework.navigation.event;
 
-import org.exoplatform.ide.vfs.shared.Item;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class SelectItemEvent extends GwtEvent<SelectItemHandler>
-{
+public class SelectItemEvent extends GwtEvent<SelectItemHandler> {
 
-   public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
+    public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
 
-   //private String itemId;
+    //private String itemId;
 
-   private Item item;
+    private Item item;
 
-   public SelectItemEvent(Item item)
-   {
-      this.item = item;
-   }
+    public SelectItemEvent(Item item) {
+        this.item = item;
+    }
 
-   //   public String getItemId()
-   //   {
-   //      return itemId;
-   //   }
+    //   public String getItemId()
+    //   {
+    //      return itemId;
+    //   }
 
-   @Override
-   protected void dispatch(SelectItemHandler handler)
-   {
-      handler.onSelectItem(this);
-   }
+    @Override
+    protected void dispatch(SelectItemHandler handler) {
+        handler.onSelectItem(this);
+    }
 
-   public Item getItem()
-   {
-      return item;
-   }
+    public Item getItem() {
+        return item;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SelectItemHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SelectItemHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

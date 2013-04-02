@@ -18,46 +18,37 @@
  */
 package org.exoplatform.ide.extension.gadget.server.rest;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GadgetExtensionApplication extends Application
-{
+public class GadgetExtensionApplication extends Application {
 
-   private Set<Class<?>> classes;
+    private Set<Class<?>> classes;
 
-   private Set<Object> singletons;
+    private Set<Object> singletons;
 
-   public GadgetExtensionApplication()
-   {
-      classes = new HashSet<Class<?>>();
-      classes.add(RestSecurityTokenGenerator.class);
-      singletons = new HashSet<Object>();
-   }
+    public GadgetExtensionApplication() {
+        classes = new HashSet<Class<?>>();
+        classes.add(RestSecurityTokenGenerator.class);
+        singletons = new HashSet<Object>();
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
-   }
+    /** @see javax.ws.rs.core.Application#getSingletons() */
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 }

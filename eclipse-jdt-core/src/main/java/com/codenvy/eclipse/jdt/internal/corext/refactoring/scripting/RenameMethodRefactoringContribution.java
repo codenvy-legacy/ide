@@ -38,36 +38,35 @@ import java.util.Map;
  */
 public final class RenameMethodRefactoringContribution extends JavaUIRefactoringContribution {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Refactoring createRefactoring(JavaRefactoringDescriptor descriptor, RefactoringStatus status) throws JavaModelException {
-		JavaRefactoringArguments arguments= new JavaRefactoringArguments(descriptor.getProject(), retrieveArgumentMap(descriptor));
+    /** {@inheritDoc} */
+    @Override
+    public Refactoring createRefactoring(JavaRefactoringDescriptor descriptor, RefactoringStatus status) throws JavaModelException {
+        JavaRefactoringArguments arguments = new JavaRefactoringArguments(descriptor.getProject(), retrieveArgumentMap(descriptor));
 
-		String input= arguments.getAttribute(JavaRefactoringDescriptorUtil.ATTRIBUTE_INPUT);
-		IMethod method= (IMethod) JavaRefactoringDescriptorUtil.handleToElement(arguments.getProject(), input);
-		if (method == null) {
-			status.addFatalError(Messages.format(RefactoringCoreMessages.RenameMethodRefactoringContribution_could_not_create, new Object[] { BasicElementLabels.getResourceName(arguments.getProject()), input }));
-			return null;
-		}
+        String input = arguments.getAttribute(JavaRefactoringDescriptorUtil.ATTRIBUTE_INPUT);
+        IMethod method = (IMethod)JavaRefactoringDescriptorUtil.handleToElement(arguments.getProject(), input);
+        if (method == null) {
+            status.addFatalError(Messages.format(RefactoringCoreMessages.RenameMethodRefactoringContribution_could_not_create,
+                                                 new Object[]{BasicElementLabels.getResourceName(arguments.getProject()), input}));
+            return null;
+        }
 
-		JavaRenameProcessor processor;
-		if (MethodChecks.isVirtual(method)) {
-			processor= new RenameVirtualMethodProcessor(method, arguments, status);
-		} else {
-			processor= new RenameNonVirtualMethodProcessor(method, arguments, status);
-		}
-		return new RenameRefactoring(processor);
-	}
+        JavaRenameProcessor processor;
+        if (MethodChecks.isVirtual(method)) {
+            processor = new RenameVirtualMethodProcessor(method, arguments, status);
+        } else {
+            processor = new RenameNonVirtualMethodProcessor(method, arguments, status);
+        }
+        return new RenameRefactoring(processor);
+    }
 
-	@Override
-	public RefactoringDescriptor createDescriptor() {
-		return RefactoringSignatureDescriptorFactory.createRenameJavaElementDescriptor(IJavaRefactorings.RENAME_METHOD);
-	}
+    @Override
+    public RefactoringDescriptor createDescriptor() {
+        return RefactoringSignatureDescriptorFactory.createRenameJavaElementDescriptor(IJavaRefactorings.RENAME_METHOD);
+    }
 
-	@Override
-	public RefactoringDescriptor createDescriptor(String id, String project, String description, String comment, Map arguments, int flags) {
-		return RefactoringSignatureDescriptorFactory.createRenameJavaElementDescriptor(id, project, description, comment, arguments, flags);
-	}
+    @Override
+    public RefactoringDescriptor createDescriptor(String id, String project, String description, String comment, Map arguments, int flags) {
+        return RefactoringSignatureDescriptorFactory.createRenameJavaElementDescriptor(id, project, description, comment, arguments, flags);
+    }
 }

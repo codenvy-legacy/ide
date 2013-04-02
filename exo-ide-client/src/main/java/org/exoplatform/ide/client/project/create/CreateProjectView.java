@@ -18,23 +18,12 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import com.google.gwt.dom.client.Style.Unit;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -57,613 +46,503 @@ import java.util.Map.Entry;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 4:41:51 PM anya $
- *
  */
-public class CreateProjectView extends ViewImpl implements CreateProjectPresenter.Display
-{
-   private static final String ID = "eXoCreateNewProjectView";
+public class CreateProjectView extends ViewImpl implements CreateProjectPresenter.Display {
+    private static final String ID = "eXoCreateNewProjectView";
 
-   private static final String CREATE_TITLE = IDE.TEMPLATE_CONSTANT.createProjectFromTemplateTitle();
+    private static final String CREATE_TITLE = IDE.TEMPLATE_CONSTANT.createProjectFromTemplateTitle();
 
-   private static final int HEIGHT = 460;
+    private static final int HEIGHT = 460;
 
-   private static final int WIDTH = 705;
+    private static final int WIDTH = 705;
 
-   private final String NAME_FIELD_ID = "eXoCreateNewProjectViewNameField";
+    private final String NAME_FIELD_ID = "eXoCreateNewProjectViewNameField";
 
-   private final String BACK_BUTTON_ID = "eXoCreateNewProjectViewBackButton";
+    private final String BACK_BUTTON_ID = "eXoCreateNewProjectViewBackButton";
 
-   private final String NEXT_BUTTON_ID = "eXoCreateNewProjectViewNextButton";
+    private final String NEXT_BUTTON_ID = "eXoCreateNewProjectViewNextButton";
 
-   private final String FINISH_BUTTON_ID = "eXoCreateNewProjectViewFinishButton";
+    private final String FINISH_BUTTON_ID = "eXoCreateNewProjectViewFinishButton";
 
-   private final String CANCEL_BUTTON_ID = "eXoCreateNewProjectViewCancelButton";
+    private final String CANCEL_BUTTON_ID = "eXoCreateNewProjectViewCancelButton";
 
-   private final String USE_JREBEL_PLUGIN_FIELD_ID = "usejrebelpluginfield";
-   
-   private final String JREBEL_PROFILE_FIRSTNAME_ID = "jrebelprofilefirstname";
-   
-   private final String JREBEL_PROFILE_LASTNAME_ID = "jrebelprofilelastname";
-   
-   private final String JREBEL_PROFILE_PHONE_ID = "jrebelprofilephone";
-   
-   private final String JREBEL_ERROR_MESSAGE_LABEL_ID = "jrebelerrormessagelabel";
-   
-   private final String JREBEL_PROFILE_FIELDS_ID = "jrebelprofilefields";
+    private final String USE_JREBEL_PLUGIN_FIELD_ID = "usejrebelpluginfield";
 
-   private static CreateProjectViewUiBinder uiBinder = GWT.create(CreateProjectViewUiBinder.class);
+    private final String JREBEL_PROFILE_FIRSTNAME_ID = "jrebelprofilefirstname";
 
-   interface CreateProjectViewUiBinder extends UiBinder<Widget, CreateProjectView>
-   {
-   }
+    private final String JREBEL_PROFILE_LASTNAME_ID = "jrebelprofilelastname";
 
-   @UiField
-   ImageButton nextButton;
+    private final String JREBEL_PROFILE_PHONE_ID = "jrebelprofilephone";
 
-   @UiField
-   ImageButton backButton;
+    private final String JREBEL_ERROR_MESSAGE_LABEL_ID = "jrebelerrormessagelabel";
 
-   @UiField
-   ImageButton finishButton;
+    private final String JREBEL_PROFILE_FIELDS_ID = "jrebelprofilefields";
 
-   @UiField
-   ImageButton cancelButton;
+    private static CreateProjectViewUiBinder uiBinder = GWT.create(CreateProjectViewUiBinder.class);
 
-   @UiField
-   Grid projectTypesGrid;
+    interface CreateProjectViewUiBinder extends UiBinder<Widget, CreateProjectView> {
+    }
 
-   @UiField
-   Grid targetGrid;
+    @UiField
+    ImageButton nextButton;
 
-   @UiField
-   TextInput projectNameField;
+    @UiField
+    ImageButton backButton;
 
-   @UiField
-   Label errorLabel;
+    @UiField
+    ImageButton finishButton;
 
-   @UiField
-   ProjectTemplateGrid templatesGrid;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   CheckBox useJRebelPluginField;
+    @UiField
+    Grid projectTypesGrid;
 
-   @UiField
-   FlowPanel createProjectStep;
+    @UiField
+    Grid targetGrid;
 
-   @UiField
-   DockLayoutPanel chooseTemplateStep;
+    @UiField
+    TextInput projectNameField;
 
-   @UiField
-   FlowPanel deployProjectStep;
+    @UiField
+    Label errorLabel;
 
-   @UiField
-   DockLayoutPanel jRebelPanel;
+    @UiField
+    ProjectTemplateGrid templatesGrid;
 
-   @UiField
-   TextInput jRebelProfileFirstName;
+    @UiField
+    CheckBox useJRebelPluginField;
 
-   @UiField
-   TextInput jRebelProfileLastName;
+    @UiField
+    FlowPanel createProjectStep;
 
-   @UiField
-   TextInput jRebelProfilePhone;
+    @UiField
+    DockLayoutPanel chooseTemplateStep;
 
-   @UiField
-   Label jRebelErrorMessageLabel;
+    @UiField
+    FlowPanel deployProjectStep;
 
-   @UiField
-   DockLayoutPanel jRebelProfileFields;
+    @UiField
+    DockLayoutPanel jRebelPanel;
 
-   private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
+    @UiField
+    TextInput jRebelProfileFirstName;
 
-   private List<ToggleButton> targetButtonsList = new LinkedList<ToggleButton>();
+    @UiField
+    TextInput jRebelProfileLastName;
 
-   private Map<ToggleButton, ProjectType> projectTypesMap = new HashMap<ToggleButton, ProjectType>();
+    @UiField
+    TextInput jRebelProfilePhone;
 
-   private Map<ToggleButton, PaaS> targetsMap = new HashMap<ToggleButton, PaaS>();
+    @UiField
+    Label jRebelErrorMessageLabel;
 
-   private Map<PaaS, ToggleButton> paasButtonsMap = new HashMap<PaaS, ToggleButton>();
+    @UiField
+    DockLayoutPanel jRebelProfileFields;
 
-   private boolean showJRebelStoredForm;
+    private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
-   public CreateProjectView()
-   {
-      super(ID, ViewType.MODAL, CREATE_TITLE, null, WIDTH, HEIGHT, false);
-      add(uiBinder.createAndBindUi(this));
+    private List<ToggleButton> targetButtonsList = new LinkedList<ToggleButton>();
 
-      backButton.setButtonId(BACK_BUTTON_ID);
-      nextButton.setButtonId(NEXT_BUTTON_ID);
-      finishButton.setButtonId(FINISH_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      
-      jRebelErrorMessageLabel.setID(JREBEL_ERROR_MESSAGE_LABEL_ID);
-      jRebelProfileFields.getElement().setId(JREBEL_PROFILE_FIELDS_ID);
-      jRebelProfileFirstName.getElement().setId(JREBEL_PROFILE_FIRSTNAME_ID);
-      jRebelProfileLastName.getElement().setId(JREBEL_PROFILE_LASTNAME_ID);
-      jRebelProfilePhone.getElement().setId(JREBEL_PROFILE_PHONE_ID);
-      useJRebelPluginField.getElement().setId(USE_JREBEL_PLUGIN_FIELD_ID);
+    private Map<ToggleButton, ProjectType> projectTypesMap = new HashMap<ToggleButton, ProjectType>();
 
-      projectNameField.setName(NAME_FIELD_ID);
+    private Map<ToggleButton, PaaS> targetsMap = new HashMap<ToggleButton, PaaS>();
 
-      deployProjectStep.setVisible(false);
-      jRebelErrorMessageLabel.setValue("");
-   }
-   
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#switchToCreateModule()
-    */
-   @Override
-   public void switchToCreateModule()
-   {
-      setTitle(IDE.TEMPLATE_CONSTANT.createProjectFromTemplateNewModuleTitle());
-   }
+    private Map<PaaS, ToggleButton> paasButtonsMap = new HashMap<PaaS, ToggleButton>();
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    private boolean showJRebelStoredForm;
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getNextButton()
-    */
-   @Override
-   public HasClickHandlers getNextButton()
-   {
-      return nextButton;
-   }
+    public CreateProjectView() {
+        super(ID, ViewType.MODAL, CREATE_TITLE, null, WIDTH, HEIGHT, false);
+        add(uiBinder.createAndBindUi(this));
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getFinishButton()
-    */
-   @Override
-   public HasClickHandlers getFinishButton()
-   {
-      return finishButton;
-   }
+        backButton.setButtonId(BACK_BUTTON_ID);
+        nextButton.setButtonId(NEXT_BUTTON_ID);
+        finishButton.setButtonId(FINISH_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getNameField()
-    */
-   @Override
-   public HasValue<String> getNameField()
-   {
-      return projectNameField;
-   }
+        jRebelErrorMessageLabel.setID(JREBEL_ERROR_MESSAGE_LABEL_ID);
+        jRebelProfileFields.getElement().setId(JREBEL_PROFILE_FIELDS_ID);
+        jRebelProfileFirstName.getElement().setId(JREBEL_PROFILE_FIRSTNAME_ID);
+        jRebelProfileLastName.getElement().setId(JREBEL_PROFILE_LASTNAME_ID);
+        jRebelProfilePhone.getElement().setId(JREBEL_PROFILE_PHONE_ID);
+        useJRebelPluginField.getElement().setId(USE_JREBEL_PLUGIN_FIELD_ID);
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableNextButton(boolean)
-    */
-   @Override
-   public void enableNextButton(boolean enabled)
-   {
-      nextButton.setEnabled(enabled);
-   }
+        projectNameField.setName(NAME_FIELD_ID);
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableFinishButton(boolean)
-    */
-   @Override
-   public void enableFinishButton(boolean enabled)
-   {
-      finishButton.setEnabled(enabled);
-   }
+        deployProjectStep.setVisible(false);
+        jRebelErrorMessageLabel.setValue("");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showCreateProjectStep()
-    */
-   @Override
-   public void showCreateProjectStep()
-   {
-      createProjectStep.setVisible(true);
-      chooseTemplateStep.setVisible(false);
-      deployProjectStep.setVisible(false);
+    /** @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#switchToCreateModule() */
+    @Override
+    public void switchToCreateModule() {
+        setTitle(IDE.TEMPLATE_CONSTANT.createProjectFromTemplateNewModuleTitle());
+    }
 
-      backButton.setVisible(false);
-      nextButton.setVisible(true);
-      finishButton.setVisible(true);
-   }
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showChooseTemlateStep()
-    */
-   @Override
-   public void showChooseTemlateStep()
-   {
-      createProjectStep.setVisible(false);
-      chooseTemplateStep.setVisible(true);
-      deployProjectStep.setVisible(false);
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getNextButton() */
+    @Override
+    public HasClickHandlers getNextButton() {
+        return nextButton;
+    }
 
-      backButton.setVisible(true);
-      nextButton.setVisible(true);
-      finishButton.setVisible(true);
-   }
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getFinishButton() */
+    @Override
+    public HasClickHandlers getFinishButton() {
+        return finishButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showDeployProjectStep()
-    */
-   @Override
-   public void showDeployProjectStep()
-   {
-      createProjectStep.setVisible(false);
-      chooseTemplateStep.setVisible(false);
-      deployProjectStep.setVisible(true);
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getNameField() */
+    @Override
+    public HasValue<String> getNameField() {
+        return projectNameField;
+    }
 
-      backButton.setVisible(true);
-      nextButton.setVisible(false);
-      finishButton.setVisible(true);
-   }
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableNextButton(boolean) */
+    @Override
+    public void enableNextButton(boolean enabled) {
+        nextButton.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getBackButton()
-    */
-   @Override
-   public HasClickHandlers getBackButton()
-   {
-      return backButton;
-   }
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableFinishButton(boolean) */
+    @Override
+    public void enableFinishButton(boolean enabled) {
+        finishButton.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setDeployView(com.google.gwt.user.client.ui.Composite)
-    */
-   @Override
-   public void setDeployView(Composite deployView)
-   {
-      deployProjectStep.clear();
-      deployProjectStep.add(deployView);
-   }
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showCreateProjectStep() */
+    @Override
+    public void showCreateProjectStep() {
+        createProjectStep.setVisible(true);
+        chooseTemplateStep.setVisible(false);
+        deployProjectStep.setVisible(false);
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setProjectTypes(java.util.List)
-    */
-   @Override
-   public void setProjectTypes(List<ProjectType> projectTypeList)
-   {
-      projectTypesGrid.setSize("100%", "100%");
+        backButton.setVisible(false);
+        nextButton.setVisible(true);
+        finishButton.setVisible(true);
+    }
 
-      int columnCount = 8;
-      int rowCount = (int)Math.ceil((double)projectTypeList.size() / columnCount);
-      projectTypesGrid.resize(rowCount, columnCount);
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showChooseTemlateStep() */
+    @Override
+    public void showChooseTemlateStep() {
+        createProjectStep.setVisible(false);
+        chooseTemplateStep.setVisible(true);
+        deployProjectStep.setVisible(false);
 
-      int buttonNum = 0;
-      for (int rowNum = 0; rowNum < rowCount; rowNum++)
-      {
-         for (int colNum = 0; colNum < columnCount; colNum++)
-         {
-            // add empty DockPanels because the spacing between the buttons should be the same on all lines
-            if (buttonNum >= projectTypeList.size())
-            {
-               DockPanel dock = new DockPanel();
-               dock.setSpacing(4);
-               dock.add(getNewButtonLabel(null), DockPanel.SOUTH);
-               projectTypesGrid.setWidget(rowNum, colNum, dock);
-               continue;
+        backButton.setVisible(true);
+        nextButton.setVisible(true);
+        finishButton.setVisible(true);
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showDeployProjectStep() */
+    @Override
+    public void showDeployProjectStep() {
+        createProjectStep.setVisible(false);
+        chooseTemplateStep.setVisible(false);
+        deployProjectStep.setVisible(true);
+
+        backButton.setVisible(true);
+        nextButton.setVisible(false);
+        finishButton.setVisible(true);
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getBackButton() */
+    @Override
+    public HasClickHandlers getBackButton() {
+        return backButton;
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setDeployView(com.google.gwt.user.client.ui
+     * .Composite) */
+    @Override
+    public void setDeployView(Composite deployView) {
+        deployProjectStep.clear();
+        deployProjectStep.add(deployView);
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setProjectTypes(java.util.List) */
+    @Override
+    public void setProjectTypes(List<ProjectType> projectTypeList) {
+        projectTypesGrid.setSize("100%", "100%");
+
+        int columnCount = 8;
+        int rowCount = (int)Math.ceil((double)projectTypeList.size() / columnCount);
+        projectTypesGrid.resize(rowCount, columnCount);
+
+        int buttonNum = 0;
+        for (int rowNum = 0; rowNum < rowCount; rowNum++) {
+            for (int colNum = 0; colNum < columnCount; colNum++) {
+                // add empty DockPanels because the spacing between the buttons should be the same on all lines
+                if (buttonNum >= projectTypeList.size()) {
+                    DockPanel dock = new DockPanel();
+                    dock.setSpacing(4);
+                    dock.add(getNewButtonLabel(null), DockPanel.SOUTH);
+                    projectTypesGrid.setWidget(rowNum, colNum, dock);
+                    continue;
+                }
+
+                DockPanel dock = new DockPanel();
+                dock.setSpacing(4);
+                dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+
+                ProjectType projectType = projectTypeList.get(buttonNum++);
+                Image image = new Image(ProjectResolver.getLargeImageForProject(projectType));
+                ToggleButton projectTypeButton = getNewButton(image, null);
+
+                String type = projectType.value();
+                // TODO
+                if (projectType == ProjectType.JSP) {
+                    type = "Java Web Application (WAR)";
+                } else if (projectType == ProjectType.JAR) {
+                    type = "Java Library (JAR)";
+                } else if (projectType == ProjectType.SPRING) {
+                    type = "Java Spring";
+                } else if (projectType == ProjectType.RUBY_ON_RAILS) {
+                    type = "Ruby on Rails";
+                }
+
+                dock.add(projectTypeButton, DockPanel.NORTH);
+                dock.add(getNewButtonLabel(type), DockPanel.SOUTH);
+
+                projectTypeButtonsList.add(projectTypeButton);
+                projectTypesMap.put(projectTypeButton, projectType);
+                projectTypeButton.getElement().setId("CREATE-PROJECT-" + projectType);
+                projectTypesGrid.setWidget(rowNum, colNum, dock);
             }
+        }
+    }
 
-            DockPanel dock = new DockPanel();
-            dock.setSpacing(4);
-            dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setTargets(java.util.List) */
+    @Override
+    public void setTargets(List<PaaS> targetList) {
+        targetGrid.setSize("100%", "100%");
 
-            ProjectType projectType = projectTypeList.get(buttonNum++);
-            Image image = new Image(ProjectResolver.getLargeImageForProject(projectType));
-            ToggleButton projectTypeButton = getNewButton(image, null);
+        int columnCount = 8;
+        int rowCount = (int)Math.ceil((double)targetList.size() / columnCount);
+        targetGrid.resize(rowCount, columnCount);
 
-            String type = projectType.value();
-            // TODO
-            if (projectType == ProjectType.JSP)
-            {
-               type = "Java Web Application (WAR)";
+        int buttonNum = 0;
+        for (int rowNum = 0; rowNum < rowCount; rowNum++) {
+            for (int colNum = 0; colNum < columnCount; colNum++) {
+                // add empty DockPanels because the spacing between the buttons should be the same on all lines
+                if (buttonNum >= targetList.size()) {
+                    DockPanel dock = new DockPanel();
+                    dock.setSpacing(4);
+                    dock.add(getNewButtonLabel(null), DockPanel.SOUTH);
+                    targetGrid.setWidget(rowNum, colNum, dock);
+                    continue;
+                }
+
+                DockPanel dock = new DockPanel();
+                dock.setSpacing(4);
+                dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+
+                PaaS target = targetList.get(buttonNum++);
+                Image targetImageEnabled = target.getImageEnabled();
+                Image targetImageDisabled = target.getImageDisabled();
+                ToggleButton targetButton = getNewButton(targetImageEnabled, targetImageDisabled);
+                targetButton.setEnabled(false);
+
+                dock.add(targetButton, DockPanel.NORTH);
+                dock.add(getNewButtonLabel(target.getTitle()), DockPanel.SOUTH);
+
+                targetButtonsList.add(targetButton);
+                targetsMap.put(targetButton, target);
+                paasButtonsMap.put(target, targetButton);
+                dock.getElement().setId("CREATE-PROJECT-PAAS-" + target.getId());
+                targetGrid.setWidget(rowNum, colNum, dock);
             }
-            else if (projectType == ProjectType.JAR)
-            {
-               type = "Java Library (JAR)";
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTemplatesGrid() */
+    @Override
+    public ListGridItem<ProjectTemplate> getTemplatesGrid() {
+        return templatesGrid;
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getUseJRebelPlugin() */
+    @Override
+    public HasValue<Boolean> getUseJRebelPlugin() {
+        return useJRebelPluginField;
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#selectTemplate(org.exoplatform.ide.client.framework
+     * .template.ProjectTemplate) */
+    @Override
+    public void selectTemplate(ProjectTemplate projectTemplate) {
+        templatesGrid.selectItem(projectTemplate);
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getErrorLabel() */
+    @Override
+    public HasValue<String> getErrorLabel() {
+        return errorLabel;
+    }
+
+    /**
+     * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#toggleUpAllButtons(java.util.List,
+     *      com.google.gwt.user.client.ui.ToggleButton)
+     */
+    @Override
+    public void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton) {
+        for (ToggleButton button : buttonsList) {
+            if (button != currentButton) {
+                button.setValue(false);
             }
-            else if (projectType == ProjectType.SPRING)
-            {
-               type = "Java Spring";
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getProjectTypeButtons() */
+    @Override
+    public List<ToggleButton> getProjectTypeButtons() {
+        return projectTypeButtonsList;
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTargetButtons() */
+    @Override
+    public List<ToggleButton> getTargetButtons() {
+        return targetButtonsList;
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getProjectTypeByButton(com.google.gwt.user.client
+     * .ui.ToggleButton) */
+    @Override
+    public ProjectType getProjectTypeByButton(ToggleButton button) {
+        return projectTypesMap.get(button);
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTargetByButton(com.google.gwt.user.client.ui
+     * .ToggleButton) */
+    @Override
+    public PaaS getTargetByButton(ToggleButton button) {
+        return targetsMap.get(button);
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableButtonsForSupportedTargets(java.util.List) */
+    @Override
+    public void enableButtonsForSupportedTargets(List<PaaS> list) {
+        for (Entry<PaaS, ToggleButton> entry : paasButtonsMap.entrySet()) {
+            if (list.contains(entry.getKey())) {
+                entry.getValue().setEnabled(true);
+            } else {
+                entry.getValue().setEnabled(false);
             }
-            else if (projectType == ProjectType.RUBY_ON_RAILS)
-            {
-               type = "Ruby on Rails";
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#selectTarget(org.exoplatform.ide.client.framework
+     * .paas.PaaS) */
+    @Override
+    public void selectTarget(PaaS target) {
+        for (Entry<PaaS, ToggleButton> entry : paasButtonsMap.entrySet()) {
+            entry.getValue().setValue(false);
+            if (entry.getKey() == target) {
+                entry.getValue().setValue(true, true);
             }
+        }
+    }
 
-            dock.add(projectTypeButton, DockPanel.NORTH);
-            dock.add(getNewButtonLabel(type), DockPanel.SOUTH);
+    /** @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#setJRebelPanelVisibility(boolean) */
+    @Override
+    public void setJRebelPanelVisibility(boolean isVisible) {
+        jRebelPanel.setVisible(isVisible);
+    }
 
-            projectTypeButtonsList.add(projectTypeButton);
-            projectTypesMap.put(projectTypeButton, projectType);
-            projectTypeButton.getElement().setId("CREATE-PROJECT-" + projectType);
-            projectTypesGrid.setWidget(rowNum, colNum, dock);
-         }
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setTargets(java.util.List)
-    */
-   @Override
-   public void setTargets(List<PaaS> targetList)
-   {
-      targetGrid.setSize("100%", "100%");
-
-      int columnCount = 8;
-      int rowCount = (int)Math.ceil((double)targetList.size() / columnCount);
-      targetGrid.resize(rowCount, columnCount);
-
-      int buttonNum = 0;
-      for (int rowNum = 0; rowNum < rowCount; rowNum++)
-      {
-         for (int colNum = 0; colNum < columnCount; colNum++)
-         {
-            // add empty DockPanels because the spacing between the buttons should be the same on all lines
-            if (buttonNum >= targetList.size())
-            {
-               DockPanel dock = new DockPanel();
-               dock.setSpacing(4);
-               dock.add(getNewButtonLabel(null), DockPanel.SOUTH);
-               targetGrid.setWidget(rowNum, colNum, dock);
-               continue;
+    @Override
+    public void setJRebelFormVisible(boolean visible) {
+        jRebelProfileFields.setVisible(visible);
+        for (int i = 0; i < getProjectTypeButtons().size(); i++) {
+            if (getProjectTypeButtons().get(i).isDown()) {
+                ProjectType projectType = ProjectType.fromValue(projectTypesMap.get(getProjectTypeButtons().get(i)).value());
+                if (projectType == ProjectType.JSP || projectType == ProjectType.SPRING) {
+                    if (visible) {
+                        if (!showJRebelStoredForm) {
+                            chooseTemplateStep.setHeight("88%");
+                            return;
+                        }
+                        chooseTemplateStep.setHeight("58%");
+                    } else {
+                        chooseTemplateStep.setHeight("88%");
+                    }
+                    return;
+                }
             }
+        }
+        chooseTemplateStep.setHeight("100%");
+    }
 
-            DockPanel dock = new DockPanel();
-            dock.setSpacing(4);
-            dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+    /**
+     * Creates a {@link ToggleButton} with the specified images and preconfigured style settings.
+     *
+     * @param enabledImage
+     *         image for enabled button state
+     * @param disabledImage
+     *         image for disabled button state
+     * @return a {@link ToggleButton}
+     */
+    private ToggleButton getNewButton(Image enabledImage, Image disabledImage) {
+        ToggleButton button = new ToggleButton();
+        if (enabledImage != null) {
+            button.getUpFace().setImage(enabledImage);
+        }
+        if (disabledImage != null) {
+            button.getUpDisabledFace().setImage(disabledImage);
+        }
+        button.setSize("48px", "48px");
+        button.getElement().getStyle().setPropertyPx("borderRadius", 10);
+        button.getElement().getStyle().setPropertyPx("outline", 0);
+        return button;
+    }
 
-            PaaS target = targetList.get(buttonNum++);
-            Image targetImageEnabled = target.getImageEnabled();
-            Image targetImageDisabled = target.getImageDisabled();
-            ToggleButton targetButton = getNewButton(targetImageEnabled, targetImageDisabled);
-            targetButton.setEnabled(false);
+    /**
+     * Creates an HTML widget with the specified text content and preconfigured style settings.
+     *
+     * @param label
+     *         the new widget's text content
+     * @return an HTML widget
+     */
+    private HTML getNewButtonLabel(String label) {
+        HTML titleLabel = new HTML();
+        if (label != null) {
+            titleLabel.setHTML(label);
+        }
+        titleLabel.setWidth("70px");
+        titleLabel.setHeight("46px");
+        titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");
+        titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
+        titleLabel.getElement().getStyle().setColor("#545454");
+        return titleLabel;
+    }
 
-            dock.add(targetButton, DockPanel.NORTH);
-            dock.add(getNewButtonLabel(target.getTitle()), DockPanel.SOUTH);
+    @Override
+    public HasValue<String> getJRebelFirstNameField() {
+        return jRebelProfileFirstName;
+    }
 
-            targetButtonsList.add(targetButton);
-            targetsMap.put(targetButton, target);
-            paasButtonsMap.put(target, targetButton);
-            dock.getElement().setId("CREATE-PROJECT-PAAS-" + target.getId());
-            targetGrid.setWidget(rowNum, colNum, dock);
-         }
-      }
-   }
+    @Override
+    public HasValue<String> getJRebelLastNameField() {
+        return jRebelProfileLastName;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTemplatesGrid()
-    */
-   @Override
-   public ListGridItem<ProjectTemplate> getTemplatesGrid()
-   {
-      return templatesGrid;
-   }
+    @Override
+    public HasValue<String> getJRebelPhoneNumberField() {
+        return jRebelProfilePhone;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getUseJRebelPlugin()
-    */
-   @Override
-   public HasValue<Boolean> getUseJRebelPlugin()
-   {
-      return useJRebelPluginField;
-   }
+    @Override
+    public void setJRebelErrorMessageLabel(String message) {
+        jRebelErrorMessageLabel.setValue(message);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#selectTemplate(org.exoplatform.ide.client.framework.template.ProjectTemplate)
-    */
-   @Override
-   public void selectTemplate(ProjectTemplate projectTemplate)
-   {
-      templatesGrid.selectItem(projectTemplate);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getErrorLabel()
-    */
-   @Override
-   public HasValue<String> getErrorLabel()
-   {
-      return errorLabel;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#toggleUpAllButtons(java.util.List, com.google.gwt.user.client.ui.ToggleButton)
-    */
-   @Override
-   public void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton)
-   {
-      for (ToggleButton button : buttonsList)
-      {
-         if (button != currentButton)
-         {
-            button.setValue(false);
-         }
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getProjectTypeButtons()
-    */
-   @Override
-   public List<ToggleButton> getProjectTypeButtons()
-   {
-      return projectTypeButtonsList;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTargetButtons()
-    */
-   @Override
-   public List<ToggleButton> getTargetButtons()
-   {
-      return targetButtonsList;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getProjectTypeByButton(com.google.gwt.user.client.ui.ToggleButton)
-    */
-   @Override
-   public ProjectType getProjectTypeByButton(ToggleButton button)
-   {
-      return projectTypesMap.get(button);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTargetByButton(com.google.gwt.user.client.ui.ToggleButton)
-    */
-   @Override
-   public PaaS getTargetByButton(ToggleButton button)
-   {
-      return targetsMap.get(button);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableButtonsForSupportedTargets(java.util.List)
-    */
-   @Override
-   public void enableButtonsForSupportedTargets(List<PaaS> list)
-   {
-      for (Entry<PaaS, ToggleButton> entry : paasButtonsMap.entrySet())
-      {
-         if (list.contains(entry.getKey()))
-         {
-            entry.getValue().setEnabled(true);
-         }
-         else
-         {
-            entry.getValue().setEnabled(false);
-         }
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#selectTarget(org.exoplatform.ide.client.framework.paas.PaaS)
-    */
-   @Override
-   public void selectTarget(PaaS target)
-   {
-      for (Entry<PaaS, ToggleButton> entry : paasButtonsMap.entrySet())
-      {
-         entry.getValue().setValue(false);
-         if (entry.getKey() == target)
-         {
-            entry.getValue().setValue(true, true);
-         }
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#setJRebelPanelVisibility(boolean)
-    */
-   @Override
-   public void setJRebelPanelVisibility(boolean isVisible)
-   {
-      jRebelPanel.setVisible(isVisible);
-   }
-
-   @Override
-   public void setJRebelFormVisible(boolean visible)
-   {
-      jRebelProfileFields.setVisible(visible);
-      for (int i = 0; i < getProjectTypeButtons().size(); i++)
-      {
-         if (getProjectTypeButtons().get(i).isDown())
-         {
-            ProjectType projectType = ProjectType.fromValue(projectTypesMap.get(getProjectTypeButtons().get(i)).value());
-            if (projectType == ProjectType.JSP || projectType == ProjectType.SPRING)
-            {
-               if (visible)
-               {
-                  if (!showJRebelStoredForm)
-                  {
-                     chooseTemplateStep.setHeight("88%");
-                     return;
-                  }
-                  chooseTemplateStep.setHeight("58%");
-               }
-               else
-               {
-                  chooseTemplateStep.setHeight("88%");
-               }
-               return;
-            }
-         }
-      }
-      chooseTemplateStep.setHeight("100%");
-   }
-
-   /**
-    * Creates a {@link ToggleButton} with the specified images and preconfigured style settings.
-    *
-    * @param enabledImage image for enabled button state
-    * @param disabledImage image for disabled button state
-    * @return a {@link ToggleButton}
-    */
-   private ToggleButton getNewButton(Image enabledImage, Image disabledImage)
-   {
-      ToggleButton button = new ToggleButton();
-      if (enabledImage != null)
-      {
-         button.getUpFace().setImage(enabledImage);
-      }
-      if (disabledImage != null)
-      {
-         button.getUpDisabledFace().setImage(disabledImage);
-      }
-      button.setSize("48px", "48px");
-      button.getElement().getStyle().setPropertyPx("borderRadius", 10);
-      button.getElement().getStyle().setPropertyPx("outline", 0);
-      return button;
-   }
-
-   /**
-    * Creates an HTML widget with the specified text content and preconfigured style settings.
-    *
-    * @param label the new widget's text content
-    * @return an HTML widget
-    */
-   private HTML getNewButtonLabel(String label)
-   {
-      HTML titleLabel = new HTML();
-      if (label != null)
-      {
-         titleLabel.setHTML(label);
-      }
-      titleLabel.setWidth("70px");
-      titleLabel.setHeight("46px");
-      titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");
-      titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
-      titleLabel.getElement().getStyle().setColor("#545454");
-      return titleLabel;
-   }
-
-   @Override
-   public HasValue<String> getJRebelFirstNameField()
-   {
-      return jRebelProfileFirstName;
-   }
-
-   @Override
-   public HasValue<String> getJRebelLastNameField()
-   {
-      return jRebelProfileLastName;
-   }
-
-   @Override
-   public HasValue<String> getJRebelPhoneNumberField()
-   {
-      return jRebelProfilePhone;
-   }
-
-   @Override
-   public void setJRebelErrorMessageLabel(String message)
-   {
-      jRebelErrorMessageLabel.setValue(message);
-   }
-
-   @Override
-   public void setJRebelStoredFormVisible(boolean visible)
-   {
-      showJRebelStoredForm = visible;
-   }
+    @Override
+    public void setJRebelStoredFormVisible(boolean visible) {
+        showJRebelStoredForm = visible;
+    }
 }

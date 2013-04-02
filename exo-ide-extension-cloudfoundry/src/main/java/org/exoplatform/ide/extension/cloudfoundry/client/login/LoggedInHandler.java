@@ -21,11 +21,10 @@ package org.exoplatform.ide.extension.cloudfoundry.client.login;
 /**
  * Can be called after success login.
  * <p/>
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: LoggedInHandler.java Jul 12, 2011 10:27:16 AM vereshchaka $
- *
  */
-public interface LoggedInHandler
-{
-   void onLoggedIn();
+public interface LoggedInHandler {
+    void onLoggedIn();
 }

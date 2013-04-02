@@ -36,112 +36,93 @@ import org.junit.Before;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 12, 2012 3:23:29 PM evgen $
- * 
  */
-public abstract class ParserBaseTest extends BaseTest
-{
+public abstract class ParserBaseTest extends BaseTest {
 
-   protected CompilationUnit unit;
+    protected CompilationUnit unit;
 
-   protected char[] javaFiles;
+    protected char[] javaFiles;
 
-   protected interface Resources extends ClientBundle
-   {
-      @Source("CreateJavaClassPresenter.txt")
-      TextResource resource();
-   }
+    protected interface Resources extends ClientBundle {
+        @Source("CreateJavaClassPresenter.txt")
+        TextResource resource();
+    }
 
 
-   @Before
-   public void gwtSetUp()
-   {
-      Resources rs = GWT.create(Resources.class);
-      javaFiles = rs.resource().getText().toCharArray();
+    @Before
+    public void gwtSetUp() {
+        Resources rs = GWT.create(Resources.class);
+        javaFiles = rs.resource().getText().toCharArray();
 
-      ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      parser.setUnitName("/P/org/test/CreateJavaClassPresenter.java");
-      parser.setSource(javaFiles);
-      parser.setNameEnvironment(new MockNameEnv());
-      ASTNode ast = parser.createAST(null);
-      unit = (CompilationUnit)ast;
+        ASTParser parser = ASTParser.newParser(AST.JLS3);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setUnitName("/P/org/test/CreateJavaClassPresenter.java");
+        parser.setSource(javaFiles);
+        parser.setNameEnvironment(new MockNameEnv());
+        ASTNode ast = parser.createAST(null);
+        unit = (CompilationUnit)ast;
 
-      new JavaCodeAssistantService(null, null);
-   }
+        new JavaCodeAssistantService(null, null);
+    }
 
-   private class MockNameEnv implements INameEnvironment
-   {
+    private class MockNameEnv implements INameEnvironment {
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[][])
-       */
-      @Override
-      public NameEnvironmentAnswer findType(char[][] compoundTypeName)
-      {
-         // TODO Auto-generated method stub
-         return null;
-      }
+        /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[][]) */
+        @Override
+        public NameEnvironmentAnswer findType(char[][] compoundTypeName) {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[], char[][])
-       */
-      @Override
-      public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName)
-      {
-         // TODO Auto-generated method stub
-         return null;
-      }
+        /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findType(char[], char[][]) */
+        @Override
+        public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName) {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#isPackage(char[][], char[])
-       */
-      @Override
-      public boolean isPackage(char[][] parentPackageName, char[] packageName)
-      {
-         // TODO Auto-generated method stub
-         return false;
-      }
+        /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#isPackage(char[][], char[]) */
+        @Override
+        public boolean isPackage(char[][] parentPackageName, char[] packageName) {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup()
-       */
-      @Override
-      public void cleanup()
-      {
-         // TODO Auto-generated method stub
+        /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup() */
+        @Override
+        public void cleanup() {
+            // TODO Auto-generated method stub
 
-      }
+        }
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findTypes(char[], boolean, boolean, int, org.eclipse.jdt.client.internal.codeassist.ISearchRequestor, org.eclipse.jdt.client.runtime.IProgressMonitor)
-       */
-      public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
-         final ISearchRequestor requestor, IProgressMonitor monitor)
-      {
-      }
+        /**
+         * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findTypes(char[], boolean, boolean, int,
+         *      org.eclipse.jdt.client.internal.codeassist.ISearchRequestor, org.eclipse.jdt.client.runtime.IProgressMonitor)
+         */
+        public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
+                              final ISearchRequestor requestor, IProgressMonitor monitor) {
+        }
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findPackages(char[], org.eclipse.jdt.client.internal.codeassist.ISearchRequestor)
-       */
-      public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
-      {
-      }
+        /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findPackages(char[],
+         * org.eclipse.jdt.client.internal.codeassist.ISearchRequestor) */
+        public void findPackages(char[] qualifiedName, ISearchRequestor requestor) {
+        }
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findConstructorDeclarations(char[], boolean, org.eclipse.jdt.client.internal.codeassist.ISearchRequestor, org.eclipse.jdt.client.runtime.IProgressMonitor)
-       */
-      public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor,
-         IProgressMonitor monitor)
-      {
-      }
+        /**
+         * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findConstructorDeclarations(char[], boolean,
+         *      org.eclipse.jdt.client.internal.codeassist.ISearchRequestor, org.eclipse.jdt.client.runtime.IProgressMonitor)
+         */
+        public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor,
+                                                IProgressMonitor monitor) {
+        }
 
-      /**
-       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findExactTypes(char[], boolean, int, org.eclipse.jdt.client.internal.codeassist.ISearchRequestor)
-       */
-      public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
-      {
-      }
+        /**
+         * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findExactTypes(char[], boolean, int,
+         *      org.eclipse.jdt.client.internal.codeassist.ISearchRequestor)
+         */
+        public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage) {
+        }
 
-   }
+    }
 
 }

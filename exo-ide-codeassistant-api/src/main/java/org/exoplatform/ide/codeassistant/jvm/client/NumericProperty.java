@@ -20,56 +20,43 @@ package org.exoplatform.ide.codeassistant.jvm.client;
 
 /**
  * Numeric implementation of {@link TokenProperty} Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class NumericProperty extends TokenProperty
-{
+public class NumericProperty extends TokenProperty {
 
-   private Number value;
+    private Number value;
 
-   /**
-    * @param value
-    */
-   public NumericProperty(Number value)
-   {
-      super();
-      this.value = value;
-   }
+    /** @param value */
+    public NumericProperty(Number value) {
+        super();
+        this.value = value;
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isNumericProperty()
-    */
-   @Override
-   public NumericProperty isNumericProperty()
-   {
-      return this;
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isNumericProperty() */
+    @Override
+    public NumericProperty isNumericProperty() {
+        return this;
+    }
 
-   /**
-    * @return value of this property
-    */
-   public Number numericValue()
-   {
-      return value;
-   }
+    /** @return value of this property */
+    public Number numericValue() {
+        return value;
+    }
 
-   @Override
-   public StringProperty isStringProperty()
-   {
-      return null;
-   }
+    @Override
+    public StringProperty isStringProperty() {
+        return null;
+    }
 
-   @Override
-   public ArrayProperty isArrayProperty()
-   {
-      return null;
-   }
+    @Override
+    public ArrayProperty isArrayProperty() {
+        return null;
+    }
 
-   @Override
-   public ObjectProperty isObjectProperty()
-   {
-      return null;
-   }
+    @Override
+    public ObjectProperty isObjectProperty() {
+        return null;
+    }
 }

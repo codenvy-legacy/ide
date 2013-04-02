@@ -22,54 +22,39 @@ package org.exoplatform.ide.extension.googleappengine.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ApplicationInfoImpl implements ApplicationInfo
-{
-   private String applicationId;
-   private String webURL;
+public class ApplicationInfoImpl implements ApplicationInfo {
+    private String applicationId;
+    private String webURL;
 
-   public ApplicationInfoImpl(String applicationId, String webURL)
-   {
-      this.applicationId = applicationId;
-      this.webURL = webURL;
-   }
+    public ApplicationInfoImpl(String applicationId, String webURL) {
+        this.applicationId = applicationId;
+        this.webURL = webURL;
+    }
 
-   public ApplicationInfoImpl()
-   {
-   }
+    public ApplicationInfoImpl() {
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#getWebURL()
-    */
-   @Override
-   public String getWebURL()
-   {
-      return webURL;
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#getWebURL() */
+    @Override
+    public String getWebURL() {
+        return webURL;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#setWebURL(java.lang.String)
-    */
-   @Override
-   public void setWebURL(String webURL)
-   {
-      this.webURL = webURL;
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#setWebURL(java.lang.String) */
+    @Override
+    public void setWebURL(String webURL) {
+        this.webURL = webURL;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#getApplicationId()
-    */
-   @Override
-   public String getApplicationId()
-   {
-      return applicationId;
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#getApplicationId() */
+    @Override
+    public String getApplicationId() {
+        return applicationId;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#setApplicationId(java.lang.String)
-    */
-   @Override
-   public void setApplicationId(String applicationId)
-   {
-      this.applicationId = applicationId;
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo#setApplicationId(java.lang.String) */
+    @Override
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
+    }
 }

@@ -12,56 +12,46 @@ package com.codenvy.eclipse.jdt.internal.core.builder;
 
 import com.codenvy.eclipse.jdt.internal.compiler.util.SimpleSet;
 
-public class WorkQueue
-{
+public class WorkQueue {
 
-   private SimpleSet needsCompileList;
+    private SimpleSet needsCompileList;
 
-   private SimpleSet compiledList;
+    private SimpleSet compiledList;
 
-   public WorkQueue()
-   {
-      this.needsCompileList = new SimpleSet();
-      this.compiledList = new SimpleSet();
-   }
+    public WorkQueue() {
+        this.needsCompileList = new SimpleSet();
+        this.compiledList = new SimpleSet();
+    }
 
-   public void add(SourceFile element)
-   {
-      this.needsCompileList.add(element);
-   }
+    public void add(SourceFile element) {
+        this.needsCompileList.add(element);
+    }
 
-   public void addAll(SourceFile[] elements)
-   {
-      for (int i = 0, l = elements.length; i < l; i++)
-      {
-         add(elements[i]);
-      }
-   }
+    public void addAll(SourceFile[] elements) {
+        for (int i = 0, l = elements.length; i < l; i++) {
+            add(elements[i]);
+        }
+    }
 
-   public void clear()
-   {
-      this.needsCompileList.clear();
-      this.compiledList.clear();
-   }
+    public void clear() {
+        this.needsCompileList.clear();
+        this.compiledList.clear();
+    }
 
-   public void finished(SourceFile element)
-   {
-      this.needsCompileList.remove(element);
-      this.compiledList.add(element);
-   }
+    public void finished(SourceFile element) {
+        this.needsCompileList.remove(element);
+        this.compiledList.add(element);
+    }
 
-   public boolean isCompiled(SourceFile element)
-   {
-      return this.compiledList.includes(element);
-   }
+    public boolean isCompiled(SourceFile element) {
+        return this.compiledList.includes(element);
+    }
 
-   public boolean isWaiting(SourceFile element)
-   {
-      return this.needsCompileList.includes(element);
-   }
+    public boolean isWaiting(SourceFile element) {
+        return this.needsCompileList.includes(element);
+    }
 
-   public String toString()
-   {
-      return "WorkQueue: " + this.needsCompileList; //$NON-NLS-1$
-   }
+    public String toString() {
+        return "WorkQueue: " + this.needsCompileList; //$NON-NLS-1$
+    }
 }

@@ -26,16 +26,10 @@ import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubRepository;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 /**
  * REST service to get the list of repositories from GitHub (where sample projects are located).
@@ -44,62 +38,54 @@ import javax.ws.rs.core.MediaType;
  * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
  */
 @Path("ide/github")
-public class GitHubService
-{
-   @Inject
-   OAuthTokenProvider oauthTokenProvider;
+public class GitHubService {
+    @Inject
+    OAuthTokenProvider oauthTokenProvider;
 
-   @Inject
-   GitHub github;
+    @Inject
+    GitHub github;
 
-   public GitHubService()
-   {
-   }
+    public GitHubService() {
+    }
 
-   protected GitHubService(GitHub github)
-   {
-      this.github = github;
-   }
+    protected GitHubService(GitHub github) {
+        this.github = github;
+    }
 
-   @Path("list/user")
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public GitHubRepository[] listRepositoriesByUser(
-      @QueryParam("username") String userName) throws IOException, GitHubException, ParsingResponseException
-   {
-      return github.listRepositories(userName);
-   }
+    @Path("list/user")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public GitHubRepository[] listRepositoriesByUser(
+            @QueryParam("username") String userName) throws IOException, GitHubException, ParsingResponseException {
+        return github.listRepositories(userName);
+    }
 
-   @Path("list")
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException
-   {
-      return github.listRepositories();
-   }
+    @Path("list")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException {
+        return github.listRepositories();
+    }
 
-   @GET
-   @Path("collaborators/{user}/{repository}")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Collaborators collaborators(@PathParam("user") String user,
-                                      @PathParam("repository") String repository) throws IOException,
-      GitHubException, ParsingResponseException
-   {
-      return github.getCollaborators(user, repository);
-   }
+    @GET
+    @Path("collaborators/{user}/{repository}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collaborators collaborators(@PathParam("user") String user,
+                                       @PathParam("repository") String repository) throws IOException,
+                                                                                          GitHubException, ParsingResponseException {
+        return github.getCollaborators(user, repository);
+    }
 
-   @GET
-   @Path("token/{userid}")
-   @Produces(MediaType.TEXT_PLAIN)
-   public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException
-   {
-      return oauthTokenProvider.getToken("github", userId);
-   }
+    @GET
+    @Path("token/{userid}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException {
+        return oauthTokenProvider.getToken("github", userId);
+    }
 
-   @POST
-   @Path("ssh/generate")
-   public void updateSSHKey() throws SshKeyStoreException, IOException, GitHubException, ParsingResponseException
-   {
-      github.generateGitHubSshKey();
-   }
+    @POST
+    @Path("ssh/generate")
+    public void updateSSHKey() throws SshKeyStoreException, IOException, GitHubException, ParsingResponseException {
+        github.generateGitHubSshKey();
+    }
 }

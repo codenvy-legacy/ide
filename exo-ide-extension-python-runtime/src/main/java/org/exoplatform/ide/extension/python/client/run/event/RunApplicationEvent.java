@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to run Python application.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 2:59:01 PM anya $
- * 
  */
-public class RunApplicationEvent extends GwtEvent<RunApplicationHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<RunApplicationHandler> TYPE = new GwtEvent.Type<RunApplicationHandler>();
+public class RunApplicationEvent extends GwtEvent<RunApplicationHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<RunApplicationHandler> TYPE = new GwtEvent.Type<RunApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RunApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RunApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RunApplicationHandler handler)
-   {
-      handler.onRunApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RunApplicationHandler handler) {
+        handler.onRunApplication(this);
+    }
 
 }

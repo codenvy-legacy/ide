@@ -40,109 +40,89 @@ import java.util.List;
  * Provide access via GitHubClientService for getting list of collaborators
  * and allow invite invite they to Codenvy community.
  * For inviting call REST service from cloud-ide project.
- *
+ * <p/>
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GitHubCollaboratorsHandler.java Aug 6, 2012
- *
  */
-public class GitHubCollaboratorsHandler
-{
+public class GitHubCollaboratorsHandler {
 
-   interface Display extends IsView
-   {
-      void showCollaborators(Collaborators collaborators);
+    interface Display extends IsView {
+        void showCollaborators(Collaborators collaborators);
 
-      Collaborators getCollaboratorsForInvite();
+        Collaborators getCollaboratorsForInvite();
 
-      HasClickHandlers getInviteButton();
+        HasClickHandlers getInviteButton();
 
-      HasClickHandlers getCloseButton();
-   }
+        HasClickHandlers getCloseButton();
+    }
 
-   private Display display;
+    private Display display;
 
-   public void bindDisplay()
-   {
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCloseButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getInviteButton().addClickHandler(new ClickHandler()
-      {
+        display.getInviteButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doInvite();
-         }
-      });
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                doInvite();
+            }
+        });
+    }
 
-   /**
-    * Send invitation to selected collaborators
-    */
-   protected void doInvite()
-   {
-      Collaborators collaboratorsForInvite = display.getCollaboratorsForInvite();
-      List<GitHubUser> collaborators = collaboratorsForInvite.getCollaborators();
-      for (GitHubUser gitHubUser : collaborators)
-      {
-         System.out.println("GetCollaboratorsHandler.doInvite()" + gitHubUser.getEmail());
-      }
+    /** Send invitation to selected collaborators */
+    protected void doInvite() {
+        Collaborators collaboratorsForInvite = display.getCollaboratorsForInvite();
+        List<GitHubUser> collaborators = collaboratorsForInvite.getCollaborators();
+        for (GitHubUser gitHubUser : collaborators) {
+            System.out.println("GetCollaboratorsHandler.doInvite()" + gitHubUser.getEmail());
+        }
 
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+        IDE.getInstance().closeView(display.asView().getId());
+    }
 
-   /**
-    * Get list of collaborators of GitHub repository.
-    * Display in pop window wit proposal inviting join to eXo IDE community   
-    *
-    * @param user
-    * @param repository
-    */
-   public void showCollaborators(String user, String repository)
-   {
-      Window.alert("User > " + user);
-      Window.alert("Repository > " + repository);
+    /**
+     * Get list of collaborators of GitHub repository.
+     * Display in pop window wit proposal inviting join to eXo IDE community
+     *
+     * @param user
+     * @param repository
+     */
+    public void showCollaborators(String user, String repository) {
+        Window.alert("User > " + user);
+        Window.alert("Repository > " + repository);
 
-      AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
-      AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
-      try
-      {
-         GitHubClientService.getInstance().getCollaborators(user, repository,
-            new AsyncRequestCallback<Collaborators>(unmarshaller)
-            {
+        AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
+        AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
+        try {
+            GitHubClientService.getInstance().getCollaborators(user, repository,
+                                                               new AsyncRequestCallback<Collaborators>(unmarshaller) {
 
-               @Override
-               protected void onSuccess(Collaborators result)
-               {
-                  if (result != null && !result.getCollaborators().isEmpty())
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                     display.showCollaborators(result);
-                  }
-               }
+                                                                   @Override
+                                                                   protected void onSuccess(Collaborators result) {
+                                                                       if (result != null && !result.getCollaborators().isEmpty()) {
+                                                                           display = GWT.create(Display.class);
+                                                                           bindDisplay();
+                                                                           IDE.getInstance().openView(display.asView());
+                                                                           display.showCollaborators(result);
+                                                                       }
+                                                                   }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  //Nothing todo 
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
-   }
+                                                                   @Override
+                                                                   protected void onFailure(Throwable exception) {
+                                                                       //Nothing todo
+                                                                   }
+                                                               });
+        } catch (RequestException e) {
+            e.printStackTrace();
+        }
+    }
 }

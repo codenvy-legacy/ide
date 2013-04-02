@@ -19,45 +19,39 @@
 
 package org.exoplatform.ide.client.framework.project;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ProjectClosedEvent extends GwtEvent<ProjectClosedHandler>
-{
+public class ProjectClosedEvent extends GwtEvent<ProjectClosedHandler> {
 
-   public static final GwtEvent.Type<ProjectClosedHandler> TYPE = new GwtEvent.Type<ProjectClosedHandler>();
+    public static final GwtEvent.Type<ProjectClosedHandler> TYPE = new GwtEvent.Type<ProjectClosedHandler>();
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   public ProjectClosedEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+    public ProjectClosedEvent(ProjectModel project) {
+        this.project = project;
+    }
 
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    public ProjectModel getProject() {
+        return project;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ProjectClosedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ProjectClosedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ProjectClosedHandler handler)
-   {
-      handler.onProjectClosed(this);
-   }
+    @Override
+    protected void dispatch(ProjectClosedHandler handler) {
+        handler.onProjectClosed(this);
+    }
 
 }

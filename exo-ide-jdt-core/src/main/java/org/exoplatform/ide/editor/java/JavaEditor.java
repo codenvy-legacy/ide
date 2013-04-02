@@ -35,84 +35,61 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaEditor extends CollabEditor
-{
+public class JavaEditor extends CollabEditor {
 
-   private BreakpointGutterManager breakPointManager;
+    private BreakpointGutterManager breakPointManager;
 
-   /**
-    * @param mimeType
-    */
-   public JavaEditor(String mimeType)
-   {
-      super(mimeType);
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaAutocompleter());
-      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
-         new JavaContentAssistProcessor());
-      editor.getDocumentListenerRegistrar().add(new DocumentListener()
-      {
-         @Override
-         public void onDocumentChanged(com.google.collide.shared.document.Document oldDocument,
-            com.google.collide.shared.document.Document newDocument)
-         {
-            if (newDocument != null)
-            {
-               final Gutter gutter =
-                  editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
-                     .workspaceEditorCss().leftGutterBase());
-               breakPointManager =
-                  new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(), editor.getRenderer(),
-                     JavaClientBundle.INSTANCE);
-               breakPointManager.render();
+    /** @param mimeType */
+    public JavaEditor(String mimeType) {
+        super(mimeType);
+        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaAutocompleter());
+        editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
+                                                                 new JavaContentAssistProcessor());
+        editor.getDocumentListenerRegistrar().add(new DocumentListener() {
+            @Override
+            public void onDocumentChanged(com.google.collide.shared.document.Document oldDocument,
+                                          com.google.collide.shared.document.Document newDocument) {
+                if (newDocument != null) {
+                    final Gutter gutter =
+                            editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
+                                                                                           .workspaceEditorCss().leftGutterBase());
+                    breakPointManager =
+                            new BreakpointGutterManager(gutter, editor.getBuffer(), editor.getViewport(), editor.getRenderer(),
+                                                        JavaClientBundle.INSTANCE);
+                    breakPointManager.render();
+                }
             }
-         }
-      });
-      getEditor().getFoldingManager().setFoldFinder(new JavaFoldOccurrencesFinder());
-   }
+        });
+        getEditor().getFoldingManager().setFoldFinder(new JavaFoldOccurrencesFinder());
+    }
 
-   /**
-    * @return the breakPointManager
-    */
-   public BreakpointGutterManager getBreakPointManager()
-   {
-      return breakPointManager;
-   }
+    /** @return the breakPointManager */
+    public BreakpointGutterManager getBreakPointManager() {
+        return breakPointManager;
+    }
 
-   /**
-    * @see com.google.collide.client.CollabEditor#setText(java.lang.String)
-    */
-   @Override
-   public void setText(String text)
-   {
-      super.setText(text);
-      getHoverPresenter().addHover(Document.DEFAULT_CONTENT_TYPE, new JavaTypeHover(IDE.eventBus()));
-   }
+    /** @see com.google.collide.client.CollabEditor#setText(java.lang.String) */
+    @Override
+    public void setText(String text) {
+        super.setText(text);
+        getHoverPresenter().addHover(Document.DEFAULT_CONTENT_TYPE, new JavaTypeHover(IDE.eventBus()));
+    }
 
-   /**
-    * @see com.google.collide.client.CollabEditor#getCursorOffsetLeft()
-    */
-   @Override
-   public int getCursorOffsetLeft()
-   {
-      return super.getCursorOffsetLeft() + breakPointManager.getGutter().getWidth();
-   }
+    /** @see com.google.collide.client.CollabEditor#getCursorOffsetLeft() */
+    @Override
+    public int getCursorOffsetLeft() {
+        return super.getCursorOffsetLeft() + breakPointManager.getGutter().getWidth();
+    }
 
-   /**
-    * @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability)
-    */
-   @Override
-   public boolean isCapable(EditorCapability capability)
-   {
-      if (capability == EditorCapability.CODE_FOLDING)
-      {
-         return true;
-      }
-      else
-      {
-         return super.isCapable(capability);
-      }
-   }
+    /** @see com.google.collide.client.CollabEditor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability) */
+    @Override
+    public boolean isCapable(EditorCapability capability) {
+        if (capability == EditorCapability.CODE_FOLDING) {
+            return true;
+        } else {
+            return super.isCapable(capability);
+        }
+    }
 
 }

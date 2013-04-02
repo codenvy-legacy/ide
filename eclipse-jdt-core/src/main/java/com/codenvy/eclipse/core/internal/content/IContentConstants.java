@@ -15,16 +15,11 @@ package com.codenvy.eclipse.core.internal.content;
  *
  * @since org.eclipse.core.contenttype 3.2
  */
-public interface IContentConstants
-{
-   /**
-    * Backward compatibility: name of the original runtime plugin
-    */
-   public static final String RUNTIME_NAME = "org.eclipse.core.runtime"; //$NON-NLS-1$
+public interface IContentConstants {
+    /** Backward compatibility: name of the original runtime plugin */
+    public static final String RUNTIME_NAME = "org.eclipse.core.runtime"; //$NON-NLS-1$
 
-   /**
-    * Name of this plugin
-    */
-   public static final String CONTENT_NAME = "org.eclipse.core.contenttype"; //$NON-NLS-1$
+    /** Name of this plugin */
+    public static final String CONTENT_NAME = "org.eclipse.core.contenttype"; //$NON-NLS-1$
 
 }

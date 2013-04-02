@@ -27,55 +27,46 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SolutionStackImpl implements SolutionStack
-{
-   private String name;
-   private List<String> permittedFileTypes;
+public class SolutionStackImpl implements SolutionStack {
+    private String       name;
+    private List<String> permittedFileTypes;
 
-   public SolutionStackImpl(String name, List<String> permittedFileTypes)
-   {
-      this.name = name;
-      this.permittedFileTypes = permittedFileTypes;
-   }
+    public SolutionStackImpl(String name, List<String> permittedFileTypes) {
+        this.name = name;
+        this.permittedFileTypes = permittedFileTypes;
+    }
 
-   public SolutionStackImpl()
-   {
-   }
+    public SolutionStackImpl() {
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public List<String> getPermittedFileTypes()
-   {
-      if (permittedFileTypes == null)
-      {
-         permittedFileTypes = new ArrayList<String>();
-      }
-      return permittedFileTypes;
-   }
+    @Override
+    public List<String> getPermittedFileTypes() {
+        if (permittedFileTypes == null) {
+            permittedFileTypes = new ArrayList<String>();
+        }
+        return permittedFileTypes;
+    }
 
-   @Override
-   public void setPermittedFileTypes(List<String> permittedFileTypes)
-   {
-      this.permittedFileTypes = permittedFileTypes;
-   }
+    @Override
+    public void setPermittedFileTypes(List<String> permittedFileTypes) {
+        this.permittedFileTypes = permittedFileTypes;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "SolutionStackImpl{" +
-         "name='" + name + '\'' +
-         ", permittedFileTypes=" + permittedFileTypes +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "SolutionStackImpl{" +
+               "name='" + name + '\'' +
+               ", permittedFileTypes=" + permittedFileTypes +
+               '}';
+    }
 }

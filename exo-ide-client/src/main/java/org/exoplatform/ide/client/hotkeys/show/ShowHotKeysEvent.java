@@ -22,36 +22,26 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs when user tries to show keyboard shortcuts.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowHotKeysEvent.java May 10, 2012 10:33:10 AM azatsarynnyy $
- *
  */
-public class ShowHotKeysEvent extends GwtEvent<ShowHotKeysHandler>
-{
+public class ShowHotKeysEvent extends GwtEvent<ShowHotKeysHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ShowHotKeysHandler> TYPE =
-      new GwtEvent.Type<ShowHotKeysHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ShowHotKeysHandler> TYPE =
+            new GwtEvent.Type<ShowHotKeysHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowHotKeysHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowHotKeysHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowHotKeysHandler handler)
-   {
-      handler.onShowHotKeys(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowHotKeysHandler handler) {
+        handler.onShowHotKeys(this);
+    }
 
 }

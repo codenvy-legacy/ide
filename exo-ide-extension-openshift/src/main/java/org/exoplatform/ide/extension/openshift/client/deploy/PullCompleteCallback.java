@@ -21,9 +21,7 @@ package org.exoplatform.ide.extension.openshift.client.deploy;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface PullCompleteCallback
-{
-   void onPullComplete(boolean success);
+public interface PullCompleteCallback {
+    void onPullComplete(boolean success);
 }

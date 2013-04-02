@@ -36,141 +36,105 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
  * View for log in OpenShift.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 10:54:35 AM anya $
- * 
  */
-public class LoginView extends ViewImpl implements LoginPresenter.Display
-{
-   private static final String ID = "ideLoginView";
+public class LoginView extends ViewImpl implements LoginPresenter.Display {
+    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 410;
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 200;
+    private static final int HEIGHT = 200;
 
-   private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
+    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
 
-   private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
+    private static final String EMAIL_FIELD_ID = "ideLoginViewEmailField";
 
-   private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
-   
-   private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
+    private static final String PASSWORD_FIELD_ID = "ideLoginViewPasswordField";
 
-   /**
-    * UI binder for this view.
-    */
-   private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
+    private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
 
-   interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
-   {
-   }
+    /** UI binder for this view. */
+    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
-   /**
-    * Email field.
-    */
-   @UiField
-   TextInput emailField;
+    interface LoginViewUiBinder extends UiBinder<Widget, LoginView> {
+    }
 
-   /**
-    * Password field.
-    */
-   @UiField
-   PasswordTextInput passwordField;
+    /** Email field. */
+    @UiField
+    TextInput emailField;
 
-   /**
-    * Login button.
-    */
-   @UiField
-   ImageButton loginButton;
+    /** Password field. */
+    @UiField
+    PasswordTextInput passwordField;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Login button. */
+    @UiField
+    ImageButton loginButton;
 
-   @UiField
-   Label loginResult;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   public LoginView()
-   {
-      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    @UiField
+    Label loginResult;
 
-      emailField.setName(EMAIL_FIELD_ID);
-      emailField.setHeight("22px");
-      passwordField.setName(PASSWORD_FIELD_ID);
-      passwordField.setHeight("22px");
-      loginButton.setButtonId(LOGIN_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      loginResult.setID(LOGIN_RESULT_ID);
-   }
+    public LoginView() {
+        super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.loginViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getLoginButton()
-    */
-   @Override
-   public HasClickHandlers getLoginButton()
-   {
-      return loginButton;
-   }
+        emailField.setName(EMAIL_FIELD_ID);
+        emailField.setHeight("22px");
+        passwordField.setName(PASSWORD_FIELD_ID);
+        passwordField.setHeight("22px");
+        loginButton.setButtonId(LOGIN_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        loginResult.setID(LOGIN_RESULT_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getLoginButton() */
+    @Override
+    public HasClickHandlers getLoginButton() {
+        return loginButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getEmailField()
-    */
-   @Override
-   public HasValue<String> getEmailField()
-   {
-      return emailField;
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getPasswordField()
-    */
-   @Override
-   public TextFieldItem getPasswordField()
-   {
-      return passwordField;
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getEmailField() */
+    @Override
+    public HasValue<String> getEmailField() {
+        return emailField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#enableLoginButton(boolean)
-    */
-   @Override
-   public void enableLoginButton(boolean enabled)
-   {
-      loginButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getPasswordField() */
+    @Override
+    public TextFieldItem getPasswordField() {
+        return passwordField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#focusInEmailField()
-    */
-   @Override
-   public void focusInEmailField()
-   {
-      emailField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#enableLoginButton(boolean) */
+    @Override
+    public void enableLoginButton(boolean enabled) {
+        loginButton.setEnabled(enabled);
+    }
 
-   /**
-    * 
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getLoginResult()
-    */
-   @Override
-   public HasValue<String> getLoginResult()
-   {
-      return loginResult;
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#focusInEmailField() */
+    @Override
+    public void focusInEmailField() {
+        emailField.focus();
+    }
+
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getLoginResult() */
+    @Override
+    public HasValue<String> getLoginResult() {
+        return loginResult;
+    }
 
 }

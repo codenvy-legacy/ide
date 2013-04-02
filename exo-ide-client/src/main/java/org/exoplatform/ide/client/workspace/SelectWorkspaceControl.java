@@ -29,60 +29,50 @@ import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class SelectWorkspaceControl extends SimpleControl implements IDEControl, IsDiscoverableResultReceivedHandler
-{
+public class SelectWorkspaceControl extends SimpleControl implements IDEControl, IsDiscoverableResultReceivedHandler {
 
-   public static final String ID = "Window/Workspace...";
+    public static final String ID = "Window/Workspace...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.selectWorkspaceControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.selectWorkspaceControl();
 
-   /**
-    * 
-    */
-   public SelectWorkspaceControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());
+    /**
+     *
+     */
+    public SelectWorkspaceControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.workspace(), IDEImageBundle.INSTANCE.workspaceDisabled());
 
-      setEnabled(true);
-      setVisible(true);
-      setDelimiterBefore(true);
+        setEnabled(true);
+        setVisible(true);
+        setDelimiterBefore(true);
 
-      setEvent(new SelectWorkspaceEvent());
-   }
+        setEvent(new SelectWorkspaceEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(IsDiscoverableResultReceivedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedHandler#isDiscoverableResultReceived(org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent)
-    */
-   @Override
-   public void isDiscoverableResultReceived(IsDiscoverableResultReceivedEvent event)
-   {
-      if (event.isDiscoverable())
-      {
-         setVisible(true);
-         setEnabled(true);
-      }
-      else
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedHandler#isDiscoverableResultReceived(org
+     * .exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent) */
+    @Override
+    public void isDiscoverableResultReceived(IsDiscoverableResultReceivedEvent event) {
+        if (event.isDiscoverable()) {
+            setVisible(true);
+            setEnabled(true);
+        } else {
+            setVisible(false);
+            setEnabled(false);
+        }
+    }
 
 }

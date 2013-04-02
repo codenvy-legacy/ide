@@ -21,34 +21,32 @@ import org.exoplatform.ide.json.shared.JsonArray;
 
 import javax.annotation.Nonnull;
 
-/**
- * Interface that presents code analyzing facilities.
- */
+/** Interface that presents code analyzing facilities. */
 public interface CodeAnalyzer {
 
-  /**
-   * Prepares for new iteration of parsing.
-   */
-  void onBeforeParse();
+    /** Prepares for new iteration of parsing. */
+    void onBeforeParse();
 
-  /**
-   * Analyzes tokens and updates line meta-information.
-   *
-   * @param previousLine line that precedes line being parsed
-   * @param line line being parsed
-   * @param tokens tokens collected on the line
-   */
-  void onParseLine(TaggableLine previousLine, TaggableLine line, @Nonnull JsonArray<Token> tokens);
+    /**
+     * Analyzes tokens and updates line meta-information.
+     *
+     * @param previousLine
+     *         line that precedes line being parsed
+     * @param line
+     *         line being parsed
+     * @param tokens
+     *         tokens collected on the line
+     */
+    void onParseLine(TaggableLine previousLine, TaggableLine line, @Nonnull JsonArray<Token> tokens);
 
-  /**
-   * Cleans up and perform batch operations at the end of parsing iteration.
-   */
-  void onAfterParse();
+    /** Cleans up and perform batch operations at the end of parsing iteration. */
+    void onAfterParse();
 
-  /**
-   * Cleans up meta-information for detached lines.
-   *
-   * @param deletedLines lines that are now detached
-   */
-  void onLinesDeleted(JsonArray<TaggableLine> deletedLines);
+    /**
+     * Cleans up meta-information for detached lines.
+     *
+     * @param deletedLines
+     *         lines that are now detached
+     */
+    void onLinesDeleted(JsonArray<TaggableLine> deletedLines);
 }

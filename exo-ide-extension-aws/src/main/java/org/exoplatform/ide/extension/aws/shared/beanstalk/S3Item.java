@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface S3Item
-{
-   String getS3Bucket();
+public interface S3Item {
+    String getS3Bucket();
 
-   void setS3Bucket(String s3Bucket);
+    void setS3Bucket(String s3Bucket);
 
-   String getS3Key();
+    String getS3Key();
 
-   void setS3Key(String s3Key);
+    void setS3Key(String s3Key);
 }

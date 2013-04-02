@@ -24,7 +24,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface EventListener
-{
-   void handleEvent(ChangeEvent event) throws VirtualFileSystemException;
+public interface EventListener {
+    void handleEvent(ChangeEvent event) throws VirtualFileSystemException;
 }

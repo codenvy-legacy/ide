@@ -17,12 +17,9 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Information about multiple workspaces.
- *
- */
+/** Information about multiple workspaces. */
 @RoutingType(type = RoutingTypes.GETWORKSPACERESPONSE)
 public interface GetWorkspaceResponse extends ServerToClientDto {
 
-  WorkspaceInfo getWorkspace();
+    WorkspaceInfo getWorkspace();
 }

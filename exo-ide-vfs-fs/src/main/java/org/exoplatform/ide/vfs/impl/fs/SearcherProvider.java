@@ -26,16 +26,15 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface SearcherProvider
-{
-   /**
-    * Get Searcher for specified MountPoint.
-    *
-    * @param mountPoint
-    *    MountPoint
-    * @return instance of Searcher
-    * @throws VirtualFileSystemException
-    * @see MountPoint
-    */
-   Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException;
+public interface SearcherProvider {
+    /**
+     * Get Searcher for specified MountPoint.
+     *
+     * @param mountPoint
+     *         MountPoint
+     * @return instance of Searcher
+     * @throws VirtualFileSystemException
+     * @see MountPoint
+     */
+    Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException;
 }

@@ -23,20 +23,16 @@ package org.exoplatform.ide.commons;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class JsonParseException extends Exception
-{
-   public JsonParseException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+public class JsonParseException extends Exception {
+    public JsonParseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   public JsonParseException(String message)
-   {
-      super(message);
-   }
+    public JsonParseException(String message) {
+        super(message);
+    }
 
-   public JsonParseException(Throwable cause)
-   {
-      super(cause);
-   }
+    public JsonParseException(Throwable cause) {
+        super(cause);
+    }
 }

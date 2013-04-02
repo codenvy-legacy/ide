@@ -14,15 +14,15 @@ package com.codenvy.eclipse.jdt.core.search;
  * A <code>TypeNameMatchRequestor</code> collects matches from a <code>searchAllTypeNames</code>
  * query to a <code>SearchEngine</code>. Clients must subclass this abstract class and pass an instance to the
  * {@link SearchEngine#searchAllTypeNames(
- *		char[] packageName,
- *		int packageMatchRule,
- *		char[] typeName,
- *		int typeMatchRule,
- *		int searchFor,
- *		IJavaSearchScope scope,
- *		TypeNameMatchRequestor nameMatchRequestor,
- *		int waitingPolicy,
- * 	org.eclipse.core.runtime.IProgressMonitor monitor)} method.
+ *char[] packageName,
+ * int packageMatchRule,
+ * char[] typeName,
+ * int typeMatchRule,
+ * int searchFor,
+ * IJavaSearchScope scope,
+ * TypeNameMatchRequestor nameMatchRequestor,
+ * int waitingPolicy,
+ * org.eclipse.core.runtime.IProgressMonitor monitor)} method.
  * Only top-level and member types are reported. Local types are not reported.
  * <p>
  * While {@link TypeNameRequestor} only reports type names information (e.g. package, enclosing types, simple name, modifiers, etc.),
@@ -32,17 +32,18 @@ package com.codenvy.eclipse.jdt.core.search;
  * <p>
  * This class may be subclassed by clients.
  * </p>
+ *
  * @see TypeNameMatch
  * @see TypeNameRequestor
- *
  * @since 3.3
  */
 public abstract class TypeNameMatchRequestor {
-	/**
-	 * Accepts a type name match ({@link TypeNameMatch}) which contains top-level or a member type
-	 * information as package name, enclosing types names, simple type name, modifiers, etc.
-	 *
-	 * @param match the match which contains all type information
-	 */
-	public abstract void acceptTypeNameMatch(TypeNameMatch match);
+    /**
+     * Accepts a type name match ({@link TypeNameMatch}) which contains top-level or a member type
+     * information as package name, enclosing types names, simple type name, modifiers, etc.
+     *
+     * @param match
+     *         the match which contains all type information
+     */
+    public abstract void acceptTypeNameMatch(TypeNameMatch match);
 }

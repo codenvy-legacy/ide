@@ -24,22 +24,17 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class GenerateNewConstructorUsingFieldsControl extends JavaControl
-{
+public class GenerateNewConstructorUsingFieldsControl extends JavaControl {
 
-   /**
-    * @param id
-    */
-   public GenerateNewConstructorUsingFieldsControl()
-   {
-      super("Edit/Source/Generate Constructor using Fields");
-      setTitle("Generate Constructor using Fields...");
-      setPrompt("Generate Constructor using Fields...");
-      setEvent(new GenerateNewConstructorUsingFieldsEvent());
-      setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
-      setShowInContextMenu(true);
-   }
+    /** @param id */
+    public GenerateNewConstructorUsingFieldsControl() {
+        super("Edit/Source/Generate Constructor using Fields");
+        setTitle("Generate Constructor using Fields...");
+        setPrompt("Generate Constructor using Fields...");
+        setEvent(new GenerateNewConstructorUsingFieldsEvent());
+        setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
+        setShowInContextMenu(true);
+    }
 
 }

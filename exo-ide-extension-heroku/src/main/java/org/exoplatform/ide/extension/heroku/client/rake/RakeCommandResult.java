@@ -20,31 +20,24 @@ package org.exoplatform.ide.extension.heroku.client.rake;
 
 /**
  * The response of the rake command execution result.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 20, 2011 9:40:09 AM anya $
- * 
  */
-public class RakeCommandResult
-{
-   /**
-    * Rake command result.
-    */
-   private String result;
+public class RakeCommandResult {
+    /** Rake command result. */
+    private String result;
 
-   /**
-    * @return {@link String} rake command result
-    */
-   public String getResult()
-   {
-      return result;
-   }
+    /** @return {@link String} rake command result */
+    public String getResult() {
+        return result;
+    }
 
-   /**
-    * @param result rake command result
-    */
-   public void setResult(String result)
-   {
-      this.result = result;
-   }
+    /**
+     * @param result
+     *         rake command result
+     */
+    public void setResult(String result) {
+        this.result = result;
+    }
 }

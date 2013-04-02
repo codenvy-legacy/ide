@@ -19,28 +19,29 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
-   <ui:style>
-      .content {
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-size: 11px;
-      	font-style: normal;
-      	font-weight: normal;
-      	color: #000077;
-      }
-   </ui:style>
+    <ui:style>
+        .content {
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-size: 11px;
+            font-style: normal;
+            font-weight: normal;
+            color: #000077;
+        }
+    </ui:style>
 
-   <c:Border margin="1" borderColor="transparent">
-      <c:layer top="0" height="28px">
-         <c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="2"></c:Toolbar>
-      </c:layer>
-      <c:layer top="30px" bottom="0">
-         <g:ScrollPanel ui:field="scrollPanel">
-            <g:HTML>
-               <pre ui:field="content" class='{style.content}'></pre>
-            </g:HTML>
-         </g:ScrollPanel>
-      </c:layer>
-   </c:Border>
+    <c:Border margin="1" borderColor="transparent">
+        <c:layer top="0" height="28px">
+            <c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="2"></c:Toolbar>
+        </c:layer>
+        <c:layer top="30px" bottom="0">
+            <g:ScrollPanel ui:field="scrollPanel">
+                <g:HTML>
+                    <pre ui:field="content" class='{style.content}'></pre>
+                </g:HTML>
+            </g:ScrollPanel>
+        </c:layer>
+    </c:Border>
 </ui:UiBinder> 

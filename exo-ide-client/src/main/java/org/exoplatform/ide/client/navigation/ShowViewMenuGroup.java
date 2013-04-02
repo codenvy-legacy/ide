@@ -25,33 +25,29 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class ShowViewMenuGroup extends SimpleControl implements IDEControl
-{
+public class ShowViewMenuGroup extends SimpleControl implements IDEControl {
 
-   public static final String ID = "Window/Show View";
+    public static final String ID = "Window/Show View";
 
-   public static final String TITLE = "Show View";
+    public static final String TITLE = "Show View";
 
-   public ShowViewMenuGroup()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setGroupName(GroupNames.ADDITIONS);
-   }
+    public ShowViewMenuGroup() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setGroupName(GroupNames.ADDITIONS);
+    }
 
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

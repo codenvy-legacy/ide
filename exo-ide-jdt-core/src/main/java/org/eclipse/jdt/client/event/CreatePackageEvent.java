@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CreatePackageEvent extends GwtEvent<CreatePackageHandler>
-{
+public class CreatePackageEvent extends GwtEvent<CreatePackageHandler> {
 
-   public static final GwtEvent.Type<CreatePackageHandler> TYPE = new Type<CreatePackageHandler>();
+    public static final GwtEvent.Type<CreatePackageHandler> TYPE = new Type<CreatePackageHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreatePackageHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreatePackageHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CreatePackageHandler handler)
-   {
-      handler.onCreatePackage(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CreatePackageHandler handler) {
+        handler.onCreatePackage(this);
+    }
 
 }

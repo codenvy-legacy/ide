@@ -24,66 +24,56 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ConfigurationOptionImpl implements ConfigurationOption
-{
-   private String namespace;
-   private String name;
-   private String value;
+public class ConfigurationOptionImpl implements ConfigurationOption {
+    private String namespace;
+    private String name;
+    private String value;
 
-   public ConfigurationOptionImpl(String namespace, String name, String value)
-   {
-      this.namespace = namespace;
-      this.name = name;
-      this.value = value;
-   }
+    public ConfigurationOptionImpl(String namespace, String name, String value) {
+        this.namespace = namespace;
+        this.name = name;
+        this.value = value;
+    }
 
-   public ConfigurationOptionImpl()
-   {
-   }
+    public ConfigurationOptionImpl() {
+    }
 
-   @Override
-   public String getNamespace()
-   {
-      return namespace;
-   }
+    @Override
+    public String getNamespace() {
+        return namespace;
+    }
 
-   @Override
-   public void setNamespace(String namespace)
-   {
-      this.namespace = namespace;
-   }
+    @Override
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String getValue()
-   {
-      return value;
-   }
+    @Override
+    public String getValue() {
+        return value;
+    }
 
-   @Override
-   public void setValue(String value)
-   {
-      this.value = value;
-   }
+    @Override
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "ConfigurationOptionImpl{" +
-         "namespace='" + namespace + '\'' +
-         ", name='" + name + '\'' +
-         ", value='" + value + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "ConfigurationOptionImpl{" +
+               "namespace='" + namespace + '\'' +
+               ", name='" + name + '\'' +
+               ", value='" + value + '\'' +
+               '}';
+    }
 }

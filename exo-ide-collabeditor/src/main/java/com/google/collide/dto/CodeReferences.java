@@ -15,11 +15,8 @@ package com.google.collide.dto;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Collection of references for a single file.
- *
- */
+/** Collection of references for a single file. */
 public interface CodeReferences {
 
-  JsonArray<CodeReference> getReferences();
+    JsonArray<CodeReference> getReferences();
 }

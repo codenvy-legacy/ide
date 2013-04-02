@@ -19,13 +19,14 @@ import java.util.Map;
 
 
 public class AssistAnnotation extends Annotation {
-	private Map infoCache;
-	public AssistAnnotation(JavaElement parent, String name, Map infoCache) {
-		super(parent, name);
-		this.infoCache = infoCache;
-	}
+    private Map infoCache;
 
-	public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
-		return this.infoCache.get(this);
-	}
+    public AssistAnnotation(JavaElement parent, String name, Map infoCache) {
+        super(parent, name);
+        this.infoCache = infoCache;
+    }
+
+    public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
+        return this.infoCache.get(this);
+    }
 }

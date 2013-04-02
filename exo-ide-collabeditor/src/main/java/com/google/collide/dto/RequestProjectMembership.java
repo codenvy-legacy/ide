@@ -17,13 +17,10 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Requests by the current user to become a project member.
- * 
- */
+/** Requests by the current user to become a project member. */
 // TODO: Let the user specify a requested membership level? 
 @RoutingType(type = RoutingTypes.REQUESTPROJECTMEMBERSHIP)
 public interface RequestProjectMembership extends ClientToServerDto {
 
-  String projectId();
+    String projectId();
 }

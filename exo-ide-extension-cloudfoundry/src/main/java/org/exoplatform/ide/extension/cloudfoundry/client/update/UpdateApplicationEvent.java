@@ -23,34 +23,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event, occurs after pressing Update Application button.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UpdateApplicationEvent.java Jul 14, 2011 11:45:11 AM vereshchaka $
- *
  */
-public class UpdateApplicationEvent extends GwtEvent<UpdateApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<UpdateApplicationHandler> TYPE = new GwtEvent.Type<UpdateApplicationHandler>();
+public class UpdateApplicationEvent extends GwtEvent<UpdateApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<UpdateApplicationHandler> TYPE = new GwtEvent.Type<UpdateApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateApplicationHandler handler)
-   {
-      handler.onUpdateApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateApplicationHandler handler) {
+        handler.onUpdateApplication(this);
+    }
 
 }

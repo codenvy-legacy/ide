@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to update Dos.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 4:59:34 PM anya $
- * 
  */
-public class UpdateDosEvent extends GwtEvent<UpdateDosHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<UpdateDosHandler> TYPE = new GwtEvent.Type<UpdateDosHandler>();
+public class UpdateDosEvent extends GwtEvent<UpdateDosHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<UpdateDosHandler> TYPE = new GwtEvent.Type<UpdateDosHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateDosHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateDosHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateDosHandler handler)
-   {
-      handler.onUpdateDos(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateDosHandler handler) {
+        handler.onUpdateDos(this);
+    }
 
 }

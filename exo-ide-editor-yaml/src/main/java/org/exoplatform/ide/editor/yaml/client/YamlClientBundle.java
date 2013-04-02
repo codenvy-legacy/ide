@@ -25,15 +25,13 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: YamlClientBundle.java May 29, 2012 3:50:10 PM azatsarynnyy $
- *
  */
-public interface YamlClientBundle extends ClientBundle
-{
-   YamlClientBundle INSTANCE = GWT.create(YamlClientBundle.class);
-   
-   @Source("org/exoplatform/ide/editor/yaml/client/images/yaml.png")
-   ImageResource yaml();
+public interface YamlClientBundle extends ClientBundle {
+    YamlClientBundle INSTANCE = GWT.create(YamlClientBundle.class);
 
-   @Source("org/exoplatform/ide/editor/yaml/client/images/yaml-disabled.png")
-   ImageResource yamlDisabled();
+    @Source("org/exoplatform/ide/editor/yaml/client/images/yaml.png")
+    ImageResource yaml();
+
+    @Source("org/exoplatform/ide/editor/yaml/client/images/yaml-disabled.png")
+    ImageResource yamlDisabled();
 }

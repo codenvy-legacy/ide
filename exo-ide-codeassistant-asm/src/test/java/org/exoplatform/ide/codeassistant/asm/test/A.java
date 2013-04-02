@@ -22,81 +22,65 @@ import java.util.List;
 import java.util.Set;
 
 /**
-*/
-public abstract class A
-{
-   private String string;
+ */
+public abstract class A {
+    private String string;
 
-   protected Integer integer;
+    protected Integer integer;
 
-   public long l;
+    public long l;
 
-   public A() throws ClassNotFoundException
-   {
+    public A() throws ClassNotFoundException {
 
-   }
+    }
 
-   public A(Set<Class<?>> classes) throws ClassNotFoundException, ClassFormatError
-   {
-   }
+    public A(Set<Class<?>> classes) throws ClassNotFoundException, ClassFormatError {
+    }
 
-   /**
-    * @return the string
-    */
-   public String getString()
-   {
-      return string;
-   }
+    /** @return the string */
+    public String getString() {
+        return string;
+    }
 
-   /**
-    * @param string
-    *           the string to set
-    */
-   public void setString(String string)
-   {
-      this.string = string;
-   }
+    /**
+     * @param string
+     *         the string to set
+     */
+    public void setString(String string) {
+        this.string = string;
+    }
 
-   /**
-    * @return the integer
-    */
-   public Integer getInteger()
-   {
-      return integer;
-   }
+    /** @return the integer */
+    public Integer getInteger() {
+        return integer;
+    }
 
-   /**
-    * @param integer
-    *           the integer to set
-    */
-   public void setInteger(Integer integer)
-   {
-      this.integer = integer;
-   }
+    /**
+     * @param integer
+     *         the integer to set
+     */
+    public void setInteger(Integer integer) {
+        this.integer = integer;
+    }
 
-   /**
-    * @return the l
-    */
-   public long getL()
-   {
-      return l;
-   }
+    /** @return the l */
+    public long getL() {
+        return l;
+    }
 
-   /**
-    * @param l
-    *           the l to set
-    */
-   public void setL(long l)
-   {
-      this.l = l;
-   }
+    /**
+     * @param l
+     *         the l to set
+     */
+    public void setL(long l) {
+        this.l = l;
+    }
 
-   public A(String string, Integer integer, List<String> tt)
-   {
-      super();
-      this.string = string;
-      this.integer = integer;
-      this.l = 10;
-   }
+    public A(String string, Integer integer, List<String> tt) {
+        super();
+        this.string = string;
+        this.integer = integer;
+        this.l = 10;
+    }
 
 }

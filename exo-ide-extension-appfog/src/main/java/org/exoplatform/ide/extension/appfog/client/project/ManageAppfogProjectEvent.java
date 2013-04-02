@@ -26,30 +26,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ManageAppfogProjectEvent extends GwtEvent<ManageAppfogProjectHandler>
-{
+public class ManageAppfogProjectEvent extends GwtEvent<ManageAppfogProjectHandler> {
 
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ManageAppfogProjectHandler> TYPE = new GwtEvent.Type<ManageAppfogProjectHandler>();
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ManageAppfogProjectHandler> TYPE = new GwtEvent.Type<ManageAppfogProjectHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageAppfogProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageAppfogProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageAppfogProjectHandler handler)
-   {
-      handler.onManageAppfogProject(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageAppfogProjectHandler handler) {
+        handler.onManageAppfogProject(this);
+    }
 
 }

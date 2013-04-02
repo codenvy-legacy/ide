@@ -17,15 +17,10 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Response when setting a project or workspace roles.
- * 
- */
+/** Response when setting a project or workspace roles. */
 @RoutingType(type = RoutingTypes.SETROLERESPONSE)
 public interface SetRoleResponse extends ServerToClientDto {
 
-  /**
-   * Returns the updated user details.
-   */
-  UserDetailsWithRole getUpdatedUserDetails();
+    /** Returns the updated user details. */
+    UserDetailsWithRole getUpdatedUserDetails();
 }

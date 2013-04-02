@@ -34,101 +34,80 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
 public abstract class MultipleSelectionItemsControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ViewVisibilityChangedHandler
-{
+                                                                                     ViewVisibilityChangedHandler {
 
-   protected boolean browserSelected = true;
+    protected boolean browserSelected = true;
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   /**
-    * @param id
-    */
-   protected MultipleSelectionItemsControl(String id)
-   {
-      super(id);
-   }
+    /** @param id */
+    protected MultipleSelectionItemsControl(String id) {
+        super(id);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @param items
-    * @return
-    */
-   public boolean isItemsInSameFolder(List<Item> items)
-   {
-      List<String> hrefs = new ArrayList<String>();
-      for (Item i : items)
-      {
-         if (i.getId().equals(vfsInfo.getRoot().getId()))
-         {
-            return false;
-         }
-         String p = i.getPath();
-         p = p.substring(0, p.lastIndexOf("/"));
-         hrefs.add(p);
-      }
-
-      for (int i = 0; i < hrefs.size(); i++)
-      {
-         String path = hrefs.get(i);
-         for (int j = i + 1; j < hrefs.size(); j++)
-         {
-            if (!path.equals(hrefs.get(j)))
-            {
-               return false;
+    /**
+     * @param items
+     * @return
+     */
+    public boolean isItemsInSameFolder(List<Item> items) {
+        List<String> hrefs = new ArrayList<String>();
+        for (Item i : items) {
+            if (i.getId().equals(vfsInfo.getRoot().getId())) {
+                return false;
             }
-         }
-      }
+            String p = i.getPath();
+            p = p.substring(0, p.lastIndexOf("/"));
+            hrefs.add(p);
+        }
 
-      return true;
-   }
+        for (int i = 0; i < hrefs.size(); i++) {
+            String path = hrefs.get(i);
+            for (int j = i + 1; j < hrefs.size(); j++) {
+                if (!path.equals(hrefs.get(j))) {
+                    return false;
+                }
+            }
+        }
 
-   /**
-    * 
-    */
-   protected abstract void updateEnabling();
+        return true;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfsInfo = event.getVfsInfo();
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-   }
+    /**
+     *
+     */
+    protected abstract void updateEnabling();
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay)
-      {
-         browserSelected = event.getView().isViewVisible();
-         updateEnabling();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfsInfo = event.getVfsInfo();
+        if (event.getVfsInfo() != null) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay) {
+            browserSelected = event.getView().isViewVisible();
+            updateEnabling();
+        }
+    }
 }

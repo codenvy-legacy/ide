@@ -16,42 +16,33 @@ package org.exoplatform.ide.dtogen.server;
 
 import org.exoplatform.ide.dtogen.shared.RoutableDto;
 
-/**
- * Server side base class for all DTO implementations.
- */
-public abstract class RoutableDtoServerImpl implements RoutableDto
-{
-   private final int _type;
+/** Server side base class for all DTO implementations. */
+public abstract class RoutableDtoServerImpl implements RoutableDto {
+    private final int _type;
 
-   protected RoutableDtoServerImpl()
-   {
-      _type = RoutableDto.NON_ROUTABLE_TYPE;
-   }
+    protected RoutableDtoServerImpl() {
+        _type = RoutableDto.NON_ROUTABLE_TYPE;
+    }
 
-   protected RoutableDtoServerImpl(int type)
-   {
-      this._type = type;
-   }
+    protected RoutableDtoServerImpl(int type) {
+        this._type = type;
+    }
 
-   @Override
-   public int getType()
-   {
-      return _type;
-   }
+    @Override
+    public int getType() {
+        return _type;
+    }
 
-   @Override
-   public boolean equals(Object other)
-   {
-      if (!(other instanceof RoutableDtoServerImpl))
-      {
-         return false;
-      }
-      return _type == ((RoutableDtoServerImpl)other)._type;
-   }
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof RoutableDtoServerImpl)) {
+            return false;
+        }
+        return _type == ((RoutableDtoServerImpl)other)._type;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return _type;
-   }
+    @Override
+    public int hashCode() {
+        return _type;
+    }
 }

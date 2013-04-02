@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EnvironmentInfoChangedEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EnvironmentStatusChangedHandler.java Oct 2, 2012 10:51:39 AM azatsarynnyy $
- *
  */
-public interface EnvironmentInfoChangedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when AWS application's environment info were changed.
-    * 
-    * @param event
-    */
-   void onEnvironmentInfoChanged(EnvironmentInfoChangedEvent event);
+public interface EnvironmentInfoChangedHandler extends EventHandler {
+    /**
+     * Perform actions, when AWS application's environment info were changed.
+     *
+     * @param event
+     */
+    void onEnvironmentInfoChanged(EnvironmentInfoChangedEvent event);
 }

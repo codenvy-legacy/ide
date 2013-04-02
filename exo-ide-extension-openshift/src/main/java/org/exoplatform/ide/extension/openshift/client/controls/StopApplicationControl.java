@@ -24,20 +24,18 @@ import org.exoplatform.ide.extension.openshift.client.start.StopApplicationEvent
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class StopApplicationControl extends AbstractOpenShiftControl
-{
+public class StopApplicationControl extends AbstractOpenShiftControl {
 
-   private static final String ID = "PaaS/OpenShift/StopApp";
+    private static final String ID = "PaaS/OpenShift/StopApp";
 
-   private static final String TITLE = "Stop Application";
+    private static final String TITLE = "Stop Application";
 
-   private static final String PROMPT = "Stop Application";
+    private static final String PROMPT = "Stop Application";
 
-   public StopApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new StopApplicationEvent());
-   }
+    public StopApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setEvent(new StopApplicationEvent());
+    }
 }

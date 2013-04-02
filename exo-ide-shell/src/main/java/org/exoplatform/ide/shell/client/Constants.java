@@ -21,32 +21,30 @@ package org.exoplatform.ide.shell.client;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 4, 2011 4:50:06 PM anya $
- * 
  */
-public interface Constants
-{
-   String COMMAND = "command";
+public interface Constants {
+    String COMMAND = "command";
 
-   String PATH = "path";
+    String PATH = "path";
 
-   String METHOD = "method";
+    String METHOD = "method";
 
-   String CONSUMES = "consumes";
+    String CONSUMES = "consumes";
 
-   String PRODUCES = "produces";
+    String PRODUCES = "produces";
 
-   String PARAMS = "params";
+    String PARAMS = "params";
 
-   String DESCRIPTION = "description";
+    String DESCRIPTION = "description";
 
-   // Parameter:
-   String NAME = "name";
+    // Parameter:
+    String NAME = "name";
 
-   String OPTIONS = "options";
+    String OPTIONS = "options";
 
-   String TYPE = "type";
+    String TYPE = "type";
 
-   String MANDATORY = "mandatory";
+    String MANDATORY = "mandatory";
 
-   String HAS_ARG = "hasArg";
+    String HAS_ARG = "hasArg";
 }

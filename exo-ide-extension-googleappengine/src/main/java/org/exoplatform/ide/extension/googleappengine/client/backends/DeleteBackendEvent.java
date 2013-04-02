@@ -22,48 +22,34 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to delete backend.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 5:24:39 PM anya $
- * 
  */
-public class DeleteBackendEvent extends GwtEvent<DeleteBackendHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<DeleteBackendHandler> TYPE = new GwtEvent.Type<DeleteBackendHandler>();
+public class DeleteBackendEvent extends GwtEvent<DeleteBackendHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<DeleteBackendHandler> TYPE = new GwtEvent.Type<DeleteBackendHandler>();
 
-   private String backendName;
+    private String backendName;
 
-   public DeleteBackendEvent(String backendName)
-   {
-      this.backendName = backendName;
-   }
+    public DeleteBackendEvent(String backendName) {
+        this.backendName = backendName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeleteBackendHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DeleteBackendHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DeleteBackendHandler handler)
-   {
-      handler.onDeleteBackend(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(DeleteBackendHandler handler) {
+        handler.onDeleteBackend(this);
+    }
 
-   /**
-    * @return the backendName
-    */
-   public String getBackendName()
-   {
-      return backendName;
-   }
+    /** @return the backendName */
+    public String getBackendName() {
+        return backendName;
+    }
 }

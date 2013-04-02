@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface ShowPackageExplorerHandler extends EventHandler
-{
-   
-   void onShowPackageExplorer(ShowPackageExplorerEvent event);
+public interface ShowPackageExplorerHandler extends EventHandler {
+
+    void onShowPackageExplorer(ShowPackageExplorerEvent event);
 
 }

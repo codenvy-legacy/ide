@@ -17,100 +17,79 @@ package org.exoplatform.ide.json.client;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringSet;
 
-/**
- * Client implementation of a set of strings.
- */
-public class JsoStringSet implements JsonStringSet
-{
+/** Client implementation of a set of strings. */
+public class JsoStringSet implements JsonStringSet {
 
-   private static final String KEY_PREFIX = "#";
+    private static final String KEY_PREFIX = "#";
 
-   /**
-    * Convenience factory method.
-    */
-   public static JsoStringSet create()
-   {
-      return new JsoStringSet();
-   }
+    /** Convenience factory method. */
+    public static JsoStringSet create() {
+        return new JsoStringSet();
+    }
 
-   private Jso delegate = Jso.create();
+    private Jso delegate = Jso.create();
 
-   private JsoStringSet()
-   {
-   }
+    private JsoStringSet() {
+    }
 
-   @Override
-   public final boolean contains(String key)
-   {
-      return delegate.hasOwnProperty(toInternalKey(key));
-   }
+    @Override
+    public final boolean contains(String key) {
+        return delegate.hasOwnProperty(toInternalKey(key));
+    }
 
-   @Override
-   public final JsonArray<String> getKeys()
-   {
-      JsonArray<String> result = delegate.getKeys();
-      for (int i = 0, n = result.size(); i < n; ++i)
-      {
-         result.set(i, toPublicKey(result.get(i)));
-      }
-      return result;
-   }
+    @Override
+    public final JsonArray<String> getKeys() {
+        JsonArray<String> result = delegate.getKeys();
+        for (int i = 0, n = result.size(); i < n; ++i) {
+            result.set(i, toPublicKey(result.get(i)));
+        }
+        return result;
+    }
 
-   @Override
-   public boolean isEmpty()
-   {
-      return delegate.isEmpty();
-   }
+    @Override
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
 
-   @Override
-   public final void iterate(IterationCallback callback)
-   {
-      JsonArray<String> keys = getKeys();
-      for (int i = 0, n = keys.size(); i < n; ++i)
-      {
-         callback.onIteration(keys.get(i));
-      }
-   }
+    @Override
+    public final void iterate(IterationCallback callback) {
+        JsonArray<String> keys = getKeys();
+        for (int i = 0, n = keys.size(); i < n; ++i) {
+            callback.onIteration(keys.get(i));
+        }
+    }
 
-   @Override
-   public final void add(String key)
-   {
-      delegate.addField(toInternalKey(key), true);
-   }
+    @Override
+    public final void add(String key) {
+        delegate.addField(toInternalKey(key), true);
+    }
 
-   @Override
-   public final void addAll(JsonArray<String> keys)
-   {
-      for (int i = 0, n = keys.size(); i < n; ++i)
-      {
-         add(keys.get(i));
-      }
-   }
+    @Override
+    public final void addAll(JsonArray<String> keys) {
+        for (int i = 0, n = keys.size(); i < n; ++i) {
+            add(keys.get(i));
+        }
+    }
 
-   @Override
-   public final boolean remove(String key)
-   {
-      if (contains(key))
-      {
-         delegate.deleteField(toInternalKey(key));
-         return true;
-      }
-      return false;
-   }
+    @Override
+    public final boolean remove(String key) {
+        if (contains(key)) {
+            delegate.deleteField(toInternalKey(key));
+            return true;
+        }
+        return false;
+    }
 
-   @Override
-   public void clear()
-   {
-      delegate = Jso.create();
-   }
+    @Override
+    public void clear() {
+        delegate = Jso.create();
+    }
 
-   private static String toInternalKey(String key)
-   {
-      return KEY_PREFIX + key;
-   }
+    private static String toInternalKey(String key) {
+        return KEY_PREFIX + key;
+    }
 
-   private static String toPublicKey(String key)
-   {
-      return key.substring(KEY_PREFIX.length());
-   }
+    private static String toPublicKey(String key) {
+        return key.substring(KEY_PREFIX.length());
+    }
 }

@@ -38,60 +38,47 @@ import static org.exoplatform.ide.commons.ContainerUtils.readValuesParam;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class MemoryFileSystemInitializer implements Startable
-{
-   private static final Log LOG = ExoLogger.getExoLogger(MemoryFileSystemInitializer.class);
+public final class MemoryFileSystemInitializer implements Startable {
+    private static final Log LOG = ExoLogger.getExoLogger(MemoryFileSystemInitializer.class);
 
-   private final VirtualFileSystemRegistry registry;
-   private final Set<String> vfsIds;
-   private final EventListenerList listeners;
+    private final VirtualFileSystemRegistry registry;
+    private final Set<String>               vfsIds;
+    private final EventListenerList         listeners;
 
-   public MemoryFileSystemInitializer(InitParams initParams,
-                                      VirtualFileSystemRegistry registry,
-                                      EventListenerList listeners)
-   {
-      this(readValuesParam(initParams, "ids"), registry, listeners);
-   }
+    public MemoryFileSystemInitializer(InitParams initParams,
+                                       VirtualFileSystemRegistry registry,
+                                       EventListenerList listeners) {
+        this(readValuesParam(initParams, "ids"), registry, listeners);
+    }
 
-   public MemoryFileSystemInitializer(Collection<String> vfsIds,
-                                      VirtualFileSystemRegistry registry,
-                                      EventListenerList listeners)
-   {
-      this.vfsIds = new HashSet<String>(vfsIds);
-      this.registry = registry;
-      this.listeners = listeners;
-   }
+    public MemoryFileSystemInitializer(Collection<String> vfsIds,
+                                       VirtualFileSystemRegistry registry,
+                                       EventListenerList listeners) {
+        this.vfsIds = new HashSet<String>(vfsIds);
+        this.registry = registry;
+        this.listeners = listeners;
+    }
 
-   @Override
-   public void start()
-   {
-      URLHandlerFactorySetup.setup(registry, listeners);
-      for (String id : vfsIds)
-      {
-         try
-         {
-            registry.registerProvider(id, new MemoryFileSystemProvider(id, new MemoryFileSystemContext()));
-         }
-         catch (VirtualFileSystemException e)
-         {
-            LOG.error(e.getMessage(), e);
-         }
-      }
-   }
+    @Override
+    public void start() {
+        URLHandlerFactorySetup.setup(registry, listeners);
+        for (String id : vfsIds) {
+            try {
+                registry.registerProvider(id, new MemoryFileSystemProvider(id, new MemoryFileSystemContext()));
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+    }
 
-   @Override
-   public void stop()
-   {
-      for (String id : vfsIds)
-      {
-         try
-         {
-            registry.unregisterProvider(id);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            LOG.error(e.getMessage(), e);
-         }
-      }
-   }
+    @Override
+    public void stop() {
+        for (String id : vfsIds) {
+            try {
+                registry.unregisterProvider(id);
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+    }
 }

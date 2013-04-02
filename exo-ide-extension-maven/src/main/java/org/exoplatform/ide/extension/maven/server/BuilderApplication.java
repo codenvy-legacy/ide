@@ -18,26 +18,22 @@
  */
 package org.exoplatform.ide.extension.maven.server;
 
+import javax.ws.rs.core.Application;
 import java.util.Collections;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BuilderApplication extends Application
-{
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return Collections.<Class<?>>singleton(BuilderService.class);
-   }
+public class BuilderApplication extends Application {
+    @Override
+    public Set<Class<?>> getClasses() {
+        return Collections.<Class<?>>singleton(BuilderService.class);
+    }
 
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return Collections.<Object>singleton(new BuilderExceptionMapper());
-   }
+    @Override
+    public Set<Object> getSingletons() {
+        return Collections.<Object>singleton(new BuilderExceptionMapper());
+    }
 }

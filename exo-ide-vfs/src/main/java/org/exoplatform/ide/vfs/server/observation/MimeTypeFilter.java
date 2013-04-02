@@ -24,67 +24,52 @@ package org.exoplatform.ide.vfs.server.observation;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class MimeTypeFilter extends ChangeEventFilter
-{
-   private final MimeType pattern;
+public final class MimeTypeFilter extends ChangeEventFilter {
+    private final MimeType pattern;
 
-   public MimeTypeFilter(String mimeType)
-   {
-      pattern = fromString(mimeType);
-   }
+    public MimeTypeFilter(String mimeType) {
+        pattern = fromString(mimeType);
+    }
 
-   @Override
-   public boolean matched(ChangeEvent event)
-   {
-      String actual = event.getMimeType();
-      if (actual == null)
-      {
-         return false;
-      }
-      MimeType other = fromString(actual);
-      if (pattern.type.equals("*"))
-      {
-         return true;
-      }
-      if (pattern.type.equalsIgnoreCase(other.type))
-      {
-         if (pattern.subType.equals("*") || pattern.subType.equalsIgnoreCase(other.subType))
-         {
+    @Override
+    public boolean matched(ChangeEvent event) {
+        String actual = event.getMimeType();
+        if (actual == null) {
+            return false;
+        }
+        MimeType other = fromString(actual);
+        if (pattern.type.equals("*")) {
             return true;
-         }
-      }
-      return false;
-   }
+        }
+        if (pattern.type.equalsIgnoreCase(other.type)) {
+            if (pattern.subType.equals("*") || pattern.subType.equalsIgnoreCase(other.subType)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-   private MimeType fromString(String str)
-   {
-      int sl = str.indexOf('/');
-      int col = str.indexOf(';');
+    private MimeType fromString(String str) {
+        int sl = str.indexOf('/');
+        int col = str.indexOf(';');
 
-      if (sl < 0 && col < 0)
-      {
-         return new MimeType(str, "*");
-      }
-      else if (sl > 0 && col < 0)
-      {
-         return new MimeType(str.substring(0, sl), str.substring(sl + 1));
-      }
-      else if (sl < 0 && col > 0)
-      {
-         return new MimeType(str.substring(0, col), "*");
-      }
-      return new MimeType(str.substring(0, sl), str.substring(sl + 1, col));
-   }
+        if (sl < 0 && col < 0) {
+            return new MimeType(str, "*");
+        } else if (sl > 0 && col < 0) {
+            return new MimeType(str.substring(0, sl), str.substring(sl + 1));
+        } else if (sl < 0 && col > 0) {
+            return new MimeType(str.substring(0, col), "*");
+        }
+        return new MimeType(str.substring(0, sl), str.substring(sl + 1, col));
+    }
 
-   private static class MimeType
-   {
-      final String type;
-      final String subType;
+    private static class MimeType {
+        final String type;
+        final String subType;
 
-      private MimeType(String type, String subType)
-      {
-         this.type = type;
-         this.subType = subType;
-      }
-   }
+        private MimeType(String type, String subType) {
+            this.type = type;
+            this.subType = subType;
+        }
+    }
 }

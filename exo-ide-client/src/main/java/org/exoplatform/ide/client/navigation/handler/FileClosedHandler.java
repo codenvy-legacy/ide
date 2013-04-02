@@ -37,71 +37,55 @@ import java.util.Map;
 /**
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Sep 13, 2010 $
- * 
  */
-public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSettingsReceivedHandler
-{
+public class FileClosedHandler implements EditorFileClosedHandler, ApplicationSettingsReceivedHandler {
 
-   private Map<String, String> lockTokens;
+    private Map<String, String> lockTokens;
 
-   private static final String UNLOCK_FAILURE_MSG = IDE.ERRORS_CONSTANT.fileClosedUnlockFailure();
+    private static final String UNLOCK_FAILURE_MSG = IDE.ERRORS_CONSTANT.fileClosedUnlockFailure();
 
-   public FileClosedHandler()
-   {
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-   }
+    public FileClosedHandler() {
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
-    */
-   public void onEditorFileClosed(final EditorFileClosedEvent event)
-   {
-      String lockToken = lockTokens.get(event.getFile().getId());
-      if (!event.getFile().isPersisted())
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client
+     * .framework.editor.event.EditorFileClosedEvent) */
+    public void onEditorFileClosed(final EditorFileClosedEvent event) {
+        String lockToken = lockTokens.get(event.getFile().getId());
+        if (!event.getFile().isPersisted()) {
+            return;
+        }
 
-      if (lockToken != null)
-      {
-         try
-         {
-            VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Object>()
-            {
+        if (lockToken != null) {
+            try {
+                VirtualFileSystem.getInstance().unlock(event.getFile(), lockToken, new AsyncRequestCallback<Object>() {
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new ItemUnlockedEvent(event.getFile()));
-               }
+                    @Override
+                    protected void onSuccess(Object result) {
+                        IDE.fireEvent(new ItemUnlockedEvent(event.getFile()));
+                    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
-               }
-            });
-         }
-         catch (RequestException e)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
-         }
+                    @Override
+                    protected void onFailure(Throwable exception) {
+                        IDE.fireEvent(new ExceptionThrownEvent(exception, UNLOCK_FAILURE_MSG));
+                    }
+                });
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e, UNLOCK_FAILURE_MSG));
+            }
 
-      }
-   }
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
-      {
-         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
+    /** @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org
+     * .exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent) */
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null) {
+            event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+        }
 
-      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
-   }
+        lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
+    }
 
 }

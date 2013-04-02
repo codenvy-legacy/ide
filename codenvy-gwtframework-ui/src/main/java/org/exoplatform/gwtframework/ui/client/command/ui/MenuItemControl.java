@@ -20,119 +20,101 @@
 
 package org.exoplatform.gwtframework.ui.client.command.ui;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControlStateListener;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
-
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class MenuItemControl implements Command, SimpleControlStateListener
-{
-   
-   private HandlerManager eventBus;
+public class MenuItemControl implements Command, SimpleControlStateListener {
 
-   private MenuItem menuItem;
+    private HandlerManager eventBus;
 
-   private SimpleControl command;
+    private MenuItem menuItem;
 
-   public MenuItemControl(HandlerManager eventBus, MenuItem menuItem, SimpleControl command)
-   {
-      this.eventBus = eventBus;
-      this.menuItem = menuItem;
-      this.command = command;
+    private SimpleControl command;
 
-      updateItemIcon();
-      menuItem.setTitle(command.getTitle());
-      menuItem.setCommand(this);
-      menuItem.setEnabled(command.isEnabled());
-      menuItem.setVisible(command.isVisible());
-      menuItem.setSelected(command.isSelected());
-      menuItem.setHotKey(command.getHotKey());
-      command.getStateListeners().add(this);
-   }
+    public MenuItemControl(HandlerManager eventBus, MenuItem menuItem, SimpleControl command) {
+        this.eventBus = eventBus;
+        this.menuItem = menuItem;
+        this.command = command;
 
-   private void updateItemIcon()
-   {
-      String icon = "";
-      if (command.isEnabled())
-      {
-         if (command.getNormalImage() != null)
-         {
-            icon = ImageHelper.getImageHTML(command.getNormalImage());
-         } else if (command.getIcon() != null) {
-            icon = ImageHelper.getImageHTML(command.getIcon());
-         }
-      }
-      else
-      {
-         if (command.getDisabledImage() != null)
-         {
-            icon = ImageHelper.getImageHTML(command.getDisabledImage());
-         } else if (command.getIcon() != null) {
-            String iconNormal = command.getIcon();
-            String iconDisabled = iconNormal.substring(0, iconNormal.lastIndexOf("."));
-            iconDisabled += "_Disabled";
-            iconDisabled += iconNormal.substring(iconNormal.lastIndexOf("."));
-            icon = ImageHelper.getImageHTML(iconDisabled);
-         }
-      }
+        updateItemIcon();
+        menuItem.setTitle(command.getTitle());
+        menuItem.setCommand(this);
+        menuItem.setEnabled(command.isEnabled());
+        menuItem.setVisible(command.isVisible());
+        menuItem.setSelected(command.isSelected());
+        menuItem.setHotKey(command.getHotKey());
+        command.getStateListeners().add(this);
+    }
 
-      menuItem.setIcon(icon);
-   }
+    private void updateItemIcon() {
+        String icon = "";
+        if (command.isEnabled()) {
+            if (command.getNormalImage() != null) {
+                icon = ImageHelper.getImageHTML(command.getNormalImage());
+            } else if (command.getIcon() != null) {
+                icon = ImageHelper.getImageHTML(command.getIcon());
+            }
+        } else {
+            if (command.getDisabledImage() != null) {
+                icon = ImageHelper.getImageHTML(command.getDisabledImage());
+            } else if (command.getIcon() != null) {
+                String iconNormal = command.getIcon();
+                String iconDisabled = iconNormal.substring(0, iconNormal.lastIndexOf("."));
+                iconDisabled += "_Disabled";
+                iconDisabled += iconNormal.substring(iconNormal.lastIndexOf("."));
+                icon = ImageHelper.getImageHTML(iconDisabled);
+            }
+        }
 
-   public void updateControlEnabling(boolean enabled)
-   {
-      menuItem.setEnabled(enabled);
-      updateItemIcon();
-   }
+        menuItem.setIcon(icon);
+    }
 
-   public void updateControlVisibility(boolean visible)
-   {
-      menuItem.setVisible(visible);
-   }
+    public void updateControlEnabling(boolean enabled) {
+        menuItem.setEnabled(enabled);
+        updateItemIcon();
+    }
 
-   public void updateControlPrompt(String prompt)
-   {
-   }
+    public void updateControlVisibility(boolean visible) {
+        menuItem.setVisible(visible);
+    }
 
-   public void updateControlIcon(String icon)
-   {
-      updateItemIcon();
-   }
+    public void updateControlPrompt(String prompt) {
+    }
 
-   public void execute()
-   {
-      if (command.getEvent() != null)
-      {
-         //TODO
-         eventBus.fireEvent(command.getEvent());
-      }
-   }
+    public void updateControlIcon(String icon) {
+        updateItemIcon();
+    }
 
-   public void updateControlTitle(String title)
-   {
-      menuItem.setTitle(title);
-   }
+    public void execute() {
+        if (command.getEvent() != null) {
+            //TODO
+            eventBus.fireEvent(command.getEvent());
+        }
+    }
 
-   public void updateControlSelectionState(boolean selected)
-   {
-      menuItem.setSelected(selected);
-   }
+    public void updateControlTitle(String title) {
+        menuItem.setTitle(title);
+    }
 
-   public void updateControlHotKey(String hotKey)
-   {
-      menuItem.setHotKey(hotKey);
-   }
+    public void updateControlSelectionState(boolean selected) {
+        menuItem.setSelected(selected);
+    }
+
+    public void updateControlHotKey(String hotKey) {
+        menuItem.setHotKey(hotKey);
+    }
 
 }
 

@@ -20,31 +20,31 @@
 
 -->
 <configuration>
-   
-   <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder>
-         <pattern>%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n</pattern>
-      </encoder>
-   </appender>
-   
-   <appender name="file" class="ch.qos.logback.core.FileAppender">
-      <File>target/log/cloud-admin.log</File>
-      <encoder>
-         <pattern>%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n</pattern>
-      </encoder>
-   </appender>
-   
-   <logger name="com.exoplatform.cloud" level="INFO"/>
-   <logger name="org.exoplatform" level="INFO"/>
-   <!--logger name="org.eclipse" level="DEBUG"/>
-   <logger name="org.everrest" level="DEBUG"/>
-   <logger name="org.exoplatform.cloudide" level="DEBUG"/-->
-  
-   <logger name="exo" level="INFO"/>
-      
-   <root level="OFF">
-      <appender-ref ref="stdout"/>
-      <appender-ref ref="file"/>
-   </root>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <File>target/log/cloud-admin.log</File>
+        <encoder>
+            <pattern>%-41(%date[%.15thread]) %-45([%-5level] [%.30logger{30} %L]) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.exoplatform.cloud" level="INFO"/>
+    <logger name="org.exoplatform" level="INFO"/>
+    <!--logger name="org.eclipse" level="DEBUG"/>
+    <logger name="org.everrest" level="DEBUG"/>
+    <logger name="org.exoplatform.cloudide" level="DEBUG"/-->
+
+    <logger name="exo" level="INFO"/>
+
+    <root level="OFF">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file"/>
+    </root>
 
 </configuration>

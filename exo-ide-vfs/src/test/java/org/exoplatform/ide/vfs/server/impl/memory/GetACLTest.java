@@ -35,67 +35,60 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GetACLTest.java 75032 2011-10-13 15:24:34Z andrew00x $
  */
-public class GetACLTest extends MemoryFileSystemTest
-{
-   private MemoryFile file;
-   private String fileId;
+public class GetACLTest extends MemoryFileSystemTest {
+    private MemoryFile file;
+    private String     fileId;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      String name = getClass().getName();
-      MemoryFolder getAclTestFolder = new MemoryFolder(name);
-      testRoot.addChild(getAclTestFolder);
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        String name = getClass().getName();
+        MemoryFolder getAclTestFolder = new MemoryFolder(name);
+        testRoot.addChild(getAclTestFolder);
 
-      file = new MemoryFile(name, "text/plain",
-         new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      getAclTestFolder.addChild(file);
+        file = new MemoryFile(name, "text/plain",
+                              new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+        getAclTestFolder.addChild(file);
 
-      AccessControlEntry adminACE = new AccessControlEntryImpl();
-      adminACE.setPrincipal("admin");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
-      AccessControlEntry userACE = new AccessControlEntryImpl();
-      adminACE.setPrincipal("john");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
-      file.updateACL(Arrays.asList(adminACE, userACE), true);
+        AccessControlEntry adminACE = new AccessControlEntryImpl();
+        adminACE.setPrincipal("admin");
+        adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
+        AccessControlEntry userACE = new AccessControlEntryImpl();
+        adminACE.setPrincipal("john");
+        adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
+        file.updateACL(Arrays.asList(adminACE, userACE), true);
 
-      fileId = file.getId();
+        fileId = file.getId();
 
-      memoryContext.putItem(getAclTestFolder);
-   }
+        memoryContext.putItem(getAclTestFolder);
+    }
 
-   public void testGetACL() throws Exception
-   {
-      String path = SERVICE_URI + "acl/" + fileId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
-      assertEquals(200, response.getStatus());
-      @SuppressWarnings("unchecked")
-      List<AccessControlEntry> acl = (List<AccessControlEntry>)response.getEntity();
-      for (AccessControlEntry ace : acl)
-      {
-         if ("root".equals(ace.getPrincipal()))
-         {
-            ace.getPermissions().contains("all");
-         }
-         if ("john".equals(ace.getPrincipal()))
-         {
-            ace.getPermissions().contains("read");
-         }
-      }
-   }
+    public void testGetACL() throws Exception {
+        String path = SERVICE_URI + "acl/" + fileId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
+        assertEquals(200, response.getStatus());
+        @SuppressWarnings("unchecked")
+        List<AccessControlEntry> acl = (List<AccessControlEntry>)response.getEntity();
+        for (AccessControlEntry ace : acl) {
+            if ("root".equals(ace.getPrincipal())) {
+                ace.getPermissions().contains("all");
+            }
+            if ("john".equals(ace.getPrincipal())) {
+                ace.getPermissions().contains("read");
+            }
+        }
+    }
 
-   public void testGetACLNoPermissions() throws Exception
-   {
-      AccessControlEntry ace = new AccessControlEntryImpl();
-      ace.setPrincipal("admin");
-      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
-      file.updateACL(Arrays.asList(ace), true);
+    public void testGetACLNoPermissions() throws Exception {
+        AccessControlEntry ace = new AccessControlEntryImpl();
+        ace.setPrincipal("admin");
+        ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
+        file.updateACL(Arrays.asList(ace), true);
 
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "acl/" + fileId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals(403, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "acl/" + fileId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals(403, response.getStatus());
+        log.info(new String(writer.getBody()));
+    }
 }

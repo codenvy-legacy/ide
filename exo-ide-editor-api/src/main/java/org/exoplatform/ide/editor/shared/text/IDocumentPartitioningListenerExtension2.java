@@ -20,24 +20,24 @@ package org.exoplatform.ide.editor.shared.text;
 
 /**
  * Extension interface to {@link org.eclipse.jface.text.IDocumentPartitioningListener}.
- * <p>
- * 
+ * <p/>
+ * <p/>
  * Replaces the previous notification mechanisms by introducing an explicit document partitioning changed event.
- * 
+ *
  * @see org.eclipse.jface.text.DocumentPartitioningChangedEvent
  * @since 3.0
  */
-public interface IDocumentPartitioningListenerExtension2
-{
+public interface IDocumentPartitioningListenerExtension2 {
 
-   /**
-    * Signals the change of document partitionings.
-    * <p>
-    * This method replaces {@link IDocumentPartitioningListener#documentPartitioningChanged(IDocument)} and
-    * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)}
-    * 
-    * @param event the event describing the change
-    * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
-    */
-   void documentPartitioningChanged(DocumentPartitioningChangedEvent event);
+    /**
+     * Signals the change of document partitionings.
+     * <p/>
+     * This method replaces {@link IDocumentPartitioningListener#documentPartitioningChanged(IDocument)} and
+     * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)}
+     *
+     * @param event
+     *         the event describing the change
+     * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
+     */
+    void documentPartitioningChanged(DocumentPartitioningChangedEvent event);
 }

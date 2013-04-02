@@ -24,51 +24,50 @@ import java.util.Set;
  * @author <a href="mailto:dvishinskiy@codenvy.com">Dmitriy Vyshinskiy</a>
  * @version $Id: Status.java 68135 2011-04-08 14:23:36Z andrew00x $
  */
-public interface Status
-{
+public interface Status {
 
-   public boolean isClean();
+    public boolean isClean();
 
-   public void setClean(Boolean clean);
+    public void setClean(Boolean clean);
 
-   public boolean getShortFormat();
+    public boolean getShortFormat();
 
-   public void setShortFormat(Boolean shortFormat);
+    public void setShortFormat(Boolean shortFormat);
 
-   public String getBranchName();
+    public String getBranchName();
 
-   public void setBranchName(String branchName);
+    public void setBranchName(String branchName);
 
-   public Set<String> getAdded();
+    public Set<String> getAdded();
 
-   public void setAdded(Set<String> added);
+    public void setAdded(Set<String> added);
 
-   public Set<String> getChanged();
+    public Set<String> getChanged();
 
-   public void setChanged(Set<String> changed);
+    public void setChanged(Set<String> changed);
 
-   public Set<String> getRemoved();
+    public Set<String> getRemoved();
 
-   public void setRemoved(Set<String> removed);
+    public void setRemoved(Set<String> removed);
 
-   public Set<String> getMissing();
+    public Set<String> getMissing();
 
-   public void setMissing(Set<String> missing);
+    public void setMissing(Set<String> missing);
 
-   public Set<String> getModified();
+    public Set<String> getModified();
 
-   public void setModified(Set<String> modified);
+    public void setModified(Set<String> modified);
 
-   public Set<String> getUntracked();
+    public Set<String> getUntracked();
 
-   public void setUntracked(Set<String> untracked);
+    public void setUntracked(Set<String> untracked);
 
-   public Set<String> getUntrackedFolders();
+    public Set<String> getUntrackedFolders();
 
-   public void setUntrackedFolders(Set<String> untrackedFolders);
+    public void setUntrackedFolders(Set<String> untrackedFolders);
 
-   public Set<String> getConflicting();
+    public Set<String> getConflicting();
 
-   public void setConflicting(Set<String> conflicting);
+    public void setConflicting(Set<String> conflicting);
 
 }

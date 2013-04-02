@@ -17,13 +17,9 @@ import com.codenvy.eclipse.jdt.core.IOpenable;
  * This class represents a null buffer. This buffer is used to represent a buffer for a class file
  * that has no source attached.
  */
-public class NullBuffer extends Buffer
-{
-   /**
-    * Creates a new null buffer on an underlying resource.
-    */
-   public NullBuffer(IFile file, IOpenable owner, boolean readOnly)
-   {
-      super(file, owner, readOnly);
-   }
+public class NullBuffer extends Buffer {
+    /** Creates a new null buffer on an underlying resource. */
+    public NullBuffer(IFile file, IOpenable owner, boolean readOnly) {
+        super(file, owner, readOnly);
+    }
 }

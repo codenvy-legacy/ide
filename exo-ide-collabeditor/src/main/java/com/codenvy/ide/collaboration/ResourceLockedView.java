@@ -26,22 +26,20 @@ import org.exoplatform.ide.client.framework.ui.api.View;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface ResourceLockedView extends View
-{
-   public interface ActionDelegate
-   {
-      void onClose();
+public interface ResourceLockedView extends View {
+    public interface ActionDelegate {
+        void onClose();
 
-      void onNotify();
-   }
+        void onNotify();
+    }
 
-   String ID = "ideCollaborationResourceLocked";
+    String ID = "ideCollaborationResourceLocked";
 
-   void setDelegate(ActionDelegate delegate);
+    void setDelegate(ActionDelegate delegate);
 
-   void setMessageText(SafeHtml message);
+    void setMessageText(SafeHtml message);
 
-   void setUserList(SafeHtml userList);
+    void setUserList(SafeHtml userList);
 
-   void setNotifyButtonEnabled(boolean enabled);
+    void setNotifyButtonEnabled(boolean enabled);
 }

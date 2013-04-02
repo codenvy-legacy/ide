@@ -22,35 +22,29 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum EnvironmentHealth
-{
-   Green("Green"),
-   Yellow("Yellow"),
-   Red("Red"),
-   Grey("Grey");
+public enum EnvironmentHealth {
+    Green("Green"),
+    Yellow("Yellow"),
+    Red("Red"),
+    Grey("Grey");
 
-   private final String value;
+    private final String value;
 
-   private EnvironmentHealth(String value)
-   {
-      this.value = value;
-   }
+    private EnvironmentHealth(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static EnvironmentHealth fromValue(String value)
-   {
-      for (EnvironmentHealth v : EnvironmentHealth.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static EnvironmentHealth fromValue(String value) {
+        for (EnvironmentHealth v : EnvironmentHealth.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

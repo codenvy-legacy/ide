@@ -24,9 +24,8 @@ import org.exoplatform.ide.security.shared.User;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface GaeUser extends User
-{
-   boolean isAuthenticated();
+public interface GaeUser extends User {
+    boolean isAuthenticated();
 
-   void setAuthenticated(boolean authenticated);
+    void setAuthenticated(boolean authenticated);
 }

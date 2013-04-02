@@ -26,28 +26,27 @@ import java.io.StringWriter;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: StringUtils.java Oct 16, 2012 vetal $
- *
  */
-public class StringUtils
-{
+public class StringUtils {
 
-   /**
-    * Get the contents of an <code>InputStream</code> as a String
-    * @param stream  the <code>InputStream</code> to read from
-    * @return the requested String
-    * @throws IOException if an I/O error occurs
-    */
-   public static String toString(InputStream stream) throws IOException
-   {
-      StringWriter sw = new StringWriter();
-      InputStreamReader in = new InputStreamReader(stream);
-      char[] buffer = new char[1024];
-      int n = 0;
-      while (-1 != (n = in.read(buffer)))
-      {
-         sw.write(buffer, 0, n);
-      }
-      return sw.toString();
-   }
+    /**
+     * Get the contents of an <code>InputStream</code> as a String
+     *
+     * @param stream
+     *         the <code>InputStream</code> to read from
+     * @return the requested String
+     * @throws IOException
+     *         if an I/O error occurs
+     */
+    public static String toString(InputStream stream) throws IOException {
+        StringWriter sw = new StringWriter();
+        InputStreamReader in = new InputStreamReader(stream);
+        char[] buffer = new char[1024];
+        int n = 0;
+        while (-1 != (n = in.read(buffer))) {
+            sw.write(buffer, 0, n);
+        }
+        return sw.toString();
+    }
 
 }

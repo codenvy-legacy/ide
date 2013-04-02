@@ -24,62 +24,47 @@ import org.objectweb.asm.Type;
 /**
  * Member based on org.objectweb.asm.tree.MemberNode created during class file
  * parsing.
- * 
+ *
  * @see org.objectweb.asm.tree.MemberNode
  */
-public class AsmMember implements Member
-{
-   private final String name;
+public class AsmMember implements Member {
+    private final String name;
 
-   private final int modifiers;
+    private final int modifiers;
 
-   public AsmMember(String name, int modifiers)
-   {
-      super();
-      this.name = name;
-      this.modifiers = modifiers;
-   }
+    public AsmMember(String name, int modifiers) {
+        super();
+        this.name = name;
+        this.modifiers = modifiers;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#getModifiers()
-    */
-   @Override
-   public int getModifiers()
-   {
-      return modifiers;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.Member#getModifiers() */
+    @Override
+    public int getModifiers() {
+        return modifiers;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#getName()
-    */
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.Member#getName() */
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#setModifiers(int)
-    */
-   @Override
-   public void setModifiers(int modifiers)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.Member#setModifiers(int) */
+    @Override
+    public void setModifiers(int modifiers) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.Member#setName(java.lang.String)
-    */
-   @Override
-   public void setName(String name)
-   {
-      throw new UnsupportedOperationException("Set not supported");
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.Member#setName(java.lang.String) */
+    @Override
+    public void setName(String name) {
+        throw new UnsupportedOperationException("Set not supported");
+    }
 
-   public static String classNameFromType(String type)
-   {
-      // can be null for Object super class.
-      return type == null ? "" : Type.getObjectType(type).getClassName();
-   }
+    public static String classNameFromType(String type) {
+        // can be null for Object super class.
+        return type == null ? "" : Type.getObjectType(type).getClassName();
+    }
 
 }

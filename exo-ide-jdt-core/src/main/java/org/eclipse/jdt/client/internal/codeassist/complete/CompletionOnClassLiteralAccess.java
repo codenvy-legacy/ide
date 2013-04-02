@@ -36,33 +36,29 @@ import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
-public class CompletionOnClassLiteralAccess extends ClassLiteralAccess
-{
+public class CompletionOnClassLiteralAccess extends ClassLiteralAccess {
 
-   public char[] completionIdentifier;
+    public char[] completionIdentifier;
 
-   public int classStart;
+    public int classStart;
 
-   public CompletionOnClassLiteralAccess(long pos, TypeReference t)
-   {
+    public CompletionOnClassLiteralAccess(long pos, TypeReference t) {
 
-      super((int)pos, t);
-      this.classStart = (int)(pos >>> 32);
-   }
+        super((int)pos, t);
+        this.classStart = (int)(pos >>> 32);
+    }
 
-   public StringBuffer printExpression(int indent, StringBuffer output)
-   {
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-      output.append("<CompleteOnClassLiteralAccess:"); //$NON-NLS-1$
-      return this.type.print(0, output).append('.').append(this.completionIdentifier).append('>');
-   }
+        output.append("<CompleteOnClassLiteralAccess:"); //$NON-NLS-1$
+        return this.type.print(0, output).append('.').append(this.completionIdentifier).append('>');
+    }
 
-   public TypeBinding resolveType(BlockScope scope)
-   {
+    public TypeBinding resolveType(BlockScope scope) {
 
-      if (super.resolveType(scope) == null)
-         throw new CompletionNodeFound();
-      else
-         throw new CompletionNodeFound(this, this.targetType, scope);
-   }
+        if (super.resolveType(scope) == null)
+            throw new CompletionNodeFound();
+        else
+            throw new CompletionNodeFound(this, this.targetType, scope);
+    }
 }

@@ -39,462 +39,386 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class IconButton extends Composite implements HasClickHandlers
-{
+public class IconButton extends Composite implements HasClickHandlers {
 
-   /**
-    * Styles for component.
-    */
-   private interface Style
-   {
+    /** Styles for component. */
+    private interface Style {
 
-      static final String BUTTON_PANEL = "exoIconButtonPanel";
+        static final String BUTTON_PANEL = "exoIconButtonPanel";
 
-      static final String BUTTON_PANEL_OVER = "exoIconButtonPanelOver";
+        static final String BUTTON_PANEL_OVER = "exoIconButtonPanelOver";
 
-      static final String BUTTON_PANEL_DOWN = "exoIconButtonPanelDown";
+        static final String BUTTON_PANEL_DOWN = "exoIconButtonPanelDown";
 
-      static final String BUTTON_PANEL_SELECTED = "exoIconButtonPanelSelected";
+        static final String BUTTON_PANEL_SELECTED = "exoIconButtonPanelSelected";
 
-      static final String BUTTON_PANEL_SELECTED_OVER = "exoIconButtonPanelSelectedOver";
+        static final String BUTTON_PANEL_SELECTED_OVER = "exoIconButtonPanelSelectedOver";
 
-      static final String BUTTON_PANEL_SELECTED_DOWN = "exoIconButtonPanelSelectedDown";
+        static final String BUTTON_PANEL_SELECTED_DOWN = "exoIconButtonPanelSelectedDown";
 
-      static final String BUTTON_ICON = "exoIconButtonIcon";
+        static final String BUTTON_ICON = "exoIconButtonIcon";
 
-   }
+    }
 
-   /**
-    * Button's panel.
-    */
-   private ButtonPanel buttonPanel;
+    /** Button's panel. */
+    private ButtonPanel buttonPanel;
 
-   /**
-    * Icon for enabled state.
-    * Icon must be represented as HTML string. e.g. <img src="..." />
-    */
-   protected String icon;
+    /**
+     * Icon for enabled state.
+     * Icon must be represented as HTML string. e.g. <img src="..." />
+     */
+    protected String icon;
 
-   /**
-    * Icon for disabled state.
-    * Icon must be represented as HTML string. e.g. <img src="..." />
-    */
-   protected String disabledIcon;
+    /**
+     * Icon for disabled state.
+     * Icon must be represented as HTML string. e.g. <img src="..." />
+     */
+    protected String disabledIcon;
 
-   /**
-    * Command which will be executed when button was pressed.
-    */
-   protected Command command;
+    /** Command which will be executed when button was pressed. */
+    protected Command command;
 
-   /**
-    * Is enabled.
-    */
-   private boolean enabled = true;
+    /** Is enabled. */
+    private boolean enabled = true;
 
-   /**
-    * Is button selected.
-    */
-   private boolean selected = false;
+    /** Is button selected. */
+    private boolean selected = false;
 
-   private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
+    private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
 
-   /**
-    * Create IconButton with icons. Icons is an HTML image and must be prepared like "<img ... />" tag
-    * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper to create Image from some sources.
-    * 
-    * @param icon icon for enabled state
-    * @param disabledIcon icon for disabled state
-    */
-   public IconButton(String icon, String disabledIcon)
-   {
-      this(icon, disabledIcon, null);
-   }
+    /**
+     * Create IconButton with icons. Icons is an HTML image and must be prepared like "<img ... />" tag
+     * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper to create Image from some sources.
+     *
+     * @param icon
+     *         icon for enabled state
+     * @param disabledIcon
+     *         icon for disabled state
+     */
+    public IconButton(String icon, String disabledIcon) {
+        this(icon, disabledIcon, null);
+    }
 
-   /**
-    * Creates new instance of this {@link IconButton}.
-    */
-   public IconButton() {
-      buttonPanel = new ButtonPanel();
-      initWidget(buttonPanel);
-      buttonPanel.setStyleName(Style.BUTTON_PANEL);
-      setEnabled(true);
-   }
-   
-   /**
-    * Creates a new instance of this {@link IconButton}
-    * 
-    * @param icon html image for enabled state
-    * @param disabledIcon html image for disabled state
-    */
-   public IconButton(Image icon, Image disabledIcon)
-   {
-      this(ImageHelper.getImageHTML(icon), ImageHelper.getImageHTML(disabledIcon), null);
-   }
+    /** Creates new instance of this {@link IconButton}. */
+    public IconButton() {
+        buttonPanel = new ButtonPanel();
+        initWidget(buttonPanel);
+        buttonPanel.setStyleName(Style.BUTTON_PANEL);
+        setEnabled(true);
+    }
 
-   /**
-    * Create IconButton with icons and command. Icons is an HTML image and must be prepared like "<img ... />" tag
-    * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper to create Image from some sources.
-    * 
-    * @param icon icon for enabled state
-    * @param disabledIcon icon for disabled state
-    * @param command command which will be executed when button was pressed.
-    */
-   public IconButton(String icon, String disabledIcon, Command command)
-   {
-      this();
-      
-      this.icon = icon;
-      this.disabledIcon = disabledIcon;
-      this.command = command;
+    /**
+     * Creates a new instance of this {@link IconButton}
+     *
+     * @param icon
+     *         html image for enabled state
+     * @param disabledIcon
+     *         html image for disabled state
+     */
+    public IconButton(Image icon, Image disabledIcon) {
+        this(ImageHelper.getImageHTML(icon), ImageHelper.getImageHTML(disabledIcon), null);
+    }
 
-      renderIcon();
-   }
+    /**
+     * Create IconButton with icons and command. Icons is an HTML image and must be prepared like "<img ... />" tag
+     * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper to create Image from some sources.
+     *
+     * @param icon
+     *         icon for enabled state
+     * @param disabledIcon
+     *         icon for disabled state
+     * @param command
+     *         command which will be executed when button was pressed.
+     */
+    public IconButton(String icon, String disabledIcon, Command command) {
+        this();
 
-   /**
-    * Get command which will be executed when button was pressed.
-    * 
-    * @return command which will be executed when button was pressed
-    */
-   public Command getCommand()
-   {
-      return command;
-   }
+        this.icon = icon;
+        this.disabledIcon = disabledIcon;
+        this.command = command;
 
-   /**
-    * Set command which will be executed when button was pressed.
-    * 
-    * @param command command which will be executed when button was pressed
-    */
-   public void setCommand(Command command)
-   {
-      this.command = command;
-   }
+        renderIcon();
+    }
 
-   /**
-    * Get is enabled.
-    * 
-    * @return is enabled
-    */
-   public boolean isEnabled()
-   {
-      return enabled;
-   }
+    /**
+     * Get command which will be executed when button was pressed.
+     *
+     * @return command which will be executed when button was pressed
+     */
+    public Command getCommand() {
+        return command;
+    }
 
-   /**
-    * Set is enabled.
-    * 
-    * @param enabled is enabled
-    */
-   public void setEnabled(boolean enabled)
-   {
-      this.enabled = enabled;
-      buttonPanel.setStyleName(Style.BUTTON_PANEL);
-      DOM.setElementAttribute(buttonPanel.getElement(), "enabled", "" + enabled);
-      renderIcon();
-   }
+    /**
+     * Set command which will be executed when button was pressed.
+     *
+     * @param command
+     *         command which will be executed when button was pressed
+     */
+    public void setCommand(Command command) {
+        this.command = command;
+    }
 
-   /**
-    * Get icon for enabled state.
-    * 
-    * @return icon which is uses for enabled state 
-    */
-   public String getIcon()
-   {
-      return icon;
-   }
+    /**
+     * Get is enabled.
+     *
+     * @return is enabled
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-   /**
-    * Set icon as HTML image for enabled state. Image must be prepared like "<img ... />" tag
-    * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper for creation Image from some sources.
-    * 
-    * @param icon icon
-    */
-   public void setIcon(String icon)
-   {
-      this.icon = icon;
-      if (enabled)
-      {
-         renderIcon();
-      }
-   }
+    /**
+     * Set is enabled.
+     *
+     * @param enabled
+     *         is enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        buttonPanel.setStyleName(Style.BUTTON_PANEL);
+        DOM.setElementAttribute(buttonPanel.getElement(), "enabled", "" + enabled);
+        renderIcon();
+    }
 
-   /**
-    * Get icon for disabled state.
-    * 
-    * @return icon which is uses for disabled state
-    */
-   public String getDisabledIcon()
-   {
-      return disabledIcon;
-   }
+    /**
+     * Get icon for enabled state.
+     *
+     * @return icon which is uses for enabled state
+     */
+    public String getIcon() {
+        return icon;
+    }
 
-   /**
-    * Set icon as HTML image for disabled state. Image must be prepared like "<img ... />" tag
-    * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper for creation Image from some sources.
-    * 
-    * @param disabledIcon icon which is uses for disabled state 
-    */
-   public void setDisabledIcon(String disabledIcon)
-   {
-      this.disabledIcon = disabledIcon;
-      if (enabled)
-      {
-         return;
-      }
+    /**
+     * Set icon as HTML image for enabled state. Image must be prepared like "<img ... />" tag
+     * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper for creation Image from some sources.
+     *
+     * @param icon
+     *         icon
+     */
+    public void setIcon(String icon) {
+        this.icon = icon;
+        if (enabled) {
+            renderIcon();
+        }
+    }
 
-      renderIcon();
-   }
+    /**
+     * Get icon for disabled state.
+     *
+     * @return icon which is uses for disabled state
+     */
+    public String getDisabledIcon() {
+        return disabledIcon;
+    }
 
-   /**
-    * Get is button selected.
-    * 
-    * @return <code>true</code> if button selected, <code>false</code> otherwise. 
-    */
-   public boolean isSelected()
-   {
-      return selected;
-   }
-
-   /**
-    * Set button is selected.
-    * 
-    * @param selected is button selected
-    */
-   public void setSelected(boolean selected)
-   {
-      this.selected = selected;
-      if (selected)
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED);
-      }
-      else
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL);
-      }
-   }
-
-   /**
-    * Redraw icon.
-    */
-   private void renderIcon()
-   {
-      if (enabled)
-      {
-         if (icon != null)
-         {
-            buttonPanel.getElement().setInnerHTML(icon);
-         }
-         else
-         {
-            buttonPanel.getElement().setInnerHTML("");
+    /**
+     * Set icon as HTML image for disabled state. Image must be prepared like "<img ... />" tag
+     * Use org.exoplatform.gwtframework.ui.client.util.ImageHelper for creation Image from some sources.
+     *
+     * @param disabledIcon
+     *         icon which is uses for disabled state
+     */
+    public void setDisabledIcon(String disabledIcon) {
+        this.disabledIcon = disabledIcon;
+        if (enabled) {
             return;
-         }
-      }
-      else
-      {
-         if (disabledIcon != null)
-         {
-            buttonPanel.getElement().setInnerHTML(disabledIcon);
-         }
-         else
-         {
-            buttonPanel.getElement().setInnerHTML("");
-            return;
-         }
+        }
 
-      }
+        renderIcon();
+    }
 
-      Element e = buttonPanel.getElement();
-      Element imageElement = DOM.getChild(e, 0);
-      //NOT Work in IE !!!
-      //DOM.setElementAttribute(imageElement, "class", Style.BUTTON_ICON);
-      imageElement.setClassName(Style.BUTTON_ICON);
-   }
-   
-   /**
-    * Set name of the image which will be received from {@link ImageFactory}
-    * 
-    * @param imageName name of the image
-    */
-   public void setImageName(String imageName) {
-      icon = ImageHelper.getImageHTML(ImageFactory.getImage(imageName));
-      disabledIcon = ImageHelper.getImageHTML(ImageFactory.getDisabledImage(imageName));
-      renderIcon();
-   }
+    /**
+     * Get is button selected.
+     *
+     * @return <code>true</code> if button selected, <code>false</code> otherwise.
+     */
+    public boolean isSelected() {
+        return selected;
+    }
 
-   /**
-    * Mouse Over handler.
-    */
-   private void onMouseOver()
-   {
-      if (selected)
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_OVER);
-      }
-      else
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_OVER);
-      }
-   }
+    /**
+     * Set button is selected.
+     *
+     * @param selected
+     *         is button selected
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        if (selected) {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED);
+        } else {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL);
+        }
+    }
 
-   /**
-    * Mouse Out handler.
-    */
-   private void onMouseOut()
-   {
-      if (selected)
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED);
-      }
-      else
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL);
-      }
-   }
+    /** Redraw icon. */
+    private void renderIcon() {
+        if (enabled) {
+            if (icon != null) {
+                buttonPanel.getElement().setInnerHTML(icon);
+            } else {
+                buttonPanel.getElement().setInnerHTML("");
+                return;
+            }
+        } else {
+            if (disabledIcon != null) {
+                buttonPanel.getElement().setInnerHTML(disabledIcon);
+            } else {
+                buttonPanel.getElement().setInnerHTML("");
+                return;
+            }
 
-   /**
-    * Mouse Down handler.
-    */
-   private void onMouseDown()
-   {
-      if (selected)
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_DOWN);
-      }
-      else
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_DOWN);
-      }
-   }
+        }
 
-   /**
-    * Mouse Up handler.
-    */
-   private void onMouseUp()
-   {
-      if (selected)
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_OVER);
-      }
-      else
-      {
-         buttonPanel.setStyleName(Style.BUTTON_PANEL_OVER);
-      }
-   }
+        Element e = buttonPanel.getElement();
+        Element imageElement = DOM.getChild(e, 0);
+        //NOT Work in IE !!!
+        //DOM.setElementAttribute(imageElement, "class", Style.BUTTON_ICON);
+        imageElement.setClassName(Style.BUTTON_ICON);
+    }
 
-   /**
-    * Mouse Click handler.
-    */
-   private void onClick()
-   {
-      if (command != null)
-      {
-         command.execute();
-      }
+    /**
+     * Set name of the image which will be received from {@link ImageFactory}
+     *
+     * @param imageName
+     *         name of the image
+     */
+    public void setImageName(String imageName) {
+        icon = ImageHelper.getImageHTML(ImageFactory.getImage(imageName));
+        disabledIcon = ImageHelper.getImageHTML(ImageFactory.getDisabledImage(imageName));
+        renderIcon();
+    }
 
-      ClickEvent clickEvent = new ClickEvent()
-      {
-      };
-      for (ClickHandler clickHandler : clickHandlers)
-      {
-         clickHandler.onClick(clickEvent);
-      }
-   }
+    /** Mouse Over handler. */
+    private void onMouseOver() {
+        if (selected) {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_OVER);
+        } else {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_OVER);
+        }
+    }
 
-   /**
-    *  ButtonPanel class uses for listening mouse events on button.
-    */
-   private class ButtonPanel extends FlowPanel
-   {
+    /** Mouse Out handler. */
+    private void onMouseOut() {
+        if (selected) {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED);
+        } else {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL);
+        }
+    }
 
-      public ButtonPanel()
-      {
-         sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONCLICK);
-      }
+    /** Mouse Down handler. */
+    private void onMouseDown() {
+        if (selected) {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_DOWN);
+        } else {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_DOWN);
+        }
+    }
 
-      /**
-       * Handle browser's events.
-       */
-      @Override
-      public void onBrowserEvent(Event event)
-      {
-         if (!enabled)
-         {
-            return;
-         }
+    /** Mouse Up handler. */
+    private void onMouseUp() {
+        if (selected) {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_SELECTED_OVER);
+        } else {
+            buttonPanel.setStyleName(Style.BUTTON_PANEL_OVER);
+        }
+    }
 
-         switch (DOM.eventGetType(event))
-         {
-            case Event.ONMOUSEOVER :
-               onMouseOver();
-               break;
+    /** Mouse Click handler. */
+    private void onClick() {
+        if (command != null) {
+            command.execute();
+        }
 
-            case Event.ONMOUSEOUT :
-               onMouseOut();
-               break;
+        ClickEvent clickEvent = new ClickEvent() {
+        };
+        for (ClickHandler clickHandler : clickHandlers) {
+            clickHandler.onClick(clickEvent);
+        }
+    }
 
-            case Event.ONMOUSEDOWN :
-               if (event.getButton() != Event.BUTTON_LEFT)
-               {
-                  return;
-               }
+    /** ButtonPanel class uses for listening mouse events on button. */
+    private class ButtonPanel extends FlowPanel {
 
-               onMouseDown();
-               break;
+        public ButtonPanel() {
+            sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEDOWN | Event.ONMOUSEUP | Event.ONCLICK);
+        }
 
-            case Event.ONMOUSEUP :
-               onMouseUp();
-               break;
+        /** Handle browser's events. */
+        @Override
+        public void onBrowserEvent(Event event) {
+            if (!enabled) {
+                return;
+            }
 
-            case Event.ONCLICK :
-               onClick();
-               break;
-         }
-      }
+            switch (DOM.eventGetType(event)) {
+                case Event.ONMOUSEOVER:
+                    onMouseOver();
+                    break;
 
-   }
+                case Event.ONMOUSEOUT:
+                    onMouseOut();
+                    break;
 
-   /**
-    * Sets the title associated with this button. The title is the 'tool-tip'
-    * displayed to users when they hover over the object.
-    * 
-    * @param title the object's new title
-    */
-   public void setTitle(String title)
-   {
-      buttonPanel.setTitle(title);
-   }
+                case Event.ONMOUSEDOWN:
+                    if (event.getButton() != Event.BUTTON_LEFT) {
+                        return;
+                    }
 
-   @Override
-   public HandlerRegistration addClickHandler(ClickHandler handler)
-   {
-      clickHandlers.add(handler);
-      return new ClickHandlerRegistration(handler);
-   }
+                    onMouseDown();
+                    break;
 
-   private class ClickHandlerRegistration implements HandlerRegistration
-   {
+                case Event.ONMOUSEUP:
+                    onMouseUp();
+                    break;
 
-      private ClickHandler clickHandler;
+                case Event.ONCLICK:
+                    onClick();
+                    break;
+            }
+        }
 
-      public ClickHandlerRegistration(ClickHandler clickHandler)
-      {
-         this.clickHandler = clickHandler;
-      }
+    }
 
-      @Override
-      public void removeHandler()
-      {
-         clickHandlers.remove(clickHandler);
-      }
+    /**
+     * Sets the title associated with this button. The title is the 'tool-tip'
+     * displayed to users when they hover over the object.
+     *
+     * @param title
+     *         the object's new title
+     */
+    public void setTitle(String title) {
+        buttonPanel.setTitle(title);
+    }
 
-   }
+    @Override
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        clickHandlers.add(handler);
+        return new ClickHandlerRegistration(handler);
+    }
+
+    private class ClickHandlerRegistration implements HandlerRegistration {
+
+        private ClickHandler clickHandler;
+
+        public ClickHandlerRegistration(ClickHandler clickHandler) {
+            this.clickHandler = clickHandler;
+        }
+
+        @Override
+        public void removeHandler() {
+            clickHandlers.remove(clickHandler);
+        }
+
+    }
 
 }

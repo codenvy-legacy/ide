@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class RenameItemEvent extends GwtEvent<RenameItemHander>
-{
+public class RenameItemEvent extends GwtEvent<RenameItemHander> {
 
-   public static final GwtEvent.Type<RenameItemHander> TYPE = new GwtEvent.Type<RenameItemHander>();
+    public static final GwtEvent.Type<RenameItemHander> TYPE = new GwtEvent.Type<RenameItemHander>();
 
-   @Override
-   protected void dispatch(RenameItemHander handler)
-   {
-      handler.onRenameItem(this);
-   }
+    @Override
+    protected void dispatch(RenameItemHander handler) {
+        handler.onRenameItem(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RenameItemHander> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RenameItemHander> getAssociatedType() {
+        return TYPE;
+    }
 
 }

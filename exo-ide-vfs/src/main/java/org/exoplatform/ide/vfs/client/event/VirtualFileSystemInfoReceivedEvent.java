@@ -18,54 +18,43 @@
  */
 package org.exoplatform.ide.vfs.client.event;
 
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class VirtualFileSystemInfoReceivedEvent extends GwtEvent<VirtualFileSystemInfoReceivedHandler>
-{
+public class VirtualFileSystemInfoReceivedEvent extends GwtEvent<VirtualFileSystemInfoReceivedHandler> {
 
-   public static GwtEvent.Type<VirtualFileSystemInfoReceivedHandler> TYPE =
-      new Type<VirtualFileSystemInfoReceivedHandler>();
+    public static GwtEvent.Type<VirtualFileSystemInfoReceivedHandler> TYPE =
+            new Type<VirtualFileSystemInfoReceivedHandler>();
 
-   private VirtualFileSystemInfo virtualFileSystemInfo;
+    private VirtualFileSystemInfo virtualFileSystemInfo;
 
-   public VirtualFileSystemInfoReceivedEvent(VirtualFileSystemInfo virtualFileSystemInfo)
-   {
-      this.virtualFileSystemInfo = virtualFileSystemInfo;
-   }
+    public VirtualFileSystemInfoReceivedEvent(VirtualFileSystemInfo virtualFileSystemInfo) {
+        this.virtualFileSystemInfo = virtualFileSystemInfo;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<VirtualFileSystemInfoReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<VirtualFileSystemInfoReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(VirtualFileSystemInfoReceivedHandler handler)
-   {
-      handler.onVirtualFileSystemInfoReceived(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(VirtualFileSystemInfoReceivedHandler handler) {
+        handler.onVirtualFileSystemInfoReceived(this);
+    }
 
-   /**
-    * @return the virtualFileSystemInfo
-    */
-   public VirtualFileSystemInfo getVirtualFileSystemInfo()
-   {
-      return virtualFileSystemInfo;
-   }
+    /** @return the virtualFileSystemInfo */
+    public VirtualFileSystemInfo getVirtualFileSystemInfo() {
+        return virtualFileSystemInfo;
+    }
 
 }

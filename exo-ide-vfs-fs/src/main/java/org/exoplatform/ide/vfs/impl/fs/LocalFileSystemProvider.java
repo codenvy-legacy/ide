@@ -35,136 +35,115 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class LocalFileSystemProvider implements VirtualFileSystemProvider
-{
-   private static final Log LOG = ExoLogger.getLogger(LocalFileSystemProvider.class);
+public class LocalFileSystemProvider implements VirtualFileSystemProvider {
+    private static final Log LOG = ExoLogger.getLogger(LocalFileSystemProvider.class);
 
-   private final String workspaceId;
-   private final LocalFSMountStrategy mountStrategy;
-   private final SearcherProvider searcherProvider;
-   private final AtomicReference<MountPoint> mountRef;
+    private final String                      workspaceId;
+    private final LocalFSMountStrategy        mountStrategy;
+    private final SearcherProvider            searcherProvider;
+    private final AtomicReference<MountPoint> mountRef;
 
-   /**
-    * @param vfsId
-    *    virtual file system identifier
-    * @param mountStrategy
-    *    LocalFSMountStrategy
-    * @see LocalFileSystemProvider
-    */
-   public LocalFileSystemProvider(String vfsId, LocalFSMountStrategy mountStrategy)
-   {
-      this(vfsId, mountStrategy, null);
-   }
+    /**
+     * @param vfsId
+     *         virtual file system identifier
+     * @param mountStrategy
+     *         LocalFSMountStrategy
+     * @see LocalFileSystemProvider
+     */
+    public LocalFileSystemProvider(String vfsId, LocalFSMountStrategy mountStrategy) {
+        this(vfsId, mountStrategy, null);
+    }
 
-   /**
-    * @param workspaceId
-    *    virtual file system identifier
-    * @param mountStrategy
-    *    LocalFSMountStrategy
-    * @param searcherProvider
-    *    SearcherProvider
-    * @see LocalFileSystemProvider
-    */
-   public LocalFileSystemProvider(String workspaceId, LocalFSMountStrategy mountStrategy, SearcherProvider searcherProvider)
-   {
-      this.workspaceId = workspaceId;
-      this.mountStrategy = mountStrategy;
-      this.searcherProvider = searcherProvider;
-      this.mountRef = new AtomicReference<MountPoint>();
-   }
+    /**
+     * @param workspaceId
+     *         virtual file system identifier
+     * @param mountStrategy
+     *         LocalFSMountStrategy
+     * @param searcherProvider
+     *         SearcherProvider
+     * @see LocalFileSystemProvider
+     */
+    public LocalFileSystemProvider(String workspaceId, LocalFSMountStrategy mountStrategy, SearcherProvider searcherProvider) {
+        this.workspaceId = workspaceId;
+        this.mountStrategy = mountStrategy;
+        this.searcherProvider = searcherProvider;
+        this.mountRef = new AtomicReference<MountPoint>();
+    }
 
-   /**
-    * Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used
-    * first time.
-    */
-   @Override
-   public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
-      throws VirtualFileSystemException
-   {
-      MountPoint mount = mountRef.get();
+    /**
+     * Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used
+     * first time.
+     */
+    @Override
+    public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
+            throws VirtualFileSystemException {
+        MountPoint mount = mountRef.get();
 
-      if (mount == null)
-      {
-         final java.io.File workspaceMountPoint;
-         try
-         {
-            workspaceMountPoint = mountStrategy.getMountPath(workspaceId);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            LOG.error(e.getMessage(), e);
-            // critical error cannot continue
-            throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
-         }
-         MountPoint newMount = new MountPoint(workspaceMountPoint, searcherProvider);
-         if (mountRef.compareAndSet(null, newMount))
-         {
-            if (!(workspaceMountPoint.exists() || workspaceMountPoint.mkdirs()))
-            {
-               LOG.error("Unable create directory {}", workspaceMountPoint);
-               // critical error cannot continue
-               throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
+        if (mount == null) {
+            final java.io.File workspaceMountPoint;
+            try {
+                workspaceMountPoint = mountStrategy.getMountPath(workspaceId);
+            } catch (VirtualFileSystemException e) {
+                LOG.error(e.getMessage(), e);
+                // critical error cannot continue
+                throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
             }
-            mount = newMount;
-         }
-      }
-      return new LocalFileSystem(workspaceId,
-         requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
-         listeners,
-         mount,
-         searcherProvider);
-   }
-
-   @Override
-   public void close()
-   {
-      final MountPoint mount = mountRef.getAndSet(null);
-      if (mount != null)
-      {
-         mount.reset();
-         if (searcherProvider != null)
-         {
-            try
-            {
-               searcherProvider.getSearcher(mount).close();
+            MountPoint newMount = new MountPoint(workspaceMountPoint, searcherProvider);
+            if (mountRef.compareAndSet(null, newMount)) {
+                if (!(workspaceMountPoint.exists() || workspaceMountPoint.mkdirs())) {
+                    LOG.error("Unable create directory {}", workspaceMountPoint);
+                    // critical error cannot continue
+                    throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", workspaceId));
+                }
+                mount = newMount;
             }
-            catch (VirtualFileSystemException e)
-            {
-               LOG.error(e.getMessage(), e);
+        }
+        return new LocalFileSystem(workspaceId,
+                                   requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
+                                   listeners,
+                                   mount,
+                                   searcherProvider);
+    }
+
+    @Override
+    public void close() {
+        final MountPoint mount = mountRef.getAndSet(null);
+        if (mount != null) {
+            mount.reset();
+            if (searcherProvider != null) {
+                try {
+                    searcherProvider.getSearcher(mount).close();
+                } catch (VirtualFileSystemException e) {
+                    LOG.error(e.getMessage(), e);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   /**
-    * Mount backing local filesystem.
-    *
-    * @param ioFile
-    *    root point on the backing local filesystem
-    * @throws VirtualFileSystemException
-    *    if mount is failed, e.g. if specified <code>ioFile</code> already mounted
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem
-    */
-   public void mount(java.io.File ioFile) throws VirtualFileSystemException
-   {
-      if (!mountRef.compareAndSet(null, new MountPoint(ioFile, searcherProvider)))
-      {
-         throw new VirtualFileSystemException(String.format("Local filesystem '%s' already mounted. ", ioFile));
-      }
-   }
+    /**
+     * Mount backing local filesystem.
+     *
+     * @param ioFile
+     *         root point on the backing local filesystem
+     * @throws VirtualFileSystemException
+     *         if mount is failed, e.g. if specified <code>ioFile</code> already mounted
+     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem
+     */
+    public void mount(java.io.File ioFile) throws VirtualFileSystemException {
+        if (!mountRef.compareAndSet(null, new MountPoint(ioFile, searcherProvider))) {
+            throw new VirtualFileSystemException(String.format("Local filesystem '%s' already mounted. ", ioFile));
+        }
+    }
 
-   public boolean isMounted() throws VirtualFileSystemException
-   {
-      return mountRef.get() != null;
-   }
+    public boolean isMounted() throws VirtualFileSystemException {
+        return mountRef.get() != null;
+    }
 
-   public MountPoint getMountPoint() throws VirtualFileSystemException
-   {
-      final MountPoint mount = mountRef.get();
-      if (mount == null)
-      {
-         throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not mounted yet. ", workspaceId));
-      }
-      return mount;
-   }
+    public MountPoint getMountPoint() throws VirtualFileSystemException {
+        final MountPoint mount = mountRef.get();
+        if (mount == null) {
+            throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not mounted yet. ", workspaceId));
+        }
+        return mount;
+    }
 }

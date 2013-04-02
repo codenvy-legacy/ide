@@ -22,110 +22,96 @@ import java.util.List;
 
 /**
  * Describes a Google contact entry.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContact.java Aug 22, 2012 11:00:44 AM azatsarynnyy $
- *
  */
-public class GoogleContact
-{
-   /**
-    * The unique identifier for this contact.
-    */
-   private String id;
+public class GoogleContact {
+    /** The unique identifier for this contact. */
+    private String id;
 
-   /**
-    * The contact name.
-    */
-   private String name;
+    /** The contact name. */
+    private String name;
 
-   /**
-    * The contact photo as a Base64 encoded {@link String}.
-    */
-   private String photoBase64;
+    /** The contact photo as a Base64 encoded {@link String}. */
+    private String photoBase64;
 
-   /**
-    * The contact e-mail addresses.
-    */
-   private List<String> emailAddresses;
+    /** The contact e-mail addresses. */
+    private List<String> emailAddresses;
 
-   /**
-    * Returns the contact identifier.
-    * 
-    * @return the contact identifier
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /**
+     * Returns the contact identifier.
+     *
+     * @return the contact identifier
+     */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * Sets the contact identifier.
-    * 
-    * @param id the contact identifier to set
-    */
-   public void setId(String id)
-   {
-      this.id = id;
-   }
+    /**
+     * Sets the contact identifier.
+     *
+     * @param id
+     *         the contact identifier to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   /**
-    * Returns the contact name.
-    * 
-    * @return the contact name
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /**
+     * Returns the contact name.
+     *
+     * @return the contact name
+     */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * Sets the contact name.
-    * 
-    * @param name the contact name to set
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /**
+     * Sets the contact name.
+     *
+     * @param name
+     *         the contact name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * Returns the contact e-mail addresses.
-    * 
-    * @return the contact e-mail addresses
-    */
-   public List<String> getEmailAddresses()
-   {
-      return emailAddresses;
-   }
+    /**
+     * Returns the contact e-mail addresses.
+     *
+     * @return the contact e-mail addresses
+     */
+    public List<String> getEmailAddresses() {
+        return emailAddresses;
+    }
 
-   /**
-    * Sets the contact e-mail addresses.
-    * 
-    * @param email the contact e-mail addresses to set
-    */
-   public void setEmailAddresses(List<String> emailAddresses)
-   {
-      this.emailAddresses = emailAddresses;
-   }
+    /**
+     * Sets the contact e-mail addresses.
+     *
+     * @param email
+     *         the contact e-mail addresses to set
+     */
+    public void setEmailAddresses(List<String> emailAddresses) {
+        this.emailAddresses = emailAddresses;
+    }
 
-   /**
-    * Returns the contact photo as a Base64 encoded {@link String}.
-    * 
-    * @return the contact photo as a Base64 encoded {@link String}
-    */
-   public String getPhotoBase64()
-   {
-      return photoBase64;
-   }
+    /**
+     * Returns the contact photo as a Base64 encoded {@link String}.
+     *
+     * @return the contact photo as a Base64 encoded {@link String}
+     */
+    public String getPhotoBase64() {
+        return photoBase64;
+    }
 
-   /**
-    * Sets the contact photo as a Base64 encoded {@link String}.
-    * 
-    * @param photoBase64 the contact photo as a Base64 encoded {@link String}
-    */
-   public void setPhotoBase64(String photoBase64)
-   {
-      this.photoBase64 = photoBase64;
-   }
+    /**
+     * Sets the contact photo as a Base64 encoded {@link String}.
+     *
+     * @param photoBase64
+     *         the contact photo as a Base64 encoded {@link String}
+     */
+    public void setPhotoBase64(String photoBase64) {
+        this.photoBase64 = photoBase64;
+    }
 }

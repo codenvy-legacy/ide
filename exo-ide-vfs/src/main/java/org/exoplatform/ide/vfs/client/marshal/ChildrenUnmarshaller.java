@@ -38,92 +38,70 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FilderContentUnmarshaller Feb 2, 2011 2:59:31 PM evgen $
- * 
  */
-public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
-{
+public class ChildrenUnmarshaller implements Unmarshallable<List<Item>> {
 
-   /**
-    * Item type
-    */
-   private static final String TYPE = "itemType";
+    /** Item type */
+    private static final String TYPE = "itemType";
 
-   /**
-    * Item mime type
-    */
-   private static final String MIME_TYPE = "mimeType";
+    /** Item mime type */
+    private static final String MIME_TYPE = "mimeType";
 
-   private final List<Item> items;
+    private final List<Item> items;
 
-   /**
-    * @param items
-    */
-   public ChildrenUnmarshaller(final List<Item> items)
-   {
-      super();
-      this.items = items;
-      this.items.clear();
-   }
+    /** @param items */
+    public ChildrenUnmarshaller(final List<Item> items) {
+        super();
+        this.items = items;
+        this.items.clear();
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         JSONValue jsonValue = JSONParser.parseLenient(response.getText());
-         parseItems(jsonValue.isObject().get("items").isArray());
-      }
-      catch (Exception exc)
-      {
-         String message = "Can't parse folder content at <b>" + "id" + "</b>! ";
-         throw new UnmarshallerException(message);
-      }
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            JSONValue jsonValue = JSONParser.parseLenient(response.getText());
+            parseItems(jsonValue.isObject().get("items").isArray());
+        } catch (Exception exc) {
+            String message = "Can't parse folder content at <b>" + "id" + "</b>! ";
+            throw new UnmarshallerException(message);
+        }
+    }
 
-   @Override
-   public List<Item> getPayload()
-   {
-      return this.items;
-   }
+    @Override
+    public List<Item> getPayload() {
+        return this.items;
+    }
 
-   /**
-    * Parse JSON Array to List of Item
-    * 
-    * @param itemsArray JSON array
-    * @return list of children items
-    */
-   private void parseItems(JSONArray itemsArray)
-   {
-      // ArrayList<Item> items = new ArrayList<Item>();
-      // items.clear();
+    /**
+     * Parse JSON Array to List of Item
+     *
+     * @param itemsArray
+     *         JSON array
+     * @return list of children items
+     */
+    private void parseItems(JSONArray itemsArray) {
+        // ArrayList<Item> items = new ArrayList<Item>();
+        // items.clear();
 
-      for (int i = 0; i < itemsArray.size(); i++)
-      {
-         JSONObject object = itemsArray.get(i).isObject();
-         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
-         String mimeType = null;
-         if (object.get(MIME_TYPE).isString() != null)
-            mimeType = object.get(MIME_TYPE).isString().stringValue();
+        for (int i = 0; i < itemsArray.size(); i++) {
+            JSONObject object = itemsArray.get(i).isObject();
+            ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
+            String mimeType = null;
+            if (object.get(MIME_TYPE).isString() != null)
+                mimeType = object.get(MIME_TYPE).isString().stringValue();
 
-         if (type == ItemType.PROJECT)
-         {
-            if (Project.PROJECT_MIME_TYPE.equals(mimeType))
-            {
-               items.add(new ProjectModel(object));
-            }
-         }
-         else if(type == ItemType.FOLDER)
-         {
-             items.add(new FolderModel(object));
-         }
-         else
-            items.add(new FileModel(object));
-      }
+            if (type == ItemType.PROJECT) {
+                if (Project.PROJECT_MIME_TYPE.equals(mimeType)) {
+                    items.add(new ProjectModel(object));
+                }
+            } else if (type == ItemType.FOLDER) {
+                items.add(new FolderModel(object));
+            } else
+                items.add(new FileModel(object));
+        }
 
-      // this.folder.getChildren().setItems(items);
-   }
+        // this.folder.getChildren().setItems(items);
+    }
 
 }

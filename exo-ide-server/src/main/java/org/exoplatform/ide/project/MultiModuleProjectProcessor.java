@@ -28,78 +28,69 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 
+import javax.ws.rs.core.MediaType;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import javax.ws.rs.core.MediaType;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class MultiModuleProjectProcessor
-{
+public class MultiModuleProjectProcessor {
 
-   private VirtualFileSystem vfs;
+    private VirtualFileSystem vfs;
 
-   public MultiModuleProjectProcessor(VirtualFileSystem vfs)
-   {
-      this.vfs = vfs;
-   }
+    public MultiModuleProjectProcessor(VirtualFileSystem vfs) {
+        this.vfs = vfs;
+    }
 
-   private Node getNode(Node parent, String nodeName)
-   {
-      NodeList nodes = parent.getChildNodes();
-      for (int i = 0; i < nodes.getLength(); i++)
-      {
-         Node node = nodes.item(i);
-         if (nodeName.equals(node.getNodeName()))
-         {
-            return node;
-         }
-      }
+    private Node getNode(Node parent, String nodeName) {
+        NodeList nodes = parent.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (nodeName.equals(node.getNodeName())) {
+                return node;
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   public void addModule(Item pomItem, String moduleName) throws Exception
-   {
-      DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder builder = domFactory.newDocumentBuilder();
-      InputStream inputStream = vfs.getContent(pomItem.getId()).getStream();
-      Document doc = builder.parse(inputStream);
-      inputStream.close();
+    public void addModule(Item pomItem, String moduleName) throws Exception {
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = domFactory.newDocumentBuilder();
+        InputStream inputStream = vfs.getContent(pomItem.getId()).getStream();
+        Document doc = builder.parse(inputStream);
+        inputStream.close();
 
-      Node projectNode = getNode(doc, "project");
-      Node modulesNode = getNode(projectNode, "modules");
-      if (modulesNode == null)
-      {
-         modulesNode = doc.createElement("modules");
-         projectNode.appendChild(modulesNode);
-      }
+        Node projectNode = getNode(doc, "project");
+        Node modulesNode = getNode(projectNode, "modules");
+        if (modulesNode == null) {
+            modulesNode = doc.createElement("modules");
+            projectNode.appendChild(modulesNode);
+        }
 
-      Node moduleNode = doc.createElement("module");
-      moduleNode.setTextContent(moduleName);
-      modulesNode.appendChild(moduleNode);
+        Node moduleNode = doc.createElement("module");
+        moduleNode.setTextContent(moduleName);
+        modulesNode.appendChild(moduleNode);
 
-      DOMImplementation impl = doc.getImplementation();
-      DOMImplementationLS implLS = (DOMImplementationLS)impl.getFeature("LS", "3.0");
-      LSSerializer lsSerializer = implLS.createLSSerializer();
-      lsSerializer.getDomConfig().setParameter("format-pretty-print", true);
+        DOMImplementation impl = doc.getImplementation();
+        DOMImplementationLS implLS = (DOMImplementationLS)impl.getFeature("LS", "3.0");
+        LSSerializer lsSerializer = implLS.createLSSerializer();
+        lsSerializer.getDomConfig().setParameter("format-pretty-print", true);
 
-      LSOutput lsOutput = implLS.createLSOutput();
-      lsOutput.setEncoding("UTF-8");
-      Writer stringWriter = new StringWriter();
-      lsOutput.setCharacterStream(stringWriter);
-      lsSerializer.write(doc, lsOutput);
+        LSOutput lsOutput = implLS.createLSOutput();
+        lsOutput.setEncoding("UTF-8");
+        Writer stringWriter = new StringWriter();
+        lsOutput.setCharacterStream(stringWriter);
+        lsSerializer.write(doc, lsOutput);
 
-      String outXml = stringWriter.toString();
-      vfs.updateContent(pomItem.getId(), MediaType.TEXT_XML_TYPE, new ByteArrayInputStream(outXml.getBytes()), null);
-   }
+        String outXml = stringWriter.toString();
+        vfs.updateContent(pomItem.getId(), MediaType.TEXT_XML_TYPE, new ByteArrayInputStream(outXml.getBytes()), null);
+    }
 
 }

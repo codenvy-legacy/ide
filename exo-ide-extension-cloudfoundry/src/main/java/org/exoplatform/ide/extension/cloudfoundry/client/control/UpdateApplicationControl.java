@@ -24,30 +24,27 @@ import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicatio
 
 /**
  * Control to start application on CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
- *
  */
-public class UpdateApplicationControl extends AbstractCloudFoundryControl
-{
+public class UpdateApplicationControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAppControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAppControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAppControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAppControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateAppControlPrompt();
 
-   /**
-    * 
-    */
-   public UpdateApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.updateApp(), CloudFoundryClientBundle.INSTANCE.updateAppDisabled());
-      setEvent(new UpdateApplicationEvent());
-   }
+    /**
+     *
+     */
+    public UpdateApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.updateApp(), CloudFoundryClientBundle.INSTANCE.updateAppDisabled());
+        setEvent(new UpdateApplicationEvent());
+    }
 
 }

@@ -31,31 +31,26 @@ import org.exoplatform.ide.git.shared.RepoInfo;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RepoInfoUnmarshallerWS.java Nov 21, 2012 3:02:52 PM azatsarynnyy $
  */
-public class RepoInfoUnmarshallerWS implements Unmarshallable<RepoInfo>
-{
-   private final RepoInfo repoInfo;
+public class RepoInfoUnmarshallerWS implements Unmarshallable<RepoInfo> {
+    private final RepoInfo repoInfo;
 
-   public RepoInfoUnmarshallerWS(RepoInfo repoInfo)
-   {
-      this.repoInfo = repoInfo;
-   }
+    public RepoInfoUnmarshallerWS(RepoInfo repoInfo) {
+        this.repoInfo = repoInfo;
+    }
 
-   @Override
-   public void unmarshal(ResponseMessage response) throws UnmarshallerException
-   {
-      JSONObject jsonObject = JSONParser.parseLenient(response.getBody()).isObject();
-      JSONString jsonString = jsonObject.get("remoteUri").isString();
-      if (jsonString != null)
-      {
-         repoInfo.setRemoteUri(jsonString.stringValue());
-      }
+    @Override
+    public void unmarshal(ResponseMessage response) throws UnmarshallerException {
+        JSONObject jsonObject = JSONParser.parseLenient(response.getBody()).isObject();
+        JSONString jsonString = jsonObject.get("remoteUri").isString();
+        if (jsonString != null) {
+            repoInfo.setRemoteUri(jsonString.stringValue());
+        }
 
-   }
+    }
 
-   @Override
-   public RepoInfo getPayload()
-   {
-      return repoInfo;
-   }
+    @Override
+    public RepoInfo getPayload() {
+        return repoInfo;
+    }
 
 }

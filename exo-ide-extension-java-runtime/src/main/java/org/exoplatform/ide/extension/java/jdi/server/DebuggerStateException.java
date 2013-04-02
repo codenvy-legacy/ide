@@ -25,10 +25,8 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public final class DebuggerStateException extends DebuggerException
-{
-   public DebuggerStateException(String message)
-   {
-      super(message);
-   }
+public final class DebuggerStateException extends DebuggerException {
+    public DebuggerStateException(String message) {
+        super(message);
+    }
 }

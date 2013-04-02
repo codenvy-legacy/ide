@@ -26,45 +26,32 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler>
-{
+public class ApplicationDeletedEvent extends GwtEvent<ApplicationDeletedHandler> {
 
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ApplicationDeletedHandler> TYPE = new GwtEvent.Type<ApplicationDeletedHandler>();
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ApplicationDeletedHandler> TYPE = new GwtEvent.Type<ApplicationDeletedHandler>();
 
-   private String applicationName;
+    private String applicationName;
 
-   public ApplicationDeletedEvent(String applicationName)
-   {
-      this.applicationName = applicationName;
-   }
+    public ApplicationDeletedEvent(String applicationName) {
+        this.applicationName = applicationName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationDeletedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationDeletedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationDeletedHandler handler)
-   {
-      handler.onApplicationDeleted(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationDeletedHandler handler) {
+        handler.onApplicationDeleted(this);
+    }
 
 
-   /**
-    * @return {@link String} deleted application name
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
-   }
+    /** @return {@link String} deleted application name */
+    public String getApplicationName() {
+        return applicationName;
+    }
 }

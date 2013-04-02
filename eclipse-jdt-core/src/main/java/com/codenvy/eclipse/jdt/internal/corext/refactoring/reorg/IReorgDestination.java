@@ -15,14 +15,13 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.reorg;
  * {@link ReorgDestinationFactory} can create concrete
  * instances
  */
-public interface IReorgDestination
-{
+public interface IReorgDestination {
 
-   public static final int LOCATION_BEFORE = 1;
-   public static final int LOCATION_AFTER = 2;
-   public static final int LOCATION_ON = 3;
+    public static final int LOCATION_BEFORE = 1;
+    public static final int LOCATION_AFTER  = 2;
+    public static final int LOCATION_ON     = 3;
 
-   public Object getDestination();
+    public Object getDestination();
 
-   public int getLocation();
+    public int getLocation();
 }

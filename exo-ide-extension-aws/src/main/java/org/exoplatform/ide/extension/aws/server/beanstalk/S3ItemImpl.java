@@ -24,47 +24,39 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class S3ItemImpl implements S3Item
-{
-   private String s3Bucket;
-   private String s3Key;
+public class S3ItemImpl implements S3Item {
+    private String s3Bucket;
+    private String s3Key;
 
-   public S3ItemImpl(String s3Bucket, String s3Key)
-   {
-      this.s3Bucket = s3Bucket;
-      this.s3Key = s3Key;
-   }
+    public S3ItemImpl(String s3Bucket, String s3Key) {
+        this.s3Bucket = s3Bucket;
+        this.s3Key = s3Key;
+    }
 
-   public S3ItemImpl()
-   {
-   }
+    public S3ItemImpl() {
+    }
 
-   public String getS3Bucket()
-   {
-      return s3Bucket;
-   }
+    public String getS3Bucket() {
+        return s3Bucket;
+    }
 
-   public void setS3Bucket(String s3Bucket)
-   {
-      this.s3Bucket = s3Bucket;
-   }
+    public void setS3Bucket(String s3Bucket) {
+        this.s3Bucket = s3Bucket;
+    }
 
-   public String getS3Key()
-   {
-      return s3Key;
-   }
+    public String getS3Key() {
+        return s3Key;
+    }
 
-   public void setS3Key(String s3Key)
-   {
-      this.s3Key = s3Key;
-   }
+    public void setS3Key(String s3Key) {
+        this.s3Key = s3Key;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "S3ItemImpl{" +
-         "s3Bucket='" + s3Bucket + '\'' +
-         ", s3Key='" + s3Key + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "S3ItemImpl{" +
+               "s3Bucket='" + s3Bucket + '\'' +
+               ", s3Key='" + s3Key + '\'' +
+               '}';
+    }
 }

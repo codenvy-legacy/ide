@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to update cron.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 25, 2012 4:19:38 PM anya $
- * 
  */
-public class UpdateCronEvent extends GwtEvent<UpdateCronHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<UpdateCronHandler> TYPE = new GwtEvent.Type<UpdateCronHandler>();
+public class UpdateCronEvent extends GwtEvent<UpdateCronHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<UpdateCronHandler> TYPE = new GwtEvent.Type<UpdateCronHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateCronHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateCronHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateCronHandler handler)
-   {
-      handler.onUpdateCron(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateCronHandler handler) {
+        handler.onUpdateCron(this);
+    }
 
 }

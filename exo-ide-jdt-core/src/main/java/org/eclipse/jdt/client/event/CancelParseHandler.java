@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  2:12:22 PM 34360 2009-07-22 23:58:59Z evgen $
- *
  */
-public interface CancelParseHandler extends EventHandler
-{
+public interface CancelParseHandler extends EventHandler {
 
-   void onCancelParse(CancelParseEvent event);
+    void onCancelParse(CancelParseEvent event);
 
 }

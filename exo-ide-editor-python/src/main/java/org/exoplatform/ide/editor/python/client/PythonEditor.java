@@ -24,11 +24,9 @@ import com.google.collide.client.CollabEditor;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class PythonEditor extends CollabEditor
-{
-   public PythonEditor(String mimeType)
-   {
-      super(mimeType);
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new PyAutocompliter());
-   }
+public class PythonEditor extends CollabEditor {
+    public PythonEditor(String mimeType) {
+        super(mimeType);
+        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new PyAutocompliter());
+    }
 }

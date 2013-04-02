@@ -18,14 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import test.classes.CTestClass;
 
 import org.apache.lucene.document.Document;
@@ -46,68 +38,70 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
 /**
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ShortTypeInfoExtractorTest
-{
-   @Mock
-   private IndexReader reader;
+public class ShortTypeInfoExtractorTest {
+    @Mock
+    private IndexReader reader;
 
-   private final ShortTypeInfoExtractor extractor = new ShortTypeInfoExtractor();
+    private final ShortTypeInfoExtractor extractor = new ShortTypeInfoExtractor();
 
-   @Test
-   public void shouldCallReaderGetDocumentWithSameIdAndFieldSelector() throws Exception
-   {
+    @Test
+    public void shouldCallReaderGetDocumentWithSameIdAndFieldSelector() throws Exception {
 
-      Document luceneDocument = new Document();
-      //add minimal set of field to be able to call method  extractor.getValue
-      luceneDocument.add(new Field(DataIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+        Document luceneDocument = new Document();
+        //add minimal set of field to be able to call method  extractor.getValue
+        luceneDocument.add(new Field(DataIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
-      extractor.getValue(reader, 5);
+        extractor.getValue(reader, 5);
 
-      verify(reader).document(eq(5), (FieldSelector)anyObject());
-      verifyNoMoreInteractions(reader);
-   }
+        verify(reader).document(eq(5), (FieldSelector)anyObject());
+        verifyNoMoreInteractions(reader);
+    }
 
-   @org.junit.Ignore
-   @Test
-   public void shouldReconstructShortTypeInfo() throws Exception
-   {
-      TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
-      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected,"rt");
+    @org.junit.Ignore
+    @Test
+    public void shouldReconstructShortTypeInfo() throws Exception {
+        TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
+        Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected, "rt");
 
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
-      ShortTypeInfo actual = extractor.getValue(reader, 5);
+        ShortTypeInfo actual = extractor.getValue(reader, 5);
 
-      assertEquals(expected.getType(), actual.getType());
-      assertEquals(expected.getModifiers(), actual.getModifiers());
-      assertEquals(expected.getName(), actual.getName());
-   }
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getModifiers(), actual.getModifiers());
+        assertEquals(expected.getName(), actual.getName());
+    }
 
-   @Test
-   public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception
-   {
-      Document luceneDocument = new Document();
-      //add minimal set of field to be able to call method  extractor.getValue
-      luceneDocument.add(new Field(DataIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
-      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
+    @Test
+    public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception {
+        Document luceneDocument = new Document();
+        //add minimal set of field to be able to call method  extractor.getValue
+        luceneDocument.add(new Field(DataIndexFields.MODIFIERS, "1", Store.YES, Index.NO));
+        when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
-      extractor.getValue(reader, 5);
+        extractor.getValue(reader, 5);
 
-      ArgumentCaptor<FieldSelector> model = ArgumentCaptor.forClass(FieldSelector.class);
-      verify(reader).document(eq(5), model.capture());
+        ArgumentCaptor<FieldSelector> model = ArgumentCaptor.forClass(FieldSelector.class);
+        verify(reader).document(eq(5), model.capture());
 
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.MODIFIERS));
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.FQN));
-      assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.ENTITY_TYPE));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.SUPERCLASS));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
-      assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
+        assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.MODIFIERS));
+        assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.FQN));
+        assertEquals(FieldSelectorResult.LOAD, model.getValue().accept(DataIndexFields.ENTITY_TYPE));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.SUPERCLASS));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
+        assertEquals(FieldSelectorResult.NO_LOAD, model.getValue().accept(DataIndexFields.INTERFACES));
 
-   }
+    }
 
 }

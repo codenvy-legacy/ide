@@ -20,50 +20,49 @@ package org.exoplatform.ide.client.framework.ui.api;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-import java.util.Map;
-
 import org.exoplatform.ide.client.framework.ui.api.event.HasClosingViewHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewVisibilityChangedHandler;
 
+import java.util.Map;
+
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public interface Perspective extends HasViewVisibilityChangedHandler, HasViewOpenedHandler, HasViewClosedHandler,
-   HasClosingViewHandler, IsWidget
-{
+                                     HasClosingViewHandler, IsWidget {
 
-   /**
-    * Opens View.
-    * 
-    * @param view
-    */
-   void openView(View view);
+    /**
+     * Opens View.
+     *
+     * @param view
+     */
+    void openView(View view);
 
-   /**
-    * Closes View.
-    * 
-    * @param viewId
-    */
-   void closeView(String viewId);
+    /**
+     * Closes View.
+     *
+     * @param viewId
+     */
+    void closeView(String viewId);
 
-   /**
-    * Returns map of opened views.
-    * 
-    * @return
-    */
-   public Map<String, View> getViews();
+    /**
+     * Returns map of opened views.
+     *
+     * @return
+     */
+    public Map<String, View> getViews();
 
-   /**
-    * Returns map of opened panels.
-    * 
-    * @return
-    */
-   public Map<String, Panel> getPanels();
+    /**
+     * Returns map of opened panels.
+     *
+     * @return
+     */
+    public Map<String, Panel> getPanels();
 
 }

@@ -22,20 +22,19 @@ package org.exoplatform.gwtframework.ui.client.command;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ControlStateListener
-{
+public interface ControlStateListener {
 
-   void updateControlEnabling(boolean enabled);
+    void updateControlEnabling(boolean enabled);
 
-   void updateControlVisibility(boolean visible);
+    void updateControlVisibility(boolean visible);
 
-   void updateControlPrompt(String prompt);
+    void updateControlPrompt(String prompt);
 
-   void updateControlIcon(String icon);
+    void updateControlIcon(String icon);
 
 }

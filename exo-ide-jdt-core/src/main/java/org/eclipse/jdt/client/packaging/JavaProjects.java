@@ -28,41 +28,35 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class JavaProjects
-{
+public class JavaProjects {
 
-   private static ArrayList<String> projects = new ArrayList<String>();
+    private static ArrayList<String> projects = new ArrayList<String>();
 
-   static
-   {
-      projects.add(ProjectResolver.APP_ENGINE_JAVA);
-      projects.add(ProjectResolver.SERVLET_JSP);
-      projects.add(ProjectResolver.SPRING);
-      projects.add(ProjectType.JAVA.value());
-      projects.add(ProjectType.JAR.value());
-      projects.add(ProjectType.WAR.value());
-      projects.add(ProjectType.JSP.value());
-      projects.add(ProjectType.AWS.value());
-      projects.add(ProjectType.MultiModule.value());
-   }
+    static {
+        projects.add(ProjectResolver.APP_ENGINE_JAVA);
+        projects.add(ProjectResolver.SERVLET_JSP);
+        projects.add(ProjectResolver.SPRING);
+        projects.add(ProjectType.JAVA.value());
+        projects.add(ProjectType.JAR.value());
+        projects.add(ProjectType.WAR.value());
+        projects.add(ProjectType.JSP.value());
+        projects.add(ProjectType.AWS.value());
+        projects.add(ProjectType.MultiModule.value());
+    }
 
-   public static boolean contains(ProjectModel project)
-   {
-      if (project == null)
-      {
-         return false;
-      }
-      
-      return projects.contains(project.getProjectType());
-   }
-   
-   public static List<String> getList()
-   {
-      ArrayList<String> list = new ArrayList<String>();
-      list.addAll(projects);
-      return list;
-   }
+    public static boolean contains(ProjectModel project) {
+        if (project == null) {
+            return false;
+        }
+
+        return projects.contains(project.getProjectType());
+    }
+
+    public static List<String> getList() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.addAll(projects);
+        return list;
+    }
 
 }

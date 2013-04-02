@@ -17,17 +17,12 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * 
- * A DTO for telling the server that the workspace's run targets have changed.
- * 
- *
- */
+/** A DTO for telling the server that the workspace's run targets have changed. */
 @RoutingType(type = RoutingTypes.UPDATEWORKSPACERUNTARGETS)
 public interface UpdateWorkspaceRunTargets extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 
-  String getWorkspaceId();
-  
-  RunTarget getRunTarget();
+    String getWorkspaceId();
+
+    RunTarget getRunTarget();
 }

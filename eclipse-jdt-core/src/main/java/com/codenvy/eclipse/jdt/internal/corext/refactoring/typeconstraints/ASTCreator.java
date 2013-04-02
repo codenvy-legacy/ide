@@ -19,40 +19,34 @@ import com.codenvy.eclipse.jdt.core.dom.CompilationUnit;
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.util.RefactoringASTParser;
 
 
-public class ASTCreator
-{
+public class ASTCreator {
 
-   public static final String CU_PROPERTY = "org.eclipse.jdt.ui.refactoring.cu"; //$NON-NLS-1$
+    public static final String CU_PROPERTY = "org.eclipse.jdt.ui.refactoring.cu"; //$NON-NLS-1$
 
-   private ASTCreator()
-   {
-      //private
-   }
+    private ASTCreator() {
+        //private
+    }
 
-   public static CompilationUnit createAST(ICompilationUnit cu, WorkingCopyOwner workingCopyOwner)
-   {
-      CompilationUnit cuNode = getCuNode(workingCopyOwner, cu);
-      cuNode.setProperty(CU_PROPERTY, cu);
-      return cuNode;
-   }
+    public static CompilationUnit createAST(ICompilationUnit cu, WorkingCopyOwner workingCopyOwner) {
+        CompilationUnit cuNode = getCuNode(workingCopyOwner, cu);
+        cuNode.setProperty(CU_PROPERTY, cu);
+        return cuNode;
+    }
 
-   private static CompilationUnit getCuNode(WorkingCopyOwner workingCopyOwner, ICompilationUnit cu)
-   {
-      ASTParser p = ASTParser.newParser(AST.JLS4);
-      p.setSource(cu);
-      p.setResolveBindings(true);
-      p.setWorkingCopyOwner(workingCopyOwner);
-      p.setCompilerOptions(RefactoringASTParser.getCompilerOptions(cu));
-      return (CompilationUnit)p.createAST(null);
-   }
+    private static CompilationUnit getCuNode(WorkingCopyOwner workingCopyOwner, ICompilationUnit cu) {
+        ASTParser p = ASTParser.newParser(AST.JLS4);
+        p.setSource(cu);
+        p.setResolveBindings(true);
+        p.setWorkingCopyOwner(workingCopyOwner);
+        p.setCompilerOptions(RefactoringASTParser.getCompilerOptions(cu));
+        return (CompilationUnit)p.createAST(null);
+    }
 
-   public static ICompilationUnit getCu(ASTNode node)
-   {
-      Object property = node.getRoot().getProperty(CU_PROPERTY);
-      if (property instanceof ICompilationUnit)
-      {
-         return (ICompilationUnit)property;
-      }
-      return null;
-   }
+    public static ICompilationUnit getCu(ASTNode node) {
+        Object property = node.getRoot().getProperty(CU_PROPERTY);
+        if (property instanceof ICompilationUnit) {
+            return (ICompilationUnit)property;
+        }
+        return null;
+    }
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.cutcopy;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -37,109 +35,97 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
 @RolesAllowed({"developer"})
 public class PasteItemsCommand extends SimpleControl implements IDEControl, ItemsToPasteSelectedHandler,
-   PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler
-{
-   public static final String ID = "Edit/Paste Item(s)";
+                                                                PasteItemsCompleteHandler, ItemsSelectedHandler, VfsChangedHandler,
+                                                                ViewActivatedHandler {
+    public static final String ID = "Edit/Paste Item(s)";
 
-   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsTitleControl();
+    private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsTitleControl();
 
-   private final static String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsPromptControl();
+    private final static String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.pasteItemsPromptControl();
 
-   private boolean itemsToPasteSelected = false;
+    private boolean itemsToPasteSelected = false;
 
-   private boolean browserPanelSelected = false;
+    private boolean browserPanelSelected = false;
 
-   private List<Item> selectedItems;
+    private List<Item> selectedItems;
 
-   /**
-    * 
-    */
-   public PasteItemsCommand()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
-      setEvent(new PasteItemsEvent());
-      setGroupName(GroupNames.CUT_COPY);
-   }
+    /**
+     *
+     */
+    public PasteItemsCommand() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.paste(), IDEImageBundle.INSTANCE.pasteDisabled());
+        setEvent(new PasteItemsEvent());
+        setGroupName(GroupNames.CUT_COPY);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
-      IDE.addHandler(PasteItemsCompleteEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.navigation.control.MultipleSelectionItemsControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ItemsToPasteSelectedEvent.TYPE, this);
+        IDE.addHandler(PasteItemsCompleteEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedHandler#onItemsToPasteSelected(org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedEvent)
-    */
-   @Override
-   public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event)
-   {
-      itemsToPasteSelected = true;
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.navigation.event.ItemsToPasteSelectedHandler#onItemsToPasteSelected(org.exoplatform.ide.client
+     * .navigation.event.ItemsToPasteSelectedEvent) */
+    @Override
+    public void onItemsToPasteSelected(ItemsToPasteSelectedEvent event) {
+        itemsToPasteSelected = true;
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.event.PasteItemsCompleteHandler#onPasteItemsComlete(org.exoplatform.ide.client.navigation.event.PasteItemsCompleteEvent)
-    */
-   @Override
-   public void onPasteItemsComlete(PasteItemsCompleteEvent event)
-   {
-      itemsToPasteSelected = false;
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.navigation.event.PasteItemsCompleteHandler#onPasteItemsComlete(org.exoplatform.ide.client
+     * .navigation.event.PasteItemsCompleteEvent) */
+    @Override
+    public void onPasteItemsComlete(PasteItemsCompleteEvent event) {
+        itemsToPasteSelected = false;
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        updateState();
+    }
 
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      setVisible(event.getVfsInfo() != null);
-   }
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        setVisible(event.getVfsInfo() != null);
+    }
 
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      browserPanelSelected = event.getView() instanceof NavigatorDisplay ||
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerDisplay;
-      updateState();
-   }
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        browserPanelSelected = event.getView() instanceof NavigatorDisplay ||
+                               event.getView() instanceof ProjectExplorerDisplay ||
+                               event.getView() instanceof PackageExplorerDisplay;
+        updateState();
+    }
 
-   protected void updateState()
-   {
-      setShowInContextMenu(browserPanelSelected);
+    protected void updateState() {
+        setShowInContextMenu(browserPanelSelected);
 
-      if (selectedItems == null || selectedItems.size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
+        if (selectedItems == null || selectedItems.size() != 1) {
+            setEnabled(false);
+            return;
+        }
 
-      setEnabled(itemsToPasteSelected && browserPanelSelected);
-   }
+        setEnabled(itemsToPasteSelected && browserPanelSelected);
+    }
 }

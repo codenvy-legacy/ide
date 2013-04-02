@@ -21,21 +21,21 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * Notification from server that it has finished processing the uploaded files in the
  * a session.
- *
  */
 @RoutingType(type = RoutingTypes.ENDUPLOADSESSIONFINISHED)
 public interface EndUploadSessionFinished extends ServerToClientDto {
 
-  public interface UnzipFailure {
-    String getZipWorkspacePath();
-    JsonArray<String> getDisplayFailedWorkspacePaths();
-  }
-  
-  String getSessionId();
-  
-  JsonArray<String> getFailedFileWorkspacePaths();
-  
-  JsonArray<String> getFailedDirWorkspacePaths();
-  
-  JsonArray<UnzipFailure> getUnzipFailures();
+    public interface UnzipFailure {
+        String getZipWorkspacePath();
+
+        JsonArray<String> getDisplayFailedWorkspacePaths();
+    }
+
+    String getSessionId();
+
+    JsonArray<String> getFailedFileWorkspacePaths();
+
+    JsonArray<String> getFailedDirWorkspacePaths();
+
+    JsonArray<UnzipFailure> getUnzipFailures();
 }

@@ -31,35 +31,28 @@ import org.exoplatform.ide.editor.shared.text.IRegion;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public abstract class AbstractJavaHover implements TextHover, UpdateOutlineHandler 
-{
-      
-   protected CompilationUnit cUnit;
-   
-   /**
-    * 
-    */
-   public AbstractJavaHover(HandlerManager eventBus)
-   {
-      eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
-   }
-   /**
-   * @see org.eclipse.jdt.client.UpdateOutlineHandler#onUpdateOutline(org.eclipse.jdt.client.UpdateOutlineEvent)
-   */
-   @Override
-   public void onUpdateOutline(UpdateOutlineEvent event)
-   {
-      cUnit = event.getCompilationUnit();
-   }
-   /**
-    * @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverRegion(org.exoplatform.ide.editor.client.api.Editor, int)
-    */
-   @Override
-   public IRegion getHoverRegion(Editor editor, int offset)
-   {
-      return JavaWordFinder.findWord(editor.getDocument(), offset);
-   }
+public abstract class AbstractJavaHover implements TextHover, UpdateOutlineHandler {
+
+    protected CompilationUnit cUnit;
+
+    /**
+     *
+     */
+    public AbstractJavaHover(HandlerManager eventBus) {
+        eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
+    }
+
+    /** @see org.eclipse.jdt.client.UpdateOutlineHandler#onUpdateOutline(org.eclipse.jdt.client.UpdateOutlineEvent) */
+    @Override
+    public void onUpdateOutline(UpdateOutlineEvent event) {
+        cUnit = event.getCompilationUnit();
+    }
+
+    /** @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverRegion(org.exoplatform.ide.editor.client.api.Editor, int) */
+    @Override
+    public IRegion getHoverRegion(Editor editor, int offset) {
+        return JavaWordFinder.findWord(editor.getDocument(), offset);
+    }
 
 }

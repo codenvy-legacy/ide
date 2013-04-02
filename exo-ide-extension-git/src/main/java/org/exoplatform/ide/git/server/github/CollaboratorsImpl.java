@@ -27,33 +27,26 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: Collaborators.java Aug 6, 2012
  */
-public class CollaboratorsImpl implements Collaborators
-{
+public class CollaboratorsImpl implements Collaborators {
 
-   private List<GitHubUser> collaborators;
+    private List<GitHubUser> collaborators;
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.shared.Collaborators#getCollaborators()
-    */
-   @Override
-   public List<GitHubUser> getCollaborators()
-   {
-      if (collaborators == null)
-         collaborators = new ArrayList<GitHubUser>();
-      return collaborators;
-   }
+    /** @see org.exoplatform.ide.extension.samples.shared.Collaborators#getCollaborators() */
+    @Override
+    public List<GitHubUser> getCollaborators() {
+        if (collaborators == null)
+            collaborators = new ArrayList<GitHubUser>();
+        return collaborators;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.shared.Collaborators#setCollaborators(java.util.List)
-    */
-   @Override
-   public void setCollaborators(List<GitHubUser> collaborators)
-   {
-      this.collaborators = collaborators;
-   }
+    /** @see org.exoplatform.ide.extension.samples.shared.Collaborators#setCollaborators(java.util.List) */
+    @Override
+    public void setCollaborators(List<GitHubUser> collaborators) {
+        this.collaborators = collaborators;
+    }
 
 }

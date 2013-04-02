@@ -18,28 +18,24 @@ import com.google.collide.dto.CodeError;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * A receiver which handles notifying the editor of code errors.
- *
- */
+/** A receiver which handles notifying the editor of code errors. */
 public interface ErrorReceiver {
 
-  /**
-   * Gets notified about code errors detected in a source file.
-   */
-  public static interface ErrorListener {
+    /** Gets notified about code errors detected in a source file. */
+    public static interface ErrorListener {
 
-    /**
-     * Signals that the list of errors in a file has changed.
-     *
-     * @param errors new list of all errors in the file
-     */
-    void onErrorsChanged(JsonArray<CodeError> errors);
-  }
+        /**
+         * Signals that the list of errors in a file has changed.
+         *
+         * @param errors
+         *         new list of all errors in the file
+         */
+        void onErrorsChanged(JsonArray<CodeError> errors);
+    }
 
-  public void setActiveDocument(String fileEditSessionKey);
+    public void setActiveDocument(String fileEditSessionKey);
 
-  public void addErrorListener(String fileEditSessionKey, ErrorListener listener);
+    public void addErrorListener(String fileEditSessionKey, ErrorListener listener);
 
-  public void removeErrorListener(String fileEditSessionKey, ErrorListener listener);
+    public void removeErrorListener(String fileEditSessionKey, ErrorListener listener);
 }

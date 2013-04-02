@@ -26,12 +26,10 @@ import java.io.File;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: RmTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class RmTest extends BaseTest
-{
-   public void testRm() throws Exception
-   {
-      getDefaultConnection().rm(new RmRequest(new String[]{"README.txt"}));
-      assertFalse(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
-      checkNoFilesInCache(getDefaultRepository(), "README.txt");
-   }
+public class RmTest extends BaseTest {
+    public void testRm() throws Exception {
+        getDefaultConnection().rm(new RmRequest(new String[]{"README.txt"}));
+        assertFalse(new File(getDefaultRepository().getWorkTree(), "README.txt").exists());
+        checkNoFilesInCache(getDefaultRepository(), "README.txt");
+    }
 }

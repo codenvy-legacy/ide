@@ -22,24 +22,22 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class RunAppEvent extends GwtEvent<RunAppHandler>
-{
+ */
+public class RunAppEvent extends GwtEvent<RunAppHandler> {
 
-     public static final GwtEvent.Type<RunAppHandler> TYPE = new GwtEvent.Type<RunAppHandler>();
+    public static final GwtEvent.Type<RunAppHandler> TYPE = new GwtEvent.Type<RunAppHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RunAppHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RunAppHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(RunAppHandler handler)
-   {
-      handler.onRunApp(this);
-   }
+    @Override
+    protected void dispatch(RunAppHandler handler) {
+        handler.onRunApp(this);
+    }
 
 }

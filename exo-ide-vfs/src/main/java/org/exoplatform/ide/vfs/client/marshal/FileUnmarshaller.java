@@ -25,44 +25,32 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-/**
- * @version $Id:$
- * 
- */
-public class FileUnmarshaller implements Unmarshallable<FileModel>
-{
+/** @version $Id:$ */
+public class FileUnmarshaller implements Unmarshallable<FileModel> {
 
-   private final FileModel item;
+    private final FileModel item;
 
-   public FileUnmarshaller(FileModel item)
-   {
+    public FileUnmarshaller(FileModel item) {
 
-      this.item = item;
+        this.item = item;
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         item.init(JSONParser.parseLenient(response.getText()).isObject());
-      }
-      catch (Exception exc)
-      {
-         String message = "Can't parse item " + response.getText();
-         throw new UnmarshallerException(message);
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            item.init(JSONParser.parseLenient(response.getText()).isObject());
+        } catch (Exception exc) {
+            String message = "Can't parse item " + response.getText();
+            throw new UnmarshallerException(message);
+        }
 
-   }
+    }
 
-   @Override
-   public FileModel getPayload()
-   {
-      return this.item;
-   }
+    @Override
+    public FileModel getPayload() {
+        return this.item;
+    }
 
 }

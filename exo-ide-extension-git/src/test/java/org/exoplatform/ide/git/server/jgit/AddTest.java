@@ -26,46 +26,41 @@ import java.io.File;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: AddTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class AddTest extends BaseTest
-{
-   public void testNoAdd() throws Exception
-   {
-      File workDir = getDefaultRepository().getWorkTree();
-      File file1 = addFile(workDir, "testNoAdd", CONTENT);
-      checkNoFilesInCache(getDefaultRepository(), file1);
-   }
+public class AddTest extends BaseTest {
+    public void testNoAdd() throws Exception {
+        File workDir = getDefaultRepository().getWorkTree();
+        File file1 = addFile(workDir, "testNoAdd", CONTENT);
+        checkNoFilesInCache(getDefaultRepository(), file1);
+    }
 
-   public void testUpdate() throws Exception
-   {
-      File workDir = getDefaultRepository().getWorkTree();
-      File file1 = addFile(workDir, "testUpdate", CONTENT);
-      AddRequest addRequest = new AddRequest();
-      addRequest.setUpdate(true);
-      getDefaultConnection().add(addRequest);
-      // File not added in index. Existed file re-indexed if modified.
-      checkNoFilesInCache(getDefaultRepository(), file1);
-   }
+    public void testUpdate() throws Exception {
+        File workDir = getDefaultRepository().getWorkTree();
+        File file1 = addFile(workDir, "testUpdate", CONTENT);
+        AddRequest addRequest = new AddRequest();
+        addRequest.setUpdate(true);
+        getDefaultConnection().add(addRequest);
+        // File not added in index. Existed file re-indexed if modified.
+        checkNoFilesInCache(getDefaultRepository(), file1);
+    }
 
-   public void testAdd() throws Exception
-   {
-      File workDir = getDefaultRepository().getWorkTree();
-      File file1 = addFile(workDir, "testAdd", CONTENT);
-      AddRequest addRequest = new AddRequest();
-      getDefaultConnection().add(addRequest);
-      checkFilesInCache(getDefaultRepository(), file1);
-   }
+    public void testAdd() throws Exception {
+        File workDir = getDefaultRepository().getWorkTree();
+        File file1 = addFile(workDir, "testAdd", CONTENT);
+        AddRequest addRequest = new AddRequest();
+        getDefaultConnection().add(addRequest);
+        checkFilesInCache(getDefaultRepository(), file1);
+    }
 
-   public void testAddAfterRemove() throws Exception
-   {
-      File workDir = getDefaultRepository().getWorkTree();
-      File readMe = new File(workDir, "README.txt");
-      String relativePath = calculateRelativePath(workDir, readMe);
-      checkFilesInCache(getDefaultRepository(), readMe);
-      readMe.delete();
-      AddRequest addRequest = new AddRequest();
-      // If 'update' is 'true' then removed files should be removed from index.
-      addRequest.setUpdate(true);
-      getDefaultConnection().add(addRequest);
-      checkNoFilesInCache(getDefaultRepository(), relativePath);
-   }
+    public void testAddAfterRemove() throws Exception {
+        File workDir = getDefaultRepository().getWorkTree();
+        File readMe = new File(workDir, "README.txt");
+        String relativePath = calculateRelativePath(workDir, readMe);
+        checkFilesInCache(getDefaultRepository(), readMe);
+        readMe.delete();
+        AddRequest addRequest = new AddRequest();
+        // If 'update' is 'true' then removed files should be removed from index.
+        addRequest.setUpdate(true);
+        getDefaultConnection().add(addRequest);
+        checkNoFilesInCache(getDefaultRepository(), relativePath);
+    }
 }

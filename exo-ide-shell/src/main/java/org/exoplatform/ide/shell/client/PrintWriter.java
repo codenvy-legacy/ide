@@ -18,25 +18,20 @@
  */
 package org.exoplatform.ide.shell.client;
 
-import org.exoplatform.ide.shell.client.CloudShell;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class PrintWriter
-{
+public class PrintWriter {
 
-   public void println(String s)
-   {
-      CloudShell.console().printToBuffer(s + "\n");
-   }
+    public void println(String s) {
+        CloudShell.console().printToBuffer(s + "\n");
+    }
 
-   public void flush()
-   {
-      CloudShell.console().flush();
-   }
+    public void flush() {
+        CloudShell.console().flush();
+    }
 
 }

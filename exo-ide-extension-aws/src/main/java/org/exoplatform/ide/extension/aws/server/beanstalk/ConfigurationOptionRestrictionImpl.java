@@ -24,42 +24,35 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionRes
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ConfigurationOptionRestrictionImpl implements ConfigurationOptionRestriction
-{
-   private String label;
-   private String pattern;
+public class ConfigurationOptionRestrictionImpl implements ConfigurationOptionRestriction {
+    private String label;
+    private String pattern;
 
-   public ConfigurationOptionRestrictionImpl(String label, String pattern)
-   {
-      this.label = label;
-      this.pattern = pattern;
-   }
+    public ConfigurationOptionRestrictionImpl(String label, String pattern) {
+        this.label = label;
+        this.pattern = pattern;
+    }
 
-   public ConfigurationOptionRestrictionImpl()
-   {
-   }
+    public ConfigurationOptionRestrictionImpl() {
+    }
 
-   @Override
-   public String getLabel()
-   {
-      return label;
-   }
+    @Override
+    public String getLabel() {
+        return label;
+    }
 
-   @Override
-   public void setLabel(String label)
-   {
-      this.label = label;
-   }
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-   @Override
-   public String getPattern()
-   {
-      return pattern;
-   }
+    @Override
+    public String getPattern() {
+        return pattern;
+    }
 
-   @Override
-   public void setPattern(String pattern)
-   {
-      this.pattern = pattern;
-   }
+    @Override
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
 }

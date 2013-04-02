@@ -29,102 +29,101 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 
 /**
  * Client service for Jenkins Extension
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class JenkinsService
-{
+public class JenkinsService {
 
-   private String restContext;
+    private String restContext;
 
-   private Loader loader;
+    private Loader loader;
 
-   private static JenkinsService instance;
+    private static JenkinsService instance;
 
-   private static final String JENKINS = "/ide/jenkins";
+    private static final String JENKINS = "/ide/jenkins";
 
-   /**
-    * @param restContext
-    * @param loader
-    */
-   public JenkinsService(String restContext, Loader loader)
-   {
-      super();
-      this.restContext = restContext;
-      this.loader = loader;
-      instance = this;
-   }
+    /**
+     * @param restContext
+     * @param loader
+     */
+    public JenkinsService(String restContext, Loader loader) {
+        super();
+        this.restContext = restContext;
+        this.loader = loader;
+        instance = this;
+    }
 
-   /**
-    * @return instance of {@link JenkinsService}
-    */
-   public static JenkinsService get()
-   {
-      if (instance == null)
-         throw new IllegalStateException("Jenkins Service uninitialized");
-      return instance;
-   }
+    /** @return instance of {@link JenkinsService} */
+    public static JenkinsService get() {
+        if (instance == null)
+            throw new IllegalStateException("Jenkins Service uninitialized");
+        return instance;
+    }
 
-   /**
-    * Create new Jenkins job
-    * 
-    * @param name of job
-    * @param git Got repository URL
-    * @param user User name
-    * @param mail User e-mail
-    * @param workDir Git working directory
-    * @param callback
-    * @throws RequestException 
-    */
-   public void createJenkinsJob(String name, String user, String mail, String vfsId, String projectId,
-      AsyncRequestCallback<Job> callback) throws RequestException
-   {
-      String url =
-         restContext + JENKINS + "/job/create?name=" + name + "&user=" + user + "&email=" + mail + "&vfsid=" + vfsId
-            + "&projectid=" + projectId;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
+    /**
+     * Create new Jenkins job
+     *
+     * @param name
+     *         of job
+     * @param git
+     *         Got repository URL
+     * @param user
+     *         User name
+     * @param mail
+     *         User e-mail
+     * @param workDir
+     *         Git working directory
+     * @param callback
+     * @throws RequestException
+     */
+    public void createJenkinsJob(String name, String user, String mail, String vfsId, String projectId,
+                                 AsyncRequestCallback<Job> callback) throws RequestException {
+        String url =
+                restContext + JENKINS + "/job/create?name=" + name + "&user=" + user + "&email=" + mail + "&vfsid=" + vfsId
+                + "&projectid=" + projectId;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
 
-   /**
-    * Start building job
-    *
-    * @param vfsId identifier of the virtual file system
-    * @param projectId identifier of the project we want to send for build
-    * @param jobName Name of Job
-    * @param callback
-    * @throws RequestException 
-    */
-   public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<Object> callback)
-      throws RequestException
-   {
-      String params = "name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
+    /**
+     * Start building job
+     *
+     * @param vfsId
+     *         identifier of the virtual file system
+     * @param projectId
+     *         identifier of the project we want to send for build
+     * @param jobName
+     *         Name of Job
+     * @param callback
+     * @throws RequestException
+     */
+    public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<Object> callback)
+            throws RequestException {
+        String params = "name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
 
-      String url = restContext + JENKINS + "/job/build?" + params;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
+        String url = restContext + JENKINS + "/job/build?" + params;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
 
-   /**
-    * Get Job status
-    * 
-    * @param jobName Name of Job
-    * @param callback
-    * @throws RequestException 
-    */
-   public void jobStatus(String vfsId, String projectId, String jobName, AsyncRequestCallback<JobStatus> callback)
-      throws RequestException
-   {
-      String url =
-         restContext + JENKINS + "/job/status?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-   }
+    /**
+     * Get Job status
+     *
+     * @param jobName
+     *         Name of Job
+     * @param callback
+     * @throws RequestException
+     */
+    public void jobStatus(String vfsId, String projectId, String jobName, AsyncRequestCallback<JobStatus> callback)
+            throws RequestException {
+        String url =
+                restContext + JENKINS + "/job/status?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
+        AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+    }
 
-   public void getJenkinsOutput(String vfsId, String projectId, String jobName,
-      AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      String url =
-         restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-   }
+    public void getJenkinsOutput(String vfsId, String projectId, String jobName,
+                                 AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        String url =
+                restContext + JENKINS + "/job/console-output?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
+        AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+    }
 }

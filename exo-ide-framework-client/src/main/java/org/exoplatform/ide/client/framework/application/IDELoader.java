@@ -22,47 +22,39 @@ import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class IDELoader
-{
+public class IDELoader {
 
-   private static GWTLoader loader;
+    private static GWTLoader loader;
 
-   public static GWTLoader get()
-   {
-      if (loader == null)
-      {
-         loader = new GWTLoader()
-         {
-         };
-      }
+    public static GWTLoader get() {
+        if (loader == null) {
+            loader = new GWTLoader() {
+            };
+        }
 
-      return loader;
-   }
+        return loader;
+    }
 
-   public static GWTLoader getInstance()
-   {
-      return get();
-   }
+    public static GWTLoader getInstance() {
+        return get();
+    }
 
-   public static void show()
-   {
-      get().show();
-   }
+    public static void show() {
+        get().show();
+    }
 
-   public static void show(String message)
-   {
-      get().setMessage(message);
-      get().show();
-   }
+    public static void show(String message) {
+        get().setMessage(message);
+        get().show();
+    }
 
-   public static void hide()
-   {
-      get().hide();
-   }
+    public static void hide() {
+        get().hide();
+    }
 
 }

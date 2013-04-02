@@ -14,53 +14,50 @@
 
 package com.google.collide.dto.server;
 
-import static com.google.collide.dto.DocOpComponent.Type.*;
-
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent.Delete;
 import com.google.collide.dto.DocOpComponent.Insert;
 import com.google.collide.dto.DocOpComponent.Retain;
 import com.google.collide.dto.DocOpComponent.RetainLine;
-import com.google.collide.dto.server.DtoServerImpls.DeleteImpl;
-import com.google.collide.dto.server.DtoServerImpls.DocOpImpl;
-import com.google.collide.dto.server.DtoServerImpls.InsertImpl;
-import com.google.collide.dto.server.DtoServerImpls.RetainImpl;
-import com.google.collide.dto.server.DtoServerImpls.RetainLineImpl;
+import com.google.collide.dto.server.DtoServerImpls.*;
 import com.google.collide.dto.shared.DocOpFactory;
 
+import static com.google.collide.dto.DocOpComponent.Type.*;
+
 // TODO: These should be moved to an Editor2-specific package
+
 /**
  */
 public final class ServerDocOpFactory implements DocOpFactory {
 
-  public static final ServerDocOpFactory INSTANCE = new ServerDocOpFactory();
+    public static final ServerDocOpFactory INSTANCE = new ServerDocOpFactory();
 
-  private ServerDocOpFactory() {
-  }
+    private ServerDocOpFactory() {
+    }
 
-  @Override
-  public Delete createDelete(String text) {
-    return (Delete) DeleteImpl.make().setText(text).setType(DELETE);
-  }
+    @Override
+    public Delete createDelete(String text) {
+        return (Delete)DeleteImpl.make().setText(text).setType(DELETE);
+    }
 
-  @Override
-  public DocOp createDocOp() {
-    return DocOpImpl.make();
-  }
+    @Override
+    public DocOp createDocOp() {
+        return DocOpImpl.make();
+    }
 
-  @Override
-  public Insert createInsert(String text) {
-    return (Insert) InsertImpl.make().setText(text).setType(INSERT);
-  }
+    @Override
+    public Insert createInsert(String text) {
+        return (Insert)InsertImpl.make().setText(text).setType(INSERT);
+    }
 
-  @Override
-  public Retain createRetain(int count, boolean hasTrailingNewline) {
-    return (Retain) RetainImpl.make().setCount(count).setHasTrailingNewline(hasTrailingNewline)
-        .setType(RETAIN);
-  }
+    @Override
+    public Retain createRetain(int count, boolean hasTrailingNewline) {
+        return (Retain)RetainImpl.make().setCount(count).setHasTrailingNewline(hasTrailingNewline)
+                                 .setType(RETAIN);
+    }
 
-  @Override
-  public RetainLine createRetainLine(int lineCount) {
-    return (RetainLine) RetainLineImpl.make().setLineCount(lineCount).setType(RETAIN_LINE);
-  }
+    @Override
+    public RetainLine createRetainLine(int lineCount) {
+        return (RetainLine)RetainLineImpl.make().setLineCount(lineCount).setType(RETAIN_LINE);
+    }
 }

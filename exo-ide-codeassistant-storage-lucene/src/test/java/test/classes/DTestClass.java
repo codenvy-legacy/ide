@@ -24,18 +24,13 @@ import test.interfaces.DTestInterface;
  * @author <a href="mailto:foo@bar.org">Foo Bar</a>
  * @version $Id: exo-jboss-codetemplates.xml 34360 2009-07-22 23:58:59Z
  *          aheritier $
- * 
  */
-public class DTestClass implements DTestInterface
-{
+public class DTestClass implements DTestInterface {
 
-   /**
-    * @see test.interfaces.DTestInterface#getName()
-    */
-   @Override
-   public String getName()
-   {
-      return "Name";
-   }
+    /** @see test.interfaces.DTestInterface#getName() */
+    @Override
+    public String getName() {
+        return "Name";
+    }
 
 }

@@ -26,40 +26,33 @@ import org.exoplatform.ide.extension.heroku.client.key.ClearKeysEvent;
 
 /**
  * Control for clearing(removing) keys from Heroku.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 9:32:28 AM anya $
- * 
  */
-public class ClearKeysControl extends AbstractHerokuControl
-{
+public class ClearKeysControl extends AbstractHerokuControl {
 
-   public ClearKeysControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysPrompt());
-      setImages(HerokuClientBundle.INSTANCE.clearKeys(), HerokuClientBundle.INSTANCE.clearKeysDisabled());
-      setEvent(new ClearKeysEvent());
-   }
+    public ClearKeysControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.clearKeysPrompt());
+        setImages(HerokuClientBundle.INSTANCE.clearKeys(), HerokuClientBundle.INSTANCE.clearKeysDisabled());
+        setEvent(new ClearKeysEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * 
-    */
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /**
+     *
+     */
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 
 }

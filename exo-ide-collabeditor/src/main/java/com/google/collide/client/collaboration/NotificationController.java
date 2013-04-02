@@ -35,58 +35,52 @@ import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecip
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class NotificationController
-{
+public class NotificationController {
 
-   private MessageRecipient<FileOperationNotification> fileOperationNotificationRecipient = new MessageRecipient<FileOperationNotification>()
-   {
-      @Override
-      public void onMessageReceived(FileOperationNotification message)
-      {
-         showFileOperationNotification(message);
-      }
-   };
+    private MessageRecipient<FileOperationNotification> fileOperationNotificationRecipient =
+            new MessageRecipient<FileOperationNotification>() {
+                @Override
+                public void onMessageReceived(FileOperationNotification message) {
+                    showFileOperationNotification(message);
+                }
+            };
 
 
-   private NotificationManager manager;
+    private NotificationManager manager;
 
-   private UsersModel usersModel;
+    private UsersModel usersModel;
 
 
-   public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
-      MessageFilter messageFilter, UsersModel usersModel, HandlerManager eventBus, Css css)
-   {
-      this.usersModel = usersModel;
-      this.manager = manager;
-      messageFilter.registerMessageRecipient(RoutingTypes.FILEOPERATIONNOTIFICATION, fileOperationNotificationRecipient);
-   }
+    public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
+                                  MessageFilter messageFilter, UsersModel usersModel, HandlerManager eventBus, Css css) {
+        this.usersModel = usersModel;
+        this.manager = manager;
+        messageFilter.registerMessageRecipient(RoutingTypes.FILEOPERATIONNOTIFICATION, fileOperationNotificationRecipient);
+    }
 
-   private void showFileOperationNotification(FileOperationNotification notification)
-   {
-      Participant user = usersModel.getParticipant(usersModel.getUserIdByClientId(notification.getUserId()));
-      String targetPath = notification.getTarget();
-      targetPath = targetPath.substring(targetPath.lastIndexOf('/') + 1, targetPath.length());
-      String fileName = notification.getFilePath();
-      fileName = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
-      manager.addNotification(new Notification("User " + user.getDisplayName() + " wants to " + getOperationName(
-         notification.getOperation()) + " " + targetPath + " and ask you to close file " + fileName, -1));
-   }
+    private void showFileOperationNotification(FileOperationNotification notification) {
+        Participant user = usersModel.getParticipant(usersModel.getUserIdByClientId(notification.getUserId()));
+        String targetPath = notification.getTarget();
+        targetPath = targetPath.substring(targetPath.lastIndexOf('/') + 1, targetPath.length());
+        String fileName = notification.getFilePath();
+        fileName = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
+        manager.addNotification(new Notification("User " + user.getDisplayName() + " wants to " + getOperationName(
+                notification.getOperation()) + " " + targetPath + " and ask you to close file " + fileName, -1));
+    }
 
-   private String getOperationName(Operation operation)
-   {
-      switch (operation)
-      {
-         case RENAME:
-            return "rename";
-         case DELETE:
-            return "delete";
-         case MOVE:
-            return "move";
-         case REFACTORING:
-            return "perform refactoring";
+    private String getOperationName(Operation operation) {
+        switch (operation) {
+            case RENAME:
+                return "rename";
+            case DELETE:
+                return "delete";
+            case MOVE:
+                return "move";
+            case REFACTORING:
+                return "perform refactoring";
 
-         default:
-            return operation.name().toLowerCase();
-      }
-   }
+            default:
+                return operation.name().toLowerCase();
+        }
+    }
 }

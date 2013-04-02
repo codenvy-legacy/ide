@@ -17,25 +17,16 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Response for requesting the project that owns this workspace.
- *
- */
+/** Response for requesting the project that owns this workspace. */
 @RoutingType(type = RoutingTypes.GETOWNINGPROJECTRESPONSE)
 public interface GetOwningProjectResponse extends ServerToClientDto {
 
-  /**
-   * This should always be non-null.
-   */
-  ProjectInfo getOwningProject();
-  
-  /**
-   * The members of the project.
-   */
-  ProjectMembersInfo getProjectMembersInfo();
+    /** This should always be non-null. */
+    ProjectInfo getOwningProject();
 
-  /**
-   * This should always be non-null.
-   */
-  WorkspaceInfo getWorkspace();
+    /** The members of the project. */
+    ProjectMembersInfo getProjectMembersInfo();
+
+    /** This should always be non-null. */
+    WorkspaceInfo getWorkspace();
 }

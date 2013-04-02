@@ -36,78 +36,66 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class InvitedDeveloperTile extends Composite
-{
-   private static final String REVOKE_ACCESS_BUTTON = "ideDeveloperAccessTileRevokeAccessButton";
+public class InvitedDeveloperTile extends Composite {
+    private static final String REVOKE_ACCESS_BUTTON = "ideDeveloperAccessTileRevokeAccessButton";
 
-   private static InvitedDeveloperTileUiBinder uiBinder = GWT.create(InvitedDeveloperTileUiBinder.class);
+    private static InvitedDeveloperTileUiBinder uiBinder = GWT.create(InvitedDeveloperTileUiBinder.class);
 
-   interface InvitedDeveloperTileUiBinder extends UiBinder<Widget, InvitedDeveloperTile>
-   {
-   }
+    interface InvitedDeveloperTileUiBinder extends UiBinder<Widget, InvitedDeveloperTile> {
+    }
 
-   interface Style extends CssResource
-   {
-      String userFieldBody();
+    interface Style extends CssResource {
+        String userFieldBody();
 
-      String userFieldBodySelected();
-   }
+        String userFieldBodySelected();
+    }
 
-   private RevokeInviteHandler revokeInviteHandler;
+    private RevokeInviteHandler revokeInviteHandler;
 
-   @UiField
-   Style style;
+    @UiField
+    Style style;
 
-   @UiField
-   Label invitedId;
+    @UiField
+    Label invitedId;
 
-   @UiField
-   Label inviteRole;
+    @UiField
+    Label inviteRole;
 
-   @UiField
-   ImageButton revokeImage;
+    @UiField
+    ImageButton revokeImage;
 
-   public InvitedDeveloperTile(final Invite invite)
-   {
-      initWidget(uiBinder.createAndBindUi(this));
+    public InvitedDeveloperTile(final Invite invite) {
+        initWidget(uiBinder.createAndBindUi(this));
 
-      revokeImage.setId(REVOKE_ACCESS_BUTTON);
+        revokeImage.setId(REVOKE_ACCESS_BUTTON);
 
-      invitedId.setText(invite.getEmail());
+        invitedId.setText(invite.getEmail());
 
-      if (invite.isActivated() == null)
-      {
-         revokeImage.setVisible(false);
-         revokeImage.setEnabled(false);
-         inviteRole.getElement().setInnerHTML("<span style=\"font-weight:bold\">Owner</span>");
-      }
-      else if (invite.isActivated())
-      {
-         revokeImage.setVisible(false);
-         revokeImage.setEnabled(false);
-         inviteRole.getElement().setInnerHTML("<span style=\"color:green\">Accepted</span>");
-      }
-      else
-      {
-         inviteRole.getElement().setInnerHTML("<span style=\"color:red; margin-right:10px\">Pending</span>");
-      }
+        if (invite.isActivated() == null) {
+            revokeImage.setVisible(false);
+            revokeImage.setEnabled(false);
+            inviteRole.getElement().setInnerHTML("<span style=\"font-weight:bold\">Owner</span>");
+        } else if (invite.isActivated()) {
+            revokeImage.setVisible(false);
+            revokeImage.setEnabled(false);
+            inviteRole.getElement().setInnerHTML("<span style=\"color:green\">Accepted</span>");
+        } else {
+            inviteRole.getElement().setInnerHTML("<span style=\"color:red; margin-right:10px\">Pending</span>");
+        }
 
-      revokeImage.setImage(new Image(SamplesClientBundle.INSTANCE.cancel()));
-      revokeImage.setDisabledImage(new Image(SamplesClientBundle.INSTANCE.cancelDisabled()));
-      revokeImage.setPixelSize(25, 16);
+        revokeImage.setImage(new Image(SamplesClientBundle.INSTANCE.cancel()));
+        revokeImage.setDisabledImage(new Image(SamplesClientBundle.INSTANCE.cancelDisabled()));
+        revokeImage.setPixelSize(25, 16);
 
-      revokeImage.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            revokeInviteHandler.onRevokeInvite(invite);
-         }
-      });
-   }
+        revokeImage.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                revokeInviteHandler.onRevokeInvite(invite);
+            }
+        });
+    }
 
-   public void setRevokeInviteHandler(RevokeInviteHandler handler)
-   {
-      this.revokeInviteHandler = handler;
-   }
+    public void setRevokeInviteHandler(RevokeInviteHandler handler) {
+        this.revokeInviteHandler = handler;
+    }
 }

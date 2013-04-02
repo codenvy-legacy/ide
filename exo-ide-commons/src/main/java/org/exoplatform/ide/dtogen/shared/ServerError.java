@@ -14,77 +14,56 @@
 
 package org.exoplatform.ide.dtogen.shared;
 
-/**
- * Notifies the client of an error on the frontend.
- *
- */
+/** Notifies the client of an error on the frontend. */
 public interface ServerError extends ServerToClientDto {
 
-  /**
-   * @return the error code
-   */
-  FailureReason getFailureReason();
+    /** @return the error code */
+    FailureReason getFailureReason();
 
-  /** @return the error details (probably not suitable for end-user consumption) */
-  String getDetails();
+    /** @return the error details (probably not suitable for end-user consumption) */
+    String getDetails();
 
-  
-  /**
-   * A list of errors shared by the server and the client.
-   */
-  public static enum FailureReason {
-    /**
-     * Broadly covers any communication error between the client and server in
-     * which a response is not received.
-     */
-    COMMUNICATION_ERROR,
 
-    /**
-     * The server returned an error.
-     */
-    SERVER_ERROR,
+    /** A list of errors shared by the server and the client. */
+    public static enum FailureReason {
+        /**
+         * Broadly covers any communication error between the client and server in
+         * which a response is not received.
+         */
+        COMMUNICATION_ERROR,
 
-    /**
-     * The server indicated that the current user is not authorized for the
-     * requested service, most likely due to an ACL failure.
-     */
-    UNAUTHORIZED,
+        /** The server returned an error. */
+        SERVER_ERROR,
 
-    /**
-     * The server indicated that the current user is not logged in to GAIA.
-     */
-    NOT_LOGGED_IN,
+        /**
+         * The server indicated that the current user is not authorized for the
+         * requested service, most likely due to an ACL failure.
+         */
+        UNAUTHORIZED,
 
-    /**
-     * The server indicated that the request was unable to complete because the
-     * client request was out of sync with the current state of some server
-     * resource. This can include a missing workspace session.
-     */
-    STALE_CLIENT,
+        /** The server indicated that the current user is not logged in to GAIA. */
+        NOT_LOGGED_IN,
 
-    /**
-     * The failure does not fit into any of the other categories.
-     */
-    UNKNOWN,
+        /**
+         * The server indicated that the request was unable to complete because the
+         * client request was out of sync with the current state of some server
+         * resource. This can include a missing workspace session.
+         */
+        STALE_CLIENT,
 
-    /**
-     * No workspace session present when one is expected.
-     */
-    MISSING_WORKSPACE_SESSION,
-    
-    /**
-     * No file edit session where one is expected.
-     */
-    MISSING_FILE_SESSION,
-    
-    /**
-     * Client doc ops failed to apply on the server's document.
-     */
-    DOC_OPS_FAILED,
+        /** The failure does not fit into any of the other categories. */
+        UNKNOWN,
 
-    /**
-     * The Client is talking to a Frontend that might speak different DTOs.
-     */
-    CLIENT_FRONTEND_VERSION_SKEW
-  }
+        /** No workspace session present when one is expected. */
+        MISSING_WORKSPACE_SESSION,
+
+        /** No file edit session where one is expected. */
+        MISSING_FILE_SESSION,
+
+        /** Client doc ops failed to apply on the server's document. */
+        DOC_OPS_FAILED,
+
+        /** The Client is talking to a Frontend that might speak different DTOs. */
+        CLIENT_FRONTEND_VERSION_SKEW
+    }
 }

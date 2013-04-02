@@ -15,9 +15,9 @@
 package com.google.collide.client.code.lang;
 
 import com.google.collide.codemirror2.SyntaxType;
-import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.common.base.Preconditions;
 
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
@@ -26,37 +26,37 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
  */
 public class LanguageHelperResolver {
 
-  private static LanguageHelperResolver instance;
+    private static LanguageHelperResolver instance;
 
-  private final JsonStringMap<LanguageHelper> mapping;
+    private final JsonStringMap<LanguageHelper> mapping;
 
-  private LanguageHelperResolver() {
-     //TODO (evgen) configure this
-    mapping = JsonCollections.createMap();
-    mapping.put(SyntaxType.CSS.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.CPP.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.DART.getName(), new DartLanguageHelper());
-    mapping.put(SyntaxType.GO.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.HTML.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.NONE.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.JAVA.getName(), new JsLanguageHelper());
-    mapping.put(SyntaxType.JS.getName(), new JsLanguageHelper());
-    mapping.put(SyntaxType.PHP.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.PY.getName(), new PyLanguageHelper());
-    mapping.put(SyntaxType.XML.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.YAML.getName(), new NoneLanguageHelper());
-  }
-
-  public static LanguageHelper getHelper(SyntaxType type) {
-    if (instance == null) {
-      instance = new LanguageHelperResolver();
+    private LanguageHelperResolver() {
+        //TODO (evgen) configure this
+        mapping = JsonCollections.createMap();
+        mapping.put(SyntaxType.CSS.getName(), new NoneLanguageHelper());
+        mapping.put(SyntaxType.CPP.getName(), new NoneLanguageHelper());
+        mapping.put(SyntaxType.DART.getName(), new DartLanguageHelper());
+        mapping.put(SyntaxType.GO.getName(), new NoneLanguageHelper());
+        mapping.put(SyntaxType.HTML.getName(), new NoneLanguageHelper());
+        mapping.put(SyntaxType.NONE.getName(), new NoneLanguageHelper());
+        mapping.put(SyntaxType.JAVA.getName(), new JsLanguageHelper());
+        mapping.put(SyntaxType.JS.getName(), new JsLanguageHelper());
+        mapping.put(SyntaxType.PHP.getName(), new NoneLanguageHelper());
+        mapping.put(SyntaxType.PY.getName(), new PyLanguageHelper());
+        mapping.put(SyntaxType.XML.getName(), new NoneLanguageHelper());
+        mapping.put(SyntaxType.YAML.getName(), new NoneLanguageHelper());
     }
-    return instance.resolve(type.getName());
-  }
 
-  private LanguageHelper resolve(String typeName) {
-    LanguageHelper result = mapping.get(typeName);
-    Preconditions.checkNotNull(result, "can't resolve language helper");
-    return result;
-  }
+    public static LanguageHelper getHelper(SyntaxType type) {
+        if (instance == null) {
+            instance = new LanguageHelperResolver();
+        }
+        return instance.resolve(type.getName());
+    }
+
+    private LanguageHelper resolve(String typeName) {
+        LanguageHelper result = mapping.get(typeName);
+        Preconditions.checkNotNull(result, "can't resolve language helper");
+        return result;
+    }
 }

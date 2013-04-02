@@ -30,30 +30,27 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * HTML editor based on {@link CollabEditor}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: HtmlEditor.java Feb 7, 2013 10:48:00 AM azatsarynnyy $
- *
  */
-public class HtmlEditor extends CollabEditor
-{
+public class HtmlEditor extends CollabEditor {
 
-   /**
-    * Constructs new editor for the given MIME-type.
-    * 
-    * @param mimeType
-    */
-   public HtmlEditor(String mimeType)
-   {
-      super(mimeType);
-      CssAutocompleter cssAutocompleter = CssAutocompleter.create();
-      HtmlAutocompleter htmlAutocompleter = HtmlAutocompleter.create(cssAutocompleter, new JavaScriptAutocompleter());
+    /**
+     * Constructs new editor for the given MIME-type.
+     *
+     * @param mimeType
+     */
+    public HtmlEditor(String mimeType) {
+        super(mimeType);
+        CssAutocompleter cssAutocompleter = CssAutocompleter.create();
+        HtmlAutocompleter htmlAutocompleter = HtmlAutocompleter.create(cssAutocompleter, new JavaScriptAutocompleter());
 
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(htmlAutocompleter);
+        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(htmlAutocompleter);
 
-      editorBundle.getAutocompleter().addContentAssitProcessor(
-         IDocument.DEFAULT_CONTENT_TYPE,
-         new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
-            new JavaScriptContentAssistProcessor()));
-   }
+        editorBundle.getAutocompleter().addContentAssitProcessor(
+                IDocument.DEFAULT_CONTENT_TYPE,
+                new HtmlContentAssistProcessor(new CssContentAssistProcessor(cssAutocompleter),
+                                               new JavaScriptContentAssistProcessor()));
+    }
 }

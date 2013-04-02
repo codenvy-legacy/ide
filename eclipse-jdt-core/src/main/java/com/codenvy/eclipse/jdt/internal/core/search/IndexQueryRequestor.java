@@ -14,12 +14,11 @@ import com.codenvy.eclipse.jdt.core.search.SearchParticipant;
 import com.codenvy.eclipse.jdt.core.search.SearchPattern;
 import com.codenvy.eclipse.jdt.internal.compiler.env.AccessRuleSet;
 
-/**
- * TODO add spec
- */
+/** TODO add spec */
 public abstract class IndexQueryRequestor {
 
-	// answer false if requesting cancel
-	public abstract boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord, SearchParticipant participant, AccessRuleSet access);
+    // answer false if requesting cancel
+    public abstract boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord, SearchParticipant participant,
+                                             AccessRuleSet access);
 
 }

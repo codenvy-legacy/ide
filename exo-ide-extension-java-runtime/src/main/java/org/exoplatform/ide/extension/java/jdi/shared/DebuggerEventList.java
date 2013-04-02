@@ -24,9 +24,8 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DebuggerEventList
-{
-   List<DebuggerEvent> getEvents();
+public interface DebuggerEventList {
+    List<DebuggerEvent> getEvents();
 
-   void setEvents(List<DebuggerEvent> events);
+    void setEvents(List<DebuggerEvent> events);
 }

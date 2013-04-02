@@ -26,60 +26,50 @@ import com.sun.jdi.Value;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JdiArrayElementImpl implements JdiArrayElement
-{
-   private final int index;
-   private final Value value;
-   private final String name;
+public class JdiArrayElementImpl implements JdiArrayElement {
+    private final int    index;
+    private final Value  value;
+    private final String name;
 
-   public JdiArrayElementImpl(int index, Value value)
-   {
-      this.index = index;
-      this.value = value;
-      this.name = "[" + index + "]";
-   }
+    public JdiArrayElementImpl(int index, Value value) {
+        this.index = index;
+        this.value = value;
+        this.name = "[" + index + "]";
+    }
 
-   @Override
-   public int getIndex()
-   {
-      return index;
-   }
+    @Override
+    public int getIndex() {
+        return index;
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public boolean isArray()
-   {
-      return value instanceof ArrayReference;
-   }
+    @Override
+    public boolean isArray() {
+        return value instanceof ArrayReference;
+    }
 
-   @Override
-   public boolean isPrimitive()
-   {
-      return value instanceof PrimitiveValue;
-   }
+    @Override
+    public boolean isPrimitive() {
+        return value instanceof PrimitiveValue;
+    }
 
-   @Override
-   public JdiValue getValue()
-   {
-      if (value == null)
-      {
-         return new JdiNullValue();
-      }
-      return new JdiValueImpl(value);
-   }
+    @Override
+    public JdiValue getValue() {
+        if (value == null) {
+            return new JdiNullValue();
+        }
+        return new JdiValueImpl(value);
+    }
 
-   @Override
-   public String getTypeName()
-   {
-      if (value == null)
-      {
-         return "null";
-      }
-      return value.type().name();
-   }
+    @Override
+    public String getTypeName() {
+        if (value == null) {
+            return "null";
+        }
+        return value.type().name();
+    }
 }

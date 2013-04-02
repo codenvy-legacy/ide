@@ -24,13 +24,12 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface SolutionStack
-{
-   String getName();
+public interface SolutionStack {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   List<String> getPermittedFileTypes();
+    List<String> getPermittedFileTypes();
 
-   void setPermittedFileTypes(List<String> permittedFileTypes);
+    void setPermittedFileTypes(List<String> permittedFileTypes);
 }

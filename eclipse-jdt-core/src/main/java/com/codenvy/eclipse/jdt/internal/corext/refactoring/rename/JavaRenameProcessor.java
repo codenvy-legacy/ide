@@ -26,66 +26,60 @@ import com.codenvy.eclipse.ltk.core.refactoring.participants.SharableParticipant
 import com.codenvy.eclipse.ltk.core.refactoring.participants.ValidateEditChecker;
 
 
-public abstract class JavaRenameProcessor extends RenameProcessor implements INameUpdating
-{
+public abstract class JavaRenameProcessor extends RenameProcessor implements INameUpdating {
 
-   private String fNewElementName;
+    private String fNewElementName;
 
-   private RenameModifications fRenameModifications;
+    private RenameModifications fRenameModifications;
 
-   @Override
-   public final RefactoringParticipant[] loadParticipants(RefactoringStatus status,
-      SharableParticipants shared) throws CoreException
-   {
-      return fRenameModifications.loadParticipants(status, this, getAffectedProjectNatures(), shared);
-   }
+    @Override
+    public final RefactoringParticipant[] loadParticipants(RefactoringStatus status,
+                                                           SharableParticipants shared) throws CoreException {
+        return fRenameModifications.loadParticipants(status, this, getAffectedProjectNatures(), shared);
+    }
 
-   @Override
-   public final RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-      CheckConditionsContext context) throws CoreException, OperationCanceledException
-   {
-      ResourceChangeChecker checker = (ResourceChangeChecker)context.getChecker(ResourceChangeChecker.class);
-      IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
-      RefactoringStatus result = doCheckFinalConditions(pm, context);
-      if (result.hasFatalError())
-      {
-         return result;
-      }
-      IFile[] changed = getChangedFiles();
-      for (int i = 0; i < changed.length; i++)
-      {
-         deltaFactory.change(changed[i]);
-      }
-      fRenameModifications = computeRenameModifications();
-      fRenameModifications.buildDelta(deltaFactory);
-      fRenameModifications.buildValidateEdits((ValidateEditChecker)context.getChecker(ValidateEditChecker.class));
-      return result;
-   }
+    @Override
+    public final RefactoringStatus checkFinalConditions(IProgressMonitor pm,
+                                                        CheckConditionsContext context) throws CoreException, OperationCanceledException {
+        ResourceChangeChecker checker = (ResourceChangeChecker)context.getChecker(ResourceChangeChecker.class);
+        IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
+        RefactoringStatus result = doCheckFinalConditions(pm, context);
+        if (result.hasFatalError()) {
+            return result;
+        }
+        IFile[] changed = getChangedFiles();
+        for (int i = 0; i < changed.length; i++) {
+            deltaFactory.change(changed[i]);
+        }
+        fRenameModifications = computeRenameModifications();
+        fRenameModifications.buildDelta(deltaFactory);
+        fRenameModifications.buildValidateEdits((ValidateEditChecker)context.getChecker(ValidateEditChecker.class));
+        return result;
+    }
 
-   protected abstract RenameModifications computeRenameModifications() throws CoreException;
+    protected abstract RenameModifications computeRenameModifications() throws CoreException;
 
-   protected abstract RefactoringStatus doCheckFinalConditions(IProgressMonitor pm,
-      CheckConditionsContext context) throws CoreException, OperationCanceledException;
+    protected abstract RefactoringStatus doCheckFinalConditions(IProgressMonitor pm,
+                                                                CheckConditionsContext context)
+            throws CoreException, OperationCanceledException;
 
-   protected abstract IFile[] getChangedFiles() throws CoreException;
+    protected abstract IFile[] getChangedFiles() throws CoreException;
 
-   protected abstract String[] getAffectedProjectNatures() throws CoreException;
+    protected abstract String[] getAffectedProjectNatures() throws CoreException;
 
-   public void setNewElementName(String newName)
-   {
-      Assert.isNotNull(newName);
-      fNewElementName = newName;
-   }
+    public void setNewElementName(String newName) {
+        Assert.isNotNull(newName);
+        fNewElementName = newName;
+    }
 
-   public String getNewElementName()
-   {
-      return fNewElementName;
-   }
+    public String getNewElementName() {
+        return fNewElementName;
+    }
 
-   /**
-    * @return a save mode from {@link RefactoringSaveHelper}
-    * @see RefactoringSaveHelper
-    */
-   public abstract int getSaveMode();
+    /**
+     * @return a save mode from {@link RefactoringSaveHelper}
+     * @see RefactoringSaveHelper
+     */
+    public abstract int getSaveMode();
 
 }

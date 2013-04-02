@@ -24,42 +24,33 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
- * 
  */
-public class EditorBreakPoint extends Breakpoint
-{
+public class EditorBreakPoint extends Breakpoint {
 
-   private String message;
+    private String message;
 
-   private final BreakPoint breakPoint;
+    private final BreakPoint breakPoint;
 
-   /**
-    * @param lineNumber
-    * @param message
-    */
+    /**
+     * @param lineNumber
+     * @param message
+     */
 
-   public EditorBreakPoint(BreakPoint breakPoint, String message)
-   {
-      super(Type.BREAKPOINT, breakPoint.getLocation().getLineNumber(), message);
-      this.breakPoint = breakPoint;
+    public EditorBreakPoint(BreakPoint breakPoint, String message) {
+        super(Type.BREAKPOINT, breakPoint.getLocation().getLineNumber(), message);
+        this.breakPoint = breakPoint;
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getLineNumber()
-    */
-   @Override
-   public int getLineNumber()
-   {
-      return breakPoint.getLocation().getLineNumber();
-   }
+    /** @see org.exoplatform.ide.editor.problem.Problem#getLineNumber() */
+    @Override
+    public int getLineNumber() {
+        return breakPoint.getLocation().getLineNumber();
+    }
 
-   /**
-    * @return the breakPoint
-    */
-   public BreakPoint getBreakPoint()
-   {
-      return breakPoint;
-   }
+    /** @return the breakPoint */
+    public BreakPoint getBreakPoint() {
+        return breakPoint;
+    }
 
 }

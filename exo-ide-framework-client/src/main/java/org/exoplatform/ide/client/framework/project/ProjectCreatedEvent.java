@@ -24,49 +24,35 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Event is fired to configure build path of the project.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 6, 2011 $
- * 
  */
-public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler>
-{
+public class ProjectCreatedEvent extends GwtEvent<ProjectCreatedHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ProjectCreatedHandler> TYPE = new GwtEvent.Type<ProjectCreatedHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ProjectCreatedHandler> TYPE = new GwtEvent.Type<ProjectCreatedHandler>();
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   public ProjectCreatedEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+    public ProjectCreatedEvent(ProjectModel project) {
+        this.project = project;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ProjectCreatedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ProjectCreatedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ProjectCreatedHandler handler)
-   {
-      handler.onProjectCreated(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ProjectCreatedHandler handler) {
+        handler.onProjectCreated(this);
+    }
 
-   /**
-    * @return the projectLocation
-    */
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    /** @return the projectLocation */
+    public ProjectModel getProject() {
+        return project;
+    }
 }

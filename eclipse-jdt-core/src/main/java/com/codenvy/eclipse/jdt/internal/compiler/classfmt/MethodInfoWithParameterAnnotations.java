@@ -15,83 +15,64 @@ package com.codenvy.eclipse.jdt.internal.compiler.classfmt;
 import com.codenvy.eclipse.jdt.internal.compiler.env.IBinaryAnnotation;
 import com.codenvy.eclipse.jdt.internal.compiler.util.Util;
 
-class MethodInfoWithParameterAnnotations extends MethodInfoWithAnnotations
-{
-   private AnnotationInfo[][] parameterAnnotations;
+class MethodInfoWithParameterAnnotations extends MethodInfoWithAnnotations {
+    private AnnotationInfo[][] parameterAnnotations;
 
-   MethodInfoWithParameterAnnotations(MethodInfo methodInfo, AnnotationInfo[] annotations,
-      AnnotationInfo[][] parameterAnnotations)
-   {
-      super(methodInfo, annotations);
-      if (methodInfo.isConstructor())
-      {
-         int parametersCount = Util.getParameterCount(methodInfo.getMethodDescriptor());
-         if (parameterAnnotations.length < parametersCount)
-         {
-            AnnotationInfo[][] temp = new AnnotationInfo[parametersCount][];
-            System.arraycopy(parameterAnnotations, 0, temp, 1, parameterAnnotations.length);
-            this.parameterAnnotations = temp;
-         }
-         else
-         {
+    MethodInfoWithParameterAnnotations(MethodInfo methodInfo, AnnotationInfo[] annotations,
+                                       AnnotationInfo[][] parameterAnnotations) {
+        super(methodInfo, annotations);
+        if (methodInfo.isConstructor()) {
+            int parametersCount = Util.getParameterCount(methodInfo.getMethodDescriptor());
+            if (parameterAnnotations.length < parametersCount) {
+                AnnotationInfo[][] temp = new AnnotationInfo[parametersCount][];
+                System.arraycopy(parameterAnnotations, 0, temp, 1, parameterAnnotations.length);
+                this.parameterAnnotations = temp;
+            } else {
+                this.parameterAnnotations = parameterAnnotations;
+            }
+        } else {
             this.parameterAnnotations = parameterAnnotations;
-         }
-      }
-      else
-      {
-         this.parameterAnnotations = parameterAnnotations;
-      }
-   }
+        }
+    }
 
-   public IBinaryAnnotation[] getParameterAnnotations(int index)
-   {
-      return this.parameterAnnotations[index];
-   }
+    public IBinaryAnnotation[] getParameterAnnotations(int index) {
+        return this.parameterAnnotations[index];
+    }
 
-   public int getAnnotatedParametersCount()
-   {
-      return this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length;
-   }
+    public int getAnnotatedParametersCount() {
+        return this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length;
+    }
 
-   protected void initialize()
-   {
-      for (int i = 0, l = this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length; i < l; i++)
-      {
-         AnnotationInfo[] infos = this.parameterAnnotations[i];
-         for (int j = 0, k = infos == null ? 0 : infos.length; j < k; j++)
-         {
-            infos[j].initialize();
-         }
-      }
-      super.initialize();
-   }
+    protected void initialize() {
+        for (int i = 0, l = this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length; i < l; i++) {
+            AnnotationInfo[] infos = this.parameterAnnotations[i];
+            for (int j = 0, k = infos == null ? 0 : infos.length; j < k; j++) {
+                infos[j].initialize();
+            }
+        }
+        super.initialize();
+    }
 
-   protected void reset()
-   {
-      for (int i = 0, l = this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length; i < l; i++)
-      {
-         AnnotationInfo[] infos = this.parameterAnnotations[i];
-         for (int j = 0, k = infos == null ? 0 : infos.length; j < k; j++)
-         {
-            infos[j].reset();
-         }
-      }
-      super.reset();
-   }
+    protected void reset() {
+        for (int i = 0, l = this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length; i < l; i++) {
+            AnnotationInfo[] infos = this.parameterAnnotations[i];
+            for (int j = 0, k = infos == null ? 0 : infos.length; j < k; j++) {
+                infos[j].reset();
+            }
+        }
+        super.reset();
+    }
 
-   protected void toStringContent(StringBuffer buffer)
-   {
-      super.toStringContent(buffer);
-      for (int i = 0, l = this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length; i < l; i++)
-      {
-         buffer.append("param" + (i - 1)); //$NON-NLS-1$
-         buffer.append('\n');
-         AnnotationInfo[] infos = this.parameterAnnotations[i];
-         for (int j = 0, k = infos == null ? 0 : infos.length; j < k; j++)
-         {
-            buffer.append(infos[j]);
+    protected void toStringContent(StringBuffer buffer) {
+        super.toStringContent(buffer);
+        for (int i = 0, l = this.parameterAnnotations == null ? 0 : this.parameterAnnotations.length; i < l; i++) {
+            buffer.append("param" + (i - 1)); //$NON-NLS-1$
             buffer.append('\n');
-         }
-      }
-   }
+            AnnotationInfo[] infos = this.parameterAnnotations[i];
+            for (int j = 0, k = infos == null ? 0 : infos.length; j < k; j++) {
+                buffer.append(infos[j]);
+                buffer.append('\n');
+            }
+        }
+    }
 }

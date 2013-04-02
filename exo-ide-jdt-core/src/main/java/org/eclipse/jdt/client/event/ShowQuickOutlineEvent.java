@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class ShowQuickOutlineEvent extends GwtEvent<ShowQuickOutlineHandler>
-{
+public class ShowQuickOutlineEvent extends GwtEvent<ShowQuickOutlineHandler> {
 
-   public static final GwtEvent.Type<ShowQuickOutlineHandler> TYPE = new Type<ShowQuickOutlineHandler>();
+    public static final GwtEvent.Type<ShowQuickOutlineHandler> TYPE = new Type<ShowQuickOutlineHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowQuickOutlineHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowQuickOutlineHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowQuickOutlineHandler handler)
-   {
-      handler.onShowQuickOutline(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowQuickOutlineHandler handler) {
+        handler.onShowQuickOutline(this);
+    }
 
 }

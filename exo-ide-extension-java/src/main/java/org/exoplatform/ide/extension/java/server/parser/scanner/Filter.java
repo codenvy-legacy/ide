@@ -23,9 +23,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 28, 2011 4:09:36 PM evgen $
- * 
  */
-public interface Filter
-{
-   boolean filter(Item item);
+public interface Filter {
+    boolean filter(Item item);
 }

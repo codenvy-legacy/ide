@@ -22,12 +22,11 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 @RoutingType(type = RoutingTypes.NEWFILECOLLABORATOR)
-public interface NewFileCollaborator extends ServerToClientDto
-{
+public interface NewFileCollaborator extends ServerToClientDto {
 
-   String getEditSessionId();
+    String getEditSessionId();
 
-   String getPath();
+    String getPath();
 
-   ParticipantUserDetails getParticipant();
+    ParticipantUserDetails getParticipant();
 }

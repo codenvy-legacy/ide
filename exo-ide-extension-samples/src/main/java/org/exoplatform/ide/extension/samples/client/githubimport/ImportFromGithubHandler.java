@@ -23,9 +23,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ShowImportFromGithubHandler.java Dec 7, 2011 3:20:15 PM vereshchaka $
- * 
  */
-public interface ImportFromGithubHandler extends EventHandler
-{
-   void onImportFromGithub(ImportFromGithubEvent event);
+public interface ImportFromGithubHandler extends EventHandler {
+    void onImportFromGithub(ImportFromGithubEvent event);
 }

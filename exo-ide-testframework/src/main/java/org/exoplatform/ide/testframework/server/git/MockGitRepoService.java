@@ -18,64 +18,51 @@
  */
 package org.exoplatform.ide.testframework.server.git;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 @Path("ide/git-repo")
-public class MockGitRepoService
-{
+public class MockGitRepoService {
 
-   private static MockGitRepoService instance;
+    private static MockGitRepoService instance;
 
-   public static MockGitRepoService getInstance()
-   {
-      return instance;
-   }
+    public static MockGitRepoService getInstance() {
+        return instance;
+    }
 
-   public MockGitRepoService()
-   {
-      instance = this;
-   }
+    public MockGitRepoService() {
+        instance = this;
+    }
 
-   private List<String> gitDirectories = new ArrayList<String>();
+    private List<String> gitDirectories = new ArrayList<String>();
 
-   @GET
-   @Path("workdir")
-   @Produces(MediaType.TEXT_PLAIN)
-   public String getWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location) throws Exception
-   {
-      return location + ".git";
-   }
+    @GET
+    @Path("workdir")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getWorkDir(@Context UriInfo uriInfo, @HeaderParam("location") String location) throws Exception {
+        return location + ".git";
+    }
 
-   /**
-    * @param dir
-    */
-   public void addGitDirectory(String dir)
-   {
-      gitDirectories.add(dir);
-   }
+    /** @param dir */
+    public void addGitDirectory(String dir) {
+        gitDirectories.add(dir);
+    }
 
-   @POST
-   @Path("reset")
-   public void resetMockGitService()
-   {
-      gitDirectories = new ArrayList<String>();
-   }
+    @POST
+    @Path("reset")
+    public void resetMockGitService() {
+        gitDirectories = new ArrayList<String>();
+    }
 
 }

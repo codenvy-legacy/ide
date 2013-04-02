@@ -13,34 +13,29 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 import com.codenvy.eclipse.jdt.core.dom.Expression;
 import com.codenvy.eclipse.jdt.core.dom.ReturnStatement;
 
-class ReturnFlowInfo extends FlowInfo
-{
+class ReturnFlowInfo extends FlowInfo {
 
-   public ReturnFlowInfo(ReturnStatement node)
-   {
-      super(getReturnFlag(node));
-   }
+    public ReturnFlowInfo(ReturnStatement node) {
+        super(getReturnFlag(node));
+    }
 
-   public void merge(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void merge(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      assignAccessMode(info);
-   }
+        assignAccessMode(info);
+    }
 
-   private static int getReturnFlag(ReturnStatement node)
-   {
-      Expression expression = node.getExpression();
-      if (expression == null || expression.resolveTypeBinding() == node.getAST().resolveWellKnownType(
-         "void")) //$NON-NLS-1$
-      {
-         return VOID_RETURN;
-      }
-      return VALUE_RETURN;
-   }
+    private static int getReturnFlag(ReturnStatement node) {
+        Expression expression = node.getExpression();
+        if (expression == null || expression.resolveTypeBinding() == node.getAST().resolveWellKnownType(
+                "void")) //$NON-NLS-1$
+        {
+            return VOID_RETURN;
+        }
+        return VALUE_RETURN;
+    }
 }
 
 

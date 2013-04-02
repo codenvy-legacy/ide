@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ApplicationInfoChangedEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 8, 2011 4:10:45 PM anya $
- *
  */
-public interface ApplicationInfoChangedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when CloudFoundry application information, properties were changed.
-    * 
-    * @param event
-    */
-   void onApplicationInfoChanged(ApplicationInfoChangedEvent event);
+public interface ApplicationInfoChangedHandler extends EventHandler {
+    /**
+     * Perform actions, when CloudFoundry application information, properties were changed.
+     *
+     * @param event
+     */
+    void onApplicationInfoChanged(ApplicationInfoChangedEvent event);
 }

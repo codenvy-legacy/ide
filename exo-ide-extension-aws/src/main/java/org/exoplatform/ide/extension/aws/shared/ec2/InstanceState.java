@@ -24,36 +24,30 @@ package org.exoplatform.ide.extension.aws.shared.ec2;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum InstanceState
-{
-   pending("pending"),
-   running("running"),
-   shutting_down("shutting-down"),
-   terminated("terminated"),
-   stopping("stopping"),
-   stopped("stopped");
+public enum InstanceState {
+    pending("pending"),
+    running("running"),
+    shutting_down("shutting-down"),
+    terminated("terminated"),
+    stopping("stopping"),
+    stopped("stopped");
 
-   private final String value;
+    private final String value;
 
-   private InstanceState(String value)
-   {
-      this.value = value;
-   }
+    private InstanceState(String value) {
+        this.value = value;
+    }
 
-   public String toString()
-   {
-      return value;
-   }
+    public String toString() {
+        return value;
+    }
 
-   public static InstanceState fromValue(String value)
-   {
-      for (InstanceState v : InstanceState.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static InstanceState fromValue(String value) {
+        for (InstanceState v : InstanceState.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

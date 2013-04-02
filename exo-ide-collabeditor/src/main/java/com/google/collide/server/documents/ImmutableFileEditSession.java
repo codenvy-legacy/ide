@@ -17,23 +17,22 @@ package com.google.collide.server.documents;
 import com.google.protobuf.ByteString;
 
 /** A read-only view of a {@link FileEditSession}. */
-public interface ImmutableFileEditSession
-{
+public interface ImmutableFileEditSession {
 
-   String getContents();
+    String getContents();
 
-   int getSize();
+    int getSize();
 
-   ByteString getSha1();
+    ByteString getSha1();
 
-   String getFileEditSessionKey();
+    String getFileEditSessionKey();
 
-   boolean hasChanges();
+    boolean hasChanges();
 
-   /** @return last known saved full path of the file */
-   String getPath();
+    /** @return last known saved full path of the file */
+    String getPath();
 
-   String getResourceId();
+    String getResourceId();
 
-   boolean hasUnresolvedConflictChunks();
+    boolean hasUnresolvedConflictChunks();
 }

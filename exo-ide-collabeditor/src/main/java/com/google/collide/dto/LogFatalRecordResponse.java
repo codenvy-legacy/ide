@@ -17,15 +17,12 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Response for a fatal remote log message.
- *
- */
+/** Response for a fatal remote log message. */
 @RoutingType(type = RoutingTypes.LOGFATALRECORDRESPONSE)
 public interface LogFatalRecordResponse extends ServerToClientDto {
-  String getStackTrace();
+    String getStackTrace();
 
-  String getServiceName();
+    String getServiceName();
 
-  String getThrowableProtoHex();
+    String getThrowableProtoHex();
 }

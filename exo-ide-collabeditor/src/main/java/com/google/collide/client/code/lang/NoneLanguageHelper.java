@@ -14,24 +14,20 @@
 
 package com.google.collide.client.code.lang;
 
+import com.codenvy.ide.client.util.SignalEvent;
 import com.google.collide.client.editor.input.ActionExecutor;
 import com.google.collide.client.editor.input.InputScheme;
 
-import com.codenvy.ide.client.util.SignalEvent;
-
-/**
- * Implementation that do not do anything language specific.
- *
- */
+/** Implementation that do not do anything language specific. */
 class NoneLanguageHelper implements LanguageHelper, ActionExecutor {
 
-  @Override
-  public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
-    return false;
-  }
+    @Override
+    public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
+        return false;
+    }
 
-  @Override
-  public ActionExecutor getActionExecutor() {
-    return this;
-  }
+    @Override
+    public ActionExecutor getActionExecutor() {
+        return this;
+    }
 }

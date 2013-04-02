@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface EditorMoveLineDownHandler extends EventHandler
-{
+public interface EditorMoveLineDownHandler extends EventHandler {
 
-   void onEditorMoveLineDown(EditorMoveLineDownEvent event);
+    void onEditorMoveLineDown(EditorMoveLineDownEvent event);
 
 }

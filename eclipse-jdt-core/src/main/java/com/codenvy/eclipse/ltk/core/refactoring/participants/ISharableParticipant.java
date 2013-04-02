@@ -35,14 +35,15 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  * @see RefactoringParticipant
  * @since 3.0
  */
-public interface ISharableParticipant
-{
+public interface ISharableParticipant {
 
-   /**
-    * Adds the given element and argument to the refactoring participant.
-    *
-    * @param element   the element to add
-    * @param arguments the corresponding arguments
-    */
-   public void addElement(Object element, RefactoringArguments arguments);
+    /**
+     * Adds the given element and argument to the refactoring participant.
+     *
+     * @param element
+     *         the element to add
+     * @param arguments
+     *         the corresponding arguments
+     */
+    public void addElement(Object element, RefactoringArguments arguments);
 }

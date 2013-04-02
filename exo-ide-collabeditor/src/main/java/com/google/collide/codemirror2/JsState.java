@@ -14,19 +14,17 @@
 
 package com.google.collide.codemirror2;
 
-/**
- * Object that represents js-parser state.
- */
+/** Object that represents js-parser state. */
 public class JsState extends CmState {
 
-  protected JsState() {
-  }
-
-  public final native JsLocalVariable getLocalVariables() /*-{
-    if (this.mode == "javascript") {
-      return this.localState.localVars;
-    } else {
-      return this.localVars;
+    protected JsState() {
     }
-  }-*/;
+
+    public final native JsLocalVariable getLocalVariables() /*-{
+        if (this.mode == "javascript") {
+            return this.localState.localVars;
+        } else {
+            return this.localVars;
+        }
+    }-*/;
 }

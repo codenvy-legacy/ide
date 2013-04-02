@@ -25,41 +25,31 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
  * Unmarshaller to get {@link DiffResponse} from response.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 4, 2011 11:11:03 AM anya $
- * 
  */
-public class DiffResponseUnmarshaller implements Unmarshallable<StringBuilder>
-{
-   /**
-    * Diff response.
-    */
-   private StringBuilder diffResponse;
+public class DiffResponseUnmarshaller implements Unmarshallable<StringBuilder> {
+    /** Diff response. */
+    private StringBuilder diffResponse;
 
-   /**
-    * @param diffResponse diff response
-    */
-   public DiffResponseUnmarshaller(StringBuilder diffResponse)
-   {
-      this.diffResponse = diffResponse;
-   }
+    /**
+     * @param diffResponse
+     *         diff response
+     */
+    public DiffResponseUnmarshaller(StringBuilder diffResponse) {
+        this.diffResponse = diffResponse;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      diffResponse.append(response.getText());
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        diffResponse.append(response.getText());
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public StringBuilder getPayload()
-   {
-      return diffResponse;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public StringBuilder getPayload() {
+        return diffResponse;
+    }
 }

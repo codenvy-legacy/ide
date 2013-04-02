@@ -22,46 +22,40 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ChangeViewTitleEvent extends GwtEvent<ChangeViewTitleHandler>
-{
+public class ChangeViewTitleEvent extends GwtEvent<ChangeViewTitleHandler> {
 
-   public static final GwtEvent.Type<ChangeViewTitleHandler> TYPE = new GwtEvent.Type<ChangeViewTitleHandler>();
+    public static final GwtEvent.Type<ChangeViewTitleHandler> TYPE = new GwtEvent.Type<ChangeViewTitleHandler>();
 
-   private String viewId;
+    private String viewId;
 
-   private String title;
+    private String title;
 
-   public ChangeViewTitleEvent(String viewId, String title)
-   {
-      this.viewId = viewId;
-      this.title = title;
-   }
+    public ChangeViewTitleEvent(String viewId, String title) {
+        this.viewId = viewId;
+        this.title = title;
+    }
 
-   public String getViewId()
-   {
-      return viewId;
-   }
+    public String getViewId() {
+        return viewId;
+    }
 
-   public String getTitle()
-   {
-      return title;
-   }
+    public String getTitle() {
+        return title;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ChangeViewTitleHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ChangeViewTitleHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ChangeViewTitleHandler handler)
-   {
-      handler.onChangeViewTitle(this);
-   }
+    @Override
+    protected void dispatch(ChangeViewTitleHandler handler) {
+        handler.onChangeViewTitle(this);
+    }
 
 }

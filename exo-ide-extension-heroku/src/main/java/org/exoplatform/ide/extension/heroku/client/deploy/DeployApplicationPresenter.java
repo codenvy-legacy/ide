@@ -41,11 +41,7 @@ import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
-import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
-import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
-import org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant;
-import org.exoplatform.ide.extension.heroku.client.HerokuRESTfulRequestCallback;
+import org.exoplatform.ide.extension.heroku.client.*;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
@@ -64,345 +60,275 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 26, 2012 5:41:46 PM anya $
- * 
  */
-public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHandler, LoggedInHandler
-{
-   interface Display
-   {
-      HasValue<String> getApplicationNameField();
+public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHandler, LoggedInHandler {
+    interface Display {
+        HasValue<String> getApplicationNameField();
 
-      HasValue<String> getRemoteNameField();
+        HasValue<String> getRemoteNameField();
 
-      Composite getView();
-   }
+        Composite getView();
+    }
 
-   private static final HerokuLocalizationConstant lb = HerokuExtension.LOCALIZATION_CONSTANT;
+    private static final HerokuLocalizationConstant lb = HerokuExtension.LOCALIZATION_CONSTANT;
 
-   private VirtualFileSystemInfo vfs;
+    private VirtualFileSystemInfo vfs;
 
-   private Display display;
+    private Display display;
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   private DeployResultHandler deployResultHandler;
+    private DeployResultHandler deployResultHandler;
 
-   private String projectName;
+    private String projectName;
 
-   public DeployApplicationPresenter()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    public DeployApplicationPresenter() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-   }
+    public void bindDisplay() {
+    }
 
-   /**
-    * Form the message about application creation to display in output.
-    * 
-    * @param properties application's properties
-    * @return {@link String}
-    */
-   public String formApplicationCreatedMessage(List<Property> properties)
-   {
-      if (properties == null)
-      {
-         return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess("");
-      }
-      StringBuilder message = new StringBuilder("<br> [");
-      for (Property property : properties)
-      {
-         if ("webUrl".equals(property.getName()))
-         {
-            message.append("<b>").append(property.getName()).append("</b>").append(" : ").append("<a href='")
-               .append(property.getValue()).append("' target='_blank'>").append(property.getValue()).append("</a>")
-               .append("<br>");
-         }
-         else
-         {
-            message.append("<b>").append(property.getName()).append("</b>").append(" : ").append(property.getValue())
-               .append("<br>");
-         }
-      }
-      message.append("] ");
-      return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(message.toString());
-   }
+    /**
+     * Form the message about application creation to display in output.
+     *
+     * @param properties
+     *         application's properties
+     * @return {@link String}
+     */
+    public String formApplicationCreatedMessage(List<Property> properties) {
+        if (properties == null) {
+            return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess("");
+        }
+        StringBuilder message = new StringBuilder("<br> [");
+        for (Property property : properties) {
+            if ("webUrl".equals(property.getName())) {
+                message.append("<b>").append(property.getName()).append("</b>").append(" : ").append("<a href='")
+                       .append(property.getValue()).append("' target='_blank'>").append(property.getValue()).append("</a>")
+                       .append("<br>");
+            } else {
+                message.append("<b>").append(property.getName()).append("</b>").append(" : ").append(property.getValue())
+                       .append("<br>");
+            }
+        }
+        message.append("] ");
+        return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(message.toString());
+    }
 
-   /**
-    * Perform creation of application on Heroku by sending request over WebSocket or HTTP.
-    */
-   private void createApplication()
-   {
-      String applicationName =
-         (display.getApplicationNameField().getValue() == null || display.getApplicationNameField().getValue()
-            .isEmpty()) ? null : display.getApplicationNameField().getValue();
-      String remoteName =
-         (display.getRemoteNameField().getValue() == null || display.getRemoteNameField().getValue().isEmpty()) ? null
-            : display.getRemoteNameField().getValue();
-      JobManager.get().showJobSeparated();
+    /** Perform creation of application on Heroku by sending request over WebSocket or HTTP. */
+    private void createApplication() {
+        String applicationName =
+                (display.getApplicationNameField().getValue() == null || display.getApplicationNameField().getValue()
+                                                                                .isEmpty()) ? null
+                                                                                            : display.getApplicationNameField().getValue();
+        String remoteName =
+                (display.getRemoteNameField().getValue() == null || display.getRemoteNameField().getValue().isEmpty()) ? null
+                                                                                                                       : display
+                        .getRemoteNameField().getValue();
+        JobManager.get().showJobSeparated();
 
-      try
-      {
-         HerokuClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
-            remoteName, new HerokuRESTfulRequestCallback(this)
-            {
-               @Override
-               protected void onSuccess(List<Property> properties)
-               {
-                  onAppCreatedSuccess(properties);
-               }
+        try {
+            HerokuClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
+                                                                  remoteName, new HerokuRESTfulRequestCallback(this) {
+                @Override
+                protected void onSuccess(List<Property> properties) {
+                    onAppCreatedSuccess(properties);
+                }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  super.onFailure(exception);
-                  deployResultHandler.onDeployFinished(false);
-               }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    super.onFailure(exception);
+                    deployResultHandler.onDeployFinished(false);
+                }
             });
-      }
-      catch (WebSocketException e)
-      {
-         createApplicationREST(applicationName, remoteName);
-      }
-   }
+        } catch (WebSocketException e) {
+            createApplicationREST(applicationName, remoteName);
+        }
+    }
 
-   /**
-    * Perform creation of application on Heroku by sending request over HTTP.
-    */
-   private void createApplicationREST(String applicationName, String remoteName)
-   {
-      try
-      {
-         HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
-            new HerokuAsyncRequestCallback(this)
-            {
-               @Override
-               protected void onSuccess(List<Property> properties)
-               {
-                  onAppCreatedSuccess(properties);
-               }
+    /** Perform creation of application on Heroku by sending request over HTTP. */
+    private void createApplicationREST(String applicationName, String remoteName) {
+        try {
+            HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
+                                                                new HerokuAsyncRequestCallback(this) {
+                                                                    @Override
+                                                                    protected void onSuccess(List<Property> properties) {
+                                                                        onAppCreatedSuccess(properties);
+                                                                    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  super.onFailure(exception);
-                  deployResultHandler.onDeployFinished(false);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         deployResultHandler.onDeployFinished(false);
-      }
-   }
+                                                                    @Override
+                                                                    protected void onFailure(Throwable exception) {
+                                                                        super.onFailure(exception);
+                                                                        deployResultHandler.onDeployFinished(false);
+                                                                    }
+                                                                });
+        } catch (RequestException e) {
+            deployResultHandler.onDeployFinished(false);
+        }
+    }
 
-   /**
-    * Performs action when application successfully created.
-    * 
-    * @param properties {@link List} of application's {@link Property}
-    */
-   private void onAppCreatedSuccess(List<Property> properties)
-   {
-      IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
-      IDE.fireEvent(new RefreshBrowserEvent(project));
-      deployResultHandler.onDeployFinished(true);
-   }
+    /**
+     * Performs action when application successfully created.
+     *
+     * @param properties
+     *         {@link List} of application's {@link Property}
+     */
+    private void onAppCreatedSuccess(List<Property> properties) {
+        IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+        IDE.fireEvent(new RefreshBrowserEvent(project));
+        deployResultHandler.onDeployFinished(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfs = event.getVfsInfo();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      createApplication();
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client
+     * .login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        createApplication();
+    }
 
-   /**
-    * Initialize of the Git-repository by sending request over WebSocket or HTTP.
-    */
-   private void initRepository(final ProjectModel project)
-   {
-      try
-      {
-         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
-            new RequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  createApplication();
-               }
+    /** Initialize of the Git-repository by sending request over WebSocket or HTTP. */
+    private void initRepository(final ProjectModel project) {
+        try {
+            GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
+                                                  new RequestCallback<String>() {
+                                                      @Override
+                                                      protected void onSuccess(String result) {
+                                                          createApplication();
+                                                      }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleGitError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         initRepositoryREST(project);
-      }
-   }
+                                                      @Override
+                                                      protected void onFailure(Throwable exception) {
+                                                          handleGitError(exception);
+                                                      }
+                                                  });
+        } catch (WebSocketException e) {
+            initRepositoryREST(project);
+        }
+    }
 
-   /**
-    * Initialize Git repository (sends request over HTTP).
-    */
-   private void initRepositoryREST(final ProjectModel project)
-   {
-      try
-      {
-         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
-            new AsyncRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  createApplication();
-               }
+    /** Initialize Git repository (sends request over HTTP). */
+    private void initRepositoryREST(final ProjectModel project) {
+        try {
+            GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
+                                                new AsyncRequestCallback<String>() {
+                                                    @Override
+                                                    protected void onSuccess(String result) {
+                                                        createApplication();
+                                                    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleGitError(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleGitError(e);
-      }
-   }
+                                                    @Override
+                                                    protected void onFailure(Throwable exception) {
+                                                        handleGitError(exception);
+                                                    }
+                                                });
+        } catch (RequestException e) {
+            handleGitError(e);
+        }
+    }
 
-   @Override
-   public Composite getDeployView(String projectName, ProjectType projectType)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-      }
-      this.projectName = projectName;
-      display.getApplicationNameField().setValue("");
-      display.getRemoteNameField().setValue("");
-      return display.getView();
-   }
+    @Override
+    public Composite getDeployView(String projectName, ProjectType projectType) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
+        this.projectName = projectName;
+        display.getApplicationNameField().setValue("");
+        display.getRemoteNameField().setValue("");
+        return display.getView();
+    }
 
-   @Override
-   public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
-   {
-      this.deployResultHandler = deployResultHandler;
-      createProject(projectTemplate);
-   }
+    @Override
+    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler) {
+        this.deployResultHandler = deployResultHandler;
+        createProject(projectTemplate);
+    }
 
-   /**
-    * Create new project from pointed template.
-    * 
-    * @param projectTemplate
-    */
-   private void createProject(ProjectTemplate projectTemplate)
-   {
-      final Loader loader = new GWTLoader();
-      loader.setMessage(lb.creatingProject());
-      loader.show();
-      try
-      {
-         TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
-            projectTemplate.getName(),
-            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
-            {
+    /**
+     * Create new project from pointed template.
+     *
+     * @param projectTemplate
+     */
+    private void createProject(ProjectTemplate projectTemplate) {
+        final Loader loader = new GWTLoader();
+        loader.setMessage(lb.creatingProject());
+        loader.show();
+        try {
+            TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+                                                                    projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
 
-               @Override
-               protected void onSuccess(ProjectModel result)
-               {
-                  loader.hide();
-                  project = result;
-                  deployResultHandler.onProjectCreated(project);
-                  initRepository(project);
-               }
+                                                                        @Override
+                                                                        protected void onSuccess(ProjectModel result) {
+                                                                            loader.hide();
+                                                                            project = result;
+                                                                            deployResultHandler.onProjectCreated(project);
+                                                                            initRepository(project);
+                                                                        }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  loader.hide();
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         loader.hide();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            loader.hide();
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            loader.hide();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   @Override
-   public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
-   {
-      this.project = project;
-      this.deployResultHandler = deployResultHandler;
-      checkIsGitRepository(project);
-   }
+    @Override
+    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler) {
+        this.project = project;
+        this.deployResultHandler = deployResultHandler;
+        checkIsGitRepository(project);
+    }
 
-   private void checkIsGitRepository(final ProjectModel project)
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().getChildren(project,
-            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-            {
+    private void checkIsGitRepository(final ProjectModel project) {
+        try {
+            VirtualFileSystem.getInstance().getChildren(project,
+                                                        new AsyncRequestCallback<List<Item>>(
+                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-               @Override
-               protected void onSuccess(List<Item> result)
-               {
-                  for (Item item : result)
-                  {
-                     if (".git".equals(item.getName()))
-                     {
-                        createApplication();
-                        return;
-                     }
-                  }
-                  initRepository(project);
-               }
+                                                            @Override
+                                                            protected void onSuccess(List<Item> result) {
+                                                                for (Item item : result) {
+                                                                    if (".git".equals(item.getName())) {
+                                                                        createApplication();
+                                                                        return;
+                                                                    }
+                                                                }
+                                                                initRepository(project);
+                                                            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  initRepository(project);
-               }
-            });
-      }
-      catch (RequestException ignored)
-      {
-      }
-   }
+                                                            @Override
+                                                            protected void onFailure(Throwable exception) {
+                                                                initRepository(project);
+                                                            }
+                                                        });
+        } catch (RequestException ignored) {
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
-    */
-   @Override
-   public boolean validate()
-   {
-      return true;
-   }
+    /** @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate() */
+    @Override
+    public boolean validate() {
+        return true;
+    }
 
-   private void handleGitError(Throwable e)
-   {
-      String errorMessage =
-         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-   }
+    private void handleGitError(Throwable e) {
+        String errorMessage =
+                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
+        IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+    }
 }

@@ -25,11 +25,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.template.AbstractTemplate;
-import org.exoplatform.ide.client.framework.template.FileTemplate;
-import org.exoplatform.ide.client.framework.template.FolderTemplate;
-import org.exoplatform.ide.client.framework.template.FolderTemplateImpl;
-import org.exoplatform.ide.client.framework.template.Template;
+import org.exoplatform.ide.client.framework.template.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,178 +33,148 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: TemplateTree Mar 21, 2011 11:16:32 AM evgen $
- * 
  */
-public class TemplateTree extends Tree<Template>
-{
+public class TemplateTree extends Tree<Template> {
 
-   private TreeItem rootNode;
+    private TreeItem rootNode;
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.component.Tree#doUpdateValue()
-    */
-   @Override
-   public void doUpdateValue()
-   {
-      if (getValue() == null)
-      {
-         if (tree.getItemCount() != 0)
-         {
-            tree.removeItems();
-         }
-         return;
-      }
-
-      if (tree.getItemCount() == 0)
-      {
-         String nodeName = getValue().getName();
-         ImageResource icon;
-         if (getValue().getIcon() != null)
-         {
-            icon = getValue().getIcon();
-            // rootNode.setAttribute("icon", getValue().getIcon());
-         }
-         else
-            icon = IDEImageBundle.INSTANCE.folder();
-         rootNode = new TreeItem(createTreeNodeWidget(new Image(icon), nodeName));
-         rootNode.setUserObject(getValue());
-         tree.addItem(rootNode);
-         tree.setSelectedItem(rootNode);
-      }
-
-      if (getValue() instanceof FolderTemplateImpl)
-      {
-         FolderTemplate folder = (FolderTemplate)getValue();
-         if (folder.getChildren() != null)
-         {
-            setItems(rootNode, folder.getChildren());
-         }
-      }
-      else if (getValue() instanceof FileTemplate)
-      {
-         return;
-      }
-   }
-
-   /**
-    * Recursively fills tree with templates.
-    * 
-    * @param parentNode node, which will be filled
-    * @param children list of templates
-    */
-   private void setItems(TreeItem parentNode, List<AbstractTemplate> children)
-   {
-      parentNode.removeItems();
-      for (Template template : children)
-      {
-         TreeItem newNode = null;
-
-         for (int i = 0; i < parentNode.getChildCount(); i++)
-         {
-            TreeItem node = parentNode.getChild(i);
-            if (node.getUserObject() == template)
-            {
-               newNode = node;
-               break;
+    /** @see org.exoplatform.gwtframework.ui.client.component.Tree#doUpdateValue() */
+    @Override
+    public void doUpdateValue() {
+        if (getValue() == null) {
+            if (tree.getItemCount() != 0) {
+                tree.removeItems();
             }
-         }
+            return;
+        }
 
-         if (newNode == null)
-         {
-            // newNode = new TreeNode(template.getName());
-            // newNode.setAttribute(getValuePropertyName(), template);
-            // newNode.setAttribute(ICON, template.getIcon());
-            String nodeName = template.getName();
-            if (template instanceof FileTemplate)
-            {
-               nodeName =
-                  ((FileTemplate)template).getFileName() + "(" + IDE.TEMPLATE_CONSTANT.from() + " "
-                     + template.getName() + ")";
+        if (tree.getItemCount() == 0) {
+            String nodeName = getValue().getName();
+            ImageResource icon;
+            if (getValue().getIcon() != null) {
+                icon = getValue().getIcon();
+                // rootNode.setAttribute("icon", getValue().getIcon());
+            } else
+                icon = IDEImageBundle.INSTANCE.folder();
+            rootNode = new TreeItem(createTreeNodeWidget(new Image(icon), nodeName));
+            rootNode.setUserObject(getValue());
+            tree.addItem(rootNode);
+            tree.setSelectedItem(rootNode);
+        }
+
+        if (getValue() instanceof FolderTemplateImpl) {
+            FolderTemplate folder = (FolderTemplate)getValue();
+            if (folder.getChildren() != null) {
+                setItems(rootNode, folder.getChildren());
             }
-            newNode = new TreeItem(createTreeNodeWidget(new Image(template.getIcon()), nodeName));
-            newNode.setUserObject(template);
+        } else if (getValue() instanceof FileTemplate) {
+            return;
+        }
+    }
 
-            parentNode.addItem(newNode);
-            parentNode.setState(true, true);
-         }
+    /**
+     * Recursively fills tree with templates.
+     *
+     * @param parentNode
+     *         node, which will be filled
+     * @param children
+     *         list of templates
+     */
+    private void setItems(TreeItem parentNode, List<AbstractTemplate> children) {
+        parentNode.removeItems();
+        for (Template template : children) {
+            TreeItem newNode = null;
 
-         if (template instanceof FolderTemplateImpl)
-         {
-            if (((FolderTemplate)template).getChildren() != null)
-            {
-               setItems(newNode, ((FolderTemplate)template).getChildren());
+            for (int i = 0; i < parentNode.getChildCount(); i++) {
+                TreeItem node = parentNode.getChild(i);
+                if (node.getUserObject() == template) {
+                    newNode = node;
+                    break;
+                }
             }
-         }
-      }
-   }
 
-   /**
-    * Get selected templates in tree grid.
-    * 
-    * @return List of Templates
-    */
-   public List<AbstractTemplate> getSelectedItems()
-   {
-      List<AbstractTemplate> selectedItems = new ArrayList<AbstractTemplate>();
+            if (newNode == null) {
+                // newNode = new TreeNode(template.getName());
+                // newNode.setAttribute(getValuePropertyName(), template);
+                // newNode.setAttribute(ICON, template.getIcon());
+                String nodeName = template.getName();
+                if (template instanceof FileTemplate) {
+                    nodeName =
+                            ((FileTemplate)template).getFileName() + "(" + IDE.TEMPLATE_CONSTANT.from() + " "
+                            + template.getName() + ")";
+                }
+                newNode = new TreeItem(createTreeNodeWidget(new Image(template.getIcon()), nodeName));
+                newNode.setUserObject(template);
 
-      // for (ListGridRecord record : getSelection())
-      // {
-      // selectedItems.add((Template)record.getAttributeAsObject(getValuePropertyName()));
-      // }
-      if (tree.getSelectedItem() != null)
-      {
-         selectedItems.add((AbstractTemplate)tree.getSelectedItem().getUserObject());
-      }
+                parentNode.addItem(newNode);
+                parentNode.setState(true, true);
+            }
 
-      return selectedItems;
-   }
+            if (template instanceof FolderTemplateImpl) {
+                if (((FolderTemplate)template).getChildren() != null) {
+                    setItems(newNode, ((FolderTemplate)template).getChildren());
+                }
+            }
+        }
+    }
 
-   private TreeItem getTreeItem(TreeItem parent, Template template)
-   {
-      if (parent.getUserObject() == template)
-         return parent;
+    /**
+     * Get selected templates in tree grid.
+     *
+     * @return List of Templates
+     */
+    public List<AbstractTemplate> getSelectedItems() {
+        List<AbstractTemplate> selectedItems = new ArrayList<AbstractTemplate>();
 
-      for (int i = 0; i < parent.getChildCount(); i++)
-      {
-         TreeItem node = parent.getChild(i);
-         if (node.getUserObject() == template)
-         {
-            return node;
-         }
-         TreeItem child = getTreeItem(node, template);
-         if (child != null)
-            return child;
-      }
+        // for (ListGridRecord record : getSelection())
+        // {
+        // selectedItems.add((Template)record.getAttributeAsObject(getValuePropertyName()));
+        // }
+        if (tree.getSelectedItem() != null) {
+            selectedItems.add((AbstractTemplate)tree.getSelectedItem().getUserObject());
+        }
 
-      return null;
-   }
+        return selectedItems;
+    }
 
-   public void selectTemplate(Template template)
-   {
-      TreeItem item = getTreeItem(rootNode, template);
-      if (item != null)
-         tree.setSelectedItem(item, true);
-   }
+    private TreeItem getTreeItem(TreeItem parent, Template template) {
+        if (parent.getUserObject() == template)
+            return parent;
 
-   public void setRootNodeName(String name)
-   {
-      // rootNode.setAttribute(NAME, name);
-      // redraw();
-   }
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            TreeItem node = parent.getChild(i);
+            if (node.getUserObject() == template) {
+                return node;
+            }
+            TreeItem child = getTreeItem(node, template);
+            if (child != null)
+                return child;
+        }
 
-   public void updateTree()
-   {
-      doUpdateValue();
-   }
+        return null;
+    }
 
-   public String getTemplateLocation(Template template)
-   {
-      TreeItem item = getTreeItem(rootNode, template);
-      if (item != null)
-      {
-         // item.getP
-      }
-      return null;
-   }
+    public void selectTemplate(Template template) {
+        TreeItem item = getTreeItem(rootNode, template);
+        if (item != null)
+            tree.setSelectedItem(item, true);
+    }
+
+    public void setRootNodeName(String name) {
+        // rootNode.setAttribute(NAME, name);
+        // redraw();
+    }
+
+    public void updateTree() {
+        doUpdateValue();
+    }
+
+    public String getTemplateLocation(Template template) {
+        TreeItem item = getTreeItem(rootNode, template);
+        if (item != null) {
+            // item.getP
+        }
+        return null;
+    }
 
 }

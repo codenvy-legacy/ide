@@ -22,54 +22,55 @@ import java.util.List;
 
 /**
  * Interface describe information about user.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: UserInfo.java Mar 28, 2012 11:33:45 AM azatsarynnyy $
- *
  */
-public interface UserInfo
-{
+public interface UserInfo {
 
-   /**
-    * Returns the user's id.
-    * 
-    * @return {@link String} user's id
-    */
-   public String getUserId();
+    /**
+     * Returns the user's id.
+     *
+     * @return {@link String} user's id
+     */
+    public String getUserId();
 
-   /**
-    * Change the user's id.
-    * 
-    * @param id user's id
-    */
-   public void setUserId(String id);
+    /**
+     * Change the user's id.
+     *
+     * @param id
+     *         user's id
+     */
+    public void setUserId(String id);
 
-   /**
-    * Returns the list of the user's groups.
-    * 
-    * @return the user's groups
-    */
-   public List<String> getGroups();
+    /**
+     * Returns the list of the user's groups.
+     *
+     * @return the user's groups
+     */
+    public List<String> getGroups();
 
-   /**
-    * Sets the list of the user's groups.
-    * 
-    * @param groups the user's groups
-    */
-   public void setGroups(List<String> groups);
+    /**
+     * Sets the list of the user's groups.
+     *
+     * @param groups
+     *         the user's groups
+     */
+    public void setGroups(List<String> groups);
 
-   /**
-    * Returns the list of the user's roles.
-    * 
-    * @return the user's roles
-    */
-   public List<String> getRoles();
+    /**
+     * Returns the list of the user's roles.
+     *
+     * @return the user's roles
+     */
+    public List<String> getRoles();
 
-   /**
-    * Sets the list of the user's roles.
-    * 
-    * @param roles the user's roles
-    */
-   public void setRoles(List<String> roles);
+    /**
+     * Sets the list of the user's roles.
+     *
+     * @param roles
+     *         the user's roles
+     */
+    public void setRoles(List<String> roles);
 
 }

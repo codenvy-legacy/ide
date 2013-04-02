@@ -18,46 +18,40 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant.ui;
 
+import com.google.gwt.user.client.ui.FlowPanel;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.ui.FlowPanel;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 19, 2010 4:41:26 PM evgen $
- * 
  */
-public class AssistantImportDeclarationPanel extends FlowPanel
-{
+public class AssistantImportDeclarationPanel extends FlowPanel {
 
-   private List<TokenWidget> entries = new ArrayList<TokenWidget>();
+    private List<TokenWidget> entries = new ArrayList<TokenWidget>();
 
-   /**
-    * Add a new child widget to the panel.
-    * 
-    * @param w the widget to be added
-    */
-   public void addWidget(TokenWidget w)
-   {
-      entries.add(w);
-      super.add(w);
-   }
+    /**
+     * Add a new child widget to the panel.
+     *
+     * @param w
+     *         the widget to be added
+     */
+    public void addWidget(TokenWidget w) {
+        entries.add(w);
+        super.add(w);
+    }
 
-   /**
-    * @see com.google.gwt.user.client.ui.FlowPanel#clear()
-    */
-   @Override
-   public void clear()
-   {
-      entries.clear();
-      super.clear();
-   }
+    /** @see com.google.gwt.user.client.ui.FlowPanel#clear() */
+    @Override
+    public void clear() {
+        entries.clear();
+        super.clear();
+    }
 
-   public List<TokenWidget> getEntries()
-   {
-      return entries;
-   }
+    public List<TokenWidget> getEntries() {
+        return entries;
+    }
 }

@@ -14,20 +14,26 @@ import com.codenvy.eclipse.jdt.core.IJavaProject;
 import com.codenvy.eclipse.jdt.internal.corext.codemanipulation.CodeGenerationSettings;
 import com.codenvy.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
 
-public class JavaPreferencesSettings
-{
+public class JavaPreferencesSettings {
 
-   public static CodeGenerationSettings getCodeGenerationSettings(IJavaProject project)
-   {
-      CodeGenerationSettings res = new CodeGenerationSettings();
-      res.createComments = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();
-      res.useKeywordThis = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue();
-      res.overrideAnnotation = true;// Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_USE_OVERRIDE_ANNOTATION, project)).booleanValue();
-      res.importIgnoreLowercase = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.ORGIMPORTS_IGNORELOWERCASE, project)).booleanValue();
-      res.tabWidth = CodeFormatterUtil.getTabWidth(project);
-      res.indentWidth = CodeFormatterUtil.getIndentWidth(project);
-      return res;
-   }
+    public static CodeGenerationSettings getCodeGenerationSettings(IJavaProject project) {
+        CodeGenerationSettings res = new CodeGenerationSettings();
+        res.createComments =
+                true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS,
+                // project)).booleanValue();
+        res.useKeywordThis =
+                true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS,
+                // project)).booleanValue();
+        res.overrideAnnotation =
+                true;// Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_USE_OVERRIDE_ANNOTATION,
+                // project)).booleanValue();
+        res.importIgnoreLowercase =
+                true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.ORGIMPORTS_IGNORELOWERCASE,
+                // project)).booleanValue();
+        res.tabWidth = CodeFormatterUtil.getTabWidth(project);
+        res.indentWidth = CodeFormatterUtil.getIndentWidth(project);
+        return res;
+    }
 
 }
 

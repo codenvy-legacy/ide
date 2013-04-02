@@ -20,97 +20,82 @@
 package org.exoplatform.ide.client.project.properties;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ShowProjectPropertiesControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, ItemsSelectedHandler, ViewActivatedHandler
-{
+                                                                           ProjectClosedHandler, ItemsSelectedHandler,
+                                                                           ViewActivatedHandler {
 
-   public static final String ID = "Project/Properties...";
+    public static final String ID = "Project/Properties...";
 
-   private static final String TITLE = "Properties...";
+    private static final String TITLE = "Properties...";
 
-   private static final String PROMPT = "Show Project Properties...";
+    private static final String PROMPT = "Show Project Properties...";
 
-   private boolean isNavigatorSelected;
+    private boolean isNavigatorSelected;
 
-   public ShowProjectPropertiesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectProperties(), IDEImageBundle.INSTANCE.projectPropertiesDisabled());
-      setEvent(new ShowProjectPropertiesEvent());
-      setGroupName(GroupNames.PROPERTIES);
-   }
+    public ShowProjectPropertiesControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.projectProperties(), IDEImageBundle.INSTANCE.projectPropertiesDisabled());
+        setEvent(new ShowProjectPropertiesEvent());
+        setGroupName(GroupNames.PROPERTIES);
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      setVisible(true);
-   }
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+        setVisible(true);
+    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(true);
-   }
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(true);
+    }
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      isNavigatorSelected =
-         event.getView() instanceof ProjectExplorerDisplay || event.getView() instanceof NavigatorDisplay;
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        isNavigatorSelected =
+                event.getView() instanceof ProjectExplorerDisplay || event.getView() instanceof NavigatorDisplay;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
 
-      if (event.getSelectedItems() == null || event.getSelectedItems().isEmpty())
-      {
-         setShowInContextMenu(false);
-         return;
-      }
-      setShowInContextMenu(isNavigatorSelected && event.getSelectedItems().get(0) instanceof ProjectModel);
-   }
+        if (event.getSelectedItems() == null || event.getSelectedItems().isEmpty()) {
+            setShowInContextMenu(false);
+            return;
+        }
+        setShowInContextMenu(isNavigatorSelected && event.getSelectedItems().get(0) instanceof ProjectModel);
+    }
 
 }

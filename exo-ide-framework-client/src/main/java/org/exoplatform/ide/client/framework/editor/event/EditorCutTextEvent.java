@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to cut selected text from editor.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 4, 2012 9:28:46 AM anya $
- * 
  */
-public class EditorCutTextEvent extends GwtEvent<EditorCutTextHandler>
-{
+public class EditorCutTextEvent extends GwtEvent<EditorCutTextHandler> {
 
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<EditorCutTextHandler> TYPE = new GwtEvent.Type<EditorCutTextHandler>();
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<EditorCutTextHandler> TYPE = new GwtEvent.Type<EditorCutTextHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorCutTextHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorCutTextHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorCutTextHandler handler)
-   {
-      handler.onEditorCutText(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorCutTextHandler handler) {
+        handler.onEditorCutText(this);
+    }
 
 }

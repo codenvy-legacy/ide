@@ -31,55 +31,45 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
 /**
  * WebSocket CloudBees request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception,
  * in this case - the {@link LoginEvent} is fired.
- * 
- * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CloudBeesRESTfulRequestCallback.java Nov 30, 2012 2:29:52 PM azatsarynnyy $
  *
  * @param <T>
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: CloudBeesRESTfulRequestCallback.java Nov 30, 2012 2:29:52 PM azatsarynnyy $
  * @see CloudBeesAsyncRequestCallback
  */
-public abstract class CloudBeesRESTfulRequestCallback<T> extends RequestCallback<T>
-{
-   private LoggedInHandler loggedIn;
+public abstract class CloudBeesRESTfulRequestCallback<T> extends RequestCallback<T> {
+    private LoggedInHandler loggedIn;
 
-   private LoginCanceledHandler loginCanceled;
+    private LoginCanceledHandler loginCanceled;
 
-   public CloudBeesRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled)
-   {
-      super(unmarshaller);
-      this.loggedIn = loggedIn;
-      this.loginCanceled = loginCanceled;
-   }
+    public CloudBeesRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                           LoginCanceledHandler loginCanceled) {
+        super(unmarshaller);
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
+    }
 
-   public CloudBeesRESTfulRequestCallback(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
-   {
-      this.loggedIn = loggedIn;
-      this.loginCanceled = loginCanceled;
-   }
+    public CloudBeesRESTfulRequestCallback(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled) {
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable)
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         // because of CloudBees returned not 401 status, but 500 status
-         // and explanation, that user not autherised in text message,
-         // that's why we must parse text message
-         final String exceptionMsg = serverException.getMessage();
-         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
-            && exceptionMsg.contains("AuthFailure"))
-         {
-            IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled));
-            return;
-         }
-      }
-      IDE.fireEvent(new ExceptionThrownEvent(exception));
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable) */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            // because of CloudBees returned not 401 status, but 500 status
+            // and explanation, that user not autherised in text message,
+            // that's why we must parse text message
+            final String exceptionMsg = serverException.getMessage();
+            if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
+                && exceptionMsg.contains("AuthFailure")) {
+                IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled));
+                return;
+            }
+        }
+        IDE.fireEvent(new ExceptionThrownEvent(exception));
+    }
 
 }

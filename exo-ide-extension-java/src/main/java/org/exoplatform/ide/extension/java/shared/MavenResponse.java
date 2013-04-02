@@ -22,53 +22,54 @@ import java.util.Map;
 
 /**
  * Interface describe maven response.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: MavenResponse.java Mar 25, 2012 11:51:16 PM azatsarynnyy $
- *
  */
-public interface MavenResponse
-{
+public interface MavenResponse {
 
-   /**
-    * Returns exit code.
-    * 
-    * @return exit code
-    */
-   public int getExitCode();
+    /**
+     * Returns exit code.
+     *
+     * @return exit code
+     */
+    public int getExitCode();
 
-   /**
-    * Set exit code.
-    * 
-    * @param exitCode exit code
-    */
-   public void setExitCode(int exitCode);
+    /**
+     * Set exit code.
+     *
+     * @param exitCode
+     *         exit code
+     */
+    public void setExitCode(int exitCode);
 
-   /**
-    * Returns the output message.
-    * 
-    * @return the outout message
-    */
-   public String getOutput();
+    /**
+     * Returns the output message.
+     *
+     * @return the outout message
+     */
+    public String getOutput();
 
-   /**
-    * Change the output message.
-    * 
-    * @param output the output message
-    */
-   public void setOutput(String output);
+    /**
+     * Change the output message.
+     *
+     * @param output
+     *         the output message
+     */
+    public void setOutput(String output);
 
-   /**
-    * Returns the result.
-    * 
-    * @return the result
-    */
-   public Map<String, String> getResult();
+    /**
+     * Returns the result.
+     *
+     * @return the result
+     */
+    public Map<String, String> getResult();
 
-   /**
-    * Change the result.
-    * 
-    * @param result the result
-    */
-   public void setResult(Map<String, String> result);
+    /**
+     * Change the result.
+     *
+     * @param result
+     *         the result
+     */
+    public void setResult(Map<String, String> result);
 }

@@ -22,15 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface DebuggerConnectedHandler extends EventHandler
-{
-   /**
-    * Perform actions when Heroku application is deleted.
-    * 
-    * @param event
-    */
-   void onDebuggerConnected(DebuggerConnectedEvent event);
+ */
+public interface DebuggerConnectedHandler extends EventHandler {
+    /**
+     * Perform actions when Heroku application is deleted.
+     *
+     * @param event
+     */
+    void onDebuggerConnected(DebuggerConnectedEvent event);
 }

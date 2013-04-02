@@ -18,38 +18,33 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DebuggerApplication extends Application
-{
-   private final Set<Class<?>> classes;
-   private final Set<Object> objects;
+public class DebuggerApplication extends Application {
+    private final Set<Class<?>> classes;
+    private final Set<Object>   objects;
 
-   public DebuggerApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(DebuggerService.class);
-      classes.add(ApplicationRunnerService.class);
-      objects = new HashSet<Object>(1);
-      objects.add(new ApplicationRunnerExceptionMapper());
-   }
+    public DebuggerApplication() {
+        classes = new HashSet<Class<?>>(2);
+        classes.add(DebuggerService.class);
+        classes.add(ApplicationRunnerService.class);
+        objects = new HashSet<Object>(1);
+        objects.add(new ApplicationRunnerExceptionMapper());
+    }
 
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return objects;
-   }
+    @Override
+    public Set<Object> getSingletons() {
+        return objects;
+    }
 }

@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: $
- * 
  */
-public class SaveFileAsTemplateEvent extends GwtEvent<SaveFileAsTemplateHandler>
-{
+public class SaveFileAsTemplateEvent extends GwtEvent<SaveFileAsTemplateHandler> {
 
-   public static final GwtEvent.Type<SaveFileAsTemplateHandler> TYPE = new GwtEvent.Type<SaveFileAsTemplateHandler>();
+    public static final GwtEvent.Type<SaveFileAsTemplateHandler> TYPE = new GwtEvent.Type<SaveFileAsTemplateHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(SaveFileAsTemplateHandler handler)
-   {
-      handler.onSaveFileAsTemplate(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(SaveFileAsTemplateHandler handler) {
+        handler.onSaveFileAsTemplate(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public Type<SaveFileAsTemplateHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public Type<SaveFileAsTemplateHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

@@ -30,68 +30,56 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP Class or Object property.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class PhpPropertyWidget extends PhpTokenWidgetBase
-{
+public class PhpPropertyWidget extends PhpTokenWidgetBase {
 
-   /**
-    * @param token
-    */
-   public PhpPropertyWidget(Token token)
-   {
-      super(token);
-      grid = new Grid(1, 3);
-      grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
-      Image i = getImage();
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+    /** @param token */
+    public PhpPropertyWidget(Token token) {
+        super(token);
+        grid = new Grid(1, 3);
+        grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
+        Image i = getImage();
+        i.setHeight("16px");
+        grid.setWidget(0, 0, i);
 
-      String name = token.getName();
-      if (token.hasProperty(TokenProperties.ELEMENT_TYPE))
-      {
-         name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
-      }
-      Label nameLabel = new Label(name, false);
-      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
-      grid.setWidget(0, 1, nameLabel);
+        String name = token.getName();
+        if (token.hasProperty(TokenProperties.ELEMENT_TYPE)) {
+            name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+        }
+        Label nameLabel = new Label(name, false);
+        nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+        grid.setWidget(0, 1, nameLabel);
 
-      String pack = token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue();
-      Label l = new Label("-" + pack, false);
-      l.setStyleName(PhpClientBundle.INSTANCE.css().fqnStyle());
+        String pack = token.getProperty(TokenProperties.DECLARING_CLASS).isStringProperty().stringValue();
+        Label l = new Label("-" + pack, false);
+        l.setStyleName(PhpClientBundle.INSTANCE.css().fqnStyle());
 
-      grid.setWidget(0, 2, l);
+        grid.setWidget(0, 2, l);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 2, "100%");
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 2, "100%");
 
-      initWidget(grid);
-      setWidth("100%");
-   }
+        initWidget(grid);
+        setWidth("100%");
+    }
 
-   private Image getImage()
-   {
-      Image i;
-      if (modifieres.contains(Modifier.PRIVATE))
-      {
-         i = new Image(PhpClientBundle.INSTANCE.privateField());
-      }
-      else if (modifieres.contains(Modifier.PROTECTED))
-      {
-         i = new Image(PhpClientBundle.INSTANCE.protectedField());
-      }
-      else
-      {
-         i = new Image(PhpClientBundle.INSTANCE.publicField());
-      }
+    private Image getImage() {
+        Image i;
+        if (modifieres.contains(Modifier.PRIVATE)) {
+            i = new Image(PhpClientBundle.INSTANCE.privateField());
+        } else if (modifieres.contains(Modifier.PROTECTED)) {
+            i = new Image(PhpClientBundle.INSTANCE.protectedField());
+        } else {
+            i = new Image(PhpClientBundle.INSTANCE.publicField());
+        }
 
-      return i;
-   }
+        return i;
+    }
 
 }

@@ -22,59 +22,43 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to view application's information. Implement {@link ShowApplicationInfoHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 11:22:18 AM anya $
- * 
  */
-public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ShowApplicationInfoHandler> TYPE = new GwtEvent.Type<ShowApplicationInfoHandler>();
+public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ShowApplicationInfoHandler> TYPE = new GwtEvent.Type<ShowApplicationInfoHandler>();
 
-   /**
-    * Application's name.
-    */
-   private String applicationName;
+    /** Application's name. */
+    private String applicationName;
 
-   public ShowApplicationInfoEvent()
-   {
-      this.applicationName = null;
-   }
+    public ShowApplicationInfoEvent() {
+        this.applicationName = null;
+    }
 
-   /**
-    * @param applicationName application's name to display properties, may be null
-    */
-   public ShowApplicationInfoEvent(String applicationName)
-   {
-      this.applicationName = applicationName;
-   }
+    /**
+     * @param applicationName
+     *         application's name to display properties, may be null
+     */
+    public ShowApplicationInfoEvent(String applicationName) {
+        this.applicationName = applicationName;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationInfoHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationInfoHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowApplicationInfoHandler handler)
-   {
-      handler.onShowApplicationInfo(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowApplicationInfoHandler handler) {
+        handler.onShowApplicationInfo(this);
+    }
 
-   /**
-    * @return the applicationName application's name to display properties
-    */
-   public String getApplicationName()
-   {
-      return applicationName;
-   }
+    /** @return the applicationName application's name to display properties */
+    public String getApplicationName() {
+        return applicationName;
+    }
 }

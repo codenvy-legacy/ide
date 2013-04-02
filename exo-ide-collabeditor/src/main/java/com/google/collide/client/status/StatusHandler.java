@@ -14,11 +14,10 @@
 
 package com.google.collide.client.status;
 
-/**
- * Client code wishing to react to status events must implement this interface.
- */
+/** Client code wishing to react to status events must implement this interface. */
 
 public interface StatusHandler {
-  void clear();
-  void onStatusMessage(StatusMessage msg);
+    void clear();
+
+    void onStatusMessage(StatusMessage msg);
 }

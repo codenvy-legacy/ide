@@ -20,65 +20,66 @@ package org.exoplatform.ide.upload;
 
 /**
  * Checked exception that gives possibility to set response status that may be passed to client if this type of exception occurs.
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 13, 2011 10:36:39 AM evgen $
- * 
  */
 @SuppressWarnings("serial")
-public class UploadServiceException extends Exception
-{
+public class UploadServiceException extends Exception {
 
-   private int status = 500;
+    private int status = 500;
 
-   /**
-    * @param message the detail message about exception
-    * @param cause the cause
-    */
-   public UploadServiceException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     *         the detail message about exception
+     * @param cause
+     *         the cause
+     */
+    public UploadServiceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   /**
-    * @param message the detail message about exception
-    */
-   public UploadServiceException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     *         the detail message about exception
+     */
+    public UploadServiceException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param status the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
-    *           this exception
-    * @param message the detail message about exception
-    * @param cause the cause
-    */
-   public UploadServiceException(int status, String message, Throwable cause)
-   {
-      super(message, cause);
-      this.status = status;
-   }
+    /**
+     * @param status
+     *         the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
+     *         this exception
+     * @param message
+     *         the detail message about exception
+     * @param cause
+     *         the cause
+     */
+    public UploadServiceException(int status, String message, Throwable cause) {
+        super(message, cause);
+        this.status = status;
+    }
 
-   /**
-    * @param status the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
-    *           this exception
-    * @param message the detail message about exception
-    */
-   public UploadServiceException(int status, String message)
-   {
-      super(message);
-      this.status = status;
-   }
+    /**
+     * @param status
+     *         the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
+     *         this exception
+     * @param message
+     *         the detail message about exception
+     */
+    public UploadServiceException(int status, String message) {
+        super(message);
+        this.status = status;
+    }
 
-   /**
-    * @return the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for this
-    *         exception
-    */
-   public int getStatus()
-   {
-      return status;
-   }
+    /**
+     * @return the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for this
+     *         exception
+     */
+    public int getStatus() {
+        return status;
+    }
 }

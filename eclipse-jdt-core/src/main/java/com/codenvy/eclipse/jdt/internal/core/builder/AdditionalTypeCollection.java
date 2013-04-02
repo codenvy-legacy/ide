@@ -10,16 +10,14 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.builder;
 
-public class AdditionalTypeCollection extends ReferenceCollection
-{
+public class AdditionalTypeCollection extends ReferenceCollection {
 
-   char[][] definedTypeNames;
+    char[][] definedTypeNames;
 
-   protected AdditionalTypeCollection(char[][] definedTypeNames, char[][][] qualifiedReferences,
-      char[][] simpleNameReferences, char[][] rootReferences)
-   {
-      super(qualifiedReferences, simpleNameReferences, rootReferences);
-      this.definedTypeNames = definedTypeNames; // do not bother interning member type names (i.e. 'A$M')
-   }
+    protected AdditionalTypeCollection(char[][] definedTypeNames, char[][][] qualifiedReferences,
+                                       char[][] simpleNameReferences, char[][] rootReferences) {
+        super(qualifiedReferences, simpleNameReferences, rootReferences);
+        this.definedTypeNames = definedTypeNames; // do not bother interning member type names (i.e. 'A$M')
+    }
 }
 

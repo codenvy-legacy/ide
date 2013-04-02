@@ -28,61 +28,47 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 /**
  * Service for getting running jobs (asynchronous tasks).
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 13, 2012 9:58:05 AM anya $
- * 
  */
-public class JobService
-{
-   /**
-    * Service.
-    */
-   private static JobService jobService;
+public class JobService {
+    /** Service. */
+    private static JobService jobService;
 
-   /**
-    * REST context.
-    */
-   private final String REST_CONTEXT = "rest/private";
+    /** REST context. */
+    private final String REST_CONTEXT = "rest/private";
 
-   /**
-    * Path to job's list service.
-    */
-   private final String JOBS_PATH = "async";
+    /** Path to job's list service. */
+    private final String JOBS_PATH = "async";
 
-   protected JobService()
-   {
-   }
+    protected JobService() {
+    }
 
-   /**
-    * @return {@link JobService} job service
-    */
-   public static JobService getService()
-   {
-      if (jobService == null)
-      {
-         jobService = new JobService();
-      }
-      return jobService;
-   }
+    /** @return {@link JobService} job service */
+    public static JobService getService() {
+        if (jobService == null) {
+            jobService = new JobService();
+        }
+        return jobService;
+    }
 
-   /**
-    * Get the list of running jobs (asynchronous tasks) in text format.
-    * 
-    * @param callback callback
-    * @throws RequestException
-    */
-   public void getJobs(AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      String url = REST_CONTEXT + "/" + JOBS_PATH;
+    /**
+     * Get the list of running jobs (asynchronous tasks) in text format.
+     *
+     * @param callback
+     *         callback
+     * @throws RequestException
+     */
+    public void getJobs(AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        String url = REST_CONTEXT + "/" + JOBS_PATH;
 
-      AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, url).header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).send(callback);
+    }
 
-   public void killJob(String jobId, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      StringBuilder url = new StringBuilder(REST_CONTEXT).append("/").append(JOBS_PATH).append("/").append(jobId);
+    public void killJob(String jobId, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        StringBuilder url = new StringBuilder(REST_CONTEXT).append("/").append(JOBS_PATH).append("/").append(jobId);
 
-      AsyncRequest.build(RequestBuilder.DELETE, url.toString()).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.DELETE, url.toString()).send(callback);
+    }
 }

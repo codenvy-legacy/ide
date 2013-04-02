@@ -32,158 +32,130 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 12:28:23 PM anya $
- * 
  */
-public class EnvironmentsGrid extends ListGrid<EnvironmentInfo>
-{
-   public class LinkCell extends AbstractSafeHtmlCell<String>
-   {
+public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> {
+    public class LinkCell extends AbstractSafeHtmlCell<String> {
 
-      public LinkCell()
-      {
-         super(new SafeHtmlListRenderer());
-      }
+        public LinkCell() {
+            super(new SafeHtmlListRenderer());
+        }
 
-      @Override
-      protected void render(com.google.gwt.cell.client.Cell.Context context, SafeHtml data, SafeHtmlBuilder sb)
-      {
-         sb.append(data);
-      }
+        @Override
+        protected void render(com.google.gwt.cell.client.Cell.Context context, SafeHtml data, SafeHtmlBuilder sb) {
+            sb.append(data);
+        }
 
-   }
+    }
 
-   private class SafeHtmlListRenderer implements SafeHtmlRenderer<String>
-   {
+    private class SafeHtmlListRenderer implements SafeHtmlRenderer<String> {
 
-      @Override
-      public SafeHtml render(String object)
-      {
-         String string = createLinks(object);
-         return new SafeHtmlBuilder().appendHtmlConstant(string).toSafeHtml();
-      }
+        @Override
+        public SafeHtml render(String object) {
+            String string = createLinks(object);
+            return new SafeHtmlBuilder().appendHtmlConstant(string).toSafeHtml();
+        }
 
-      /**
-       * @see com.google.gwt.text.shared.SafeHtmlRenderer#render(java.lang.Object, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
-       */
-      @Override
-      public void render(String object, SafeHtmlBuilder builder)
-      {
-         String string = createLinks(object);
-         builder.appendHtmlConstant(string);
-      }
+        /** @see com.google.gwt.text.shared.SafeHtmlRenderer#render(java.lang.Object, com.google.gwt.safehtml.shared.SafeHtmlBuilder) */
+        @Override
+        public void render(String object, SafeHtmlBuilder builder) {
+            String string = createLinks(object);
+            builder.appendHtmlConstant(string);
+        }
 
-   }
+    }
 
-   private final String ID = "ideEnvironmentsGrid";
+    private final String ID = "ideEnvironmentsGrid";
 
-   private final String NAME = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridName();
+    private final String NAME = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridName();
 
-   private final String SOLUTION_STACK = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridStack();
+    private final String SOLUTION_STACK = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridStack();
 
-   private final String VERSION = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridVersion();
+    private final String VERSION = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridVersion();
 
-   private final String STATUS = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridStatus();
+    private final String STATUS = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridStatus();
 
-   private final String HEALTH = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridHealth();
+    private final String HEALTH = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridHealth();
 
-   private final String URL = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridUrl();
+    private final String URL = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridUrl();
 
-   public EnvironmentsGrid()
-   {
-      setID(ID);
+    public EnvironmentsGrid() {
+        setID(ID);
 
-      Column<EnvironmentInfo, String> nameColumn = new Column<EnvironmentInfo, String>(new TextCell())
-      {
+        Column<EnvironmentInfo, String> nameColumn = new Column<EnvironmentInfo, String>(new TextCell()) {
 
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return environmentInfo.getName();
-         }
-      };
-
-      Column<EnvironmentInfo, String> solutionStackColumn = new Column<EnvironmentInfo, String>(new TextCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return environmentInfo.getSolutionStackName();
-         }
-      };
-
-      Column<EnvironmentInfo, String> appVersionColumn = new Column<EnvironmentInfo, String>(new TextCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            if (environmentInfo.getVersionLabel() == null)
-            {
-               return "No version";
+            @Override
+            public String getValue(EnvironmentInfo environmentInfo) {
+                return environmentInfo.getName();
             }
-            return environmentInfo.getVersionLabel();
-         }
-      };
+        };
 
-      Column<EnvironmentInfo, String> statusColumn = new Column<EnvironmentInfo, String>(new TextCell())
-      {
+        Column<EnvironmentInfo, String> solutionStackColumn = new Column<EnvironmentInfo, String>(new TextCell()) {
 
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return environmentInfo.getStatus().name();
-         }
-      };
-
-      Column<EnvironmentInfo, String> healthColumn = new Column<EnvironmentInfo, String>(new TextCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return environmentInfo.getHealth().name();
-         }
-      };
-
-      Column<EnvironmentInfo, String> urlColumn = new Column<EnvironmentInfo, String>(new LinkCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-        	if (environmentInfo.getCname() != null)
-            {
-               return environmentInfo.getCname();
+            @Override
+            public String getValue(EnvironmentInfo environmentInfo) {
+                return environmentInfo.getSolutionStackName();
             }
-            if (environmentInfo.getEndpointUrl() != null)
-            {
-               return environmentInfo.getEndpointUrl();
+        };
+
+        Column<EnvironmentInfo, String> appVersionColumn = new Column<EnvironmentInfo, String>(new TextCell()) {
+
+            @Override
+            public String getValue(EnvironmentInfo environmentInfo) {
+                if (environmentInfo.getVersionLabel() == null) {
+                    return "No version";
+                }
+                return environmentInfo.getVersionLabel();
             }
-            return "";
-         }
-      };
+        };
 
-      getCellTable().addColumn(nameColumn, NAME);
-      getCellTable().addColumn(solutionStackColumn, SOLUTION_STACK);
-      getCellTable().addColumn(appVersionColumn, VERSION);
-      getCellTable().addColumn(statusColumn, STATUS);
-      getCellTable().addColumn(healthColumn, HEALTH);
-      getCellTable().addColumn(urlColumn, URL);
-   }
+        Column<EnvironmentInfo, String> statusColumn = new Column<EnvironmentInfo, String>(new TextCell()) {
 
-   /**
-    * @param object
-    * @return
-    */
-   private String createLinks(String s)
-   {
-      if (s.isEmpty())
-      {
-         return "n/a";
-      }
-      return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s
-         + " target=\"_blank\">View Running Version</a><br>";
-   }
+            @Override
+            public String getValue(EnvironmentInfo environmentInfo) {
+                return environmentInfo.getStatus().name();
+            }
+        };
+
+        Column<EnvironmentInfo, String> healthColumn = new Column<EnvironmentInfo, String>(new TextCell()) {
+
+            @Override
+            public String getValue(EnvironmentInfo environmentInfo) {
+                return environmentInfo.getHealth().name();
+            }
+        };
+
+        Column<EnvironmentInfo, String> urlColumn = new Column<EnvironmentInfo, String>(new LinkCell()) {
+
+            @Override
+            public String getValue(EnvironmentInfo environmentInfo) {
+                if (environmentInfo.getCname() != null) {
+                    return environmentInfo.getCname();
+                }
+                if (environmentInfo.getEndpointUrl() != null) {
+                    return environmentInfo.getEndpointUrl();
+                }
+                return "";
+            }
+        };
+
+        getCellTable().addColumn(nameColumn, NAME);
+        getCellTable().addColumn(solutionStackColumn, SOLUTION_STACK);
+        getCellTable().addColumn(appVersionColumn, VERSION);
+        getCellTable().addColumn(statusColumn, STATUS);
+        getCellTable().addColumn(healthColumn, HEALTH);
+        getCellTable().addColumn(urlColumn, URL);
+    }
+
+    /**
+     * @param object
+     * @return
+     */
+    private String createLinks(String s) {
+        if (s.isEmpty()) {
+            return "n/a";
+        }
+        return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s
+               + " target=\"_blank\">View Running Version</a><br>";
+    }
 
 }

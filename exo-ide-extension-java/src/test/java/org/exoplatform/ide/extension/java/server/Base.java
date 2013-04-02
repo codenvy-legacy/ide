@@ -36,50 +36,47 @@ import java.util.Set;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Base Mar 30, 2011 11:35:14 AM evgen $
- * 
  */
 
-public class Base
-{
+public class Base {
 
-   protected static StandaloneContainer container;
+    protected static StandaloneContainer container;
 
-   public int maxBufferSize = 200 * 1024;
+    public int maxBufferSize = 200 * 1024;
 
-   public static ResourceBinder binder;
+    public static ResourceBinder binder;
 
-   public static ResourceLauncher launcher;
+    public static ResourceLauncher launcher;
 
-   public static int resourceNumber = 0;
+    public static int resourceNumber = 0;
 
-   protected static SimpleSecurityContext adminSecurityContext;
+    protected static SimpleSecurityContext adminSecurityContext;
 
-   protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
+    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
 
-   @BeforeClass
-   public static void setUp() throws Exception
-   {
-      String containerConf = Base.class.getResource("/conf/standalone/test-configuration.xml").toString();
+    @BeforeClass
+    public static void setUp() throws Exception {
+        String containerConf = Base.class.getResource("/conf/standalone/test-configuration.xml").toString();
 
-      StandaloneContainer.addConfigurationURL(containerConf);
+        StandaloneContainer.addConfigurationURL(containerConf);
 
-      container = StandaloneContainer.getInstance();
+        container = StandaloneContainer.getInstance();
 
-      if (System.getProperty("java.security.auth.login.config") == null)
-         System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
-            .getResource("login.conf").toString());
+        if (System.getProperty("java.security.auth.login.config") == null)
+            System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
+                                                                        .getResource("login.conf").toString());
 
-      binder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
-      resourceNumber = binder.getSize();
-      RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
-      launcher = new ResourceLauncher(handler);
-      ConversationState state = new ConversationState(new Identity("root"));
-      ConversationState.setCurrent(state);
-      Set<String> adminRoles = new HashSet<String>();
-      adminRoles.add("administrators");
-      Set<String> devRoles = new HashSet<String>();
-      devRoles.add("developers");
-      adminSecurityContext = new SimpleSecurityContext(new MockPrincipal("root"), adminRoles,"BASIC", false);
-   }
+        binder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
+        resourceNumber = binder.getSize();
+        RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
+        launcher = new ResourceLauncher(handler);
+        ConversationState state = new ConversationState(new Identity("root"));
+        ConversationState.setCurrent(state);
+        Set<String> adminRoles = new HashSet<String>();
+        adminRoles.add("administrators");
+        Set<String> devRoles = new HashSet<String>();
+        devRoles.add("developers");
+        adminSecurityContext = new SimpleSecurityContext(new MockPrincipal("root"), adminRoles, "BASIC", false);
+    }
 
 }

@@ -25,18 +25,14 @@ import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CssTokenWidget Feb 22, 2011 4:59:41 PM evgen $
- * 
  */
-public class CssTokenWidgetFactory implements TokenWidgetFactory
-{
+public class CssTokenWidgetFactory implements TokenWidgetFactory {
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api.codeassitant.Token)
-    */
-   @Override
-   public TokenWidget buildTokenWidget(Token token)
-   {
-      return new CssTokenWidget(token);
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api
+     * .codeassitant.Token) */
+    @Override
+    public TokenWidget buildTokenWidget(Token token) {
+        return new CssTokenWidget(token);
+    }
 
 }

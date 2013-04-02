@@ -16,35 +16,35 @@ package com.codenvy.eclipse.core.internal.filebuffers;
  *
  * @since 3.1
  */
-public class NLSUtility
-{
+public class NLSUtility {
 
-   /**
-    * Formats the given string with the given argument.
-    *
-    * @param message  the message to format, must not be <code>null</code>
-    * @param argument the argument used to format the string
-    * @return the formatted string
-    */
-   public static String format(String message, Object argument)
-   {
-      return String.format(message, new Object[]{argument});
-   }
+    /**
+     * Formats the given string with the given argument.
+     *
+     * @param message
+     *         the message to format, must not be <code>null</code>
+     * @param argument
+     *         the argument used to format the string
+     * @return the formatted string
+     */
+    public static String format(String message, Object argument) {
+        return String.format(message, new Object[]{argument});
+    }
 
-   /**
-    * Formats the given string with the given argument.
-    *
-    * @param message   the message to format, must not be <code>null</code>
-    * @param arguments the arguments used to format the string
-    * @return the formatted string
-    */
-   public static String format(String message, Object[] arguments)
-   {
-      return String.format(message, arguments);
-   }
+    /**
+     * Formats the given string with the given argument.
+     *
+     * @param message
+     *         the message to format, must not be <code>null</code>
+     * @param arguments
+     *         the arguments used to format the string
+     * @return the formatted string
+     */
+    public static String format(String message, Object[] arguments) {
+        return String.format(message, arguments);
+    }
 
-   private NLSUtility()
-   {
-      // Do not instantiate
-   }
+    private NLSUtility() {
+        // Do not instantiate
+    }
 }

@@ -22,16 +22,14 @@ package org.exoplatform.ide.client.project.explorer;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ShowProjectExplorerHandler extends EventHandler
-{
+public interface ShowProjectExplorerHandler extends EventHandler {
 
-   void onShowProjectExplorer(ShowProjectExplorerEvent event);
+    void onShowProjectExplorer(ShowProjectExplorerEvent event);
 
 }

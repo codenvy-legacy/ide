@@ -26,38 +26,33 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class CustomizeHotKeysControl extends SimpleControl implements IDEControl
-{
+public class CustomizeHotKeysControl extends SimpleControl implements IDEControl {
 
-   public static final String ID = "Window/HotKeys...";
+    public static final String ID = "Window/HotKeys...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.customizeHotkeysControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.customizeHotkeysControl();
 
-   /**
-    * 
-    */
-   public CustomizeHotKeysControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
-      setEvent(new CustomizeHotKeysEvent());
-   }
+    /**
+     *
+     */
+    public CustomizeHotKeysControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.customizeHotKeys(), IDEImageBundle.INSTANCE.customizeHotKeysDisabled());
+        setEvent(new CustomizeHotKeysEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setEnabled(true);
-      setVisible(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setEnabled(true);
+        setVisible(true);
+    }
 
 }

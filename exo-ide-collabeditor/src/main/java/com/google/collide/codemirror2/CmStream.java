@@ -16,16 +16,14 @@ package com.google.collide.codemirror2;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-/**
- * Native CodeMirror {@link Stream} wrapper.
- */
+/** Native CodeMirror {@link Stream} wrapper. */
 public class CmStream extends JavaScriptObject implements Stream {
 
-  protected CmStream() {
-  }
+    protected CmStream() {
+    }
 
-  @Override
-  public final native boolean isEnd() /*-{
-    return this.eol();
-  }-*/;
+    @Override
+    public final native boolean isEnd() /*-{
+        return this.eol();
+    }-*/;
 }

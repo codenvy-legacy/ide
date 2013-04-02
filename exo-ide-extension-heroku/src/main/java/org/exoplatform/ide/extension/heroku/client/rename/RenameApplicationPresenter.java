@@ -19,11 +19,7 @@
 package org.exoplatform.ide.extension.heroku.client.rename;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -49,252 +45,214 @@ import java.util.List;
 
 /**
  * Presenter for rename application on Heroku. The view must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 2, 2011 11:54:59 AM anya $
- * 
  */
 public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler,
-   LoggedInHandler
-{
-   
-   interface Display extends IsView
-   {
-      /**
-       * Get rename text field.
-       * 
-       * @return {@link TextFieldItem}
-       */
-      TextFieldItem getRenameField();
+                                                                        LoggedInHandler {
 
-      /**
-       * Get rename button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getRenameButton();
+    interface Display extends IsView {
+        /**
+         * Get rename text field.
+         *
+         * @return {@link TextFieldItem}
+         */
+        TextFieldItem getRenameField();
 
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+        /**
+         * Get rename button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getRenameButton();
 
-      /**
-       * Select value in rename field.
-       */
-      void selectValueInRenameField();
+        /**
+         * Get cancel button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Change the enable state of the rename button.
-       * 
-       * @param isEnabled
-       */
-      void enableRenameButton(boolean isEnabled);
-   }
+        /** Select value in rename field. */
+        void selectValueInRenameField();
 
-   private Display display;
+        /**
+         * Change the enable state of the rename button.
+         *
+         * @param isEnabled
+         */
+        void enableRenameButton(boolean isEnabled);
+    }
 
-   /**
-    * Heroku application's name.
-    */
-   private String applicationName;
+    private Display display;
 
-   private static final String NAME_PROPERTY = "name";
+    /** Heroku application's name. */
+    private String applicationName;
 
-   /**
-    * @param eventBus events handler
-    */
-   public RenameApplicationPresenter()
-   {
-      IDE.addHandler(RenameApplicationEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    private static final String NAME_PROPERTY = "name";
 
-   /**
-    * Bind display with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    /**
+     * @param eventBus
+     *         events handler
+     */
+    public RenameApplicationPresenter() {
+        IDE.addHandler(RenameApplicationEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+    /** Bind display with presenter. */
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-      display.getRenameButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doRenameApplication();
-         }
-      });
-
-      display.getRenameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean enable =
-               (applicationName != null && !event.getValue().equals(applicationName) && event.getValue() != null && !event
-                  .getValue().isEmpty());
-            display.enableRenameButton(enable);
-         }
-      });
-
-      display.getRenameField().addKeyUpHandler(new KeyUpHandler()
-      {
-
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13)
-            {
-               doRenameApplication();
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         }
-      });
-   }
+        });
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationHandler#onRenameApplication(org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationEvent)
-    */
-   @Override
-   public void onRenameApplication(RenameApplicationEvent event)
-   {
-      applicationName = event.getApplication();
-      if (applicationName != null && !applicationName.isEmpty())
-      {
-         if (display == null)
-         {
-            display = GWT.create(Display.class);
-            bindDisplay();
-            IDE.getInstance().openView(display.asView());
-         }
-         display.getRenameField().setValue(applicationName);
-         display.selectValueInRenameField();
-         display.enableRenameButton(false);
-         return;
-      }
+        display.getRenameButton().addClickHandler(new ClickHandler() {
 
-      if (makeSelectionCheck())
-      {
-         getApplicationInfo();
-      }
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                doRenameApplication();
+            }
+        });
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        display.getRenameField().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-   /**
-    * Get information about application.
-    */
-   protected void getApplicationInfo()
-   {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean enable =
+                        (applicationName != null && !event.getValue().equals(applicationName) && event.getValue() != null && !event
+                                .getValue().isEmpty());
+                display.enableRenameButton(enable);
+            }
+        });
+
+        display.getRenameField().addKeyUpHandler(new KeyUpHandler() {
+
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == 13) {
+                    doRenameApplication();
+                }
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationHandler#onRenameApplication(org.exoplatform.ide
+     * .extension.heroku.client.rename.RenameApplicationEvent) */
+    @Override
+    public void onRenameApplication(RenameApplicationEvent event) {
+        applicationName = event.getApplication();
+        if (applicationName != null && !applicationName.isEmpty()) {
+            if (display == null) {
+                display = GWT.create(Display.class);
+                bindDisplay();
+                IDE.getInstance().openView(display.asView());
+            }
+            display.getRenameField().setValue(applicationName);
+            display.selectValueInRenameField();
+            display.enableRenameButton(false);
+            return;
+        }
+
+        if (makeSelectionCheck()) {
+            getApplicationInfo();
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** Get information about application. */
+    protected void getApplicationInfo() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
-            new HerokuAsyncRequestCallback(this)
-            {
-               @Override
-               protected void onSuccess(List<Property> properties)
-               {
-                  for (Property property : properties)
-                  {
-                     if (NAME_PROPERTY.equals(property.getName()))
-                     {
-                        applicationName = property.getValue();
-                        break;
-                     }
-                  }
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                     display.getRenameField().setValue(applicationName);
-                     display.selectValueInRenameField();
-                     display.enableRenameButton(false);
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-      }
-   }
+        String projectId = getSelectedProject().getId();
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         getApplicationInfo();
-      }
-   }
+        try {
+            HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId, false,
+                                                                 new HerokuAsyncRequestCallback(this) {
+                                                                     @Override
+                                                                     protected void onSuccess(List<Property> properties) {
+                                                                         for (Property property : properties) {
+                                                                             if (NAME_PROPERTY.equals(property.getName())) {
+                                                                                 applicationName = property.getValue();
+                                                                                 break;
+                                                                             }
+                                                                         }
+                                                                         if (display == null) {
+                                                                             display = GWT.create(Display.class);
+                                                                             bindDisplay();
+                                                                             IDE.getInstance().openView(display.asView());
+                                                                             display.getRenameField().setValue(applicationName);
+                                                                             display.selectValueInRenameField();
+                                                                             display.enableRenameButton(false);
+                                                                         }
+                                                                     }
+                                                                 });
+        } catch (RequestException e) {
+        }
+    }
 
-   /**
-    * Perform renaming the application.
-    */
-   public void doRenameApplication()
-   {
-      final String newName = display.getRenameField().getValue();
-      final String projectId = detectProjectId();
+    /** @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client
+     * .login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        if (!event.isFailed()) {
+            getApplicationInfo();
+        }
+    }
 
-      try
-      {
-         HerokuClientService.getInstance().renameApplication(applicationName, vfs.getId(), projectId, newName,
-            new HerokuAsyncRequestCallback(this)
-            {
-               @Override
-               protected void onSuccess(List<Property> properties)
-               {
-                  IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
-                     applicationName, newName), Type.INFO));
-                  IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new ApplicationRenamedEvent(properties, applicationName));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    /** Perform renaming the application. */
+    public void doRenameApplication() {
+        final String newName = display.getRenameField().getValue();
+        final String projectId = detectProjectId();
 
-   /**
-    * Detects project's id by Heroku application name, if opened project is the following Heroku application.
-    * 
-    * @return {@link String} project's id or <code>null</code> if not found
-    */
-   private String detectProjectId()
-   {
-      String projectId = null;
-      
+        try {
+            HerokuClientService.getInstance().renameApplication(applicationName, vfs.getId(), projectId, newName,
+                                                                new HerokuAsyncRequestCallback(this) {
+                                                                    @Override
+                                                                    protected void onSuccess(List<Property> properties) {
+                                                                        IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT
+
+
+
+
+
+
+                                                                                                                     .renameApplicationSuccess(
+
+
+                                                                                                                             applicationName,
+                                                                                                                             newName),
+                                                                                                      Type.INFO));
+                                                                        IDE.getInstance().closeView(display.asView().getId());
+                                                                        IDE.fireEvent(
+                                                                                new ApplicationRenamedEvent(properties, applicationName));
+                                                                    }
+                                                                });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * Detects project's id by Heroku application name, if opened project is the following Heroku application.
+     *
+     * @return {@link String} project's id or <code>null</code> if not found
+     */
+    private String detectProjectId() {
+        String projectId = null;
+
 //      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
 //      {
 //         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
@@ -304,17 +262,15 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
 //            projectId = project.getId();
 //         }
 //      }
-      
-      if (selectedItem != null)
-      {
-         ProjectModel project = getSelectedProject();
-         if (project != null && project.getPropertyValue("heroku-application") != null
-                  && applicationName.equals((String)project.getPropertyValue("heroku-application")))
-         {
-            projectId = project.getId();
-         }
-      }
-      
-      return projectId;
-   }
+
+        if (selectedItem != null) {
+            ProjectModel project = getSelectedProject();
+            if (project != null && project.getPropertyValue("heroku-application") != null
+                && applicationName.equals((String)project.getPropertyValue("heroku-application"))) {
+                projectId = project.getId();
+            }
+        }
+
+        return projectId;
+    }
 }

@@ -48,57 +48,52 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
 public class PreferencesModule implements InitializeServicesHandler, ControlsUpdatedHandler,
-   ApplicationSettingsReceivedHandler
-{
+                                          ApplicationSettingsReceivedHandler {
 
-   private IDEConfiguration applicationConfiguration;
+    private IDEConfiguration applicationConfiguration;
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   private List<Control> controls;
+    private List<Control> controls;
 
-   public PreferencesModule()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+    public PreferencesModule() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
-      Preferences.get().addPreferenceItem(new ToolbarPreferenceItem(new CustomizeToolbarPresenter()));
-      Preferences.get().addPreferenceItem(new HotKeysPreferenceItem(new CustomizeHotKeysPresenter()));
-      Preferences.get().addPreferenceItem(new ThemePreferenceItem(new SelectThemePresenter()));
+        Preferences.get().addPreferenceItem(new ToolbarPreferenceItem(new CustomizeToolbarPresenter()));
+        Preferences.get().addPreferenceItem(new HotKeysPreferenceItem(new CustomizeHotKeysPresenter()));
+        Preferences.get().addPreferenceItem(new ThemePreferenceItem(new SelectThemePresenter()));
 //      Preferences.get().addPreferenceItem(new WorkspacePreferenceItem(new SelectWorkspacePresenter()));
 
-      new AutocompletionHandler();
-      new AboutIDEPresenter();
-      new RestServicesDiscoveryPresenter();
-      new ShowHotKeysPresenter();
-      new PreferencesPresenter();
-   }
+        new AutocompletionHandler();
+        new AboutIDEPresenter();
+        new RestServicesDiscoveryPresenter();
+        new ShowHotKeysPresenter();
+        new PreferencesPresenter();
+    }
 
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      applicationConfiguration = event.getApplicationConfiguration();
-      new VirtualFileSystemFactory(applicationConfiguration.getContext());
-      new RestDiscoveryService(applicationConfiguration.getContext());
-      new HotKeyManager(controls, applicationSettings);
-      new GoogleContactsService();
-   }
+    public void onInitializeServices(InitializeServicesEvent event) {
+        applicationConfiguration = event.getApplicationConfiguration();
+        new VirtualFileSystemFactory(applicationConfiguration.getContext());
+        new RestDiscoveryService(applicationConfiguration.getContext());
+        new HotKeyManager(controls, applicationSettings);
+        new GoogleContactsService();
+    }
 
-   public void onControlsUpdated(ControlsUpdatedEvent event)
-   {
-      controls = event.getControls();
-   }
+    public void onControlsUpdated(ControlsUpdatedEvent event) {
+        controls = event.getControls();
+    }
 
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
-   }
+    @Override
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        applicationSettings = event.getApplicationSettings();
+    }
 
 }

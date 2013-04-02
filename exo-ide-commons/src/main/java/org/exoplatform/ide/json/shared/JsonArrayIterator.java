@@ -20,54 +20,48 @@ import java.util.NoSuchElementException;
 /**
  * Implementation that iterates array without gaps in index,
  *
- * @param <T> items type
+ * @param <T>
+ *         items type
  */
-public class JsonArrayIterator<T> implements Iterator<T>
-{
+public class JsonArrayIterator<T> implements Iterator<T> {
 
-   private int index;
+    private int index;
 
-   private final JsonArray<T> items;
+    private final JsonArray<T> items;
 
-   private boolean hasRemovedSinceNextCall;
+    private boolean hasRemovedSinceNextCall;
 
-   public JsonArrayIterator(JsonArray<T> items)
-   {
-      this.items = items;
-   }
+    public JsonArrayIterator(JsonArray<T> items) {
+        this.items = items;
+    }
 
-   @Override
-   public boolean hasNext()
-   {
-      return index < items.size();
-   }
+    @Override
+    public boolean hasNext() {
+        return index < items.size();
+    }
 
-   @Override
-   public T next()
-   {
-      if (index == items.size())
-      {
-         throw new NoSuchElementException();
-      }
+    @Override
+    public T next() {
+        if (index == items.size()) {
+            throw new NoSuchElementException();
+        }
 
-      T result = items.get(index);
-      index++;
+        T result = items.get(index);
+        index++;
 
-      hasRemovedSinceNextCall = false;
+        hasRemovedSinceNextCall = false;
 
-      return result;
-   }
+        return result;
+    }
 
-   @Override
-   public void remove()
-   {
-      if (hasRemovedSinceNextCall || index == 0)
-      {
-         throw new IllegalStateException();
-      }
+    @Override
+    public void remove() {
+        if (hasRemovedSinceNextCall || index == 0) {
+            throw new IllegalStateException();
+        }
 
-      index--;
-      items.remove(index);
-      hasRemovedSinceNextCall = true;
-   }
+        index--;
+        items.remove(index);
+        hasRemovedSinceNextCall = true;
+    }
 }

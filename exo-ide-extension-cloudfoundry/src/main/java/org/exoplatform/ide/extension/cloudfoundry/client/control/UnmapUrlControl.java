@@ -24,31 +24,28 @@ import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlEvent;
 
 /**
  * Control to unmap url from application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UnmapUrlControl.java Jul 18, 2011 9:49:11 AM vereshchaka $
- *
  */
-public class UnmapUrlControl extends AbstractCloudFoundryControl
-{
+public class UnmapUrlControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlControlPrompt();
 
-   /**
-    * 
-    */
-   public UnmapUrlControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.mapUrl(), CloudFoundryClientBundle.INSTANCE.mapUrlDisabled());
-      setEvent(new UnmapUrlEvent());
-      setDelimiterBefore(true);
-   }
+    /**
+     *
+     */
+    public UnmapUrlControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.mapUrl(), CloudFoundryClientBundle.INSTANCE.mapUrlDisabled());
+        setEvent(new UnmapUrlEvent());
+        setDelimiterBefore(true);
+    }
 
 }

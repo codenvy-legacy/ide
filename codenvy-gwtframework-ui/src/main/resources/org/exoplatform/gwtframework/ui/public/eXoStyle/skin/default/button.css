@@ -8,9 +8,8 @@ style prefix: exo-button-
 BUTTON x 20
 */
 
-.exo-button-table
-{
-	border-collapse: collapse;
+.exo-button-table {
+    border-collapse: collapse;
 }
 
 .exo-button-left-20,
@@ -21,9 +20,8 @@ BUTTON x 20
 .exo-button-middle-20-disabled,
 .exo-button-right-20,
 .exo-button-right-20-down,
-.exo-button-right-20-disabled
-{
-	height: 20px;
+.exo-button-right-20-disabled {
+    height: 20px;
 }
 
 .exo-button-left-20,
@@ -31,61 +29,50 @@ BUTTON x 20
 .exo-button-left-20-disabled,
 .exo-button-right-20,
 .exo-button-right-20-down,
-.exo-button-right-20-disabled
-{
-	width: 4px;
+.exo-button-right-20-disabled {
+    width: 4px;
 }
 
 .exo-button-middle-20,
 .exo-button-middle-20-down,
-.exo-button-middle-20-disabled
-{
-	text-align: center;
+.exo-button-middle-20-disabled {
+    text-align: center;
 }
 
-.exo-button-left-20
-{
-	background: url("images/button/20/button_left.png ") no-repeat;
+.exo-button-left-20 {
+    background: url("images/button/20/button_left.png ") no-repeat;
 }
 
-.exo-button-left-20-down
-{
-	background: url("images/button/20/button_Down_left.png ") no-repeat;
+.exo-button-left-20-down {
+    background: url("images/button/20/button_Down_left.png ") no-repeat;
 }
 
-.exo-button-left-20-disabled
-{
-	background: url("images/button/20/button_Disabled_left.png ") no-repeat;
+.exo-button-left-20-disabled {
+    background: url("images/button/20/button_Disabled_left.png ") no-repeat;
 }
 
-.exo-button-middle-20
-{
-	background: url("images/button/20/button_middle.png ") repeat-x;
+.exo-button-middle-20 {
+    background: url("images/button/20/button_middle.png ") repeat-x;
 }
 
-.exo-button-middle-20-down
-{
-	background: url("images/button/20/button_Down_middle.png ") repeat-x;
+.exo-button-middle-20-down {
+    background: url("images/button/20/button_Down_middle.png ") repeat-x;
 }
 
-.exo-button-middle-20-disabled
-{
-	background: url("images/button/20/button_middle.png ") repeat-x;
+.exo-button-middle-20-disabled {
+    background: url("images/button/20/button_middle.png ") repeat-x;
 }
 
-.exo-button-right-20
-{
-	background: url("images/button/20/button_right.png ") no-repeat;
+.exo-button-right-20 {
+    background: url("images/button/20/button_right.png ") no-repeat;
 }
 
-.exo-button-right-20-down
-{
-	background: url("images/button/20/button_Down_right.png ") no-repeat;
+.exo-button-right-20-down {
+    background: url("images/button/20/button_Down_right.png ") no-repeat;
 }
 
-.exo-button-right-20-disabled
-{
-	background: url("images/button/20/button_right.png ") no-repeat;
+.exo-button-right-20-disabled {
+    background: url("images/button/20/button_right.png ") no-repeat;
 }
 
 /*
@@ -100,9 +87,8 @@ BUTTON x 22
 .exo-button-middle-22-disabled,
 .exo-button-right-22,
 .exo-button-right-22-down,
-.exo-button-right-22-disabled
-{
-	height: 22px;
+.exo-button-right-22-disabled {
+    height: 22px;
 }
 
 .exo-button-left-22,
@@ -110,105 +96,87 @@ BUTTON x 22
 .exo-button-left-22-disabled,
 .exo-button-right-22,
 .exo-button-right-22-down,
-.exo-button-right-22-disabled
-{
-	width: 4px;
+.exo-button-right-22-disabled {
+    width: 4px;
 }
 
 .exo-button-middle-22,
 .exo-button-middle-22-down,
-.exo-button-middle-22-disabled
-{
-	text-align: center;
+.exo-button-middle-22-disabled {
+    text-align: center;
 }
 
-.exo-button-left-22
-{
-	background: url("images/button/22/button_left.png ") no-repeat;
+.exo-button-left-22 {
+    background: url("images/button/22/button_left.png ") no-repeat;
 }
 
-.exo-button-left-22-down
-{
-	background: url("images/button/22/button_Down_left.png ") no-repeat;
+.exo-button-left-22-down {
+    background: url("images/button/22/button_Down_left.png ") no-repeat;
 }
 
-.exo-button-left-22-disabled
-{
-	background: url("images/button/22/button_Disabled_left.png ") no-repeat;
+.exo-button-left-22-disabled {
+    background: url("images/button/22/button_Disabled_left.png ") no-repeat;
 }
 
-.exo-button-middle-22
-{
-	background: url("images/button/22/button_middle.png ") repeat-x;
+.exo-button-middle-22 {
+    background: url("images/button/22/button_middle.png ") repeat-x;
 }
 
-.exo-button-middle-22-down
-{
-	background: url("images/button/22/button_Down_middle.png ") repeat-x;
+.exo-button-middle-22-down {
+    background: url("images/button/22/button_Down_middle.png ") repeat-x;
 }
 
-.exo-button-middle-22-disabled
-{
-	background: url("images/button/22/button_middle.png ") repeat-x;
+.exo-button-middle-22-disabled {
+    background: url("images/button/22/button_middle.png ") repeat-x;
 }
 
-.exo-button-right-22
-{
-	background: url("images/button/22/button_right.png ") no-repeat;
+.exo-button-right-22 {
+    background: url("images/button/22/button_right.png ") no-repeat;
 }
 
-.exo-button-right-22-down
-{
-	background: url("images/button/22/button_Down_right.png ") no-repeat;
+.exo-button-right-22-down {
+    background: url("images/button/22/button_Down_right.png ") no-repeat;
 }
 
-.exo-button-right-22-disabled
-{
-	background: url("images/button/22/button_right.png ") no-repeat;
+.exo-button-right-22-disabled {
+    background: url("images/button/22/button_right.png ") no-repeat;
 }
 
 /*
 BUTTON TITLE
 */
 
-.exo-button-title-table
-{
-	border-collapse: collapse;
-	height: 100%;
-	margin: auto;
+.exo-button-title-table {
+    border-collapse: collapse;
+    height: 100%;
+    margin: auto;
 }
 
-.exo-button-title-icon
-{
-	width: 16px;
+.exo-button-title-icon {
+    width: 16px;
 }
 
 .exo-button-title-text,
 .exo-button-title-text-down,
-.exo-button-title-text-disabled
-{
-    font-family:Verdana,sans-serif;
-    font-size:11px;
-	color:#4C4C4C;
-    padding-left:2px;
-    padding-right:2px;
+.exo-button-title-text-disabled {
+    font-family: Verdana, sans-serif;
+    font-size: 11px;
+    color: #4C4C4C;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
-
-.exo-button-title-text
-{
-	color:#4C4C4C;
-	font-weight:bold;
+.exo-button-title-text {
+    color: #4C4C4C;
+    font-weight: bold;
 }
 
-.exo-button-title-text-down
-{
-	color:#4C4C4C;
-	font-weight:bold;
+.exo-button-title-text-down {
+    color: #4C4C4C;
+    font-weight: bold;
 }
 
-.exo-button-title-text-disabled
-{
-	color:#AAAAAA;
-	font-weight:normal;
+.exo-button-title-text-disabled {
+    color: #AAAAAA;
+    font-weight: normal;
 }

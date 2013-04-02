@@ -19,61 +19,69 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-   <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle' />
-   <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
-   <ui:style>
-      .center {
-      	display: block;
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-      
-      .floatLeft {
-      	float: left;
-      }
-      
-      .floatRight {
-      	float: right;
-      }
-      
-      .label {
-      	margin-top: 3px;
-      	margin-right: 5px;
-      	font-size: 11px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	float: left;
-      }
-      
-      .spacingBottom {
-      	margin-bottom: 10px;
-      }
-   </ui:style>
-   <f:Border margin="15" borderColor="transparent">
-      <f:layer>
-         <g:FlowPanel>
-            <g:Label addStyleNames="{style.label} {style.spacingBottom}" text="{locale.importApplicationViewApplicationField}" width="25%"></g:Label>
-            <f:TextInput ui:field="applicationField" addStyleNames="{style.floatRight} {style.spacingBottom}" enabled="false" height="20px"
-               width="73%"></f:TextInput>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with field='resource' type='org.exoplatform.ide.extension.heroku.client.HerokuClientBundle'/>
+    <ui:with field="locale" type="org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant"></ui:with>
+    <ui:style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-            <g:Label addStyleNames="{style.label} {style.spacingBottom}" text="{locale.importApplicationViewProjectField}" width="25%"></g:Label>
-            <f:TextInput ui:field="projectField" addStyleNames="{style.floatRight} {style.spacingBottom}" height="20px" width="73%"></f:TextInput>
+        .floatLeft {
+            float: left;
+        }
 
-            <g:CheckBox ui:field="deployPublicKeyField" HTML="{locale.importApplicationViewDeployField}" addStyleNames="{style.floatRight}"
-               width="74%">
-            </g:CheckBox>
-         </g:FlowPanel>
+        .floatRight {
+            float: right;
+        }
 
-      </f:layer>
-      <f:layer height="22px" bottom="0">
-         <g:FlowPanel width="190px" styleName="{style.center}">
-            <f:ImageButton ui:field="importButton" width="90" height="22" text="{locale.importButton}" imageResource="{resource.okButton}"
-               disabledImageResource="{resource.okButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
-            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
-               disabledImageResource="{resource.cancelButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
-         </g:FlowPanel>
-      </f:layer>
+        .label {
+            margin-top: 3px;
+            margin-right: 5px;
+            font-size: 11px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            float: left;
+        }
 
-   </f:Border>
+        .spacingBottom {
+            margin-bottom: 10px;
+        }
+    </ui:style>
+    <f:Border margin="15" borderColor="transparent">
+        <f:layer>
+            <g:FlowPanel>
+                <g:Label addStyleNames="{style.label} {style.spacingBottom}" text="{locale.importApplicationViewApplicationField}"
+                         width="25%"></g:Label>
+                <f:TextInput ui:field="applicationField" addStyleNames="{style.floatRight} {style.spacingBottom}" enabled="false"
+                             height="20px"
+                             width="73%"></f:TextInput>
+
+                <g:Label addStyleNames="{style.label} {style.spacingBottom}" text="{locale.importApplicationViewProjectField}"
+                         width="25%"></g:Label>
+                <f:TextInput ui:field="projectField" addStyleNames="{style.floatRight} {style.spacingBottom}" height="20px"
+                             width="73%"></f:TextInput>
+
+                <g:CheckBox ui:field="deployPublicKeyField" HTML="{locale.importApplicationViewDeployField}"
+                            addStyleNames="{style.floatRight}"
+                            width="74%">
+                </g:CheckBox>
+            </g:FlowPanel>
+
+        </f:layer>
+        <f:layer height="22px" bottom="0">
+            <g:FlowPanel width="190px" styleName="{style.center}">
+                <f:ImageButton ui:field="importButton" width="90" height="22" text="{locale.importButton}"
+                               imageResource="{resource.okButton}"
+                               disabledImageResource="{resource.okButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+                <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+                <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}"
+                               imageResource="{resource.cancelButton}"
+                               disabledImageResource="{resource.cancelButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+            </g:FlowPanel>
+        </f:layer>
+
+    </f:Border>
 </ui:UiBinder> 

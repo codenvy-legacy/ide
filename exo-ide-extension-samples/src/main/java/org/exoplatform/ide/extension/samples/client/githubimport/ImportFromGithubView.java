@@ -40,123 +40,92 @@ import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubView.java Dec 7, 2011 3:37:28 PM vereshchaka $
  */
-public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPresenter.Display
-{
-   private static final String ID = "ideImportFromGithubView";
+public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPresenter.Display {
+    private static final String ID = "ideImportFromGithubView";
 
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importLoadDialogTitle();
+    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importLoadDialogTitle();
 
-   private static final int HEIGHT = 365;
+    private static final int HEIGHT = 365;
 
-   private static final int WIDTH = 500;
+    private static final int WIDTH = 500;
 
-   private static final String READONLY_MODE_FIELD_ID = "ideImportFromGithubViewReadOnlyModeField";
+    private static final String READONLY_MODE_FIELD_ID = "ideImportFromGithubViewReadOnlyModeField";
 
-   private static final String NAME_FIELD_ID = "ideImportFromGithubViewNameField";
+    private static final String NAME_FIELD_ID = "ideImportFromGithubViewNameField";
 
-   private static final String FINISH_BUTTON_ID = "ideImportFromGithubViewFinishButton";
+    private static final String FINISH_BUTTON_ID = "ideImportFromGithubViewFinishButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideImportFromGithubViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideImportFromGithubViewCancelButton";
 
-   interface ImportFromGithubViewUiBinder extends UiBinder<Widget, ImportFromGithubView>
-   {
-   }
+    interface ImportFromGithubViewUiBinder extends UiBinder<Widget, ImportFromGithubView> {
+    }
 
-   private static ImportFromGithubViewUiBinder uiBinder = GWT.create(ImportFromGithubViewUiBinder.class);
+    private static ImportFromGithubViewUiBinder uiBinder = GWT.create(ImportFromGithubViewUiBinder.class);
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   /**
-    * Next button.
-    */
-   @UiField
-   ImageButton finishButton;
+    /** Next button. */
+    @UiField
+    ImageButton finishButton;
 
-   /**
-    * GitHub repositories grid.
-    */
-   @UiField
-   GitHubProjectsListGrid repositoriesGrid;
+    /** GitHub repositories grid. */
+    @UiField
+    GitHubProjectsListGrid repositoriesGrid;
 
-   /**
-    * Project's name field.
-    */
-   @UiField
-   TextInput projectNameField;
+    /** Project's name field. */
+    @UiField
+    TextInput projectNameField;
 
-   /**
-    * Read-only mode field.
-    */
-   @UiField
-   CheckBox readOnlyModeField;
+    /** Read-only mode field. */
+    @UiField
+    CheckBox readOnlyModeField;
 
-   public ImportFromGithubView()
-   {
-      super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
-      add(uiBinder.createAndBindUi(this));
+    public ImportFromGithubView() {
+        super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
+        add(uiBinder.createAndBindUi(this));
 
-      finishButton.setButtonId(FINISH_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        finishButton.setButtonId(FINISH_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
 
-      projectNameField.setName(NAME_FIELD_ID);
-      readOnlyModeField.setName(READONLY_MODE_FIELD_ID);
-   }
+        projectNameField.setName(NAME_FIELD_ID);
+        readOnlyModeField.setName(READONLY_MODE_FIELD_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getFinishButton()
-    */
-   @Override
-   public HasClickHandlers getFinishButton()
-   {
-      return finishButton;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getFinishButton() */
+    @Override
+    public HasClickHandlers getFinishButton() {
+        return finishButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getRepositoriesGrid()
-    */
-   @Override
-   public ListGridItem<ProjectData> getRepositoriesGrid()
-   {
-      return repositoriesGrid;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getRepositoriesGrid() */
+    @Override
+    public ListGridItem<ProjectData> getRepositoriesGrid() {
+        return repositoriesGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getProjectNameField()
-    */
-   @Override
-   public HasValue<String> getProjectNameField()
-   {
-      return projectNameField;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getProjectNameField() */
+    @Override
+    public HasValue<String> getProjectNameField() {
+        return projectNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setFinishButtonEnabled(boolean)
-    */
-   @Override
-   public void setFinishButtonEnabled(boolean enabled)
-   {
-      finishButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setFinishButtonEnabled(boolean) */
+    @Override
+    public void setFinishButtonEnabled(boolean enabled) {
+        finishButton.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getReadOnlyModeField()
-    */
-   @Override
-   public HasValue<Boolean> getReadOnlyModeField()
-   {
-      return readOnlyModeField;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getReadOnlyModeField() */
+    @Override
+    public HasValue<Boolean> getReadOnlyModeField() {
+        return readOnlyModeField;
+    }
 }

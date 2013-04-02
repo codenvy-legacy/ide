@@ -23,59 +23,54 @@ import com.google.gwt.user.client.Window;
 
 /**
  * Represents an x, y position relative to an offsetParent.
- *
+ * <p/>
  * If offsetParent is null, then interpret left and top as absolute positions on
  * the browser.
  */
-public final class OffsetPosition
-{
-   public final int left;
+public final class OffsetPosition {
+    public final int left;
 
-   public final int top;
+    public final int top;
 
-   public final Element offsetParent;
+    public final Element offsetParent;
 
-   public OffsetPosition(int left, int top, Element offsetParent)
-   {
-      this.left = left;
-      this.top = top;
-      this.offsetParent = offsetParent;
-   }
+    public OffsetPosition(int left, int top, Element offsetParent) {
+        this.left = left;
+        this.top = top;
+        this.offsetParent = offsetParent;
+    }
 
-   /**
-    * Create a offset position base on the event's client X, Y. The return offset
-    * position is relative to the Document body coordinate.
-    *
-    * @param event
-    */
-   public OffsetPosition(Event event)
-   {
-      // convert the event's client coordinate system, which is client area base, to the
-      // body position coordinate system.
+    /**
+     * Create a offset position base on the event's client X, Y. The return offset
+     * position is relative to the Document body coordinate.
+     *
+     * @param event
+     */
+    public OffsetPosition(Event event) {
+        // convert the event's client coordinate system, which is client area base, to the
+        // body position coordinate system.
 
-      this.left = event.getClientX() + Window.getScrollLeft() - Document.get().getBodyOffsetLeft();
-      this.top = event.getClientY() + Window.getScrollTop() - Document.get().getBodyOffsetTop();
+        this.left = event.getClientX() + Window.getScrollLeft() - Document.get().getBodyOffsetLeft();
+        this.top = event.getClientY() + Window.getScrollTop() - Document.get().getBodyOffsetTop();
 
-      this.offsetParent = null;
-   }
+        this.offsetParent = null;
+    }
 
-   /**
-    * Gets the position of target relative to a specified element.
-    *
-    * @param target
-    * @param relative
-    */
-   public static OffsetPosition getRelativePosition(OffsetPosition target, Element relative)
-   {
-      int parentLeft = 0;
-      int parentTop = 0;
-      if (target.offsetParent != null)
-      {
-         parentLeft = target.offsetParent.getAbsoluteLeft();
-         parentTop = target.offsetParent.getAbsoluteTop();
-      }
-      int left = parentLeft + target.left - relative.getAbsoluteLeft();
-      int top = parentTop + target.top - relative.getAbsoluteTop();
-      return new OffsetPosition(left, top, relative);
-   }
+    /**
+     * Gets the position of target relative to a specified element.
+     *
+     * @param target
+     * @param relative
+     */
+    public static OffsetPosition getRelativePosition(OffsetPosition target, Element relative) {
+        int parentLeft = 0;
+        int parentTop = 0;
+        if (target.offsetParent != null) {
+            parentLeft = target.offsetParent.getAbsoluteLeft();
+            parentTop = target.offsetParent.getAbsoluteTop();
+        }
+        int left = parentLeft + target.left - relative.getAbsoluteLeft();
+        int top = parentTop + target.top - relative.getAbsoluteTop();
+        return new OffsetPosition(left, top, relative);
+    }
 }

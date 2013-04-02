@@ -21,28 +21,26 @@ package com.google.collide.client.common;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface ThemeConstants
-{
-   
-   String SCROLLBAR = "collabeditor-scrollbar";
-   
-   String SCROLLABLE = "collabeditor-scrollable";
-   
-   String ROOT = "collabeditor-root";
-   
-   
-   String LINE_NUMBER = "collabeditor-line-number";
-   
-   String ACTIVE_LINE_NUMBER = "collabeditor-active-line-number";
-   
-   String ACTIVE_LINE = "collabeditor-active-line";
-   
-   
-   String SELECTION = "collabeditor-selection";
-   
-   String SELECTION_INACTIVE = "collabeditor-selection-inactive";
-   
+public interface ThemeConstants {
+
+    String SCROLLBAR = "collabeditor-scrollbar";
+
+    String SCROLLABLE = "collabeditor-scrollable";
+
+    String ROOT = "collabeditor-root";
+
+
+    String LINE_NUMBER = "collabeditor-line-number";
+
+    String ACTIVE_LINE_NUMBER = "collabeditor-active-line-number";
+
+    String ACTIVE_LINE = "collabeditor-active-line";
+
+
+    String SELECTION = "collabeditor-selection";
+
+    String SELECTION_INACTIVE = "collabeditor-selection-inactive";
+
 
 }

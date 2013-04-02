@@ -35,46 +35,35 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 18, 2012 10:33:01 AM anya $
- * 
  */
-public class EnvironmentsInfoListUnmarshaller implements Unmarshallable<List<EnvironmentInfo>>
-{
-   private List<EnvironmentInfo> environmentsList = new ArrayList<EnvironmentInfo>();
+public class EnvironmentsInfoListUnmarshaller implements Unmarshallable<List<EnvironmentInfo>> {
+    private List<EnvironmentInfo> environmentsList = new ArrayList<EnvironmentInfo>();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
 
-      if (value == null)
-      {
-         return;
-      }
+        if (value == null) {
+            return;
+        }
 
-      for (int i = 0; i < value.size(); i++)
-      {
-         String payload = value.get(i).isObject().toString();
+        for (int i = 0; i < value.size(); i++) {
+            String payload = value.get(i).isObject().toString();
 
-         AutoBean<EnvironmentInfo> applicationVersionInfoBean =
-            AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, EnvironmentInfo.class, payload);
-         environmentsList.add(applicationVersionInfoBean.as());
-      }
-   }
+            AutoBean<EnvironmentInfo> applicationVersionInfoBean =
+                    AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, EnvironmentInfo.class, payload);
+            environmentsList.add(applicationVersionInfoBean.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<EnvironmentInfo> getPayload()
-   {
-      return environmentsList;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public List<EnvironmentInfo> getPayload() {
+        return environmentsList;
+    }
 }

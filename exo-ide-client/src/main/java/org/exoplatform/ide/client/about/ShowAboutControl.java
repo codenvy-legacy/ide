@@ -31,35 +31,30 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 @RolesAllowed({"developer"})
-public class ShowAboutControl extends SimpleControl implements IDEControl
-{
+public class ShowAboutControl extends SimpleControl implements IDEControl {
 
-   public static final String ID = "Help/About...";
+    public static final String ID = "Help/About...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.aboutControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.aboutControl();
 
-   /**
-    *
-    */
-   public ShowAboutControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setEnabled(true);
-      setVisible(true);
-      setGroupName(TITLE);
-      setImages(IDEImageBundle.INSTANCE.about(), IDEImageBundle.INSTANCE.aboutDisabled());
-      setEvent(new ShowAboutDialogEvent());
-      setHotKey("F1");
-   }
+    /**
+     *
+     */
+    public ShowAboutControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setEnabled(true);
+        setVisible(true);
+        setGroupName(TITLE);
+        setImages(IDEImageBundle.INSTANCE.about(), IDEImageBundle.INSTANCE.aboutDisabled());
+        setEvent(new ShowAboutDialogEvent());
+        setHotKey("F1");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+    }
 
 }

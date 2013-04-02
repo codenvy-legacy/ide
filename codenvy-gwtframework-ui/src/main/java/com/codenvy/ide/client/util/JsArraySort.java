@@ -17,77 +17,78 @@
 
 package com.codenvy.ide.client.util;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
-import com.google.gwt.core.client.JsArrayBoolean;
-import com.google.gwt.core.client.JsArrayInteger;
-import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.core.client.*;
 
 /**
  * Utility to sort java.com.gwt.core.client.JsArray* classes.
- *
+ * <p/>
  * NOTE(user):
  * This is done as a static helper class rather than within the JsArray*
  * classes, to avoid passing in functors to a JSNI method (which make knorton
  * and jgw nervous).
  */
-public class JsArraySort
-{
-   /**
-    * Utility class, so private constructor.
-    */
-   private JsArraySort()
-   {
-   }
+public class JsArraySort {
+    /** Utility class, so private constructor. */
+    private JsArraySort() {
+    }
 
-   /**
-    * Sorts a JsArray of type T.
-    *
-    * @param sortMe     Array to be sorted.
-    * @param comparator Comparator to be used, per native JS sort() method.
-    */
-   public static native <T extends JavaScriptObject> void sort(JsArray<T> sortMe, JavaScriptObject comparator) /*-{
-      sortMe.sort(comparator);
-   }-*/;
+    /**
+     * Sorts a JsArray of type T.
+     *
+     * @param sortMe
+     *         Array to be sorted.
+     * @param comparator
+     *         Comparator to be used, per native JS sort() method.
+     */
+    public static native <T extends JavaScriptObject> void sort(JsArray<T> sortMe, JavaScriptObject comparator) /*-{
+        sortMe.sort(comparator);
+    }-*/;
 
-   /**
-    * Sorts a JsArray of booleans.
-    *
-    * @param sortMe     Array to be sorted.
-    * @param comparator Comparator to be used, per native JS sort() method.
-    */
-   public static native void sort(JsArrayBoolean sortMe, JavaScriptObject comparator) /*-{
-      sortMe.sort(comparator);
-   }-*/;
+    /**
+     * Sorts a JsArray of booleans.
+     *
+     * @param sortMe
+     *         Array to be sorted.
+     * @param comparator
+     *         Comparator to be used, per native JS sort() method.
+     */
+    public static native void sort(JsArrayBoolean sortMe, JavaScriptObject comparator) /*-{
+        sortMe.sort(comparator);
+    }-*/;
 
-   /**
-    * Sorts a JsArray of integers.
-    *
-    * @param sortMe     Array to be sorted.
-    * @param comparator Comparator to be used, per native JS sort() method.
-    */
-   public static native void sort(JsArrayInteger sortMe, JavaScriptObject comparator) /*-{
-      sortMe.sort(comparator);
-   }-*/;
+    /**
+     * Sorts a JsArray of integers.
+     *
+     * @param sortMe
+     *         Array to be sorted.
+     * @param comparator
+     *         Comparator to be used, per native JS sort() method.
+     */
+    public static native void sort(JsArrayInteger sortMe, JavaScriptObject comparator) /*-{
+        sortMe.sort(comparator);
+    }-*/;
 
-   /**
-    * Sorts a JsArray of doubles.
-    *
-    * @param sortMe     Array to be sorted.
-    * @param comparator Comparator to be used, per native JS sort() method.
-    */
-   public static native void sort(JsArrayNumber sortMe, JavaScriptObject comparator) /*-{
-      sortMe.sort(comparator);
-   }-*/;
+    /**
+     * Sorts a JsArray of doubles.
+     *
+     * @param sortMe
+     *         Array to be sorted.
+     * @param comparator
+     *         Comparator to be used, per native JS sort() method.
+     */
+    public static native void sort(JsArrayNumber sortMe, JavaScriptObject comparator) /*-{
+        sortMe.sort(comparator);
+    }-*/;
 
-   /**
-    * Sorts a JsArray of strings.
-    *
-    * @param sortMe     Array to be sorted.
-    * @param comparator Comparator to be used, per native JS sort() method.
-    */
-   public static native void sort(JsArrayString sortMe, JavaScriptObject comparator) /*-{
-      sortMe.sort(comparator);
-   }-*/;
+    /**
+     * Sorts a JsArray of strings.
+     *
+     * @param sortMe
+     *         Array to be sorted.
+     * @param comparator
+     *         Comparator to be used, per native JS sort() method.
+     */
+    public static native void sort(JsArrayString sortMe, JavaScriptObject comparator) /*-{
+        sortMe.sort(comparator);
+    }-*/;
 }

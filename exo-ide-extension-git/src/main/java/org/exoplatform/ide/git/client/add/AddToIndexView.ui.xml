@@ -19,49 +19,50 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-   <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle' />
-   <ui:with field="locale" type="org.exoplatform.ide.git.client.GitLocalizationConstant"></ui:with>
-   <ui:style>
-      .spacingTop {
-      	margin-top: 20px;
-      }
-      
-      .spacingBottom {
-      	margin-bottom: 15px;
-      	font-size: 11px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      }
-      
-      .center {
-      	display: block;
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-      
-      .floatLeft {
-      	float: left;
-      }
-   </ui:style>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with field='resource' type='org.exoplatform.ide.git.client.GitClientBundle'/>
+    <ui:with field="locale" type="org.exoplatform.ide.git.client.GitLocalizationConstant"></ui:with>
+    <ui:style>
+        .spacingTop {
+            margin-top: 20px;
+        }
 
-   <f:Border margin="20" borderColor="transparent">
-      <f:layer>
-         <g:FlowPanel>
-            <f:Label ui:field="messageField" isHTML="true" styleName="{style.spacingBottom}"></f:Label>
-            <g:CheckBox ui:field="updateField" HTML="{locale.addToIndexUpdateFieldTitle}"></g:CheckBox>
-         </g:FlowPanel>
-      </f:layer>
+        .spacingBottom {
+            margin-bottom: 15px;
+            font-size: 11px;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+        }
 
-      <f:layer height="22px" bottom="0">
-         <g:FlowPanel width="190px" styleName="{style.center}">
-            <f:ImageButton ui:field="addButton" width="90" height="22" text="{locale.buttonAdd}" imageResource="{resource.add}"
-               disabledImageResource="{resource.addDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
-            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.buttonCancel}" imageResource="{resource.cancel}"
-               disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
-         </g:FlowPanel>
-      </f:layer>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-   </f:Border>
+        .floatLeft {
+            float: left;
+        }
+    </ui:style>
+
+    <f:Border margin="20" borderColor="transparent">
+        <f:layer>
+            <g:FlowPanel>
+                <f:Label ui:field="messageField" isHTML="true" styleName="{style.spacingBottom}"></f:Label>
+                <g:CheckBox ui:field="updateField" HTML="{locale.addToIndexUpdateFieldTitle}"></g:CheckBox>
+            </g:FlowPanel>
+        </f:layer>
+
+        <f:layer height="22px" bottom="0">
+            <g:FlowPanel width="190px" styleName="{style.center}">
+                <f:ImageButton ui:field="addButton" width="90" height="22" text="{locale.buttonAdd}" imageResource="{resource.add}"
+                               disabledImageResource="{resource.addDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
+                <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+                <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.buttonCancel}" imageResource="{resource.cancel}"
+                               disabledImageResource="{resource.cancelDisabled}"></f:ImageButton>
+            </g:FlowPanel>
+        </f:layer>
+
+    </f:Border>
 
 </ui:UiBinder>

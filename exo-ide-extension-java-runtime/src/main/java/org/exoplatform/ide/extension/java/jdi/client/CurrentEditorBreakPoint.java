@@ -23,51 +23,42 @@ import org.exoplatform.ide.editor.java.Breakpoint;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
- * 
  */
-public class CurrentEditorBreakPoint extends Breakpoint
-{
+public class CurrentEditorBreakPoint extends Breakpoint {
 
-   private String filePath;
-
-  
-   /**
-    * @param lineNumber
-    * @param message
-    */
-   public CurrentEditorBreakPoint(int line, String message, String filePath)
-   {
-      super(Type.CURRENT, line, message);
-      this.filePath = filePath;
-   }
-
-   
-   public String getFilePath()
-   {
-      return filePath;
-   }
-   
-   public void setFilePath(String filePath)
-   {
-      this.filePath = filePath;
-   }
-   
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (obj instanceof CurrentEditorBreakPoint)
-         return getLineNumber() == ((CurrentEditorBreakPoint)obj).getLineNumber();
-      return false;
-   }
+    private String filePath;
 
 
-   /**
-    * @param lineNumber
-    */
-   public void setLineNumber(int lineNumber)
-   {
-      this.lineNumber = lineNumber;
-   }
+    /**
+     * @param lineNumber
+     * @param message
+     */
+    public CurrentEditorBreakPoint(int line, String message, String filePath) {
+        super(Type.CURRENT, line, message);
+        this.filePath = filePath;
+    }
+
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CurrentEditorBreakPoint)
+            return getLineNumber() == ((CurrentEditorBreakPoint)obj).getLineNumber();
+        return false;
+    }
+
+
+    /** @param lineNumber */
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 
 }

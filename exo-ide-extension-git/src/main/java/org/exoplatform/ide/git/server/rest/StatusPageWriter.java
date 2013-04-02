@@ -20,17 +20,16 @@ package org.exoplatform.ide.git.server.rest;
 
 import org.exoplatform.ide.git.server.InfoPage;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -38,45 +37,41 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @Produces(MediaType.TEXT_PLAIN)
-public final class StatusPageWriter implements MessageBodyWriter<InfoPage>
-{
-   /**
-    * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-    *      javax.ws.rs.core.MediaType)
-    */
-   @Override
-   public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType)
-   {
-      return InfoPage.class.isAssignableFrom(type);
-   }
+public final class StatusPageWriter implements MessageBodyWriter<InfoPage> {
+    /**
+     * @see MessageBodyWriter#isWriteable(Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
+     *      javax.ws.rs.core.MediaType)
+     */
+    @Override
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return InfoPage.class.isAssignableFrom(type);
+    }
 
-   /**
-    * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-    *      javax.ws.rs.core.MediaType)
-    */
-   @Override
-   public long getSize(InfoPage infoPage,
-                       Class<?> type,
-                       Type genericType,
-                       Annotation[] annotations,
-                       MediaType mediaType)
-   {
-      return -1;
-   }
+    /**
+     * @see MessageBodyWriter#getSize(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
+     *      javax.ws.rs.core.MediaType)
+     */
+    @Override
+    public long getSize(InfoPage infoPage,
+                        Class<?> type,
+                        Type genericType,
+                        Annotation[] annotations,
+                        MediaType mediaType) {
+        return -1;
+    }
 
-   /**
-    * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
-    *      javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
-    */
-   @Override
-   public void writeTo(InfoPage infoPage,
-                       Class<?> type,
-                       Type genericType,
-                       Annotation[] annotations,
-                       MediaType mediaType,
-                       MultivaluedMap<String, Object> httpHeaders,
-                       OutputStream entityStream) throws IOException, WebApplicationException
-   {
-      infoPage.writeTo(entityStream);
-   }
+    /**
+     * @see MessageBodyWriter#writeTo(Object, Class, java.lang.reflect.Type, java.lang.annotation.Annotation[],
+     *      javax.ws.rs.core.MediaType, javax.ws.rs.core.MultivaluedMap, java.io.OutputStream)
+     */
+    @Override
+    public void writeTo(InfoPage infoPage,
+                        Class<?> type,
+                        Type genericType,
+                        Annotation[] annotations,
+                        MediaType mediaType,
+                        MultivaluedMap<String, Object> httpHeaders,
+                        OutputStream entityStream) throws IOException, WebApplicationException {
+        infoPage.writeTo(entityStream);
+    }
 }

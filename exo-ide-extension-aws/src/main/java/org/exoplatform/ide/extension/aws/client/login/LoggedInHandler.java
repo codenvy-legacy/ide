@@ -21,9 +21,7 @@ package org.exoplatform.ide.extension.aws.client.login;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 18, 2012 11:15:01 AM anya $
- * 
  */
-public interface LoggedInHandler
-{
-   void onLoggedIn();
+public interface LoggedInHandler {
+    void onLoggedIn();
 }

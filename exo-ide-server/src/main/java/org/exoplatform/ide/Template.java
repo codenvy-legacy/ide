@@ -20,91 +20,75 @@ package org.exoplatform.ide;
 
 /**
  * Abstract template data.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: AbstractTemplate.java Jul 26, 2011 5:37:26 PM vereshchaka $
- * 
  */
-public abstract class Template
-{
-   private String name;
+public abstract class Template {
+    private String name;
 
-   private String description;
+    private String description;
 
-   /**
-    * Flag, is template default. If template is default, it can't be deleted, unlike user's template
-    */
-   private boolean defaultTemplate;
+    /** Flag, is template default. If template is default, it can't be deleted, unlike user's template */
+    private boolean defaultTemplate;
 
-   /**
-    * Auxiliary field. It is necessary for client, that while parsing json it will be able to detect the type of child (folder or
-    * file).
-    */
-   private String childType;
+    /**
+     * Auxiliary field. It is necessary for client, that while parsing json it will be able to detect the type of child (folder or
+     * file).
+     */
+    private String childType;
 
-   public Template()
-   {
-   }
+    public Template() {
+    }
 
-   protected Template(String type)
-   {
-      this.childType = type;
-   };
+    protected Template(String type) {
+        this.childType = type;
+    }
 
-   /**
-    * @return the defaultTemplate
-    */
-   public boolean isDefault()
-   {
-      return defaultTemplate;
-   }
+    ;
 
-   /**
-    * @param defaultTemplate the defaultTemplate to set
-    */
-   public void setDefault(boolean defaultTemplate)
-   {
-      this.defaultTemplate = defaultTemplate;
-   }
+    /** @return the defaultTemplate */
+    public boolean isDefault() {
+        return defaultTemplate;
+    }
 
-   /**
-    * @return the type
-    */
-   public String getChildType()
-   {
-      return childType;
-   }
+    /**
+     * @param defaultTemplate
+     *         the defaultTemplate to set
+     */
+    public void setDefault(boolean defaultTemplate) {
+        this.defaultTemplate = defaultTemplate;
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @return the type */
+    public String getChildType() {
+        return childType;
+    }
 
-   /**
-    * @param name the name to set
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /** @return the name */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @return the description
-    */
-   public String getDescription()
-   {
-      return description;
-   }
+    /**
+     * @param name
+     *         the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @param description the description to set
-    */
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    /** @return the description */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description
+     *         the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
 }

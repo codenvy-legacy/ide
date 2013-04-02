@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ManageApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 19, 2012 11:24:02 AM anya $
- * 
  */
-public interface ManageApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to manage application on AWS.
-    * 
-    * @param event
-    */
-   void onManageApplication(ManageApplicationEvent event);
+public interface ManageApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to manage application on AWS.
+     *
+     * @param event
+     */
+    void onManageApplication(ManageApplicationEvent event);
 }

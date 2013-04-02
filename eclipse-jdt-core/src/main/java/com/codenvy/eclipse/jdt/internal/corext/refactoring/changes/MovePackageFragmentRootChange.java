@@ -22,28 +22,24 @@ import com.codenvy.eclipse.jdt.internal.ui.viewsupport.BasicElementLabels;
 import com.codenvy.eclipse.jdt.ui.JavaElementLabels;
 import com.codenvy.eclipse.ltk.core.refactoring.Change;
 
-public class MovePackageFragmentRootChange extends PackageFragmentRootReorgChange
-{
+public class MovePackageFragmentRootChange extends PackageFragmentRootReorgChange {
 
-   public MovePackageFragmentRootChange(IPackageFragmentRoot root, IContainer destination,
-      IPackageFragmentRootManipulationQuery updateClasspathQuery)
-   {
-      super(root, destination, null, updateClasspathQuery);
-   }
+    public MovePackageFragmentRootChange(IPackageFragmentRoot root, IContainer destination,
+                                         IPackageFragmentRootManipulationQuery updateClasspathQuery) {
+        super(root, destination, null, updateClasspathQuery);
+    }
 
-   @Override
-   protected Change doPerformReorg(IPath destinationPath, IProgressMonitor pm) throws JavaModelException
-   {
-      getRoot().move(destinationPath, getResourceUpdateFlags(), getUpdateModelFlags(false), null, pm);
-      return null;
-   }
+    @Override
+    protected Change doPerformReorg(IPath destinationPath, IProgressMonitor pm) throws JavaModelException {
+        getRoot().move(destinationPath, getResourceUpdateFlags(), getUpdateModelFlags(false), null, pm);
+        return null;
+    }
 
-   @Override
-   public String getName()
-   {
-      String rootName = JavaElementLabels.getElementLabel(getRoot(), JavaElementLabels.ALL_DEFAULT);
-      String destinationName = BasicElementLabels.getResourceName(getDestination());
-      return Messages.format(RefactoringCoreMessages.MovePackageFragmentRootChange_move,
-         new String[]{rootName, destinationName});
-   }
+    @Override
+    public String getName() {
+        String rootName = JavaElementLabels.getElementLabel(getRoot(), JavaElementLabels.ALL_DEFAULT);
+        String destinationName = BasicElementLabels.getResourceName(getDestination());
+        return Messages.format(RefactoringCoreMessages.MovePackageFragmentRootChange_move,
+                               new String[]{rootName, destinationName});
+    }
 }

@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to manage project, deployed to OpenShift.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 12:34:34 PM anya $
- * 
  */
-public class ManageOpenShiftProjectEvent extends GwtEvent<ManageOpenShiftProjectHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<ManageOpenShiftProjectHandler> TYPE =
-      new GwtEvent.Type<ManageOpenShiftProjectHandler>();
+public class ManageOpenShiftProjectEvent extends GwtEvent<ManageOpenShiftProjectHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<ManageOpenShiftProjectHandler> TYPE =
+            new GwtEvent.Type<ManageOpenShiftProjectHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageOpenShiftProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageOpenShiftProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageOpenShiftProjectHandler handler)
-   {
-      handler.onManageOpenShiftProject(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageOpenShiftProjectHandler handler) {
+        handler.onManageOpenShiftProject(this);
+    }
 
 }

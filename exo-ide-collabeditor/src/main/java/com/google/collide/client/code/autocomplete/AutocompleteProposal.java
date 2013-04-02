@@ -25,66 +25,66 @@ import java.util.Comparator;
  */
 public class AutocompleteProposal {
 
-  public static final Comparator<AutocompleteProposal> LEXICOGRAPHICAL_COMPARATOR =
-      new Comparator<AutocompleteProposal>() {
+    public static final Comparator<AutocompleteProposal> LEXICOGRAPHICAL_COMPARATOR =
+            new Comparator<AutocompleteProposal>() {
+                @Override
+                public int compare(AutocompleteProposal first, AutocompleteProposal second) {
+                    // We assume that proposal never return null as label.
+                    return first.getLabel().compareToIgnoreCase(second.getLabel());
+                }
+            };
+
+    protected final String   name;
+    protected final PathUtil path;
+
+    public AutocompleteProposal(String name) {
+        this(name, PathUtil.EMPTY_PATH);
+    }
+
+    public AutocompleteProposal(String name, PathUtil path) {
+        assert name != null;
+        this.name = name;
+        this.path = path;
+    }
+
     @Override
-    public int compare(AutocompleteProposal first, AutocompleteProposal second) {
-      // We assume that proposal never return null as label.
-      return first.getLabel().compareToIgnoreCase(second.getLabel());
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof AutocompleteProposal) {
+            AutocompleteProposal that = (AutocompleteProposal)obj;
+            if (!this.name.equals(that.name)) {
+                return false;
+            }
+            if (Utils.equalsOrNull(this.path, that.path)) {
+                return true;
+            }
+            return false;
+        } else {
+            return false;
+        }
     }
-  };
 
-  protected final String name;
-  protected final PathUtil path;
-
-  public AutocompleteProposal(String name) {
-    this(name, PathUtil.EMPTY_PATH);
-  }
-
-  public AutocompleteProposal(String name, PathUtil path) {
-    assert name != null;
-    this.name = name;
-    this.path = path;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
+    public String getName() {
+        return name;
     }
-    if (obj instanceof AutocompleteProposal) {
-      AutocompleteProposal that = (AutocompleteProposal) obj;
-      if (!this.name.equals(that.name)) {
-        return false;
-      }
-      if (Utils.equalsOrNull(this.path, that.path)) {
-        return true;
-      }
-      return false;
-    } else {
-      return false;
+
+    public PathUtil getPath() {
+        return path;
     }
-  }
 
-  public String getName() {
-    return name;
-  }
+    @Override
+    public int hashCode() {
+        return this.name.hashCode() + (31 * this.path.hashCode());
+    }
 
-  public PathUtil getPath() {
-    return path;
-  }
+    @Override
+    public String toString() {
+        return this.name + " :" + this.path.getPathString();
+    }
 
-  @Override
-  public int hashCode() {
-    return this.name.hashCode() + (31 * this.path.hashCode());
-  }
-
-  @Override
-  public String toString() {
-    return this.name + " :" + this.path.getPathString();
-  }
-
-  public String getLabel() {
-    return name;
-  }
+    public String getLabel() {
+        return name;
+    }
 }

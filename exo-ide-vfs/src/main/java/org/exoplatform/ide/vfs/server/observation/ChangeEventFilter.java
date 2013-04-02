@@ -30,99 +30,80 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public abstract class ChangeEventFilter
-{
-   public static ChangeEventFilter createAndFilter(ChangeEventFilter... filters)
-   {
-      if (filters == null || filters.length < 2)
-      {
-         throw new IllegalArgumentException("At least two filters required. ");
-      }
-      ChangeEventFilter[] copy = new ChangeEventFilter[filters.length];
-      System.arraycopy(filters, 0, copy, 0, filters.length);
-      return new AndChangeEventFilter(copy);
-   }
+public abstract class ChangeEventFilter {
+    public static ChangeEventFilter createAndFilter(ChangeEventFilter... filters) {
+        if (filters == null || filters.length < 2) {
+            throw new IllegalArgumentException("At least two filters required. ");
+        }
+        ChangeEventFilter[] copy = new ChangeEventFilter[filters.length];
+        System.arraycopy(filters, 0, copy, 0, filters.length);
+        return new AndChangeEventFilter(copy);
+    }
 
-   public static ChangeEventFilter createAndFilter(List<ChangeEventFilter> filters)
-   {
-      return createAndFilter(filters.toArray(new ChangeEventFilter[filters.size()]));
-   }
+    public static ChangeEventFilter createAndFilter(List<ChangeEventFilter> filters) {
+        return createAndFilter(filters.toArray(new ChangeEventFilter[filters.size()]));
+    }
 
-   private static class AndChangeEventFilter extends ChangeEventFilter
-   {
-      private final ChangeEventFilter[] filters;
+    private static class AndChangeEventFilter extends ChangeEventFilter {
+        private final ChangeEventFilter[] filters;
 
-      @Override
-      public boolean matched(ChangeEvent event) throws VirtualFileSystemException
-      {
-         for (ChangeEventFilter filter : filters)
-         {
-            if (!filter.matched(event))
-            {
-               return false;
+        @Override
+        public boolean matched(ChangeEvent event) throws VirtualFileSystemException {
+            for (ChangeEventFilter filter : filters) {
+                if (!filter.matched(event)) {
+                    return false;
+                }
             }
-         }
-         return true;
-      }
+            return true;
+        }
 
-      private AndChangeEventFilter(ChangeEventFilter[] filters)
-      {
-         this.filters = filters;
-      }
-   }
+        private AndChangeEventFilter(ChangeEventFilter[] filters) {
+            this.filters = filters;
+        }
+    }
 
-   public static ChangeEventFilter createOrFilter(ChangeEventFilter... filters)
-   {
-      if (filters == null || filters.length < 2)
-      {
-         throw new IllegalArgumentException("At least two filters required. ");
-      }
-      ChangeEventFilter[] copy = new ChangeEventFilter[filters.length];
-      System.arraycopy(filters, 0, copy, 0, filters.length);
-      return new OrChangeEventFilter(copy);
-   }
+    public static ChangeEventFilter createOrFilter(ChangeEventFilter... filters) {
+        if (filters == null || filters.length < 2) {
+            throw new IllegalArgumentException("At least two filters required. ");
+        }
+        ChangeEventFilter[] copy = new ChangeEventFilter[filters.length];
+        System.arraycopy(filters, 0, copy, 0, filters.length);
+        return new OrChangeEventFilter(copy);
+    }
 
-   public static ChangeEventFilter createOrFilter(List<ChangeEventFilter> filters)
-   {
-      return createOrFilter(filters.toArray(new ChangeEventFilter[filters.size()]));
-   }
+    public static ChangeEventFilter createOrFilter(List<ChangeEventFilter> filters) {
+        return createOrFilter(filters.toArray(new ChangeEventFilter[filters.size()]));
+    }
 
-   private static class OrChangeEventFilter extends ChangeEventFilter
-   {
-      private final ChangeEventFilter[] filters;
+    private static class OrChangeEventFilter extends ChangeEventFilter {
+        private final ChangeEventFilter[] filters;
 
-      @Override
-      public boolean matched(ChangeEvent event) throws VirtualFileSystemException
-      {
-         for (ChangeEventFilter filter : filters)
-         {
-            if (filter.matched(event))
-            {
-               return true;
+        @Override
+        public boolean matched(ChangeEvent event) throws VirtualFileSystemException {
+            for (ChangeEventFilter filter : filters) {
+                if (filter.matched(event)) {
+                    return true;
+                }
             }
-         }
-         return false;
-      }
+            return false;
+        }
 
-      private OrChangeEventFilter(ChangeEventFilter[] filters)
-      {
-         this.filters = filters;
-      }
-   }
+        private OrChangeEventFilter(ChangeEventFilter[] filters) {
+            this.filters = filters;
+        }
+    }
 
-   public static final ChangeEventFilter ANY_FILTER = new AnyFilter();
+    public static final ChangeEventFilter ANY_FILTER = new AnyFilter();
 
-   private static class AnyFilter extends ChangeEventFilter
-   {
-      @Override
-      public boolean matched(ChangeEvent event)
-      {
-         return true;
-      }
-   }
+    private static class AnyFilter extends ChangeEventFilter {
+        @Override
+        public boolean matched(ChangeEvent event) {
+            return true;
+        }
+    }
 
    /* ================================================= */
 
-   public abstract boolean matched(ChangeEvent event) throws VirtualFileSystemException;
+    public abstract boolean matched(ChangeEvent event) throws VirtualFileSystemException;
 
 }

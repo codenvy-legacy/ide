@@ -18,44 +18,35 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryServiceApplication extends Application
-{
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
+public class CloudfoundryServiceApplication extends Application {
+    private Set<Class<?>> classes;
+    private Set<Object>   singletons;
 
-   public CloudfoundryServiceApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(CloudfoundryService.class);
-      classes.add(CloudfoundryPoolService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new CloudfoundryExceptionMapper());
-   }
+    public CloudfoundryServiceApplication() {
+        classes = new HashSet<Class<?>>(2);
+        classes.add(CloudfoundryService.class);
+        classes.add(CloudfoundryPoolService.class);
+        singletons = new HashSet<Object>(1);
+        singletons.add(new CloudfoundryExceptionMapper());
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
-   }
+    /** @see javax.ws.rs.core.Application#getSingletons() */
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 }

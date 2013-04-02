@@ -21,12 +21,10 @@ package org.exoplatform.ide.client.framework.websocket.events;
 
 /**
  * Handler closing WebSocket connection.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ConnectionClosedHandler.java Dec 7, 2012 11:17:44 AM azatsarynnyy $
- *
  */
-public interface ConnectionClosedHandler
-{
-   void onClose(WebSocketClosedEvent event);
+public interface ConnectionClosedHandler {
+    void onClose(WebSocketClosedEvent event);
 }

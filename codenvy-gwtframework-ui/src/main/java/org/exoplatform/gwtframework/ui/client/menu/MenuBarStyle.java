@@ -21,24 +21,23 @@ package org.exoplatform.gwtframework.ui.client.menu;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface MenuBarStyle
-{
+public interface MenuBarStyle {
 
-   public final static String MENUBAR = "exo-menuBar";
+    public final static String MENUBAR = "exo-menuBar";
 
-   public final static String MENUBAR_TABLE = "exo-menuBarTable";
+    public final static String MENUBAR_TABLE = "exo-menuBarTable";
 
-   public final static String ITEM = "exo-menuBarItem";
+    public final static String ITEM = "exo-menuBarItem";
 
-   public final static String ITEM_OVER = "exo-menuBarItemOver";
+    public final static String ITEM_OVER = "exo-menuBarItemOver";
 
-   public final static String ITEM_SELECTED = "exo-menuBarItemSelected";
+    public final static String ITEM_SELECTED = "exo-menuBarItemSelected";
 
-   public final static String ITEM_DISABLED = "exo-menuBarItemDisabled";   
+    public final static String ITEM_DISABLED = "exo-menuBarItemDisabled";
 
 }

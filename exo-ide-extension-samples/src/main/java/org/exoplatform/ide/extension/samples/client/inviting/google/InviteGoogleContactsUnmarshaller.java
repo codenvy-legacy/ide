@@ -35,57 +35,42 @@ import java.util.List;
 
 /**
  * Unmarshaller for unmarshalling Google Contacts as {@link List} of {@link GoogleContact} objects.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: InviteGoogleContactsUnmarshaller.java Aug 20, 2012 3:50:12 PM azatsarynnyy $
- *
  */
-public class InviteGoogleContactsUnmarshaller implements Unmarshallable<List<GoogleContact>>
-{
+public class InviteGoogleContactsUnmarshaller implements Unmarshallable<List<GoogleContact>> {
 
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   private static final IDEAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(IDEAutoBeanFactory.class);
+    /** The generator of an {@link AutoBean}. */
+    private static final IDEAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(IDEAutoBeanFactory.class);
 
-   /**
-    * {@link List} of {@link GoogleContact}.
-    */
-   private List<GoogleContact> contacts;
+    /** {@link List} of {@link GoogleContact}. */
+    private List<GoogleContact> contacts;
 
-   public InviteGoogleContactsUnmarshaller(List<GoogleContact> contacts)
-   {
-      this.contacts = contacts;
-   }
+    public InviteGoogleContactsUnmarshaller(List<GoogleContact> contacts) {
+        this.contacts = contacts;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
-      if (jsonArray == null)
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+        if (jsonArray == null) {
+            return;
+        }
 
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         JSONObject jsonObject = jsonArray.get(i).isObject();
-         AutoBean<GoogleContact> contact =
-            AutoBeanCodex.decode(AUTO_BEAN_FACTORY, GoogleContact.class, jsonObject.toString());
-         contacts.add(contact.as());
-      }
-   }
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject = jsonArray.get(i).isObject();
+            AutoBean<GoogleContact> contact =
+                    AutoBeanCodex.decode(AUTO_BEAN_FACTORY, GoogleContact.class, jsonObject.toString());
+            contacts.add(contact.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<GoogleContact> getPayload()
-   {
-      return contacts;
-   }
-   
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<GoogleContact> getPayload() {
+        return contacts;
+    }
+
 }

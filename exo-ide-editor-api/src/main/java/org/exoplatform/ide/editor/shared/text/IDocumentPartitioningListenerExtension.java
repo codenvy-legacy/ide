@@ -20,26 +20,27 @@ package org.exoplatform.ide.editor.shared.text;
 
 /**
  * Extension interface for {@link org.eclipse.jface.text.IDocumentPartitioningListener}.
- * <p>
+ * <p/>
  * Replaces the original notification mechanism by telling the listener the minimal region that comprises all partitioning
  * changes.
- * 
+ *
  * @see org.eclipse.jdt.client.text.jface.text.IDocumentPartitionerExtension
  * @since 2.0
  */
-public interface IDocumentPartitioningListenerExtension
-{
+public interface IDocumentPartitioningListenerExtension {
 
-   /**
-    * The partitioning of the given document changed in the given region.
-    * <p>
-    * In version 3.0, this method has been replaced with
-    * {@link IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)}.
-    * 
-    * @param document the document whose partitioning changed
-    * @param region the region in which the partitioning changed
-    * @see IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)
-    * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
-    */
-   void documentPartitioningChanged(IDocument document, IRegion region);
+    /**
+     * The partitioning of the given document changed in the given region.
+     * <p/>
+     * In version 3.0, this method has been replaced with
+     * {@link IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)}.
+     *
+     * @param document
+     *         the document whose partitioning changed
+     * @param region
+     *         the region in which the partitioning changed
+     * @see IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)
+     * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
+     */
+    void documentPartitioningChanged(IDocument document, IRegion region);
 }

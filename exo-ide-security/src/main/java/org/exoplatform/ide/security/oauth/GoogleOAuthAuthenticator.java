@@ -35,25 +35,22 @@ import java.util.HashSet;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GoogleOAuthAuthenticator extends OAuthAuthenticator
-{
+public class GoogleOAuthAuthenticator extends OAuthAuthenticator {
 
-   public GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
-   {
-      super(new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
-         Collections.<String>emptyList()).setCredentialStore(credentialStore).setApprovalPrompt("auto").setAccessType
-         ("online").build(), new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
-   }
+    public GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets) {
+        super(new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
+                                                      Collections.<String>emptyList()).setCredentialStore(credentialStore)
+                                                                                      .setApprovalPrompt("auto").setAccessType
+                        ("online").build(), new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
+    }
 
-   @Override
-   public User getUser(String accessToken) throws OAuthAuthenticationException
-   {
-      return getJson("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken, GoogleUser.class);
-   }
+    @Override
+    public User getUser(String accessToken) throws OAuthAuthenticationException {
+        return getJson("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken, GoogleUser.class);
+    }
 
-   @Override
-   public final String getOAuthProvider()
-   {
-      return "google";
-   }
+    @Override
+    public final String getOAuthProvider() {
+        return "google";
+    }
 }

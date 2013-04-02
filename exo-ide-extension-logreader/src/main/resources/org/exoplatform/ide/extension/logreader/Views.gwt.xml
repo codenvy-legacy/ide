@@ -30,16 +30,16 @@
 	51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: 
 	http://www.fsf.org. -->
 <module>
-	<inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
 
-	<replace-with
-		class="org.exoplatform.ide.extension.logreader.client.ui.LogReaderView">
-		<when-type-is
-			class="org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display" />
-	</replace-with>
-	<replace-with
-		class="org.exoplatform.ide.extension.logreader.client.ui.LogReaderSettingsView">
-		<when-type-is
-			class="org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display" />
-	</replace-with>
+    <replace-with
+            class="org.exoplatform.ide.extension.logreader.client.ui.LogReaderView">
+        <when-type-is
+                class="org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display"/>
+    </replace-with>
+    <replace-with
+            class="org.exoplatform.ide.extension.logreader.client.ui.LogReaderSettingsView">
+        <when-type-is
+                class="org.exoplatform.ide.extension.logreader.client.LogRederSettingsPresenter.Display"/>
+    </replace-with>
 </module>

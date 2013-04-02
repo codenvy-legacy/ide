@@ -28,53 +28,46 @@ import com.google.gwt.user.client.ui.TextArea;
  * Text area form's item with possibility to display title near it.
  * In HTML it is represented as <code><textarea /></code> element
  * and label with field's title.
- * @deprecated use {@link TextAreaInput}
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
+ * @deprecated use {@link TextAreaInput}
  */
-public class TextAreaItem extends TextItemBase
-{
+public class TextAreaItem extends TextItemBase {
 
-   /**
-    * Default constructor.
-    */
-   public TextAreaItem()
-   {
-      super(new TextInputBase(new TextArea().getElement()));
-   }
+    /** Default constructor. */
+    public TextAreaItem() {
+        super(new TextInputBase(new TextArea().getElement()));
+    }
 
-   /**
-    * @param name form element's name
-    */
-   public TextAreaItem(String name)
-   {
-      this();
-      setName(name);
-   }
+    /**
+     * @param name
+     *         form element's name
+     */
+    public TextAreaItem(String name) {
+        this();
+        setName(name);
+    }
 
-   /**
-    * @param name form element's name
-    * @param title title shown near form element
-    */
-   public TextAreaItem(String name, String title)
-   {
-      this();
-      setName(name);
-      setTitle(title);
-   }
+    /**
+     * @param name
+     *         form element's name
+     * @param title
+     *         title shown near form element
+     */
+    public TextAreaItem(String name, String title) {
+        this();
+        setName(name);
+        setTitle(title);
+    }
 
-   /**
-    * Sets focus in text area.
-    */
-   public void focus()
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            focusInItem();
-         }
-      });
-   }
+    /** Sets focus in text area. */
+    public void focus() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                focusInItem();
+            }
+        });
+    }
 }

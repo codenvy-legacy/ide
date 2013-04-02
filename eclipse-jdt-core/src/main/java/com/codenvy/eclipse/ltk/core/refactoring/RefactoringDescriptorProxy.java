@@ -48,92 +48,76 @@ import com.codenvy.eclipse.ltk.internal.core.refactoring.history.RefactoringHist
  * @see RefactoringHistory
  * @since 3.2
  */
-public abstract class RefactoringDescriptorProxy extends PlatformObject implements Comparable
-{
+public abstract class RefactoringDescriptorProxy extends PlatformObject implements Comparable {
 
-   /**
-    * {@inheritDoc}
-    */
-   public int compareTo(final Object object)
-   {
-      if (object instanceof RefactoringDescriptorProxy)
-      {
-         final RefactoringDescriptorProxy proxy = (RefactoringDescriptorProxy)object;
-         final long delta = getTimeStamp() - proxy.getTimeStamp();
-         if (delta > 0)
-         {
-            return 1;
-         }
-         else if (delta < 0)
-         {
-            return -1;
-         }
-         return 0;
-      }
-      return 0;
-   }
+    /** {@inheritDoc} */
+    public int compareTo(final Object object) {
+        if (object instanceof RefactoringDescriptorProxy) {
+            final RefactoringDescriptorProxy proxy = (RefactoringDescriptorProxy)object;
+            final long delta = getTimeStamp() - proxy.getTimeStamp();
+            if (delta > 0) {
+                return 1;
+            } else if (delta < 0) {
+                return -1;
+            }
+            return 0;
+        }
+        return 0;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public final boolean equals(final Object object)
-   {
-      if (object instanceof RefactoringDescriptorProxy)
-      {
-         final RefactoringDescriptorProxy proxy = (RefactoringDescriptorProxy)object;
-         return getTimeStamp() == proxy.getTimeStamp() && getDescription().equals(proxy.getDescription());
-      }
-      return false;
-   }
+    /** {@inheritDoc} */
+    public final boolean equals(final Object object) {
+        if (object instanceof RefactoringDescriptorProxy) {
+            final RefactoringDescriptorProxy proxy = (RefactoringDescriptorProxy)object;
+            return getTimeStamp() == proxy.getTimeStamp() && getDescription().equals(proxy.getDescription());
+        }
+        return false;
+    }
 
-   /**
-    * Returns a human-readable description of refactoring.
-    *
-    * @return a description of the refactoring
-    */
-   public abstract String getDescription();
+    /**
+     * Returns a human-readable description of refactoring.
+     *
+     * @return a description of the refactoring
+     */
+    public abstract String getDescription();
 
-   /**
-    * Returns the name of the associated project.
-    *
-    * @return the non-empty name of the project, or <code>null</code>
-    */
-   public abstract String getProject();
+    /**
+     * Returns the name of the associated project.
+     *
+     * @return the non-empty name of the project, or <code>null</code>
+     */
+    public abstract String getProject();
 
-   /**
-    * Returns the time stamp of this refactoring.
-    *
-    * @return the time stamp, or <code>-1</code> if no time information is
-    *         available
-    */
-   public abstract long getTimeStamp();
+    /**
+     * Returns the time stamp of this refactoring.
+     *
+     * @return the time stamp, or <code>-1</code> if no time information is
+     *         available
+     */
+    public abstract long getTimeStamp();
 
-   /**
-    * {@inheritDoc}
-    */
-   public final int hashCode()
-   {
-      int code = getDescription().hashCode();
-      final long stamp = getTimeStamp();
-      if (stamp >= 0)
-      {
-         code += (17 * stamp);
-      }
-      return code;
-   }
+    /** {@inheritDoc} */
+    public final int hashCode() {
+        int code = getDescription().hashCode();
+        final long stamp = getTimeStamp();
+        if (stamp >= 0) {
+            code += (17 * stamp);
+        }
+        return code;
+    }
 
-   /**
-    * Resolves this proxy and returns the associated refactoring descriptor.
-    * <p>
-    * Clients must connect to the refactoring history service first before
-    * calling this method.
-    * </p>
-    *
-    * @param monitor the progress monitor to use, or <code>null</code>
-    * @return the refactoring descriptor, or <code>null</code>
-    */
-   public RefactoringDescriptor requestDescriptor(final IProgressMonitor monitor)
-   {
-      return RefactoringHistoryService.getInstance().requestDescriptor(this, monitor);
-   }
+    /**
+     * Resolves this proxy and returns the associated refactoring descriptor.
+     * <p>
+     * Clients must connect to the refactoring history service first before
+     * calling this method.
+     * </p>
+     *
+     * @param monitor
+     *         the progress monitor to use, or <code>null</code>
+     * @return the refactoring descriptor, or <code>null</code>
+     */
+    public RefactoringDescriptor requestDescriptor(final IProgressMonitor monitor) {
+        return RefactoringHistoryService.getInstance().requestDescriptor(this, monitor);
+    }
 }

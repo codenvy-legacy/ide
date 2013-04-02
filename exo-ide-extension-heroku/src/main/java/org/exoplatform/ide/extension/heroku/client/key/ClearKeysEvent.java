@@ -22,33 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to clear(remove) keys from Heroku. Implement {@link ClearKeysHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 10:40:16 AM anya $
- * 
  */
-public class ClearKeysEvent extends GwtEvent<ClearKeysHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ClearKeysHandler> TYPE = new GwtEvent.Type<ClearKeysHandler>();
+public class ClearKeysEvent extends GwtEvent<ClearKeysHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ClearKeysHandler> TYPE = new GwtEvent.Type<ClearKeysHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ClearKeysHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ClearKeysHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ClearKeysHandler handler)
-   {
-      handler.onClearKeys(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ClearKeysHandler handler) {
+        handler.onClearKeys(this);
+    }
 }

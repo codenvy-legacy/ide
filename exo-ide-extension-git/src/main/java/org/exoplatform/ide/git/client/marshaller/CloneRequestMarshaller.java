@@ -26,40 +26,29 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 
 /**
  * Marshaller for clone repository request.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 12:32:56 PM anya $
- * 
  */
-public class CloneRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Clone repository request.
-    */
-   private CloneRequest cloneRequest;
+public class CloneRequestMarshaller implements Marshallable, Constants {
+    /** Clone repository request. */
+    private CloneRequest cloneRequest;
 
-   /**
-    * @param cloneRequest
-    */
-   public CloneRequestMarshaller(CloneRequest cloneRequest)
-   {
-      this.cloneRequest = cloneRequest;
-   }
+    /** @param cloneRequest */
+    public CloneRequestMarshaller(CloneRequest cloneRequest) {
+        this.cloneRequest = cloneRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(WORKNG_DIR, new JSONString(cloneRequest.getWorkingDir()));
-      jsonObject.put(REMOTE_URI, new JSONString(cloneRequest.getRemoteUri()));
-      if (cloneRequest.getRemoteName() != null)
-      {
-         jsonObject.put(REMOTE_NAME, new JSONString(cloneRequest.getRemoteName()));
-      }
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(WORKNG_DIR, new JSONString(cloneRequest.getWorkingDir()));
+        jsonObject.put(REMOTE_URI, new JSONString(cloneRequest.getRemoteUri()));
+        if (cloneRequest.getRemoteName() != null) {
+            jsonObject.put(REMOTE_NAME, new JSONString(cloneRequest.getRemoteName()));
+        }
+        return jsonObject.toString();
+    }
 
 }

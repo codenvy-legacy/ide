@@ -30,37 +30,31 @@ import com.google.collide.codemirror2.SyntaxType;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class PyAutocompliter extends LanguageSpecificAutocompleter
-{
+public class PyAutocompliter extends LanguageSpecificAutocompleter {
 
-   private static final PyExplicitAutocompleter EXPLICIT_AUTOCOMPLETER = new PyExplicitAutocompleter();
+    private static final PyExplicitAutocompleter EXPLICIT_AUTOCOMPLETER = new PyExplicitAutocompleter();
 
-   protected PyAutocompliter()
-   {
-      super(SyntaxType.PY);
-   }
+    protected PyAutocompliter() {
+        super(SyntaxType.PY);
+    }
 
-   @Override
-   protected ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
-      boolean popupIsShown)
-   {
-      return EXPLICIT_AUTOCOMPLETER.getExplicitAction(selectionModel, signal, popupIsShown, getParser());
-   }
+    @Override
+    protected ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
+                                               boolean popupIsShown) {
+        return EXPLICIT_AUTOCOMPLETER.getExplicitAction(selectionModel, signal, popupIsShown, getParser());
+    }
 
-   @Override
-   public AutocompleteResult computeAutocompletionResult(ProposalWithContext proposal)
-   {
-      return null;
-   }
+    @Override
+    public AutocompleteResult computeAutocompletionResult(ProposalWithContext proposal) {
+        return null;
+    }
 
-   @Override
-   public AutocompleteProposals findAutocompletions(SelectionModel selection, SignalEventEssence trigger)
-   {
-      return null;
-   }
+    @Override
+    public AutocompleteProposals findAutocompletions(SelectionModel selection, SignalEventEssence trigger) {
+        return null;
+    }
 
-   @Override
-   public void cleanup()
-   {
-   }
+    @Override
+    public void cleanup() {
+    }
 }

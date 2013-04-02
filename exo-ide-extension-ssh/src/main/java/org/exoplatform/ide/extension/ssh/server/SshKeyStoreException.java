@@ -23,25 +23,22 @@ package org.exoplatform.ide.extension.ssh.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public final class SshKeyStoreException extends Exception
-{
-   /**
-    * @param message
-    *    the detail message
-    * @param cause
-    *    the cause
-    */
-   public SshKeyStoreException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+public final class SshKeyStoreException extends Exception {
+    /**
+     * @param message
+     *         the detail message
+     * @param cause
+     *         the cause
+     */
+    public SshKeyStoreException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   /**
-    * @param message
-    *    the detail message
-    */
-   public SshKeyStoreException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     *         the detail message
+     */
+    public SshKeyStoreException(String message) {
+        super(message);
+    }
 }

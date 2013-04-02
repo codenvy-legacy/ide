@@ -30,52 +30,45 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class ImageUtil
-{
+public class ImageUtil {
 
-   private static HashMap<String, ImageResource> images = new HashMap<String, ImageResource>();
+    private static HashMap<String, ImageResource> images = new HashMap<String, ImageResource>();
 
-   static
-   {
-      // TODO
-      images.put(null, IconImageBundle.INSTANCE.defaultFile());
-      
-      images.put(Folder.FOLDER_MIME_TYPE, IconImageBundle.INSTANCE.folder());
-      images.put(Project.PROJECT_MIME_TYPE, IconImageBundle.INSTANCE.defaultProject());
-   }
+    static {
+        // TODO
+        images.put(null, IconImageBundle.INSTANCE.defaultFile());
 
-   public static void putIcon(String mimeType, ImageResource imageResource)
-   {
-      images.put(mimeType, imageResource);
-   }
+        images.put(Folder.FOLDER_MIME_TYPE, IconImageBundle.INSTANCE.folder());
+        images.put(Project.PROJECT_MIME_TYPE, IconImageBundle.INSTANCE.defaultProject());
+    }
 
-   public static ImageResource getIcon(String mimeType)
-   {
-      ImageResource icon = images.get(mimeType);
-      if (icon == null)
-      {
-         icon = IconImageBundle.INSTANCE.defaultFile();
-      }
-      return icon;
-   }
+    public static void putIcon(String mimeType, ImageResource imageResource) {
+        images.put(mimeType, imageResource);
+    }
 
-   public static Map<String, ImageResource> getIcons()
-   {
-      return images;
-   }
+    public static ImageResource getIcon(String mimeType) {
+        ImageResource icon = images.get(mimeType);
+        if (icon == null) {
+            icon = IconImageBundle.INSTANCE.defaultFile();
+        }
+        return icon;
+    }
 
-   /**
-    * @param newFile
-    * @return
-    */
-   public static ImageResource getIcon(FileModel file)
-   {
-      return getIcon(file.getMimeType());
-   }
+    public static Map<String, ImageResource> getIcons() {
+        return images;
+    }
+
+    /**
+     * @param newFile
+     * @return
+     */
+    public static ImageResource getIcon(FileModel file) {
+        return getIcon(file.getMimeType());
+    }
 
 }

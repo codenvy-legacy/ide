@@ -24,12 +24,11 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface StopApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to stop application.
-    *
-    * @param event
-    */
-   void onStopApplication(StopApplicationEvent event);
+public interface StopApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to stop application.
+     *
+     * @param event
+     */
+    void onStopApplication(StopApplicationEvent event);
 }

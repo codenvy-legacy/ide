@@ -10,14 +10,9 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.compiler;
 
-/**
- * A callback interface for receiving compilation results.
- */
-public interface ICompilerRequestor
-{
+/** A callback interface for receiving compilation results. */
+public interface ICompilerRequestor {
 
-   /**
-    * Accept a compilation result.
-    */
-   public void acceptResult(CompilationResult result);
+    /** Accept a compilation result. */
+    public void acceptResult(CompilationResult result);
 }

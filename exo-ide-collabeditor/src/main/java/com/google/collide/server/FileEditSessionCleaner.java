@@ -20,35 +20,31 @@ package com.google.collide.server;
 
 import com.google.collide.server.documents.EditSessions;
 import com.google.collide.server.participants.Participants;
+
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-public class FileEditSessionCleaner implements HttpSessionListener
-{
-   @Override
-   public void sessionCreated(HttpSessionEvent se)
-   {
-   }
+public class FileEditSessionCleaner implements HttpSessionListener {
+    @Override
+    public void sessionCreated(HttpSessionEvent se) {
+    }
 
-   @Override
-   public void sessionDestroyed(HttpSessionEvent se)
-   {
-      ExoContainer container = getContainer();
-      if (container != null)
-      {
-         Participants participants = (Participants)container.getComponentInstanceOfType(Participants.class);
-         EditSessions editSessions = (EditSessions)container.getComponentInstanceOfType(EditSessions.class);
-         final String id = se.getSession().getId();
-         editSessions.closeAllSessions(id);
-         participants.removeParticipant(id);
-      }
-   }
+    @Override
+    public void sessionDestroyed(HttpSessionEvent se) {
+        ExoContainer container = getContainer();
+        if (container != null) {
+            Participants participants = (Participants)container.getComponentInstanceOfType(Participants.class);
+            EditSessions editSessions = (EditSessions)container.getComponentInstanceOfType(EditSessions.class);
+            final String id = se.getSession().getId();
+            editSessions.closeAllSessions(id);
+            participants.removeParticipant(id);
+        }
+    }
 
-   protected ExoContainer getContainer()
-   {
-      return ExoContainerContext.getCurrentContainerIfPresent();
-   }
+    protected ExoContainer getContainer() {
+        return ExoContainerContext.getCurrentContainerIfPresent();
+    }
 }

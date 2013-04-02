@@ -28,66 +28,56 @@ import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
  * Field to enter password (when entered letters are not seen).
  * In HTML it is represented as <code><input type="password"/></code> element
  * and it is possible to display label with field's title near it.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 30, 2010 $
- *
  */
-public class PasswordField extends TextItemBase implements TextFieldItem
-{
+public class PasswordField extends TextItemBase implements TextFieldItem {
 
-   /**
-    * Default constructor.
-    */
-   public PasswordField()
-   {
-      super(new TextInputBase(new PasswordTextBox().getElement()));
-   }
+    /** Default constructor. */
+    public PasswordField() {
+        super(new TextInputBase(new PasswordTextBox().getElement()));
+    }
 
-   /**
-    * @param name field name
-    */
-   public PasswordField(String name)
-   {
-      this();
-      setName(name);
-   }
+    /**
+     * @param name
+     *         field name
+     */
+    public PasswordField(String name) {
+        this();
+        setName(name);
+    }
 
-   /**
-    * @param name field name
-    * @param title field title
-    */
-   public PasswordField(String name, String title)
-   {
-      this();
-      setName(name);
-      setTitle(title);
-   }
+    /**
+     * @param name
+     *         field name
+     * @param title
+     *         field title
+     */
+    public PasswordField(String name, String title) {
+        this();
+        setName(name);
+        setTitle(title);
+    }
 
-   /**
-    * Sets ID attribute to Password Field element.
-    * This method is required to use in UI Binder.
-    * 
-    * @param id
-    */
-   public void setPasswordFieldId(String id)
-   {
-      super.setId(id);
-   }
+    /**
+     * Sets ID attribute to Password Field element.
+     * This method is required to use in UI Binder.
+     *
+     * @param id
+     */
+    public void setPasswordFieldId(String id) {
+        super.setId(id);
+    }
 
-   /**
-    * Sets focus in password field.
-    */
-   public void focus()
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            focusInItem();
-         }
-      });
-   }
+    /** Sets focus in password field. */
+    public void focus() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                focusInItem();
+            }
+        });
+    }
 
 }

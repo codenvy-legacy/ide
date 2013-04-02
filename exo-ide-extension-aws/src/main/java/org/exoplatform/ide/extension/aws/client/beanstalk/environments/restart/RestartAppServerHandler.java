@@ -22,17 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link RestartAppServerEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: RestartAppServerHandler.java Sep 28, 2012 3:48:36 PM azatsarynnyy $
- *
  */
-public interface RestartAppServerHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to restart an application server associated with the specified environment.
-    * 
-    * @param event {@link RestartAppServerEvent}
-    */
-   void onRestartAppServer(RestartAppServerEvent event);
+public interface RestartAppServerHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to restart an application server associated with the specified environment.
+     *
+     * @param event
+     *         {@link RestartAppServerEvent}
+     */
+    void onRestartAppServer(RestartAppServerEvent event);
 }

@@ -22,14 +22,13 @@ package org.exoplatform.gwtframework.ui.client.dialog;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public interface BooleanValueReceivedHandler
-{
+public interface BooleanValueReceivedHandler {
 
-   public void booleanValueReceived(Boolean value);
+    public void booleanValueReceived(Boolean value);
 
 }

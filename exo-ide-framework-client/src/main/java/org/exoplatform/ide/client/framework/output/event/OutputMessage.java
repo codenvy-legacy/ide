@@ -20,44 +20,36 @@ package org.exoplatform.ide.client.framework.output.event;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class OutputMessage
-{
+public class OutputMessage {
 
-   public enum Type {
+    public enum Type {
 
-      INFO, ERROR, WARNING, LOG, OUTPUT, GIT
+        INFO, ERROR, WARNING, LOG, OUTPUT, GIT
 
-   }
+    }
 
-   private String message;
+    private String message;
 
-   private OutputMessage.Type type;
+    private OutputMessage.Type type;
 
-   public OutputMessage(String message, OutputMessage.Type type)
-   {
-      this.message = message;
-      this.type = type;
-   }
+    public OutputMessage(String message, OutputMessage.Type type) {
+        this.message = message;
+        this.type = type;
+    }
 
-   /**
-    * @return the message
-    */
-   public String getMessage()
-   {
-      return message;
-   }
+    /** @return the message */
+    public String getMessage() {
+        return message;
+    }
 
-   /**
-    * @return the type
-    */
-   public OutputMessage.Type getType()
-   {
-      return type;
-   }
+    /** @return the type */
+    public OutputMessage.Type getType() {
+        return type;
+    }
 
 }

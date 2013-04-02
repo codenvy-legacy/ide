@@ -19,25 +19,25 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
+    <inherits name='com.google.gwt.user.User'/>
 
-   <replace-with class="org.exoplatform.ide.extension.googleappengine.client.login.LoginView">
-      <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.googleappengine.client.login.LoginView">
+        <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectView">
-      <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectView">
+        <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.googleappengine.client.logs.LogView">
-      <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.logs.LogsPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.googleappengine.client.logs.LogView">
+        <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.logs.LogsPresenter.Display"/>
+    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter.Display" />
-   </replace-with>
+    <replace-with class="org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationView">
+        <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter.Display"/>
+    </replace-with>
 </module>

@@ -45,149 +45,136 @@ import org.exoplatform.ide.git.client.GitPresenter;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class PreviewApplicationPresenter extends GitPresenter implements PreviewApplicationHandler, ViewClosedHandler,
-   EditorActiveFileChangedHandler, LoggedInHandler
-{
+                                                                         EditorActiveFileChangedHandler, LoggedInHandler {
 
-   private PreviewForm previewForm;
+    private PreviewForm previewForm;
 
-   private boolean previewOpened = false;
+    private boolean previewOpened = false;
 
-   public PreviewApplicationPresenter()
-   {
-      IDE.addHandler(PreviewApplicationEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    public PreviewApplicationPresenter() {
+        IDE.addHandler(PreviewApplicationEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onPreviewApplication(PreviewApplicationEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         getApplicationInfo();
-      }
-   }
+    @Override
+    public void onPreviewApplication(PreviewApplicationEvent event) {
+        if (makeSelectionCheck()) {
+            getApplicationInfo();
+        }
+    }
 
-   private void getApplicationInfo()
-   {
+    private void getApplicationInfo() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
-         OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
-            new AsyncRequestCallback<AppInfo>(unmarshaller)
-            {
+        String projectId = getSelectedProject().getId();
 
-               @Override
-               protected void onSuccess(AppInfo result)
-               {
-                  applicationInfoReceived(result);
-               }
+        try {
+            AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+            AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+            OpenShiftClientService.getInstance().getApplicationInfo(null, vfs.getId(), projectId,
+                                                                    new AsyncRequestCallback<AppInfo>(unmarshaller) {
 
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException serverException = (ServerException)exception;
-                     if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                     {
-                        addLoggedInHandler();
-                        IDE.fireEvent(new LoginEvent());
-                        return;
-                     }
-                  }
-                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                     .getApplicationInfoFail()));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-            .getApplicationInfoFail()));
-      }
-   }
+                                                                        @Override
+                                                                        protected void onSuccess(AppInfo result) {
+                                                                            applicationInfoReceived(result);
+                                                                        }
 
-   private void addLoggedInHandler()
-   {
-      IDE.addHandler(LoggedInEvent.TYPE, this);
-   }
+                                                                        /**
+                                                                         * @see org.exoplatform.gwtframework.commons.rest
+                                                                         * .AsyncRequestCallback#onFailure(java.lang.Throwable)
+                                                                         */
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            if (exception instanceof ServerException) {
+                                                                                ServerException serverException =
+                                                                                        (ServerException)exception;
+                                                                                if (HTTPStatus.OK == serverException.getHTTPStatus()
+                                                                                    && "Authentication-required".equals(serverException
+                                                                                                                                .getHeader(
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         getApplicationInfo();
-      }
-   }
 
-   private void applicationInfoReceived(AppInfo result)
-   {
-      String href = result.getPublicUrl();
 
-      if (previewForm == null)
-      {
-         previewForm = new PreviewForm();
-         previewForm.setIcon(new Image(OpenShiftClientBundle.INSTANCE.previewControl()));
-      }
-      previewForm.showPreview(href);
 
-      if (previewOpened)
-      {
-         previewForm.setViewVisible();
-      }
-      else
-      {
-         IDE.getInstance().openView(previewForm);
-      }
-      previewOpened = true;
-   }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (previewForm == null)
-         return;
-      if (event.getView().getId().equals(previewForm.getId()))
-      {
-         previewOpened = false;
-         previewForm = null;
-      }
-   }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (previewOpened)
-      {
-         IDE.getInstance().closeView(PreviewForm.ID);
-         previewOpened = false;
-      }
-   }
+
+
+
+                                                                                                                                        HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                                                                                    addLoggedInHandler();
+                                                                                    IDE.fireEvent(new LoginEvent());
+                                                                                    return;
+                                                                                }
+                                                                            }
+                                                                            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception,
+                                                                                                                            OpenShiftExtension
+                                                                                                                                    .LOCALIZATION_CONSTANT
+                                                                                                                                    .getApplicationInfoFail()));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                 .getApplicationInfoFail()));
+        }
+    }
+
+    private void addLoggedInHandler() {
+        IDE.addHandler(LoggedInEvent.TYPE, this);
+    }
+
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
+     * .client.login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        if (!event.isFailed()) {
+            getApplicationInfo();
+        }
+    }
+
+    private void applicationInfoReceived(AppInfo result) {
+        String href = result.getPublicUrl();
+
+        if (previewForm == null) {
+            previewForm = new PreviewForm();
+            previewForm.setIcon(new Image(OpenShiftClientBundle.INSTANCE.previewControl()));
+        }
+        previewForm.showPreview(href);
+
+        if (previewOpened) {
+            previewForm.setViewVisible();
+        } else {
+            IDE.getInstance().openView(previewForm);
+        }
+        previewOpened = true;
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (previewForm == null)
+            return;
+        if (event.getView().getId().equals(previewForm.getId())) {
+            previewOpened = false;
+            previewForm = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (previewOpened) {
+            IDE.getInstance().closeView(PreviewForm.ID);
+            previewOpened = false;
+        }
+    }
 
 }

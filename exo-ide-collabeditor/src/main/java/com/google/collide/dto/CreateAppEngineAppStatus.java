@@ -18,25 +18,21 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 /**
- * 
  * A DTO for responding to requests from the client for creating
  * GAE apps. See the SetupMimic DTO.
- * 
  */
 @RoutingType(type = RoutingTypes.CREATEAPPENGINEAPPSTATUS)
 public interface CreateAppEngineAppStatus extends ServerToClientDto {
 
-  /**
-   * The app creation status.
-   */
-  public static enum Status {
-    OK,
-    APP_ID_UNAVAILABLE,
-    MAX_APPS,
-    // if the user has already created an app using app engine's create app api
-    ALREADY_CREATED_APP,
-    ERROR
-  }
+    /** The app creation status. */
+    public static enum Status {
+        OK,
+        APP_ID_UNAVAILABLE,
+        MAX_APPS,
+        // if the user has already created an app using app engine's create app api
+        ALREADY_CREATED_APP,
+        ERROR
+    }
 
-  Status getStatus();
+    Status getStatus();
 }

@@ -18,67 +18,49 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.SerializationIndex;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Representation of a reference from one code chunk to another.
- */
+/** Representation of a reference from one code chunk to another. */
 @RoutingType(type = RoutingTypes.CODEREFERENCE)
 public interface CodeReference extends ServerToClientDto, CompactJsonDto {
-  /**
-   * Enumeration of currently supported reference types.
-   */
-  public static enum Type {
-    /** Reference to var declaration or object property declaration. */
-    VAR,
+    /** Enumeration of currently supported reference types. */
+    public static enum Type {
+        /** Reference to var declaration or object property declaration. */
+        VAR,
 
-    /** Reference to function argument. */
-    ARG,
+        /** Reference to function argument. */
+        ARG,
 
-    /** Reference to class declaration. */
-    CLASS,
+        /** Reference to class declaration. */
+        CLASS,
 
-    /** Reference to called method declaration. */
-    CALL
-  }
+        /** Reference to called method declaration. */
+        CALL
+    }
 
-  /**
-   * @return type of this reference
-   */
-  @SerializationIndex(1)
-  Type getReferenceType();
+    /** @return type of this reference */
+    @SerializationIndex(1)
+    Type getReferenceType();
 
-  /**
-   * @return reference start position
-   */
-  @SerializationIndex(2)
-  FilePosition getReferenceStart();
+    /** @return reference start position */
+    @SerializationIndex(2)
+    FilePosition getReferenceStart();
 
-  /**
-   * @return reference end position inclusive
-   */
-  @SerializationIndex(3)
-  FilePosition getReferenceEnd();
+    /** @return reference end position inclusive */
+    @SerializationIndex(3)
+    FilePosition getReferenceEnd();
 
-  /**
-   * @return project file path where this reference points
-   */
-  @SerializationIndex(4)
-  String getTargetFilePath();
+    /** @return project file path where this reference points */
+    @SerializationIndex(4)
+    String getTargetFilePath();
 
-  /**
-   * @return target start position in target file
-   */
-  @SerializationIndex(5)
-  FilePosition getTargetStart();
+    /** @return target start position in target file */
+    @SerializationIndex(5)
+    FilePosition getTargetStart();
 
-  /**
-   * @return target end position inclusive in target file
-   */
-  @SerializationIndex(6)
-  FilePosition getTargetEnd();
+    /** @return target end position inclusive in target file */
+    @SerializationIndex(6)
+    FilePosition getTargetEnd();
 
-  /**
-   * @return target snippet if it is available, {@code null} otherwise
-   */
-  @SerializationIndex(7)
-  String getTargetSnippet();
+    /** @return target snippet if it is available, {@code null} otherwise */
+    @SerializationIndex(7)
+    String getTargetSnippet();
 }

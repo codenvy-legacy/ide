@@ -25,32 +25,24 @@ import com.google.gwt.event.shared.GwtEvent;
  * file on server.
  * <p/>
  * This event called, when all templates are moved from registry to plain text file on server.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesMigrated.java Aug 1, 2011 12:21:44 PM vereshchaka $
- * 
  */
-public class TemplatesMigratedEvent extends GwtEvent<TemplatesMigratedHandler>
-{
+public class TemplatesMigratedEvent extends GwtEvent<TemplatesMigratedHandler> {
 
-   public static final GwtEvent.Type<TemplatesMigratedHandler> TYPE = new GwtEvent.Type<TemplatesMigratedHandler>();
+    public static final GwtEvent.Type<TemplatesMigratedHandler> TYPE = new GwtEvent.Type<TemplatesMigratedHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<TemplatesMigratedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<TemplatesMigratedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(TemplatesMigratedHandler handler)
-   {
-      handler.onTemplatesMigrated(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(TemplatesMigratedHandler handler) {
+        handler.onTemplatesMigrated(this);
+    }
 
 }

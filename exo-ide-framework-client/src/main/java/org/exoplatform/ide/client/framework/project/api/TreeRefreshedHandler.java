@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface TreeRefreshedHandler extends EventHandler
-{
-   
-   void onTreeRefreshed(TreeRefreshedEvent event);
+public interface TreeRefreshedHandler extends EventHandler {
+
+    void onTreeRefreshed(TreeRefreshedEvent event);
 
 }

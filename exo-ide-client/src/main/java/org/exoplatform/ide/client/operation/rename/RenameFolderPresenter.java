@@ -23,13 +23,7 @@ import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -64,277 +58,232 @@ import java.util.List;
 
 /**
  * Presenter for renaming folders and files form.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
 public class RenameFolderPresenter extends ItemsOperationPresenter implements RenameItemHander, ApplicationSettingsReceivedHandler,
-   ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ViewClosedHandler
-{
+                                                                              ItemsSelectedHandler, EditorFileOpenedHandler,
+                                                                              EditorFileClosedHandler, ViewClosedHandler {
 
-   /**
-    * Interface for display for renaming files and folders.
-    */
-   public interface Display extends IsView
-   {
+    /** Interface for display for renaming files and folders. */
+    public interface Display extends IsView {
 
-      HasValue<String> getNameField();
+        HasValue<String> getNameField();
 
-      HasClickHandlers getRenameButton();
+        HasClickHandlers getRenameButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      HasKeyPressHandlers getNameFieldKeyPressHandler();
+        HasKeyPressHandlers getNameFieldKeyPressHandler();
 
-      void enableRenameButton(boolean enable);
+        void enableRenameButton(boolean enable);
 
-      void focusInNameField();
+        void focusInNameField();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   // private String itemBaseHref;
+    // private String itemBaseHref;
 
-   private List<Item> selectedItems;
+    private List<Item> selectedItems;
 
 
-   private Item renamedItem;
+    private Item renamedItem;
 
-   public RenameFolderPresenter()
-   {
-      IDE.addHandler(RenameItemEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public RenameFolderPresenter() {
+        IDE.addHandler(RenameItemEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay(Display d)
-   {
-      display = d;
+    public void bindDisplay(Display d) {
+        display = d;
 
-      display.enableRenameButton(false);
+        display.enableRenameButton(false);
 
-      // itemBaseHref = selectedItems.get(0).getHref();
-      // if (selectedItems.get(0) instanceof FolderModel)
-      // {
-      // itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
-      // }
-      // itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
+        // itemBaseHref = selectedItems.get(0).getHref();
+        // if (selectedItems.get(0) instanceof FolderModel)
+        // {
+        // itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/"));
+        // }
+        // itemBaseHref = itemBaseHref.substring(0, itemBaseHref.lastIndexOf("/") + 1);
 
-      display.getNameField().setValue(selectedItems.get(0).getName());
+        display.getNameField().setValue(selectedItems.get(0).getName());
 
-      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableRenameButton(wasItemPropertiesChanged());
-         }
-      });
-
-      display.getRenameButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            rename();
-         }
-      });
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            closeView();
-         }
-      });
-
-      display.getNameFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler()
-      {
-         public void onKeyPress(KeyPressEvent event)
-         {
-            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER && wasItemPropertiesChanged())
-            {
-               rename();
+        display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableRenameButton(wasItemPropertiesChanged());
             }
-         }
+        });
 
-      });
-
-      display.focusInNameField();
-   }
-
-   private boolean wasItemPropertiesChanged()
-   {
-      final String newName = display.getNameField().getValue();
-      if (newName == null || newName.length() == 0)
-      {
-         return false;
-      }
-      final String oldName = selectedItems.get(0).getName();
-      return !newName.equals(oldName);
-   }
-
-   protected void rename()
-   {
-      final Item item = selectedItems.get(0);
-
-      final String newName = getDestination();
-
-      moveItem(item, newName);
-   }
-
-   private String getDestination()
-   {
-      return display.getNameField().getValue();
-   }
-
-   private void updateOpenedFiles(Folder folder, String sourcePath)
-   {
-      // TODO
-      if (openedFiles == null || openedFiles.isEmpty())
-         return;
-
-      for (FileModel file : openedFiles.values())
-      {
-         if (file.getPath().startsWith(sourcePath))
-         {
-            String fileHref = file.getPath().replace(sourcePath, folder.getPath());
-            file.setPath(fileHref);
-
-            IDE.fireEvent(new EditorReplaceFileEvent(file, file));
-         }
-      }
-   }
-
-   private void completeMove()
-   {
-      if (renamedItem instanceof ProjectModel)
-      {
-         IDE.fireEvent(new OpenProjectEvent((ProjectModel)renamedItem));
-      }
-      else
-         IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)renamedItem).getParent(), renamedItem));
-
-      closeView();
-   }
-
-   /**
-    * Move item.
-    * 
-    * @param item - the item to move (with old properties: href and name)
-    * @param newName - the new name of item
-    */
-   private void moveItem(final Item item, final String newName)
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().rename(item, null, newName, lockTokens.get(item.getId()),
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-            {
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  ItemContext ic = (ItemContext)result.getItem();
-                  ic.setParent(((ItemContext)item).getParent());
-                  ic.setProject(((ItemContext)item).getProject());
-                  itemMoved((Folder)result.getItem(), item.getPath());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-      catch (Exception e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * @param folder - moved item
-    * @param oldItemPath - href of old item
-    */
-   private void itemMoved(Folder folder, final String oldItemPath)
-   {
-      renamedItem = folder;
-      updateOpenedFiles(folder, oldItemPath);
-      completeMove();
-   }
-
-   @Override
-   public void onRenameItem(RenameItemEvent event)
-   {
-      if (selectedItems == null || selectedItems.isEmpty())
-      {
-         // throwing an exception is in RenameFilePresenter
-         return;
-      }
-
-      if (selectedItems.get(0) instanceof Folder)
-      {
-         CollaborationManager collaborationManager = CollabEditorExtension.get().getCollaborationManager();
-         for(Item i : selectedItems)
-         {
-            for(String path : collaborationManager.getOpenedFiles().asIterable())
-            {
-               if(path.startsWith(i.getPath()))
-               {
-                  new ResourceLockedPresenter(
-                     new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
-                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false,i.getPath() , Operation.RENAME);
-                  return;
-               }
+        display.getRenameButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                rename();
             }
-         }
-         openView();
-      }
-   }
+        });
 
-   private void openView()
-   {
-      if (display == null)
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Display RenameFolder must be null"));
-      }
-   }
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                closeView();
+            }
+        });
 
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+        display.getNameFieldKeyPressHandler().addKeyPressHandler(new KeyPressHandler() {
+            public void onKeyPress(KeyPressEvent event) {
+                if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER && wasItemPropertiesChanged()) {
+                    rename();
+                }
+            }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        });
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
+        display.focusInNameField();
+    }
+
+    private boolean wasItemPropertiesChanged() {
+        final String newName = display.getNameField().getValue();
+        if (newName == null || newName.length() == 0) {
+            return false;
+        }
+        final String oldName = selectedItems.get(0).getName();
+        return !newName.equals(oldName);
+    }
+
+    protected void rename() {
+        final Item item = selectedItems.get(0);
+
+        final String newName = getDestination();
+
+        moveItem(item, newName);
+    }
+
+    private String getDestination() {
+        return display.getNameField().getValue();
+    }
+
+    private void updateOpenedFiles(Folder folder, String sourcePath) {
+        // TODO
+        if (openedFiles == null || openedFiles.isEmpty())
+            return;
+
+        for (FileModel file : openedFiles.values()) {
+            if (file.getPath().startsWith(sourcePath)) {
+                String fileHref = file.getPath().replace(sourcePath, folder.getPath());
+                file.setPath(fileHref);
+
+                IDE.fireEvent(new EditorReplaceFileEvent(file, file));
+            }
+        }
+    }
+
+    private void completeMove() {
+        if (renamedItem instanceof ProjectModel) {
+            IDE.fireEvent(new OpenProjectEvent((ProjectModel)renamedItem));
+        } else
+            IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)renamedItem).getParent(), renamedItem));
+
+        closeView();
+    }
+
+    /**
+     * Move item.
+     *
+     * @param item
+     *         - the item to move (with old properties: href and name)
+     * @param newName
+     *         - the new name of item
+     */
+    private void moveItem(final Item item, final String newName) {
+        try {
+            VirtualFileSystem.getInstance().rename(item, null, newName, lockTokens.get(item.getId()),
+                                                   new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
+                                                       @Override
+                                                       protected void onSuccess(ItemWrapper result) {
+                                                           ItemContext ic = (ItemContext)result.getItem();
+                                                           ic.setParent(((ItemContext)item).getParent());
+                                                           ic.setProject(((ItemContext)item).getProject());
+                                                           itemMoved((Folder)result.getItem(), item.getPath());
+                                                       }
+
+                                                       @Override
+                                                       protected void onFailure(Throwable exception) {
+                                                           IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                       }
+                                                   });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        } catch (Exception e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /**
+     * @param folder
+     *         - moved item
+     * @param oldItemPath
+     *         - href of old item
+     */
+    private void itemMoved(Folder folder, final String oldItemPath) {
+        renamedItem = folder;
+        updateOpenedFiles(folder, oldItemPath);
+        completeMove();
+    }
+
+    @Override
+    public void onRenameItem(RenameItemEvent event) {
+        if (selectedItems == null || selectedItems.isEmpty()) {
+            // throwing an exception is in RenameFilePresenter
+            return;
+        }
+
+        if (selectedItems.get(0) instanceof Folder) {
+            CollaborationManager collaborationManager = CollabEditorExtension.get().getCollaborationManager();
+            for (Item i : selectedItems) {
+                for (String path : collaborationManager.getOpenedFiles().asIterable()) {
+                    if (path.startsWith(i.getPath())) {
+                        new ResourceLockedPresenter(
+                                new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
+                                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false,
+                                i.getPath(), Operation.RENAME);
+                        return;
+                    }
+                }
+            }
+            openView();
+        }
+    }
+
+    private void openView() {
+        if (display == null) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView(d.asView());
+            bindDisplay(d);
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent("Display RenameFolder must be null"));
+        }
+    }
+
+    private void closeView() {
+        IDE.getInstance().closeView(display.asView().getId());
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+    }
 
 }

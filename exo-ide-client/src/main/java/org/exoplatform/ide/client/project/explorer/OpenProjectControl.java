@@ -28,47 +28,39 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 20, 2012 3:46:43 PM anya $
- * 
  */
-public class OpenProjectControl extends SimpleControl implements IDEControl, ProjectSelectedHandler
-{
-   public static final String ID = "Project/Open.";
+public class OpenProjectControl extends SimpleControl implements IDEControl, ProjectSelectedHandler {
+    public static final String ID = "Project/Open.";
 
-   private static final String TITLE = "Open";
+    private static final String TITLE = "Open";
 
-   private static final String PROMPT = "Open Project";
+    private static final String PROMPT = "Open Project";
 
-   private ProjectModel selectedProject;
+    private ProjectModel selectedProject;
 
-   public OpenProjectControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
-      setShowInMenu(false);
-   }
+    public OpenProjectControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
+        setShowInMenu(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler#onProjectSelected(org.exoplatform.ide.client.project.explorer.ProjectSelectedEvent)
-    */
-   @Override
-   public void onProjectSelected(ProjectSelectedEvent event)
-   {
-      this.selectedProject = event.getProject();
-      boolean selected = (selectedProject != null);
-      setShowInContextMenu(selected);
-      setEnabled(selected);
-      setVisible(selected);
-      setEvent(new OpenProjectEvent(selectedProject));
-   }
+    /** @see org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler#onProjectSelected(org.exoplatform.ide.client.project
+     * .explorer.ProjectSelectedEvent) */
+    @Override
+    public void onProjectSelected(ProjectSelectedEvent event) {
+        this.selectedProject = event.getProject();
+        boolean selected = (selectedProject != null);
+        setShowInContextMenu(selected);
+        setEnabled(selected);
+        setVisible(selected);
+        setEvent(new OpenProjectEvent(selectedProject));
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectSelectedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectSelectedEvent.TYPE, this);
+    }
 }

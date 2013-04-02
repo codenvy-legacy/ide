@@ -30,109 +30,97 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.services.security.Authenticator;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Credential;
-import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.PasswordCredential;
-import org.exoplatform.services.security.UsernameCredential;
+import org.exoplatform.services.security.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.SecurityContext;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.SecurityContext;
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 20, 2011 evgen $
- * 
  */
-public class ProjectTemplateTest extends BaseTest
-{
-   private SecurityContext securityContext;
+public class ProjectTemplateTest extends BaseTest {
+    private SecurityContext securityContext;
 
-   private VirtualFileSystem vfs;
+    private VirtualFileSystem vfs;
 
-   protected final String BASE_URI = "http://localhost.com:8080";
+    protected final String BASE_URI = "http://localhost.com:8080";
 
-   @Before
-   public void setUp() throws Exception
-   {
-      super.setUp();
-      Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
-      String validUser =
-         authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
-      Identity id = authr.createIdentity(validUser);
-      Set<String> roles = new HashSet<String>();
-      roles.add("users");
-      roles.add("administrators");
-      id.setRoles(roles);
-      ConversationState s = new ConversationState(id);
-      ConversationState.setCurrent(s);
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
+        String validUser =
+                authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
+        Identity id = authr.createIdentity(validUser);
+        Set<String> roles = new HashSet<String>();
+        roles.add("users");
+        roles.add("administrators");
+        id.setRoles(roles);
+        ConversationState s = new ConversationState(id);
+        ConversationState.setCurrent(s);
 
-      VirtualFileSystemRegistry vfsRegistry =
-         (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
-      vfs = vfsRegistry.getProvider("dev-monit").newInstance(null, null);
+        VirtualFileSystemRegistry vfsRegistry =
+                (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
+        vfs = vfsRegistry.getProvider("dev-monit").newInstance(null, null);
 
-      ItemList<Item> children =
-         vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
-      for (Item i : children.getItems())
-      {
-         vfs.delete(i.getId(), null);
-      }
-   }
+        ItemList<Item> children =
+                vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+        for (Item i : children.getItems()) {
+            vfs.delete(i.getId(), null);
+        }
+    }
 
-   @Test
-   @SuppressWarnings("unchecked")
-   public void testGetProjectTemplate() throws Exception
-   {
-      Set<String> userRoles = new HashSet<String>();
-      userRoles.add("users");
-      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, securityContext);
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      ContainerResponse cres =
-         launcher.service("GET", "/ide/templates/project/list", BASE_URI, headers, null, null, ctx);
-      Assert.assertEquals(200, cres.getStatus());
-      Assert.assertNotNull(cres.getEntity());
-      List<ProjectTemplate> templates = (List<ProjectTemplate>)cres.getEntity();
-      Assert.assertEquals(1, templates.size());
-      ProjectTemplate proj = templates.get(0);
-      Assert.assertEquals("SpringDemoProject", proj.getName());
-      Assert.assertEquals("spring", proj.getType());
-      Assert.assertEquals("Demo Spring Project", proj.getDescription());
-   }
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetProjectTemplate() throws Exception {
+        Set<String> userRoles = new HashSet<String>();
+        userRoles.add("users");
+        securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
+        EnvironmentContext ctx = new EnvironmentContext();
+        ctx.put(SecurityContext.class, securityContext);
+        MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+        ContainerResponse cres =
+                launcher.service("GET", "/ide/templates/project/list", BASE_URI, headers, null, null, ctx);
+        Assert.assertEquals(200, cres.getStatus());
+        Assert.assertNotNull(cres.getEntity());
+        List<ProjectTemplate> templates = (List<ProjectTemplate>)cres.getEntity();
+        Assert.assertEquals(1, templates.size());
+        ProjectTemplate proj = templates.get(0);
+        Assert.assertEquals("SpringDemoProject", proj.getName());
+        Assert.assertEquals("spring", proj.getType());
+        Assert.assertEquals("Demo Spring Project", proj.getDescription());
+    }
 
-   @Test
-   public void testCreateProjectFromTempalte() throws Exception
-   {
-      String prj = UUID.randomUUID().toString();
-      Set<String> userRoles = new HashSet<String>();
-      userRoles.add("users");
-      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles,  "BASIC", false);
-      EnvironmentContext ctx = new EnvironmentContext();
-      ctx.put(SecurityContext.class, securityContext);
-      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      String rootId = vfs.getInfo().getRoot().getId();
-      ContainerResponse cres =
-         launcher.service("POST", BASE_URI + "/ide/templates/project/create?vfsid=dev-monit&name=" + prj + "&parentId="
-            + rootId + "&templateName=SpringDemoProject", BASE_URI, headers, null, null, ctx);
-      Assert.assertEquals(200, cres.getStatus());
-      Item item = (Item)cres.getEntity();
-      Assert.assertTrue(item instanceof Project);
-      Project p = (Project)item;
-      Assert.assertEquals("spring", p.getProjectType());
-      String pom = StringUtils.toString(vfs.getContent(p.getPath() + "/pom.xml", null).getStream());
-      Assert.assertTrue(pom.contains("<artifactId>" + prj + "</artifactId>"));
-      Assert.assertTrue(pom.contains("<groupId>com.localhost</groupId>"));
-   }
+    @Test
+    public void testCreateProjectFromTempalte() throws Exception {
+        String prj = UUID.randomUUID().toString();
+        Set<String> userRoles = new HashSet<String>();
+        userRoles.add("users");
+        securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
+        EnvironmentContext ctx = new EnvironmentContext();
+        ctx.put(SecurityContext.class, securityContext);
+        MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+        String rootId = vfs.getInfo().getRoot().getId();
+        ContainerResponse cres =
+                launcher.service("POST", BASE_URI + "/ide/templates/project/create?vfsid=dev-monit&name=" + prj + "&parentId="
+                                         + rootId + "&templateName=SpringDemoProject", BASE_URI, headers, null, null, ctx);
+        Assert.assertEquals(200, cres.getStatus());
+        Item item = (Item)cres.getEntity();
+        Assert.assertTrue(item instanceof Project);
+        Project p = (Project)item;
+        Assert.assertEquals("spring", p.getProjectType());
+        String pom = StringUtils.toString(vfs.getContent(p.getPath() + "/pom.xml", null).getStream());
+        Assert.assertTrue(pom.contains("<artifactId>" + prj + "</artifactId>"));
+        Assert.assertTrue(pom.contains("<groupId>com.localhost</groupId>"));
+    }
 
-   
+
 }

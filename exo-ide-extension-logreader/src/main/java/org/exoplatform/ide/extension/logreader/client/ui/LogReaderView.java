@@ -39,119 +39,97 @@ import java.util.logging.LogRecord;
 
 /**
  * View for Log reader, contains toolbar, and {@link ScrollPanel} with set of {@link LogRecord}
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class LogReaderView extends ViewImpl implements LogReaderPresenter.Display
-{
+public class LogReaderView extends ViewImpl implements LogReaderPresenter.Display {
 
-   private static LogReaderViewUiBinder uiBinder = GWT.create(LogReaderViewUiBinder.class);
+    private static LogReaderViewUiBinder uiBinder = GWT.create(LogReaderViewUiBinder.class);
 
-   interface LogReaderViewUiBinder extends UiBinder<Widget, LogReaderView>
-   {
-   }
+    interface LogReaderViewUiBinder extends UiBinder<Widget, LogReaderView> {
+    }
 
-   @UiField
-   ScrollPanel scrollPanel;
+    @UiField
+    ScrollPanel scrollPanel;
 
-   @UiField
-   Element content;
+    @UiField
+    Element content;
 
-   @UiField
-   Toolbar toolbar;
+    @UiField
+    Toolbar toolbar;
 
-   private IconButton nextLogButton;
+    private IconButton nextLogButton;
 
-   private IconButton prevLogButton;
+    private IconButton prevLogButton;
 
-   private IconButton refreshLogButton;
+    private IconButton refreshLogButton;
 
-   public LogReaderView()
-   {
-      super(ID, ViewType.OPERATION, "Log", new Image(LogReaderClientBundle.INSTANCE.logReader()));
-      add(uiBinder.createAndBindUi(this));
+    public LogReaderView() {
+        super(ID, ViewType.OPERATION, "Log", new Image(LogReaderClientBundle.INSTANCE.logReader()));
+        add(uiBinder.createAndBindUi(this));
 
-      prevLogButton =
-         new IconButton(new Image(LogReaderClientBundle.INSTANCE.prev()), new Image(
-            LogReaderClientBundle.INSTANCE.prev_Disabled()));
+        prevLogButton =
+                new IconButton(new Image(LogReaderClientBundle.INSTANCE.prev()), new Image(
+                        LogReaderClientBundle.INSTANCE.prev_Disabled()));
 
-      prevLogButton.setTitle(LogReaderExtension.MESSAGES.getPrevLogButton());
+        prevLogButton.setTitle(LogReaderExtension.MESSAGES.getPrevLogButton());
 
-      toolbar.addItem(prevLogButton);
-      toolbar.addDelimiter();
+        toolbar.addItem(prevLogButton);
+        toolbar.addDelimiter();
 
-      refreshLogButton =
-         new IconButton(new Image(LogReaderClientBundle.INSTANCE.refresh()), new Image(
-            LogReaderClientBundle.INSTANCE.refresh_Disabled()));
+        refreshLogButton =
+                new IconButton(new Image(LogReaderClientBundle.INSTANCE.refresh()), new Image(
+                        LogReaderClientBundle.INSTANCE.refresh_Disabled()));
 
-      refreshLogButton.setTitle(LogReaderExtension.MESSAGES.getRefreshLogButton());
-      toolbar.addItem(refreshLogButton);
-      toolbar.addDelimiter();
+        refreshLogButton.setTitle(LogReaderExtension.MESSAGES.getRefreshLogButton());
+        toolbar.addItem(refreshLogButton);
+        toolbar.addDelimiter();
 
-      nextLogButton =
-         new IconButton(new Image(LogReaderClientBundle.INSTANCE.next()), new Image(
-            LogReaderClientBundle.INSTANCE.next_Disabled()));
+        nextLogButton =
+                new IconButton(new Image(LogReaderClientBundle.INSTANCE.next()), new Image(
+                        LogReaderClientBundle.INSTANCE.next_Disabled()));
 
-      nextLogButton.setTitle(LogReaderExtension.MESSAGES.getNextLogButton());
-      toolbar.addItem(nextLogButton);
+        nextLogButton.setTitle(LogReaderExtension.MESSAGES.getNextLogButton());
+        toolbar.addItem(nextLogButton);
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addLog(java.lang.String)
-    */
-   @Override
-   public void addLog(String logContent)
-   {
-      content.setInnerText(logContent);
-      scrollPanel.scrollToTop();
-   }
+    /** @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addLog(java.lang.String) */
+    @Override
+    public void addLog(String logContent) {
+        content.setInnerText(logContent);
+        scrollPanel.scrollToTop();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#setPrevLogButtonEnabled(boolean)
-    */
-   @Override
-   public void setPrevLogButtonEnabled(boolean enabled)
-   {
-      prevLogButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#setPrevLogButtonEnabled(boolean) */
+    @Override
+    public void setPrevLogButtonEnabled(boolean enabled) {
+        prevLogButton.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getNexLogButton()
-    */
-   @Override
-   public HasClickHandlers getNexLogButton()
-   {
-      return nextLogButton;
-   }
+    /** @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getNexLogButton() */
+    @Override
+    public HasClickHandlers getNexLogButton() {
+        return nextLogButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getPrevLogButton()
-    */
-   @Override
-   public HasClickHandlers getPrevLogButton()
-   {
-      return prevLogButton;
-   }
+    /** @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getPrevLogButton() */
+    @Override
+    public HasClickHandlers getPrevLogButton() {
+        return prevLogButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getRefreshLogButton()
-    */
-   @Override
-   public HasClickHandlers getRefreshLogButton()
-   {
-      return refreshLogButton;
-   }
+    /** @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#getRefreshLogButton() */
+    @Override
+    public HasClickHandlers getRefreshLogButton() {
+        return refreshLogButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#setNextLogButtonEnabled(boolean)
-    */
-   @Override
-   public void setNextLogButtonEnabled(boolean enabled)
-   {
-      nextLogButton.setEnabled(enabled);
-   }
+    /** @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#setNextLogButtonEnabled(boolean) */
+    @Override
+    public void setNextLogButtonEnabled(boolean enabled) {
+        nextLogButton.setEnabled(enabled);
+    }
 
 }

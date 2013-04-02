@@ -13,17 +13,7 @@ package org.eclipse.jdt.client.astview.views;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.core.Flags;
-import org.eclipse.jdt.client.core.dom.AST;
-import org.eclipse.jdt.client.core.dom.CharacterLiteral;
-import org.eclipse.jdt.client.core.dom.IAnnotationBinding;
-import org.eclipse.jdt.client.core.dom.IBinding;
-import org.eclipse.jdt.client.core.dom.IMemberValuePairBinding;
-import org.eclipse.jdt.client.core.dom.IMethodBinding;
-import org.eclipse.jdt.client.core.dom.IPackageBinding;
-import org.eclipse.jdt.client.core.dom.ITypeBinding;
-import org.eclipse.jdt.client.core.dom.IVariableBinding;
-import org.eclipse.jdt.client.core.dom.PrimitiveType;
-import org.eclipse.jdt.client.core.dom.StringLiteral;
+import org.eclipse.jdt.client.core.dom.*;
 
 import java.util.ArrayList;
 

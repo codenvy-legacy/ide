@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface OrganizeImportsHandler extends EventHandler
-{
+public interface OrganizeImportsHandler extends EventHandler {
 
-   void onOrganizeImports(OrganizeImportsEvent event);
+    void onOrganizeImports(OrganizeImportsEvent event);
 
 }

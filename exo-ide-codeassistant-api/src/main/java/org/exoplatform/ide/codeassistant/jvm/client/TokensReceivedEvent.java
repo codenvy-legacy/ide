@@ -24,48 +24,41 @@ import com.google.gwt.event.shared.GwtEvent;
 import java.util.List;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TokensReceivedEvent extends GwtEvent<TokensReceivedHandler>
-{
+public class TokensReceivedEvent extends GwtEvent<TokensReceivedHandler> {
 
-   public static final GwtEvent.Type<TokensReceivedHandler> TYPE = new GwtEvent.Type<TokensReceivedHandler>();
+    public static final GwtEvent.Type<TokensReceivedHandler> TYPE = new GwtEvent.Type<TokensReceivedHandler>();
 
-   private String providerId;
+    private String providerId;
 
-   private List<? extends Token> tokens;
+    private List<? extends Token> tokens;
 
-   public TokensReceivedEvent(String providerId, List<? extends Token> tokens)
-   {
-      this.providerId = providerId;
-      this.tokens = tokens;
-   }
+    public TokensReceivedEvent(String providerId, List<? extends Token> tokens) {
+        this.providerId = providerId;
+        this.tokens = tokens;
+    }
 
-   public String getProviderId()
-   {
-      return providerId;
-   }
+    public String getProviderId() {
+        return providerId;
+    }
 
-   public List<? extends Token> getTokens()
-   {
-      return tokens;
-   }
+    public List<? extends Token> getTokens() {
+        return tokens;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<TokensReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<TokensReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(TokensReceivedHandler handler)
-   {
-      handler.onTokensReceived(this);
-   }
+    @Override
+    protected void dispatch(TokensReceivedHandler handler) {
+        handler.onTokensReceived(this);
+    }
 
 }

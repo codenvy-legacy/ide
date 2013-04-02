@@ -33,51 +33,39 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 5:00:19 PM anya $
- * 
  */
-public class QueuesHandler extends GoogleAppEnginePresenter implements UpdateQueuesHandler
-{
+public class QueuesHandler extends GoogleAppEnginePresenter implements UpdateQueuesHandler {
 
-   public QueuesHandler()
-   {
-      IDE.addHandler(UpdateQueuesEvent.TYPE, this);
-   }
+    public QueuesHandler() {
+        IDE.addHandler(UpdateQueuesEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesHandler#onUpdateQueues(org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent)
-    */
-   @Override
-   public void onUpdateQueues(UpdateQueuesEvent event)
-   {
-      if (isAppEngineProject())
-      {
-         updateQueues();
-      }
-      else
-      {
-         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
-      }
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesHandler#onUpdateQueues(org.exoplatform.ide.extension
+     * .googleappengine.client.queues.UpdateQueuesEvent) */
+    @Override
+    public void onUpdateQueues(UpdateQueuesEvent event) {
+        if (isAppEngineProject()) {
+            updateQueues();
+        } else {
+            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
+        }
+    }
 
-   public void updateQueues()
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().updateQueues(currentVfs.getId(), currentProject.getId(),
-            new GoogleAppEngineAsyncRequestCallback<Object>()
-            {
+    public void updateQueues() {
+        try {
+            GoogleAppEngineClientService.getInstance().updateQueues(currentVfs.getId(), currentProject.getId(),
+                                                                    new GoogleAppEngineAsyncRequestCallback<Object>() {
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateQueuesSuccessfully(),
-                     Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                        @Override
+                                                                        protected void onSuccess(Object result) {
+                                                                            IDE.fireEvent(new OutputEvent(
+                                                                                    GoogleAppEngineExtension.GAE_LOCALIZATION
+                                                                                                            .updateQueuesSuccessfully(),
+                                                                                    Type.INFO));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

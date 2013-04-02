@@ -22,127 +22,98 @@ import com.codenvy.eclipse.jdt.internal.core.util.Messages;
 
 /**
  * <p>This operation creates a initializer in a type.
- *
+ * <p/>
  * <p>Required Attributes:<ul>
  * <li>Containing Type
  * <li>The source code for the initializer. No verification of the source is
  * performed.
  * </ul>
  */
-public class CreateInitializerOperation extends CreateTypeMemberOperation
-{
-   /**
-    * The current number of initializers in the parent type.
-    * Used to retrieve the handle of the newly created initializer.
-    */
-   protected int numberOfInitializers = 1;
+public class CreateInitializerOperation extends CreateTypeMemberOperation {
+    /**
+     * The current number of initializers in the parent type.
+     * Used to retrieve the handle of the newly created initializer.
+     */
+    protected int numberOfInitializers = 1;
 
-   /**
-    * When executed, this operation will create an initializer with the given name
-    * in the given type with the specified source.
-    *
-    * <p>By default the new initializer is positioned after the last existing initializer
-    * declaration, or as the first member in the type if there are no
-    * initializers.
-    */
-   public CreateInitializerOperation(IType parentElement, String source)
-   {
-      super(parentElement, source, false);
-   }
+    /**
+     * When executed, this operation will create an initializer with the given name
+     * in the given type with the specified source.
+     * <p/>
+     * <p>By default the new initializer is positioned after the last existing initializer
+     * declaration, or as the first member in the type if there are no
+     * initializers.
+     */
+    public CreateInitializerOperation(IType parentElement, String source) {
+        super(parentElement, source, false);
+    }
 
-   protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException
-   {
-      ASTNode node = super.generateElementAST(rewriter, cu);
-      if (node.getNodeType() != ASTNode.INITIALIZER)
-      {
-         throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.INVALID_CONTENTS));
-      }
-      return node;
-   }
+    protected ASTNode generateElementAST(ASTRewrite rewriter, ICompilationUnit cu) throws JavaModelException {
+        ASTNode node = super.generateElementAST(rewriter, cu);
+        if (node.getNodeType() != ASTNode.INITIALIZER) {
+            throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.INVALID_CONTENTS));
+        }
+        return node;
+    }
 
-   /**
-    * @see CreateElementInCUOperation#generateResultHandle
-    */
-   protected IJavaElement generateResultHandle()
-   {
-      try
-      {
-         //update the children to be current
-         getType().getCompilationUnit().close();
-         if (this.anchorElement == null)
-         {
-            return getType().getInitializer(this.numberOfInitializers);
-         }
-         else
-         {
-            IJavaElement[] children = getType().getChildren();
-            int count = 0;
-            for (int i = 0; i < children.length; i++)
-            {
-               IJavaElement child = children[i];
-               if (child.equals(this.anchorElement))
-               {
-                  if (child.getElementType() == IJavaElement.INITIALIZER && this.insertionPolicy == CreateElementInCUOperation.INSERT_AFTER)
-                  {
-                     count++;
-                  }
-                  return getType().getInitializer(count);
-               }
-               else if (child.getElementType() == IJavaElement.INITIALIZER)
-               {
-                  count++;
-               }
+    /** @see CreateElementInCUOperation#generateResultHandle */
+    protected IJavaElement generateResultHandle() {
+        try {
+            //update the children to be current
+            getType().getCompilationUnit().close();
+            if (this.anchorElement == null) {
+                return getType().getInitializer(this.numberOfInitializers);
+            } else {
+                IJavaElement[] children = getType().getChildren();
+                int count = 0;
+                for (int i = 0; i < children.length; i++) {
+                    IJavaElement child = children[i];
+                    if (child.equals(this.anchorElement)) {
+                        if (child.getElementType() == IJavaElement.INITIALIZER &&
+                            this.insertionPolicy == CreateElementInCUOperation.INSERT_AFTER) {
+                            count++;
+                        }
+                        return getType().getInitializer(count);
+                    } else if (child.getElementType() == IJavaElement.INITIALIZER) {
+                        count++;
+                    }
+                }
             }
-         }
-      }
-      catch (JavaModelException e)
-      {
-         // type doesn't exist: ignore
-      }
-      return null;
-   }
+        } catch (JavaModelException e) {
+            // type doesn't exist: ignore
+        }
+        return null;
+    }
 
-   /**
-    * @see CreateElementInCUOperation#getMainTaskName()
-    */
-   public String getMainTaskName()
-   {
-      return Messages.operation_createInitializerProgress;
-   }
+    /** @see CreateElementInCUOperation#getMainTaskName() */
+    public String getMainTaskName() {
+        return Messages.operation_createInitializerProgress;
+    }
 
-   protected SimpleName rename(ASTNode node, SimpleName newName)
-   {
-      return null; // intializer cannot be renamed
-   }
+    protected SimpleName rename(ASTNode node, SimpleName newName) {
+        return null; // intializer cannot be renamed
+    }
 
-   /**
-    * By default the new initializer is positioned after the last existing initializer
-    * declaration, or as the first member in the type if there are no
-    * initializers.
-    */
-   protected void initializeDefaultPosition()
-   {
-      IType parentElement = getType();
-      try
-      {
-         IJavaElement[] elements = parentElement.getInitializers();
-         if (elements != null && elements.length > 0)
-         {
-            this.numberOfInitializers = elements.length;
-            createAfter(elements[elements.length - 1]);
-         }
-         else
-         {
-            elements = parentElement.getChildren();
-            if (elements != null && elements.length > 0)
-            {
-               createBefore(elements[0]);
+    /**
+     * By default the new initializer is positioned after the last existing initializer
+     * declaration, or as the first member in the type if there are no
+     * initializers.
+     */
+    protected void initializeDefaultPosition() {
+        IType parentElement = getType();
+        try {
+            IJavaElement[] elements = parentElement.getInitializers();
+            if (elements != null && elements.length > 0) {
+                this.numberOfInitializers = elements.length;
+                createAfter(elements[elements.length - 1]);
+            } else {
+                elements = parentElement.getChildren();
+                if (elements != null && elements.length > 0) {
+                    createBefore(elements[0]);
+                }
             }
-         }
-      }
-      catch (JavaModelException e)
-      {
-         // type doesn't exist: ignore
-      }
-   }
+        } catch (JavaModelException e) {
+            // type doesn't exist: ignore
+        }
+    }
 }

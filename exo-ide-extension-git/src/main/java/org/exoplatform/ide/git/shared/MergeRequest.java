@@ -20,46 +20,39 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Request to merge {@link #commit} with HEAD.
- * 
+ *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: MergeRequest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class MergeRequest extends GitRequest
-{
-   /**
-    * Commit to merge with HEAD. Typically it is the name of other branch.
-    */
-   private String commit;
+public class MergeRequest extends GitRequest {
+    /** Commit to merge with HEAD. Typically it is the name of other branch. */
+    private String commit;
 
-   /**
-    * @param commit commit to merge
-    */
-   public MergeRequest(String commit)
-   {
-      this.commit = commit;
-   }
+    /**
+     * @param commit
+     *         commit to merge
+     */
+    public MergeRequest(String commit) {
+        this.commit = commit;
+    }
 
-   /**
-    * "Empty" merge request. Corresponding setters used to setup required
-    * parameters.
-    */
-   public MergeRequest()
-   {
-   }
+    /**
+     * "Empty" merge request. Corresponding setters used to setup required
+     * parameters.
+     */
+    public MergeRequest() {
+    }
 
-   /**
-    * @return commit to merge
-    */
-   public String getCommit()
-   {
-      return commit;
-   }
+    /** @return commit to merge */
+    public String getCommit() {
+        return commit;
+    }
 
-   /**
-    * @param commit commit to merge
-    */
-   public void setCommit(String commit)
-   {
-      this.commit = commit;
-   }
+    /**
+     * @param commit
+     *         commit to merge
+     */
+    public void setCommit(String commit) {
+        this.commit = commit;
+    }
 }

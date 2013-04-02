@@ -22,59 +22,43 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to rename application on Heroku.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 2, 2011 11:50:31 AM anya $
- * 
  */
-public class RenameApplicationEvent extends GwtEvent<RenameApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<RenameApplicationHandler> TYPE = new GwtEvent.Type<RenameApplicationHandler>();
+public class RenameApplicationEvent extends GwtEvent<RenameApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<RenameApplicationHandler> TYPE = new GwtEvent.Type<RenameApplicationHandler>();
 
-   /**
-    * Application to rename.
-    */
-   private String application;
+    /** Application to rename. */
+    private String application;
 
-   /**
-    * @param application application to rename, may be <code>null</code>
-    */
-   public RenameApplicationEvent(String application)
-   {
-      this.application = application;
-   }
+    /**
+     * @param application
+     *         application to rename, may be <code>null</code>
+     */
+    public RenameApplicationEvent(String application) {
+        this.application = application;
+    }
 
-   public RenameApplicationEvent()
-   {
-      this.application = null;
-   }
+    public RenameApplicationEvent() {
+        this.application = null;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RenameApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RenameApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RenameApplicationHandler handler)
-   {
-      handler.onRenameApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RenameApplicationHandler handler) {
+        handler.onRenameApplication(this);
+    }
 
-   /**
-    * @return the application application to rename, may be <code>null</code>
-    */
-   public String getApplication()
-   {
-      return application;
-   }
+    /** @return the application application to rename, may be <code>null</code> */
+    public String getApplication() {
+        return application;
+    }
 }

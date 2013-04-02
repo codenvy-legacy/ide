@@ -23,77 +23,59 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- * 
  */
-public class HotKeyItem
-{
+public class HotKeyItem {
 
-   private String hotKey;
+    private String hotKey;
 
-   private Control command;
+    private Control command;
 
-   // --- fields for group item
-   private boolean isGroup = false;
+    // --- fields for group item
+    private boolean isGroup = false;
 
-   private String title;
+    private String title;
 
-   private String group;
+    private String group;
 
-   public HotKeyItem(Control command, String hotkey, String group)
-   {
-      this.command = command;
-      this.hotKey = hotkey;
-      this.group = group;
-   }
+    public HotKeyItem(Control command, String hotkey, String group) {
+        this.command = command;
+        this.hotKey = hotkey;
+        this.group = group;
+    }
 
-   public HotKeyItem(String title, String hotkey, boolean isGroup, String group)
-   {
-      this.title = title;
-      this.hotKey = hotkey;
-      this.isGroup = isGroup;
-      this.group = group;
-   }
+    public HotKeyItem(String title, String hotkey, boolean isGroup, String group) {
+        this.title = title;
+        this.hotKey = hotkey;
+        this.isGroup = isGroup;
+        this.group = group;
+    }
 
-   /**
-    * @return the group
-    */
-   public String getGroup()
-   {
-      return group;
-   }
+    /** @return the group */
+    public String getGroup() {
+        return group;
+    }
 
-   /**
-    * @return the isGroup
-    */
-   public boolean isGroup()
-   {
-      return isGroup;
-   }
+    /** @return the isGroup */
+    public boolean isGroup() {
+        return isGroup;
+    }
 
-   /**
-    * @return the title
-    */
-   public String getTitle()
-   {
-      return title;
-   }
+    /** @return the title */
+    public String getTitle() {
+        return title;
+    }
 
-   public String getHotKey()
-   {
-      return hotKey;
-   }
+    public String getHotKey() {
+        return hotKey;
+    }
 
-   public void setHotKey(String hotKey)
-   {
-      this.hotKey = hotKey;
-   }
+    public void setHotKey(String hotKey) {
+        this.hotKey = hotKey;
+    }
 
-   /**
-    * @return the command
-    */
-   public Control getCommand()
-   {
-      return command;
-   }
+    /** @return the command */
+    public Control getCommand() {
+        return command;
+    }
 
 }

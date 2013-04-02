@@ -20,26 +20,20 @@ package org.exoplatform.ide.security.oauth;
 
 import java.io.IOException;
 
-/**
- * Retrieves oAuth token with help of OAuthAuthenticatorProvider.
- */
-public class OAuthAuthenticatorTokenProvider implements OAuthTokenProvider
-{
-   private final OAuthAuthenticatorProvider oAuthAuthenticatorProvider;
+/** Retrieves oAuth token with help of OAuthAuthenticatorProvider. */
+public class OAuthAuthenticatorTokenProvider implements OAuthTokenProvider {
+    private final OAuthAuthenticatorProvider oAuthAuthenticatorProvider;
 
-   public OAuthAuthenticatorTokenProvider(OAuthAuthenticatorProvider oAuthAuthenticatorProvider)
-   {
-      this.oAuthAuthenticatorProvider = oAuthAuthenticatorProvider;
-   }
+    public OAuthAuthenticatorTokenProvider(OAuthAuthenticatorProvider oAuthAuthenticatorProvider) {
+        this.oAuthAuthenticatorProvider = oAuthAuthenticatorProvider;
+    }
 
-   @Override
-   public String getToken(String oauthProviderName, String userId) throws IOException
-   {
-      OAuthAuthenticator oAuthAuthenticator = oAuthAuthenticatorProvider.getAuthenticator(oauthProviderName);
-      if (oAuthAuthenticator != null)
-      {
-         return oAuthAuthenticator.getToken(userId);
-      }
-      return null;
-   }
+    @Override
+    public String getToken(String oauthProviderName, String userId) throws IOException {
+        OAuthAuthenticator oAuthAuthenticator = oAuthAuthenticatorProvider.getAuthenticator(oauthProviderName);
+        if (oAuthAuthenticator != null) {
+            return oAuthAuthenticator.getToken(userId);
+        }
+        return null;
+    }
 }

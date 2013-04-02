@@ -34,90 +34,74 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for initializing the repository.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 10:35:37 AM anya $
- * 
  */
 public class InitRepositoryView extends ViewImpl implements
-   org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display
-{
+                                                 org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display {
 
-   public static final String ID = "ideInitRepositoryView";
+    public static final String ID = "ideInitRepositoryView";
 
    /* Elements IDs */
 
-   private static final String INIT_BUTTON_ID = "ideInitRepositoryViewInitButton";
+    private static final String INIT_BUTTON_ID = "ideInitRepositoryViewInitButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideInitRepositoryViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideInitRepositoryViewCancelButton";
 
-   private static final String WORKDIR_FIELD_ID = "ideInitRepositoryViewWorkDirField";
+    private static final String WORKDIR_FIELD_ID = "ideInitRepositoryViewWorkDirField";
 
-   private static final String BARE_FIELD_ID = "ideInitRepositoryViewBareField";
+    private static final String BARE_FIELD_ID = "ideInitRepositoryViewBareField";
 
-   @UiField
-   TextInput workdirField;
+    @UiField
+    TextInput workdirField;
 
-   @UiField
-   CheckBox bareField;
+    @UiField
+    CheckBox bareField;
 
-   @UiField
-   ImageButton initButton;
+    @UiField
+    ImageButton initButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   interface InitRepositoryViewUiBinder extends UiBinder<Widget, InitRepositoryView>
-   {
-   }
+    interface InitRepositoryViewUiBinder extends UiBinder<Widget, InitRepositoryView> {
+    }
 
-   private static InitRepositoryViewUiBinder uiBinder = GWT.create(InitRepositoryViewUiBinder.class);
+    private static InitRepositoryViewUiBinder uiBinder = GWT.create(InitRepositoryViewUiBinder.class);
 
-   public InitRepositoryView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.createTitle(), null, 475, 195);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public InitRepositoryView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.createTitle(), null, 475, 195);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      bareField.setName(BARE_FIELD_ID);
-      workdirField.setName(WORKDIR_FIELD_ID);
-      initButton.setButtonId(INIT_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        bareField.setName(BARE_FIELD_ID);
+        workdirField.setName(WORKDIR_FIELD_ID);
+        initButton.setButtonId(INIT_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getBareValue()
-    */
-   @Override
-   public HasValue<Boolean> getBareValue()
-   {
-      return bareField;
-   }
+    /** @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getBareValue() */
+    @Override
+    public HasValue<Boolean> getBareValue() {
+        return bareField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getWorkDirValue()
-    */
-   @Override
-   public HasValue<String> getWorkDirValue()
-   {
-      return workdirField;
-   }
+    /** @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getWorkDirValue() */
+    @Override
+    public HasValue<String> getWorkDirValue() {
+        return workdirField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getInitButton()
-    */
-   @Override
-   public HasClickHandlers getInitButton()
-   {
-      return initButton;
-   }
+    /** @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getInitButton() */
+    @Override
+    public HasClickHandlers getInitButton() {
+        return initButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.git.client.init.InitRepositoryPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 }

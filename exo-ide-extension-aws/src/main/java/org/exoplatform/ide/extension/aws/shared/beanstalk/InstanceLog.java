@@ -24,37 +24,34 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface InstanceLog
-{
-   /**
-    * Get ID of the instance
-    *
-    * @return
-    *    ID of the instance
-    */
-   String getInstanceId();
+public interface InstanceLog {
+    /**
+     * Get ID of the instance
+     *
+     * @return ID of the instance
+     */
+    String getInstanceId();
 
-   /**
-    * Set ID of the instance
-    *
-    * @param instanceId
-    *    ID of the instance
-    */
-   void setInstanceId(String instanceId);
+    /**
+     * Set ID of the instance
+     *
+     * @param instanceId
+     *         ID of the instance
+     */
+    void setInstanceId(String instanceId);
 
-   /**
-    * Get url of the application logs
-    *
-    * @return
-    *    url of the logs
-    */
-   String getLogUrl();
+    /**
+     * Get url of the application logs
+     *
+     * @return url of the logs
+     */
+    String getLogUrl();
 
-   /**
-    * Set url of the application logs
-    *
-    * @param logUrl
-    *    url of the logs
-    */
-   void setLogUrl(String logUrl);
+    /**
+     * Set url of the application logs
+     *
+     * @param logUrl
+     *         url of the logs
+     */
+    void setLogUrl(String logUrl);
 }

@@ -29,65 +29,56 @@ import com.google.collide.codemirror2.SyntaxType;
 
 /**
  * JavaScript-specific autocompleter.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: JavaScriptAutocompleter.java Aug 28, 2012 9:37:43 AM azatsarynnyy $
- *
  */
-public class JavaScriptAutocompleter extends LanguageSpecificAutocompleter
-{
+public class JavaScriptAutocompleter extends LanguageSpecificAutocompleter {
 
-   JavaScriptExplicitAutocompleter autocompleter = new JavaScriptExplicitAutocompleter();
-   
-   /**
-    * @param mode
-    */
-   public JavaScriptAutocompleter()
-   {
-      super(SyntaxType.JS);
-   }
-   
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#getExplicitAction(com.google.collide.client.editor.selection.SelectionModel, com.google.collide.client.code.autocomplete.SignalEventEssence, boolean)
-    */
-   @Override
-   public ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
-      boolean popupIsShown)
-   {
-      return autocompleter.getExplicitAction(selectionModel, signal, popupIsShown, getParser());
-   }
+    JavaScriptExplicitAutocompleter autocompleter = new JavaScriptExplicitAutocompleter();
 
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#computeAutocompletionResult(com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext)
-    */
-   @Override
-   public AutocompleteResult computeAutocompletionResult(ProposalWithContext proposal)
-   {
-      return null;
-   }
+    /** @param mode */
+    public JavaScriptAutocompleter() {
+        super(SyntaxType.JS);
+    }
 
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#findAutocompletions(com.google.collide.client.editor.selection.SelectionModel, com.google.collide.client.code.autocomplete.SignalEventEssence)
-    */
-   @Override
-   public AutocompleteProposals findAutocompletions(SelectionModel selection, SignalEventEssence trigger)
-   {
-      return null;
-   }
+    /**
+     * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#getExplicitAction(com.google.collide.client.editor
+     * .selection.SelectionModel,
+     *      com.google.collide.client.code.autocomplete.SignalEventEssence, boolean)
+     */
+    @Override
+    public ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
+                                            boolean popupIsShown) {
+        return autocompleter.getExplicitAction(selectionModel, signal, popupIsShown, getParser());
+    }
 
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#cleanup()
-    */
-   @Override
-   public void cleanup()
-   {
-   }
+    /** @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#computeAutocompletionResult(com.google.collide
+     * .client.code.autocomplete.AutocompleteProposals.ProposalWithContext) */
+    @Override
+    public AutocompleteResult computeAutocompletionResult(ProposalWithContext proposal) {
+        return null;
+    }
 
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#attach(com.google.collide.client.documentparser.DocumentParser)
-    */
-   @Override
-   public void attach(DocumentParser parser) {
-     super.attach(parser);
-   }
+    /**
+     * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#findAutocompletions(com.google.collide.client.editor
+     * .selection.SelectionModel,
+     *      com.google.collide.client.code.autocomplete.SignalEventEssence)
+     */
+    @Override
+    public AutocompleteProposals findAutocompletions(SelectionModel selection, SignalEventEssence trigger) {
+        return null;
+    }
+
+    /** @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#cleanup() */
+    @Override
+    public void cleanup() {
+    }
+
+    /** @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#attach(com.google.collide.client.documentparser
+     * .DocumentParser) */
+    @Override
+    public void attach(DocumentParser parser) {
+        super.attach(parser);
+    }
 }

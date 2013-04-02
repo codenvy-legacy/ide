@@ -22,23 +22,21 @@ package org.exoplatform.ide.extension.samples.client.github.deploy;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportSampleStep.java Nov 22, 2011 11:53:47 AM vereshchaka $
  */
-public interface ImportSampleStep<T>
-{
+public interface ImportSampleStep<T> {
 
-   /**
-    * What to do, when open this screen.
-    *
-    * @param value context data of wizard
-    */
-   void onOpen(T value);
+    /**
+     * What to do, when open this screen.
+     *
+     * @param value
+     *         context data of wizard
+     */
+    void onOpen(T value);
 
-   /**
-    * What to do, when you return to this screen from next.
-    */
-   void onReturn();
+    /** What to do, when you return to this screen from next. */
+    void onReturn();
 
-   void setNextStep(ImportSampleStep<T> step);
+    void setNextStep(ImportSampleStep<T> step);
 
-   void setPreviousStep(ImportSampleStep<T> step);
+    void setPreviousStep(ImportSampleStep<T> step);
 
 }

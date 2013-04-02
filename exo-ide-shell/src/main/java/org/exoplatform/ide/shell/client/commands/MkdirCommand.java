@@ -38,78 +38,62 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 10, 2011 evgen $
- * 
  */
-public class MkdirCommand extends ClientCommand
-{
+public class MkdirCommand extends ClientCommand {
 
-   private static final Set<String> commads = new HashSet<String>();
+    private static final Set<String> commads = new HashSet<String>();
 
-   static
-   {
-      commads.add("mkdir");
-   }
+    static {
+        commads.add("mkdir");
+    }
 
-   /**
-    * 
-    */
-   public MkdirCommand()
-   {
-      super(commads, new Options(), CloudShell.messages.mkdirHelp());
-   }
+    /**
+     *
+     */
+    public MkdirCommand() {
+        super(commads, new Options(), CloudShell.messages.mkdirHelp());
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
-    */
-   @Override
-   public void execute(CommandLine commandLine)
-   {
-      if (commandLine.hasOption("h"))
-      {
-         printHelp(CloudShell.messages.mkdirUsage(), CloudShell.messages.mkdirHeader());
-         return;
-      }
-      @SuppressWarnings("unchecked")
-      List<String> args = commandLine.getArgList();
-      args.remove(0);
-      if (args.isEmpty())
-      {
-         CloudShell.console().println(CloudShell.messages.mkdirError());
-         return;
-      }
-      Folder parentFolder = Environment.get().getCurrentFolder();
-      for (String name : args)
-      {
+    /** @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine) */
+    @Override
+    public void execute(CommandLine commandLine) {
+        if (commandLine.hasOption("h")) {
+            printHelp(CloudShell.messages.mkdirUsage(), CloudShell.messages.mkdirHeader());
+            return;
+        }
+        @SuppressWarnings("unchecked")
+        List<String> args = commandLine.getArgList();
+        args.remove(0);
+        if (args.isEmpty()) {
+            CloudShell.console().println(CloudShell.messages.mkdirError());
+            return;
+        }
+        Folder parentFolder = Environment.get().getCurrentFolder();
+        for (String name : args) {
 
-         FolderModel newFolder = new FolderModel();
-         newFolder.setName(name);
-         try
-         {
-            VirtualFileSystem.getInstance().createFolder(parentFolder,
-               new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
-               {
+            FolderModel newFolder = new FolderModel();
+            newFolder.setName(name);
+            try {
+                VirtualFileSystem.getInstance().createFolder(parentFolder,
+                                                             new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder)) {
 
-                  @Override
-                  protected void onSuccess(FolderModel result)
-                  {
-                     CloudShell.console().println(result.getName());
-                  }
+                                                                 @Override
+                                                                 protected void onSuccess(FolderModel result) {
+                                                                     CloudShell.console().println(result.getName());
+                                                                 }
 
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     CloudShell.console().println(exception.getMessage());
+                                                                 @Override
+                                                                 protected void onFailure(Throwable exception) {
+                                                                     CloudShell.console().println(exception.getMessage());
 
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            CloudShell.console().println(e.getMessage());
-         }
+                                                                 }
+                                                             });
+            } catch (RequestException e) {
+                CloudShell.console().println(e.getMessage());
+            }
 
-      }
+        }
 
-   }
+    }
 
 }

@@ -30,15 +30,11 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: ItemNotFoundExceptionMapper.java 74306 2011-09-29 13:55:18Z andrew00x $
  */
 @Provider
-public class ItemNotFoundExceptionMapper implements ExceptionMapper<ItemNotFoundException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(ItemNotFoundException exception)
-   {
-      return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_NOT_FOUND)).build();
-   }
+public class ItemNotFoundExceptionMapper implements ExceptionMapper<ItemNotFoundException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(ItemNotFoundException exception) {
+        return Response.status(Response.Status.NOT_FOUND).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_NOT_FOUND)).build();
+    }
 }

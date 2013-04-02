@@ -18,39 +18,31 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk.versions;
 
-import com.google.gwt.uibinder.client.UiField;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 12:14:23 PM anya $
- * 
  */
-public class VersionsTabPain extends Composite
-{
-   private static VersionsTabPainUiBinder uiBinder = GWT.create(VersionsTabPainUiBinder.class);
+public class VersionsTabPain extends Composite {
+    private static VersionsTabPainUiBinder uiBinder = GWT.create(VersionsTabPainUiBinder.class);
 
-   interface VersionsTabPainUiBinder extends UiBinder<Widget, VersionsTabPain>
-   {
-   }
+    interface VersionsTabPainUiBinder extends UiBinder<Widget, VersionsTabPain> {
+    }
 
-   @UiField
-   VersionsGrid versionsGrid;
+    @UiField
+    VersionsGrid versionsGrid;
 
-   public VersionsTabPain()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    public VersionsTabPain() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * @return the versionsGrid
-    */
-   public VersionsGrid getVersionsGrid()
-   {
-      return versionsGrid;
-   }
+    /** @return the versionsGrid */
+    public VersionsGrid getVersionsGrid() {
+        return versionsGrid;
+    }
 }

@@ -21,86 +21,84 @@ import com.google.collide.shared.document.Position;
 import com.google.common.base.Preconditions;
 import com.google.gwt.regexp.shared.RegExp;
 
-/**
- * Utility that comments / uncomments selected lines.
- *
- */
+/** Utility that comments / uncomments selected lines. */
 public class ToggleCommentsController {
 
-  private final RegExp commentChecker;
+    private final RegExp commentChecker;
 
-  private final String commentHead;
+    private final String commentHead;
 
-  ToggleCommentsController(RegExp commentChecker, String commentHead) {
-    this.commentChecker = commentChecker;
-    this.commentHead = commentHead;
-  }
-
-  void processLines(DocumentMutator documentMutator, SelectionModel selection) {
-    boolean moveDown = !selection.hasSelection();
-    Position[] selectionRange = selection.getSelectionRange(false);
-    int initialColumn = selectionRange[0].getColumn();
-    Line terminator = selectionRange[1].getLine();
-    if (selectionRange[1].getColumn() != 0 || !selection.hasSelection()) {
-      terminator = terminator.getNextLine();
+    ToggleCommentsController(RegExp commentChecker, String commentHead) {
+        this.commentChecker = commentChecker;
+        this.commentHead = commentHead;
     }
 
-    int lineNumber = selectionRange[0].getLineNumber();
-    Line current = selectionRange[0].getLine();
+    void processLines(DocumentMutator documentMutator, SelectionModel selection) {
+        boolean moveDown = !selection.hasSelection();
+        Position[] selectionRange = selection.getSelectionRange(false);
+        int initialColumn = selectionRange[0].getColumn();
+        Line terminator = selectionRange[1].getLine();
+        if (selectionRange[1].getColumn() != 0 || !selection.hasSelection()) {
+            terminator = terminator.getNextLine();
+        }
 
-    if (canUncommentAll(current, terminator)) {
-      int headLength = commentHead.length();
-      while (current != terminator) {
-        int pos = current.getText().indexOf(commentHead);
-        documentMutator.deleteText(current, lineNumber, pos, headLength);
-        lineNumber++;
-        current = current.getNextLine();
-      }
-    } else {
-      while (current != terminator) {
-        documentMutator.insertText(current, lineNumber, 0, commentHead, false);
-        lineNumber++;
-        current = current.getNextLine();
-      }
+        int lineNumber = selectionRange[0].getLineNumber();
+        Line current = selectionRange[0].getLine();
+
+        if (canUncommentAll(current, terminator)) {
+            int headLength = commentHead.length();
+            while (current != terminator) {
+                int pos = current.getText().indexOf(commentHead);
+                documentMutator.deleteText(current, lineNumber, pos, headLength);
+                lineNumber++;
+                current = current.getNextLine();
+            }
+        } else {
+            while (current != terminator) {
+                documentMutator.insertText(current, lineNumber, 0, commentHead, false);
+                lineNumber++;
+                current = current.getNextLine();
+            }
+        }
+
+        if (moveDown) {
+            moveCursorDown(selection, initialColumn);
+        }
     }
 
-    if (moveDown) {
-      moveCursorDown(selection, initialColumn);
-    }
-  }
+    /**
+     * Check that all lines between begin (inclusive) and end (exclusive) are
+     * commented.
+     *
+     * @param end
+     *         {@code null} to check to document end
+     */
+    private boolean canUncommentAll(Line begin, Line end) {
+        Line current = begin;
+        while (current != end) {
+            Preconditions.checkNotNull(current, "hasn't met terminator before document end");
+            if (!commentChecker.test(current.getText())) {
+                return false;
+            }
 
-  /**
-   * Check that all lines between begin (inclusive) and end (exclusive) are
-   * commented.
-   *
-   * @param end {@code null} to check to document end
-   */
-  private boolean canUncommentAll(Line begin, Line end) {
-    Line current = begin;
-    while (current != end) {
-      Preconditions.checkNotNull(current, "hasn't met terminator before document end");
-      if (!commentChecker.test(current.getText())) {
-        return false;
-      }
-
-      current = current.getNextLine();
+            current = current.getNextLine();
+        }
+        return true;
     }
-    return true;
-  }
 
-  private void moveCursorDown(SelectionModel selection, int initialColumn) {
-    Line line = selection.getCursorLine().getNextLine();
-    if (line == null) {
-      return;
-    }
-    int lineNumber = selection.getCursorLineNumber() + 1;
+    private void moveCursorDown(SelectionModel selection, int initialColumn) {
+        Line line = selection.getCursorLine().getNextLine();
+        if (line == null) {
+            return;
+        }
+        int lineNumber = selection.getCursorLineNumber() + 1;
 
-    String text = line.getText();
-    int lineLength = text.length();
-    if (text.endsWith("\n")) {
-      lineLength--;
+        String text = line.getText();
+        int lineLength = text.length();
+        if (text.endsWith("\n")) {
+            lineLength--;
+        }
+        int column = Math.min(initialColumn, lineLength);
+        selection.setCursorPosition(new LineInfo(line, lineNumber), column);
     }
-    int column = Math.min(initialColumn, lineLength);
-    selection.setCursorPosition(new LineInfo(line, lineNumber), column);
-  }
 }

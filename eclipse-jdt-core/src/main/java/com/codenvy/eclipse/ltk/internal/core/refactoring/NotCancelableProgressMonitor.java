@@ -13,20 +13,16 @@ package com.codenvy.eclipse.ltk.internal.core.refactoring;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
 import com.codenvy.eclipse.core.runtime.ProgressMonitorWrapper;
 
-public class NotCancelableProgressMonitor extends ProgressMonitorWrapper
-{
-   public NotCancelableProgressMonitor(IProgressMonitor monitor)
-   {
-      super(monitor);
-   }
+public class NotCancelableProgressMonitor extends ProgressMonitorWrapper {
+    public NotCancelableProgressMonitor(IProgressMonitor monitor) {
+        super(monitor);
+    }
 
-   public void setCanceled(boolean b)
-   {
-      // ignore set cancel
-   }
+    public void setCanceled(boolean b) {
+        // ignore set cancel
+    }
 
-   public boolean isCanceled()
-   {
-      return false;
-   }
+    public boolean isCanceled() {
+        return false;
+    }
 }

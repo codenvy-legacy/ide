@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface InviteGoogleDevelopersHandler extends EventHandler
-{
+public interface InviteGoogleDevelopersHandler extends EventHandler {
 
-   void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event);
-   
+    void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event);
+
 }

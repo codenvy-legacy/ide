@@ -25,7 +25,6 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.GETOPENEDFILESINWORKSPACE )
-public interface GetOpenendFilesInWorkspace extends ClientToServerDto
-{
+@RoutingType(type = RoutingTypes.GETOPENEDFILESINWORKSPACE)
+public interface GetOpenendFilesInWorkspace extends ClientToServerDto {
 }

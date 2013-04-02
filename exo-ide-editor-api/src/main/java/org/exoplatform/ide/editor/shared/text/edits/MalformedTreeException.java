@@ -24,58 +24,55 @@ package org.exoplatform.ide.editor.shared.text.edits;
  * <p>
  * This class is not intended to be serialized.
  * </p>
- * 
+ *
  * @see TextEdit#addChild(TextEdit)
  * @see TextEdit#addChildren(TextEdit[])
- * 
  * @since 3.0
  */
-public class MalformedTreeException extends RuntimeException
-{
+public class MalformedTreeException extends RuntimeException {
 
-   // Not intended to be serialized
-   private static final long serialVersionUID = 1L;
+    // Not intended to be serialized
+    private static final long serialVersionUID = 1L;
 
-   private TextEdit fParent;
+    private TextEdit fParent;
 
-   private TextEdit fChild;
+    private TextEdit fChild;
 
-   /**
-    * Constructs a new malformed tree exception.
-    * 
-    * @param parent the parent edit
-    * @param child the child edit
-    * @param message the detail message
-    */
-   public MalformedTreeException(TextEdit parent, TextEdit child, String message)
-   {
-      super(message);
-      fParent = parent;
-      fChild = child;
-   }
+    /**
+     * Constructs a new malformed tree exception.
+     *
+     * @param parent
+     *         the parent edit
+     * @param child
+     *         the child edit
+     * @param message
+     *         the detail message
+     */
+    public MalformedTreeException(TextEdit parent, TextEdit child, String message) {
+        super(message);
+        fParent = parent;
+        fChild = child;
+    }
 
-   /**
-    * Returns the parent edit that caused the exception.
-    * 
-    * @return the parent edit
-    */
-   public TextEdit getParent()
-   {
-      return fParent;
-   }
+    /**
+     * Returns the parent edit that caused the exception.
+     *
+     * @return the parent edit
+     */
+    public TextEdit getParent() {
+        return fParent;
+    }
 
-   /**
-    * Returns the child edit that caused the exception.
-    * 
-    * @return the child edit
-    */
-   public TextEdit getChild()
-   {
-      return fChild;
-   }
+    /**
+     * Returns the child edit that caused the exception.
+     *
+     * @return the child edit
+     */
+    public TextEdit getChild() {
+        return fChild;
+    }
 
-   void setParent(TextEdit parent)
-   {
-      fParent = parent;
-   }
+    void setParent(TextEdit parent) {
+        fParent = parent;
+    }
 }

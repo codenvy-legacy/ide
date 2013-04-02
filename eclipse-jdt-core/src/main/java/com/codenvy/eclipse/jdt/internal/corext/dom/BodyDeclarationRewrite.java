@@ -21,29 +21,25 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 import java.util.List;
 
 
-public class BodyDeclarationRewrite
-{
+public class BodyDeclarationRewrite {
 
-   private ASTNode fTypeNode;
+    private ASTNode fTypeNode;
 
-   private ListRewrite fListRewrite;
+    private ListRewrite fListRewrite;
 
-   public static BodyDeclarationRewrite create(ASTRewrite rewrite, ASTNode typeNode)
-   {
-      return new BodyDeclarationRewrite(rewrite, typeNode);
-   }
+    public static BodyDeclarationRewrite create(ASTRewrite rewrite, ASTNode typeNode) {
+        return new BodyDeclarationRewrite(rewrite, typeNode);
+    }
 
-   private BodyDeclarationRewrite(ASTRewrite rewrite, ASTNode typeNode)
-   {
-      ChildListPropertyDescriptor property = ASTNodes.getBodyDeclarationsProperty(typeNode);
-      fTypeNode = typeNode;
-      fListRewrite = rewrite.getListRewrite(typeNode, property);
-   }
+    private BodyDeclarationRewrite(ASTRewrite rewrite, ASTNode typeNode) {
+        ChildListPropertyDescriptor property = ASTNodes.getBodyDeclarationsProperty(typeNode);
+        fTypeNode = typeNode;
+        fListRewrite = rewrite.getListRewrite(typeNode, property);
+    }
 
-   public void insert(BodyDeclaration decl, TextEditGroup description)
-   {
-      List<BodyDeclaration> container = ASTNodes.getBodyDeclarations(fTypeNode);
-      int index = ASTNodes.getInsertionIndex(decl, container);
-      fListRewrite.insertAt(decl, index, description);
-   }
+    public void insert(BodyDeclaration decl, TextEditGroup description) {
+        List<BodyDeclaration> container = ASTNodes.getBodyDeclarations(fTypeNode);
+        int index = ASTNodes.getInsertionIndex(decl, container);
+        fListRewrite.insertAt(decl, index, description);
+    }
 }

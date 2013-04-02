@@ -37,12 +37,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -69,349 +64,289 @@ import java.util.Map;
 /**
  * Presenter for deploy version view.
  * The view must implement {@link DeployVersionPresenter.Display} interface and pointed in Views.gwt.xml file.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: DeployVersionPresenter.java Sep 27, 2012 6:05:22 PM azatsarynnyy $
- *
  */
 public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-   DeployVersionHandler, ViewClosedHandler, ActiveProjectChangedHandler
-{
-   interface Display extends IsView
-   {
-      /**
-       * Get the 'Deploy to a new environment' mode radio field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<Boolean> getNewEnvironmentMode();
+                                               DeployVersionHandler, ViewClosedHandler, ActiveProjectChangedHandler {
+    interface Display extends IsView {
+        /**
+         * Get the 'Deploy to a new environment' mode radio field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getNewEnvironmentMode();
 
-      /**
-       * Get the 'Deploy to an existing environment' mode radio field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<Boolean> getExistingEnvironmentMode();
+        /**
+         * Get the 'Deploy to an existing environment' mode radio field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getExistingEnvironmentMode();
 
-      /**
-       * Get the environment field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getEnvironmentsField();
+        /**
+         * Get the environment field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<String> getEnvironmentsField();
 
-      /**
-       * Set environments field value.
-       * 
-       * @param values {@link LinkedHashMap} where key is represents the item's value
-       *          and value represents the text of the item to be added
-       */
-      void setEnvironmentsValues(LinkedHashMap<String, String> values);
+        /**
+         * Set environments field value.
+         *
+         * @param values
+         *         {@link LinkedHashMap} where key is represents the item's value
+         *         and value represents the text of the item to be added
+         */
+        void setEnvironmentsValues(LinkedHashMap<String, String> values);
 
-      /**
-       * Change the enable state of the environments field.
-       * 
-       * @param enable enabled or not
-       */
-      void enableEnvironmentsField(boolean value);
+        /**
+         * Change the enable state of the environments field.
+         *
+         * @param enable
+         *         enabled or not
+         */
+        void enableEnvironmentsField(boolean value);
 
-      /**
-       * Get deploy button click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getDeployButton();
+        /**
+         * Get deploy button click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getDeployButton();
 
-      /**
-       * Change the enable state of the deploy button.
-       * 
-       * @param enable enabled or not
-       */
-      void enableDeployButton(boolean value);
+        /**
+         * Change the enable state of the deploy button.
+         *
+         * @param enable
+         *         enabled or not
+         */
+        void enableDeployButton(boolean value);
 
-      /**
-       * Get cancel button click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+        /**
+         * Get cancel button click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private ProjectModel openedProject;
+    private ProjectModel openedProject;
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   private String applicationName;
+    private String applicationName;
 
-   private String versionLabel;
+    private String versionLabel;
 
-   private DeployVersionStartedHandler deployVersionStartedHandler;
+    private DeployVersionStartedHandler deployVersionStartedHandler;
 
-   private Map<String, EnvironmentInfo> environments = new HashMap<String, EnvironmentInfo>();
+    private Map<String, EnvironmentInfo> environments = new HashMap<String, EnvironmentInfo>();
 
-   private LaunchEnvironmentStartedHandler launchEnvironmentStartedHandler = new LaunchEnvironmentStartedHandler()
-   {
+    private LaunchEnvironmentStartedHandler launchEnvironmentStartedHandler = new LaunchEnvironmentStartedHandler() {
 
-      @Override
-      public void onLaunchEnvironmentStarted(EnvironmentInfo environmentInfo)
-      {
-         if (environmentInfo == null)
-         {
-            return;
-         }
-         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentLaunching(environmentInfo
-            .getName()), Type.INFO));
-         RequestStatusHandler environmentStatusHandler =
-            new EnvironmentRequestStatusHandler(
-               AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentLaunching(environmentInfo.getName()),
-               AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentSuccess(environmentInfo.getName()));
-         new EnvironmentStatusChecker(vfsInfo, openedProject, environmentInfo, true, environmentStatusHandler)
-            .startChecking();
-      }
-   };
-
-   public DeployVersionPresenter()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(DeployVersionEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
-
-   /**
-    * Bind display (view) with presenter.
-    */
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getDeployButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            if (display.getExistingEnvironmentMode().getValue())
-            {
-               deployVersion();
+        @Override
+        public void onLaunchEnvironmentStarted(EnvironmentInfo environmentInfo) {
+            if (environmentInfo == null) {
+                return;
             }
-            else if (display.getNewEnvironmentMode().getValue())
-            {
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new LaunchEnvironmentEvent(vfsInfo.getId(), openedProject.getId(), applicationName,
-                  versionLabel, launchEnvironmentStartedHandler));
+            IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentLaunching(environmentInfo
+                                                                                                                .getName()), Type.INFO));
+            RequestStatusHandler environmentStatusHandler =
+                    new EnvironmentRequestStatusHandler(
+                            AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentLaunching(environmentInfo.getName()),
+                            AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentSuccess(environmentInfo.getName()));
+            new EnvironmentStatusChecker(vfsInfo, openedProject, environmentInfo, true, environmentStatusHandler)
+                    .startChecking();
+        }
+    };
+
+    public DeployVersionPresenter() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(DeployVersionEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    }
+
+    /** Bind display (view) with presenter. */
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         }
-      });
+        });
 
-      display.getNewEnvironmentMode().addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
+        display.getDeployButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
-            display.enableEnvironmentsField(false);
-            display.enableDeployButton(true);
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                if (display.getExistingEnvironmentMode().getValue()) {
+                    deployVersion();
+                } else if (display.getNewEnvironmentMode().getValue()) {
+                    IDE.getInstance().closeView(display.asView().getId());
+                    IDE.fireEvent(new LaunchEnvironmentEvent(vfsInfo.getId(), openedProject.getId(), applicationName,
+                                                             versionLabel, launchEnvironmentStartedHandler));
+                }
+            }
+        });
 
-      display.getExistingEnvironmentMode().addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
+        display.getNewEnvironmentMode().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
-            display.enableEnvironmentsField(true);
-            display.enableDeployButton(display.getEnvironmentsField().getValue() != null);
-         }
-      });
-   }
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                display.enableEnvironmentsField(false);
+                display.enableDeployButton(true);
+            }
+        });
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        display.getExistingEnvironmentMode().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionHandler#onDeployVersion(org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionEvent)
-    */
-   @Override
-   public void onDeployVersion(DeployVersionEvent event)
-   {
-      this.applicationName = event.getApplicationName();
-      this.versionLabel = event.getVersionLabel();
-      this.deployVersionStartedHandler = event.getDeployVersionStartedHandler();
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                display.enableEnvironmentsField(true);
+                display.enableDeployButton(display.getEnvironmentsField().getValue() != null);
+            }
+        });
+    }
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      getEnvironments();
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   /**
-    * Update pointed environment with the selected version.
-    */
-   private void deployVersion()
-   {
-      UpdateEnvironmentRequest updateEnvironmentRequest =
-         AWSExtension.AUTO_BEAN_FACTORY.updateEnvironmentRequest().as();
-      updateEnvironmentRequest.setVersionLabel(versionLabel);
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionHandler#onDeployVersion(org.exoplatform.ide
+     * .extension.aws.client.beanstalk.versions.deploy.DeployVersionEvent) */
+    @Override
+    public void onDeployVersion(DeployVersionEvent event) {
+        this.applicationName = event.getApplicationName();
+        this.versionLabel = event.getVersionLabel();
+        this.deployVersionStartedHandler = event.getDeployVersionStartedHandler();
 
-      AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
-      final String environmentId = display.getEnvironmentsField().getValue();
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+        getEnvironments();
+    }
 
-      try
-      {
-         BeanstalkClientService.getInstance().updateEnvironment(
-            environmentId,
-            updateEnvironmentRequest,
-            new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
-               new LoggedInHandler()
-               {
+    /** Update pointed environment with the selected version. */
+    private void deployVersion() {
+        UpdateEnvironmentRequest updateEnvironmentRequest =
+                AWSExtension.AUTO_BEAN_FACTORY.updateEnvironmentRequest().as();
+        updateEnvironmentRequest.setVersionLabel(versionLabel);
 
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     deployVersion();
-                  }
-               })
-            {
+        AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
+        final String environmentId = display.getEnvironmentsField().getValue();
 
-               @Override
-               protected void onSuccess(EnvironmentInfo result)
-               {
-                  if (display != null)
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                  }
-                  if (deployVersionStartedHandler != null)
-                  {
-                     deployVersionStartedHandler.onDeployVersionStarted(environments.get(environmentId));
-                  }
-               }
+        try {
+            BeanstalkClientService.getInstance().updateEnvironment(
+                    environmentId,
+                    updateEnvironmentRequest,
+                    new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
+                                                                 new LoggedInHandler() {
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.deployVersionFailed(versionLabel);
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                     @Override
+                                                                     public void onLoggedIn() {
+                                                                         deployVersion();
+                                                                     }
+                                                                 }) {
 
-   /**
-    * Get the environment list.
-    */
-   private void getEnvironments()
-   {
-      try
-      {
-         BeanstalkClientService.getInstance().getEnvironments(
-            vfsInfo.getId(),
-            openedProject.getId(),
-            new AwsAsyncRequestCallback<List<EnvironmentInfo>>(new EnvironmentsInfoListUnmarshaller(),
-               new LoggedInHandler()
-               {
+                        @Override
+                        protected void onSuccess(EnvironmentInfo result) {
+                            if (display != null) {
+                                IDE.getInstance().closeView(display.asView().getId());
+                            }
+                            if (deployVersionStartedHandler != null) {
+                                deployVersionStartedHandler.onDeployVersionStarted(environments.get(environmentId));
+                            }
+                        }
 
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     getEnvironments();
-                  }
-               })
-            {
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            String message = AWSExtension.LOCALIZATION_CONSTANT.deployVersionFailed(versionLabel);
+                            if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null) {
+                                message += "<br>" + ((ServerException)exception).getMessage();
+                            }
+                            IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-               @Override
-               protected void onSuccess(List<EnvironmentInfo> result)
-               {
-                  LinkedHashMap<String, String> values = new LinkedHashMap<String, String>(result.size());
-                  for (EnvironmentInfo environmentInfo : result)
-                  {
-                     if (environmentInfo.getStatus() == EnvironmentStatus.Ready)
-                     {
-                        values.put(environmentInfo.getId(), environmentInfo.getName());
-                        environments.put(environmentInfo.getId(), environmentInfo);
-                     }
-                  }
-                  display.setEnvironmentsValues(values);
-               }
+    /** Get the environment list. */
+    private void getEnvironments() {
+        try {
+            BeanstalkClientService.getInstance().getEnvironments(
+                    vfsInfo.getId(),
+                    openedProject.getId(),
+                    new AwsAsyncRequestCallback<List<EnvironmentInfo>>(new EnvironmentsInfoListUnmarshaller(),
+                                                                       new LoggedInHandler() {
 
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                           @Override
+                                                                           public void onLoggedIn() {
+                                                                               getEnvironments();
+                                                                           }
+                                                                       }) {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfsInfo = event.getVfsInfo();
-   }
+                        @Override
+                        protected void onSuccess(List<EnvironmentInfo> result) {
+                            LinkedHashMap<String, String> values = new LinkedHashMap<String, String>(result.size());
+                            for (EnvironmentInfo environmentInfo : result) {
+                                if (environmentInfo.getStatus() == EnvironmentStatus.Ready) {
+                                    values.put(environmentInfo.getId(), environmentInfo.getName());
+                                    environments.put(environmentInfo.getId(), environmentInfo);
+                                }
+                            }
+                            display.setEnvironmentsValues(values);
+                        }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      this.openedProject = null;
-   }
+                        @Override
+                        protected void processFail(Throwable exception) {
+                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      this.openedProject = event.getProject();
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      this.openedProject = event.getProject();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfsInfo = event.getVfsInfo();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        this.openedProject = null;
+    }
+
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        this.openedProject = event.getProject();
+    }
+
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        this.openedProject = event.getProject();
+    }
 
 }

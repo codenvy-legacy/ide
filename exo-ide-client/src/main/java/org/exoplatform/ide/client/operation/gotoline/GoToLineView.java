@@ -36,106 +36,84 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 public class GoToLineView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display
-{
+                                           org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display {
 
-   private static final String ID = "ideGoToLineForm";
+    private static final String ID = "ideGoToLineForm";
 
-   private static final int WIDTH = 400;
+    private static final int WIDTH = 400;
 
-   private static final int HEIGHT = 160;
+    private static final int HEIGHT = 160;
 
-   private static final String GO_BUTTON_ID = "ideGoToLineFormGoButton";
+    private static final String GO_BUTTON_ID = "ideGoToLineFormGoButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideGoToLineFormCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideGoToLineFormCancelButton";
 
-   private static final String LINE_NUMBER_FIELD = "ideGoToLineFormLineNumberField";
+    private static final String LINE_NUMBER_FIELD = "ideGoToLineFormLineNumberField";
 
-   private static final String LINE_NUMBER_RANGE_LABEL = "ideGoToLineFormLineRangeLabel";
+    private static final String LINE_NUMBER_RANGE_LABEL = "ideGoToLineFormLineRangeLabel";
 
-   private static GoTolineViewUiBinder uiBinder = GWT.create(GoTolineViewUiBinder.class);
+    private static GoTolineViewUiBinder uiBinder = GWT.create(GoTolineViewUiBinder.class);
 
-   interface GoTolineViewUiBinder extends UiBinder<Widget, GoToLineView>
-   {
-   }
+    interface GoTolineViewUiBinder extends UiBinder<Widget, GoToLineView> {
+    }
 
-   @UiField
-   TextInput lineNumberField;
+    @UiField
+    TextInput lineNumberField;
 
-   @UiField
-   Label rangeLabel;
+    @UiField
+    Label rangeLabel;
 
-   @UiField
-   ImageButton goButton;
+    @UiField
+    ImageButton goButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   private static final String TITLE = IDE.EDITOR_CONSTANT.goToLineTitle();
+    private static final String TITLE = IDE.EDITOR_CONSTANT.goToLineTitle();
 
-   public GoToLineView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.goToLine()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      setCloseOnEscape(true);
+    public GoToLineView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.goToLine()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        setCloseOnEscape(true);
 
-      lineNumberField.setName(LINE_NUMBER_FIELD);
-      rangeLabel.getElement().setId(LINE_NUMBER_RANGE_LABEL);
-      goButton.setButtonId(GO_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        lineNumberField.setName(LINE_NUMBER_FIELD);
+        rangeLabel.getElement().setId(LINE_NUMBER_RANGE_LABEL);
+        goButton.setButtonId(GO_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#getCancelButton()
-    */
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#getCancelButton() */
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#getGoButton()
-    */
-   public HasClickHandlers getGoButton()
-   {
-      return goButton;
-   }
+    /** @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#getGoButton() */
+    public HasClickHandlers getGoButton() {
+        return goButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#removeFocusFromLineNumber()
-    */
-   public void removeFocusFromLineNumber()
-   {
-   }
+    /** @see org.exoplatform.ide.client.EditorPresenter.GoToLinePresenter.Display#removeFocusFromLineNumber() */
+    public void removeFocusFromLineNumber() {
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.EditorPresenter.edit.action.GoToLinePresenter.Display#getLineNumber()
-    */
-   @Override
-   public TextFieldItem getLineNumber()
-   {
-      return lineNumberField;
-   }
+    /** @see org.exoplatform.ide.client.EditorPresenter.edit.action.GoToLinePresenter.Display#getLineNumber() */
+    @Override
+    public TextFieldItem getLineNumber() {
+        return lineNumberField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.edit.GoToLinePresenter.Display#setFocusInLineNumberField()
-    */
-   @Override
-   public void setFocusInLineNumberField()
-   {
-      lineNumberField.focus();
-   }
+    /** @see org.exoplatform.ide.client.edit.GoToLinePresenter.Display#setFocusInLineNumberField() */
+    @Override
+    public void setFocusInLineNumberField() {
+        lineNumberField.focus();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.edit.GoToLinePresenter.Display#setCaptionLabel(java.lang.String)
-    */
-   @Override
-   public void setCaptionLabel(String caption)
-   {
-      rangeLabel.setText(caption);
-   }
+    /** @see org.exoplatform.ide.client.edit.GoToLinePresenter.Display#setCaptionLabel(java.lang.String) */
+    @Override
+    public void setCaptionLabel(String caption) {
+        rangeLabel.setText(caption);
+    }
 
 }

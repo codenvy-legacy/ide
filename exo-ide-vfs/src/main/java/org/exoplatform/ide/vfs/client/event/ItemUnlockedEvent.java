@@ -18,57 +18,44 @@
  */
 package org.exoplatform.ide.vfs.client.event;
 
-import org.exoplatform.ide.vfs.shared.Item;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ItemUnlockedEvent extends GwtEvent<ItemUnlockedHandler>
-{
+public class ItemUnlockedEvent extends GwtEvent<ItemUnlockedHandler> {
 
-   public static final GwtEvent.Type<ItemUnlockedHandler> TYPE = new Type<ItemUnlockedHandler>();
+    public static final GwtEvent.Type<ItemUnlockedHandler> TYPE = new Type<ItemUnlockedHandler>();
 
-   private Item item;
+    private Item item;
 
-   /**
-    * @param item
-    */
-   public ItemUnlockedEvent(Item item)
-   {
-      super();
-      this.item = item;
-   }
+    /** @param item */
+    public ItemUnlockedEvent(Item item) {
+        super();
+        this.item = item;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ItemUnlockedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ItemUnlockedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ItemUnlockedHandler handler)
-   {
-      handler.onItemUnlocked(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ItemUnlockedHandler handler) {
+        handler.onItemUnlocked(this);
+    }
 
-   /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
+    /** @return the item */
+    public Item getItem() {
+        return item;
+    }
 
 }

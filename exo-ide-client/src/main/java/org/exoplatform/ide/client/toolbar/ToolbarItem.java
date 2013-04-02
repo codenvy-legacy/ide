@@ -22,51 +22,45 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ToolbarItem
-{
+public class ToolbarItem {
 
-   public static enum Type {
+    public static enum Type {
 
-      COMMAND, DELIMITER, SPACER
+        COMMAND, DELIMITER, SPACER
 
-   }
+    }
 
-   private Type type;
+    private Type type;
 
-   private String id;
+    private String id;
 
-   private Control command;
+    private Control command;
 
-   public ToolbarItem(Type type)
-   {
-      this.type = type;
-   }
+    public ToolbarItem(Type type) {
+        this.type = type;
+    }
 
-   public ToolbarItem(Type type, String id, Control command)
-   {
-      this.type = type;
-      this.id = id;
-      this.command = command;
-   }
+    public ToolbarItem(Type type, String id, Control command) {
+        this.type = type;
+        this.id = id;
+        this.command = command;
+    }
 
-   public Type getType()
-   {
-      return type;
-   }
+    public Type getType() {
+        return type;
+    }
 
-   public String getId()
-   {
-      return id;
-   }
+    public String getId() {
+        return id;
+    }
 
-   public Control getCommand()
-   {
-      return command;
-   }
+    public Control getCommand() {
+        return command;
+    }
 
 }

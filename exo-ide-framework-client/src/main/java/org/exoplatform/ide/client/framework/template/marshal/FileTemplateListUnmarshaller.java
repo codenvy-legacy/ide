@@ -34,45 +34,34 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FileTemplateListUnmarshaller.java Jul 27, 2011 2:56:00 PM vereshchaka $
- * 
  */
-public class FileTemplateListUnmarshaller implements Unmarshallable<List<FileTemplate>>
-{
-   private List<FileTemplate> fileTemplates;
+public class FileTemplateListUnmarshaller implements Unmarshallable<List<FileTemplate>> {
+    private List<FileTemplate> fileTemplates;
 
-   public FileTemplateListUnmarshaller(List<FileTemplate> fileTemplates)
-   {
-      this.fileTemplates = fileTemplates;
-   }
+    public FileTemplateListUnmarshaller(List<FileTemplate> fileTemplates) {
+        this.fileTemplates = fileTemplates;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
-      if (jsonArray == null)
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+        if (jsonArray == null) {
+            return;
+        }
 
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         String payload = jsonArray.get(i).isObject().toString();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            String payload = jsonArray.get(i).isObject().toString();
 
-         AutoBean<FileTemplate> fileTemplateBean =
-            AutoBeanCodex.decode(TemplateAutoBeanFactory.AUTO_BEAN_FACTORY, FileTemplate.class, payload);
-         fileTemplates.add(fileTemplateBean.as());
-      }
-   }
+            AutoBean<FileTemplate> fileTemplateBean =
+                    AutoBeanCodex.decode(TemplateAutoBeanFactory.AUTO_BEAN_FACTORY, FileTemplate.class, payload);
+            fileTemplates.add(fileTemplateBean.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<FileTemplate> getPayload()
-   {
-      return fileTemplates;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<FileTemplate> getPayload() {
+        return fileTemplates;
+    }
 }

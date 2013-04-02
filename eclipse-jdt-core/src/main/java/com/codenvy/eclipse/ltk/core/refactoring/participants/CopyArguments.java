@@ -21,54 +21,51 @@ import com.codenvy.eclipse.core.runtime.Assert;
  *
  * @since 3.1
  */
-public class CopyArguments extends RefactoringArguments
-{
+public class CopyArguments extends RefactoringArguments {
 
-   private Object fDestination;
+    private Object fDestination;
 
-   private final ReorgExecutionLog fLog;
+    private final ReorgExecutionLog fLog;
 
-   /**
-    * Creates new copy arguments.
-    *
-    * @param destination the destination of the copy
-    * @param log         the log for the execution of the reorg refactoring
-    */
-   public CopyArguments(Object destination, ReorgExecutionLog log)
-   {
-      Assert.isNotNull(destination);
-      Assert.isNotNull(log);
-      fDestination = destination;
-      fLog = log;
-   }
+    /**
+     * Creates new copy arguments.
+     *
+     * @param destination
+     *         the destination of the copy
+     * @param log
+     *         the log for the execution of the reorg refactoring
+     */
+    public CopyArguments(Object destination, ReorgExecutionLog log) {
+        Assert.isNotNull(destination);
+        Assert.isNotNull(log);
+        fDestination = destination;
+        fLog = log;
+    }
 
-   /**
-    * Returns the destination of the move
-    *
-    * @return the move's destination
-    */
-   public Object getDestination()
-   {
-      return fDestination;
-   }
+    /**
+     * Returns the destination of the move
+     *
+     * @return the move's destination
+     */
+    public Object getDestination() {
+        return fDestination;
+    }
 
-   /**
-    * Returns the resource execution log.
-    *
-    * @return the resource execution log
-    */
-   public ReorgExecutionLog getExecutionLog()
-   {
-      return fLog;
-   }
+    /**
+     * Returns the resource execution log.
+     *
+     * @return the resource execution log
+     */
+    public ReorgExecutionLog getExecutionLog() {
+        return fLog;
+    }
 
-   /**
-    * {@inheritDoc}
-    *
-    * @since 3.2
-    */
-   public String toString()
-   {
-      return "copy to " + fDestination.toString(); //$NON-NLS-1$
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @since 3.2
+     */
+    public String toString() {
+        return "copy to " + fDestination.toString(); //$NON-NLS-1$
+    }
 }

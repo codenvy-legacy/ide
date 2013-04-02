@@ -56,80 +56,66 @@ import java.util.Arrays;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 13, 2012 2:57:21 PM anya $
- *
  */
-public class AWSExtension extends Extension implements InitializeServicesHandler
-{
+public class AWSExtension extends Extension implements InitializeServicesHandler {
 
-   /**
-    * The generator of an {@link AutoBean}.
-    */
-   public static final AWSAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(AWSAutoBeanFactory.class);
+    /** The generator of an {@link AutoBean}. */
+    public static final AWSAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(AWSAutoBeanFactory.class);
 
-   /**
-    * AWS Localization.
-    */
-   public static final AWSLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AWSLocalizationConstant.class);
+    /** AWS Localization. */
+    public static final AWSLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AWSLocalizationConstant.class);
 
-   public static final String INIT_VER_LABEL = "initial version";
+    public static final String INIT_VER_LABEL = "initial version";
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().registerPaaS(
-         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk48()), new Image(
-            AWSClientBundle.INSTANCE.elasticBeanstalk48Disabled()), Arrays.asList(ProjectType.JAVA, ProjectType.SPRING,
-            ProjectType.JSP, ProjectType.AWS, ProjectType.WAR, ProjectType.WAR), new DeployApplicationPresenter()));
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.getInstance().registerPaaS(
+                new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk48()), new Image(
+                        AWSClientBundle.INSTANCE.elasticBeanstalk48Disabled()), Arrays.asList(ProjectType.JAVA, ProjectType.SPRING,
+                                                                                              ProjectType.JSP, ProjectType.AWS,
+                                                                                              ProjectType.WAR, ProjectType.WAR),
+                         new DeployApplicationPresenter()));
 
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new BeanstalkControl());
+        IDE.getInstance().addControl(new BeanstalkControl());
 
-      new CreateApplicationPresenter();
-      new ManageApplicationPresenter();
-      new LoginPresenter();
-      new UpdateApplicationPresenter();
-      new CreateVersionPresenter();
-      new DeployVersionPresenter();
-      new DeleteVersionPresenter();
-      new EditConfigurationPresenter();
-      new LaunchEnvironmentPresenter();
-      new TerminateEnvironmentPresenter();
-      new RebuildEnvironmentPresenter();
-      new RestartAppServerPresenter();
-      new EC2Manager();
-      new StopInstancePresenter();
-      new S3Manager();
-   }
+        new CreateApplicationPresenter();
+        new ManageApplicationPresenter();
+        new LoginPresenter();
+        new UpdateApplicationPresenter();
+        new CreateVersionPresenter();
+        new DeployVersionPresenter();
+        new DeleteVersionPresenter();
+        new EditConfigurationPresenter();
+        new LaunchEnvironmentPresenter();
+        new TerminateEnvironmentPresenter();
+        new RebuildEnvironmentPresenter();
+        new RestartAppServerPresenter();
+        new EC2Manager();
+        new StopInstancePresenter();
+        new S3Manager();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-      new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+        new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+    }
 
-   public static boolean canBeDeployedToBeanstalk(ProjectModel project)
-   {
-      ProjectType projectType = ProjectType.fromValue(project.getProjectType());
-      if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType))
-      {
-         return true;
-      }
-      else
-      {
-         return false;
-      }
-   }
+    public static boolean canBeDeployedToBeanstalk(ProjectModel project) {
+        ProjectType projectType = ProjectType.fromValue(project.getProjectType());
+        if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-   public static boolean isAWSApplication(ProjectModel project)
-   {
-      return (project.getProperty("aws-application") != null && project.getProperty("aws-application").getValue() != null);
-   }
+    public static boolean isAWSApplication(ProjectModel project) {
+        return (project.getProperty("aws-application") != null && project.getProperty("aws-application").getValue() != null);
+    }
 }

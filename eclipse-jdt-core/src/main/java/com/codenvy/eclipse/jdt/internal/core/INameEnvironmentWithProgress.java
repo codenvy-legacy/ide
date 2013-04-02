@@ -18,20 +18,20 @@ import com.codenvy.eclipse.jdt.internal.compiler.env.INameEnvironment;
  * can use to look up types, compilation units, and packages in the
  * current environment.  The name environment is passed to the compiler
  * on creation.
- *
+ * <p/>
  * This name environment can be canceled using the monitor passed as an argument to
  * {@link #setMonitor(IProgressMonitor)}.
  *
  * @since 3.6
  */
-public interface INameEnvironmentWithProgress extends INameEnvironment
-{
+public interface INameEnvironmentWithProgress extends INameEnvironment {
 
-   /**
-    * Set the monitor for the given name environment. In order to be able to cancel this name environment calls,
-    * a non-null monitor should be given.
-    *
-    * @param monitor the given monitor
-    */
-   void setMonitor(IProgressMonitor monitor);
+    /**
+     * Set the monitor for the given name environment. In order to be able to cancel this name environment calls,
+     * a non-null monitor should be given.
+     *
+     * @param monitor
+     *         the given monitor
+     */
+    void setMonitor(IProgressMonitor monitor);
 }

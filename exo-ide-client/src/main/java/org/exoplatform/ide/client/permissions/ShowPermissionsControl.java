@@ -30,53 +30,44 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
  * This class represent command in main menu(<var>View/Show Permissions</var>).<br>
  * Fired {@link ShowPermissionsEvent} if clicked. <br>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
- * 
  */
 
 @RolesAllowed({"developer"})
-public class ShowPermissionsControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
-{
-   public static final String ID = "View/Permissions";
+public class ShowPermissionsControl extends SimpleControl implements IDEControl, ItemsSelectedHandler {
+    public static final String ID = "View/Permissions";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.permissionsControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.permissionsControl();
 
-   /**
-    * 
-    */
-   public ShowPermissionsControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
-      setEvent(new ShowPermissionsEvent());
-      setVisible(true);
-   }
+    /**
+     *
+     */
+    public ShowPermissionsControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
+        setEvent(new ShowPermissionsEvent());
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.module.navigation.event.selection.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .module.navigation.event.selection.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            setEnabled(false);
+            return;
+        }
+        setEnabled(true);
+    }
 
 }

@@ -28,26 +28,30 @@ import org.exoplatform.ide.editor.shared.text.IRegion;
  */
 public interface IProjectionPosition {
 
-	/**
-	 * Returns an array of regions that should be collapsed when the annotation
-	 * belonging to this position is collapsed. May return null instead of
-	 * an empty array.
-	 *
-	 * @param document the document that this position is attached to
-	 * @return the foldable regions for this position
-	 * @throws BadLocationException if accessing the document fails
-	 */
-	IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException;
+    /**
+     * Returns an array of regions that should be collapsed when the annotation
+     * belonging to this position is collapsed. May return null instead of
+     * an empty array.
+     *
+     * @param document
+     *         the document that this position is attached to
+     * @return the foldable regions for this position
+     * @throws BadLocationException
+     *         if accessing the document fails
+     */
+    IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException;
 
-	/**
-	 * Returns the offset of the caption (the anchor region) of this projection
-	 * position. The returned offset is relative to the receivers offset into
-	 * the document.
-	 *
-	 * @param document the document that this position is attached to
-	 * @return the caption offset relative to the position's offset
-	 * @throws BadLocationException if accessing the document fails
-	 */
-	int computeCaptionOffset(IDocument document) throws BadLocationException;
+    /**
+     * Returns the offset of the caption (the anchor region) of this projection
+     * position. The returned offset is relative to the receivers offset into
+     * the document.
+     *
+     * @param document
+     *         the document that this position is attached to
+     * @return the caption offset relative to the position's offset
+     * @throws BadLocationException
+     *         if accessing the document fails
+     */
+    int computeCaptionOffset(IDocument document) throws BadLocationException;
 
 }

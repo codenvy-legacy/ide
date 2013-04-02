@@ -34,107 +34,84 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateFileView.java Feb 6, 2013 6:04:55 PM azatsarynnyy $
- *
  */
 
-public class CreateFileView extends ViewImpl implements CreateFilePresenter.Display
-{
+public class CreateFileView extends ViewImpl implements CreateFilePresenter.Display {
 
-   public static final String ID = "ideCreateFileForm";
+    public static final String ID = "ideCreateFileForm";
 
-   public static final int WIDTH = 410;
+    public static final int WIDTH = 410;
 
-   public static final int HEIGHT = 175;
+    public static final int HEIGHT = 175;
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFileFormTitle();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFileFormTitle();
 
-   public final String NAME_FIELD = "ideCreateFileFormNameField";
+    public final String NAME_FIELD = "ideCreateFileFormNameField";
 
-   public final String ID_CREATE_BUTTON = "ideCreateFileFormCreateButton";
+    public final String ID_CREATE_BUTTON = "ideCreateFileFormCreateButton";
 
-   public final String ID_CANCEL_BUTTON = "ideCreateFileFormCancelButton";
+    public final String ID_CANCEL_BUTTON = "ideCreateFileFormCancelButton";
 
-   @UiField
-   TextInput fileNameField;
+    @UiField
+    TextInput fileNameField;
 
-   @UiField
-   ImageButton createButton;
+    @UiField
+    ImageButton createButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   interface CreateFolderViewUiBinder extends UiBinder<Widget, CreateFileView>
-   {
-   }
+    interface CreateFolderViewUiBinder extends UiBinder<Widget, CreateFileView> {
+    }
 
-   private static CreateFolderViewUiBinder uiBinder = GWT.create(CreateFolderViewUiBinder.class);
+    private static CreateFolderViewUiBinder uiBinder = GWT.create(CreateFolderViewUiBinder.class);
 
-   public CreateFileView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.newFile()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public CreateFileView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.newFile()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      fileNameField.setName(NAME_FIELD);
-      createButton.setButtonId(ID_CREATE_BUTTON);
-      cancelButton.setButtonId(ID_CANCEL_BUTTON);
-   }
+        fileNameField.setName(NAME_FIELD);
+        createButton.setButtonId(ID_CREATE_BUTTON);
+        cancelButton.setButtonId(ID_CANCEL_BUTTON);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getCreateButton()
-    */
-   @Override
-   public HasClickHandlers getCreateButton()
-   {
-      return createButton;
-   }
+    /** @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getCreateButton() */
+    @Override
+    public HasClickHandlers getCreateButton() {
+        return createButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getFileNameField()
-    */
-   @Override
-   public HasValue<String> getFileNameField()
-   {
-      return fileNameField;
-   }
+    /** @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getFileNameField() */
+    @Override
+    public HasValue<String> getFileNameField() {
+        return fileNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getFileNameFiledKeyPressed()
-    */
-   @Override
-   public HasKeyPressHandlers getFileNameFiledKeyPressed()
-   {
-      return (HasKeyPressHandlers)fileNameField;
-   }
+    /** @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#getFileNameFiledKeyPressed() */
+    @Override
+    public HasKeyPressHandlers getFileNameFiledKeyPressed() {
+        return (HasKeyPressHandlers)fileNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#setFocusInNameField()
-    */
-   @Override
-   public void setFocusInNameField()
-   {
-      fileNameField.focus();
-   }
+    /** @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#setFocusInNameField() */
+    @Override
+    public void setFocusInNameField() {
+        fileNameField.focus();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#selectFileName(int)
-    */
-   @Override
-   public void selectFileName(int extensionLength)
-   {
-      fileNameField.setSelectionRange(0, fileNameField.getValue().length() - extensionLength - 1);
-   }
+    /** @see org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display#selectFileName(int) */
+    @Override
+    public void selectFileName(int extensionLength) {
+        fileNameField.setSelectionRange(0, fileNameField.getValue().length() - extensionLength - 1);
+    }
 
 }

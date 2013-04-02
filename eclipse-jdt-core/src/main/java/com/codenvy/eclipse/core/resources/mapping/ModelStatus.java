@@ -27,33 +27,34 @@ import com.codenvy.eclipse.core.runtime.Status;
  *
  * @since 3.2
  */
-public class ModelStatus extends Status
-{
+public class ModelStatus extends Status {
 
-   private final String modelProviderId;
+    private final String modelProviderId;
 
-   /**
-    * Create a model status.
-    *
-    * @param severity        the severity
-    * @param pluginId        the plugin id
-    * @param modelProviderId the model provider id
-    * @param message         the message
-    */
-   public ModelStatus(int severity, String pluginId, String modelProviderId, String message)
-   {
-      super(severity, pluginId, 0, message, null);
-      Assert.isNotNull(modelProviderId);
-      this.modelProviderId = modelProviderId;
-   }
+    /**
+     * Create a model status.
+     *
+     * @param severity
+     *         the severity
+     * @param pluginId
+     *         the plugin id
+     * @param modelProviderId
+     *         the model provider id
+     * @param message
+     *         the message
+     */
+    public ModelStatus(int severity, String pluginId, String modelProviderId, String message) {
+        super(severity, pluginId, 0, message, null);
+        Assert.isNotNull(modelProviderId);
+        this.modelProviderId = modelProviderId;
+    }
 
-   /**
-    * Return the id of the model provider from which this status originated.
-    *
-    * @return the id of the model provider from which this status originated
-    */
-   public String getModelProviderId()
-   {
-      return modelProviderId;
-   }
+    /**
+     * Return the id of the model provider from which this status originated.
+     *
+     * @return the id of the model provider from which this status originated
+     */
+    public String getModelProviderId() {
+        return modelProviderId;
+    }
 }

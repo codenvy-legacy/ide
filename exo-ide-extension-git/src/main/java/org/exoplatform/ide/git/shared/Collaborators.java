@@ -22,15 +22,14 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: ICollaborators.java Aug 6, 2012
  */
-public interface Collaborators
-{
+public interface Collaborators {
 
-   public abstract List<GitHubUser> getCollaborators();
+    public abstract List<GitHubUser> getCollaborators();
 
-   public abstract void setCollaborators(List<GitHubUser> collaborators);
+    public abstract void setCollaborators(List<GitHubUser> collaborators);
 
 }

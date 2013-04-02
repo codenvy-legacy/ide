@@ -25,31 +25,23 @@ import java.util.Comparator;
 
 /**
  * Comparator for ordering project types.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ProjectTypesComparator.java Oct 31, 2012 12:47:56 PM azatsarynnyy $
- *
  */
-final class ProjectTypesComparator implements Comparator<ProjectType>
-{
-   /**
-    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-    */
-   @Override
-   public int compare(ProjectType type1, ProjectType type2)
-   {
-      int indexOfProjectType1 = ProjectResolver.getIndexOfProjectType(type1);
-      int indexOfProjectType2 = ProjectResolver.getIndexOfProjectType(type2);
+final class ProjectTypesComparator implements Comparator<ProjectType> {
+    /** @see java.util.Comparator#compare(java.lang.Object, java.lang.Object) */
+    @Override
+    public int compare(ProjectType type1, ProjectType type2) {
+        int indexOfProjectType1 = ProjectResolver.getIndexOfProjectType(type1);
+        int indexOfProjectType2 = ProjectResolver.getIndexOfProjectType(type2);
 
-      if (indexOfProjectType1 < indexOfProjectType2)
-      {
-         return -1;
-      }
-      else if (indexOfProjectType1 > indexOfProjectType2)
-      {
-         return 1;
-      }
+        if (indexOfProjectType1 < indexOfProjectType2) {
+            return -1;
+        } else if (indexOfProjectType1 > indexOfProjectType2) {
+            return 1;
+        }
 
-      return 0;
-   }
+        return 0;
+    }
 }

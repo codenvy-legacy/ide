@@ -21,31 +21,26 @@ package org.exoplatform.ide.git.shared;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: RepoInfo.java Aug 10, 2012
  */
-public class RepoInfo
-{
-   private String remoteUri;
+public class RepoInfo {
+    private String remoteUri;
 
-   public RepoInfo(String remoteUri)
-   {
-      this.remoteUri = remoteUri;
-   }
+    public RepoInfo(String remoteUri) {
+        this.remoteUri = remoteUri;
+    }
 
-   public RepoInfo()
-   {
-   }
+    public RepoInfo() {
+    }
 
-   public String getRemoteUri()
-   {
-      return remoteUri;
-   }
+    public String getRemoteUri() {
+        return remoteUri;
+    }
 
-   public void setRemoteUri(String remoteUri)
-   {
-      this.remoteUri = remoteUri;
-   }
+    public void setRemoteUri(String remoteUri) {
+        this.remoteUri = remoteUri;
+    }
 
 }

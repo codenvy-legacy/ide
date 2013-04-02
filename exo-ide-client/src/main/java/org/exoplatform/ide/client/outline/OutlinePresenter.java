@@ -61,497 +61,404 @@ import java.util.List;
 
 /**
  * Presenter for Outline Panel.
- * 
+ * <p/>
  * Handlers editor and outline panel activity and synchronize cursor position in editor with current token in outline.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- * 
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler,
-   ApplicationSettingsReceivedHandler
-{
+                                         EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler,
+                                         ApplicationSettingsReceivedHandler {
 
-   /**
-    * View for outline panel.
-    */
-   public interface Display extends OutlineDisplay
-   {
+    /** View for outline panel. */
+    public interface Display extends OutlineDisplay {
 
-      /**
-       * Select row with token in outline tree.
-       * 
-       * @param token - token to select
-       */
-      void selectToken(TokenBeenImpl token);
+        /**
+         * Select row with token in outline tree.
+         *
+         * @param token
+         *         - token to select
+         */
+        void selectToken(TokenBeenImpl token);
 
-      /**
-       * Sets is outline available
-       * 
-       * @param available
-       */
-      void setOutlineAvailable(boolean available);
+        /**
+         * Sets is outline available
+         *
+         * @param available
+         */
+        void setOutlineAvailable(boolean available);
 
-      /**
-       * Remove selection from any token
-       */
-      void deselectAllTokens();
+        /** Remove selection from any token */
+        void deselectAllTokens();
 
-      void setValue(List<TokenBeenImpl> tokens);
+        void setValue(List<TokenBeenImpl> tokens);
 
-      SingleSelectionModel<Object> getSingleSelectionModel();
+        SingleSelectionModel<Object> getSingleSelectionModel();
 
-      void focusInTree();
-   }
+        void focusInTree();
+    }
 
-   private Display display;
+    private Display display;
 
-   private List<TokenBeenImpl> tokens = null;
+    private List<TokenBeenImpl> tokens = null;
 
-   private int currentRow;
+    private int currentRow;
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   private Editor activeEditor;
+    private Editor activeEditor;
 
-   private List<String> ignoredMimeTypes = new ArrayList<String>();
+    private List<String> ignoredMimeTypes = new ArrayList<String>();
 
-   /**
-    * Outline selection must be processed or not.
-    */
-   private boolean processSelection = true;
+    /** Outline selection must be processed or not. */
+    private boolean processSelection = true;
 
-   /**
-    * Editor activity must be processed or not.
-    */
-   private boolean processEditorActivity = true;
+    /** Editor activity must be processed or not. */
+    private boolean processEditorActivity = true;
 
-   JavaScriptObject lastFocusedElement;
+    JavaScriptObject lastFocusedElement;
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   private Timer selectOutlineTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         if (tokens != null && !tokens.isEmpty())
-         {
-            selectTokenByRow(tokens);
-         }
-      }
-   };
+    private Timer selectOutlineTimer = new Timer() {
+        @Override
+        public void run() {
+            if (tokens != null && !tokens.isEmpty()) {
+                selectTokenByRow(tokens);
+            }
+        }
+    };
 
-   private Timer refreshOutlineTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         try
-         {
-            refreshOutlineTree();
-         }
-         catch (Throwable e)
-         {
-            Dialogs.getInstance().showError(e.getMessage());
-         }
-      }
-   };
+    private Timer refreshOutlineTimer = new Timer() {
+        @Override
+        public void run() {
+            try {
+                refreshOutlineTree();
+            } catch (Throwable e) {
+                Dialogs.getInstance().showError(e.getMessage());
+            }
+        }
+    };
 
-   public OutlinePresenter()
-   {
-      IDE.addHandler(ShowOutlineEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
+    public OutlinePresenter() {
+        IDE.addHandler(ShowOutlineEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
 //      IDE.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(EditorContentChangedEvent.TYPE, this);
-      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(EditorContentChangedEvent.TYPE, this);
+        IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
+        IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
 
-      ignoredMimeTypes.add(MimeType.APPLICATION_JAVA);
-      ignoredMimeTypes.add(MimeType.TEXT_HTML);
-      ignoredMimeTypes.add(MimeType.TEXT_CSS);
-      ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
-      ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
-      ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
-   }
+        ignoredMimeTypes.add(MimeType.APPLICATION_JAVA);
+        ignoredMimeTypes.add(MimeType.TEXT_HTML);
+        ignoredMimeTypes.add(MimeType.TEXT_CSS);
+        ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
+        ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
+        ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
+    }
 
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      this.applicationSettings = event.getApplicationSettings();
+    @Override
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        this.applicationSettings = event.getApplicationSettings();
 
-      boolean showOutline = false;
-      if (applicationSettings.getValueAsBoolean("outline") == null)
-      {
-         applicationSettings.setValue("outline", false, Store.COOKIES);
-      }
-      else
-      {
-         showOutline = applicationSettings.getValueAsBoolean("outline");
-      }
+        boolean showOutline = false;
+        if (applicationSettings.getValueAsBoolean("outline") == null) {
+            applicationSettings.setValue("outline", false, Store.COOKIES);
+        } else {
+            showOutline = applicationSettings.getValueAsBoolean("outline");
+        }
 
-      if (showOutline)
-      {
-         // TODO temporary solution not to open Outline for Java files, but save settings:
-         if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
-         {
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
-         }
-      }
-   }
+        if (showOutline) {
+            // TODO temporary solution not to open Outline for Java files, but save settings:
+            if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType())) {
+                display = GWT.create(Display.class);
+                IDE.getInstance().openView(display.asView());
+                bindDisplay();
+            }
+        }
+    }
 
-   @Override
-   public void onShowOutline(ShowOutlineEvent event)
-   {
-      applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
-      SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      if (event.isShow() && display == null)
-      {
-         // TODO temporary solution not to open Outline for Java files, but save settings:
-         if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
-         {
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
-         }
-         return;
-      }
+    @Override
+    public void onShowOutline(ShowOutlineEvent event) {
+        applicationSettings.setValue("outline", Boolean.valueOf(event.isShow()), Store.COOKIES);
+        SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+        if (event.isShow() && display == null) {
+            // TODO temporary solution not to open Outline for Java files, but save settings:
+            if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType())) {
+                display = GWT.create(Display.class);
+                IDE.getInstance().openView(display.asView());
+                bindDisplay();
+            }
+            return;
+        }
 
-      if (!event.isShow())
-      {
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      }
-   }
+        if (!event.isShow()) {
+            if (display != null) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        }
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
 
 //      if (event.getView() instanceof OutlineDisplay)
 //      {
 //         isOutlineViewOpened = false;
 //      }
-   }
+    }
 
-   public void bindDisplay()
-   {
-      display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler()
-      {
-         @Override
-         public void onSelectionChange(SelectionChangeEvent event)
-         {
-            if (!processSelection)
-            {
-               processSelection = true;
-               return;
-            }
-
-            if (display.getSingleSelectionModel().getSelectedObject() instanceof TokenBeenImpl)
-            {
-               selectEditorLine(((TokenBeenImpl)display.getSingleSelectionModel().getSelectedObject()).getLineNumber());
-            }
-         }
-      });
-
-      currentRow = 0;
-
-      if (canShowOutline())
-      {
-         display.setOutlineAvailable(true);
-         refreshOutlineTree();
-      }
-      else
-      {
-         tokens = null;
-         display.setOutlineAvailable(false);
-      }
-   }
-
-   public void selectEditorLine(int line)
-   {
-      processEditorActivity = false;
-      IDE.fireEvent(new EditorGoToLineEvent(line));
-   }
-
-   /**
-    * Refresh Outline Tree
-    * 
-    * @param scheduledEditor
-    */
-   private void refreshOutlineTree()
-   {
-      if (activeEditor == null)
-      {
-         return;
-      }
-      
-      if (activeEditor instanceof CodeMirror)
-      {
-         CodeMirror codeMirror = (CodeMirror)activeEditor;
-         codeMirror.getTokenList(new EditorTokenListPreparedHandler()
-         {
+    public void bindDisplay() {
+        display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
-            public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
-            {
-               tokenListReceived(event);
+            public void onSelectionChange(SelectionChangeEvent event) {
+                if (!processSelection) {
+                    processSelection = true;
+                    return;
+                }
+
+                if (display.getSingleSelectionModel().getSelectedObject() instanceof TokenBeenImpl) {
+                    selectEditorLine(((TokenBeenImpl)display.getSingleSelectionModel().getSelectedObject()).getLineNumber());
+                }
             }
-         });
-      }
-   }
-   
-   /**
-    * @param event
-    */
-   public void tokenListReceived(EditorTokenListPreparedEvent event)
-   {
-      if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId()))
-      {
-         return;
-      }
+        });
 
-      tokens = (List<TokenBeenImpl>)event.getTokenList();
-      display.setValue(tokens);
+        currentRow = 0;
 
-      // TODO Solution for updating tree (flush, refresh doesn't help):
-      if (tokens != null && !tokens.isEmpty())
-      {
-         selectToken(tokens.get(0));
-      }
+        if (canShowOutline()) {
+            display.setOutlineAvailable(true);
+            refreshOutlineTree();
+        } else {
+            tokens = null;
+            display.setOutlineAvailable(false);
+        }
+    }
 
-      if (activeEditor != null)
-      {
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-            @Override
-            public void execute()
-            {
-               selectTokenByRow(tokens);
+    public void selectEditorLine(int line) {
+        processEditorActivity = false;
+        IDE.fireEvent(new EditorGoToLineEvent(line));
+    }
+
+    /**
+     * Refresh Outline Tree
+     *
+     * @param scheduledEditor
+     */
+    private void refreshOutlineTree() {
+        if (activeEditor == null) {
+            return;
+        }
+
+        if (activeEditor instanceof CodeMirror) {
+            CodeMirror codeMirror = (CodeMirror)activeEditor;
+            codeMirror.getTokenList(new EditorTokenListPreparedHandler() {
+                @Override
+                public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event) {
+                    tokenListReceived(event);
+                }
+            });
+        }
+    }
+
+    /** @param event */
+    public void tokenListReceived(EditorTokenListPreparedEvent event) {
+        if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId())) {
+            return;
+        }
+
+        tokens = (List<TokenBeenImpl>)event.getTokenList();
+        display.setValue(tokens);
+
+        // TODO Solution for updating tree (flush, refresh doesn't help):
+        if (tokens != null && !tokens.isEmpty()) {
+            selectToken(tokens.get(0));
+        }
+
+        if (activeEditor != null) {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    selectTokenByRow(tokens);
+                }
+            });
+        }
+    }
+
+    public void onEditorContentChanged(EditorContentChangedEvent event) {
+        if (display == null || !canShowOutline()) {
+            return;
+        }
+
+        refreshOutlineTimer.cancel();
+        refreshOutlineTimer.schedule(2000);
+    }
+
+    private boolean canShowOutline() {
+        if (activeEditor == null || activeFile == null || activeFile.getMimeType() == null) {
+            refreshOutlineTimer.cancel();
+            selectOutlineTimer.cancel();
+            return false;
+        }
+
+        return activeEditor.isCapable(EditorCapability.OUTLINE);
+    }
+
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
+        activeEditor = event.getEditor();
+
+        if (display == null) {
+            return;
+        }
+
+        if (activeFile == null) {
+            display.setOutlineAvailable(false);
+            return;
+        }
+
+        // TODO temporary solution to close Outline for Java files
+        // TODO add possibility to configure editor's capabilities
+        if (activeFile != null && ignoredMimeTypes.contains(activeFile.getMimeType())) {
+            if (display != null) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         });
-      }
-   }   
+            return;
+        }
 
-   public void onEditorContentChanged(EditorContentChangedEvent event)
-   {
-      if (display == null || !canShowOutline())
-      {
-         return;
-      }
+        refreshOutlineTimer.cancel();
 
-      refreshOutlineTimer.cancel();
-      refreshOutlineTimer.schedule(2000);
-   }
+        if (canShowOutline()) {
+            display.setOutlineAvailable(true);
+            display.setValue(null);
+            refreshOutlineTree();
+        } else {
+            tokens = null;
+            display.setOutlineAvailable(false);
+        }
+    }
 
-   private boolean canShowOutline()
-   {
-      if (activeEditor == null || activeFile == null || activeFile.getMimeType() == null)
-      {
-         refreshOutlineTimer.cancel();
-         selectOutlineTimer.cancel();
-         return false;
-      }
+    private void selectToken(TokenBeenImpl token) {
+        if (token != null) {
+            processSelection = false;
+            display.selectToken(token);
+        }
+    }
 
-      return activeEditor.isCapable(EditorCapability.OUTLINE);
-   }
+    protected TokenBeenImpl getNodeByLineNumber(int lineNumber, List<TokenBeenImpl> tokens) {
+        for (TokenBeenImpl token : tokens) {
+            int startLineNumber = token.getLineNumber();
+            int endLineNumber = token.getLastLineNumber();
 
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-      activeEditor = event.getEditor();
-      
-      if (display == null)
-      {
-         return;
-      }
-      
-      if (activeFile == null)
-      {
-         display.setOutlineAvailable(false);
-         return;
-      }
-      
-      // TODO temporary solution to close Outline for Java files
-      // TODO add possibility to configure editor's capabilities
-      if (activeFile != null && ignoredMimeTypes.contains(activeFile.getMimeType()))
-      {
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-         return;
-      }
-
-      refreshOutlineTimer.cancel();
-
-      if (canShowOutline())
-      {
-         display.setOutlineAvailable(true);
-         display.setValue(null);
-         refreshOutlineTree();
-      }
-      else
-      {
-         tokens = null;
-         display.setOutlineAvailable(false);
-      }
-   }
-
-   private void selectToken(TokenBeenImpl token)
-   {
-      if (token != null)
-      {
-         processSelection = false;
-         display.selectToken(token);
-      }
-   }
-
-   protected TokenBeenImpl getNodeByLineNumber(int lineNumber, List<TokenBeenImpl> tokens)
-   {
-      for (TokenBeenImpl token : tokens)
-      {
-         int startLineNumber = token.getLineNumber();
-         int endLineNumber = token.getLastLineNumber();
-
-         if (startLineNumber == lineNumber)
-         {
-            return token;
-         }
-
-         // Check current line is between node's start and end lines:
-         if (startLineNumber <= lineNumber && lineNumber <= endLineNumber)
-         {
-
-            // If there are no children - return this node
-            if (token.getSubTokenList() == null || token.getSubTokenList().isEmpty())
-            {
-               return token;
+            if (startLineNumber == lineNumber) {
+                return token;
             }
-            // Checking line ranges of children, if no proper is found - return parent node:
-            else
-            {
-               TokenBeenImpl foundToken = getNodeByLineNumber(lineNumber, token.getSubTokenList());
-               return (foundToken == null) ? token : foundToken;
+
+            // Check current line is between node's start and end lines:
+            if (startLineNumber <= lineNumber && lineNumber <= endLineNumber) {
+
+                // If there are no children - return this node
+                if (token.getSubTokenList() == null || token.getSubTokenList().isEmpty()) {
+                    return token;
+                }
+                // Checking line ranges of children, if no proper is found - return parent node:
+                else {
+                    TokenBeenImpl foundToken = getNodeByLineNumber(lineNumber, token.getSubTokenList());
+                    return (foundToken == null) ? token : foundToken;
+                }
             }
-         }
-      }
-      // Nothing was found:
-      return null;
-   }
+        }
+        // Nothing was found:
+        return null;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.gwtframework.editor.event.EditorCursorActivityEvent)
-    */
-   public void onEditorCursorActivity(EditorCursorActivityEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
-      if (!processEditorActivity)
-      {
-         display.focusInTree();
-         processEditorActivity = true;
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.editor.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.gwtframework
+     * .editor.event.EditorCursorActivityEvent) */
+    public void onEditorCursorActivity(EditorCursorActivityEvent event) {
+        if (display == null) {
+            return;
+        }
+        if (!processEditorActivity) {
+            display.focusInTree();
+            processEditorActivity = true;
+            return;
+        }
 
-      if (currentRow == event.getRow())
-      {
-         return;
-      }
-      currentRow = event.getRow();
-      selectOutlineTimer.cancel();
-      selectOutlineTimer.schedule(100);
-   }   
+        if (currentRow == event.getRow()) {
+            return;
+        }
+        currentRow = event.getRow();
+        selectOutlineTimer.cancel();
+        selectOutlineTimer.schedule(100);
+    }
 
-   private boolean selectTokenByRow(List<TokenBeenImpl> tokens)
-   {
-      if (tokens == null || tokens.isEmpty())
-      {
-         return false;
-      }
+    private boolean selectTokenByRow(List<TokenBeenImpl> tokens) {
+        if (tokens == null || tokens.isEmpty()) {
+            return false;
+        }
 
-      for (int i = 0; i < tokens.size(); i++)
-      {
-         TokenBeenImpl token = tokens.get(i);
-         if (currentRow < token.getLineNumber() || !shouldBeDisplayed(token))
-         {
-            continue;
-         }
-
-         TokenBeenImpl next = null;
-         if ((i + 1) != tokens.size())
-         {
-            next = tokens.get(i + 1);
-         }
-
-         if (isCurrentToken(currentRow, token, next))
-         {
-            if (selectTokenByRow(token.getSubTokenList()))
-            {
-               return true;
+        for (int i = 0; i < tokens.size(); i++) {
+            TokenBeenImpl token = tokens.get(i);
+            if (currentRow < token.getLineNumber() || !shouldBeDisplayed(token)) {
+                continue;
             }
-            else
-            {
-               selectToken(token);
-               return true;
+
+            TokenBeenImpl next = null;
+            if ((i + 1) != tokens.size()) {
+                next = tokens.get(i + 1);
             }
-         }
-      }
 
-      return false;
-   }
+            if (isCurrentToken(currentRow, token, next)) {
+                if (selectTokenByRow(token.getSubTokenList())) {
+                    return true;
+                } else {
+                    selectToken(token);
+                    return true;
+                }
+            }
+        }
 
-   /**
-    * Test if current line within the token's area (currentLineNumber >= token.lineNumber) and (currentLineNumber <=
-    * token.lastLineNumber) or current line is before nextToken or current line is after last token
-    * 
-    * @param currentLineNumber
-    * @param token
-    * @return
-    */
-   private boolean isCurrentToken(int currentLineNumber, TokenBeenImpl token, TokenBeenImpl nextToken)
-   {
-      if (currentLineNumber == token.getLineNumber())
-      {
-         return true;
-      }
+        return false;
+    }
 
-      if (token.getLastLineNumber() != 0)
-      {
-         return currentLineNumber >= token.getLineNumber() && currentLineNumber <= token.getLastLineNumber();
-      }
+    /**
+     * Test if current line within the token's area (currentLineNumber >= token.lineNumber) and (currentLineNumber <=
+     * token.lastLineNumber) or current line is before nextToken or current line is after last token
+     *
+     * @param currentLineNumber
+     * @param token
+     * @return
+     */
+    private boolean isCurrentToken(int currentLineNumber, TokenBeenImpl token, TokenBeenImpl nextToken) {
+        if (currentLineNumber == token.getLineNumber()) {
+            return true;
+        }
 
-      // test if currentLineNumber before nextToken
-      if (nextToken != null)
-      {
-         return currentLineNumber < nextToken.getLineNumber();
-      }
+        if (token.getLastLineNumber() != 0) {
+            return currentLineNumber >= token.getLineNumber() && currentLineNumber <= token.getLastLineNumber();
+        }
 
-      return currentLineNumber >= token.getLineNumber();
-   }
+        // test if currentLineNumber before nextToken
+        if (nextToken != null) {
+            return currentLineNumber < nextToken.getLineNumber();
+        }
 
-   /**
-    * Test should token be displayed in outline tree.
-    * 
-    * @param token
-    * @return true only if token should be displayed in outline tree
-    */
-   private boolean shouldBeDisplayed(TokenBeenImpl token)
-   {
-      return !(token.getType().equals(TokenType.IMPORT));
-   }
+        return currentLineNumber >= token.getLineNumber();
+    }
+
+    /**
+     * Test should token be displayed in outline tree.
+     *
+     * @param token
+     * @return true only if token should be displayed in outline tree
+     */
+    private boolean shouldBeDisplayed(TokenBeenImpl token) {
+        return !(token.getType().equals(TokenType.IMPORT));
+    }
 
 }

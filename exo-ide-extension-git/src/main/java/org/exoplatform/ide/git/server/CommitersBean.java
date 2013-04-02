@@ -25,40 +25,31 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CommitersBean.java Aug 3, 2012
  */
-public class CommitersBean implements Commiters
-{
-   private List<GitUser> commiters;
-   
-   public CommitersBean()
-   {
-   }
-   
-   public CommitersBean(List<GitUser> commiters)
-   {
-      this.commiters = commiters;
-   }
+public class CommitersBean implements Commiters {
+    private List<GitUser> commiters;
+
+    public CommitersBean() {
+    }
+
+    public CommitersBean(List<GitUser> commiters) {
+        this.commiters = commiters;
+    }
 
 
-   /**
-    * @see org.exoplatform.ide.git.shared.Commiters#getCommiters()
-    */
-   @Override
-   public List<GitUser> getCommiters()
-   {
-      return commiters;
-   }
+    /** @see org.exoplatform.ide.git.shared.Commiters#getCommiters() */
+    @Override
+    public List<GitUser> getCommiters() {
+        return commiters;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.shared.Commiters#setCommiters(java.util.List)
-    */
-   @Override
-   public void setCommiters(List<GitUser> commiters)
-   {
-      this.commiters = commiters;
-   }
+    /** @see org.exoplatform.ide.git.shared.Commiters#setCommiters(java.util.List) */
+    @Override
+    public void setCommiters(List<GitUser> commiters) {
+        this.commiters = commiters;
+    }
 
 }

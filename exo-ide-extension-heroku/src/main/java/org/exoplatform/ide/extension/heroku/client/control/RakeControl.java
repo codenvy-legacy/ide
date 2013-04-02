@@ -24,22 +24,19 @@ import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandEvent;
 
 /**
  * Control is used for executing rake commands,
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 17, 2011 10:43:13 AM anya $
- * 
  */
-public class RakeControl extends AbstractHerokuControl
-{
+public class RakeControl extends AbstractHerokuControl {
 
-   public RakeControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlPrompt());
-      setEvent(new RakeCommandEvent());
-      setImages(HerokuClientBundle.INSTANCE.rake(), HerokuClientBundle.INSTANCE.rakeDisabled());
-      setDelimiterBefore(true);
-   }
+    public RakeControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.rakeControlPrompt());
+        setEvent(new RakeCommandEvent());
+        setImages(HerokuClientBundle.INSTANCE.rake(), HerokuClientBundle.INSTANCE.rakeDisabled());
+        setDelimiterBefore(true);
+    }
 
 }

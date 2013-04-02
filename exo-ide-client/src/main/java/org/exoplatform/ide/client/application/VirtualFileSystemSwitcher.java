@@ -35,66 +35,54 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class VirtualFileSystemSwitcher implements SwitchVFSHandler, ConfigurationReceivedSuccessfullyHandler
-{
+public class VirtualFileSystemSwitcher implements SwitchVFSHandler, ConfigurationReceivedSuccessfullyHandler {
 
-   private String vfsBaseUrl;
+    private String vfsBaseUrl;
 
-   private String vfsId;
+    private String vfsId;
 
-   public VirtualFileSystemSwitcher()
-   {
-      IDE.addHandler(SwitchVFSEvent.TYPE, this);
-      IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-   }
+    public VirtualFileSystemSwitcher() {
+        IDE.addHandler(SwitchVFSEvent.TYPE, this);
+        IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
+    }
 
-   @Override
-   public void onSwitchVFS(SwitchVFSEvent event)
-   {
-      if (vfsId != null)
-      {
-         IDE.fireEvent(new VfsChangedEvent(null));
-      }
+    @Override
+    public void onSwitchVFS(SwitchVFSEvent event) {
+        if (vfsId != null) {
+            IDE.fireEvent(new VfsChangedEvent(null));
+        }
 
-      vfsId = event.getVfsID();
-      String workspaceUrl = vfsBaseUrl;
+        vfsId = event.getVfsID();
+        String workspaceUrl = vfsBaseUrl;
 
-      try
-      {
-         new VirtualFileSystem(workspaceUrl, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
-            new VFSInfoUnmarshaller(new VirtualFileSystemInfoImpl()))
-         {
-            @Override
-            protected void onSuccess(VirtualFileSystemInfo result)
-            {
-               IDE.fireEvent(new VfsChangedEvent(result));
-            }
+        try {
+            new VirtualFileSystem(workspaceUrl, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
+                    new VFSInfoUnmarshaller(new VirtualFileSystemInfoImpl())) {
+                @Override
+                protected void onSuccess(VirtualFileSystemInfo result) {
+                    IDE.fireEvent(new VfsChangedEvent(result));
+                }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError("Workspace " + vfsId + " not found.");
-            }
-         });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Dialogs.getInstance().showError("Workspace " + vfsId + " not found.");
+                }
+            });
 
-      }
-      catch (Exception e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        } catch (Exception e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   @Override
-   public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
-   {
-      vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();
-   }
+    @Override
+    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event) {
+        vfsBaseUrl = event.getConfiguration().getVfsBaseUrl();
+    }
 
 }

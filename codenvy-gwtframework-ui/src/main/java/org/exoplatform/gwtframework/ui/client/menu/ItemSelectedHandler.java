@@ -22,21 +22,20 @@ package org.exoplatform.gwtframework.ui.client.menu;
 
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ItemSelectedHandler
-{
+public interface ItemSelectedHandler {
 
-   /**
-    * Do some actions when menu item will be selected.
-    * 
-    * @param menuItem selected MenuItem
-    */
-   void onMenuItemSelected(MenuItem menuItem);
-   
+    /**
+     * Do some actions when menu item will be selected.
+     *
+     * @param menuItem
+     *         selected MenuItem
+     */
+    void onMenuItemSelected(MenuItem menuItem);
+
 }

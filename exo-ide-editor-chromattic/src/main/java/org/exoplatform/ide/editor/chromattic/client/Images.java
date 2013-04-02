@@ -19,7 +19,6 @@
 package org.exoplatform.ide.editor.chromattic.client;
 
 import com.google.gwt.resources.client.ClientBundle;
-
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
@@ -27,14 +26,12 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Images Mar 11, 2011 12:10:25 PM evgen $
- * 
  */
-public interface Images extends ClientBundle
-{
-   String IMAGE_URL = UIHelper.getGadgetImagesURL();
+public interface Images extends ClientBundle {
+    String IMAGE_URL = UIHelper.getGadgetImagesURL();
 
-   String CHROMATTIC = IMAGE_URL + "chromattic.png";
+    String CHROMATTIC = IMAGE_URL + "chromattic.png";
 
-   @Source("org/exoplatform/ide/editor/chromattic/public/images/chromattic.png")
-   ImageResource chromattic();
+    @Source("org/exoplatform/ide/editor/chromattic/public/images/chromattic.png")
+    ImageResource chromattic();
 }

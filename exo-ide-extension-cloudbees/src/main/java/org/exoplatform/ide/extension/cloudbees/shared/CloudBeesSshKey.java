@@ -22,17 +22,16 @@ package org.exoplatform.ide.extension.cloudbees.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface CloudBeesSshKey
-{
-   String getName();
+public interface CloudBeesSshKey {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getContent();
+    String getContent();
 
-   void setContent(String content);
+    void setContent(String content);
 
-   String getFingerprint();
+    String getFingerprint();
 
-   void setFingerprint(String fingerprint);
+    void setFingerprint(String fingerprint);
 }

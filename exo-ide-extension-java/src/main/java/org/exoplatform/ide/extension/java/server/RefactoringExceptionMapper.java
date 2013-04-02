@@ -28,21 +28,18 @@ import javax.ws.rs.ext.ExceptionMapper;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: RefactoringExceptionMapper.java Jan 22, 2013 vetal $
- *
  */
-public class RefactoringExceptionMapper implements ExceptionMapper<CoreException>
-{
+public class RefactoringExceptionMapper implements ExceptionMapper<CoreException> {
 
-   @Override
-   public Response toResponse(CoreException e)
-   {
-      IStatus status = e.getStatus();
-      return Response.status(400)
-                     .header("JAXRS-Body-Provided", "Error-Message")
-                     .header("Java-Refactoring-Error-Code", status.getCode())
-                     .header("Java-Refactoring-Error-Severity", status.getSeverity())
-                     .entity(status.getMessage())
-                     .type(MediaType.TEXT_PLAIN).build();
-   }
+    @Override
+    public Response toResponse(CoreException e) {
+        IStatus status = e.getStatus();
+        return Response.status(400)
+                       .header("JAXRS-Body-Provided", "Error-Message")
+                       .header("Java-Refactoring-Error-Code", status.getCode())
+                       .header("Java-Refactoring-Error-Severity", status.getSeverity())
+                       .entity(status.getMessage())
+                       .type(MediaType.TEXT_PLAIN).build();
+    }
 
 }

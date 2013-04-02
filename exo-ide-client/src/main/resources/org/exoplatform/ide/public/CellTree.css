@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 .cellTreeWidget {
-    font-family: Verdana,Bitstream Vera Sans,sans-serif;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
     font-size: 11px;
     font-style: normal;
     font-weight: normal;
@@ -26,14 +26,14 @@
 }
 
 .cellTreeEmptyMessage {
-	padding-left: 16px;
-	font-style: italic;
+    padding-left: 16px;
+    font-style: italic;
 }
 
 .cellTreeItem {
-	height: 22px !important;
-	padding-top:2px !important;	
-	padding-bottom:2px !important;
+    height: 22px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
 }
 
 .cellTreeItemImage {
@@ -48,33 +48,34 @@
 /*
 div:focus { outline: none; }
 */
-.cellTreeKeyboardSelectedItem { /*  background-color: #ffff00; */
-	
+.cellTreeKeyboardSelectedItem {
+    /*  background-color: #ffff00; */
+
 }
 
 .cellTreeOpenItem {
-	
+
 }
 
 .cellTreeTopItem {
-	
+
 }
 
 .cellTreeTopItemImage {
-	
+
 }
 
 .cellTreeTopItemImageValue {
-	
+
 }
 
 .cellTreeSelectedItem {
-	background-color: #d6e9ff !important;
-	background-image: none;
+    background-color: #d6e9ff !important;
+    background-image: none;
 }
 
 .cellTreeShowMoreButton {
-	padding-left: 16px;
-	padding-top: 5px;
-	outline: none;
+    padding-left: 16px;
+    padding-top: 5px;
+    outline: none;
 }

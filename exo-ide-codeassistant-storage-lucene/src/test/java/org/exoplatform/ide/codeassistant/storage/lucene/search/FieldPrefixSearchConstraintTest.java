@@ -18,63 +18,54 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.search;
 
-import static org.exoplatform.ide.codeassistant.storage.lucene.search.FieldPrefixSearchConstraint.prefix;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.junit.Test;
 
+import static org.exoplatform.ide.codeassistant.storage.lucene.search.FieldPrefixSearchConstraint.prefix;
+import static org.junit.Assert.*;
+
 /**
  *
  */
-public class FieldPrefixSearchConstraintTest
-{
-   @Test
-   public void shouldCreateInstanceFromStaticMethod() throws Exception
-   {
-      LuceneSearchConstraint constraint = prefix("test", "test");
-      assertTrue(constraint instanceof FieldPrefixSearchConstraint);
-   }
+public class FieldPrefixSearchConstraintTest {
+    @Test
+    public void shouldCreateInstanceFromStaticMethod() throws Exception {
+        LuceneSearchConstraint constraint = prefix("test", "test");
+        assertTrue(constraint instanceof FieldPrefixSearchConstraint);
+    }
 
-   @Test
-   public void shouldMatchAllIfPrefixNull() throws Exception
-   {
-      LuceneSearchConstraint constraint = prefix("test", null);
-      assertTrue(constraint.matchAll());
-   }
+    @Test
+    public void shouldMatchAllIfPrefixNull() throws Exception {
+        LuceneSearchConstraint constraint = prefix("test", null);
+        assertTrue(constraint.matchAll());
+    }
 
-   @Test
-   public void shouldMatchAllIfPrefixEmptyString() throws Exception
-   {
-      LuceneSearchConstraint constraint = prefix("test", "");
-      assertTrue(constraint.matchAll());
-   }
+    @Test
+    public void shouldMatchAllIfPrefixEmptyString() throws Exception {
+        LuceneSearchConstraint constraint = prefix("test", "");
+        assertTrue(constraint.matchAll());
+    }
 
-   @Test
-   public void shouldNotMatchAllIfPrefixNotEmptyString() throws Exception
-   {
-      LuceneSearchConstraint constraint = prefix("test", "somePrefix");
-      assertFalse(constraint.matchAll());
-   }
+    @Test
+    public void shouldNotMatchAllIfPrefixNotEmptyString() throws Exception {
+        LuceneSearchConstraint constraint = prefix("test", "somePrefix");
+        assertFalse(constraint.matchAll());
+    }
 
-   @Test
-   public void shouldConstructPrefixedQuery() throws Exception
-   {
-      LuceneSearchConstraint constraint = prefix("test", "somePrefix");
-      Query query = constraint.getQuery();
-      assertTrue(query instanceof PrefixQuery);
-   }
+    @Test
+    public void shouldConstructPrefixedQuery() throws Exception {
+        LuceneSearchConstraint constraint = prefix("test", "somePrefix");
+        Query query = constraint.getQuery();
+        assertTrue(query instanceof PrefixQuery);
+    }
 
-   @Test
-   public void prefixQueryShouldMachArguments() throws Exception
-   {
-      LuceneSearchConstraint constraint = prefix("test", "somePrefix");
-      PrefixQuery query = (PrefixQuery)constraint.getQuery();
-      assertEquals("test", query.getPrefix().field());
-      assertEquals("somePrefix", query.getPrefix().text());
-   }
+    @Test
+    public void prefixQueryShouldMachArguments() throws Exception {
+        LuceneSearchConstraint constraint = prefix("test", "somePrefix");
+        PrefixQuery query = (PrefixQuery)constraint.getQuery();
+        assertEquals("test", query.getPrefix().field());
+        assertEquals("somePrefix", query.getPrefix().text());
+    }
 
 }

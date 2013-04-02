@@ -20,38 +20,37 @@ package org.exoplatform.ide.extension.heroku.shared;
 
 /**
  * Authentication credentials.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Credentials.java Mar 19, 2012 2:57:20 PM azatsarynnyy $
- *
  */
-public interface Credentials
-{
-   /**
-    * Returns the e-mail.
-    * 
-    * @return e-mail.
-    */
-   public String getEmail();
+public interface Credentials {
+    /**
+     * Returns the e-mail.
+     *
+     * @return e-mail.
+     */
+    public String getEmail();
 
-   /**
-    * Set the e-mail.
-    * 
-    * @param email
-    */
-   public void setEmail(String email);
+    /**
+     * Set the e-mail.
+     *
+     * @param email
+     */
+    public void setEmail(String email);
 
-   /**
-    * Returns the password.
-    * 
-    * @return password.
-    */
-   public String getPassword();
+    /**
+     * Returns the password.
+     *
+     * @return password.
+     */
+    public String getPassword();
 
-   /**
-    * Set the password.
-    * 
-    * @param password password.
-    */
-   public void setPassword(String password);
+    /**
+     * Set the password.
+     *
+     * @param password
+     *         password.
+     */
+    public void setPassword(String password);
 }

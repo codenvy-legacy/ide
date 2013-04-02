@@ -14,40 +14,32 @@
 
 package com.google.collide.dto;
 
-/**
- * A user's membership role in a project or workspace.
- */
+/** A user's membership role in a project or workspace. */
 public enum Role {
-  /**
-   * Owners have all privileges of contributors, plus they can edit settings and
-   * add members.
-   */
-  OWNER,
+    /**
+     * Owners have all privileges of contributors, plus they can edit settings and
+     * add members.
+     */
+    OWNER,
 
-  /**
-   * Contributors can edit code. Project contributors can submit to the root
-   * workspace of a project.
-   */
-  CONTRIBUTOR,
+    /**
+     * Contributors can edit code. Project contributors can submit to the root
+     * workspace of a project.
+     */
+    CONTRIBUTOR,
 
-  /**
-   * Readers can view code and projects, but cannot modify anything.
-   */
-  READER,
+    /** Readers can view code and projects, but cannot modify anything. */
+    READER,
 
-  /**
-   * The user's membership status should be revoked, or the request should be
-   * ignored.
-   */
-  NONE,
+    /**
+     * The user's membership status should be revoked, or the request should be
+     * ignored.
+     */
+    NONE,
 
-  /**
-   * The user requested membership, but has not been granted membership.
-   */
-  PENDING,
+    /** The user requested membership, but has not been granted membership. */
+    PENDING,
 
-  /**
-   * The user is blocked from requesting membership.
-   */
-  BLOCKED
+    /** The user is blocked from requesting membership. */
+    BLOCKED
 }

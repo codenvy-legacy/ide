@@ -13,33 +13,33 @@ package com.codenvy.eclipse.jdt.internal.codeassist.select;
 import com.codenvy.eclipse.jdt.internal.compiler.ast.LocalDeclaration;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.BlockScope;
 
-public class SelectionOnLocalName extends LocalDeclaration{
+public class SelectionOnLocalName extends LocalDeclaration {
 
-	public SelectionOnLocalName(char[] name,	int sourceStart, int sourceEnd) {
+    public SelectionOnLocalName(char[] name, int sourceStart, int sourceEnd) {
 
-		super(name, sourceStart, sourceEnd);
-	}
+        super(name, sourceStart, sourceEnd);
+    }
 
-	public void resolve(BlockScope scope) {
+    public void resolve(BlockScope scope) {
 
-		super.resolve(scope);
-		throw new SelectionNodeFound(this.binding);
-	}
+        super.resolve(scope);
+        throw new SelectionNodeFound(this.binding);
+    }
 
-	public StringBuffer printAsExpression(int indent, StringBuffer output) {
-		printIndent(indent, output);
-		output.append("<SelectionOnLocalName:"); //$NON-NLS-1$
-		printModifiers(this.modifiers, output);
-		 this.type.print(0, output).append(' ').append(this.name);
-		if (this.initialization != null) {
-			output.append(" = "); //$NON-NLS-1$
-			this.initialization.printExpression(0, output);
-		}
-		return output.append('>');
-	}
+    public StringBuffer printAsExpression(int indent, StringBuffer output) {
+        printIndent(indent, output);
+        output.append("<SelectionOnLocalName:"); //$NON-NLS-1$
+        printModifiers(this.modifiers, output);
+        this.type.print(0, output).append(' ').append(this.name);
+        if (this.initialization != null) {
+            output.append(" = "); //$NON-NLS-1$
+            this.initialization.printExpression(0, output);
+        }
+        return output.append('>');
+    }
 
-	public StringBuffer printStatement(int indent, StringBuffer output) {
-		printAsExpression(indent, output);
-		return output.append(';');
-	}
+    public StringBuffer printStatement(int indent, StringBuffer output) {
+        printAsExpression(indent, output);
+        return output.append(';');
+    }
 }

@@ -16,90 +16,82 @@ import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
 
-/**
- * @since 3.0
- */
-public abstract class AbstractFileBuffer implements IFileBuffer, IStateValidationSupport
-{
+/** @since 3.0 */
+public abstract class AbstractFileBuffer implements IFileBuffer, IStateValidationSupport {
 
-   //	/**
-   //	 * The element for which the info is stored.
-   //	 * @since 3.3
-   //	 */
-   //	protected IFileStore fFileStore;
+    //	/**
+    //	 * The element for which the info is stored.
+    //	 * @since 3.3
+    //	 */
+    //	protected IFileStore fFileStore;
 
-   /**
-    * The text file buffer manager.
-    *
-    * @since 3.4 (pulled up from subclasses)
-    */
-   final protected TextFileBufferManager fManager;
+    /**
+     * The text file buffer manager.
+     *
+     * @since 3.4 (pulled up from subclasses)
+     */
+    final protected TextFileBufferManager fManager;
 
 
-   public AbstractFileBuffer(TextFileBufferManager manager)
-   {
-      fManager = manager;
-   }
+    public AbstractFileBuffer(TextFileBufferManager manager) {
+        fManager = manager;
+    }
 
-   public abstract void create(IPath location, IProgressMonitor monitor) throws CoreException;
+    public abstract void create(IPath location, IProgressMonitor monitor) throws CoreException;
 
-   public abstract void connect();
+    public abstract void connect();
 
-   public abstract void disconnect() throws CoreException;
+    public abstract void disconnect() throws CoreException;
 
-   /**
-    * Returns whether this file buffer has been disconnected.
-    *
-    * @return <code>true</code> if already disposed, <code>false</code> otherwise
-    * @since 3.1
-    */
-   protected abstract boolean isDisconnected();
+    /**
+     * Returns whether this file buffer has been disconnected.
+     *
+     * @return <code>true</code> if already disposed, <code>false</code> otherwise
+     * @since 3.1
+     */
+    protected abstract boolean isDisconnected();
 
-   /**
-    * Disposes this file buffer.
-    * This implementation is always empty.
-    * <p>
-    * Subclasses may extend but must call <code>super.dispose()</code>.
-    * <p>
-    *
-    * @since 3.1
-    */
-   protected void dispose()
-   {
-   }
+    /**
+     * Disposes this file buffer.
+     * This implementation is always empty.
+     * <p/>
+     * Subclasses may extend but must call <code>super.dispose()</code>.
+     * <p/>
+     *
+     * @since 3.1
+     */
+    protected void dispose() {
+    }
 
-   /*
-    * @see org.eclipse.core.filebuffers.IStateValidationSupport#validationStateAboutToBeChanged()
-    */
-   public void validationStateAboutToBeChanged()
-   {
-      fManager.fireStateChanging(this);
-   }
+    /*
+     * @see org.eclipse.core.filebuffers.IStateValidationSupport#validationStateAboutToBeChanged()
+     */
+    public void validationStateAboutToBeChanged() {
+        fManager.fireStateChanging(this);
+    }
 
-   /*
-    * @see org.eclipse.core.filebuffers.IStateValidationSupport#validationStateChangeFailed()
-    */
-   public void validationStateChangeFailed()
-   {
-      fManager.fireStateChangeFailed(this);
-   }
+    /*
+     * @see org.eclipse.core.filebuffers.IStateValidationSupport#validationStateChangeFailed()
+     */
+    public void validationStateChangeFailed() {
+        fManager.fireStateChangeFailed(this);
+    }
 
-   /*
-    * @see org.eclipse.core.filebuffers.IFileBuffer#getModificationStamp()
-    */
-   public long getModificationStamp()
-   {
-      //		IFileInfo info= fFileStore.fetchInfo();
-      //		return info.exists() ? info.getLastModified() : IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP;
-      return -1;
-   }
+    /*
+     * @see org.eclipse.core.filebuffers.IFileBuffer#getModificationStamp()
+     */
+    public long getModificationStamp() {
+        //		IFileInfo info= fFileStore.fetchInfo();
+        //		return info.exists() ? info.getLastModified() : IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP;
+        return -1;
+    }
 
-   //	/*
-   //	 * @see org.eclipse.core.filebuffers.IFileBuffer#getFileStore()
-   //	 * @since 3.3
-   //	 */
-   //	public IFileStore getFileStore() {
-   //		return fFileStore;
-   //	}
+    //	/*
+    //	 * @see org.eclipse.core.filebuffers.IFileBuffer#getFileStore()
+    //	 * @since 3.3
+    //	 */
+    //	public IFileStore getFileStore() {
+    //		return fFileStore;
+    //	}
 
 }

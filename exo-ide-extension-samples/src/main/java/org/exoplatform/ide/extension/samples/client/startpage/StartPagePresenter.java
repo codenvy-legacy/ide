@@ -40,99 +40,79 @@ import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomePresenter.java Aug 25, 2011 12:27:27 PM vereshchaka $
  */
-public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler
-{
+public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
-      HasClickHandlers getCloneLink();
+    public interface Display extends IsView {
+        HasClickHandlers getCloneLink();
 
-      HasClickHandlers getProjectLink();
+        HasClickHandlers getProjectLink();
 
-      HasClickHandlers getImportLink();
+        HasClickHandlers getImportLink();
 
-      HasClickHandlers getInvitationsLink();
-   }
+        HasClickHandlers getInvitationsLink();
+    }
 
-   private Display display;
+    private Display display;
 
-   public StartPagePresenter()
-   {
-      IDE.addHandler(OpenStartPageEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public StartPagePresenter() {
+        IDE.addHandler(OpenStartPageEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   private void bindDisplay()
-   {
-      display.getCloneLink().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new CloneRepositoryEvent());
-         }
-      });
+    private void bindDisplay() {
+        display.getCloneLink().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new CloneRepositoryEvent());
+            }
+        });
 
-      display.getProjectLink().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new CreateProjectEvent());
-         }
-      });
+        display.getProjectLink().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new CreateProjectEvent());
+            }
+        });
 
-      display.getImportLink().addClickHandler(new ClickHandler()
-      {
+        display.getImportLink().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new ImportFromGithubEvent());
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new ImportFromGithubEvent());
+            }
+        });
 
-      display.getInvitationsLink().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new InviteGoogleDevelopersEvent());
-         }
-      });
-   }
+        display.getInvitationsLink().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.fireEvent(new InviteGoogleDevelopersEvent());
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client.OpenStartPageEvent.OpenWelcomeEvent)
-    */
-   @Override
-   public void onOpenStartPage(OpenStartPageEvent event)
-   {
-      if (display == null)
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView((View)d);
-         display = d;
-         bindDisplay();
-         IDE.fireEvent(new WelcomePageOpenedEvent());
-         return;
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Start Page View must be null"));
-      }
-   }
+    /** @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client
+     * .OpenStartPageEvent.OpenWelcomeEvent) */
+    @Override
+    public void onOpenStartPage(OpenStartPageEvent event) {
+        if (display == null) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView((View)d);
+            display = d;
+            bindDisplay();
+            IDE.fireEvent(new WelcomePageOpenedEvent());
+            return;
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent("Start Page View must be null"));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

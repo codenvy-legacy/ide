@@ -23,70 +23,51 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
  * Short information about class or interface. Contain fqn, short name,
  * modifiers Example : { "name": "String", "qualifiedName": "java.lang.String",
  * "modifiers": 0, "type": "CLASS" }
- * 
- * 
+ * <p/>
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class ShortTypeInfo extends Member implements IShortType
-{
-   /**
-    * Full Qualified Class Name
-    */
-   private String qualifiedName;
+public class ShortTypeInfo extends Member implements IShortType {
+    /** Full Qualified Class Name */
+    private String qualifiedName;
 
-   /**
-    * Means this is CLASS, INTERFACE or ANNOTATION
-    */
-   private String type;
+    /** Means this is CLASS, INTERFACE or ANNOTATION */
+    private String type;
 
-   public ShortTypeInfo()
-   {
-   }
+    public ShortTypeInfo() {
+    }
 
-   public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, String type)
-   {
-      super(modifiers, name);
-      this.qualifiedName = qualifiedName;
-      this.type = type;
-   }
+    public ShortTypeInfo(Integer modifiers, String name, String qualifiedName, String type) {
+        super(modifiers, name);
+        this.qualifiedName = qualifiedName;
+        this.type = type;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setQualifiedName(String qualifiedName)
-   {
-      this.qualifiedName = qualifiedName;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setQualifiedName(String qualifiedName) {
+        this.qualifiedName = qualifiedName;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getQualifiedName()
-   {
-      return qualifiedName;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getQualifiedName() {
+        return qualifiedName;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getType()
-   {
-      return type;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getType() {
+        return type;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
 
 }

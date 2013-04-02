@@ -29,11 +29,9 @@ import org.everrest.core.method.MethodInvoker;
  * @version $Id: $
  * @see WebSocketMethodInvokerDecorator
  */
-public class WebSocketMethodInvokerDecoratorFactory implements MethodInvokerDecoratorFactory
-{
-   @Override
-   public MethodInvokerDecorator makeDecorator(MethodInvoker invoker)
-   {
-      return new WebSocketMethodInvokerDecorator(invoker);
-   }
+public class WebSocketMethodInvokerDecoratorFactory implements MethodInvokerDecoratorFactory {
+    @Override
+    public MethodInvokerDecorator makeDecorator(MethodInvoker invoker) {
+        return new WebSocketMethodInvokerDecorator(invoker);
+    }
 }

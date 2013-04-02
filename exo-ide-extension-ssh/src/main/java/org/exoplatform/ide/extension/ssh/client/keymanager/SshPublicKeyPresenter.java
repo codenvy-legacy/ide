@@ -39,98 +39,84 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: SshPublicKeyPresenter May 19, 2011 12:32:14 PM evgen $
- * 
  */
-public class SshPublicKeyPresenter implements ViewClosedHandler
-{
+public class SshPublicKeyPresenter implements ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasClickHandlers getCloseButton();
+        HasClickHandlers getCloseButton();
 
-      HasValue<String> getKeyField();
+        HasValue<String> getKeyField();
 
-      void addHostToTitle(String host);
+        void addHostToTitle(String host);
 
-   }
+    }
 
-   private KeyItem keyItem;
+    private KeyItem keyItem;
 
-   private HandlerRegistration viewClosedHandler;
+    private HandlerRegistration viewClosedHandler;
 
-   private Display display;
+    private Display display;
 
-   /**
-    * 
-    */
-   public SshPublicKeyPresenter(KeyItem keyItem)
-   {
-      this.keyItem = keyItem;
-      viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
+    /**
+     *
+     */
+    public SshPublicKeyPresenter(KeyItem keyItem) {
+        this.keyItem = keyItem;
+        viewClosedHandler = IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      display = GWT.create(Display.class);
+        display = GWT.create(Display.class);
 
-      bind();
+        bind();
 
-      display.addHostToTitle(keyItem.getHost());
+        display.addHostToTitle(keyItem.getHost());
 
-      IDE.getInstance().openView(display.asView());
+        IDE.getInstance().openView(display.asView());
 
-      showPublicKey();
-   }
+        showPublicKey();
+    }
 
-   /**
-    * 
-    */
-   private void showPublicKey()
-   {
-      SshKeyService.get().getPublicKey(keyItem, new JsonpAsyncCallback<JavaScriptObject>()
-      {
+    /**
+     *
+     */
+    private void showPublicKey() {
+        SshKeyService.get().getPublicKey(keyItem, new JsonpAsyncCallback<JavaScriptObject>() {
 
-         @Override
-         public void onSuccess(JavaScriptObject result)
-         {
-            getLoader().hide();
-            JSONObject key = new JSONObject(result);
-            display.getKeyField().setValue(key.get("key").isString().stringValue());
-         }
+            @Override
+            public void onSuccess(JavaScriptObject result) {
+                getLoader().hide();
+                JSONObject key = new JSONObject(result);
+                display.getKeyField().setValue(key.get("key").isString().stringValue());
+            }
 
-         @Override
-         public void onFailure(Throwable exception)
-         {
-            getLoader().hide();
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
-   }
+            @Override
+            public void onFailure(Throwable exception) {
+                getLoader().hide();
+                IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+        });
+    }
 
-   /**
-    * 
-    */
-   private void bind()
-   {
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
+    /**
+     *
+     */
+    private void bind() {
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-         viewClosedHandler.removeHandler();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+            viewClosedHandler.removeHandler();
+        }
+    }
 
 }

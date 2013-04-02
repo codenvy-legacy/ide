@@ -22,15 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Class, that implements this handler, will listen to click on Show/Hide Hidden Files control in View menu.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowHideHiddenFilesHandler.java Mar 30, 2012 12:31:54 PM azatsarynnyy $
- *
  */
-public interface ShowHideHiddenFilesHandler extends EventHandler
-{
-   /**
-    * @param event event generated after pressing on Show/Hide Hidden Files control on View menu
-    */
-   void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event);
+public interface ShowHideHiddenFilesHandler extends EventHandler {
+    /**
+     * @param event
+     *         event generated after pressing on Show/Hide Hidden Files control on View menu
+     */
+    void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event);
 }

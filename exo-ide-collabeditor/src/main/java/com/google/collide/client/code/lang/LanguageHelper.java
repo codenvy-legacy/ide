@@ -16,10 +16,8 @@ package com.google.collide.client.code.lang;
 
 import com.google.collide.client.editor.input.ActionExecutor;
 
-/**
- * Interface that provides language-specific information / methods.
- */
+/** Interface that provides language-specific information / methods. */
 public interface LanguageHelper {
 
-  ActionExecutor getActionExecutor();
+    ActionExecutor getActionExecutor();
 }

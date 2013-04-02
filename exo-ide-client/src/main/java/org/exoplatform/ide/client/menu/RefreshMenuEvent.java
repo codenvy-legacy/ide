@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class RefreshMenuEvent extends GwtEvent<RefreshMenuHandler>
-{
+public class RefreshMenuEvent extends GwtEvent<RefreshMenuHandler> {
 
-   public static final GwtEvent.Type<RefreshMenuHandler> TYPE = new GwtEvent.Type<RefreshMenuHandler>();
+    public static final GwtEvent.Type<RefreshMenuHandler> TYPE = new GwtEvent.Type<RefreshMenuHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RefreshMenuHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RefreshMenuHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(RefreshMenuHandler handler)
-   {
-      handler.onRefreshMenu(this);
-   }
+    @Override
+    protected void dispatch(RefreshMenuHandler handler) {
+        handler.onRefreshMenu(this);
+    }
 
 }

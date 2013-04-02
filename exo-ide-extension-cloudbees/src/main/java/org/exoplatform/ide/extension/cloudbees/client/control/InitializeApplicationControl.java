@@ -21,74 +21,60 @@ package org.exoplatform.ide.extension.cloudbees.client.control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationEvent;
 
 /**
  * Control for initializing application on CloudBees.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
-public class InitializeApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
-{
+public class InitializeApplicationControl extends SimpleControl
+        implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler {
 
-   private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlId();
+    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlId();
 
-   private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlTitle();
+    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlTitle();
 
-   private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlPrompt();
+    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlPrompt();
 
-   public InitializeApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudBeesClientBundle.INSTANCE.initializeApp(), CloudBeesClientBundle.INSTANCE.initializeAppDisabled());
-      setEvent(new InitializeApplicationEvent());
-   }
+    public InitializeApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudBeesClientBundle.INSTANCE.initializeApp(), CloudBeesClientBundle.INSTANCE.initializeAppDisabled());
+        setEvent(new InitializeApplicationEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(event.getProject() != null && CloudBeesExtension.canBeDeployedToCB(event.getProject()));
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      setEnabled(event.getProject() != null && CloudBeesExtension.canBeDeployedToCB(event.getProject()));
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(event.getProject() != null && CloudBeesExtension.canBeDeployedToCB(event.getProject()));
+    }
+
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        setEnabled(event.getProject() != null && CloudBeesExtension.canBeDeployedToCB(event.getProject()));
+    }
 }

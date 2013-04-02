@@ -25,23 +25,20 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TestCanvas extends Composite
-{
+public class TestCanvas extends Composite {
 
-   private static TestCanvasUiBinder uiBinder = GWT.create(TestCanvasUiBinder.class);
+    private static TestCanvasUiBinder uiBinder = GWT.create(TestCanvasUiBinder.class);
 
-   interface TestCanvasUiBinder extends UiBinder<Widget, TestCanvas>
-   {
-   }
+    interface TestCanvasUiBinder extends UiBinder<Widget, TestCanvas> {
+    }
 
-   public TestCanvas()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    public TestCanvas() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
 }

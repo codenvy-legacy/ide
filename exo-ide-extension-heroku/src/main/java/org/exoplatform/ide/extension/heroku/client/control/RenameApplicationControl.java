@@ -25,19 +25,16 @@ import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationEvent
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 2, 2011 11:47:47 AM anya $
- * 
  */
-public class RenameApplicationControl extends AbstractHerokuControl
-{
+public class RenameApplicationControl extends AbstractHerokuControl {
 
-   public RenameApplicationControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlPrompt());
-      setEvent(new RenameApplicationEvent());
-      setImages(HerokuClientBundle.INSTANCE.renameApplication(),
-         HerokuClientBundle.INSTANCE.renameApplicationDisabled());
-   }
+    public RenameApplicationControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.renameApplicationControlPrompt());
+        setEvent(new RenameApplicationEvent());
+        setImages(HerokuClientBundle.INSTANCE.renameApplication(),
+                  HerokuClientBundle.INSTANCE.renameApplicationDisabled());
+    }
 
 }

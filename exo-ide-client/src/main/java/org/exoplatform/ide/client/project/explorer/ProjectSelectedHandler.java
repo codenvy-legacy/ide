@@ -22,19 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ProjectSelectedEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 20, 2012 3:15:43 PM anya $
- * 
  * @deprecated
- * 
  */
-public interface ProjectSelectedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when project is selected in project list.
-    * 
-    * @param event
-    */
-   void onProjectSelected(ProjectSelectedEvent event);
+public interface ProjectSelectedHandler extends EventHandler {
+    /**
+     * Perform actions, when project is selected in project list.
+     *
+     * @param event
+     */
+    void onProjectSelected(ProjectSelectedEvent event);
 }

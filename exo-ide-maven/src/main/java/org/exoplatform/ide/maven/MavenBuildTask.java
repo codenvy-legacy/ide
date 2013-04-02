@@ -31,105 +31,87 @@ import java.util.concurrent.Future;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class MavenBuildTask
-{
-   private final String id;
-   private final Future<InvocationResultImpl> f;
-   private final File projectDirectory;
-   private final TaskLogger logger;
+public class MavenBuildTask {
+    private final String                       id;
+    private final Future<InvocationResultImpl> f;
+    private final File                         projectDirectory;
+    private final TaskLogger                   logger;
 
-   public MavenBuildTask(String id, Future<InvocationResultImpl> f, File projectDirectory, TaskLogger logger)
-   {
-      this.id = id;
-      this.f = f;
-      this.projectDirectory = projectDirectory;
-      this.logger = logger;
-   }
+    public MavenBuildTask(String id, Future<InvocationResultImpl> f, File projectDirectory, TaskLogger logger) {
+        this.id = id;
+        this.f = f;
+        this.projectDirectory = projectDirectory;
+        this.logger = logger;
+    }
 
-   /**
-    * Get build unique ID.
-    *
-    * @return build ID
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /**
+     * Get build unique ID.
+     *
+     * @return build ID
+     */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * Get build logger.
-    *
-    * @return build logger
-    */
-   public TaskLogger getLogger()
-   {
-      return logger;
-   }
+    /**
+     * Get build logger.
+     *
+     * @return build logger
+     */
+    public TaskLogger getLogger() {
+        return logger;
+    }
 
-   /**
-    * Check is build done or not. Note build may be successful or failed.
-    *
-    * @return <code>true</code> if build is done and <code>false</code> otherwise
-    */
-   public boolean isDone()
-   {
-      return f.isDone();
-   }
+    /**
+     * Check is build done or not. Note build may be successful or failed.
+     *
+     * @return <code>true</code> if build is done and <code>false</code> otherwise
+     */
+    public boolean isDone() {
+        return f.isDone();
+    }
 
-   /** Cancel maven build. */
-   public void cancel()
-   {
-      f.cancel(true);
-   }
+    /** Cancel maven build. */
+    public void cancel() {
+        f.cancel(true);
+    }
 
-   /**
-    * Get result of maven build.
-    *
-    * @return result of maven build. <b>NOTE</b> If build is not finished yet this method returns <code>null</code>
-    * @throws MavenInvocationException
-    *    if maven task cannot be run because to incorrect input parameters
-    */
-   public InvocationResultImpl getInvocationResult() throws MavenInvocationException
-   {
-      if (f.isDone())
-      {
-         try
-         {
-            return f.get();
-         }
-         catch (InterruptedException e)
-         {
-            // Should not happen since we checked is task done or not.
-            Thread.currentThread().interrupt();
-         }
-         catch (ExecutionException e)
-         {
-            final Throwable cause = e.getCause();
-            if (cause instanceof Error)
-            {
-               throw (Error)cause;
+    /**
+     * Get result of maven build.
+     *
+     * @return result of maven build. <b>NOTE</b> If build is not finished yet this method returns <code>null</code>
+     * @throws MavenInvocationException
+     *         if maven task cannot be run because to incorrect input parameters
+     */
+    public InvocationResultImpl getInvocationResult() throws MavenInvocationException {
+        if (f.isDone()) {
+            try {
+                return f.get();
+            } catch (InterruptedException e) {
+                // Should not happen since we checked is task done or not.
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                final Throwable cause = e.getCause();
+                if (cause instanceof Error) {
+                    throw (Error)cause;
+                }
+                if (cause instanceof RuntimeException) {
+                    throw (RuntimeException)cause;
+                }
+                throw (MavenInvocationException)cause;
+            } catch (CancellationException ce) {
+                throw new MavenInvocationException("Job " + id + " was cancelled. ");
             }
-            if (cause instanceof RuntimeException)
-            {
-               throw (RuntimeException)cause;
-            }
-            throw (MavenInvocationException)cause;
-         }
-         catch (CancellationException ce)
-         {
-            throw new MavenInvocationException("Job " + id + " was cancelled. ");
-         }
-      }
-      return null;
-   }
+        }
+        return null;
+    }
 
-   /**
-    * Get the maven project directory.
-    *
-    * @return the maven project directory
-    */
-   public File getProjectDirectory()
-   {
-      return projectDirectory;
-   }
+    /**
+     * Get the maven project directory.
+     *
+     * @return the maven project directory
+     */
+    public File getProjectDirectory() {
+        return projectDirectory;
+    }
 }

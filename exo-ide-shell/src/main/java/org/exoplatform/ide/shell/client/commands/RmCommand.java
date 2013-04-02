@@ -38,96 +38,75 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 11, 2011 evgen $
- * 
  */
-public class RmCommand extends ClientCommand
-{
-   private static final Set<String> commads = new HashSet<String>();
+public class RmCommand extends ClientCommand {
+    private static final Set<String> commads = new HashSet<String>();
 
-   static
-   {
-      commads.add("rm");
-   }
+    static {
+        commads.add("rm");
+    }
 
-   /**
-    * 
-    */
-   public RmCommand()
-   {
-      super(commads, new Options(), CloudShell.messages.rmHelp());
-   }
+    /**
+     *
+     */
+    public RmCommand() {
+        super(commads, new Options(), CloudShell.messages.rmHelp());
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
-    */
-   @Override
-   public void execute(CommandLine commandLine)
-   {
-      if (commandLine.hasOption("h"))
-      {
-         printHelp(CloudShell.messages.rmUsage(), CloudShell.messages.rmHeader());
-         return;
-      }
-      @SuppressWarnings("unchecked")
-      List<String> args = commandLine.getArgList();
-      args.remove(commads.iterator().next());
-      if (args.size() == 1)
-      {
-         String path = args.get(0);
-         final String newPath = Utils.getPath(Environment.get().getCurrentFolder(), path);
-         try
-         {
-            VirtualFileSystem.getInstance().getItemByPath(newPath,
-               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-               {
+    /** @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine) */
+    @Override
+    public void execute(CommandLine commandLine) {
+        if (commandLine.hasOption("h")) {
+            printHelp(CloudShell.messages.rmUsage(), CloudShell.messages.rmHeader());
+            return;
+        }
+        @SuppressWarnings("unchecked")
+        List<String> args = commandLine.getArgList();
+        args.remove(commads.iterator().next());
+        if (args.size() == 1) {
+            String path = args.get(0);
+            final String newPath = Utils.getPath(Environment.get().getCurrentFolder(), path);
+            try {
+                VirtualFileSystem.getInstance().getItemByPath(newPath,
+                                                              new AsyncRequestCallback<ItemWrapper>(
+                                                                      new ItemUnmarshaller(new ItemWrapper())) {
 
-                  @Override
-                  protected void onSuccess(ItemWrapper result)
-                  {
-                     deleteItem(result.getItem());
-                  }
+                                                                  @Override
+                                                                  protected void onSuccess(ItemWrapper result) {
+                                                                      deleteItem(result.getItem());
+                                                                  }
 
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     CloudShell.console().println(exception.getMessage());
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
+                                                                  @Override
+                                                                  protected void onFailure(Throwable exception) {
+                                                                      CloudShell.console().println(exception.getMessage());
+                                                                  }
+                                                              });
+            } catch (RequestException e) {
+                CloudShell.console().println(e.getMessage());
+            }
+        }
+    }
+
+    private void deleteItem(Item item) {
+        try {
+            VirtualFileSystem.getInstance().delete(item, new AsyncRequestCallback<String>() {
+
+                @Override
+                protected void onSuccess(String result) {
+                    CloudShell.console().printPrompt();
+                }
+
+                /**
+                 * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                 */
+                @Override
+                protected void onFailure(Throwable exception) {
+                    CloudShell.console().println(exception.getMessage());
+                }
+            });
+        } catch (RequestException e) {
             CloudShell.console().println(e.getMessage());
-         }
-      }
-   }
-
-   private void deleteItem(Item item)
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().delete(item, new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
-            {
-               CloudShell.console().printPrompt();
-            }
-
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               CloudShell.console().println(exception.getMessage());
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         CloudShell.console().println(e.getMessage());
-      }
-   }
+        }
+    }
 
 }

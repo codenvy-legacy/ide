@@ -20,59 +20,46 @@ import com.codenvy.eclipse.jdt.core.JavaModelException;
  * An operation created as a result of a call to JavaCore.run(IWorkspaceRunnable, IProgressMonitor)
  * that encapsulates a user defined IWorkspaceRunnable.
  */
-public class BatchOperation extends JavaModelOperation
-{
-   protected IWorkspaceRunnable runnable;
+public class BatchOperation extends JavaModelOperation {
+    protected IWorkspaceRunnable runnable;
 
-   public BatchOperation(IWorkspaceRunnable runnable)
-   {
-      this.runnable = runnable;
-   }
+    public BatchOperation(IWorkspaceRunnable runnable) {
+        this.runnable = runnable;
+    }
 
-   protected boolean canModifyRoots()
-   {
-      // anything in the workspace runnable can modify the roots
-      return true;
-   }
+    protected boolean canModifyRoots() {
+        // anything in the workspace runnable can modify the roots
+        return true;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.core.JavaModelOperation#executeOperation()
-    */
-   protected void executeOperation() throws JavaModelException
-   {
-      try
-      {
-         this.runnable.run(this.progressMonitor);
-      }
-      catch (CoreException ce)
-      {
-         if (ce instanceof JavaModelException)
-         {
-            throw (JavaModelException)ce;
-         }
-         else
-         {
-            if (ce.getStatus().getCode() == IResourceStatus.OPERATION_FAILED)
-            {
-               Throwable e = ce.getStatus().getException();
-               if (e instanceof JavaModelException)
-               {
-                  throw (JavaModelException)e;
-               }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.core.JavaModelOperation#executeOperation()
+     */
+    protected void executeOperation() throws JavaModelException {
+        try {
+            this.runnable.run(this.progressMonitor);
+        } catch (CoreException ce) {
+            if (ce instanceof JavaModelException) {
+                throw (JavaModelException)ce;
+            } else {
+                if (ce.getStatus().getCode() == IResourceStatus.OPERATION_FAILED) {
+                    Throwable e = ce.getStatus().getException();
+                    if (e instanceof JavaModelException) {
+                        throw (JavaModelException)e;
+                    }
+                }
+                throw new JavaModelException(ce);
             }
-            throw new JavaModelException(ce);
-         }
-      }
-   }
+        }
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.core.JavaModelOperation#verify()
-    */
-   protected IJavaModelStatus verify()
-   {
-      // cannot verify user defined operation
-      return JavaModelStatus.VERIFIED_OK;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.core.JavaModelOperation#verify()
+     */
+    protected IJavaModelStatus verify() {
+        // cannot verify user defined operation
+        return JavaModelStatus.VERIFIED_OK;
+    }
 
 
 }

@@ -28,51 +28,51 @@ import java.util.Map;
  *
  * @since 3.2
  */
-public final class DefaultRefactoringDescriptor extends RefactoringDescriptor
-{
+public final class DefaultRefactoringDescriptor extends RefactoringDescriptor {
 
-   /**
-    * The map of arguments (element type: &lt;String, String&gt;)
-    */
-   private final Map fArguments;
+    /** The map of arguments (element type: &lt;String, String&gt;) */
+    private final Map fArguments;
 
-   /**
-    * Creates a new default refactoring descriptor.
-    *
-    * @param id          the unique id of the refactoring
-    * @param project     the project name, or <code>null</code>
-    * @param description the description
-    * @param comment     the comment, or <code>null</code>
-    * @param arguments   the argument map
-    * @param flags       the flags
-    */
-   public DefaultRefactoringDescriptor(final String id, final String project, final String description,
-      final String comment, final Map arguments, final int flags)
-   {
-      super(id, project, description, comment, flags);
-      Assert.isNotNull(arguments);
-      fArguments = Collections.unmodifiableMap(new HashMap(arguments));
-   }
+    /**
+     * Creates a new default refactoring descriptor.
+     *
+     * @param id
+     *         the unique id of the refactoring
+     * @param project
+     *         the project name, or <code>null</code>
+     * @param description
+     *         the description
+     * @param comment
+     *         the comment, or <code>null</code>
+     * @param arguments
+     *         the argument map
+     * @param flags
+     *         the flags
+     */
+    public DefaultRefactoringDescriptor(final String id, final String project, final String description,
+                                        final String comment, final Map arguments, final int flags) {
+        super(id, project, description, comment, flags);
+        Assert.isNotNull(arguments);
+        fArguments = Collections.unmodifiableMap(new HashMap(arguments));
+    }
 
-   /**
-    * {@inheritDoc}
-    *
-    * @return always null
-    */
-   public Refactoring createRefactoring(final RefactoringStatus status) throws CoreException
-   {
-      status.merge(RefactoringStatus.createFatalErrorStatus(
-         RefactoringCoreMessages.DefaultRefactoringDescriptor_cannot_create_refactoring));
-      return null;
-   }
+    /**
+     * {@inheritDoc}
+     *
+     * @return always null
+     */
+    public Refactoring createRefactoring(final RefactoringStatus status) throws CoreException {
+        status.merge(RefactoringStatus.createFatalErrorStatus(
+                RefactoringCoreMessages.DefaultRefactoringDescriptor_cannot_create_refactoring));
+        return null;
+    }
 
-   /**
-    * Returns the argument map
-    *
-    * @return the argument map.
-    */
-   public Map getArguments()
-   {
-      return fArguments;
-   }
+    /**
+     * Returns the argument map
+     *
+     * @return the argument map.
+     */
+    public Map getArguments() {
+        return fArguments;
+    }
 }

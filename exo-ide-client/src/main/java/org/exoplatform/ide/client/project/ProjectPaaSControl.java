@@ -27,13 +27,7 @@ import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEven
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectProperties;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -44,67 +38,58 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 2:12:50 PM anya $
- *
  */
 public class ProjectPaaSControl extends SimpleControl implements IDEControl,
-   ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler,
-   ItemsSelectedHandler
+                                                                 ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler,
+                                                                 ItemsSelectedHandler
 //   , ActiveProjectChangedHandler
 {
 
-   public static final String ID = "Project/PaaS";
+    public static final String ID = "Project/PaaS";
 
-   private static final String TITLE = "PaaS";
+    private static final String TITLE = "PaaS";
 
-   private static final String PROMPT = "PaaS";
+    private static final String PROMPT = "PaaS";
 
-   public ProjectPaaSControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.paas(), IDEImageBundle.INSTANCE.paasDisabled());
-      setGroupName(GroupNames.PAAS);
-   }
+    public ProjectPaaSControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.paas(), IDEImageBundle.INSTANCE.paasDisabled());
+        setGroupName(GroupNames.PAAS);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(false);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(false);
 
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-      
-      //IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(FolderRefreshedEvent.TYPE, this);
 
-   /**
-    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-      setVisible(false);
-   }
+        //IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      boolean enabled = isDeployed(event.getProject());
-      setEnabled(enabled);
-      setVisible(enabled);
-   }
-   
+    /** @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project
+     * .ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+        setVisible(false);
+    }
+
+    /** @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project
+     * .ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        boolean enabled = isDeployed(event.getProject());
+        setEnabled(enabled);
+        setVisible(enabled);
+    }
+
 //   @Override
 //   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
 //   {
@@ -112,62 +97,56 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl,
 //      setEnabled(enabled);
 //   }
 
-   /**
-    * Check project is deployed to one of the PaaS.
-    *
-    * @param project project
-    * @return {@link Boolean} <code>true</code> if deployed to one of the PaaS
-    */
-   private boolean isDeployed(ProjectModel project)
-   {
-      if (project == null)
-      {
-         return false;
-      }
-         
-      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+    /**
+     * Check project is deployed to one of the PaaS.
+     *
+     * @param project
+     *         project
+     * @return {@link Boolean} <code>true</code> if deployed to one of the PaaS
+     */
+    private boolean isDeployed(ProjectModel project) {
+        if (project == null) {
+            return false;
+        }
 
-      return project.getPropertyValue("cloudbees-application") != null
-         || project.getPropertyValue("heroku-application") != null
-         || project.getPropertyValue("openshift-express-application") != null
-         || project.getPropertyValue("cloudfoundry-application") != null
-         || project.getPropertyValue("appfog-application") != null
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+
+        return project.getPropertyValue("cloudbees-application") != null
+               || project.getPropertyValue("heroku-application") != null
+               || project.getPropertyValue("openshift-express-application") != null
+               || project.getPropertyValue("cloudfoundry-application") != null
+               || project.getPropertyValue("appfog-application") != null
          /* TODO || ProjectType.GAE_JAVA.value().equals(project.getProjectType())
         || ProjectType.GAE_PYTHON.value().equals(project.getProjectType())*/
          || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
          || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
          || (targets != null && targets.contains("GAE"));
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
-    */
-   @Override
-   public void onFolderRefreshed(FolderRefreshedEvent event)
-   {
-      if (event.getFolder() instanceof ProjectModel)
-      {
-         boolean enabled = isDeployed((ProjectModel)event.getFolder());
-         setEnabled(enabled);
-         setVisible(enabled);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
+     * .framework.navigation.event.FolderRefreshedEvent) */
+    @Override
+    public void onFolderRefreshed(FolderRefreshedEvent event) {
+        if (event.getFolder() instanceof ProjectModel) {
+            boolean enabled = isDeployed((ProjectModel)event.getFolder());
+            setEnabled(enabled);
+            setVisible(enabled);
+        }
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-      
-      Item selectedItem = event.getSelectedItems().get(0);
-      ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem :
-         ((ItemContext)selectedItem).getProject();
-      boolean enabled = isDeployed(project);
-      setEnabled(enabled);
-      setVisible(enabled);
-   }
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            setEnabled(false);
+            return;
+        }
+
+        Item selectedItem = event.getSelectedItems().get(0);
+        ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem :
+                               ((ItemContext)selectedItem).getProject();
+        boolean enabled = isDeployed(project);
+        setEnabled(enabled);
+        setVisible(enabled);
+    }
 
 }

@@ -24,57 +24,48 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Changed by The eXo Platform SAS .
- * 
+ *
  * @version $Id: $
  */
 
-public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentChangedHandler>
-{
+public class EditorFileContentChangedEvent extends GwtEvent<EditorFileContentChangedHandler> {
 
-   public static final GwtEvent.Type<EditorFileContentChangedHandler> TYPE =
-      new GwtEvent.Type<EditorFileContentChangedHandler>();
+    public static final GwtEvent.Type<EditorFileContentChangedHandler> TYPE =
+            new GwtEvent.Type<EditorFileContentChangedHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   private boolean hasUndoChanges;
+    private boolean hasUndoChanges;
 
-   private boolean hasRedoChanges;
+    private boolean hasRedoChanges;
 
-   public EditorFileContentChangedEvent(FileModel file, boolean hasUndoChanges, boolean hasRedoChanges)
-   {
-      this.file = file;
-      this.hasUndoChanges = hasUndoChanges;
-      this.hasRedoChanges = hasRedoChanges;
-   }
+    public EditorFileContentChangedEvent(FileModel file, boolean hasUndoChanges, boolean hasRedoChanges) {
+        this.file = file;
+        this.hasUndoChanges = hasUndoChanges;
+        this.hasRedoChanges = hasRedoChanges;
+    }
 
-   @Override
-   protected void dispatch(EditorFileContentChangedHandler handler)
-   {
-      handler.onEditorFileContentChanged(this);
-   }
+    @Override
+    protected void dispatch(EditorFileContentChangedHandler handler) {
+        handler.onEditorFileContentChanged(this);
+    }
 
-   @Override
-   public GwtEvent.Type<EditorFileContentChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public GwtEvent.Type<EditorFileContentChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @return changed item
-    */
-   public FileModel getFile()
-   {
-      return file;
-   }
+    /** @return changed item */
+    public FileModel getFile() {
+        return file;
+    }
 
-   public boolean hasUndoChanges()
-   {
-      return hasUndoChanges;
-   }
+    public boolean hasUndoChanges() {
+        return hasUndoChanges;
+    }
 
-   public boolean hasRedoChanges()
-   {
-      return hasRedoChanges;
-   }
+    public boolean hasRedoChanges() {
+        return hasRedoChanges;
+    }
 
 }

@@ -26,13 +26,12 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface HasApplicationsActions
-{
-   void addStartApplicationHandler(SelectionHandler<AppfogApplication> handler);
+public interface HasApplicationsActions {
+    void addStartApplicationHandler(SelectionHandler<AppfogApplication> handler);
 
-   void addStopApplicationHandler(SelectionHandler<AppfogApplication> handler);
+    void addStopApplicationHandler(SelectionHandler<AppfogApplication> handler);
 
-   void addRestartApplicationHandler(SelectionHandler<AppfogApplication> handler);
+    void addRestartApplicationHandler(SelectionHandler<AppfogApplication> handler);
 
-   void addDeleteApplicationHandler(SelectionHandler<AppfogApplication> handler);
+    void addDeleteApplicationHandler(SelectionHandler<AppfogApplication> handler);
 }

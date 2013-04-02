@@ -15,84 +15,62 @@ import com.codenvy.eclipse.jdt.core.IPackageDeclaration;
 import com.codenvy.eclipse.jdt.core.ISourceRange;
 import com.codenvy.eclipse.jdt.core.JavaModelException;
 
-/**
- * @see IPackageDeclaration
- */
+/** @see IPackageDeclaration */
 
-public class PackageDeclaration extends SourceRefElement implements IPackageDeclaration
-{
+public class PackageDeclaration extends SourceRefElement implements IPackageDeclaration {
 
-   String name;
+    String name;
 
-   protected PackageDeclaration(CompilationUnit parent, String name)
-   {
-      super(parent);
-      this.name = name;
-   }
+    protected PackageDeclaration(CompilationUnit parent, String name) {
+        super(parent);
+        this.name = name;
+    }
 
-   public boolean equals(Object o)
-   {
-      if (!(o instanceof PackageDeclaration))
-      {
-         return false;
-      }
-      return super.equals(o);
-   }
+    public boolean equals(Object o) {
+        if (!(o instanceof PackageDeclaration)) {
+            return false;
+        }
+        return super.equals(o);
+    }
 
-   public String getElementName()
-   {
-      return this.name;
-   }
+    public String getElementName() {
+        return this.name;
+    }
 
-   /**
-    * @see IJavaElement
-    */
-   public int getElementType()
-   {
-      return PACKAGE_DECLARATION;
-   }
+    /** @see IJavaElement */
+    public int getElementType() {
+        return PACKAGE_DECLARATION;
+    }
 
-   /**
-    * @see JavaElement#getHandleMemento()
-    */
-   protected char getHandleMementoDelimiter()
-   {
-      return JavaElement.JEM_PACKAGEDECLARATION;
-   }
+    /** @see JavaElement#getHandleMemento() */
+    protected char getHandleMementoDelimiter() {
+        return JavaElement.JEM_PACKAGEDECLARATION;
+    }
 
-   /**
-    * @see IPackageDeclaration#getNameRange()
-    */
-   public ISourceRange getNameRange() throws JavaModelException
-   {
-      AnnotatableInfo info = (AnnotatableInfo)getElementInfo();
-      return info.getNameRange();
-   }
+    /** @see IPackageDeclaration#getNameRange() */
+    public ISourceRange getNameRange() throws JavaModelException {
+        AnnotatableInfo info = (AnnotatableInfo)getElementInfo();
+        return info.getNameRange();
+    }
 
-   /*
-    * @see JavaElement#getPrimaryElement(boolean)
-    */
-   public IJavaElement getPrimaryElement(boolean checkOwner)
-   {
-      CompilationUnit cu = (CompilationUnit)getAncestor(COMPILATION_UNIT);
-      if (checkOwner && cu.isPrimary())
-      {
-         return this;
-      }
-      return cu.getPackageDeclaration(this.name);
-   }
+    /*
+     * @see JavaElement#getPrimaryElement(boolean)
+     */
+    public IJavaElement getPrimaryElement(boolean checkOwner) {
+        CompilationUnit cu = (CompilationUnit)getAncestor(COMPILATION_UNIT);
+        if (checkOwner && cu.isPrimary()) {
+            return this;
+        }
+        return cu.getPackageDeclaration(this.name);
+    }
 
-   /**
-    * @private Debugging purposes
-    */
-   protected void toStringInfo(int tab, StringBuffer buffer, Object info, boolean showResolvedInfo)
-   {
-      buffer.append(tabString(tab));
-      buffer.append("package "); //$NON-NLS-1$
-      toStringName(buffer);
-      if (info == null)
-      {
-         buffer.append(" (not open)"); //$NON-NLS-1$
-      }
-   }
+    /** @private Debugging purposes */
+    protected void toStringInfo(int tab, StringBuffer buffer, Object info, boolean showResolvedInfo) {
+        buffer.append(tabString(tab));
+        buffer.append("package "); //$NON-NLS-1$
+        toStringName(buffer);
+        if (info == null) {
+            buffer.append(" (not open)"); //$NON-NLS-1$
+        }
+    }
 }

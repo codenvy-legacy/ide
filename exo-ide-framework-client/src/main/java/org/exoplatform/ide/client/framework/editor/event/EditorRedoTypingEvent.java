@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorRedoTypingEvent extends GwtEvent<EditorRedoTypingHandler>
-{
+public class EditorRedoTypingEvent extends GwtEvent<EditorRedoTypingHandler> {
 
-   public static final GwtEvent.Type<EditorRedoTypingHandler> TYPE = new GwtEvent.Type<EditorRedoTypingHandler>();
+    public static final GwtEvent.Type<EditorRedoTypingHandler> TYPE = new GwtEvent.Type<EditorRedoTypingHandler>();
 
-   @Override
-   protected void dispatch(EditorRedoTypingHandler handler)
-   {
-      handler.onEditorRedoTyping(this);
-   }
+    @Override
+    protected void dispatch(EditorRedoTypingHandler handler) {
+        handler.onEditorRedoTyping(this);
+    }
 
-   @Override
-   public GwtEvent.Type<EditorRedoTypingHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public GwtEvent.Type<EditorRedoTypingHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

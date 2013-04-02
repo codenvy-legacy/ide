@@ -20,38 +20,37 @@ package org.exoplatform.ide.testframework.server.cloudfoundry;
 
 /**
  * If Cloudfoundry server return unexpected or error status for request.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class CloudfoundryException extends Exception
-{
-   /** HTTP status of response from Cloudfoundry server. */
-   private final int responseStatus;
+public class CloudfoundryException extends Exception {
+    /** HTTP status of response from Cloudfoundry server. */
+    private final int responseStatus;
 
-   /** Content type of response from Cloudfoundry server. */
-   private final String contentType;
+    /** Content type of response from Cloudfoundry server. */
+    private final String contentType;
 
-   /**
-    * @param responseStatus HTTP status of response from Cloudfoundry server
-    * @param message text message
-    * @param contentType content type of response from Cloudfoundry server
-    */
-   public CloudfoundryException(int responseStatus, String message, String contentType)
-   {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.contentType = contentType;
-   }
+    /**
+     * @param responseStatus
+     *         HTTP status of response from Cloudfoundry server
+     * @param message
+     *         text message
+     * @param contentType
+     *         content type of response from Cloudfoundry server
+     */
+    public CloudfoundryException(int responseStatus, String message, String contentType) {
+        super(message);
+        this.responseStatus = responseStatus;
+        this.contentType = contentType;
+    }
 
-   public int getResponseStatus()
-   {
-      return responseStatus;
-   }
+    public int getResponseStatus() {
+        return responseStatus;
+    }
 
-   public String getContentType()
-   {
-      return contentType;
-   }
+    public String getContentType() {
+        return contentType;
+    }
 }

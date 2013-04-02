@@ -24,100 +24,86 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DebuggerInfoImpl implements DebuggerInfo
-{
-   private String host;
-   private int port;
-   private String id;
-   private String vmName;
-   private String vmVersion;
+public class DebuggerInfoImpl implements DebuggerInfo {
+    private String host;
+    private int    port;
+    private String id;
+    private String vmName;
+    private String vmVersion;
 
-   public DebuggerInfoImpl(String host,
-                           int port,
-                           String id,
-                           String vmName,
-                           String vmVersion)
-   {
-      this.host = host;
-      this.port = port;
-      this.id = id;
-      this.vmName = vmName;
-      this.vmVersion = vmVersion;
-   }
+    public DebuggerInfoImpl(String host,
+                            int port,
+                            String id,
+                            String vmName,
+                            String vmVersion) {
+        this.host = host;
+        this.port = port;
+        this.id = id;
+        this.vmName = vmName;
+        this.vmVersion = vmVersion;
+    }
 
-   public DebuggerInfoImpl()
-   {
-   }
+    public DebuggerInfoImpl() {
+    }
 
-   @Override
-   public String getHost()
-   {
-      return host;
-   }
+    @Override
+    public String getHost() {
+        return host;
+    }
 
-   @Override
-   public int getPort()
-   {
-      return port;
-   }
+    @Override
+    public int getPort() {
+        return port;
+    }
 
-   @Override
-   public String getId()
-   {
-      return id;
-   }
+    @Override
+    public String getId() {
+        return id;
+    }
 
-   @Override
-   public String getVmName()
-   {
-      return vmName;
-   }
+    @Override
+    public String getVmName() {
+        return vmName;
+    }
 
-   @Override
-   public String getVmVersion()
-   {
-      return vmVersion;
-   }
+    @Override
+    public String getVmVersion() {
+        return vmVersion;
+    }
 
-   @Override
-   public void setHost(String host)
-   {
-      this.host = host;
-   }
+    @Override
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-   @Override
-   public void setPort(int port)
-   {
-      this.port = port;
-   }
+    @Override
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-   @Override
-   public void setId(String id)
-   {
-      this.id = id;
-   }
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
-   @Override
-   public void setVmName(String vmName)
-   {
-      this.vmName = vmName;
-   }
+    @Override
+    public void setVmName(String vmName) {
+        this.vmName = vmName;
+    }
 
-   @Override
-   public void setVmVersion(String vmVersion)
-   {
-      this.vmVersion = vmVersion;
-   }
+    @Override
+    public void setVmVersion(String vmVersion) {
+        this.vmVersion = vmVersion;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "DebuggerInfoImpl{" +
-         "host='" + host + '\'' +
-         ", port=" + port +
-         ", id='" + id + '\'' +
-         ", vmName='" + vmName + '\'' +
-         ", vmVersion='" + vmVersion + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "DebuggerInfoImpl{" +
+               "host='" + host + '\'' +
+               ", port=" + port +
+               ", id='" + id + '\'' +
+               ", vmName='" + vmName + '\'' +
+               ", vmVersion='" + vmVersion + '\'' +
+               '}';
+    }
 }

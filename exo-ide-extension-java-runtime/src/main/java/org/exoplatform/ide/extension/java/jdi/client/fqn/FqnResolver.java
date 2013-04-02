@@ -23,11 +23,9 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  4:58:00 PM Mar 28, 2012 evgen $
- *
  */
-public interface FqnResolver
-{
+public interface FqnResolver {
 
-   String resolveFqn(FileModel file);
-   
+    String resolveFqn(FileModel file);
+
 }

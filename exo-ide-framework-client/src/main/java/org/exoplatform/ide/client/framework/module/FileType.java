@@ -23,61 +23,46 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class FileType
-{
+public class FileType {
 
-   /**
-    * File mime type.
-    */
-   String mimeType;
+    /** File mime type. */
+    String mimeType;
 
-   /**
-    * Default file extension.
-    */
-   String extension;
+    /** Default file extension. */
+    String extension;
 
-   /**
-    * File type icon.
-    */
-   ImageResource icon;
+    /** File type icon. */
+    ImageResource icon;
 
-   public FileType(String mimeType, String extension, ImageResource icon)
-   {
-      this.mimeType = mimeType;
-      this.extension = extension;
-      this.icon = icon;
-   }
+    public FileType(String mimeType, String extension, ImageResource icon) {
+        this.mimeType = mimeType;
+        this.extension = extension;
+        this.icon = icon;
+    }
 
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   public void setMimeType(String mimeType)
-   {
-      this.mimeType = mimeType;
-   }
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-   public String getExtension()
-   {
-      return extension;
-   }
+    public String getExtension() {
+        return extension;
+    }
 
-   public void setExtension(String extension)
-   {
-      this.extension = extension;
-   }
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
 
-   public ImageResource getIcon()
-   {
-      return icon;
-   }
+    public ImageResource getIcon() {
+        return icon;
+    }
 
-   public void setIcon(ImageResource icon)
-   {
-      this.icon = icon;
-   }
+    public void setIcon(ImageResource icon) {
+        this.icon = icon;
+    }
 
 }

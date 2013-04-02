@@ -11,37 +11,31 @@
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types;
 
 
-public class TypeTuple
-{
-   private TType fFirst;
+public class TypeTuple {
+    private TType fFirst;
 
-   private TType fSecond;
+    private TType fSecond;
 
-   public TypeTuple(TType first, TType second)
-   {
-      super();
-      fFirst = first;
-      fSecond = second;
-   }
+    public TypeTuple(TType first, TType second) {
+        super();
+        fFirst = first;
+        fSecond = second;
+    }
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (!(obj instanceof TypeTuple))
-      {
-         return false;
-      }
-      TypeTuple other = (TypeTuple)obj;
-      return fFirst.equals(other.fFirst) && fSecond.equals(other.fSecond);
-   }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof TypeTuple)) {
+            return false;
+        }
+        TypeTuple other = (TypeTuple)obj;
+        return fFirst.equals(other.fFirst) && fSecond.equals(other.fSecond);
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return fFirst.hashCode() << 16 + fSecond.hashCode();
-   }
+    @Override
+    public int hashCode() {
+        return fFirst.hashCode() << 16 + fSecond.hashCode();
+    }
 }

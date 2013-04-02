@@ -23,34 +23,26 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
-public class LocalPathResolverImpl implements LocalPathResolver
-{
-   @Override
-   public String resolve(VirtualFileSystem vfs, String id) throws LocalPathResolveException
-   {
-      if (vfs == null)
-      {
-         throw new LocalPathResolveException(
-            "Cannot resolve path on the Local filesystem. Virtual filesystem is not initialized. ");
-      }
-      if (!(vfs instanceof LocalFileSystem))
-      {
-         throw new LocalPathResolveException(
-            String.format("Cannot resolve path on the local filesystem. Unsupported virtual filesystem type: %s. ", vfs));
-      }
-      if (id == null || id.length() == 0)
-      {
-         throw new LocalPathResolveException(
-            "Cannot resolve path on the local filesystem. Item id may not be null or empty. ");
-      }
+public class LocalPathResolverImpl implements LocalPathResolver {
+    @Override
+    public String resolve(VirtualFileSystem vfs, String id) throws LocalPathResolveException {
+        if (vfs == null) {
+            throw new LocalPathResolveException(
+                    "Cannot resolve path on the Local filesystem. Virtual filesystem is not initialized. ");
+        }
+        if (!(vfs instanceof LocalFileSystem)) {
+            throw new LocalPathResolveException(
+                    String.format("Cannot resolve path on the local filesystem. Unsupported virtual filesystem type: %s. ", vfs));
+        }
+        if (id == null || id.length() == 0) {
+            throw new LocalPathResolveException(
+                    "Cannot resolve path on the local filesystem. Item id may not be null or empty. ");
+        }
 
-      try
-      {
-         return ((LocalFileSystem)vfs).idToVirtualFile(id).getIoFile().getAbsolutePath();
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new LocalPathResolveException("Cannot resolve path on the local filesystem. ", e);
-      }
-   }
+        try {
+            return ((LocalFileSystem)vfs).idToVirtualFile(id).getIoFile().getAbsolutePath();
+        } catch (VirtualFileSystemException e) {
+            throw new LocalPathResolveException("Cannot resolve path on the local filesystem. ", e);
+        }
+    }
 }

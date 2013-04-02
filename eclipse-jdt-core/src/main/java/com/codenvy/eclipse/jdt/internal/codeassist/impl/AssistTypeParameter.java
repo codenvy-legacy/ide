@@ -19,13 +19,14 @@ import java.util.Map;
 
 
 public class AssistTypeParameter extends TypeParameter {
-	private Map infoCache;
-	public AssistTypeParameter(JavaElement parent, String name, Map infoCache) {
-		super(parent, name);
-		this.infoCache = infoCache;
-	}
+    private Map infoCache;
 
-	public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
-		return this.infoCache.get(this);
-	}
+    public AssistTypeParameter(JavaElement parent, String name, Map infoCache) {
+        super(parent, name);
+        this.infoCache = infoCache;
+    }
+
+    public Object getElementInfo(IProgressMonitor monitor) throws JavaModelException {
+        return this.infoCache.get(this);
+    }
 }

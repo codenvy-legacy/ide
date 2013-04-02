@@ -14,24 +14,29 @@ import com.codenvy.eclipse.jdt.internal.compiler.ast.ImportReference;
 import com.codenvy.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 
 public class CompletionOnKeyword2 extends ImportReference implements CompletionOnKeyword {
-	private char[] token;
-	private char[][] possibleKeywords;
-	public CompletionOnKeyword2(char[] token, long pos, char[][] possibleKeywords) {
-		super(new char[][]{token}, new long[]{pos}, false, ClassFileConstants.AccDefault);
-		this.token = token;
-		this.possibleKeywords = possibleKeywords;
-	}
-	public boolean canCompleteEmptyToken() {
-		return false;
-	}
-	public char[] getToken() {
-		return this.token;
-	}
-	public char[][] getPossibleKeywords() {
-		return this.possibleKeywords;
-	}
-	public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand) {
+    private char[]   token;
+    private char[][] possibleKeywords;
 
-		return printIndent(indent, output).append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
-	}
+    public CompletionOnKeyword2(char[] token, long pos, char[][] possibleKeywords) {
+        super(new char[][]{token}, new long[]{pos}, false, ClassFileConstants.AccDefault);
+        this.token = token;
+        this.possibleKeywords = possibleKeywords;
+    }
+
+    public boolean canCompleteEmptyToken() {
+        return false;
+    }
+
+    public char[] getToken() {
+        return this.token;
+    }
+
+    public char[][] getPossibleKeywords() {
+        return this.possibleKeywords;
+    }
+
+    public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand) {
+
+        return printIndent(indent, output).append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
+    }
 }

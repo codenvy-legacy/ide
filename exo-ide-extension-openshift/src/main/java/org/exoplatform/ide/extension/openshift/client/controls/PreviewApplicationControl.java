@@ -24,22 +24,20 @@ import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplication
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class PreviewApplicationControl extends AbstractOpenShiftControl
-{
+public class PreviewApplicationControl extends AbstractOpenShiftControl {
 
-   public PreviewApplicationControl()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.previewApplicationControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.previewApplicationControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.previewApplicationControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.previewControl(),
-         OpenShiftClientBundle.INSTANCE.previewControlDisabled());
-      setEvent(new PreviewApplicationEvent());
-   }
+    public PreviewApplicationControl() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.previewApplicationControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.previewApplicationControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.previewApplicationControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.previewControl(),
+                  OpenShiftClientBundle.INSTANCE.previewControlDisabled());
+        setEvent(new PreviewApplicationEvent());
+    }
 
 }

@@ -24,9 +24,8 @@ package org.exoplatform.ide.extension.appfog.client.login;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface LoginCanceledHandler
-{
+public interface LoginCanceledHandler {
 
-   void onLoginCanceled();
+    void onLoginCanceled();
 
 }

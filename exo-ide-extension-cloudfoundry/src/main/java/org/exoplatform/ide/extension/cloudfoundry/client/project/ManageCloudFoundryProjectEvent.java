@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to manage project, deployed to CloudFoundry.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Dec 7, 2011 2:27:55 PM anya $
- *
  */
-public class ManageCloudFoundryProjectEvent extends GwtEvent<ManageCloudFoundryProjectHandler>
-{
-   
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ManageCloudFoundryProjectHandler> TYPE = new GwtEvent.Type<ManageCloudFoundryProjectHandler>();
-   
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageCloudFoundryProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+public class ManageCloudFoundryProjectEvent extends GwtEvent<ManageCloudFoundryProjectHandler> {
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageCloudFoundryProjectHandler handler)
-   {
-      handler.onManageCloudFoundryProject(this);
-   }
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ManageCloudFoundryProjectHandler> TYPE = new GwtEvent.Type<ManageCloudFoundryProjectHandler>();
+
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageCloudFoundryProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageCloudFoundryProjectHandler handler) {
+        handler.onManageCloudFoundryProject(this);
+    }
 
 }

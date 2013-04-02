@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface HasChangeViewIconHandler
-{
+public interface HasChangeViewIconHandler {
 
-   HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler);
+    HandlerRegistration addChangeViewIconHandler(ChangeViewIconHandler changeViewIconHandler);
 
 }

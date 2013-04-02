@@ -27,37 +27,34 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface UpdateAccessControlRequest
-{
-   /**
-    * Get list of permissions to add to current ACL.
-    *
-    * @return
-    *    list of permissions to add to Acl
-    */
-   List<S3AccessControl> getS3AccessControlsToAdd();
+public interface UpdateAccessControlRequest {
+    /**
+     * Get list of permissions to add to current ACL.
+     *
+     * @return list of permissions to add to Acl
+     */
+    List<S3AccessControl> getS3AccessControlsToAdd();
 
-   /**
-    * Set list of permissions to add to current ACL.
-    *
-    * @param s3AccessControlsToAdd
-    *    list of permissions to add to Acl
-    */
-   void setS3AccessControlsToAdd(List<S3AccessControl> s3AccessControlsToAdd);
+    /**
+     * Set list of permissions to add to current ACL.
+     *
+     * @param s3AccessControlsToAdd
+     *         list of permissions to add to Acl
+     */
+    void setS3AccessControlsToAdd(List<S3AccessControl> s3AccessControlsToAdd);
 
-   /**
-    * Get list of permissions to delete from current ACL.
-    *
-    * @return
-    *    list of permissions to delete from Acl
-    */
-   List<S3AccessControl> getS3AccessControlsToDelete();
+    /**
+     * Get list of permissions to delete from current ACL.
+     *
+     * @return list of permissions to delete from Acl
+     */
+    List<S3AccessControl> getS3AccessControlsToDelete();
 
-   /**
-    * Set list of permissions to delete from current ACL.
-    *
-    * @param s3AccessControlsToDelete
-    *    list of permissions to delete from Acl
-    */
-   void setS3AccessControlsToDelete(List<S3AccessControl> s3AccessControlsToDelete);
+    /**
+     * Set list of permissions to delete from current ACL.
+     *
+     * @param s3AccessControlsToDelete
+     *         list of permissions to delete from Acl
+     */
+    void setS3AccessControlsToDelete(List<S3AccessControl> s3AccessControlsToDelete);
 }

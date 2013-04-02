@@ -24,51 +24,43 @@ import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class RegionInfoImpl implements RegionInfo
-{
-   private String name;
-   private String endpoint;
+public class RegionInfoImpl implements RegionInfo {
+    private String name;
+    private String endpoint;
 
-   public RegionInfoImpl(String name, String endpoint)
-   {
-      this.name = name;
-      this.endpoint = endpoint;
-   }
+    public RegionInfoImpl(String name, String endpoint) {
+        this.name = name;
+        this.endpoint = endpoint;
+    }
 
-   public RegionInfoImpl()
-   {
-   }
+    public RegionInfoImpl() {
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String getEndpoint()
-   {
-      return endpoint;
-   }
+    @Override
+    public String getEndpoint() {
+        return endpoint;
+    }
 
-   @Override
-   public void setEndpoint(String endpoint)
-   {
-      this.endpoint = endpoint;
-   }
+    @Override
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "RegionInfoImpl{" +
-         "name='" + name + '\'' +
-         ", endpoint='" + endpoint + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "RegionInfoImpl{" +
+               "name='" + name + '\'' +
+               ", endpoint='" + endpoint + '\'' +
+               '}';
+    }
 }

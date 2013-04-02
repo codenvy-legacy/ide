@@ -35,46 +35,35 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 18, 2012 10:33:01 AM anya $
- * 
  */
-public class SolutionStackListUnmarshaller implements Unmarshallable<List<SolutionStack>>
-{
-   private List<SolutionStack> solutionStackList = new ArrayList<SolutionStack>();
+public class SolutionStackListUnmarshaller implements Unmarshallable<List<SolutionStack>> {
+    private List<SolutionStack> solutionStackList = new ArrayList<SolutionStack>();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
 
-      if (value == null)
-      {
-         return;
-      }
+        if (value == null) {
+            return;
+        }
 
-      for (int i = 0; i < value.size(); i++)
-      {
-         String payload = value.get(i).isObject().toString();
+        for (int i = 0; i < value.size(); i++) {
+            String payload = value.get(i).isObject().toString();
 
-         AutoBean<SolutionStack> solutionStackBean =
-            AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, SolutionStack.class, payload);
-         solutionStackList.add(solutionStackBean.as());
-      }
-   }
+            AutoBean<SolutionStack> solutionStackBean =
+                    AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, SolutionStack.class, payload);
+            solutionStackList.add(solutionStackBean.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<SolutionStack> getPayload()
-   {
-      return solutionStackList;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public List<SolutionStack> getPayload() {
+        return solutionStackList;
+    }
 }

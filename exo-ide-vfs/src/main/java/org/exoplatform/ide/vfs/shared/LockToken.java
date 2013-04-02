@@ -20,26 +20,25 @@ package org.exoplatform.ide.vfs.shared;
 
 /**
  * Interface describe object lock token.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: LockToken.java Mar 27, 2012 10:34:26 AM azatsarynnyy $
- *
  */
-public interface LockToken
-{
+public interface LockToken {
 
-   /**
-    * Returns the lock token.
-    * 
-    * @return the lock token
-    */
-   public String getLockToken();
+    /**
+     * Returns the lock token.
+     *
+     * @return the lock token
+     */
+    public String getLockToken();
 
-   /**
-    * Set the lock token.
-    * 
-    * @param token the lock token
-    */
-   public void setLockToken(String token);
+    /**
+     * Set the lock token.
+     *
+     * @param token
+     *         the lock token
+     */
+    public void setLockToken(String token);
 
 }

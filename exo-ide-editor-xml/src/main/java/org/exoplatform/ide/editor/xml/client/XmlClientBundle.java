@@ -24,26 +24,24 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface XmlClientBundle extends ClientBundle
-{
+public interface XmlClientBundle extends ClientBundle {
 
-   @Source("org/exoplatform/ide/editor/xml/client/styles/xml.css")
-   XmlCss css();
+    @Source("org/exoplatform/ide/editor/xml/client/styles/xml.css")
+    XmlCss css();
 
-   @Source("org/exoplatform/ide/editor/xml/client/images/attribute.png")
-   ImageResource attribute();
+    @Source("org/exoplatform/ide/editor/xml/client/images/attribute.png")
+    ImageResource attribute();
 
-   @Source("org/exoplatform/ide/editor/xml/client/images/tag.png")
-   ImageResource tag();
+    @Source("org/exoplatform/ide/editor/xml/client/images/tag.png")
+    ImageResource tag();
 
-   @Source("org/exoplatform/ide/editor/xml/client/images/cdata-item.png")
-   ImageResource cdata();
+    @Source("org/exoplatform/ide/editor/xml/client/images/cdata-item.png")
+    ImageResource cdata();
 
-   @Source("org/exoplatform/ide/editor/xml/client/images/row-selected.png")
-   ImageResource itemSelected();
+    @Source("org/exoplatform/ide/editor/xml/client/images/row-selected.png")
+    ImageResource itemSelected();
 
-   @Source("org/exoplatform/ide/editor/xml/public/images/xml/xml.png")
-   ImageResource xml();
+    @Source("org/exoplatform/ide/editor/xml/public/images/xml/xml.png")
+    ImageResource xml();
 }

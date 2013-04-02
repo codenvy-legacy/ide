@@ -38,77 +38,58 @@ import java.net.URLStreamHandlerFactory;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class URLHandlerFactorySetup
-{
-   private static final Log LOG = ExoLogger.getExoLogger(URLHandlerFactorySetup.class);
+public class URLHandlerFactorySetup {
+    private static final Log LOG = ExoLogger.getExoLogger(URLHandlerFactorySetup.class);
 
-   public synchronized static void setup(VirtualFileSystemRegistry registry, EventListenerList listeners)
-   {
-      try
-      {
-         new URL("ide+vfs", "", "");
-      }
-      catch (MalformedURLException mue)
-      {
-         // URL with protocol 'ide+vfs' is not supported yet. Need register URLStreamHandlerFactory.
-
-         if (LOG.isDebugEnabled())
-         {
-            LOG.debug("--> Try setup URLStreamHandlerFactory for protocol 'ide+vfs'. ");
-         }
-         try
-         {
-            // Get currently installed URLStreamHandlerFactory.
-            Field factoryField = URL.class.getDeclaredField("factory");
-            factoryField.setAccessible(true);
-            URLStreamHandlerFactory currentFactory = (URLStreamHandlerFactory)factoryField.get(null);
-
-            if (LOG.isDebugEnabled())
-            {
-               LOG.debug("--> Current instance of URLStreamHandlerFactory: "
-                  + (currentFactory != null ? currentFactory.getClass().getName() : null));
-            }
-
-            //
-            URLStreamHandlerFactory vfsURLFactory = new VirtualFileSystemURLHandlerFactory(currentFactory,
-               registry, listeners);
-            factoryField.set(null, vfsURLFactory);
-         }
-         catch (SecurityException se)
-         {
-            throw new VirtualFileSystemRuntimeException(se.getMessage(), se);
-         }
-         catch (NoSuchFieldException nfe)
-         {
-            throw new VirtualFileSystemRuntimeException(nfe.getMessage(), nfe);
-         }
-         catch (IllegalAccessException ae)
-         {
-            throw new VirtualFileSystemRuntimeException(ae.getMessage(), ae);
-         }
-
-         // Check 'ide+vfs' again. From now it should be possible to use such URLs.
-         // At the same time we force URL to remember our protocol handler.
-         // URL knows about it even if the URLStreamHandlerFactory is changed.
-
-         try
-         {
+    public synchronized static void setup(VirtualFileSystemRegistry registry, EventListenerList listeners) {
+        try {
             new URL("ide+vfs", "", "");
+        } catch (MalformedURLException mue) {
+            // URL with protocol 'ide+vfs' is not supported yet. Need register URLStreamHandlerFactory.
 
-            //
-            if (LOG.isDebugEnabled())
-            {
-               LOG.debug("--> URLStreamHandlerFactory installed. ");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("--> Try setup URLStreamHandlerFactory for protocol 'ide+vfs'. ");
             }
-         }
-         catch (MalformedURLException e)
-         {
-            throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
-         }
-      }
-   }
+            try {
+                // Get currently installed URLStreamHandlerFactory.
+                Field factoryField = URL.class.getDeclaredField("factory");
+                factoryField.setAccessible(true);
+                URLStreamHandlerFactory currentFactory = (URLStreamHandlerFactory)factoryField.get(null);
 
-   protected URLHandlerFactorySetup()
-   {
-   }
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("--> Current instance of URLStreamHandlerFactory: "
+                              + (currentFactory != null ? currentFactory.getClass().getName() : null));
+                }
+
+                //
+                URLStreamHandlerFactory vfsURLFactory = new VirtualFileSystemURLHandlerFactory(currentFactory,
+                                                                                               registry, listeners);
+                factoryField.set(null, vfsURLFactory);
+            } catch (SecurityException se) {
+                throw new VirtualFileSystemRuntimeException(se.getMessage(), se);
+            } catch (NoSuchFieldException nfe) {
+                throw new VirtualFileSystemRuntimeException(nfe.getMessage(), nfe);
+            } catch (IllegalAccessException ae) {
+                throw new VirtualFileSystemRuntimeException(ae.getMessage(), ae);
+            }
+
+            // Check 'ide+vfs' again. From now it should be possible to use such URLs.
+            // At the same time we force URL to remember our protocol handler.
+            // URL knows about it even if the URLStreamHandlerFactory is changed.
+
+            try {
+                new URL("ide+vfs", "", "");
+
+                //
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("--> URLStreamHandlerFactory installed. ");
+                }
+            } catch (MalformedURLException e) {
+                throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+            }
+        }
+    }
+
+    protected URLHandlerFactorySetup() {
+    }
 }

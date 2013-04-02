@@ -28,22 +28,20 @@ import org.exoplatform.ide.extension.appfog.client.update.UpdateInstancesEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class UpdateInstancesControl extends AbstractAppfogControl
-{
+public class UpdateInstancesControl extends AbstractAppfogControl {
 
-   private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesControlId();
+    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesControlId();
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.updateInstancesControlPrompt();
 
-   public UpdateInstancesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.appInstances(),
-         AppfogClientBundle.INSTANCE.appInstancesDisabled());
-      setEvent(new UpdateInstancesEvent());
-   }
+    public UpdateInstancesControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.appInstances(),
+                  AppfogClientBundle.INSTANCE.appInstancesDisabled());
+        setEvent(new UpdateInstancesEvent());
+    }
 }

@@ -18,16 +18,15 @@ import com.codenvy.eclipse.resources.WorkspaceResource;
  * The internal abstract superclass of all TeamHook implementations.  This superclass
  * provides access to internal non-API methods that are not available from the API
  * package. Plugin developers should not subclass this class.
- * 
+ *
  * @see com.codenvy.eclipse.core.resources.team.TeamHook
  */
-public class InternalTeamHook
-{
-	/* (non-Javadoc)
-	 * Internal implementation of TeamHook#setRulesFor(IProject,IResourceRuleFactory)
-	 */
-	protected void setRuleFactory(IProject project, IResourceRuleFactory factory) {
-		WorkspaceResource workspace = ((WorkspaceResource) project.getWorkspace());
-		((Rules) workspace.getRuleFactory()).setRuleFactory(project, factory);
-	}
+public class InternalTeamHook {
+    /* (non-Javadoc)
+     * Internal implementation of TeamHook#setRulesFor(IProject,IResourceRuleFactory)
+     */
+    protected void setRuleFactory(IProject project, IResourceRuleFactory factory) {
+        WorkspaceResource workspace = ((WorkspaceResource)project.getWorkspace());
+        ((Rules)workspace.getRuleFactory()).setRuleFactory(project, factory);
+    }
 }

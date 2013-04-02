@@ -33,67 +33,61 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 3:16:10 PM anya $
- * 
  */
-public class PythonRuntimeServiceImpl extends PythonRuntimeService
-{
-   private static final String LOGS = "/ide/python/runner/logs";
+public class PythonRuntimeServiceImpl extends PythonRuntimeService {
+    private static final String LOGS = "/ide/python/runner/logs";
 
-   private String restContext;
+    private String restContext;
 
-   private static final String RUN_APPLICATION = "/ide/python/runner/run";
+    private static final String RUN_APPLICATION = "/ide/python/runner/run";
 
-   private static final String STOP_APPLICATION = "/ide/python/runner/stop";
+    private static final String STOP_APPLICATION = "/ide/python/runner/stop";
 
-   public PythonRuntimeServiceImpl(String restContext)
-   {
-      this.restContext = restContext;
-   }
+    public PythonRuntimeServiceImpl(String restContext) {
+        this.restContext = restContext;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.python.client.PythonRuntimeService#start(java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
-      throws RequestException
-   {
-      String requestUrl = restContext + RUN_APPLICATION;
+    /**
+     * @see org.exoplatform.ide.extension.python.client.PythonRuntimeService#start(java.lang.String, java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void start(String vfsId, ProjectModel project, AsyncRequestCallback<ApplicationInstance> callback)
+            throws RequestException {
+        String requestUrl = restContext + RUN_APPLICATION;
 
-      StringBuilder params = new StringBuilder("?");
-      params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
+        StringBuilder params = new StringBuilder("?");
+        params.append("&vfsid=").append(vfsId).append("&projectid=").append(project.getId());
 
-      AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
-         .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
+                    .requestStatusHandler(new StartApplicationStatusHandler(project.getName()))
+                    .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.python.client.PythonRuntimeService#stop(java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException
-   {
-      String requestUrl = restContext + STOP_APPLICATION;
+    /**
+     * @see org.exoplatform.ide.extension.python.client.PythonRuntimeService#stop(java.lang.String,
+     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+     */
+    @Override
+    public void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException {
+        String requestUrl = restContext + STOP_APPLICATION;
 
-      StringBuilder params = new StringBuilder("?name=");
-      params.append(name);
+        StringBuilder params = new StringBuilder("?name=");
+        params.append(name);
 
-      AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
-         .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, requestUrl + params.toString(), true)
+                    .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
+    }
 
-   public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      String url = restContext + LOGS;
-      StringBuilder params = new StringBuilder("?name=");
-      params.append(name);
+    public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        String url = restContext + LOGS;
+        StringBuilder params = new StringBuilder("?name=");
+        params.append(name);
 
-      Loader loader = new GWTLoader();
-      loader.setMessage("Retrieving logs.... ");
+        Loader loader = new GWTLoader();
+        loader.setMessage("Retrieving logs.... ");
 
-      AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
+    }
 
 }

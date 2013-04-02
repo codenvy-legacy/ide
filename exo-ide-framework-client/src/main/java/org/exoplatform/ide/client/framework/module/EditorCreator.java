@@ -23,11 +23,9 @@ import org.exoplatform.ide.editor.client.api.Editor;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface EditorCreator
-{
-   
-   Editor createEditor();
+public interface EditorCreator {
+
+    Editor createEditor();
 
 }

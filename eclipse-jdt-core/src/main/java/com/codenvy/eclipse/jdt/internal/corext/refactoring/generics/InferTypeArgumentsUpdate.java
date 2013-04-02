@@ -20,65 +20,53 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InferTypeArgumentsUpdate
-{
-   public static class CuUpdate
-   {
-      private List<CollectionElementVariable2> fDeclarations = new ArrayList<CollectionElementVariable2>();
+public class InferTypeArgumentsUpdate {
+    public static class CuUpdate {
+        private List<CollectionElementVariable2> fDeclarations = new ArrayList<CollectionElementVariable2>();
 
-      private List<CastVariable2> fCastsToRemove = new ArrayList<CastVariable2>();
+        private List<CastVariable2> fCastsToRemove = new ArrayList<CastVariable2>();
 
-      public List<CollectionElementVariable2> getDeclarations()
-      {
-         return fDeclarations;
-      }
+        public List<CollectionElementVariable2> getDeclarations() {
+            return fDeclarations;
+        }
 
-      public List<CastVariable2> getCastsToRemove()
-      {
-         return fCastsToRemove;
-      }
-   }
+        public List<CastVariable2> getCastsToRemove() {
+            return fCastsToRemove;
+        }
+    }
 
-   private HashMap<ICompilationUnit, CuUpdate> fUpdates = new HashMap<ICompilationUnit, CuUpdate>();
+    private HashMap<ICompilationUnit, CuUpdate> fUpdates = new HashMap<ICompilationUnit, CuUpdate>();
 
-   public HashMap<ICompilationUnit, CuUpdate> getUpdates()
-   {
-      return fUpdates;
-   }
+    public HashMap<ICompilationUnit, CuUpdate> getUpdates() {
+        return fUpdates;
+    }
 
-   public void addDeclaration(CollectionElementVariable2 elementCv)
-   {
-      ICompilationUnit cu = elementCv.getCompilationUnit();
-      if (cu == null)
-      {
-         return;
-      }
-      CuUpdate update = getUpdate(cu);
-      update.fDeclarations.add(elementCv);
-   }
+    public void addDeclaration(CollectionElementVariable2 elementCv) {
+        ICompilationUnit cu = elementCv.getCompilationUnit();
+        if (cu == null) {
+            return;
+        }
+        CuUpdate update = getUpdate(cu);
+        update.fDeclarations.add(elementCv);
+    }
 
-   public void addCastToRemove(CastVariable2 castCv)
-   {
-      ICompilationUnit cu = castCv.getCompilationUnit();
-      CuUpdate update = getUpdate(cu);
-      update.fCastsToRemove.add(castCv);
-   }
+    public void addCastToRemove(CastVariable2 castCv) {
+        ICompilationUnit cu = castCv.getCompilationUnit();
+        CuUpdate update = getUpdate(cu);
+        update.fCastsToRemove.add(castCv);
+    }
 
-   private CuUpdate getUpdate(ICompilationUnit cu)
-   {
-      Assert.isNotNull(cu);
-      Object obj = fUpdates.get(cu);
-      CuUpdate update;
-      if (obj == null)
-      {
-         update = new CuUpdate();
-         fUpdates.put(cu, update);
-      }
-      else
-      {
-         update = (CuUpdate)obj;
-      }
-      return update;
-   }
+    private CuUpdate getUpdate(ICompilationUnit cu) {
+        Assert.isNotNull(cu);
+        Object obj = fUpdates.get(cu);
+        CuUpdate update;
+        if (obj == null) {
+            update = new CuUpdate();
+            fUpdates.put(cu, update);
+        } else {
+            update = (CuUpdate)obj;
+        }
+        return update;
+    }
 
 }

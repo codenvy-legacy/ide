@@ -16,19 +16,21 @@ package com.codenvy.eclipse.core.internal.watson;
  *
  * @see ElementTreeIterator
  */
-public interface IElementContentVisitor
-{
-   /**
-    * Visits a node (element).
-    * <p> Note that <code>elementContents</code> is equal to<code>tree.
-    * getElement(elementPath)</code> but takes no time.
-    *
-    * @param tree            the element tree being visited
-    * @param elementContents the object at the node being visited on this call
-    * @param requestor       callback object for requesting the path of the object being
-    *                        visited.
-    * @return true if this element's children should be visited, and false
-    *         otherwise.
-    */
-   public boolean visitElement(ElementTree tree, IPathRequestor requestor, Object elementContents);
+public interface IElementContentVisitor {
+    /**
+     * Visits a node (element).
+     * <p> Note that <code>elementContents</code> is equal to<code>tree.
+     * getElement(elementPath)</code> but takes no time.
+     *
+     * @param tree
+     *         the element tree being visited
+     * @param elementContents
+     *         the object at the node being visited on this call
+     * @param requestor
+     *         callback object for requesting the path of the object being
+     *         visited.
+     * @return true if this element's children should be visited, and false
+     *         otherwise.
+     */
+    public boolean visitElement(ElementTree tree, IPathRequestor requestor, Object elementContents);
 }

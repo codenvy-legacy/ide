@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link RollbackBackendsEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 29, 2012 5:22:50 PM anya $
- * 
  */
-public interface RollbackBackendsHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to rollback backend(s).
-    * 
-    * @param event
-    */
-   void onRollbackBackend(RollbackBackendsEvent event);
+public interface RollbackBackendsHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to rollback backend(s).
+     *
+     * @param event
+     */
+    void onRollbackBackend(RollbackBackendsEvent event);
 }

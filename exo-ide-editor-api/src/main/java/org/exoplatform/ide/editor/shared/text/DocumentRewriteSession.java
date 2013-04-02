@@ -11,39 +11,34 @@
 package org.exoplatform.ide.editor.shared.text;
 
 
-/**
- * A document rewrite session.
- */
-public class DocumentRewriteSession
-{
+/** A document rewrite session. */
+public class DocumentRewriteSession {
 
-   private DocumentRewriteSessionType fSessionType;
+    private DocumentRewriteSessionType fSessionType;
 
-   /**
-    * Prohibit package external object creation.
-    *
-    * @param sessionType the type of this session
-    */
-   protected DocumentRewriteSession(DocumentRewriteSessionType sessionType)
-   {
-      fSessionType = sessionType;
-   }
+    /**
+     * Prohibit package external object creation.
+     *
+     * @param sessionType
+     *         the type of this session
+     */
+    protected DocumentRewriteSession(DocumentRewriteSessionType sessionType) {
+        fSessionType = sessionType;
+    }
 
-   /**
-    * Returns the type of this session.
-    *
-    * @return the type of this session
-    */
-   public DocumentRewriteSessionType getSessionType()
-   {
-      return fSessionType;
-   }
+    /**
+     * Returns the type of this session.
+     *
+     * @return the type of this session
+     */
+    public DocumentRewriteSessionType getSessionType() {
+        return fSessionType;
+    }
 
-   /*
-    * @see java.lang.Object#toString()
-    */
-   public String toString()
-   {
-      return new StringBuffer().append(hashCode()).toString();
-   }
+    /*
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return new StringBuffer().append(hashCode()).toString();
+    }
 }

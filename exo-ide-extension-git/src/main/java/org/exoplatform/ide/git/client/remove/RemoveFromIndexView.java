@@ -36,73 +36,60 @@ import org.exoplatform.ide.git.client.GitExtension;
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 30, 2011 9:25:02 AM anya $
- *
  */
-public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPresenter.Display
-{
-   public static final int HEIGHT = 180;
+public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPresenter.Display {
+    public static final int HEIGHT = 180;
 
-   public static final int WIDTH = 420;
+    public static final int WIDTH = 420;
 
-   public static final String ID = "ideRemoveFromIndexView";
+    public static final String ID = "ideRemoveFromIndexView";
 
-   private static final String REMOVE_BUTTON_ID = "ideRemoveFromIndexViewRemoveButton";
+    private static final String REMOVE_BUTTON_ID = "ideRemoveFromIndexViewRemoveButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRemoveFromIndexViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideRemoveFromIndexViewCancelButton";
 
 
-   private static final String MESSAGE_FIELD_ID = "ideRemoveFromIndexViewMessageField";
+    private static final String MESSAGE_FIELD_ID = "ideRemoveFromIndexViewMessageField";
 
-   /* Elements titles */
-   @UiField
-   ImageButton removeButton;
+    /* Elements titles */
+    @UiField
+    ImageButton removeButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   Label messageField;
+    @UiField
+    Label messageField;
 
-   interface RemoveFromIndexViewUiBinder extends UiBinder<Widget, RemoveFromIndexView>
-   {
-   }
+    interface RemoveFromIndexViewUiBinder extends UiBinder<Widget, RemoveFromIndexView> {
+    }
 
-   private static RemoveFromIndexViewUiBinder uiBinder = GWT.create(RemoveFromIndexViewUiBinder.class);
+    private static RemoveFromIndexViewUiBinder uiBinder = GWT.create(RemoveFromIndexViewUiBinder.class);
 
-   public RemoveFromIndexView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFromIndexTitle(), null, WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      messageField.getElement().setId(MESSAGE_FIELD_ID);
-      removeButton.setButtonId(REMOVE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+    public RemoveFromIndexView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFromIndexTitle(), null, WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        messageField.getElement().setId(MESSAGE_FIELD_ID);
+        removeButton.setButtonId(REMOVE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getRemoveButton()
-    */
-   @Override
-   public HasClickHandlers getRemoveButton()
-   {
-      return removeButton;
-   }
+    /** @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getRemoveButton() */
+    @Override
+    public HasClickHandlers getRemoveButton() {
+        return removeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getMessage()
-    */
-   @Override
-   public HasValue<String> getMessage()
-   {
-      return messageField;
-   }
+    /** @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getMessage() */
+    @Override
+    public HasValue<String> getMessage() {
+        return messageField;
+    }
 }

@@ -36,107 +36,86 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 @RolesAllowed({"developer"})
 public class CursorPositionControl extends StatusTextControl implements IDEControl, EditorCursorActivityHandler,
-   EditorActiveFileChangedHandler
-{
+                                                                        EditorActiveFileChangedHandler {
 
-   public static final String ID = "__editor_cursor_position";
+    public static final String ID = "__editor_cursor_position";
 
-   private FileModel file;
+    private FileModel file;
 
-   private Editor editor;
+    private Editor editor;
 
-   /**
-    * 
-    */
-   public CursorPositionControl()
-   {
-      super(ID);
+    /**
+     *
+     */
+    public CursorPositionControl() {
+        super(ID);
 
-      setSize(70);
-      setFireEventOnSingleClick(true);
-      setText("&nbsp;");
-      setTextAlignment(TextAlignment.CENTER);
-      setEvent(new GoToLineEvent());
-   }
+        setSize(70);
+        setFireEventOnSingleClick(true);
+        setText("&nbsp;");
+        setTextAlignment(TextAlignment.CENTER);
+        setEvent(new GoToLineEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
-      setEnabled(true);
-   }
+        setEnabled(true);
+    }
 
-   /**
-    * @param row
-    * @param column
-    */
-   private void setCursorPosition(int row, int column)
-   {
-      if (row > 0 && column > 0)
-      {
-         setText("<nobr>" + row + " : " + column + "</nobr>");
-      }
-      else
-      {
-         setText("");
-      }
-   }
+    /**
+     * @param row
+     * @param column
+     */
+    private void setCursorPosition(int row, int column) {
+        if (row > 0 && column > 0) {
+            setText("<nobr>" + row + " : " + column + "</nobr>");
+        } else {
+            setText("");
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event.EditorActivityEvent)
-    */
-   @Override
-   public void onEditorCursorActivity(EditorCursorActivityEvent event)
-   {
-      if (editor == null || !editor.getId().equals(event.getEditor().getId()))
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.editor.event.EditorActivityHandler#onEditorActivity(org.exoplatform.gwtframework.editor.event
+     * .EditorActivityEvent) */
+    @Override
+    public void onEditorCursorActivity(EditorCursorActivityEvent event) {
+        if (editor == null || !editor.getId().equals(event.getEditor().getId())) {
+            return;
+        }
 
-      setCursorPosition(event.getRow(), event.getColumn());
-   }
+        setCursorPosition(event.getRow(), event.getColumn());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      file = event.getFile();
-      editor = event.getEditor();
-      Scheduler.get().scheduleDeferred(updateCursorPositionCommand);
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        file = event.getFile();
+        editor = event.getEditor();
+        Scheduler.get().scheduleDeferred(updateCursorPositionCommand);
+    }
 
-   ScheduledCommand updateCursorPositionCommand = new ScheduledCommand()
-   {
-      @Override
-      public void execute()
-      {
-         try
-         {
-            if (file == null || editor == null)
-            {
-               setText("");
-               setVisible(false);
-               return;
+    ScheduledCommand updateCursorPositionCommand = new ScheduledCommand() {
+        @Override
+        public void execute() {
+            try {
+                if (file == null || editor == null) {
+                    setText("");
+                    setVisible(false);
+                    return;
+                }
+
+                setVisible(true);
+                setCursorPosition(editor.getCursorRow(), editor.getCursorColumn());
+            } catch (Throwable e) {
             }
-
-            setVisible(true);
-            setCursorPosition(editor.getCursorRow(), editor.getCursorColumn());
-         }
-         catch (Throwable e)
-         {
-         }
-      }
-   };
+        }
+    };
 
 }

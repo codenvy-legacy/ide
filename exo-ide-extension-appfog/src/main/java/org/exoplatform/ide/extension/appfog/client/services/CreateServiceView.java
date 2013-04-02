@@ -40,94 +40,77 @@ import java.util.LinkedHashMap;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class CreateServiceView extends ViewImpl implements CreateServicePresenter.Display
-{
-   private static final String ID = "ideCreateServiceView";
+public class CreateServiceView extends ViewImpl implements CreateServicePresenter.Display {
+    private static final String ID = "ideCreateServiceView";
 
-   private static final int WIDTH = 470;
+    private static final int WIDTH = 470;
 
-   private static final int HEIGHT = 150;
+    private static final int HEIGHT = 150;
 
-   private static final String CREATE_BUTTON_ID = "ideCreateServiceViewCreateButton";
+    private static final String CREATE_BUTTON_ID = "ideCreateServiceViewCreateButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideCreateServiceViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideCreateServiceViewCancelButton";
 
-   private static final String NAME_FIELD_ID = "ideCreateServiceViewNameField";
+    private static final String NAME_FIELD_ID = "ideCreateServiceViewNameField";
 
-   private static final String SERVICES_FIELD_ID = "ideCreateServiceViewServicesField";
+    private static final String SERVICES_FIELD_ID = "ideCreateServiceViewServicesField";
 
-   private static CreateServiceViewUiBinder uiBinder = GWT.create(CreateServiceViewUiBinder.class);
+    private static CreateServiceViewUiBinder uiBinder = GWT.create(CreateServiceViewUiBinder.class);
 
-   interface CreateServiceViewUiBinder extends UiBinder<Widget, CreateServiceView>
-   {
-   }
+    interface CreateServiceViewUiBinder extends UiBinder<Widget, CreateServiceView> {
+    }
 
-   @UiField
-   ImageButton createButton;
+    @UiField
+    ImageButton createButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   TextInput nameField;
+    @UiField
+    TextInput nameField;
 
-   @UiField
-   SelectItem servicesField;
+    @UiField
+    SelectItem servicesField;
 
-   public CreateServiceView()
-   {
-      super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.createServiceViewTitle(), null, WIDTH,
-         HEIGHT, false);
-      add(uiBinder.createAndBindUi(this));
+    public CreateServiceView() {
+        super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.createServiceViewTitle(), null, WIDTH,
+              HEIGHT, false);
+        add(uiBinder.createAndBindUi(this));
 
-      createButton.setButtonId(CREATE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      nameField.setName(NAME_FIELD_ID);
-      servicesField.setName(SERVICES_FIELD_ID);
-   }
+        createButton.setButtonId(CREATE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        nameField.setName(NAME_FIELD_ID);
+        servicesField.setName(SERVICES_FIELD_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getSystemServicesField()
-    */
-   @Override
-   public HasValue<String> getSystemServicesField()
-   {
-      return servicesField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getSystemServicesField() */
+    @Override
+    public HasValue<String> getSystemServicesField() {
+        return servicesField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getNameField()
-    */
-   @Override
-   public HasValue<String> getNameField()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getNameField() */
+    @Override
+    public HasValue<String> getNameField() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getCreateButton()
-    */
-   @Override
-   public HasClickHandlers getCreateButton()
-   {
-      return createButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getCreateButton() */
+    @Override
+    public HasClickHandlers getCreateButton() {
+        return createButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#setServices(java.util.LinkedHashMap)
-    */
-   @Override
-   public void setServices(LinkedHashMap<String, String> values)
-   {
-      servicesField.setValueMap(values);
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display#setServices(java.util
+     * .LinkedHashMap) */
+    @Override
+    public void setServices(LinkedHashMap<String, String> values) {
+        servicesField.setValueMap(values);
+    }
 }

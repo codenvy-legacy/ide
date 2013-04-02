@@ -15,150 +15,152 @@
 package com.google.collide.shared.document;
 
 import com.google.collide.shared.TaggableLine;
-import org.exoplatform.ide.json.shared.JsonCollections;
 
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /*
  * TODO: prevent leaks by forcing a clear on the tags when a line
  * is detached.
  */
+
 /**
  * Model for a line of text (including the newline character) in a document.
- *
- *  Lines by design do not know their line numbers since that would require a
+ * <p/>
+ * Lines by design do not know their line numbers since that would require a
  * line insertion/deletion to iterate through all of the following lines to
  * update the line numbers, thus making insertion/deletion slower operations
  * than they have to be. The {@link LineFinder} can help to efficiently resolve
  * a line number given the line, or vice versa.
- *
+ * <p/>
  * Lines can have tags attached to them by clients of this class.
  */
 public class Line implements TaggableLine {
 
-  static Line create(Document document, String text) {
-    return new Line(document, text);
-  }
+    static Line create(Document document, String text) {
+        return new Line(document, text);
+    }
 
-  private boolean attached;
+    private boolean attached;
 
-  private final Document document;
+    private final Document document;
 
-  private Line nextLine;
+    private Line nextLine;
 
-  private Line previousLine;
+    private Line previousLine;
 
-  // Not final so we can do O(1) clearTags
-  private JsonStringMap<Object> tags;
+    // Not final so we can do O(1) clearTags
+    private JsonStringMap<Object> tags;
 
-  private String text;
+    private String text;
 
-  private Line(Document document, String text) {
-    this.document = document;
-    this.text = text;
+    private Line(Document document, String text) {
+        this.document = document;
+        this.text = text;
 
-    tags = JsonCollections.createMap();
-  }
+        tags = JsonCollections.createMap();
+    }
 
-  public Document getDocument() {
-    return document;
-  }
+    public Document getDocument() {
+        return document;
+    }
 
-  public Line getNextLine() {
-    return nextLine;
-  }
+    public Line getNextLine() {
+        return nextLine;
+    }
 
-  @Override
-  public Line getPreviousLine() {
-    return previousLine;
-  }
+    @Override
+    public Line getPreviousLine() {
+        return previousLine;
+    }
 
-  /**
-   * Gets a tag set on this line with {@link #putTag}. This serves as storage
-   * for arbitrary objects for this line. For example, a document parser may
-   * store its snapshot here.
-   *
-   *  It is the client's responsibility to ensure type safety, this method
-   * blindly casts as a convenience.
-   *
-   * @param key the unique identifier for this tag. In order to prevent
-   *        namespace collisions, prefix this with the caller's fully qualified
-   *        class name
-   */
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getTag(String key) {
-    return (T) tags.get(key);
-  }
+    /**
+     * Gets a tag set on this line with {@link #putTag}. This serves as storage
+     * for arbitrary objects for this line. For example, a document parser may
+     * store its snapshot here.
+     * <p/>
+     * It is the client's responsibility to ensure type safety, this method
+     * blindly casts as a convenience.
+     *
+     * @param key
+     *         the unique identifier for this tag. In order to prevent
+     *         namespace collisions, prefix this with the caller's fully qualified
+     *         class name
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getTag(String key) {
+        return (T)tags.get(key);
+    }
 
-  @SuppressWarnings("unchecked")
-  public <T> T removeTag(String key) {
-    return (T) tags.remove(key);
-  }
+    @SuppressWarnings("unchecked")
+    public <T> T removeTag(String key) {
+        return (T)tags.remove(key);
+    }
 
-  public String getText() {
-    return text;
-  }
+    public String getText() {
+        return text;
+    }
 
-  public boolean hasColumn(int column) {
-    return column >= 0 && column < text.length();
-  }
+    public boolean hasColumn(int column) {
+        return column >= 0 && column < text.length();
+    }
 
-  public boolean isAttached() {
-    return attached;
-  }
+    public boolean isAttached() {
+        return attached;
+    }
 
-  public int length() {
-    return text.length();
-  }
+    public int length() {
+        return text.length();
+    }
 
-  /**
-   * Puts a tag on this line.
-   *
-   * @see Line#getTag(String)
-   */
-  @Override
-  public <T> void putTag(String key, T value) {
-    tags.put(key, value);
-  }
-  
-  /**
-   * This is not public API and will eventually be hidden in the public
-   * interface
-   */
-  public void clearTags() {
-    tags = JsonCollections.createMap();
-  }
+    /**
+     * Puts a tag on this line.
+     *
+     * @see Line#getTag(String)
+     */
+    @Override
+    public <T> void putTag(String key, T value) {
+        tags.put(key, value);
+    }
 
-  @Override
-  public String toString() {
-    String trimmedText = text.trim();
-    return (trimmedText.length() > 50 ? trimmedText.substring(0, 50) + "..." : trimmedText);
-  }
+    /**
+     * This is not public API and will eventually be hidden in the public
+     * interface
+     */
+    public void clearTags() {
+        tags = JsonCollections.createMap();
+    }
 
-  @Override
-  public boolean isFirstLine() {
-    return getPreviousLine() == null;
-  }
+    @Override
+    public String toString() {
+        String trimmedText = text.trim();
+        return (trimmedText.length() > 50 ? trimmedText.substring(0, 50) + "..." : trimmedText);
+    }
 
-  @Override
-  public boolean isLastLine() {
-    return getNextLine() == null;
-  }
+    @Override
+    public boolean isFirstLine() {
+        return getPreviousLine() == null;
+    }
 
-  void setAttached(boolean attached) {
-    this.attached = attached;
-  }
+    @Override
+    public boolean isLastLine() {
+        return getNextLine() == null;
+    }
 
-  void setNextLine(Line nextLine) {
-    this.nextLine = nextLine;
-  }
+    void setAttached(boolean attached) {
+        this.attached = attached;
+    }
 
-  void setPreviousLine(Line previousLine) {
-    this.previousLine = previousLine;
-  }
+    void setNextLine(Line nextLine) {
+        this.nextLine = nextLine;
+    }
 
-  void setText(String text) {
-    this.text = text;
-  }
+    void setPreviousLine(Line previousLine) {
+        this.previousLine = previousLine;
+    }
+
+    void setText(String text) {
+        this.text = text;
+    }
 }

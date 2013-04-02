@@ -36,29 +36,29 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class SelectionOnFieldReference extends FieldReference {
 
-	public SelectionOnFieldReference(char[] source , long pos) {
+    public SelectionOnFieldReference(char[] source, long pos) {
 
-		super(source, pos);
-	}
+        super(source, pos);
+    }
 
-	public StringBuffer printExpression(int indent, StringBuffer output){
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-		output.append("<SelectionOnFieldReference:");  //$NON-NLS-1$
-		return super.printExpression(0, output).append('>');
-	}
+        output.append("<SelectionOnFieldReference:");  //$NON-NLS-1$
+        return super.printExpression(0, output).append('>');
+    }
 
-	public TypeBinding resolveType(BlockScope scope) {
+    public TypeBinding resolveType(BlockScope scope) {
 
-		super.resolveType(scope);
-		// tolerate some error cases
-		if (this.binding == null ||
-				!(this.binding.isValidBinding() ||
-					this.binding.problemId() == ProblemReasons.NotVisible
-					|| this.binding.problemId() == ProblemReasons.InheritedNameHidesEnclosingName
-					|| this.binding.problemId() == ProblemReasons.NonStaticReferenceInConstructorInvocation
-					|| this.binding.problemId() == ProblemReasons.NonStaticReferenceInStaticContext))
-			throw new SelectionNodeFound();
-		else
-			throw new SelectionNodeFound(this.binding);
-	}
+        super.resolveType(scope);
+        // tolerate some error cases
+        if (this.binding == null ||
+            !(this.binding.isValidBinding() ||
+              this.binding.problemId() == ProblemReasons.NotVisible
+              || this.binding.problemId() == ProblemReasons.InheritedNameHidesEnclosingName
+              || this.binding.problemId() == ProblemReasons.NonStaticReferenceInConstructorInvocation
+              || this.binding.problemId() == ProblemReasons.NonStaticReferenceInStaticContext))
+            throw new SelectionNodeFound();
+        else
+            throw new SelectionNodeFound(this.binding);
+    }
 }

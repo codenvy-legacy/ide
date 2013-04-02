@@ -24,14 +24,13 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface JdiArrayElement extends JdiVariable
-{
-   /**
-    * Get index of this element of array.
-    *
-    * @return index of this array element
-    * @throws DebuggerException
-    *    if an error occurs
-    */
-   int getIndex() throws DebuggerException;
+public interface JdiArrayElement extends JdiVariable {
+    /**
+     * Get index of this element of array.
+     *
+     * @return index of this array element
+     * @throws DebuggerException
+     *         if an error occurs
+     */
+    int getIndex() throws DebuggerException;
 }

@@ -21,38 +21,33 @@ import com.codenvy.eclipse.core.runtime.Assert;
  *
  * @since 3.0
  */
-public class MoveRefactoring extends ProcessorBasedRefactoring
-{
+public class MoveRefactoring extends ProcessorBasedRefactoring {
 
-   private MoveProcessor fProcessor;
+    private MoveProcessor fProcessor;
 
-   /**
-    * Creates a new move refactoring with the given move processor.
-    *
-    * @param processor the move processor
-    */
-   public MoveRefactoring(MoveProcessor processor)
-   {
-      super(processor);
-      Assert.isNotNull(processor);
-      fProcessor = processor;
-   }
+    /**
+     * Creates a new move refactoring with the given move processor.
+     *
+     * @param processor
+     *         the move processor
+     */
+    public MoveRefactoring(MoveProcessor processor) {
+        super(processor);
+        Assert.isNotNull(processor);
+        fProcessor = processor;
+    }
 
-   /**
-    * Returns the move processor associated with this move refactoring.
-    *
-    * @return returns the move processor associated with this move refactoring
-    */
-   public MoveProcessor getMoveProcessor()
-   {
-      return fProcessor;
-   }
+    /**
+     * Returns the move processor associated with this move refactoring.
+     *
+     * @return returns the move processor associated with this move refactoring
+     */
+    public MoveProcessor getMoveProcessor() {
+        return fProcessor;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringProcessor getProcessor()
-   {
-      return fProcessor;
-   }
+    /** {@inheritDoc} */
+    public RefactoringProcessor getProcessor() {
+        return fProcessor;
+    }
 }

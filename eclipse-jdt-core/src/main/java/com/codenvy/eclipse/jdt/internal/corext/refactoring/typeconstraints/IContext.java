@@ -15,7 +15,6 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints;
  * Models "contexts" for use in context-sensitive type constraint
  * analyses.
  */
-public interface IContext
-{
+public interface IContext {
 
 }

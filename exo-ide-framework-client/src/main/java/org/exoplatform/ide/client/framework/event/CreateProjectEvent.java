@@ -22,42 +22,35 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event for opening form to creat project.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateNewProjectEvent.java Dec 8, 2011 5:38:18 PM vereshchaka $
  */
-public class CreateProjectEvent extends GwtEvent<CreateProjectHandler>
-{
+public class CreateProjectEvent extends GwtEvent<CreateProjectHandler> {
 
-   public static final GwtEvent.Type<CreateProjectHandler> TYPE = new GwtEvent.Type<CreateProjectHandler>();
-   
-   /**
-    * Creates new instance of this event
-    */
-   public CreateProjectEvent()
-   {
-   }
-   
-   /**
-    * Creates new instance of this event
-    * 
-    * @param projectName
-    * @param projectType
-    */
-   public CreateProjectEvent(String projectName, String projectType)
-   {
-   }
+    public static final GwtEvent.Type<CreateProjectHandler> TYPE = new GwtEvent.Type<CreateProjectHandler>();
 
-   @Override
-   protected void dispatch(CreateProjectHandler handler)
-   {
-      handler.onCreateProject(this);
-   }
+    /** Creates new instance of this event */
+    public CreateProjectEvent() {
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /**
+     * Creates new instance of this event
+     *
+     * @param projectName
+     * @param projectType
+     */
+    public CreateProjectEvent(String projectName, String projectType) {
+    }
+
+    @Override
+    protected void dispatch(CreateProjectHandler handler) {
+        handler.onCreateProject(this);
+    }
+
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

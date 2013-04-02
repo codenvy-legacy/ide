@@ -19,58 +19,43 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 /**
  *
  */
-public abstract class LineInformation
-{
+public abstract class LineInformation {
 
-   public static LineInformation create(final IDocument doc)
-   {
-      return new LineInformation()
-      {
-         public int getLineOfOffset(int offset)
-         {
-            try
-            {
-               return doc.getLineOfOffset(offset);
+    public static LineInformation create(final IDocument doc) {
+        return new LineInformation() {
+            public int getLineOfOffset(int offset) {
+                try {
+                    return doc.getLineOfOffset(offset);
+                } catch (BadLocationException e) {
+                    return -1;
+                }
             }
-            catch (BadLocationException e)
-            {
-               return -1;
+
+            public int getLineOffset(int line) {
+                try {
+                    return doc.getLineOffset(line);
+                } catch (BadLocationException e) {
+                    return -1;
+                }
             }
-         }
+        };
+    }
 
-         public int getLineOffset(int line)
-         {
-            try
-            {
-               return doc.getLineOffset(line);
+    public static LineInformation create(final CompilationUnit astRoot) {
+        return new LineInformation() {
+            public int getLineOfOffset(int offset) {
+                return astRoot.getLineNumber(offset) - 1;
             }
-            catch (BadLocationException e)
-            {
-               return -1;
+
+            public int getLineOffset(int line) {
+                return astRoot.getPosition(line + 1, 0);
             }
-         }
-      };
-   }
-
-   public static LineInformation create(final CompilationUnit astRoot)
-   {
-      return new LineInformation()
-      {
-         public int getLineOfOffset(int offset)
-         {
-            return astRoot.getLineNumber(offset) - 1;
-         }
-
-         public int getLineOffset(int line)
-         {
-            return astRoot.getPosition(line + 1, 0);
-         }
-      };
-   }
+        };
+    }
 
 
-   public abstract int getLineOfOffset(int offset);
+    public abstract int getLineOfOffset(int offset);
 
-   public abstract int getLineOffset(int line);
+    public abstract int getLineOffset(int line);
 
 }

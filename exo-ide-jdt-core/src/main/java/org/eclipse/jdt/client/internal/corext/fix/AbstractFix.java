@@ -12,45 +12,34 @@ package org.eclipse.jdt.client.internal.corext.fix;
 
 import org.eclipse.jdt.client.runtime.IStatus;
 
-public abstract class AbstractFix implements IProposableFix
-{
+public abstract class AbstractFix implements IProposableFix {
 
-   private final String fDisplayString;
+    private final String fDisplayString;
 
-   protected AbstractFix(String displayString)
-   {
-      fDisplayString = displayString;
-   }
+    protected AbstractFix(String displayString) {
+        fDisplayString = displayString;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getAdditionalProposalInfo()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    public String getAdditionalProposalInfo() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getDisplayString()
-   {
-      return fDisplayString;
-   }
+    /** {@inheritDoc} */
+    public String getDisplayString() {
+        return fDisplayString;
+    }
 
-   //   /**
-   //    * {@inheritDoc}
-   //    */
-   //   public LinkedProposalModel getLinkedPositions()
-   //   {
-   //      return null;
-   //   }
+    //   /**
+    //    * {@inheritDoc}
+    //    */
+    //   public LinkedProposalModel getLinkedPositions()
+    //   {
+    //      return null;
+    //   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public IStatus getStatus()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    public IStatus getStatus() {
+        return null;
+    }
 }

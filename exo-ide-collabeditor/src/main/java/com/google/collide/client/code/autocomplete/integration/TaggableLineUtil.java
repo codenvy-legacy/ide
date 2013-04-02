@@ -19,50 +19,47 @@ import com.google.collide.shared.document.Line;
 
 import javax.annotation.Nonnull;
 
-/**
- * {@link com.google.collide.shared.TaggableLine} utility class.
- *
- */
+/** {@link com.google.collide.shared.TaggableLine} utility class. */
 public class TaggableLineUtil {
 
-  private static final TaggableLine NULL_PREVIOUS_LINE = new TaggableLine() {
+    private static final TaggableLine NULL_PREVIOUS_LINE = new TaggableLine() {
 
-    @Override
-    public <T> T getTag(String key) {
-      return null;
+        @Override
+        public <T> T getTag(String key) {
+            return null;
+        }
+
+        @Override
+        public <T> void putTag(String key, T value) {
+            throw new IllegalStateException("Can't put tag to null line");
+        }
+
+        @Override
+        public TaggableLine getPreviousLine() {
+            throw new IllegalStateException("There is no minus 2'nd line");
+        }
+
+        @Override
+        public boolean isFirstLine() {
+            // It is line before the first line, so it is not first.
+            return false;
+        }
+
+        @Override
+        public boolean isLastLine() {
+            // For sure we have at least one more line (first line).
+            return false;
+        }
+    };
+
+    @Nonnull
+    public static TaggableLine getPreviousLine(@Nonnull Line line) {
+        Line previousLine = line.getPreviousLine();
+
+        if (previousLine != null) {
+            return previousLine;
+        } else {
+            return NULL_PREVIOUS_LINE;
+        }
     }
-
-    @Override
-    public <T> void putTag(String key, T value) {
-      throw new IllegalStateException("Can't put tag to null line");
-    }
-
-    @Override
-    public TaggableLine getPreviousLine() {
-      throw new IllegalStateException("There is no minus 2'nd line");
-    }
-
-    @Override
-    public boolean isFirstLine() {
-      // It is line before the first line, so it is not first.
-      return false;
-    }
-
-    @Override
-    public boolean isLastLine() {
-      // For sure we have at least one more line (first line).
-      return false;
-    }
-  };
-
-  @Nonnull
-  public static TaggableLine getPreviousLine(@Nonnull Line line) {
-    Line previousLine = line.getPreviousLine();
-
-    if (previousLine != null) {
-      return previousLine;
-    } else {
-      return NULL_PREVIOUS_LINE;
-    }
-  }
 }

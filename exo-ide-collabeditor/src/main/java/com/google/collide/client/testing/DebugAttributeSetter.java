@@ -14,56 +14,56 @@
 
 package com.google.collide.client.testing;
 
-import com.codenvy.ide.client.util.Elements;
-
 import elemental.html.Element;
+
+import com.codenvy.ide.client.util.Elements;
 
 import java.util.Map;
 
 /**
  * Setter for setting debug ID and/or attributes.
- * <p>
+ * <p/>
  * Examples:
- * <p>
+ * <p/>
  * <code>new DebugAttributeSetter().add("wsId";, "2323").on(element); </code>
- * <p>
+ * <p/>
  * <code>new DebugAttributeSetter()
- *     .setId(DebugId.CONTEXT_MENU)
- *     .add(&quot;wsId&quot;, &quot;2323&quot;)
- *     .add(&quot;owner&quot;, &quot;b&quot;)
- *     .on(element);</code>
+ * .setId(DebugId.CONTEXT_MENU)
+ * .add(&quot;wsId&quot;, &quot;2323&quot;)
+ * .add(&quot;owner&quot;, &quot;b&quot;)
+ * .on(element);</code>
  */
 public class DebugAttributeSetter {
-  private Map<String, String> keyValues;
-  private DebugId debugId;
+    private Map<String, String> keyValues;
+    private DebugId             debugId;
 
-  public DebugAttributeSetter() {
+    public DebugAttributeSetter() {
 //    if (ClientConfig.isDebugBuild()) {
 //      keyValues = new HashMap<String, String>();
 //    }
-  }
+    }
 
-  /**
-   * Sets debug ID to {@code debugId} if this is debug build. In release mode,
-   * this method will be dead code eliminated at compile time
-   */
-  public DebugAttributeSetter setId(DebugId debugId) {
+    /**
+     * Sets debug ID to {@code debugId} if this is debug build. In release mode,
+     * this method will be dead code eliminated at compile time
+     */
+    public DebugAttributeSetter setId(DebugId debugId) {
 //    if (ClientConfig.isDebugBuild()) {
 //      if (this.debugId != null) {
 //        throw new IllegalArgumentException("DebugId was already set to " + this.debugId.name());
 //      }
 //      this.debugId = debugId;
 //    }
-    return this;
-  }
+        return this;
+    }
 
-  /**
-   * Adds an attribute specified by {key, value} if this is debug build. In
-   * release mode, this method will be dead code eliminated at compile time
-   *
-   * Note that "collideid_" is added to {@code key} as prefix.
-   */
-  public DebugAttributeSetter add(String key, String value) {
+    /**
+     * Adds an attribute specified by {key, value} if this is debug build. In
+     * release mode, this method will be dead code eliminated at compile time
+     * <p/>
+     * Note that "collideid_" is added to {@code key} as prefix.
+     */
+    public DebugAttributeSetter add(String key, String value) {
 //    if (ClientConfig.isDebugBuild()) {
 //      if (key == null) {
 //        throw new IllegalArgumentException("null key");
@@ -73,13 +73,11 @@ public class DebugAttributeSetter {
 //      }
 //      keyValues.put(key, value);
 //    }
-    return this;
-  }
+        return this;
+    }
 
-  /**
-   * Applies debug ID and attributes to {@code element}.
-   */
-  public void on(Element element) {
+    /** Applies debug ID and attributes to {@code element}. */
+    public void on(Element element) {
 //    if (ClientConfig.isDebugBuild()) {
 //      if (element == null) {
 //        throw new IllegalArgumentException("null element");
@@ -92,12 +90,10 @@ public class DebugAttributeSetter {
 //        element.setAttribute(DebugId.getAttributeKey(entry.getKey()), entry.getValue());
 //      }
 //    }
-  }
+    }
 
-  /**
-   * See {@code #on(Element)}
-   */
-  public void on(com.google.gwt.dom.client.Element element) {
-    on(Elements.asJsElement(element));
-  }
+    /** See {@code #on(Element)} */
+    public void on(com.google.gwt.dom.client.Element element) {
+        on(Elements.asJsElement(element));
+    }
 }

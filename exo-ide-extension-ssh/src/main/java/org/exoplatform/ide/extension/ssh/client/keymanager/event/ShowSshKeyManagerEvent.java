@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowSshKeyManagerEvent May 18, 2011 9:52:40 AM evgen $
- * 
  */
-public class ShowSshKeyManagerEvent extends GwtEvent<ShowSshKeyManagerHandler>
-{
+public class ShowSshKeyManagerEvent extends GwtEvent<ShowSshKeyManagerHandler> {
 
-   public static final GwtEvent.Type<ShowSshKeyManagerHandler> TYPE = new Type<ShowSshKeyManagerHandler>();
+    public static final GwtEvent.Type<ShowSshKeyManagerHandler> TYPE = new Type<ShowSshKeyManagerHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowSshKeyManagerHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowSshKeyManagerHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowSshKeyManagerHandler handler)
-   {
-      handler.onShowSshKeyManager(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowSshKeyManagerHandler handler) {
+        handler.onShowSshKeyManager(this);
+    }
 
 }

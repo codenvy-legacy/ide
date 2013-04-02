@@ -24,66 +24,56 @@ import com.codenvy.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import com.codenvy.eclipse.ui.ide.undo.ResourceDescription;
 
 
-public class UndoDeleteResourceChange extends Change
-{
+public class UndoDeleteResourceChange extends Change {
 
-   private final ResourceDescription fResourceDescription;
+    private final ResourceDescription fResourceDescription;
 
-   public UndoDeleteResourceChange(ResourceDescription resourceDescription)
-   {
-      fResourceDescription = resourceDescription;
-   }
+    public UndoDeleteResourceChange(ResourceDescription resourceDescription) {
+        fResourceDescription = resourceDescription;
+    }
 
-   @Override
-   public void initializeValidationData(IProgressMonitor pm)
-   {
+    @Override
+    public void initializeValidationData(IProgressMonitor pm) {
 
-   }
+    }
 
-   @Override
-   public Object getModifiedElement()
-   {
-      return null;
-   }
+    @Override
+    public Object getModifiedElement() {
+        return null;
+    }
 
-   @Override
-   public String getName()
-   {
-      return Messages.format(RefactoringCoreMessages.UndoDeleteResourceChange_change_name,
-         BasicElementLabels.getResourceName(fResourceDescription.getName()));
-   }
+    @Override
+    public String getName() {
+        return Messages.format(RefactoringCoreMessages.UndoDeleteResourceChange_change_name,
+                               BasicElementLabels.getResourceName(fResourceDescription.getName()));
+    }
 
-   @Override
-   public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException
-   {
-      if (!fResourceDescription.isValid())
-      {
-         return RefactoringStatus.createFatalErrorStatus(
-            Messages.format(RefactoringCoreMessages.UndoDeleteResourceChange_cannot_restore,
-               BasicElementLabels.getResourceName(fResourceDescription.getName())));
-      }
+    @Override
+    public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+        if (!fResourceDescription.isValid()) {
+            return RefactoringStatus.createFatalErrorStatus(
+                    Messages.format(RefactoringCoreMessages.UndoDeleteResourceChange_cannot_restore,
+                                    BasicElementLabels.getResourceName(fResourceDescription.getName())));
+        }
 
-      if (fResourceDescription.verifyExistence(true))
-      {
-         return RefactoringStatus.createFatalErrorStatus(
-            Messages.format(RefactoringCoreMessages.UndoDeleteResourceChange_already_exists,
-               BasicElementLabels.getResourceName(fResourceDescription.getName())));
-      }
+        if (fResourceDescription.verifyExistence(true)) {
+            return RefactoringStatus.createFatalErrorStatus(
+                    Messages.format(RefactoringCoreMessages.UndoDeleteResourceChange_already_exists,
+                                    BasicElementLabels.getResourceName(fResourceDescription.getName())));
+        }
 
-      return new RefactoringStatus();
-   }
+        return new RefactoringStatus();
+    }
 
-   @Override
-   public Change perform(IProgressMonitor pm) throws CoreException
-   {
-      IResource created = fResourceDescription.createResource(pm);
-      created.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(pm, 1));
-      return new DeleteResourceChange(created.getFullPath(), true);
-   }
+    @Override
+    public Change perform(IProgressMonitor pm) throws CoreException {
+        IResource created = fResourceDescription.createResource(pm);
+        created.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(pm, 1));
+        return new DeleteResourceChange(created.getFullPath(), true);
+    }
 
-   @Override
-   public String toString()
-   {
-      return "Remove " + fResourceDescription.getName(); //$NON-NLS-1$
-   }
+    @Override
+    public String toString() {
+        return "Remove " + fResourceDescription.getName(); //$NON-NLS-1$
+    }
 }

@@ -21,50 +21,49 @@ package org.exoplatform.gwtframework.ui.client.menu;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface PopupMenuStyle
-{
+public interface PopupMenuStyle {
 
-   final static String MENU_MAIN = "exo-popupMenuMain";
+    final static String MENU_MAIN = "exo-popupMenuMain";
 
-   final static String MENU_TABLE = "exo-popupMenuTable";
+    final static String MENU_TABLE = "exo-popupMenuTable";
 
-   final static String ICON_FIELD = "exo-popupMenuIconField";
+    final static String ICON_FIELD = "exo-popupMenuIconField";
 
-   final static String ICON_FIELD_OVER = "exo-popupMenuIconFieldOver";
+    final static String ICON_FIELD_OVER = "exo-popupMenuIconFieldOver";
 
-   final static String ICON_FIELD_DISABLED = "exo-popupMenuIconFieldDisabled";
-   
-   final static String CHECK_FIELD = "exo-popupMenuCheckField";
-   
-   final static String CHECK_FIELD_OVER = "exo-popupMenuCheckFieldOver";
-   
-   final static String CHECK_FIELD_DISABLED = "exo-popupMenuCheckFieldDisabled";
+    final static String ICON_FIELD_DISABLED = "exo-popupMenuIconFieldDisabled";
 
-   public final static String TITLE_FIELD = "exo-popupMenuTitleField";
+    final static String CHECK_FIELD = "exo-popupMenuCheckField";
 
-   public final static String TITLE_FIELD_OVER = "exo-popupMenuTitleFieldOver";
+    final static String CHECK_FIELD_OVER = "exo-popupMenuCheckFieldOver";
 
-   public final static String TITLE_FIELD_DISABLED = "exo-popupMenuTitleFieldDisabled";
+    final static String CHECK_FIELD_DISABLED = "exo-popupMenuCheckFieldDisabled";
 
-   public final static String KEY_FIELD = "exo-popupMenuHotKeyField";
+    public final static String TITLE_FIELD = "exo-popupMenuTitleField";
 
-   public final static String KEY_FIELD_OVER = "exo-popupMenuHotKeyFieldOver";
+    public final static String TITLE_FIELD_OVER = "exo-popupMenuTitleFieldOver";
 
-   public final static String KEY_FIELD_DISABLED = "exo-popupMenuHotKeyFieldDisabled";
+    public final static String TITLE_FIELD_DISABLED = "exo-popupMenuTitleFieldDisabled";
 
-   public final static String SUBMENU_FIELD = "exo-popupMenuSubMenuField";
+    public final static String KEY_FIELD = "exo-popupMenuHotKeyField";
 
-   public final static String SUBMENU_FIELD_OVER = "exo-popupMenuSubMenuFieldOver";
+    public final static String KEY_FIELD_OVER = "exo-popupMenuHotKeyFieldOver";
 
-   public final static String SUBMENU_FIELD_DISABLED = "exo-popupMenuSubMenuFieldDisabled";
+    public final static String KEY_FIELD_DISABLED = "exo-popupMenuHotKeyFieldDisabled";
 
-   public final static String SUBMENU_IMAGE = "exo-popupMenuSubMenuImage";
+    public final static String SUBMENU_FIELD = "exo-popupMenuSubMenuField";
 
-   public final static String DELIMITER = "exo-popupMenuDelimiter";   
-   
+    public final static String SUBMENU_FIELD_OVER = "exo-popupMenuSubMenuFieldOver";
+
+    public final static String SUBMENU_FIELD_DISABLED = "exo-popupMenuSubMenuFieldDisabled";
+
+    public final static String SUBMENU_IMAGE = "exo-popupMenuSubMenuImage";
+
+    public final static String DELIMITER = "exo-popupMenuDelimiter";
+
 }

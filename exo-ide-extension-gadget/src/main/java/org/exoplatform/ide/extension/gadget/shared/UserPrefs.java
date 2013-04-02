@@ -20,11 +20,9 @@ package org.exoplatform.ide.extension.gadget.shared;
 
 /**
  * Interface describes prefernces of user.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: UserPrefs.java Mar 20, 2012 7:04:13 PM azatsarynnyy $
- *
  */
-public interface UserPrefs
-{
+public interface UserPrefs {
 }

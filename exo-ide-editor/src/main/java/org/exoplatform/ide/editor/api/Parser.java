@@ -18,24 +18,22 @@
  */
 package org.exoplatform.ide.editor.api;
 
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
 
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Parser Feb 9, 2011 4:55:57 PM evgen $
- * 
  */
-public abstract class Parser
-{
-   
-   public abstract List<? extends Token> getTokenList(String editorId, JavaScriptObject editor);
+public abstract class Parser {
 
-   public abstract void getTokenListInBackground(String editorId, JavaScriptObject editor, EditorTokenListPreparedHandler handler);
+    public abstract List<? extends Token> getTokenList(String editorId, JavaScriptObject editor);
 
-   public abstract void stopParsing();
+    public abstract void getTokenListInBackground(String editorId, JavaScriptObject editor, EditorTokenListPreparedHandler handler);
+
+    public abstract void stopParsing();
 
 }

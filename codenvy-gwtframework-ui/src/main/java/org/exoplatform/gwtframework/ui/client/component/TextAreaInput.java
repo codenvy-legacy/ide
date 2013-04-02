@@ -32,87 +32,66 @@ import com.google.gwt.user.client.ui.TextArea;
 /**
  * Text area HTML element.
  * Fixes firing value change event on paste and key up.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Oct 21, 2011 10:45:47 AM anya $
- *
  */
-public class TextAreaInput extends TextArea
-{
+public class TextAreaInput extends TextArea {
 
-   /**
-    * Default constructor.
-    */
-   public TextAreaInput()
-   {
-      addKeyUpHandler(new KeyUpHandler()
-      {
+    /** Default constructor. */
+    public TextAreaInput() {
+        addKeyUpHandler(new KeyUpHandler() {
 
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            valueChange();
-         }
-      });
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                valueChange();
+            }
+        });
 
-      sinkEvents(Event.ONPASTE);
-   }
+        sinkEvents(Event.ONPASTE);
+    }
 
-   /**
-    * @param name form element's name
-    */
-   public TextAreaInput(String name)
-   {
-      this();
-      setName(name);
-   }
+    /**
+     * @param name
+     *         form element's name
+     */
+    public TextAreaInput(String name) {
+        this();
+        setName(name);
+    }
 
-   /**
-    * @see com.google.gwt.user.client.ui.ValueBoxBase#onBrowserEvent(com.google.gwt.user.client.Event)
-    */
-   @Override
-   public void onBrowserEvent(Event event)
-   {
-      if (!isEnabled())
-         return;
-      int type = DOM.eventGetType(event);
-      switch (type)
-      {
-         case Event.ONPASTE :
-            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-            {
-               @Override
-               public void execute()
-               {
-                  valueChange();
-               }
-            });
-            break;
-      }
-      super.onBrowserEvent(event);
-   }
+    /** @see com.google.gwt.user.client.ui.ValueBoxBase#onBrowserEvent(com.google.gwt.user.client.Event) */
+    @Override
+    public void onBrowserEvent(Event event) {
+        if (!isEnabled())
+            return;
+        int type = DOM.eventGetType(event);
+        switch (type) {
+            case Event.ONPASTE:
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        valueChange();
+                    }
+                });
+                break;
+        }
+        super.onBrowserEvent(event);
+    }
 
-   /**
-    * Fires value changed event for the input.
-    */
-   public void valueChange()
-   {
-      ValueChangeEvent.fire(this, getText());
-   }
+    /** Fires value changed event for the input. */
+    public void valueChange() {
+        ValueChangeEvent.fire(this, getText());
+    }
 
-   /**
-    * Sets focus in text input.
-    */
-   public void focus()
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            setFocus(true);
-         }
-      });
-   }
+    /** Sets focus in text input. */
+    public void focus() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                setFocus(true);
+            }
+        });
+    }
 
 }

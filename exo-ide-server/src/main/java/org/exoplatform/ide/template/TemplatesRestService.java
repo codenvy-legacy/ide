@@ -20,12 +20,7 @@ package org.exoplatform.ide.template;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.everrest.core.impl.provider.json.ArrayValue;
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.everrest.core.impl.provider.json.ObjectValue;
+import org.everrest.core.impl.provider.json.*;
 import org.exoplatform.ide.FileTemplate;
 import org.exoplatform.ide.ProjectTemplate;
 import org.exoplatform.ide.commons.ParsingResponseException;
@@ -38,24 +33,18 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.ProjectImpl;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.*;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Providers;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,53 +52,35 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Providers;
-
 /**
  * This REST service is used for getting and storing templates for file and projects.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesRestService.java Apr 4, 2011 3:21:46 PM vereshchaka $
- * 
  */
 @Path("/ide/templates")
-public class TemplatesRestService
-{
+public class TemplatesRestService {
 
-   private static final Pattern PATTERN_GROUP_ID = Pattern.compile(".*<groupId>groupId</groupId>.*");
+    private static final Pattern PATTERN_GROUP_ID = Pattern.compile(".*<groupId>groupId</groupId>.*");
 
-   private static final Pattern PATTERN_ARTIFACT_ID = Pattern.compile(".*<artifactId>artifactId</artifactId>.*");
+    private static final Pattern PATTERN_ARTIFACT_ID = Pattern.compile(".*<artifactId>artifactId</artifactId>.*");
 
-   private static final Pattern PATTERN_GROUP_ID_OF_PARENT = Pattern.compile(".*<groupId>parent-groupId</groupId>.*");
-   
-   private static final Pattern PATTERN_ARTIFACT_ID_OF_PARENT = Pattern.compile(".*<artifactId>parent-artifactId</artifactId>.*");
-   /**
-    * File name filter. Need to filter non "zip" files.
-    */
-   private static FilenameFilter projectsZipFilter = new FilenameFilter()
-   {
-      @Override
-      public boolean accept(java.io.File dir, String name)
-      {
-         return name.endsWith(".zip");
-      }
-   };
+    private static final Pattern PATTERN_GROUP_ID_OF_PARENT = Pattern.compile(".*<groupId>parent-groupId</groupId>.*");
+
+    private static final Pattern        PATTERN_ARTIFACT_ID_OF_PARENT = Pattern.compile(".*<artifactId>parent-artifactId</artifactId>.*");
+    /** File name filter. Need to filter non "zip" files. */
+    private static       FilenameFilter projectsZipFilter             = new FilenameFilter() {
+        @Override
+        public boolean accept(java.io.File dir, String name) {
+            return name.endsWith(".zip");
+        }
+    };
 
 //   public static final String FILE_TEMPLATE_FILE = "fileTemplates.js";
 //
 //   public static final String PROJECT_TEMPLATE_FILE = "projectTemplates.js";
 
-   private static Log log = ExoLogger.getLogger(TemplatesRestService.class);
+    private static Log log = ExoLogger.getLogger(TemplatesRestService.class);
 
 //   private String workspace;
 
@@ -119,21 +90,20 @@ public class TemplatesRestService
 //
 //   private static final String PROJECT_TEMPLATE = "folderTemplates";
 
-   @Inject
-   private VirtualFileSystemRegistry vfsRegistry;
+    @Inject
+    private VirtualFileSystemRegistry vfsRegistry;
 
-   @Inject
-   private EventListenerList listenerList;
+    @Inject
+    private EventListenerList listenerList;
 
 
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/project/list")
-   public List<ProjectTemplate> getProjectTemplateList() throws URISyntaxException, IOException,
-      ParsingResponseException
-   {
-      return getProjectTemplates();
-   }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/project/list")
+    public List<ProjectTemplate> getProjectTemplateList() throws URISyntaxException, IOException,
+                                                                 ParsingResponseException {
+        return getProjectTemplates();
+    }
 
 //   @PUT
 //   @Consumes(MediaType.APPLICATION_JSON)
@@ -313,121 +283,110 @@ public class TemplatesRestService
 //
 //   }
 
-   /**
-    * Create new IDE project from predefined template
-    * 
-    * @param vfsId id of VFS
-    * @param name name of new project
-    * @param parentId parent of the project
-    * @param templateName name of the project template
-    * @return created project
-    * @throws VirtualFileSystemException
-    * @throws IOException
-    */
-   @POST
-   @Path("/project/create")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Project createProjectFromTemplate(@QueryParam("vfsid") String vfsId, // 
-      @QueryParam("name") String name, //
-      @QueryParam("parentId") String parentId,// 
-      @QueryParam("templateName") String templateName,//
-      @Context Providers providers, //
-      @Context UriInfo uriInfo) throws VirtualFileSystemException, IOException
-   {
-      ContextResolver<RequestContext> contextResolver = providers.getContextResolver(RequestContext.class, null);
-      RequestContext context = null;
-      if (contextResolver != null)
-      {
-         context = contextResolver.getContext(RequestContext.class);
-      }
+    /**
+     * Create new IDE project from predefined template
+     *
+     * @param vfsId
+     *         id of VFS
+     * @param name
+     *         name of new project
+     * @param parentId
+     *         parent of the project
+     * @param templateName
+     *         name of the project template
+     * @return created project
+     * @throws VirtualFileSystemException
+     * @throws IOException
+     */
+    @POST
+    @Path("/project/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Project createProjectFromTemplate(@QueryParam("vfsid") String vfsId, //
+                                             @QueryParam("name") String name, //
+                                             @QueryParam("parentId") String parentId,//
+                                             @QueryParam("templateName") String templateName,//
+                                             @Context Providers providers, //
+                                             @Context UriInfo uriInfo) throws VirtualFileSystemException, IOException {
+        ContextResolver<RequestContext> contextResolver = providers.getContextResolver(RequestContext.class, null);
+        RequestContext context = null;
+        if (contextResolver != null) {
+            context = contextResolver.getContext(RequestContext.class);
+        }
 
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context, listenerList);
-      Folder projectFolder = vfs.createFolder(parentId, name);
-      InputStream templateStream = null;
-      try
-      {
-         templateStream =
-            Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
-         if (templateStream == null)
-            throw new InvalidArgumentException("Can't find " + templateName + ".zip");
-         vfs.importZip(projectFolder.getId(), templateStream, true);
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context, listenerList);
+        Folder projectFolder = vfs.createFolder(parentId, name);
+        InputStream templateStream = null;
+        try {
+            templateStream =
+                    Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
+            if (templateStream == null)
+                throw new InvalidArgumentException("Can't find " + templateName + ".zip");
+            vfs.importZip(projectFolder.getId(), templateStream, true);
 
-         //Goto change Maven groupId & artifactId IDE-1981
-         try
-         {
-            String path2pom = projectFolder.getPath() + "/pom.xml";
-            File pom =
-               (File)vfs.getItemByPath(path2pom, null, PropertyFilter.NONE_FILTER);
-            String content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
-            String host = uriInfo.getAbsolutePath().getHost();
-            String groupId = null;
-            if (host.contains("."))
-            {
-               String[] split = host.split("\\.");
-               StringBuffer result = new StringBuffer();
-               int j = split.length - 1;
-               while (j > 0)
-               {
-                  result.append(split[j--]).append(".");
-               }
-               result.append(split[0]);
-               groupId = result.toString();
+            //Goto change Maven groupId & artifactId IDE-1981
+            try {
+                String path2pom = projectFolder.getPath() + "/pom.xml";
+                File pom =
+                        (File)vfs.getItemByPath(path2pom, null, PropertyFilter.NONE_FILTER);
+                String content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
+                String host = uriInfo.getAbsolutePath().getHost();
+                String groupId = null;
+                if (host.contains(".")) {
+                    String[] split = host.split("\\.");
+                    StringBuffer result = new StringBuffer();
+                    int j = split.length - 1;
+                    while (j > 0) {
+                        result.append(split[j--]).append(".");
+                    }
+                    result.append(split[0]);
+                    groupId = result.toString();
+                } else {
+                    groupId = host;
+                }
+                String newContent = PATTERN_GROUP_ID.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
+                newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");
+                newContent = PATTERN_ARTIFACT_ID.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
+                vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
+                                  new ByteArrayInputStream(newContent.getBytes()), null);
+
+                //Goto change groupId & artifactId for child project for MultiModule project IDE-2025
+                //TODO: need fix it remove hardcode
+                pom =
+                        (File)vfs.getItemByPath(projectFolder.getPath() + "/my-lib/pom.xml", null, PropertyFilter.NONE_FILTER);
+                content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
+                newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
+                newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
+                vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
+                                  new ByteArrayInputStream(newContent.getBytes()), null);
+
+                //TODO: need fix it remove hardcode
+                pom =
+                        (File)vfs.getItemByPath(projectFolder.getPath() + "/my-webapp/pom.xml", null, PropertyFilter.NONE_FILTER);
+                content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
+                newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
+                newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");//change dependency
+                newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
+                vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
+                                  new ByteArrayInputStream(newContent.getBytes()), null);
+
+            } catch (ItemNotFoundException e) {
+                //nothing todo not maven project
             }
-            else {
-               groupId = host;
-            }
-            String newContent = PATTERN_GROUP_ID.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
-            newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");
-            newContent = PATTERN_ARTIFACT_ID.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
-            vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
-               new ByteArrayInputStream(newContent.getBytes()), null);
-            
-            //Goto change groupId & artifactId for child project for MultiModule project IDE-2025
-            //TODO: need fix it remove hardcode
-            pom =
-               (File)vfs.getItemByPath(projectFolder.getPath() + "/my-lib/pom.xml", null, PropertyFilter.NONE_FILTER);
-            content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
-            newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
-            newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
-            vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
-               new ByteArrayInputStream(newContent.getBytes()), null);
-            
-             //TODO: need fix it remove hardcode
-            pom =
-               (File)vfs.getItemByPath(projectFolder.getPath() + "/my-webapp/pom.xml", null, PropertyFilter.NONE_FILTER);
-            content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
-            newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
-            newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");//change dependency
-            newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
-            vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
-               new ByteArrayInputStream(newContent.getBytes()), null);
-            
-         }
-         catch (ItemNotFoundException e)
-         {
-            //nothing todo not maven project
-         }
 
-      }
-      catch (IOException e)
-      {
-         if (log.isDebugEnabled())
-            log.error("Cant create project", e);
-         throw e;
-      }
-      finally
-      {
-         if (templateStream != null)
-            templateStream.close();
-      }
-      org.exoplatform.ide.vfs.shared.Item projectItem = vfs.getItem(projectFolder.getId(), PropertyFilter.ALL_FILTER);
-      if (projectItem instanceof ProjectImpl)
-      {
-         return (Project)projectItem;
-      }
-      else
-         throw new IllegalStateException("Something other than project was created on " + name);
-   }
+        } catch (IOException e) {
+            if (log.isDebugEnabled())
+                log.error("Cant create project", e);
+            throw e;
+        } finally {
+            if (templateStream != null)
+                templateStream.close();
+        }
+        org.exoplatform.ide.vfs.shared.Item projectItem = vfs.getItem(projectFolder.getId(), PropertyFilter.ALL_FILTER);
+        if (projectItem instanceof ProjectImpl) {
+            return (Project)projectItem;
+        } else
+            throw new IllegalStateException("Something other than project was created on " + name);
+    }
 
 //   // --------- Implementation -----------------------
 //
@@ -505,75 +464,60 @@ public class TemplatesRestService
 //      return null;
 //   }
 
-   private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, ParsingResponseException
-   {
-      List<ProjectTemplate> projectTemplateList = new ArrayList<ProjectTemplate>();
-      URL url = Thread.currentThread().getContextClassLoader().getResource("projects");
-      if (url != null)
-      {
-         java.io.File projectsFolder = new java.io.File(url.toURI());
-         java.io.File[] projects = projectsFolder.listFiles(projectsZipFilter);
-         for (java.io.File f : projects)
-         {
-            ZipFile zip = null;
-            InputStream prjDescrStream = null;
-            try
-            {
-               zip = new ZipFile(f);
-               ZipArchiveEntry entry = zip.getEntry(".project");
-               // if zip not contains ".project" file then search in next archive
-               if (entry == null)
-                  continue;
-               JsonParser jp = new JsonParser();
-               prjDescrStream = zip.getInputStream(entry);
-               jp.parse(prjDescrStream);
-               Property[] array = (Property[])ObjectBuilder.createArray(PropertyImpl[].class, jp.getJsonObject());
-               List<Property> properties = Arrays.asList(array);
-               String name = f.getName();
-               name = name.substring(0, name.lastIndexOf(".zip"));
-               projectTemplateList.add(createTemplateFromMethaData(properties, name));
-            }
-            catch (JsonException e)
-            {
-               throw new RuntimeException(e.getMessage(), e);
-            }
-            finally
-            {
-               if (zip != null)
-                  zip.close();
-               if (prjDescrStream != null)
-                  prjDescrStream.close();
-            }
+    private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, ParsingResponseException {
+        List<ProjectTemplate> projectTemplateList = new ArrayList<ProjectTemplate>();
+        URL url = Thread.currentThread().getContextClassLoader().getResource("projects");
+        if (url != null) {
+            java.io.File projectsFolder = new java.io.File(url.toURI());
+            java.io.File[] projects = projectsFolder.listFiles(projectsZipFilter);
+            for (java.io.File f : projects) {
+                ZipFile zip = null;
+                InputStream prjDescrStream = null;
+                try {
+                    zip = new ZipFile(f);
+                    ZipArchiveEntry entry = zip.getEntry(".project");
+                    // if zip not contains ".project" file then search in next archive
+                    if (entry == null)
+                        continue;
+                    JsonParser jp = new JsonParser();
+                    prjDescrStream = zip.getInputStream(entry);
+                    jp.parse(prjDescrStream);
+                    Property[] array = (Property[])ObjectBuilder.createArray(PropertyImpl[].class, jp.getJsonObject());
+                    List<Property> properties = Arrays.asList(array);
+                    String name = f.getName();
+                    name = name.substring(0, name.lastIndexOf(".zip"));
+                    projectTemplateList.add(createTemplateFromMethaData(properties, name));
+                } catch (JsonException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                } finally {
+                    if (zip != null)
+                        zip.close();
+                    if (prjDescrStream != null)
+                        prjDescrStream.close();
+                }
 
-         }
-      }
+            }
+        }
 
-      return projectTemplateList;
-   }
+        return projectTemplateList;
+    }
 
-   private ProjectTemplate createTemplateFromMethaData(List<Property> properties, String templateName)
-   {
-      ProjectTemplate template = new ProjectTemplate();
-      template.setDefault(true);
-      template.setName(templateName);
-      for (Property prop : properties)
-      {
-         String name = prop.getName();
-         if ("vfs:projectType".equals(name))
-         {
-            template.setType(prop.getValue().get(0));
-         }
-         else if ("exoide:projectDescription".equals(name))
-         {
-            template.setDescription(prop.getValue().get(0));
-         }
-         else if ("exoide:target".equals(name))
-         {
-            template.setDestination(prop.getValue());
-         }
-      }
-      return template;
-   }
+    private ProjectTemplate createTemplateFromMethaData(List<Property> properties, String templateName) {
+        ProjectTemplate template = new ProjectTemplate();
+        template.setDefault(true);
+        template.setName(templateName);
+        for (Property prop : properties) {
+            String name = prop.getName();
+            if ("vfs:projectType".equals(name)) {
+                template.setType(prop.getValue().get(0));
+            } else if ("exoide:projectDescription".equals(name)) {
+                template.setDescription(prop.getValue().get(0));
+            } else if ("exoide:target".equals(name)) {
+                template.setDestination(prop.getValue());
+            }
+        }
+        return template;
+    }
 
 //   private List<FileTemplate> getFileTemplates() throws URISyntaxException, IOException, ParsingResponseException
 //   {
@@ -637,47 +581,41 @@ public class TemplatesRestService
 //      return folderTemplate;
 //   }
 
-   /**
-    * Parse file template json object, when get the list of file templates.
-    * 
-    * @param obj
-    * @return
-    */
-   private FileTemplate parseFileTemplateObject(ObjectValue obj)
-   {
-      FileTemplate fileTemplate = new FileTemplate();
-      fileTemplate.setName(obj.getElement("name").getStringValue());
-      fileTemplate.setDescription(obj.getElement("description").getStringValue());
-      fileTemplate.setMimeType(obj.getElement("mimeType").getStringValue());
-      fileTemplate.setContent(obj.getElement("content").getStringValue());
-      fileTemplate.setDefault((obj.getElement("default") != null) ? obj.getElement("default").getBooleanValue() : obj
-         .getElement("isDefault").getBooleanValue());
-      return fileTemplate;
-   }
+    /**
+     * Parse file template json object, when get the list of file templates.
+     *
+     * @param obj
+     * @return
+     */
+    private FileTemplate parseFileTemplateObject(ObjectValue obj) {
+        FileTemplate fileTemplate = new FileTemplate();
+        fileTemplate.setName(obj.getElement("name").getStringValue());
+        fileTemplate.setDescription(obj.getElement("description").getStringValue());
+        fileTemplate.setMimeType(obj.getElement("mimeType").getStringValue());
+        fileTemplate.setContent(obj.getElement("content").getStringValue());
+        fileTemplate.setDefault((obj.getElement("default") != null) ? obj.getElement("default").getBooleanValue() : obj
+                .getElement("isDefault").getBooleanValue());
+        return fileTemplate;
+    }
 
-   private String getTemplateFileContent(String fileName) throws IOException
-   {
-      final String settingsFolderPath = System.getProperty("org.exoplatform.ide.server.settings-path");
-      InputStream input =
-         Thread.currentThread().getContextClassLoader().getResourceAsStream(settingsFolderPath + "/" + fileName);
-      Writer writer = new StringWriter();
-      char[] buffer = new char[1024];
-      try
-      {
-         Reader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-         int n;
-         while ((n = reader.read(buffer)) != -1)
-         {
-            writer.write(buffer, 0, n);
-         }
-      }
-      finally
-      {
-         input.close();
-      }
-      String userConf = writer.toString();
-      return userConf;
-   }
+    private String getTemplateFileContent(String fileName) throws IOException {
+        final String settingsFolderPath = System.getProperty("org.exoplatform.ide.server.settings-path");
+        InputStream input =
+                Thread.currentThread().getContextClassLoader().getResourceAsStream(settingsFolderPath + "/" + fileName);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } finally {
+            input.close();
+        }
+        String userConf = writer.toString();
+        return userConf;
+    }
 
 //   // ----------read and write templates----------------
 //
@@ -780,27 +718,23 @@ public class TemplatesRestService
 //      }
 //   }
 
-   /**
-    * Add template to "templates" element of <code>templatesJsonValue</code>.
-    * <p/>
-    * If <code>templatesJsonValue</code> doesn't contain "templates" element, than create it.
-    * 
-    * @param templatesJsonValue
-    * @param template
-    */
-   private void addTemplateToArray(JsonValue templatesJsonValue, JsonValue template)
-   {
-      if (templatesJsonValue.getElement("templates") != null)
-      {
-         ArrayValue jsonTemplateArray = (ArrayValue)templatesJsonValue.getElement("templates");
-         jsonTemplateArray.addElement(template);
-      }
-      else
-      {
-         ArrayValue jsonTemplateArray = new ArrayValue();
-         templatesJsonValue.addElement("templates", jsonTemplateArray);
-         jsonTemplateArray.addElement(template);
-      }
-   }
+    /**
+     * Add template to "templates" element of <code>templatesJsonValue</code>.
+     * <p/>
+     * If <code>templatesJsonValue</code> doesn't contain "templates" element, than create it.
+     *
+     * @param templatesJsonValue
+     * @param template
+     */
+    private void addTemplateToArray(JsonValue templatesJsonValue, JsonValue template) {
+        if (templatesJsonValue.getElement("templates") != null) {
+            ArrayValue jsonTemplateArray = (ArrayValue)templatesJsonValue.getElement("templates");
+            jsonTemplateArray.addElement(template);
+        } else {
+            ArrayValue jsonTemplateArray = new ArrayValue();
+            templatesJsonValue.addElement("templates", jsonTemplateArray);
+            jsonTemplateArray.addElement(template);
+        }
+    }
 
 }

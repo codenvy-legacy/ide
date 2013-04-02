@@ -23,65 +23,68 @@ import java.util.Set;
 
 /**
  * Token interface represent abstract token.
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface Token
-{
+public interface Token {
 
-   /**
-    * Get name of token
-    * 
-    * @return name
-    */
-   String getName();
+    /**
+     * Get name of token
+     *
+     * @return name
+     */
+    String getName();
 
-   /**
-    * Get token type
-    * 
-    * @return type
-    */
-   TokenType getType();
+    /**
+     * Get token type
+     *
+     * @return type
+     */
+    TokenType getType();
 
-   /**
-    * Get names of all token properties
-    * 
-    * @return {@link Set} of {@link String} properties names
-    */
-   Set<String> getPropertiesNames();
+    /**
+     * Get names of all token properties
+     *
+     * @return {@link Set} of {@link String} properties names
+     */
+    Set<String> getPropertiesNames();
 
-   /**
-    * Get all token properties
-    * 
-    * @return {@link Collection} of {@link TokenProperty}
-    */
-   Collection<TokenProperty> getProperties();
+    /**
+     * Get all token properties
+     *
+     * @return {@link Collection} of {@link TokenProperty}
+     */
+    Collection<TokenProperty> getProperties();
 
-   /**
-    * Get specific property
-    * 
-    * @param name of property
-    * @return {@link TokenProperty} property
-    */
-   TokenProperty getProperty(String name);
+    /**
+     * Get specific property
+     *
+     * @param name
+     *         of property
+     * @return {@link TokenProperty} property
+     */
+    TokenProperty getProperty(String name);
 
-   /**
-    * Set property
-    * 
-    * @param name of property
-    * @param property value
-    */
-   void setProperty(String name, TokenProperty property);
+    /**
+     * Set property
+     *
+     * @param name
+     *         of property
+     * @param property
+     *         value
+     */
+    void setProperty(String name, TokenProperty property);
 
-   /**
-    * Check is token has property
-    * 
-    * @param name of property
-    * @return <code>true</code> if token has property, otherwise <code>false</code>
-    */
-   boolean hasProperty(String name);
+    /**
+     * Check is token has property
+     *
+     * @param name
+     *         of property
+     * @return <code>true</code> if token has property, otherwise <code>false</code>
+     */
+    boolean hasProperty(String name);
 
 }

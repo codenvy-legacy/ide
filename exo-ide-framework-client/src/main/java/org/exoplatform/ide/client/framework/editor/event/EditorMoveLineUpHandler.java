@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface EditorMoveLineUpHandler extends EventHandler
-{
+public interface EditorMoveLineUpHandler extends EventHandler {
 
-   void onEditorMoveLineUp(EditorMoveLineUpEvent event);
+    void onEditorMoveLineUp(EditorMoveLineUpEvent event);
 
 }

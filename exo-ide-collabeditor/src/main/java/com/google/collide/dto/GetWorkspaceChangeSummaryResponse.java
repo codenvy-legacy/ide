@@ -18,15 +18,13 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * DTO for list of modified, added, removed, or renamed files.
- */
+/** DTO for list of modified, added, removed, or renamed files. */
 @RoutingType(type = RoutingTypes.GETWORKSPACECHANGESUMMARYRESPONSE)
 public interface GetWorkspaceChangeSummaryResponse extends ServerToClientDto {
 
-  JsonArray<NodeMutationDto> getNodeMutations();
+    JsonArray<NodeMutationDto> getNodeMutations();
 
-  String getBaseRootId();
+    String getBaseRootId();
 
-  String getFinalRootId();
+    String getFinalRootId();
 }

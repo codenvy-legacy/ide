@@ -28,242 +28,194 @@ import com.codenvy.eclipse.jdt.core.dom.ThisExpression;
 import com.codenvy.eclipse.jdt.internal.corext.dom.fragments.ASTFragmentFactory;
 import com.codenvy.eclipse.jdt.internal.corext.dom.fragments.IExpressionFragment;
 
-class ConstantChecks
-{
-   private static abstract class ExpressionChecker extends ASTVisitor
-   {
+class ConstantChecks {
+    private static abstract class ExpressionChecker extends ASTVisitor {
 
-      private final IExpressionFragment fExpression;
+        private final IExpressionFragment fExpression;
 
-      protected boolean fResult = true;
+        protected boolean fResult = true;
 
-      public ExpressionChecker(IExpressionFragment ex)
-      {
-         fExpression = ex;
-      }
+        public ExpressionChecker(IExpressionFragment ex) {
+            fExpression = ex;
+        }
 
-      public boolean check()
-      {
-         fResult = true;
-         fExpression.getAssociatedNode().accept(this);
-         return fResult;
-      }
-   }
+        public boolean check() {
+            fResult = true;
+            fExpression.getAssociatedNode().accept(this);
+            return fResult;
+        }
+    }
 
-   private static class LoadTimeConstantChecker extends ExpressionChecker
-   {
-      public LoadTimeConstantChecker(IExpressionFragment ex)
-      {
-         super(ex);
-      }
+    private static class LoadTimeConstantChecker extends ExpressionChecker {
+        public LoadTimeConstantChecker(IExpressionFragment ex) {
+            super(ex);
+        }
 
-      @Override
-      public boolean visit(SuperFieldAccess node)
-      {
-         fResult = false;
-         return false;
-      }
+        @Override
+        public boolean visit(SuperFieldAccess node) {
+            fResult = false;
+            return false;
+        }
 
-      @Override
-      public boolean visit(SuperMethodInvocation node)
-      {
-         fResult = false;
-         return false;
-      }
+        @Override
+        public boolean visit(SuperMethodInvocation node) {
+            fResult = false;
+            return false;
+        }
 
-      @Override
-      public boolean visit(ThisExpression node)
-      {
-         fResult = false;
-         return false;
-      }
+        @Override
+        public boolean visit(ThisExpression node) {
+            fResult = false;
+            return false;
+        }
 
-      @Override
-      public boolean visit(FieldAccess node)
-      {
-         fResult &= new LoadTimeConstantChecker(
-            (IExpressionFragment)ASTFragmentFactory.createFragmentForFullSubtree(node.getExpression())).check();
-         return false;
-      }
-
-      @Override
-      public boolean visit(MethodInvocation node)
-      {
-         if (node.getExpression() == null)
-         {
-            visitName(node.getName());
-         }
-         else
-         {
+        @Override
+        public boolean visit(FieldAccess node) {
             fResult &= new LoadTimeConstantChecker(
-               (IExpressionFragment)ASTFragmentFactory.createFragmentForFullSubtree(node.getExpression())).check();
-         }
+                    (IExpressionFragment)ASTFragmentFactory.createFragmentForFullSubtree(node.getExpression())).check();
+            return false;
+        }
 
-         return false;
-      }
+        @Override
+        public boolean visit(MethodInvocation node) {
+            if (node.getExpression() == null) {
+                visitName(node.getName());
+            } else {
+                fResult &= new LoadTimeConstantChecker(
+                        (IExpressionFragment)ASTFragmentFactory.createFragmentForFullSubtree(node.getExpression())).check();
+            }
 
-      @Override
-      public boolean visit(QualifiedName node)
-      {
-         return visitName(node);
-      }
+            return false;
+        }
 
-      @Override
-      public boolean visit(SimpleName node)
-      {
-         return visitName(node);
-      }
+        @Override
+        public boolean visit(QualifiedName node) {
+            return visitName(node);
+        }
 
-      private boolean visitName(Name name)
-      {
-         fResult &= checkName(name);
-         return false; //Do not descend further
-      }
+        @Override
+        public boolean visit(SimpleName node) {
+            return visitName(node);
+        }
 
-      private boolean checkName(Name name)
-      {
-         IBinding binding = name.resolveBinding();
-         if (binding == null)
-         {
-            return true;  /* If the binding is null because of compile errors etc.,
+        private boolean visitName(Name name) {
+            fResult &= checkName(name);
+            return false; //Do not descend further
+        }
+
+        private boolean checkName(Name name) {
+            IBinding binding = name.resolveBinding();
+            if (binding == null) {
+                return true;  /* If the binding is null because of compile errors etc.,
                               scenarios which may have been deemed unacceptable in
 				                  the presence of semantic information will be admitted. */
-         }
+            }
 
-         // If name represents a member:
-         if (binding instanceof IVariableBinding || binding instanceof IMethodBinding)
-         {
-            return isMemberReferenceValidInClassInitialization(name);
-         }
-         else if (binding instanceof ITypeBinding)
-         {
-            return !((ITypeBinding)binding).isTypeVariable();
-         }
-         else
-         {
-					/*  IPackageBinding is not expected, as a package name not
+            // If name represents a member:
+            if (binding instanceof IVariableBinding || binding instanceof IMethodBinding) {
+                return isMemberReferenceValidInClassInitialization(name);
+            } else if (binding instanceof ITypeBinding) {
+                return !((ITypeBinding)binding).isTypeVariable();
+            } else {
+                    /*  IPackageBinding is not expected, as a package name not
 					    used as a type name prefix is not expected in such an
 					    expression.  Other types are not expected either.
 					 */
-            Assert.isTrue(false);
-            return true;
-         }
-      }
+                Assert.isTrue(false);
+                return true;
+            }
+        }
 
-      private boolean isMemberReferenceValidInClassInitialization(Name name)
-      {
-         IBinding binding = name.resolveBinding();
-         Assert.isTrue(binding instanceof IVariableBinding || binding instanceof IMethodBinding);
+        private boolean isMemberReferenceValidInClassInitialization(Name name) {
+            IBinding binding = name.resolveBinding();
+            Assert.isTrue(binding instanceof IVariableBinding || binding instanceof IMethodBinding);
 
-         if (name instanceof SimpleName)
-         {
-            return Modifier.isStatic(binding.getModifiers());
-         }
-         else
-         {
-            Assert.isTrue(name instanceof QualifiedName);
-            return checkName(((QualifiedName)name).getQualifier());
-         }
-      }
-   }
+            if (name instanceof SimpleName) {
+                return Modifier.isStatic(binding.getModifiers());
+            } else {
+                Assert.isTrue(name instanceof QualifiedName);
+                return checkName(((QualifiedName)name).getQualifier());
+            }
+        }
+    }
 
-   private static class StaticFinalConstantChecker extends ExpressionChecker
-   {
-      public StaticFinalConstantChecker(IExpressionFragment ex)
-      {
-         super(ex);
-      }
+    private static class StaticFinalConstantChecker extends ExpressionChecker {
+        public StaticFinalConstantChecker(IExpressionFragment ex) {
+            super(ex);
+        }
 
-      @Override
-      public boolean visit(SuperFieldAccess node)
-      {
-         fResult = false;
-         return false;
-      }
+        @Override
+        public boolean visit(SuperFieldAccess node) {
+            fResult = false;
+            return false;
+        }
 
-      @Override
-      public boolean visit(SuperMethodInvocation node)
-      {
-         fResult = false;
-         return false;
-      }
+        @Override
+        public boolean visit(SuperMethodInvocation node) {
+            fResult = false;
+            return false;
+        }
 
-      @Override
-      public boolean visit(ThisExpression node)
-      {
-         fResult = false;
-         return false;
-      }
+        @Override
+        public boolean visit(ThisExpression node) {
+            fResult = false;
+            return false;
+        }
 
-      @Override
-      public boolean visit(QualifiedName node)
-      {
-         return visitName(node);
-      }
+        @Override
+        public boolean visit(QualifiedName node) {
+            return visitName(node);
+        }
 
-      @Override
-      public boolean visit(SimpleName node)
-      {
-         return visitName(node);
-      }
+        @Override
+        public boolean visit(SimpleName node) {
+            return visitName(node);
+        }
 
-      private boolean visitName(Name name)
-      {
-         IBinding binding = name.resolveBinding();
-         if (binding == null)
-         {
+        private boolean visitName(Name name) {
+            IBinding binding = name.resolveBinding();
+            if (binding == null) {
 				/* If the binding is null because of compile errors etc.,
 				   scenarios which may have been deemed unacceptable in
 				   the presence of semantic information will be admitted.
 				   Descend deeper.
 				 */
-            return true;
-         }
-
-         int modifiers = binding.getModifiers();
-         if (binding instanceof IVariableBinding)
-         {
-            if (!(Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)))
-            {
-               fResult = false;
-               return false;
+                return true;
             }
-         }
-         else if (binding instanceof IMethodBinding)
-         {
-            if (!Modifier.isStatic(modifiers))
-            {
-               fResult = false;
-               return false;
-            }
-         }
-         else if (binding instanceof ITypeBinding)
-         {
-            return false; // It's o.k.  Don't descend deeper.
 
-         }
-         else
-         {
+            int modifiers = binding.getModifiers();
+            if (binding instanceof IVariableBinding) {
+                if (!(Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers))) {
+                    fResult = false;
+                    return false;
+                }
+            } else if (binding instanceof IMethodBinding) {
+                if (!Modifier.isStatic(modifiers)) {
+                    fResult = false;
+                    return false;
+                }
+            } else if (binding instanceof ITypeBinding) {
+                return false; // It's o.k.  Don't descend deeper.
+
+            } else {
 					/*  IPackageBinding is not expected, as a package name not
 					    used as a type name prefix is not expected in such an
 					    expression.  Other types are not expected either.
 					 */
-            Assert.isTrue(false);
-            return false;
-         }
+                Assert.isTrue(false);
+                return false;
+            }
 
-         //Descend deeper:
-         return true;
-      }
-   }
+            //Descend deeper:
+            return true;
+        }
+    }
 
-   public static boolean isStaticFinalConstant(IExpressionFragment ex)
-   {
-      return new StaticFinalConstantChecker(ex).check();
-   }
+    public static boolean isStaticFinalConstant(IExpressionFragment ex) {
+        return new StaticFinalConstantChecker(ex).check();
+    }
 
-   public static boolean isLoadTimeConstant(IExpressionFragment ex)
-   {
-      return new LoadTimeConstantChecker(ex).check();
-   }
+    public static boolean isLoadTimeConstant(IExpressionFragment ex) {
+        return new LoadTimeConstantChecker(ex).check();
+    }
 }

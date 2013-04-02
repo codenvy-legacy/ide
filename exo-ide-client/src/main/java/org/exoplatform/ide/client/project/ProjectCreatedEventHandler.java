@@ -26,98 +26,76 @@ import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
-import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- *
  * Created by The eXo Platform SAS .
  *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ProjectCreatedEventHandler implements ProjectCreatedHandler, ProjectOpenedHandler, ProjectClosedHandler
-{
+public class ProjectCreatedEventHandler implements ProjectCreatedHandler, ProjectOpenedHandler, ProjectClosedHandler {
 
-   private ProjectModel openedProject;
+    private ProjectModel openedProject;
 
-   private ProjectModel projectToBeOpened;
+    private ProjectModel projectToBeOpened;
 
-   public ProjectCreatedEventHandler()
-   {
-      IDE.addHandler(ProjectCreatedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-   }
+    public ProjectCreatedEventHandler() {
+        IDE.addHandler(ProjectCreatedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      openedProject = event.getProject();
-   }
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        openedProject = event.getProject();
+    }
 
-   @Override
-   public void onProjectCreated(final ProjectCreatedEvent event)
-   {
-      projectToBeOpened = null;
+    @Override
+    public void onProjectCreated(final ProjectCreatedEvent event) {
+        projectToBeOpened = null;
 
-      if (openedProject == null)
-      {
-         openProject(event.getProject());
-         return;
-      }
-      if (openedProject.getId().equals(event.getProject().getId()))
-      {
-         //disallow to reopened current project. if this appears then we update folder contents
-         IDE.fireEvent(new RefreshBrowserEvent(event.getProject()));
-         return;
-      }
+        if (openedProject == null) {
+            openProject(event.getProject());
+            return;
+        }
+        if (openedProject.getId().equals(event.getProject().getId())) {
+            //disallow to reopened current project. if this appears then we update folder contents
+            IDE.fireEvent(new RefreshBrowserEvent(event.getProject()));
+            return;
+        }
 
-      Dialogs.getInstance().ask("IDE", "Open project " + event.getProject().getName() + " ?",
-         new BooleanValueReceivedHandler()
-         {
+        Dialogs.getInstance().ask("IDE", "Open project " + event.getProject().getName() + " ?",
+                                  new BooleanValueReceivedHandler() {
+                                      @Override
+                                      public void booleanValueReceived(Boolean value) {
+                                          if (value != null && true == value) {
+                                              projectToBeOpened = event.getProject();
+                                              IDE.fireEvent(new CloseProjectEvent());
+                                          }
+                                      }
+                                  });
+    }
+
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        openedProject = null;
+
+        if (projectToBeOpened != null) {
+            openProject(projectToBeOpened);
+            projectToBeOpened = null;
+        }
+    }
+
+    private void openProject(final ProjectModel project) {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value != null && true == value)
-               {
-                  projectToBeOpened = event.getProject();
-                  IDE.fireEvent(new CloseProjectEvent());
-               }
+            public void execute() {
+                IDE.fireEvent(new OpenProjectEvent(project));
             }
-         });
-   }
-
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      openedProject = null;
-
-      if (projectToBeOpened != null)
-      {
-         openProject(projectToBeOpened);
-         projectToBeOpened = null;
-      }
-   }
-
-   private void openProject(final ProjectModel project)
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            IDE.fireEvent(new OpenProjectEvent(project));
-         }
-      });
-   }
+        });
+    }
 
 }

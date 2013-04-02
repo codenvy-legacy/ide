@@ -17,41 +17,26 @@ package com.google.collide.dto;
 /**
  * Fields of this object are string-encoded longs which represent freshness of different segments of
  * a code graph.
- *
  */
 public interface CodeGraphFreshness {
-  /**
-   * @return libs subgraph freshness
-   */
-  String getLibsSubgraph();
+    /** @return libs subgraph freshness */
+    String getLibsSubgraph();
 
-  /**
-   * @return context file tree freshness
-   */
-  String getFileTree();
+    /** @return context file tree freshness */
+    String getFileTree();
 
-  /**
-   * @return context file hash for which we have file tree
-   */
-  String getFileTreeHash();
+    /** @return context file hash for which we have file tree */
+    String getFileTreeHash();
 
-  /**
-   * @return the whole editable workspace tree freshness
-   */
-  String getWorkspaceTree();
+    /** @return the whole editable workspace tree freshness */
+    String getWorkspaceTree();
 
-  /**
-   * @return freshness of the editable workspace links
-   */
-  String getWorkspaceLinks();
+    /** @return freshness of the editable workspace links */
+    String getWorkspaceLinks();
 
-  /**
-   * @return freshness of the whole code graph
-   */
-  String getFullGraph();
+    /** @return freshness of the whole code graph */
+    String getFullGraph();
 
-  /**
-   * @return freshness of the context file references
-   */
-  String getFileReferences();
+    /** @return freshness of the context file references */
+    String getFileReferences();
 }

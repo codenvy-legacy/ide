@@ -23,12 +23,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientBundle;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -40,76 +35,62 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: $
  */
 public class AppfogControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, FolderRefreshedHandler, ActiveProjectChangedHandler
-{
-   private static final String ID = "Project/PaaS/Appfog";
+                                                            ProjectClosedHandler, FolderRefreshedHandler, ActiveProjectChangedHandler {
+    private static final String ID = "Project/PaaS/Appfog";
 
-   private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlTitle();
+    private static final String TITLE = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlTitle();
 
-   private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlPrompt();
+    private static final String PROMPT = AppfogExtension.LOCALIZATION_CONSTANT.appfogControlPrompt();
 
-   public AppfogControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AppfogClientBundle.INSTANCE.appfog(), AppfogClientBundle.INSTANCE.appfogDisabled());
-      setEvent(new ManageAppfogProjectEvent());
-   }
+    public AppfogControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AppfogClientBundle.INSTANCE.appfog(), AppfogClientBundle.INSTANCE.appfogDisabled());
+        setEvent(new ManageAppfogProjectEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setVisible(false);
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setVisible(false);
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      update(event.getProject());
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      update(event.getProject());
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        update(event.getProject());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
-    */
-   @Override
-   public void onFolderRefreshed(FolderRefreshedEvent event)
-   {
-      if (event.getFolder() instanceof ProjectModel)
-      {
-         update((ProjectModel)event.getFolder());
-      }
-   }
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        update(event.getProject());
+    }
 
-   private void update(ProjectModel project)
-   {
-      boolean isAppfog = project.getPropertyValue("appfog-application") != null;
-      setVisible(isAppfog);
-      setEnabled(isAppfog);
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client
+     * .framework.navigation.event.FolderRefreshedEvent) */
+    @Override
+    public void onFolderRefreshed(FolderRefreshedEvent event) {
+        if (event.getFolder() instanceof ProjectModel) {
+            update((ProjectModel)event.getFolder());
+        }
+    }
+
+    private void update(ProjectModel project) {
+        boolean isAppfog = project.getPropertyValue("appfog-application") != null;
+        setVisible(isAppfog);
+        setEnabled(isAppfog);
+    }
 }

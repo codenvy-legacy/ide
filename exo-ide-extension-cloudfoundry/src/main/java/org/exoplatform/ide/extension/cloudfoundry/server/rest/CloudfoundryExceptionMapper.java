@@ -32,31 +32,27 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class CloudfoundryExceptionMapper implements ExceptionMapper<CloudfoundryException>
-{
-   
-   private static final Log log = ExoLogger.getExoLogger(CloudfoundryExceptionMapper.class);
-   
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(CloudfoundryException e)
-   {
-      log.debug("exit code :{}, message: {}", e.getExitCode(), e.getMessage());
-      if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage()))
-         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
-            .entity(e.getMessage()).type(e.getContentType()).build();
-      
-      if (e.getResponseStatus() == 500 && "Can't access target.\n".equals(e.getMessage()))
-         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Unknown-target")
-            .entity(e.getMessage()).type(e.getContentType()).build();
-      
-      ResponseBuilder rb = Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
-         .entity(e.getMessage()).type(e.getContentType());
-      int exitCode = e.getExitCode();
-      if (exitCode != -1)
-         rb.header("Cloudfoundry-Exit-Code", exitCode);
-      return rb.build();
-   }
+public class CloudfoundryExceptionMapper implements ExceptionMapper<CloudfoundryException> {
+
+    private static final Log log = ExoLogger.getExoLogger(CloudfoundryExceptionMapper.class);
+
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(CloudfoundryException e) {
+        log.debug("exit code :{}, message: {}", e.getExitCode(), e.getMessage());
+        if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage()))
+            return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+                           .entity(e.getMessage()).type(e.getContentType()).build();
+
+        if (e.getResponseStatus() == 500 && "Can't access target.\n".equals(e.getMessage()))
+            return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Unknown-target")
+                           .entity(e.getMessage()).type(e.getContentType()).build();
+
+        ResponseBuilder rb = Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+                                     .entity(e.getMessage()).type(e.getContentType());
+        int exitCode = e.getExitCode();
+        if (exitCode != -1)
+            rb.header("Cloudfoundry-Exit-Code", exitCode);
+        return rb.build();
+    }
 }

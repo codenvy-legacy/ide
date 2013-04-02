@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class IDELoadCompleteEvent extends GwtEvent<IDELoadCompleteHandler>
-{
-   
-   public static final GwtEvent.Type<IDELoadCompleteHandler> TYPE = new GwtEvent.Type<IDELoadCompleteHandler>();
+public class IDELoadCompleteEvent extends GwtEvent<IDELoadCompleteHandler> {
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<IDELoadCompleteHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    public static final GwtEvent.Type<IDELoadCompleteHandler> TYPE = new GwtEvent.Type<IDELoadCompleteHandler>();
 
-   @Override
-   protected void dispatch(IDELoadCompleteHandler handler)
-   {
-      handler.onIDELoadComplete(this);
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<IDELoadCompleteHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    @Override
+    protected void dispatch(IDELoadCompleteHandler handler) {
+        handler.onIDELoadComplete(this);
+    }
 
 }

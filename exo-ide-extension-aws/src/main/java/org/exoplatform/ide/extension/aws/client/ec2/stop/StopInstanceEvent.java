@@ -22,51 +22,36 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to stop an EC2 instance.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: RestartAppServerEvent.java Sep 28, 2012 3:49:51 PM azatsarynnyy $
- *
  */
-public class StopInstanceEvent extends GwtEvent<StopInstanceHandler>
-{
+public class StopInstanceEvent extends GwtEvent<StopInstanceHandler> {
 
-   /**
-    * Type, used to register event.
-    */
-   public static final GwtEvent.Type<StopInstanceHandler> TYPE = new GwtEvent.Type<StopInstanceHandler>();
+    /** Type, used to register event. */
+    public static final GwtEvent.Type<StopInstanceHandler> TYPE = new GwtEvent.Type<StopInstanceHandler>();
 
-   private String instanceId;
+    private String instanceId;
 
-   public StopInstanceEvent(String instanceId)
-   {
-      this.instanceId = instanceId;
-   }
+    public StopInstanceEvent(String instanceId) {
+        this.instanceId = instanceId;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StopInstanceHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<StopInstanceHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(StopInstanceHandler handler)
-   {
-      handler.onStopInstance(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(StopInstanceHandler handler) {
+        handler.onStopInstance(this);
+    }
 
-   /**
-    * 
-    * @return
-    */
-   public String getInstanceId()
-   {
-      return instanceId;
-   }
+    /** @return  */
+    public String getInstanceId() {
+        return instanceId;
+    }
 
 }

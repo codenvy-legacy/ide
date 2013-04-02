@@ -22,54 +22,46 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class AppStoppedEvent extends GwtEvent<AppStoppedHandler>
-{
+public class AppStoppedEvent extends GwtEvent<AppStoppedHandler> {
 
-   public static final GwtEvent.Type<AppStoppedHandler> TYPE = new GwtEvent.Type<AppStoppedHandler>();
+    public static final GwtEvent.Type<AppStoppedHandler> TYPE = new GwtEvent.Type<AppStoppedHandler>();
 
-   private String appName;
+    private String appName;
 
-   /**
-    * Application was stopped manually.
-    */
-   private boolean manually;
+    /** Application was stopped manually. */
+    private boolean manually;
 
-   /**
-    * @param name name of the stopped application
-    * @param manually application was stopped manually
-    */
-   public AppStoppedEvent(String name, boolean manually)
-   {
-      this.appName = name;
-      this.manually = manually;
-   }
+    /**
+     * @param name
+     *         name of the stopped application
+     * @param manually
+     *         application was stopped manually
+     */
+    public AppStoppedEvent(String name, boolean manually) {
+        this.appName = name;
+        this.manually = manually;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AppStoppedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<AppStoppedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(AppStoppedHandler handler)
-   {
-      handler.onAppStopped(this);
-   }
+    @Override
+    protected void dispatch(AppStoppedHandler handler) {
+        handler.onAppStopped(this);
+    }
 
-   public String getAppName()
-   {
-      return appName;
-   }
+    public String getAppName() {
+        return appName;
+    }
 
-   /**
-    * @return the manually
-    */
-   public boolean isManually()
-   {
-      return manually;
-   }
+    /** @return the manually */
+    public boolean isManually() {
+        return manually;
+    }
 }

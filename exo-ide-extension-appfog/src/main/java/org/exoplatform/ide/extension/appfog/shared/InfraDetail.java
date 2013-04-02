@@ -22,29 +22,28 @@ package org.exoplatform.ide.extension.appfog.shared;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface InfraDetail
-{
-   String getName();
+public interface InfraDetail {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getInfra();
+    String getInfra();
 
-   void setInfra(String infra);
+    void setInfra(String infra);
 
-   String getLocality();
+    String getLocality();
 
-   void setLocality(String locality);
+    void setLocality(String locality);
 
-   String getVendor();
+    String getVendor();
 
-   void setVendor(String vendor);
+    void setVendor(String vendor);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 
-   String getBase();
+    String getBase();
 
-   void setBase(String base);
+    void setBase(String base);
 }

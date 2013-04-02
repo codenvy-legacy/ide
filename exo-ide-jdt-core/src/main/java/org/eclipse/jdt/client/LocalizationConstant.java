@@ -23,70 +23,68 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: LocalizationConstant.java Oct 26, 2012 vetal $
- *
  */
-public interface LocalizationConstant extends Messages
-{
-   /*
-    * Buttons
-    */
-   @Key("button.refactoring.rename")
-   String refactoringRenameButton();
+public interface LocalizationConstant extends Messages {
+    /*
+     * Buttons
+     */
+    @Key("button.refactoring.rename")
+    String refactoringRenameButton();
 
-   @Key("button.cancel")
-   String cancelButton();
+    @Key("button.cancel")
+    String cancelButton();
 
-   /*
-    * Controls
-    */
-   @Key("control.updateDependency.id")
-   String updateDependencyControlId();
+    /*
+     * Controls
+     */
+    @Key("control.updateDependency.id")
+    String updateDependencyControlId();
 
-   @Key("control.updateDependency.title")
-   String updateDependencyControlTitle();
+    @Key("control.updateDependency.title")
+    String updateDependencyControlTitle();
 
-   @Key("control.updateDependency.prompt")
-   String updateDependencyControlPrompt();
+    @Key("control.updateDependency.prompt")
+    String updateDependencyControlPrompt();
 
-   @Key("control.refactoringRename.id")
-   String refactoringRenameControlId();
+    @Key("control.refactoringRename.id")
+    String refactoringRenameControlId();
 
-   @Key("control.refactoringRename.title")
-   String refactoringRenameControlTitle();
+    @Key("control.refactoringRename.title")
+    String refactoringRenameControlTitle();
 
-   @Key("control.refactoringRename.prompt")
-   String refactoringRenameControlPrompt();
+    @Key("control.refactoringRename.prompt")
+    String refactoringRenameControlPrompt();
 
-   /*
-    * Messages
-    */
-   @Key("messages.updateDependency.started")
-   String updateDependencyStarted(String project);
+    /*
+     * Messages
+     */
+    @Key("messages.updateDependency.started")
+    String updateDependencyStarted(String project);
 
-   @Key("messages.updateDependency.finished")
-   String updateDependencyFinished(String project);
+    @Key("messages.updateDependency.finished")
+    String updateDependencyFinished(String project);
 
-   @Key("messages.updateDependency.suggest")
-   String updateDependencySuggest();
+    @Key("messages.updateDependency.suggest")
+    String updateDependencySuggest();
 
-   @Key("messages.refactoringRename.saveFiles")
-   String refactoringRenameSaveFiles();
+    @Key("messages.refactoringRename.saveFiles")
+    String refactoringRenameSaveFiles();
 
-   @Key("messages.refactoringRename.wait")
-   String refactoringRenameWait();
+    @Key("messages.refactoringRename.wait")
+    String refactoringRenameWait();
 
-   @Key("messages.refactoringRename.unavailable")
-   String refactoringRenameUnavailable();
+    @Key("messages.refactoringRename.unavailable")
+    String refactoringRenameUnavailable();
 
-   @Key("messages.refactoringRename.badCursorPosition")
-   String refactoringRenameBadCursorPosition();
+    @Key("messages.refactoringRename.badCursorPosition")
+    String refactoringRenameBadCursorPosition();
 
-   /*
-    * RefactoringRenameView
-    */
-   @Key("refactoringRename.view.title")
-   String refactoringRenameViewTitle();
+    /*
+     * RefactoringRenameView
+     */
+    @Key("refactoringRename.view.title")
+    String refactoringRenameViewTitle();
 
-   @Key("refactoringRename.field.newName")
-   String refactoringRenameFieldNewName();
+    @Key("refactoringRename.field.newName")
+    String refactoringRenameFieldNewName();
 }

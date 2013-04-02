@@ -27,40 +27,34 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowDocumentationControl Jan 21, 2011 11:10:08 AM evgen $
- * 
  */
 @RolesAllowed({"developer"})
-public class ShowDocumentationControl extends SimpleControl implements IDEControl
-{
+public class ShowDocumentationControl extends SimpleControl implements IDEControl {
 
-   public static final String ID = "View/Show \\ Hide Documentation";
+    public static final String ID = "View/Show \\ Hide Documentation";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.documentationTitle();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.documentationTitle();
 
-   public static final String PROMPT_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.showDocumentationControl();
+    public static final String PROMPT_SHOW = IDE.IDE_LOCALIZATION_CONSTANT.showDocumentationControl();
 
-   public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.hideDocumentationControl();
+    public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.hideDocumentationControl();
 
-   /**
-    * 
-    */
-   public ShowDocumentationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setImages(IDEImageBundle.INSTANCE.documentation(), IDEImageBundle.INSTANCE.documentationDisabled());
-      setEvent(new ShowDocumentationEvent(true));
-      setEnabled(true);
-      setDelimiterBefore(true);
-      setCanBeSelected(true);
-   }
+    /**
+     *
+     */
+    public ShowDocumentationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setImages(IDEImageBundle.INSTANCE.documentation(), IDEImageBundle.INSTANCE.documentationDisabled());
+        setEvent(new ShowDocumentationEvent(true));
+        setEnabled(true);
+        setDelimiterBefore(true);
+        setCanBeSelected(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+    }
 
 }

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.heroku.client.info;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.cellview.client.Column;
 
@@ -29,68 +28,57 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 
 /**
  * Grid for displaying application information.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 3:02:57 PM anya $
- * 
  */
-public class ApplicationInfoGrid extends ListGrid<Property>
-{
-   private final String ID = "ideApplicationInfoGrid";
+public class ApplicationInfoGrid extends ListGrid<Property> {
+    private final String ID = "ideApplicationInfoGrid";
 
-   private final String NAME = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
+    private final String NAME = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
 
-   private final String VALUE = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
+    private final String VALUE = HerokuExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
 
-   public ApplicationInfoGrid()
-   {
-      super();
+    public ApplicationInfoGrid() {
+        super();
 
-      setID(ID);
+        setID(ID);
 
-      Column<Property, SafeHtml> nameColumn = new Column<Property, SafeHtml>(new SafeHtmlCell())
-      {
+        Column<Property, SafeHtml> nameColumn = new Column<Property, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final Property property)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final Property property) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  return "<b>" + property.getName() + "</b>";
-               }
-            };
-            return html;
-         }
-      };
+                    @Override
+                    public String asString() {
+                        return "<b>" + property.getName() + "</b>";
+                    }
+                };
+                return html;
+            }
+        };
 
-      Column<Property, SafeHtml> valueColumn = new Column<Property, SafeHtml>(new SafeHtmlCell())
-      {
+        Column<Property, SafeHtml> valueColumn = new Column<Property, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final Property property)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final Property property) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  return property.getValue();
-               }
-            };
-            return html;
-         }
-      };
+                    @Override
+                    public String asString() {
+                        return property.getValue();
+                    }
+                };
+                return html;
+            }
+        };
 
-      getCellTable().addColumn(nameColumn, NAME);
-      getCellTable().setColumnWidth(nameColumn, "35%");
-      getCellTable().addColumn(valueColumn, VALUE);
-      getCellTable().setColumnWidth(valueColumn, "65%");
-   }
+        getCellTable().addColumn(nameColumn, NAME);
+        getCellTable().setColumnWidth(nameColumn, "35%");
+        getCellTable().addColumn(valueColumn, VALUE);
+        getCellTable().setColumnWidth(valueColumn, "65%");
+    }
 }

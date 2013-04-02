@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.editor.jsp.client.codemirror;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
@@ -29,48 +28,43 @@ import org.exoplatform.ide.editor.codemirror.CodeValidator;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaAutocompleteHelper;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- * 
  */
-public class JspAutocompleteHelper extends AutocompleteHelper
-{
+public class JspAutocompleteHelper extends AutocompleteHelper {
 
-   List<? extends Token> javaCode;
+    List<? extends Token> javaCode;
 
-   HtmlAutocompleteHelper htmlAutocompleteHelper = new HtmlAutocompleteHelper();
+    HtmlAutocompleteHelper htmlAutocompleteHelper = new HtmlAutocompleteHelper();
 
-   JavaAutocompleteHelper javaAutocompleteHelper = new JavaAutocompleteHelper();
+    JavaAutocompleteHelper javaAutocompleteHelper = new JavaAutocompleteHelper();
 
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
-      List<? extends Token> tokenList, String currentLineMimeType)
-   {
-      if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
-         return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList,
-            currentLineMimeType);
+    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+                                      List<? extends Token> tokenList, String currentLineMimeType) {
+        if (MimeType.APPLICATION_JAVASCRIPT.equals(currentLineMimeType))
+            return htmlAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList,
+                                                               currentLineMimeType);
 
-      else if (MimeType.APPLICATION_JAVA.equals(currentLineMimeType))
-      {
-         javaCode =
-            CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
-               MimeType.APPLICATION_JAVA);
-         return javaAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaCode,
-            currentLineMimeType);
-      }
+        else if (MimeType.APPLICATION_JAVA.equals(currentLineMimeType)) {
+            javaCode =
+                    CodeValidator.extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(),
+                                              MimeType.APPLICATION_JAVA);
+            return javaAutocompleteHelper.getTokenBeforeCursor(node, lineNumber, cursorPosition, javaCode,
+                                                               currentLineMimeType);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   public boolean isVariable(String nodeType)
-   {
-      return false;
-   }
+    public boolean isVariable(String nodeType) {
+        return false;
+    }
 
-   public boolean isPoint(String nodeType, String nodeContent)
-   {
-      return false;
-   }
+    public boolean isPoint(String nodeType, String nodeContent) {
+        return false;
+    }
 }

@@ -24,55 +24,53 @@ import java.util.List;
 
 /**
  * RESTful messages.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RESTMessage.java Nov 8, 2012 6:29:19 PM azatsarynnyy $
- *
  */
-public interface RESTMessage extends Message
-{
-   /**
-    * Get name of HTTP method specified for resource method, e.g. GET, POST, PUT, etc.
-    *
-    * @return name of HTTP method
-    */
-   String getMethod();
+public interface RESTMessage extends Message {
+    /**
+     * Get name of HTTP method specified for resource method, e.g. GET, POST, PUT, etc.
+     *
+     * @return name of HTTP method
+     */
+    String getMethod();
 
-   /**
-    * Set name of HTTP method specified for resource method, e.g. GET, POST, PUT, etc.
-    *
-    * @param method
-    *    name of HTTP method
-    */
-   void setMethod(String method);
+    /**
+     * Set name of HTTP method specified for resource method, e.g. GET, POST, PUT, etc.
+     *
+     * @param method
+     *         name of HTTP method
+     */
+    void setMethod(String method);
 
-   /**
-    * Get resource path.
-    *
-    * @return resource path
-    */
-   String getPath();
+    /**
+     * Get resource path.
+     *
+     * @return resource path
+     */
+    String getPath();
 
-   /**
-    * Set resource path.
-    *
-    * @param path
-    *    resource path
-    */
-   void setPath(String path);
+    /**
+     * Set resource path.
+     *
+     * @param path
+     *         resource path
+     */
+    void setPath(String path);
 
-   /**
-    * Get HTTP headers.
-    *
-    * @return HTTP headers
-    */
-   List<Pair> getHeaders();
+    /**
+     * Get HTTP headers.
+     *
+     * @return HTTP headers
+     */
+    List<Pair> getHeaders();
 
-   /**
-    * Set HTTP headers.
-    *
-    * @param headers
-    *    HTTP headers
-    */
-   void setHeaders(List<Pair> headers);
+    /**
+     * Set HTTP headers.
+     *
+     * @param headers
+     *         HTTP headers
+     */
+    void setHeaders(List<Pair> headers);
 }

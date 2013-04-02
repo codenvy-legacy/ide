@@ -21,61 +21,48 @@ package org.exoplatform.ide.extension.java.jdi.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
-import org.exoplatform.ide.extension.java.jdi.shared.Field;
-import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
-import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
-import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
-import org.exoplatform.ide.extension.java.jdi.shared.Value;
-import org.exoplatform.ide.extension.java.jdi.shared.Variable;
-import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
+import org.exoplatform.ide.extension.java.jdi.shared.*;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface DebuggerAutoBeanFactory extends AutoBeanFactory
-{
+ */
+public interface DebuggerAutoBeanFactory extends AutoBeanFactory {
 
-   AutoBean<BreakPoint> breakPoint();
+    AutoBean<BreakPoint> breakPoint();
 
-   AutoBean<BreakPointEventList> breakPoinEventList();
-   
-   AutoBean<DebuggerEventList> debuggerEventList();
+    AutoBean<BreakPointEventList> breakPoinEventList();
 
-   AutoBean<StackFrameDump> stackFrameDump();
+    AutoBean<DebuggerEventList> debuggerEventList();
 
-   AutoBean<BreakPoint> breakPoint(BreakPoint breakPoint);
+    AutoBean<StackFrameDump> stackFrameDump();
 
-   AutoBean<BreakPointList> breakPoints();
+    AutoBean<BreakPoint> breakPoint(BreakPoint breakPoint);
 
-   AutoBean<DebuggerInfo> debuggerInfo();
+    AutoBean<BreakPointList> breakPoints();
 
-   AutoBean<Field> field();
+    AutoBean<DebuggerInfo> debuggerInfo();
 
-   AutoBean<Variable> variable();
+    AutoBean<Field> field();
 
-   AutoBean<Value> value();
+    AutoBean<Variable> variable();
 
-   AutoBean<VariablePath> variablePath();
+    AutoBean<Value> value();
 
-   AutoBean<VariablePath> variablePath(VariablePath valuePath);
+    AutoBean<VariablePath> variablePath();
 
-   AutoBean<BreakPointEvent> breakPoinEvent();
+    AutoBean<VariablePath> variablePath(VariablePath valuePath);
 
-   AutoBean<StepEvent> stepEvent();
+    AutoBean<BreakPointEvent> breakPoinEvent();
 
-   AutoBean<ApplicationInstance> applicationInstance();
+    AutoBean<StepEvent> stepEvent();
 
-   AutoBean<ApplicationInstance> debugApplicationInstance();
+    AutoBean<ApplicationInstance> applicationInstance();
 
-   AutoBean<UpdateVariableRequest> updateVariableRequest(UpdateVariableRequest request);
+    AutoBean<ApplicationInstance> debugApplicationInstance();
+
+    AutoBean<UpdateVariableRequest> updateVariableRequest(UpdateVariableRequest request);
 
 }

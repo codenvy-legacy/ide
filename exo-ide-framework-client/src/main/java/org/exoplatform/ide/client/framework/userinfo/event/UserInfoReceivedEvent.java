@@ -18,46 +18,41 @@
  */
 package org.exoplatform.ide.client.framework.userinfo.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.gwtframework.commons.exception.ServerExceptionEvent;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class UserInfoReceivedEvent extends ServerExceptionEvent<UserInfoReceivedHandler>
-{
+public class UserInfoReceivedEvent extends ServerExceptionEvent<UserInfoReceivedHandler> {
 
-   public static final GwtEvent.Type<UserInfoReceivedHandler> TYPE = new GwtEvent.Type<UserInfoReceivedHandler>();
+    public static final GwtEvent.Type<UserInfoReceivedHandler> TYPE = new GwtEvent.Type<UserInfoReceivedHandler>();
 
-   private UserInfo userInfo;
+    private UserInfo userInfo;
 
-   public UserInfoReceivedEvent(UserInfo userInfo)
-   {
-      super(null);
-      this.userInfo = userInfo;
-   }
+    public UserInfoReceivedEvent(UserInfo userInfo) {
+        super(null);
+        this.userInfo = userInfo;
+    }
 
-   @Override
-   protected void dispatch(UserInfoReceivedHandler handler)
-   {
-      handler.onUserInfoReceived(this);
-   }
+    @Override
+    protected void dispatch(UserInfoReceivedHandler handler) {
+        handler.onUserInfoReceived(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UserInfoReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UserInfoReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public UserInfo getUserInfo()
-   {
-      return userInfo;
-   }
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
 
 }

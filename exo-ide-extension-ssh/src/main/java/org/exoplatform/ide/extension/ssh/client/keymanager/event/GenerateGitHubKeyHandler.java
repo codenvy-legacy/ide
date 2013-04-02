@@ -24,9 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface GenerateGitHubKeyHandler extends EventHandler
-{
+public interface GenerateGitHubKeyHandler extends EventHandler {
 
-   void onGenerateGitHubSshKey(GenerateGitHubKeyEvent event);
+    void onGenerateGitHubSshKey(GenerateGitHubKeyEvent event);
 
 }

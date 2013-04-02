@@ -25,47 +25,45 @@ import com.google.gwt.resources.client.TextResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface JavaScriptClientBundle extends ClientBundle
-{
+public interface JavaScriptClientBundle extends ClientBundle {
 
-   @Source("org/exoplatform/ide/editor/javascript/client/styles/javascript.css")
-   JavaScriptCss css();
+    @Source("org/exoplatform/ide/editor/javascript/client/styles/javascript.css")
+    JavaScriptCss css();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/function-item.png")
-   ImageResource functionItem();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/function-item.png")
+    ImageResource functionItem();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/property-item.png")
-   ImageResource propertyItem();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/property-item.png")
+    ImageResource propertyItem();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/row-selected.png")
-   ImageResource itemSelected();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/row-selected.png")
+    ImageResource itemSelected();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/var-item.png")
-   ImageResource varItem();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/var-item.png")
+    ImageResource varItem();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/blank.png")
-   ImageResource blankImage();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/blank.png")
+    ImageResource blankImage();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/class.gif")
-   ImageResource classItem();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/class.gif")
+    ImageResource classItem();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/template.png")
-   ImageResource template();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/template.png")
+    ImageResource template();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/method-item.png")
-   ImageResource methodItem();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/method-item.png")
+    ImageResource methodItem();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/images/tag.png")
-   ImageResource tag();
+    @Source("org/exoplatform/ide/editor/javascript/client/images/tag.png")
+    ImageResource tag();
 
-   @Source("org/exoplatform/ide/editor/javascript/public/images/javascript/javascript.gif")
-   ImageResource javaScript();
+    @Source("org/exoplatform/ide/editor/javascript/public/images/javascript/javascript.gif")
+    ImageResource javaScript();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/esprima/esprima.js")
-   TextResource esprima();
+    @Source("org/exoplatform/ide/editor/javascript/client/esprima/esprima.js")
+    TextResource esprima();
 
-   @Source("org/exoplatform/ide/editor/javascript/client/esprima/esprimaJsContentAssist.js")
-   TextResource esprimaJsContentAssist();
+    @Source("org/exoplatform/ide/editor/javascript/client/esprima/esprimaJsContentAssist.js")
+    TextResource esprimaJsContentAssist();
 }

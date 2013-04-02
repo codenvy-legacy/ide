@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorPasteTextEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 4, 2012 9:45:22 AM anya $
- * 
  */
-public interface EditorPasteTextHandler extends EventHandler
-{
-   /**
-    * Perform paste text to editor.
-    * 
-    * @param event
-    */
-   void onEditorPasteText(EditorPasteTextEvent event);
+public interface EditorPasteTextHandler extends EventHandler {
+    /**
+     * Perform paste text to editor.
+     *
+     * @param event
+     */
+    void onEditorPasteText(EditorPasteTextEvent event);
 }

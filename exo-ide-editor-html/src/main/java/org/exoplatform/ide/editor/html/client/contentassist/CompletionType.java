@@ -13,12 +13,9 @@
 // limitations under the License.
 package org.exoplatform.ide.editor.html.client.contentassist;
 
-/**
- * An enumeration of html types of autocompletions.
- *
- */
+/** An enumeration of html types of autocompletions. */
 public enum CompletionType {
-  ELEMENT,
-  ATTRIBUTE,
-  NONE
+    ELEMENT,
+    ATTRIBUTE,
+    NONE
 }

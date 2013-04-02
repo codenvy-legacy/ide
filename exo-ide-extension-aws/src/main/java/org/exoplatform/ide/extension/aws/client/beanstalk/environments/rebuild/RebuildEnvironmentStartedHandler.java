@@ -21,17 +21,14 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: RebuildEnvironmentStartedHandler.java Oct 1, 2012 4:47:04 PM azatsarynnyy $
- *
  */
-public interface RebuildEnvironmentStartedHandler
-{
-   /**
-    * Perform actions, when rebuild environment is started.
-    * 
-    * @param environmentInfo
-    */
-   void onRebuildEnvironmentStarted(EnvironmentInfo environmentInfo);
+public interface RebuildEnvironmentStartedHandler {
+    /**
+     * Perform actions, when rebuild environment is started.
+     *
+     * @param environmentInfo
+     */
+    void onRebuildEnvironmentStarted(EnvironmentInfo environmentInfo);
 }

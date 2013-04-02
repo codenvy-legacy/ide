@@ -41,107 +41,87 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class SearchFilesControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler
-{
+                                                                 ViewActivatedHandler {
 
-   public static final String ID = "File/Search...";
+    public static final String ID = "File/Search...";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.searchFilesControl();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.searchFilesControl();
 
-   /**
-    * Current workspace's href.
-    */
-   private VirtualFileSystemInfo vfsInfo;
+    /** Current workspace's href. */
+    private VirtualFileSystemInfo vfsInfo;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private boolean navigatorSelected = false;
+    private boolean navigatorSelected = false;
 
-   /**
-    * 
-    */
-   public SearchFilesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
-      setEvent(new SearchFilesEvent());
-   }
+    /**
+     *
+     */
+    public SearchFilesControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.search(), IDEImageBundle.INSTANCE.searchDisabled());
+        setEvent(new SearchFilesEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateState();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateState();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      View activeView = event.getView();
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        View activeView = event.getView();
 
-      navigatorSelected =
-         activeView instanceof NavigatorDisplay ||
-         activeView instanceof ProjectExplorerDisplay ||
-         activeView instanceof PackageExplorerDisplay;
+        navigatorSelected =
+                activeView instanceof NavigatorDisplay ||
+                activeView instanceof ProjectExplorerDisplay ||
+                activeView instanceof PackageExplorerDisplay;
 
-      updateState();
-   }
+        updateState();
+    }
 
-   /**
-    * Update control's state.
-    */
-   private void updateState()
-   {
-      if (vfsInfo == null)
-      {
-         setVisible(false);
-         return;
-      }
-      setVisible(true);
+    /** Update control's state. */
+    private void updateState() {
+        if (vfsInfo == null) {
+            setVisible(false);
+            return;
+        }
+        setVisible(true);
 
-      if (selectedItems.size() == 1 && navigatorSelected)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
+        if (selectedItems.size() == 1 && navigatorSelected) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 
 }

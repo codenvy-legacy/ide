@@ -26,12 +26,11 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface CreateApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to initialize application.
-    *
-    * @param event
-    */
-   void onCreateApplication(CreateApplicationEvent event);
+public interface CreateApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to initialize application.
+     *
+     * @param event
+     */
+    void onCreateApplication(CreateApplicationEvent event);
 }

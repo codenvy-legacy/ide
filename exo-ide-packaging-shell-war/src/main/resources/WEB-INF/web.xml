@@ -25,54 +25,54 @@
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0"
          metadata-complete="true">
-   <display-name>Codenvy Shell</display-name>
+    <display-name>Codenvy Shell</display-name>
 
-   <context-param>
-      <param-name>crash.vfs.refresh_period</param-name>
-      <param-value>1</param-value>
-      <description>The vfs refresh rate</description>
-   </context-param>
-   <filter>
-      <filter-name>SetCurrentIdentityFilter</filter-name>
-      <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
-   </filter>
+    <context-param>
+        <param-name>crash.vfs.refresh_period</param-name>
+        <param-value>1</param-value>
+        <description>The vfs refresh rate</description>
+    </context-param>
+    <filter>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+    </filter>
 
-   <servlet>
-      <servlet-name>EverrestServlet</servlet-name>
-      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
-   </servlet>
+    <servlet>
+        <servlet-name>EverrestServlet</servlet-name>
+        <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+    </servlet>
 
-   <filter-mapping>
-      <filter-name>SetCurrentIdentityFilter</filter-name>
-      <url-pattern>/rest/*</url-pattern>
-   </filter-mapping>
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
 
-   <servlet-mapping>
-      <servlet-name>EverrestServlet</servlet-name>
-      <url-pattern>/rest/private/*</url-pattern>
-   </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/rest/private/*</url-pattern>
+    </servlet-mapping>
 
-   <security-constraint>
-      <web-resource-collection>
-         <web-resource-name>shell</web-resource-name>
-         <url-pattern>/rest/private/*</url-pattern>
-         <url-pattern>/Shell.html</url-pattern>
-      </web-resource-collection>
-      <auth-constraint>
-         <role-name>developer</role-name>
-      </auth-constraint>
-      <user-data-constraint>
-         <transport-guarantee>NONE</transport-guarantee>
-      </user-data-constraint>
-   </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>shell</web-resource-name>
+            <url-pattern>/rest/private/*</url-pattern>
+            <url-pattern>/Shell.html</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>developer</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 
-   <login-config>
-      <auth-method>BASIC</auth-method>
-      <realm-name>exo-domain</realm-name>
-   </login-config>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>exo-domain</realm-name>
+    </login-config>
 
-   <security-role>
-      <description>the user role</description>
-      <role-name>developer</role-name>
-   </security-role>
+    <security-role>
+        <description>the user role</description>
+        <role-name>developer</role-name>
+    </security-role>
 </web-app>

@@ -21,12 +21,9 @@ package org.exoplatform.ide.extension.java.jdi.client.events;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateAppHandler.java Oct 30, 2012 3:14:37 PM azatsarynnyy $
- *
  */
-public interface UpdateAppHandler extends EventHandler
-{
-   void onUpdateApp(UpdateAppEvent event);
+public interface UpdateAppHandler extends EventHandler {
+    void onUpdateApp(UpdateAppEvent event);
 }

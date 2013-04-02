@@ -28,17 +28,14 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class ProjectPrepareExceptionMapper implements ExceptionMapper<ProjectPrepareException>
-{
-   @Override
-   public Response toResponse(ProjectPrepareException exception)
-   {
-      String message = exception.getMessage();
-      if (message != null)
-      {
-         return Response.status(exception.getStatus()).entity(message).type(MediaType.TEXT_HTML).build();
-      }
+public class ProjectPrepareExceptionMapper implements ExceptionMapper<ProjectPrepareException> {
+    @Override
+    public Response toResponse(ProjectPrepareException exception) {
+        String message = exception.getMessage();
+        if (message != null) {
+            return Response.status(exception.getStatus()).entity(message).type(MediaType.TEXT_HTML).build();
+        }
 
-      return Response.status(exception.getStatus()).entity(exception.getCause()).type(MediaType.TEXT_HTML).build();
-   }
+        return Response.status(exception.getStatus()).entity(exception.getCause()).type(MediaType.TEXT_HTML).build();
+    }
 }

@@ -14,6 +14,16 @@
 
 package com.google.collide.client.editor;
 
+import elemental.client.Browser;
+import elemental.css.CSSStyleDeclaration;
+import elemental.events.Event;
+import elemental.events.EventListener;
+import elemental.events.EventRemover;
+import elemental.events.MouseEvent;
+import elemental.html.ClientRect;
+import elemental.html.DivElement;
+import elemental.html.Element;
+
 import com.codenvy.ide.client.util.CssUtils;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.Executor;
@@ -39,15 +49,6 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
-import elemental.client.Browser;
-import elemental.css.CSSStyleDeclaration;
-import elemental.events.Event;
-import elemental.events.EventListener;
-import elemental.events.EventRemover;
-import elemental.events.MouseEvent;
-import elemental.html.ClientRect;
-import elemental.html.DivElement;
-import elemental.html.Element;
 
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.json.shared.JsonArray;
@@ -61,164 +62,145 @@ import org.exoplatform.ide.shared.util.TextUtils;
  * TODO: Buffer has turned into an EditorSurface, but is still
  * called Buffer.
  */
+
 /**
  * The presenter for the text portion of the editor. This class is used to
  * display text to the user, and to accept mouse input from the user.
- *
+ * <p/>
  * The lifecycle of this class is tied to the {@link Editor} that owns it.
  */
 public class Buffer extends UiComponent<Buffer.View>
-    implements LineListener, LineCountListener, CoordinateMap.DocumentSizeProvider, FoldingManager.FoldingListener {
+        implements LineListener, LineCountListener, CoordinateMap.DocumentSizeProvider, FoldingManager.FoldingListener {
 
-  private static final int MARKER_COLUMN = 100;
+    private static final int MARKER_COLUMN = 100;
 
-  /**
-   * Static factory method for obtaining an instance of Buffer.
-   */
-  public static Buffer create(AppContext appContext, FontDimensions fontDimensions,
-      LineDimensionsCalculator lineDimensions, Executor renderTimeExecutor) {
-    View view = new View(appContext.getResources());
-    Buffer buffer = new Buffer(view, fontDimensions, lineDimensions, renderTimeExecutor);
-    MouseWheelRedirector.redirect(buffer, view.scrollableElement);
-    return buffer;
-  }
+    /** Static factory method for obtaining an instance of Buffer. */
+    public static Buffer create(AppContext appContext, FontDimensions fontDimensions,
+                                LineDimensionsCalculator lineDimensions, Executor renderTimeExecutor) {
+        View view = new View(appContext.getResources());
+        Buffer buffer = new Buffer(view, fontDimensions, lineDimensions, renderTimeExecutor);
+        MouseWheelRedirector.redirect(buffer, view.scrollableElement);
+        return buffer;
+    }
 
-  /**
-   * CssResource for the editor.
-   */
-  public interface Css extends Editor.EditorSharedCss {
-    String editorLineHeight();
+    /** CssResource for the editor. */
+    public interface Css extends Editor.EditorSharedCss {
+        String editorLineHeight();
 
-    String line();
+        String line();
 
-    String scrollbar();
+        String scrollbar();
 
-    int scrollableLeftPadding();
+        int scrollableLeftPadding();
 
-    String spacer();
+        String spacer();
 
-    String textLayer();
+        String textLayer();
 
-    String root();
+        String root();
 
-    String columnMarkerLine();
-    
-    String currentLine();
+        String columnMarkerLine();
 
-    String expandMarker();
+        String currentLine();
 
-    String expandMarkerOver();
-  }
+        String expandMarker();
 
-  /**
-   * Listener that is notified of multiple click and drag mouse actions in the
-   * text buffer area of the editor.
-   */
-  public interface MouseDragListener {
-    void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, short button);
+        String expandMarkerOver();
+    }
 
-    void onMouseDrag(Buffer buffer, int x, int y);
+    /**
+     * Listener that is notified of multiple click and drag mouse actions in the
+     * text buffer area of the editor.
+     */
+    public interface MouseDragListener {
+        void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, short button);
 
-    void onMouseDragRelease(Buffer buffer, int x, int y);
-  }
+        void onMouseDrag(Buffer buffer, int x, int y);
+
+        void onMouseDragRelease(Buffer buffer, int x, int y);
+    }
 
   /*
    * TODO: listeners probably also want to be notified when the
    * mouse leaves the buffer
    */
-  /**
-   * Listener that is notified of mouse movements in the buffer.
-   *
-   * <p>You probably want to use {@link MouseHoverManager} instead.
-   *
-   * TODO: Make it package-private.
-   */
-  public interface MouseMoveListener {
-    void onMouseMove(int x, int y);
-  }
 
-  /**
-   * Listener that is notified of mouse movements out of the buffer.
-   */
-  interface MouseOutListener {
-    void onMouseOut();
-  }
+    /**
+     * Listener that is notified of mouse movements in the buffer.
+     * <p/>
+     * <p>You probably want to use {@link MouseHoverManager} instead.
+     * <p/>
+     * TODO: Make it package-private.
+     */
+    public interface MouseMoveListener {
+        void onMouseMove(int x, int y);
+    }
 
-  /**
-   * Listener that is called when there is a click anywhere in the editor.
-   */
-  public interface MouseClickListener {
-    void onMouseClick(int x, int y);
-  }
-  /**
-   * Listener that is called when there is a Context menu called
-   */
-  public interface ContextMenuListener{
-     void onContextMenu(int x, int y);
-  }
+    /** Listener that is notified of mouse movements out of the buffer. */
+    interface MouseOutListener {
+        void onMouseOut();
+    }
 
-  /**
-   * Listener that is called when the buffer's height changes.
-   */
-  public interface HeightListener {
-    void onHeightChanged(int height);
-  }
+    /** Listener that is called when there is a click anywhere in the editor. */
+    public interface MouseClickListener {
+        void onMouseClick(int x, int y);
+    }
 
-  /**
-   * ClientBundle for the editor.
-   */
-  public interface Resources extends BaseResources.Resources {
-    @Source({"Buffer.css", "constants.css", "com/google/collide/client/common/constants.css"})
-    Css workspaceEditorBufferCss();
-  }
+    /** Listener that is called when there is a Context menu called */
+    public interface ContextMenuListener {
+        void onContextMenu(int x, int y);
+    }
 
-  /**
-   * Listener that is notified of scroll events.
-   */
-  public interface ScrollListener {
-    void onScroll(Buffer buffer, int scrollTop);
-  }
+    /** Listener that is called when the buffer's height changes. */
+    public interface HeightListener {
+        void onHeightChanged(int height);
+    }
 
-  /**
-   * Listener that is notified of window resize events.=
-   */
-  public interface ResizeListener {
-    void onResize(Buffer buffer, int documentHeight, int viewportHeight, int scrollTop);
-  }
+    /** ClientBundle for the editor. */
+    public interface Resources extends BaseResources.Resources {
+        @Source({"Buffer.css", "constants.css", "com/google/collide/client/common/constants.css"})
+        Css workspaceEditorBufferCss();
+    }
 
-  /**
-   * Listen for spacers being added or removed.
-   */
-  public interface SpacerListener {
-    void onSpacerAdded(Spacer spacer);
+    /** Listener that is notified of scroll events. */
+    public interface ScrollListener {
+        void onScroll(Buffer buffer, int scrollTop);
+    }
 
-    void onSpacerHeightChanged(Spacer spacer, int oldHeight);
+    /** Listener that is notified of window resize events.= */
+    public interface ResizeListener {
+        void onResize(Buffer buffer, int documentHeight, int viewportHeight, int scrollTop);
+    }
 
-    void onSpacerRemoved(Spacer spacer, Line oldLine, int oldLineNumber);
-  }
+    /** Listen for spacers being added or removed. */
+    public interface SpacerListener {
+        void onSpacerAdded(Spacer spacer);
 
-  /**
-   * View for the buffer.
-   */
-  public static class View extends CompositeView<ViewEvents> {
-    private final Css css;
+        void onSpacerHeightChanged(Spacer spacer, int oldHeight);
 
-    private final EventListener mouseMoveListener = new EventListener() {
-      @Override
-      public void handleEvent(Event event) {
-        int eventOffsetX = DomUtils.getOffsetX((MouseEvent) event);
-        int eventOffsetY = DomUtils.getOffsetY((MouseEvent) event);
+        void onSpacerRemoved(Spacer spacer, Line oldLine, int oldLineNumber);
+    }
 
-        Offset targetOffsetInBuffer =
-            DomUtils.calculateElementOffset((Element) event.getTarget(), textLayerElement, true);
-        getDelegate().onMouseMove(
-            targetOffsetInBuffer.left + eventOffsetX, targetOffsetInBuffer.top + eventOffsetY);
-      }
-    };
+    /** View for the buffer. */
+    public static class View extends CompositeView<ViewEvents> {
+        private final Css css;
 
-    private final EventListener mouseOutListener = new EventListener() {
-      @Override
-      public void handleEvent(Event evt) {
+        private final EventListener mouseMoveListener = new EventListener() {
+            @Override
+            public void handleEvent(Event event) {
+                int eventOffsetX = DomUtils.getOffsetX((MouseEvent)event);
+                int eventOffsetY = DomUtils.getOffsetY((MouseEvent)event);
+
+                Offset targetOffsetInBuffer =
+                        DomUtils.calculateElementOffset((Element)event.getTarget(), textLayerElement, true);
+                getDelegate().onMouseMove(
+                        targetOffsetInBuffer.left + eventOffsetX, targetOffsetInBuffer.top + eventOffsetY);
+            }
+        };
+
+        private final EventListener mouseOutListener = new EventListener() {
+            @Override
+            public void handleEvent(Event evt) {
         /*
          * Check if we really should handle this event:
          * For mouseout, there are two situations:
@@ -227,221 +209,220 @@ public class Buffer extends UiComponent<Buffer.View>
          * 2. User leaves the window using a keyboard command or something else.
          *    In this case, relatedTarget is undefined.
          */
-        com.google.gwt.user.client.Event gwtEvent = (com.google.gwt.user.client.Event) evt;
-        Element relatedTarget = (Element) gwtEvent.getRelatedEventTarget();
-        if (relatedTarget == null || !scrollableElement.contains(relatedTarget)) {
-          getDelegate().onMouseOut();
-        }
-      }
-    };
+                com.google.gwt.user.client.Event gwtEvent = (com.google.gwt.user.client.Event)evt;
+                Element relatedTarget = (Element)gwtEvent.getRelatedEventTarget();
+                if (relatedTarget == null || !scrollableElement.contains(relatedTarget)) {
+                    getDelegate().onMouseOut();
+                }
+            }
+        };
 
-    private EventRemover mouseMoveListenerRemover;
-    private EventRemover mouseOutListenerRemover;
+        private EventRemover mouseMoveListenerRemover;
+        private EventRemover mouseOutListenerRemover;
 
-    private final Element rootElement;
-    private final Element scrollbarElement;
-    private final Element scrollableElement;
-    private final Element textLayerElement;
-    private final Element columnMarkerElement;
+        private final Element rootElement;
+        private final Element scrollbarElement;
+        private final Element scrollableElement;
+        private final Element textLayerElement;
+        private final Element columnMarkerElement;
 
-    private int scrollTopFromPreviousDispatch;
+        private int scrollTopFromPreviousDispatch;
 
-    private View(Resources res) {
-      this.css = res.workspaceEditorBufferCss();
+        private View(Resources res) {
+            this.css = res.workspaceEditorBufferCss();
 
-      columnMarkerElement = Elements.createDivElement(css.columnMarkerLine());
-      textLayerElement = Elements.createDivElement(css.textLayer());
+            columnMarkerElement = Elements.createDivElement(css.columnMarkerLine());
+            textLayerElement = Elements.createDivElement(css.textLayer());
 
-      scrollableElement = createScrollableElement(res.baseCss());
-      if (false) {
+            scrollableElement = createScrollableElement(res.baseCss());
+            if (false) {
         /*
          * TODO: Re-enable post-v1 when we have a settings page to configure the
          * placement of this marker
          */
-        // Note: columnMarkerElement is lying under the textLayerElement,
-        //       so spacers are not shadowed.
-         scrollableElement.appendChild(columnMarkerElement);
-      }
-      scrollableElement.appendChild(textLayerElement);
+                // Note: columnMarkerElement is lying under the textLayerElement,
+                //       so spacers are not shadowed.
+                scrollableElement.appendChild(columnMarkerElement);
+            }
+            scrollableElement.appendChild(textLayerElement);
 
-      scrollbarElement = createScrollbarElement(res.baseCss());
+            scrollbarElement = createScrollbarElement(res.baseCss());
 
-      rootElement = Elements.createDivElement(css.root());
-      rootElement.appendChild(scrollableElement);
-      rootElement.appendChild(scrollbarElement);
-      setElement(rootElement);
-    }
-
-    private Element createScrollbarElement(BaseResources.Css baseCss) {
-      final DivElement scrollbarElement = Elements.createDivElement(css.scrollbar());
-      scrollbarElement.addClassName(baseCss.documentScrollable());
-      scrollbarElement.addClassName(ThemeConstants.SCROLLBAR);
-      
-      scrollbarElement.addEventListener(Event.SCROLL, new EventListener() {
-        @Override
-        public void handleEvent(Event evt) {
-          setScrollTop(scrollbarElement.getScrollTop(), false);
+            rootElement = Elements.createDivElement(css.root());
+            rootElement.appendChild(scrollableElement);
+            rootElement.appendChild(scrollbarElement);
+            setElement(rootElement);
         }
-      }, false);
 
-      // Prevent stealing focus from scrollable.
-      scrollbarElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
-        @Override
-        public void handleEvent(Event evt) {
-          evt.preventDefault();
+        private Element createScrollbarElement(BaseResources.Css baseCss) {
+            final DivElement scrollbarElement = Elements.createDivElement(css.scrollbar());
+            scrollbarElement.addClassName(baseCss.documentScrollable());
+            scrollbarElement.addClassName(ThemeConstants.SCROLLBAR);
+
+            scrollbarElement.addEventListener(Event.SCROLL, new EventListener() {
+                @Override
+                public void handleEvent(Event evt) {
+                    setScrollTop(scrollbarElement.getScrollTop(), false);
+                }
+            }, false);
+
+            // Prevent stealing focus from scrollable.
+            scrollbarElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
+                @Override
+                public void handleEvent(Event evt) {
+                    evt.preventDefault();
+                }
+            }, false);
+
+            // Empty child will be set to the document height
+            scrollbarElement.appendChild(Elements.createDivElement());
+
+            return scrollbarElement;
         }
-      }, false);
 
-      // Empty child will be set to the document height
-      scrollbarElement.appendChild(Elements.createDivElement());
+        private Element createScrollableElement(BaseResources.Css baseCss) {
+            final DivElement scrollableElement = Elements.createDivElement(css.scrollable());
+            scrollableElement.addClassName(baseCss.documentScrollable());
+            scrollableElement.addClassName(ThemeConstants.SCROLLABLE);
 
-      return scrollbarElement;
-    }
+            scrollableElement.addEventListener(Event.SCROLL, new EventListener() {
+                @Override
+                public void handleEvent(Event evt) {
+                    setScrollTop(scrollableElement.getScrollTop(), false);
+                }
+            }, false);
 
-    private Element createScrollableElement(BaseResources.Css baseCss) {
-      final DivElement scrollableElement = Elements.createDivElement(css.scrollable());
-      scrollableElement.addClassName(baseCss.documentScrollable());
-      scrollableElement.addClassName(ThemeConstants.SCROLLABLE);      
+            scrollableElement.addEventListener(Event.CONTEXTMENU, new EventListener() {
+                @Override
+                public void handleEvent(Event evt) {
+                    MouseEvent e = (MouseEvent)evt;
+                    getDelegate().onContextMenu(e.getClientX(), e.getClientY());
+                    evt.stopPropagation();
+                    evt.preventDefault();
+                }
+            }, false);
 
-      scrollableElement.addEventListener(Event.SCROLL, new EventListener() {
-        @Override
-        public void handleEvent(Event evt) {
-          setScrollTop(scrollableElement.getScrollTop(), false);
-        }
-      }, false);
-
-      scrollableElement.addEventListener(Event.CONTEXTMENU, new EventListener() {
-        @Override
-        public void handleEvent(Event evt) {
-          MouseEvent e = (MouseEvent)evt;
-          getDelegate().onContextMenu(e.getClientX(), e.getClientY());
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-      }, false);
-
-      // TODO: Detach listener in appropriate moment.
-      MouseGestureListener.createAndAttach(scrollableElement, new MouseGestureListener.Callback() {
-        @Override
-        public boolean onClick(int clickCount, MouseEvent event) {
-          // The buffer area does not include the scrollable's padding
-          int bufferClientLeft = css.scrollableLeftPadding() + 8;
-          int bufferClientTop = 0;
-          for (Element element = scrollableElement; element.getOffsetParent() != null;
-              element = element.getOffsetParent()) {
-            bufferClientLeft += element.getOffsetLeft();
-            bufferClientTop += element.getOffsetTop();
-          }
+            // TODO: Detach listener in appropriate moment.
+            MouseGestureListener.createAndAttach(scrollableElement, new MouseGestureListener.Callback() {
+                @Override
+                public boolean onClick(int clickCount, MouseEvent event) {
+                    // The buffer area does not include the scrollable's padding
+                    int bufferClientLeft = css.scrollableLeftPadding() + 8;
+                    int bufferClientTop = 0;
+                    for (Element element = scrollableElement; element.getOffsetParent() != null;
+                         element = element.getOffsetParent()) {
+                        bufferClientLeft += element.getOffsetLeft();
+                        bufferClientTop += element.getOffsetTop();
+                    }
 
           /*
            * This onClick method will get called for horizontal scrollbar interactions. We want to
            * exit early for those. It will not get called for vertical scrollbar interactions since
            * that is a separate element outside of the scrollable element.
            */
-          if (scrollableElement == event.getTarget()) {
-            // Test if the mouse event is on the horizontal scrollbar.
-            int relativeY = event.getClientY() - bufferClientTop;
-            if (relativeY > scrollableElement.getClientHeight()) {
-              // Prevent editor losing focus
-              event.preventDefault();
-              return false;
-            }
-          }
+                    if (scrollableElement == event.getTarget()) {
+                        // Test if the mouse event is on the horizontal scrollbar.
+                        int relativeY = event.getClientY() - bufferClientTop;
+                        if (relativeY > scrollableElement.getClientHeight()) {
+                            // Prevent editor losing focus
+                            event.preventDefault();
+                            return false;
+                        }
+                    }
 
-          getDelegate().onMouseClick(clickCount,
-              event.getClientX(),
-              event.getClientY(),
-              bufferClientLeft,
-              bufferClientTop,
-              event.isShiftKey(),
-              event.getButton());
+                    getDelegate().onMouseClick(clickCount,
+                                               event.getClientX(),
+                                               event.getClientY(),
+                                               bufferClientLeft,
+                                               bufferClientTop,
+                                               event.isShiftKey(),
+                                               event.getButton());
 
-          return true;
-        }
+                    return true;
+                }
 
-        @Override
-        public void onDragRelease(MouseEvent event) {
-          getDelegate().onMouseDragRelease(event.getClientX(), event.getClientY());
-        }
+                @Override
+                public void onDragRelease(MouseEvent event) {
+                    getDelegate().onMouseDragRelease(event.getClientX(), event.getClientY());
+                }
 
-        @Override
-        public void onDrag(MouseEvent event) {
-          getDelegate().onMouseDrag(event.getClientX(), event.getClientY());
-        }
-      });
+                @Override
+                public void onDrag(MouseEvent event) {
+                    getDelegate().onMouseDrag(event.getClientX(), event.getClientY());
+                }
+            });
 
       /*
        * Don't allow tabbing to this -- the input element will be tabbable
        * instead
        */
-      scrollableElement.setTabIndex(-1);
-      EventListener eventListener = new EventListener() {
-        @Override
-        public void handleEvent(Event evt) {
-           onResize();
+            scrollableElement.setTabIndex(-1);
+            EventListener eventListener = new EventListener() {
+                @Override
+                public void handleEvent(Event evt) {
+                    onResize();
+                }
+            };
+            Browser.getWindow().addEventListener(Event.RESIZE, eventListener, false);
+            return scrollableElement;
         }
-      };
-      Browser.getWindow().addEventListener(Event.RESIZE, eventListener, false);
-      return scrollableElement;
-    }
-    
-    public void onResize()
-    {
-       // TODO: also listen for the navigation slider
-       // this event is being caught multiple times, and sometimes the
-       // calculated values are all zero. So only respond if we have positive
-       // values.
-       int height = (int) textLayerElement.getBoundingClientRect().getHeight();
-       int viewportHeight = getHeight();
-       if (height > 0 && viewportHeight > 0) {
-         getDelegate().onScrollableResize(
-             height, viewportHeight, scrollableElement.getScrollTop());
-       }
-    }
 
-    public int getScrollLeft() {
-      return scrollableElement.getScrollLeft();
-    }
+        public void onResize() {
+            // TODO: also listen for the navigation slider
+            // this event is being caught multiple times, and sometimes the
+            // calculated values are all zero. So only respond if we have positive
+            // values.
+            int height = (int)textLayerElement.getBoundingClientRect().getHeight();
+            int viewportHeight = getHeight();
+            if (height > 0 && viewportHeight > 0) {
+                getDelegate().onScrollableResize(
+                        height, viewportHeight, scrollableElement.getScrollTop());
+            }
+        }
 
-    private void addLine(Element lineElement) {
-      String className = lineElement.getClassName();
-      if (className == null || className.isEmpty()) {
-        lineElement.addClassName(css.line());
-      }
+        public int getScrollLeft() {
+            return scrollableElement.getScrollLeft();
+        }
 
-      textLayerElement.appendChild(lineElement);
-    }
+        private void addLine(Element lineElement) {
+            String className = lineElement.getClassName();
+            if (className == null || className.isEmpty()) {
+                lineElement.addClassName(css.line());
+            }
 
-    private Element getFirstLine() {
-      return textLayerElement.getFirstChildElement();
-    }
+            textLayerElement.appendChild(lineElement);
+        }
 
-    private int getHeight() {
-      return scrollableElement.getClientHeight();
-    }
+        private Element getFirstLine() {
+            return textLayerElement.getFirstChildElement();
+        }
 
-    private int getScrollTop() {
-      return scrollableElement.getScrollTop();
-    }
+        private int getHeight() {
+            return scrollableElement.getClientHeight();
+        }
 
-    private int getScrollHeight() {
-      return scrollableElement.getScrollHeight();
-    }
+        private int getScrollTop() {
+            return scrollableElement.getScrollTop();
+        }
 
-    private int getWidth() {
-      return scrollableElement.getClientWidth();
-    }
+        private int getScrollHeight() {
+            return scrollableElement.getScrollHeight();
+        }
 
-    private void reset() {
-      scrollableElement.setScrollTop(0);
-      scrollTopFromPreviousDispatch = 0;
-      
-      textLayerElement.setInnerHTML("");
-    }
+        private int getWidth() {
+            return scrollableElement.getClientWidth();
+        }
 
-    private void setBufferHeight(int height) {
-      textLayerElement.getStyle().setHeight(height, CSSStyleDeclaration.Unit.PX);
-      columnMarkerElement.getStyle().setHeight(height, CSSStyleDeclaration.Unit.PX);
+        private void reset() {
+            scrollableElement.setScrollTop(0);
+            scrollTopFromPreviousDispatch = 0;
+
+            textLayerElement.setInnerHTML("");
+        }
+
+        private void setBufferHeight(int height) {
+            textLayerElement.getStyle().setHeight(height, CSSStyleDeclaration.Unit.PX);
+            columnMarkerElement.getStyle().setHeight(height, CSSStyleDeclaration.Unit.PX);
 
       /*
        * For expediency, we deviate from typical scrollbar behavior by having
@@ -457,474 +438,472 @@ public class Buffer extends UiComponent<Buffer.View>
        * at the bottom of the vertical scrollbar that won't scroll the
        * scrollable element, but that's OK.)
        */
-      scrollbarElement.getFirstChildElement().getStyle()
-          .setHeight(height + Constants.SCROLLBAR_SIZE, CSSStyleDeclaration.Unit.PX);
-    }
-
-    public void setWidth(int width) {
-      textLayerElement.getStyle().setWidth(width, CSSStyleDeclaration.Unit.PX);
-    }
-
-    private void setScrollTop(int scrollTop, boolean forceDispatch) {
-      if (scrollTop != scrollableElement.getScrollTop()) {
-        scrollableElement.setScrollTop(scrollTop);
-      }
-
-      if (scrollTop != scrollbarElement.getScrollTop()) {
-        scrollbarElement.setScrollTop(scrollTop);
-      }
-
-      if (scrollTop != scrollTopFromPreviousDispatch) {
-        // Use getScrollTop in case the desired scrollTop could not be set
-        int newScrollTop = scrollableElement.getScrollTop();
-        getDelegate().onScroll(newScrollTop);
-        scrollTopFromPreviousDispatch = newScrollTop;
-      }
-    }
-
-    public void setScrollLeft(int scrollLeft) {
-      scrollableElement.setScrollLeft(scrollLeft);
-    }
-
-    void registerMouseMoveListener() {
-      if (mouseMoveListenerRemover == null) {
-        mouseMoveListenerRemover =
-            scrollableElement.addEventListener(Event.MOUSEMOVE, mouseMoveListener, false);
-      }
-    }
-
-    void unregisterMouseMoveListener() {
-      if (mouseMoveListenerRemover != null) {
-        mouseMoveListenerRemover.remove();
-        mouseMoveListenerRemover = null;
-      }
-    }
-
-    void registerMouseOutListener() {
-      if (mouseOutListenerRemover == null) {
-        mouseOutListenerRemover =
-            scrollableElement.addEventListener(Event.MOUSEOUT, mouseOutListener, false);
-      }
-    }
-
-    void unregisterMouseOutListener() {
-      if (mouseOutListenerRemover != null) {
-        mouseOutListenerRemover.remove();
-        mouseOutListenerRemover = null;
-      }
-    }
-  }
-
-  private interface ViewEvents {
-    void onMouseClick(int clickCount,
-        int clientX,
-        int clientY,
-        int bufferClientLeft,
-        int bufferClientTop,
-        boolean isShiftHeld,
-        short button);
-
-    void onMouseDrag(int clientX, int clientY);
-
-    void onMouseDragRelease(int clientX, int clientY);
-
-    void onMouseMove(int bufferX, int bufferY);
-
-    void onMouseOut();
-
-    void onScroll(int scrollTop);
-
-    void onScrollableResize(int height, int viewportHeight, int scrollTop);
-    
-    void onContextMenu(int clientX, int clientY);
-  }
-
-  private final CoordinateMap coordinateMap;
-  private final ElementManager elementManager;
-  private final ListenerManager<HeightListener> heightListenerManager =
-      ListenerManager.create();
-  private int maxLineLength;
-  private final ListenerManager<MouseClickListener> mouseClickListenerManager =
-      ListenerManager.create();
-  private final ListenerManager<MouseDragListener> mouseDragListenerManager =
-      ListenerManager.create();
-  
-  private final ListenerManager<ContextMenuListener> contextMenuListenerManager =
-      ListenerManager.create();
-
-  private final ListenerManager<MouseMoveListener> mouseMoveListenerManager =
-      ListenerManager.create(new ListenerManager.RegistrationListener<MouseMoveListener>() {
-            @Override
-            public void onListenerAdded(MouseMoveListener listener) {
-              if (mouseMoveListenerManager.getCount() == 1) {
-                getView().registerMouseMoveListener();
-              }
-            }
-
-            @Override
-            public void onListenerRemoved(MouseMoveListener listener) {
-              if (mouseMoveListenerManager.getCount() == 0) {
-                getView().unregisterMouseMoveListener();
-              }
-            }
-          });
-
-  private final ListenerManager<MouseOutListener> mouseOutListenerManager =
-      ListenerManager.create(new ListenerManager.RegistrationListener<MouseOutListener>() {
-            @Override
-            public void onListenerAdded(MouseOutListener listener) {
-              if (mouseOutListenerManager.getCount() == 1) {
-                getView().registerMouseOutListener();
-              }
-            }
-
-            @Override
-            public void onListenerRemoved(MouseOutListener listener) {
-              if (mouseOutListenerManager.getCount() == 0) {
-                getView().unregisterMouseOutListener();
-              }
-            }
-          });
-
-  private static final Dispatcher<MouseOutListener> mouseOutListenerDispatcher =
-      new Dispatcher<MouseOutListener>() {
-        @Override
-        public void dispatch(MouseOutListener listener) {
-          listener.onMouseOut();
-        }
-      };
-
-  private final ListenerManager<SpacerListener> spacerListenerManager = ListenerManager.create();
-  private Document document;
-  private final int editorLineHeight;
-  private final ListenerManager<ScrollListener> scrollListenerManager = ListenerManager.create();
-  private final ListenerManager<ResizeListener> resizeListenerManager = ListenerManager.create();
-  private final FontDimensions fontDimensions;
-  private final LineDimensionsCalculator lineDimensions;
-  private final RemoverManager documentChangedRemoverManager = new RemoverManager();
-  private final Executor renderTimeExecutor;
-  private FoldingManager foldingManager;
-
-  private Buffer(View view, FontDimensions fontDimensions, LineDimensionsCalculator lineDimensions,
-      Executor renderTimeExecutor) {
-    super(view);
-
-    this.fontDimensions = fontDimensions;
-    this.lineDimensions = lineDimensions;
-    this.renderTimeExecutor = renderTimeExecutor;
-    this.editorLineHeight = CssUtils.parsePixels(view.css.editorLineHeight());
-
-    coordinateMap = new CoordinateMap(this);
-    elementManager = new ElementManager(getView().textLayerElement, this);
-
-    updateColumnMarkerPosition();
-
-    view.setDelegate(new ViewEvents() {
-      private int bufferLeft;
-      private int bufferTop;
-      private int bufferRelativeX;
-      private int bufferRelativeY;
-
-      @Override
-      public void onMouseClick(final int clickCount,
-          int clientX,
-          int clientY,
-          int bufferClientLeft,
-          int bufferClientTop,
-          final boolean isShiftHeld,
-          final short button) {
-
-        this.bufferLeft = bufferClientLeft;
-        this.bufferTop = bufferClientTop;
-        updateBufferRelativeXy(clientX, clientY);
-
-        if (clickCount == 1) {
-          // Dispatch to simple click listeners
-          mouseClickListenerManager.dispatch(new Dispatcher<MouseClickListener>() {
-            @Override
-            public void dispatch(MouseClickListener listener) {
-              listener.onMouseClick(bufferRelativeX, bufferRelativeY);
-            }
-          });
+            scrollbarElement.getFirstChildElement().getStyle()
+                            .setHeight(height + Constants.SCROLLBAR_SIZE, CSSStyleDeclaration.Unit.PX);
         }
 
-        mouseDragListenerManager.dispatch(new Dispatcher<MouseDragListener>() {
-          @Override
-          public void dispatch(MouseDragListener listener) {
-            listener.onMouseClick(
-                Buffer.this, clickCount, bufferRelativeX, bufferRelativeY, isShiftHeld, button);
-          }
-        });
-      }
+        public void setWidth(int width) {
+            textLayerElement.getStyle().setWidth(width, CSSStyleDeclaration.Unit.PX);
+        }
 
-      @Override
-      public void onMouseDrag(final int clientX, final int clientY) {
-        updateBufferRelativeXy(clientX, clientY);
-        mouseDragListenerManager.dispatch(new Dispatcher<MouseDragListener>() {
-          @Override
-          public void dispatch(MouseDragListener listener) {
-            listener.onMouseDrag(Buffer.this, bufferRelativeX, bufferRelativeY);
-          }
-        });
-      }
+        private void setScrollTop(int scrollTop, boolean forceDispatch) {
+            if (scrollTop != scrollableElement.getScrollTop()) {
+                scrollableElement.setScrollTop(scrollTop);
+            }
 
-      @Override
-      public void onMouseDragRelease(final int clientX, final int clientY) {
-        updateBufferRelativeXy(clientX, clientY);
-        mouseDragListenerManager.dispatch(new Dispatcher<MouseDragListener>() {
-          @Override
-          public void dispatch(MouseDragListener listener) {
-            listener.onMouseDragRelease(Buffer.this, bufferRelativeX, bufferRelativeY);
-          }
-        });
-      }
+            if (scrollTop != scrollbarElement.getScrollTop()) {
+                scrollbarElement.setScrollTop(scrollTop);
+            }
 
-      @Override
-      public void onMouseMove(final int bufferX, final int bufferY) {
-        mouseMoveListenerManager.dispatch(new Dispatcher<MouseMoveListener>() {
-          @Override
-          public void dispatch(MouseMoveListener listener) {
-            listener.onMouseMove(bufferX, bufferY);
-          }
-        });
-      }
+            if (scrollTop != scrollTopFromPreviousDispatch) {
+                // Use getScrollTop in case the desired scrollTop could not be set
+                int newScrollTop = scrollableElement.getScrollTop();
+                getDelegate().onScroll(newScrollTop);
+                scrollTopFromPreviousDispatch = newScrollTop;
+            }
+        }
 
-      @Override
-      public void onMouseOut() {
-        mouseOutListenerManager.dispatch(mouseOutListenerDispatcher);
-      }
+        public void setScrollLeft(int scrollLeft) {
+            scrollableElement.setScrollLeft(scrollLeft);
+        }
 
-      private void updateBufferRelativeXy(int clientX, int clientY) {
+        void registerMouseMoveListener() {
+            if (mouseMoveListenerRemover == null) {
+                mouseMoveListenerRemover =
+                        scrollableElement.addEventListener(Event.MOUSEMOVE, mouseMoveListener, false);
+            }
+        }
+
+        void unregisterMouseMoveListener() {
+            if (mouseMoveListenerRemover != null) {
+                mouseMoveListenerRemover.remove();
+                mouseMoveListenerRemover = null;
+            }
+        }
+
+        void registerMouseOutListener() {
+            if (mouseOutListenerRemover == null) {
+                mouseOutListenerRemover =
+                        scrollableElement.addEventListener(Event.MOUSEOUT, mouseOutListener, false);
+            }
+        }
+
+        void unregisterMouseOutListener() {
+            if (mouseOutListenerRemover != null) {
+                mouseOutListenerRemover.remove();
+                mouseOutListenerRemover = null;
+            }
+        }
+    }
+
+    private interface ViewEvents {
+        void onMouseClick(int clickCount,
+                          int clientX,
+                          int clientY,
+                          int bufferClientLeft,
+                          int bufferClientTop,
+                          boolean isShiftHeld,
+                          short button);
+
+        void onMouseDrag(int clientX, int clientY);
+
+        void onMouseDragRelease(int clientX, int clientY);
+
+        void onMouseMove(int bufferX, int bufferY);
+
+        void onMouseOut();
+
+        void onScroll(int scrollTop);
+
+        void onScrollableResize(int height, int viewportHeight, int scrollTop);
+
+        void onContextMenu(int clientX, int clientY);
+    }
+
+    private final CoordinateMap  coordinateMap;
+    private final ElementManager elementManager;
+    private final ListenerManager<HeightListener> heightListenerManager =
+            ListenerManager.create();
+    private int maxLineLength;
+    private final ListenerManager<MouseClickListener> mouseClickListenerManager =
+            ListenerManager.create();
+    private final ListenerManager<MouseDragListener>  mouseDragListenerManager  =
+            ListenerManager.create();
+
+    private final ListenerManager<ContextMenuListener> contextMenuListenerManager =
+            ListenerManager.create();
+
+    private final ListenerManager<MouseMoveListener> mouseMoveListenerManager =
+            ListenerManager.create(new ListenerManager.RegistrationListener<MouseMoveListener>() {
+                @Override
+                public void onListenerAdded(MouseMoveListener listener) {
+                    if (mouseMoveListenerManager.getCount() == 1) {
+                        getView().registerMouseMoveListener();
+                    }
+                }
+
+                @Override
+                public void onListenerRemoved(MouseMoveListener listener) {
+                    if (mouseMoveListenerManager.getCount() == 0) {
+                        getView().unregisterMouseMoveListener();
+                    }
+                }
+            });
+
+    private final ListenerManager<MouseOutListener> mouseOutListenerManager =
+            ListenerManager.create(new ListenerManager.RegistrationListener<MouseOutListener>() {
+                @Override
+                public void onListenerAdded(MouseOutListener listener) {
+                    if (mouseOutListenerManager.getCount() == 1) {
+                        getView().registerMouseOutListener();
+                    }
+                }
+
+                @Override
+                public void onListenerRemoved(MouseOutListener listener) {
+                    if (mouseOutListenerManager.getCount() == 0) {
+                        getView().unregisterMouseOutListener();
+                    }
+                }
+            });
+
+    private static final Dispatcher<MouseOutListener> mouseOutListenerDispatcher =
+            new Dispatcher<MouseOutListener>() {
+                @Override
+                public void dispatch(MouseOutListener listener) {
+                    listener.onMouseOut();
+                }
+            };
+
+    private final ListenerManager<SpacerListener> spacerListenerManager = ListenerManager.create();
+    private       Document document;
+    private final int      editorLineHeight;
+    private final ListenerManager<ScrollListener> scrollListenerManager = ListenerManager.create();
+    private final ListenerManager<ResizeListener> resizeListenerManager = ListenerManager.create();
+    private final FontDimensions           fontDimensions;
+    private final LineDimensionsCalculator lineDimensions;
+    private final RemoverManager documentChangedRemoverManager = new RemoverManager();
+    private final Executor       renderTimeExecutor;
+    private       FoldingManager foldingManager;
+
+    private Buffer(View view, FontDimensions fontDimensions, LineDimensionsCalculator lineDimensions,
+                   Executor renderTimeExecutor) {
+        super(view);
+
+        this.fontDimensions = fontDimensions;
+        this.lineDimensions = lineDimensions;
+        this.renderTimeExecutor = renderTimeExecutor;
+        this.editorLineHeight = CssUtils.parsePixels(view.css.editorLineHeight());
+
+        coordinateMap = new CoordinateMap(this);
+        elementManager = new ElementManager(getView().textLayerElement, this);
+
+        updateColumnMarkerPosition();
+
+        view.setDelegate(new ViewEvents() {
+            private int bufferLeft;
+            private int bufferTop;
+            private int bufferRelativeX;
+            private int bufferRelativeY;
+
+            @Override
+            public void onMouseClick(final int clickCount,
+                                     int clientX,
+                                     int clientY,
+                                     int bufferClientLeft,
+                                     int bufferClientTop,
+                                     final boolean isShiftHeld,
+                                     final short button) {
+
+                this.bufferLeft = bufferClientLeft;
+                this.bufferTop = bufferClientTop;
+                updateBufferRelativeXy(clientX, clientY);
+
+                if (clickCount == 1) {
+                    // Dispatch to simple click listeners
+                    mouseClickListenerManager.dispatch(new Dispatcher<MouseClickListener>() {
+                        @Override
+                        public void dispatch(MouseClickListener listener) {
+                            listener.onMouseClick(bufferRelativeX, bufferRelativeY);
+                        }
+                    });
+                }
+
+                mouseDragListenerManager.dispatch(new Dispatcher<MouseDragListener>() {
+                    @Override
+                    public void dispatch(MouseDragListener listener) {
+                        listener.onMouseClick(
+                                Buffer.this, clickCount, bufferRelativeX, bufferRelativeY, isShiftHeld, button);
+                    }
+                });
+            }
+
+            @Override
+            public void onMouseDrag(final int clientX, final int clientY) {
+                updateBufferRelativeXy(clientX, clientY);
+                mouseDragListenerManager.dispatch(new Dispatcher<MouseDragListener>() {
+                    @Override
+                    public void dispatch(MouseDragListener listener) {
+                        listener.onMouseDrag(Buffer.this, bufferRelativeX, bufferRelativeY);
+                    }
+                });
+            }
+
+            @Override
+            public void onMouseDragRelease(final int clientX, final int clientY) {
+                updateBufferRelativeXy(clientX, clientY);
+                mouseDragListenerManager.dispatch(new Dispatcher<MouseDragListener>() {
+                    @Override
+                    public void dispatch(MouseDragListener listener) {
+                        listener.onMouseDragRelease(Buffer.this, bufferRelativeX, bufferRelativeY);
+                    }
+                });
+            }
+
+            @Override
+            public void onMouseMove(final int bufferX, final int bufferY) {
+                mouseMoveListenerManager.dispatch(new Dispatcher<MouseMoveListener>() {
+                    @Override
+                    public void dispatch(MouseMoveListener listener) {
+                        listener.onMouseMove(bufferX, bufferY);
+                    }
+                });
+            }
+
+            @Override
+            public void onMouseOut() {
+                mouseOutListenerManager.dispatch(mouseOutListenerDispatcher);
+            }
+
+            private void updateBufferRelativeXy(int clientX, int clientY) {
         /*
          * TODO: consider moving this element top/left-relative
          * code to MouseGestureListener
          */
-        bufferRelativeX = clientX - bufferLeft + getScrollLeft();
-        bufferRelativeY = clientY - bufferTop + getScrollTop();
-      }
-
-      @Override
-      public void onScroll(final int scrollTop) {
-        scrollListenerManager.dispatch(new Dispatcher<ScrollListener>() {
-          @Override
-          public void dispatch(ScrollListener listener) {
-            listener.onScroll(Buffer.this, scrollTop);
-          }
-        });
-      }
-
-      @Override
-      public void onScrollableResize(
-          final int height, final int viewportHeight, final int scrollTop) {
-        // TODO: Look into why this is necessary.
-        updateTextWidth();
-        updateVerticalScrollbarDisplayVisibility();
-        updateColumnMarkerHeight();
-
-        resizeListenerManager.dispatch(new Dispatcher<ResizeListener>() {
-          @Override
-          public void dispatch(ResizeListener listener) {
-            listener.onResize(Buffer.this, height, viewportHeight, scrollTop);
-          }
-        });
-      }
-
-      @Override
-      public void onContextMenu(final int clientX, final int clientY)
-      {
-         contextMenuListenerManager.dispatch(new Dispatcher<Buffer.ContextMenuListener>()
-         {
+                bufferRelativeX = clientX - bufferLeft + getScrollLeft();
+                bufferRelativeY = clientY - bufferTop + getScrollTop();
+            }
 
             @Override
-            public void dispatch(ContextMenuListener listener)
-            {
-               listener.onContextMenu(clientX, clientY);
+            public void onScroll(final int scrollTop) {
+                scrollListenerManager.dispatch(new Dispatcher<ScrollListener>() {
+                    @Override
+                    public void dispatch(ScrollListener listener) {
+                        listener.onScroll(Buffer.this, scrollTop);
+                    }
+                });
             }
-         });
-      }
-    });
-  }
 
-  public void addLineElement(Element lineElement) {
-    getView().addLine(lineElement);
-  }
+            @Override
+            public void onScrollableResize(
+                    final int height, final int viewportHeight, final int scrollTop) {
+                // TODO: Look into why this is necessary.
+                updateTextWidth();
+                updateVerticalScrollbarDisplayVisibility();
+                updateColumnMarkerHeight();
 
-  public boolean hasLineElement(Element lineElement) {
-    return lineElement.getParentElement() != null;
-  }
+                resizeListenerManager.dispatch(new Dispatcher<ResizeListener>() {
+                    @Override
+                    public void dispatch(ResizeListener listener) {
+                        listener.onResize(Buffer.this, height, viewportHeight, scrollTop);
+                    }
+                });
+            }
 
-  /*
-   * TODO: consider making ElementManager public, and a
-   * getElementManager() method instead
-   */
-  public void addAnchoredElement(ReadOnlyAnchor anchor, Element element) {
-    elementManager.addAnchoredElement(anchor, element);
-  }
+            @Override
+            public void onContextMenu(final int clientX, final int clientY) {
+                contextMenuListenerManager.dispatch(new Dispatcher<Buffer.ContextMenuListener>() {
 
-  public void removeAnchoredElement(ReadOnlyAnchor anchor, Element element) {
-    elementManager.removeAnchoredElement(anchor, element);
-  }
-
-  public void addUnmanagedElement(Element element) {
-    elementManager.addUnmanagedElement(element);
-  }
-
-  public void removeUnmanagedElement(Element element) {
-    elementManager.removeUnmanagedElement(element);
-  }
-
-  /**
-   * Returns a newly added spacer above the given {@code lineInfo} with the
-   * given {@code height}.
-   */
-  public Spacer addSpacer(LineInfo lineInfo, int height) {
-    final Spacer createdSpacer =
-        coordinateMap.createSpacer(lineInfo, height, this, getView().css.spacer());
-    updateBufferHeightAndMaybeScrollTop(calculateSpacerTop(createdSpacer), height);
-    spacerListenerManager.dispatch(new Dispatcher<Buffer.SpacerListener>() {
-      @Override
-      public void dispatch(SpacerListener listener) {
-        listener.onSpacerAdded(createdSpacer);
-      }
-    });
-    return createdSpacer;
-  }
-
-  public void removeSpacer(final Spacer spacer) {
-    final Line spacerLine = spacer.getLine();
-    final int spacerLineNumber = spacer.getLineNumber();
-    if (coordinateMap.removeSpacer(spacer)) {
-      updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(spacerLineNumber),
-          -spacer.getHeight());
-      spacerListenerManager.dispatch(new Dispatcher<Buffer.SpacerListener>() {
-        @Override
-        public void dispatch(SpacerListener listener) {
-          listener.onSpacerRemoved(spacer, spacerLine, spacerLineNumber);
-        }
-      });
+                    @Override
+                    public void dispatch(ContextMenuListener listener) {
+                        listener.onContextMenu(clientX, clientY);
+                    }
+                });
+            }
+        });
     }
-  }
 
-  public boolean hasSpacers() {
-    return coordinateMap.getTotalSpacerHeight() != 0;
-  }
+    public void addLineElement(Element lineElement) {
+        getView().addLine(lineElement);
+    }
 
-  @Override
-  public void handleSpacerHeightChanged(final Spacer spacer, final int oldHeight) {
-    int deltaHeight = spacer.getHeight() - oldHeight;
-    updateBufferHeightAndMaybeScrollTop(calculateSpacerTop(spacer), deltaHeight);
-    spacerListenerManager.dispatch(new Dispatcher<Buffer.SpacerListener>() {
-      @Override
-      public void dispatch(SpacerListener listener) {
-        listener.onSpacerHeightChanged(spacer, oldHeight);
-      }
-    });
-  }
+    public boolean hasLineElement(Element lineElement) {
+        return lineElement.getParentElement() != null;
+    }
 
-  public int calculateSpacerTop(Spacer spacer) {
-    int lineNumber = spacer.getLineNumber();
-    lineNumber = modelLine2VisibleLine(lineNumber);
-    return coordinateMap.convertLineNumberToY(lineNumber) - spacer.getHeight();
-  }
+    /*
+     * TODO: consider making ElementManager public, and a
+     * getElementManager() method instead
+     */
+    public void addAnchoredElement(ReadOnlyAnchor anchor, Element element) {
+        elementManager.addAnchoredElement(anchor, element);
+    }
 
-  /**
-   * @param inDocumentRange whether to do a validation check on the return line
-   *        number to ensure it is in the document's range
-   */
-  public int convertYToLineNumber(int y, boolean inDocumentRange) {
-    int lineNumber = coordinateMap.convertYToLineNumber(y);
-    lineNumber += getFoldedLinesCountAboveLineNumber(lineNumber);
-    return inDocumentRange ? LineUtils.getValidLineNumber(lineNumber, document) : lineNumber;
-  }
+    public void removeAnchoredElement(ReadOnlyAnchor anchor, Element element) {
+        elementManager.removeAnchoredElement(anchor, element);
+    }
 
-  public int convertXToRoundedVisibleColumn(int x, Line line) {
-    int roundedColumn = convertXToColumn(x, line, RoundingStrategy.ROUND);
-    return TextUtils.findNextCharacterInclusive(line.getText(), roundedColumn);
-  }
+    public void addUnmanagedElement(Element element) {
+        elementManager.addUnmanagedElement(element);
+    }
 
-  public int convertXToColumn(int x, Line line, RoundingStrategy roundingStrategy) {
-    return LineUtils.rubberbandColumn(
-        line, lineDimensions.convertXToColumn(line, x, roundingStrategy));
-  }
+    public void removeUnmanagedElement(Element element) {
+        elementManager.removeUnmanagedElement(element);
+    }
 
-  public ListenerRegistrar<HeightListener> getHeightListenerRegistrar() {
-    return heightListenerManager;
-  }
+    /**
+     * Returns a newly added spacer above the given {@code lineInfo} with the
+     * given {@code height}.
+     */
+    public Spacer addSpacer(LineInfo lineInfo, int height) {
+        final Spacer createdSpacer =
+                coordinateMap.createSpacer(lineInfo, height, this, getView().css.spacer());
+        updateBufferHeightAndMaybeScrollTop(calculateSpacerTop(createdSpacer), height);
+        spacerListenerManager.dispatch(new Dispatcher<Buffer.SpacerListener>() {
+            @Override
+            public void dispatch(SpacerListener listener) {
+                listener.onSpacerAdded(createdSpacer);
+            }
+        });
+        return createdSpacer;
+    }
 
-  /**
-   * Returns the top for a line, e.g. if {@code lineNumber} is 0 and it is a
-   * simple document, 0 will be returned.
-   */
-  public int convertLineNumberToY(int lineNumber) {
-    lineNumber = modelLine2VisibleLine(lineNumber);
-    return coordinateMap.convertLineNumberToY(lineNumber);
-  }
+    public void removeSpacer(final Spacer spacer) {
+        final Line spacerLine = spacer.getLine();
+        final int spacerLineNumber = spacer.getLineNumber();
+        if (coordinateMap.removeSpacer(spacer)) {
+            updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(spacerLineNumber),
+                                                -spacer.getHeight());
+            spacerListenerManager.dispatch(new Dispatcher<Buffer.SpacerListener>() {
+                @Override
+                public void dispatch(SpacerListener listener) {
+                    listener.onSpacerRemoved(spacer, spacerLine, spacerLineNumber);
+                }
+            });
+        }
+    }
 
-  public int convertColumnToX(Line line, int column) {
-    return (int) Math.floor(lineDimensions.convertColumnToX(line, column));
-  }
+    public boolean hasSpacers() {
+        return coordinateMap.getTotalSpacerHeight() != 0;
+    }
 
-  public int calculateColumnLeftRelativeToScrollableIgnoringSpecialCharacters(int column) {
-    return calculateColumnLeftIgnoringSpecialCharacters(column)
-        + getView().css.scrollableLeftPadding();
-  }
+    @Override
+    public void handleSpacerHeightChanged(final Spacer spacer, final int oldHeight) {
+        int deltaHeight = spacer.getHeight() - oldHeight;
+        updateBufferHeightAndMaybeScrollTop(calculateSpacerTop(spacer), deltaHeight);
+        spacerListenerManager.dispatch(new Dispatcher<Buffer.SpacerListener>() {
+            @Override
+            public void dispatch(SpacerListener listener) {
+                listener.onSpacerHeightChanged(spacer, oldHeight);
+            }
+        });
+    }
 
-  /**
-   * Converts a column to an x value assuming all characters in-between are
-   * number width.
-   * <p>
-   * DO NOT USE THIS UNLESS IT IS INTENTIONAL AND YOU UNDERSTAND THE
-   * CONSEQUENCES. DO NOT USE IT JUST BECAUSE IT DOES NOT REQUIRE A
-   * {@link Line}.
-   */
-  public int calculateColumnLeftIgnoringSpecialCharacters(int column) {
-    return (int) Math.floor(fontDimensions.getCharacterWidth() * column);
-  }
+    public int calculateSpacerTop(Spacer spacer) {
+        int lineNumber = spacer.getLineNumber();
+        lineNumber = modelLine2VisibleLine(lineNumber);
+        return coordinateMap.convertLineNumberToY(lineNumber) - spacer.getHeight();
+    }
 
-  public int calculateColumnLeft(Line line, int column) {
-    return Math.max(0, convertColumnToX(line, column));
-  }
+    /**
+     * @param inDocumentRange
+     *         whether to do a validation check on the return line
+     *         number to ensure it is in the document's range
+     */
+    public int convertYToLineNumber(int y, boolean inDocumentRange) {
+        int lineNumber = coordinateMap.convertYToLineNumber(y);
+        lineNumber += getFoldedLinesCountAboveLineNumber(lineNumber);
+        return inDocumentRange ? LineUtils.getValidLineNumber(lineNumber, document) : lineNumber;
+    }
 
-  public int calculateLineBottom(int lineNumber) {
-    return convertLineNumberToY(lineNumber) + editorLineHeight;
-  }
+    public int convertXToRoundedVisibleColumn(int x, Line line) {
+        int roundedColumn = convertXToColumn(x, line, RoundingStrategy.ROUND);
+        return TextUtils.findNextCharacterInclusive(line.getText(), roundedColumn);
+    }
 
-  public int calculateLineTop(int lineNumber) {
-    return convertLineNumberToY(lineNumber);
-  }
+    public int convertXToColumn(int x, Line line, RoundingStrategy roundingStrategy) {
+        return LineUtils.rubberbandColumn(
+                line, lineDimensions.convertXToColumn(line, x, roundingStrategy));
+    }
 
-  public ListenerRegistrar<MouseClickListener> getMouseClickListenerRegistrar() {
-    return mouseClickListenerManager;
-  }
+    public ListenerRegistrar<HeightListener> getHeightListenerRegistrar() {
+        return heightListenerManager;
+    }
 
-  public ListenerRegistrar<SpacerListener> getSpacerListenerRegistrar() {
-    return spacerListenerManager;
-  }
+    /**
+     * Returns the top for a line, e.g. if {@code lineNumber} is 0 and it is a
+     * simple document, 0 will be returned.
+     */
+    public int convertLineNumberToY(int lineNumber) {
+        lineNumber = modelLine2VisibleLine(lineNumber);
+        return coordinateMap.convertLineNumberToY(lineNumber);
+    }
 
-  public Document getDocument() {
-    return document;
-  }
+    public int convertColumnToX(Line line, int column) {
+        return (int)Math.floor(lineDimensions.convertColumnToX(line, column));
+    }
 
-  @Override
-  public float getEditorCharacterWidth() {
-    return fontDimensions.getCharacterWidth();
-  }
+    public int calculateColumnLeftRelativeToScrollableIgnoringSpecialCharacters(int column) {
+        return calculateColumnLeftIgnoringSpecialCharacters(column)
+               + getView().css.scrollableLeftPadding();
+    }
 
-  /**
-   * TODO: So right now this uses a constant, unfortunately it's not
-   * accurate when zoomed in/out and sometimes leads to whitespace between
-   * selection lines. This should be converted to fontDimensions.getHeight().
-   */
-  @Override
-  public int getEditorLineHeight() {
-    return editorLineHeight;
-  }
+    /**
+     * Converts a column to an x value assuming all characters in-between are
+     * number width.
+     * <p/>
+     * DO NOT USE THIS UNLESS IT IS INTENTIONAL AND YOU UNDERSTAND THE
+     * CONSEQUENCES. DO NOT USE IT JUST BECAUSE IT DOES NOT REQUIRE A
+     * {@link Line}.
+     */
+    public int calculateColumnLeftIgnoringSpecialCharacters(int column) {
+        return (int)Math.floor(fontDimensions.getCharacterWidth() * column);
+    }
 
-  public Element getFirstLineElement() {
-    return getView().getFirstLine();
-  }
+    public int calculateColumnLeft(Line line, int column) {
+        return Math.max(0, convertColumnToX(line, column));
+    }
 
-  public int getFlooredHeightInLines() {
+    public int calculateLineBottom(int lineNumber) {
+        return convertLineNumberToY(lineNumber) + editorLineHeight;
+    }
+
+    public int calculateLineTop(int lineNumber) {
+        return convertLineNumberToY(lineNumber);
+    }
+
+    public ListenerRegistrar<MouseClickListener> getMouseClickListenerRegistrar() {
+        return mouseClickListenerManager;
+    }
+
+    public ListenerRegistrar<SpacerListener> getSpacerListenerRegistrar() {
+        return spacerListenerManager;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    @Override
+    public float getEditorCharacterWidth() {
+        return fontDimensions.getCharacterWidth();
+    }
+
+    /**
+     * TODO: So right now this uses a constant, unfortunately it's not
+     * accurate when zoomed in/out and sometimes leads to whitespace between
+     * selection lines. This should be converted to fontDimensions.getHeight().
+     */
+    @Override
+    public int getEditorLineHeight() {
+        return editorLineHeight;
+    }
+
+    public Element getFirstLineElement() {
+        return getView().getFirstLine();
+    }
+
+    public int getFlooredHeightInLines() {
     /*
      * Imagine scrollTop = 0, lineHeight = 10, and height = 20. If we passed
      * "true", convertYToLineNumber(0+20) would bound on the document size and
@@ -932,168 +911,171 @@ public class Buffer extends UiComponent<Buffer.View>
      */
 //    return convertYToLineNumber(getScrollTop() + getHeight(), false)
 //        - convertYToLineNumber(getScrollTop(), false);
-    return coordinateMap.convertYToLineNumber(getScrollTop() + getHeight()) - coordinateMap.convertYToLineNumber(getScrollTop());
-  }
+        return coordinateMap.convertYToLineNumber(getScrollTop() + getHeight()) - coordinateMap.convertYToLineNumber(getScrollTop());
+    }
 
-  /**
-   * Returns last visible (not collapsed) in viewport line number.
-   * 
-   * @param topLineNumber top line number
-   * @return last visible line number
-   */
-  public int getLastVisibleLineNumberFromTop(int topLineNumber) {
-    topLineNumber = getNextClosestModelLineThatIsVisible(topLineNumber);
-    final int topLineY = convertLineNumberToY(topLineNumber);
-    final int bottomLineY = topLineY + getHeight();
-    return convertYToLineNumber(bottomLineY, false);
-  }
+    /**
+     * Returns last visible (not collapsed) in viewport line number.
+     *
+     * @param topLineNumber
+     *         top line number
+     * @return last visible line number
+     */
+    public int getLastVisibleLineNumberFromTop(int topLineNumber) {
+        topLineNumber = getNextClosestModelLineThatIsVisible(topLineNumber);
+        final int topLineY = convertLineNumberToY(topLineNumber);
+        final int bottomLineY = topLineY + getHeight();
+        return convertYToLineNumber(bottomLineY, false);
+    }
 
-  public int getHeight() {
-    return getView().getHeight();
-  }
+    public int getHeight() {
+        return getView().getHeight();
+    }
 
-  public ListenerRegistrar<MouseDragListener> getMouseDragListenerRegistrar() {
-    return mouseDragListenerManager;
-  }
-  
-  public ListenerRegistrar<ContextMenuListener> getContenxtMenuListenerRegistrar() {
-     return contextMenuListenerManager;
-  }  
+    public ListenerRegistrar<MouseDragListener> getMouseDragListenerRegistrar() {
+        return mouseDragListenerManager;
+    }
 
-  // TODO: Make it package-private.
-  public ListenerRegistrar<MouseMoveListener> getMouseMoveListenerRegistrar() {
-    return mouseMoveListenerManager;
-  }
+    public ListenerRegistrar<ContextMenuListener> getContenxtMenuListenerRegistrar() {
+        return contextMenuListenerManager;
+    }
 
-  ListenerRegistrar<MouseOutListener> getMouseOutListenerRegistrar() {
-    return mouseOutListenerManager;
-  }
+    // TODO: Make it package-private.
+    public ListenerRegistrar<MouseMoveListener> getMouseMoveListenerRegistrar() {
+        return mouseMoveListenerManager;
+    }
 
-  public int getMaxLineLength() {
-    return maxLineLength;
-  }
+    ListenerRegistrar<MouseOutListener> getMouseOutListenerRegistrar() {
+        return mouseOutListenerManager;
+    }
 
-  public int getScrollLeft() {
-    return getView().getScrollLeft();
-  }
+    public int getMaxLineLength() {
+        return maxLineLength;
+    }
 
-  public ListenerRegistrar<ScrollListener> getScrollListenerRegistrar() {
-    return scrollListenerManager;
-  }
+    public int getScrollLeft() {
+        return getView().getScrollLeft();
+    }
 
-  public ListenerRegistrar<ResizeListener> getResizeListenerRegistrar() {
-    return resizeListenerManager;
-  }
+    public ListenerRegistrar<ScrollListener> getScrollListenerRegistrar() {
+        return scrollListenerManager;
+    }
 
-  public int getScrollTop() {
-    return getView().getScrollTop();
-  }
+    public ListenerRegistrar<ResizeListener> getResizeListenerRegistrar() {
+        return resizeListenerManager;
+    }
 
-  public int getScrollHeight() {
-    return getView().getScrollHeight();
-  }
+    public int getScrollTop() {
+        return getView().getScrollTop();
+    }
 
-  public int getWidth() {
-    return getView().getWidth();
-  }
+    public int getScrollHeight() {
+        return getView().getScrollHeight();
+    }
 
-  public void handleDocumentChanged(Document newDocument, FoldingManager foldingManager) {
-    documentChangedRemoverManager.remove();
+    public int getWidth() {
+        return getView().getWidth();
+    }
 
-    document = newDocument;
-    this.foldingManager = foldingManager;
-    coordinateMap.handleDocumentChange(newDocument);
-    lineDimensions.handleDocumentChange(newDocument);
+    public void handleDocumentChanged(Document newDocument, FoldingManager foldingManager) {
+        documentChangedRemoverManager.remove();
 
-    getView().reset();
+        document = newDocument;
+        this.foldingManager = foldingManager;
+        coordinateMap.handleDocumentChange(newDocument);
+        lineDimensions.handleDocumentChange(newDocument);
 
-    documentChangedRemoverManager.track(newDocument.getLineListenerRegistrar().add(this));
-    documentChangedRemoverManager.track(foldingManager.getFoldingListenerRegistrar().add(this));
-    updateBufferHeight();
-  }
+        getView().reset();
 
-  @Override
-  public void onLineAdded(Document document, final int lineNumber,
-      final JsonArray<Line> addedLines) {
-    renderTimeExecutor.execute(new Runnable() {
-      @Override
-      public void run() {
-        updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(lineNumber), addedLines.size()
-            * getEditorLineHeight());
-      }
-    });
-  }
+        documentChangedRemoverManager.track(newDocument.getLineListenerRegistrar().add(this));
+        documentChangedRemoverManager.track(foldingManager.getFoldingListenerRegistrar().add(this));
+        updateBufferHeight();
+    }
 
-  @Override
-  public void onLineRemoved(final Document document, final int lineNumber,
-      final JsonArray<Line> removedLines) {
-    renderTimeExecutor.execute(new Runnable() {
-      @Override
-      public void run() {
+    @Override
+    public void onLineAdded(Document document, final int lineNumber,
+                            final JsonArray<Line> addedLines) {
+        renderTimeExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(lineNumber), addedLines.size()
+                                                                                      * getEditorLineHeight());
+            }
+        });
+    }
+
+    @Override
+    public void onLineRemoved(final Document document, final int lineNumber,
+                              final JsonArray<Line> removedLines) {
+        renderTimeExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
         /*
          * Since the removed line(s) no longer exist, we need to make sure to
          * clamp them
          */
-        int safeLineNumber =
-            Math.min(document.getLastLineNumber(), lineNumber);
-        updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(safeLineNumber),
-            -removedLines.size() * getEditorLineHeight());
-      }
-    });
-  }
+                int safeLineNumber =
+                        Math.min(document.getLastLineNumber(), lineNumber);
+                updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(safeLineNumber),
+                                                    -removedLines.size() * getEditorLineHeight());
+            }
+        });
+    }
 
-  @Override
-  public void onLineCountChanged(Document document, int lineCountDelta) {
-    updateBufferHeight(lineCountDelta);
-  }
+    @Override
+    public void onLineCountChanged(Document document, int lineCountDelta) {
+        updateBufferHeight(lineCountDelta);
+    }
 
-  @Override
-  public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
-   renderTimeExecutor.execute(new Runnable() {
-     @Override
-     public void run() {
+    @Override
+    public void onCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
+        renderTimeExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
        /*
         * Since the collapsed line(s) no longer exist, we need to make sure to
         * clamp them
         */
-       int safeLineNumber =
-           Math.min(document.getLastLineNumber(), lineNumber + linesToCollapse.size());
-       updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(safeLineNumber),
-           -linesToCollapse.size() * getEditorLineHeight());
-     }
-   });
-  }
+                int safeLineNumber =
+                        Math.min(document.getLastLineNumber(), lineNumber + linesToCollapse.size());
+                updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(safeLineNumber),
+                                                    -linesToCollapse.size() * getEditorLineHeight());
+            }
+        });
+    }
 
-  @Override
-  public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
-   renderTimeExecutor.execute(new Runnable() {
-     @Override
-     public void run() {
-       updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(lineNumber), linesToExpand.size()
-           * getEditorLineHeight());
-     }
-   });
-  }
+    @Override
+    public void onExpand(final int lineNumber, final JsonArray<Line> linesToExpand) {
+        renderTimeExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(lineNumber), linesToExpand.size()
+                                                                                      * getEditorLineHeight());
+            }
+        });
+    }
 
-  public void setMaxLineLength(int maxLineLength) {
-    this.maxLineLength = maxLineLength;
-    updateTextWidth();
-  }
+    public void setMaxLineLength(int maxLineLength) {
+        this.maxLineLength = maxLineLength;
+        updateTextWidth();
+    }
 
-  private void updateTextWidth() {
-    int longestLineWidth = (int) Math.floor(maxLineLength * getEditorCharacterWidth());
-    getView().setWidth(longestLineWidth);
-  }
+    private void updateTextWidth() {
+        int longestLineWidth = (int)Math.floor(maxLineLength * getEditorCharacterWidth());
+        getView().setWidth(longestLineWidth);
+    }
 
-  /**
-   * Updates the buffer height and potentially the scroll top depending on
-   * whether the change is before the scroll top or not.
-   *
-   * @param changeTop the top (px) where the change occurred
-   * @param changeHeight the potentially negative change in height
-   */
-  private void updateBufferHeightAndMaybeScrollTop(int changeTop, final int changeHeight) {
-    updateBufferHeight();
+    /**
+     * Updates the buffer height and potentially the scroll top depending on
+     * whether the change is before the scroll top or not.
+     *
+     * @param changeTop
+     *         the top (px) where the change occurred
+     * @param changeHeight
+     *         the potentially negative change in height
+     */
+    private void updateBufferHeightAndMaybeScrollTop(int changeTop, final int changeHeight) {
+        updateBufferHeight();
 
     /*
      * If the change is on or before the scrolled position and we don't update
@@ -1101,202 +1083,204 @@ public class Buffer extends UiComponent<Buffer.View>
      * keep the content of the viewport the same, we adjust the scrolled
      * position.
      */
-    final int scrollTop = getScrollTop();
-    if (changeTop <= scrollTop) {
-      setScrollTop(scrollTop + changeHeight);
+        final int scrollTop = getScrollTop();
+        if (changeTop <= scrollTop) {
+            setScrollTop(scrollTop + changeHeight);
+        }
     }
-  }
 
-  /**
-   * Updates the buffer height to the calculated height. Most callers should use
-   * {@link #updateBufferHeightAndMaybeScrollTop(int, int)}.
-   * 
-   * @param lineCountDelta when document was changed in the editor with enabled
-   *                        code folding capability, slave (projection) document
-   *                        does not updated yet and need to pass
-   *                        <code>lineCountDelta</code> manually
-   */
-  private void updateBufferHeight(int lineCountDelta) {
-    int lineCount = 0;
-    if (foldingManager.isFoldingModeEnabled()) {
-      lineCount = foldingManager.getSlaveDocument().getNumberOfLines() + lineCountDelta;
+    /**
+     * Updates the buffer height to the calculated height. Most callers should use
+     * {@link #updateBufferHeightAndMaybeScrollTop(int, int)}.
+     *
+     * @param lineCountDelta
+     *         when document was changed in the editor with enabled
+     *         code folding capability, slave (projection) document
+     *         does not updated yet and need to pass
+     *         <code>lineCountDelta</code> manually
+     */
+    private void updateBufferHeight(int lineCountDelta) {
+        int lineCount = 0;
+        if (foldingManager.isFoldingModeEnabled()) {
+            lineCount = foldingManager.getSlaveDocument().getNumberOfLines() + lineCountDelta;
+        } else {
+            lineCount = document.getLineCount();
+        }
+        final int totalBufferHeight = coordinateMap.getTotalSpacerHeight() + lineCount * editorLineHeight;
+        getView().setBufferHeight(totalBufferHeight);
+        updateColumnMarkerHeight();
+        updateVerticalScrollbarDisplayVisibility();
+
+        heightListenerManager.dispatch(new Dispatcher<Buffer.HeightListener>() {
+            @Override
+            public void dispatch(HeightListener listener) {
+                listener.onHeightChanged(totalBufferHeight);
+            }
+        });
     }
-    else {
-      lineCount = document.getLineCount();
+
+    private void updateBufferHeight() {
+        updateBufferHeight(0);
     }
-    final int totalBufferHeight = coordinateMap.getTotalSpacerHeight() + lineCount * editorLineHeight;
-    getView().setBufferHeight(totalBufferHeight);
-    updateColumnMarkerHeight();
-    updateVerticalScrollbarDisplayVisibility();
 
-    heightListenerManager.dispatch(new Dispatcher<Buffer.HeightListener>() {
-      @Override
-      public void dispatch(HeightListener listener) {
-        listener.onHeightChanged(totalBufferHeight);
-      }
-    });
-  }
-
-  private void updateBufferHeight() {
-     updateBufferHeight(0);
-  }
-
-  public void setScrollLeft(int scrollLeft) {
-    getView().setScrollLeft(scrollLeft);
-  }
-
-  /**
-   * Sets the scroll top of the buffer. Cannot set scroll top from a scroll
-   * listener it will be ignored.
-   */
-  public void setScrollTop(int scrollTop) {
-    if (!scrollListenerManager.isDispatching()) {
-      getView().setScrollTop(scrollTop, false);
+    public void setScrollLeft(int scrollLeft) {
+        getView().setScrollLeft(scrollLeft);
     }
-  }
 
-  void handleComponentsInitialized(ViewportModel viewport, Renderer renderer) {
-    elementManager.handleDocumentChanged(viewport, renderer);
-  }
-
-  public void repositionAnchoredElementsWithColumn() {
-    updateColumnMarkerPosition();
-    elementManager.repositionAnchoredElementsWithColumn();
-  }
-
-  private void updateColumnMarkerPosition() {
-    getView().columnMarkerElement.getStyle().setLeft(
-        calculateColumnLeftRelativeToScrollableIgnoringSpecialCharacters(MARKER_COLUMN),
-        CSSStyleDeclaration.Unit.PX);
-  }
-
-  private void updateColumnMarkerHeight() {
-    int height = getView().textLayerElement.getClientHeight();
-    int limitHeight = Math.max(height, getHeight());
-    getView().columnMarkerElement.getStyle().setHeight(limitHeight, CSSStyleDeclaration.Unit.PX);
-  }
-
-  public ClientRect getBoundingClientRect() {
-    return getView().scrollableElement.getBoundingClientRect();
-  }
-
-  private void updateVerticalScrollbarDisplayVisibility() {
-    CssUtils.setDisplayVisibility2(getView().scrollbarElement,
-        getView().getScrollHeight() > getView().getHeight());
-  }
-
-  public void setColumnMarkerVisibility(boolean visible) {
-    CssUtils.setDisplayVisibility2(getView().columnMarkerElement, visible);
-  }
-
-  public void setVerticalScrollbarVisibility(boolean visible) {
-    if (visible) {
-      if (!getView().rootElement.contains(getView().scrollbarElement)) {
-        getView().rootElement.appendChild(getView().scrollbarElement);
-      }
-      getView().scrollableElement.getStyle().setOverflowY("auto");
-    } else {
-      getView().rootElement.removeChild(getView().scrollbarElement);
-      getView().scrollableElement.getStyle().setOverflowY("hidden");
+    /**
+     * Sets the scroll top of the buffer. Cannot set scroll top from a scroll
+     * listener it will be ignored.
+     */
+    public void setScrollTop(int scrollTop) {
+        if (!scrollListenerManager.isDispatching()) {
+            getView().setScrollTop(scrollTop, false);
+        }
     }
-  }
-  
-  public void onResize(){
-     getView().onResize();
-  }
 
-  /**
-   * Ensures that the scrollTop is synchronized across all editor components. For example, this
-   * should be called after the editor has been removed from the DOM and re-added.
-   */
-  public void synchronizeScrollTop() {
-    getView().setScrollTop(getView().scrollTopFromPreviousDispatch, true);
-  }
+    void handleComponentsInitialized(ViewportModel viewport, Renderer renderer) {
+        elementManager.handleDocumentChanged(viewport, renderer);
+    }
 
-  /**
-   * Computes count of folded lines above the specified line number.
-   * 
-   * @param lineNumber
-   * @return count of folded lines above the <code>lineNumber</code>
-   */
-  public int getFoldedLinesCountAboveLineNumber(int lineNumber) {
-    if (!foldingManager.isFoldingModeEnabled()) {
-      return 0;
+    public void repositionAnchoredElementsWithColumn() {
+        updateColumnMarkerPosition();
+        elementManager.repositionAnchoredElementsWithColumn();
     }
-    final int visibleLinesCount = foldingManager.getSlaveDocument().getNumberOfLines();
-    final int lastLineNumber = Math.min(lineNumber, visibleLinesCount-1);
-    return visibleLine2ModelLine(lastLineNumber) - lastLineNumber;
-  }
 
-  /**
-   * Returns the projection document line that corresponds to the given line of the
-   * master document or <code>-1</code> if there is no such line.
-   *
-   * @param masterLineNumber number of the master document line
-   * @return the corresponding projection document's line or <code>-1</code>
-   */
-  public int modelLine2VisibleLine(int masterLineNumber) {
-    if (!foldingManager.isFoldingModeEnabled()) {
-      return masterLineNumber;
+    private void updateColumnMarkerPosition() {
+        getView().columnMarkerElement.getStyle().setLeft(
+                calculateColumnLeftRelativeToScrollableIgnoringSpecialCharacters(MARKER_COLUMN),
+                CSSStyleDeclaration.Unit.PX);
     }
-    if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
-      return 0;
-    }
-    try {
-      return foldingManager.getInformationMapping().toImageLine(masterLineNumber);
-    }
-    catch (BadLocationException e) {
-       Log.error(getClass(), e);
-    }
-    return -1;
-  }
 
-  /**
-   * Returns the master document line that corresponds to the given line of the
-   * projection document or <code>-1</code> if there is no such line.
-   *
-   * @param visibleLine visible line
-   * @return the corresponding model line or <code>-1</code>
-   */
-  public int visibleLine2ModelLine(int visibleLine) {
-    if (!foldingManager.isFoldingModeEnabled()) {
-      return visibleLine;
+    private void updateColumnMarkerHeight() {
+        int height = getView().textLayerElement.getClientHeight();
+        int limitHeight = Math.max(height, getHeight());
+        getView().columnMarkerElement.getStyle().setHeight(limitHeight, CSSStyleDeclaration.Unit.PX);
     }
-    try {
-      return foldingManager.getInformationMapping().toOriginLine(visibleLine);
-    } catch (BadLocationException e) {
-      Log.error(getClass(), e);
-    }
-    return -1;
-  }
 
-  /**
-   * Returns the next (from the specified <code>masterLineNumber</code>)
-   * closest line of the master document that is visible or <code>-1</code>
-   * if no visible line.
-   *
-   * @param masterLineNumber the line in the master document
-   * @return the next closest line number of the master document
-   *          that is visible or <code>-1</code> if no visible line
-   */
-  public int getNextClosestModelLineThatIsVisible(int masterLineNumber) {
-     if (!foldingManager.isFoldingModeEnabled()) {
-       return masterLineNumber;
-     }
-     if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
-       return 0;
-     }
-     try {
-       for (int imageLine = -1; masterLineNumber < document.getLineCount(); masterLineNumber++) {
-         imageLine = foldingManager.getInformationMapping().toImageLine(masterLineNumber);
-         if (imageLine > -1) {
+    public ClientRect getBoundingClientRect() {
+        return getView().scrollableElement.getBoundingClientRect();
+    }
+
+    private void updateVerticalScrollbarDisplayVisibility() {
+        CssUtils.setDisplayVisibility2(getView().scrollbarElement,
+                                       getView().getScrollHeight() > getView().getHeight());
+    }
+
+    public void setColumnMarkerVisibility(boolean visible) {
+        CssUtils.setDisplayVisibility2(getView().columnMarkerElement, visible);
+    }
+
+    public void setVerticalScrollbarVisibility(boolean visible) {
+        if (visible) {
+            if (!getView().rootElement.contains(getView().scrollbarElement)) {
+                getView().rootElement.appendChild(getView().scrollbarElement);
+            }
+            getView().scrollableElement.getStyle().setOverflowY("auto");
+        } else {
+            getView().rootElement.removeChild(getView().scrollbarElement);
+            getView().scrollableElement.getStyle().setOverflowY("hidden");
+        }
+    }
+
+    public void onResize() {
+        getView().onResize();
+    }
+
+    /**
+     * Ensures that the scrollTop is synchronized across all editor components. For example, this
+     * should be called after the editor has been removed from the DOM and re-added.
+     */
+    public void synchronizeScrollTop() {
+        getView().setScrollTop(getView().scrollTopFromPreviousDispatch, true);
+    }
+
+    /**
+     * Computes count of folded lines above the specified line number.
+     *
+     * @param lineNumber
+     * @return count of folded lines above the <code>lineNumber</code>
+     */
+    public int getFoldedLinesCountAboveLineNumber(int lineNumber) {
+        if (!foldingManager.isFoldingModeEnabled()) {
+            return 0;
+        }
+        final int visibleLinesCount = foldingManager.getSlaveDocument().getNumberOfLines();
+        final int lastLineNumber = Math.min(lineNumber, visibleLinesCount - 1);
+        return visibleLine2ModelLine(lastLineNumber) - lastLineNumber;
+    }
+
+    /**
+     * Returns the projection document line that corresponds to the given line of the
+     * master document or <code>-1</code> if there is no such line.
+     *
+     * @param masterLineNumber
+     *         number of the master document line
+     * @return the corresponding projection document's line or <code>-1</code>
+     */
+    public int modelLine2VisibleLine(int masterLineNumber) {
+        if (!foldingManager.isFoldingModeEnabled()) {
             return masterLineNumber;
-         }
-       }
-     } catch (BadLocationException e) {
-       Log.error(getClass(), e);
-     }
-     return -1;
-  }
+        }
+        if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
+            return 0;
+        }
+        try {
+            return foldingManager.getInformationMapping().toImageLine(masterLineNumber);
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the master document line that corresponds to the given line of the
+     * projection document or <code>-1</code> if there is no such line.
+     *
+     * @param visibleLine
+     *         visible line
+     * @return the corresponding model line or <code>-1</code>
+     */
+    public int visibleLine2ModelLine(int visibleLine) {
+        if (!foldingManager.isFoldingModeEnabled()) {
+            return visibleLine;
+        }
+        try {
+            return foldingManager.getInformationMapping().toOriginLine(visibleLine);
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the next (from the specified <code>masterLineNumber</code>)
+     * closest line of the master document that is visible or <code>-1</code>
+     * if no visible line.
+     *
+     * @param masterLineNumber
+     *         the line in the master document
+     * @return the next closest line number of the master document
+     *         that is visible or <code>-1</code> if no visible line
+     */
+    public int getNextClosestModelLineThatIsVisible(int masterLineNumber) {
+        if (!foldingManager.isFoldingModeEnabled()) {
+            return masterLineNumber;
+        }
+        if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
+            return 0;
+        }
+        try {
+            for (int imageLine = -1; masterLineNumber < document.getLineCount(); masterLineNumber++) {
+                imageLine = foldingManager.getInformationMapping().toImageLine(masterLineNumber);
+                if (imageLine > -1) {
+                    return masterLineNumber;
+                }
+            }
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        }
+        return -1;
+    }
 
 }

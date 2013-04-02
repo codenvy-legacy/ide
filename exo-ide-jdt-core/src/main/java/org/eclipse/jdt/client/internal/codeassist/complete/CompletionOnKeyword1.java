@@ -14,51 +14,42 @@ import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
-public class CompletionOnKeyword1 extends SingleTypeReference implements CompletionOnKeyword
-{
-   private char[][] possibleKeywords;
+public class CompletionOnKeyword1 extends SingleTypeReference implements CompletionOnKeyword {
+    private char[][] possibleKeywords;
 
-   public boolean canCompleteEmptyToken;
+    public boolean canCompleteEmptyToken;
 
-   public CompletionOnKeyword1(char[] token, long pos, char[] possibleKeyword)
-   {
-      this(token, pos, new char[][]{possibleKeyword});
-   }
+    public CompletionOnKeyword1(char[] token, long pos, char[] possibleKeyword) {
+        this(token, pos, new char[][]{possibleKeyword});
+    }
 
-   public CompletionOnKeyword1(char[] token, long pos, char[][] possibleKeywords)
-   {
-      super(token, pos);
-      this.possibleKeywords = possibleKeywords;
-   }
+    public CompletionOnKeyword1(char[] token, long pos, char[][] possibleKeywords) {
+        super(token, pos);
+        this.possibleKeywords = possibleKeywords;
+    }
 
-   public boolean canCompleteEmptyToken()
-   {
-      return this.canCompleteEmptyToken;
-   }
+    public boolean canCompleteEmptyToken() {
+        return this.canCompleteEmptyToken;
+    }
 
-   public char[] getToken()
-   {
-      return this.token;
-   }
+    public char[] getToken() {
+        return this.token;
+    }
 
-   public char[][] getPossibleKeywords()
-   {
-      return this.possibleKeywords;
-   }
+    public char[][] getPossibleKeywords() {
+        return this.possibleKeywords;
+    }
 
-   public void aboutToResolve(Scope scope)
-   {
-      getTypeBinding(scope);
-   }
+    public void aboutToResolve(Scope scope) {
+        getTypeBinding(scope);
+    }
 
-   protected TypeBinding getTypeBinding(Scope scope)
-   {
-      throw new CompletionNodeFound(this, scope);
-   }
+    protected TypeBinding getTypeBinding(Scope scope) {
+        throw new CompletionNodeFound(this, scope);
+    }
 
-   public StringBuffer printExpression(int indent, StringBuffer output)
-   {
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-      return output.append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
-   }
+        return output.append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
+    }
 }

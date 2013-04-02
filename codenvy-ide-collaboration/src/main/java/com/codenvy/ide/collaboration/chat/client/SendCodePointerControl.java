@@ -25,30 +25,25 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class SendCodePointerControl  extends SimpleControl implements IDEControl
-{
+public class SendCodePointerControl extends SimpleControl implements IDEControl {
 
-   private static final String ID = "Edit/Send Code Pointer";
+    private static final String ID = "Edit/Send Code Pointer";
 
-   public SendCodePointerControl(ChatResources resources)
-   {
-      super(ID);
-      setTitle("Send Code Pointer");
-      setPrompt("Send Code Pointer");
-      setEvent(new SendCodePointEvent());
-      setEnabled(false);
-      setVisible(true);
-      setShowInContextMenu(true);
-      setImages(resources.blank(), resources.blank());
-      setShowInMenu(false);
+    public SendCodePointerControl(ChatResources resources) {
+        super(ID);
+        setTitle("Send Code Pointer");
+        setPrompt("Send Code Pointer");
+        setEvent(new SendCodePointEvent());
+        setEnabled(false);
+        setVisible(true);
+        setShowInContextMenu(true);
+        setImages(resources.blank(), resources.blank());
+        setShowInMenu(false);
 
-   }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void initialize()
-   {
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void initialize() {
+    }
 }

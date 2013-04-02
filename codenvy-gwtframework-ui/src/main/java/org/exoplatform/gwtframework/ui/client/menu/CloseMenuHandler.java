@@ -21,19 +21,15 @@
 package org.exoplatform.gwtframework.ui.client.menu;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface CloseMenuHandler
-{
-   
-   /**
-    * Implement closing of all opened popups when user will click outside of all of them 
-    */
-   void onCloseMenu();
+public interface CloseMenuHandler {
+
+    /** Implement closing of all opened popups when user will click outside of all of them */
+    void onCloseMenu();
 
 }

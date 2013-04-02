@@ -22,21 +22,21 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * This is an Handler of ClosingView Event.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ClosingViewHandler extends EventHandler
-{
+public interface ClosingViewHandler extends EventHandler {
 
-   /**
-    * Handle the event before closing the View.
-    * 
-    * @param event ClosingView Event
-    */
-   void onClosingView(ClosingViewEvent event);
+    /**
+     * Handle the event before closing the View.
+     *
+     * @param event
+     *         ClosingView Event
+     */
+    void onClosingView(ClosingViewEvent event);
 
 }

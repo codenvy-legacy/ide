@@ -22,77 +22,55 @@ import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * Range of the selection in editor.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 3:30:42 PM anya $
  * @deprecated Use {@link IRegion} instead
  */
-public class SelectionRange
-{
-   /**
-    * Selection's start line.
-    */
-   private int startLine;
+public class SelectionRange {
+    /** Selection's start line. */
+    private int startLine;
 
-   /**
-    * Selection's start symbol.
-    */
-   private int startSymbol;
+    /** Selection's start symbol. */
+    private int startSymbol;
 
-   /**
-    * Selection's end line.
-    */
-   private int endLine;
+    /** Selection's end line. */
+    private int endLine;
 
-   /**
-    * Selection's end symbol.
-    */
-   private int endSymbol;
+    /** Selection's end symbol. */
+    private int endSymbol;
 
-   /**
-    * @param startLine
-    * @param startSymbol
-    * @param endLine
-    * @param endSymbol
-    */
-   public SelectionRange(int startLine, int startSymbol, int endLine, int endSymbol)
-   {
-      this.startLine = startLine;
-      this.startSymbol = startSymbol;
-      this.endLine = endLine;
-      this.endSymbol = endSymbol;
-   }
+    /**
+     * @param startLine
+     * @param startSymbol
+     * @param endLine
+     * @param endSymbol
+     */
+    public SelectionRange(int startLine, int startSymbol, int endLine, int endSymbol) {
+        this.startLine = startLine;
+        this.startSymbol = startSymbol;
+        this.endLine = endLine;
+        this.endSymbol = endSymbol;
+    }
 
-   /**
-    * @return the startLine
-    */
-   public int getStartLine()
-   {
-      return startLine;
-   }
+    /** @return the startLine */
+    public int getStartLine() {
+        return startLine;
+    }
 
-   /**
-    * @return the startSymbol
-    */
-   public int getStartSymbol()
-   {
-      return startSymbol;
-   }
+    /** @return the startSymbol */
+    public int getStartSymbol() {
+        return startSymbol;
+    }
 
-   /**
-    * @return the endLine
-    */
-   public int getEndLine()
-   {
-      return endLine;
-   }
+    /** @return the endLine */
+    public int getEndLine() {
+        return endLine;
+    }
 
-   /**
-    * @return the endSymbol
-    */
-   public int getEndSymbol()
-   {
-      return endSymbol;
-   }
-   
+    /** @return the endSymbol */
+    public int getEndSymbol() {
+        return endSymbol;
+    }
+
 }

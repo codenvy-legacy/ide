@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to toggle single line comment in source code.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 13, 2012 1:47:56 PM anya $
- * 
  */
-public class EditorToggleCommentEvent extends GwtEvent<EditorToggleCommentHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<EditorToggleCommentHandler> TYPE = new GwtEvent.Type<EditorToggleCommentHandler>();
+public class EditorToggleCommentEvent extends GwtEvent<EditorToggleCommentHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<EditorToggleCommentHandler> TYPE = new GwtEvent.Type<EditorToggleCommentHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorToggleCommentHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorToggleCommentHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorToggleCommentHandler handler)
-   {
-      handler.onEditorToggleComment(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorToggleCommentHandler handler) {
+        handler.onEditorToggleComment(this);
+    }
 
 }

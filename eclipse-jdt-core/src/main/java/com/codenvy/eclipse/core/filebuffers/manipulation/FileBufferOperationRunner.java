@@ -19,8 +19,6 @@ import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
 
 
-
-
 /**
  * A <code>FileBufferOperationRunner</code> executes
  * {@link com.codenvy.eclipse.core.filebuffers.manipulation.IFileBufferOperation}.
@@ -32,30 +30,27 @@ import com.codenvy.eclipse.core.runtime.IProgressMonitor;
  * @see com.codenvy.eclipse.core.filebuffers.manipulation.IFileBufferOperation
  * @since 3.1
  */
-public class FileBufferOperationRunner extends GenericFileBufferOperationRunner
-{
+public class FileBufferOperationRunner extends GenericFileBufferOperationRunner {
 
-   /**
-    * Creates a new file buffer operation runner.
-    *
-    * @param fileBufferManager the file buffer manager
-    * @param validationContext the validationContext
-    */
-   public FileBufferOperationRunner(IFileBufferManager fileBufferManager, Object validationContext)
-   {
-      super(fileBufferManager, validationContext);
-   }
+    /**
+     * Creates a new file buffer operation runner.
+     *
+     * @param fileBufferManager
+     *         the file buffer manager
+     * @param validationContext
+     *         the validationContext
+     */
+    public FileBufferOperationRunner(IFileBufferManager fileBufferManager, Object validationContext) {
+        super(fileBufferManager, validationContext);
+    }
 
-   protected void commit(final IFileBuffer[] fileBuffers, final IProgressMonitor progressMonitor) throws CoreException
-   {
-      IWorkspaceRunnable runnable = new IWorkspaceRunnable()
-      {
-         public void run(IProgressMonitor monitor) throws CoreException
-         {
-            doCommit(fileBuffers, progressMonitor);
-         }
-      };
-      ResourcesPlugin.getWorkspace().run(runnable, computeCommitRule(fileBuffers), IWorkspace.AVOID_UPDATE,
-         progressMonitor);
-   }
+    protected void commit(final IFileBuffer[] fileBuffers, final IProgressMonitor progressMonitor) throws CoreException {
+        IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+            public void run(IProgressMonitor monitor) throws CoreException {
+                doCommit(fileBuffers, progressMonitor);
+            }
+        };
+        ResourcesPlugin.getWorkspace().run(runnable, computeCommitRule(fileBuffers), IWorkspace.AVOID_UPDATE,
+                                           progressMonitor);
+    }
 }

@@ -24,18 +24,25 @@ import com.codenvy.eclipse.jdt.core.IJavaElement;
  */
 public class MethodDeclarationMatch extends SearchMatch {
 
-	/**
-	 * Creates a new method declaration match.
-	 *
-	 * @param element the method declaration
-	 * @param accuracy one of A_ACCURATE or A_INACCURATE
-	 * @param offset the offset the match starts at, or -1 if unknown
-	 * @param length the length of the match, or -1 if unknown
-	 * @param participant the search participant that created the match
-	 * @param resource the resource of the element
-	 */
-	public MethodDeclarationMatch(IJavaElement element, int accuracy, int offset, int length, SearchParticipant participant, IResource resource) {
-		super(element, accuracy, offset, length, participant, resource);
-	}
+    /**
+     * Creates a new method declaration match.
+     *
+     * @param element
+     *         the method declaration
+     * @param accuracy
+     *         one of A_ACCURATE or A_INACCURATE
+     * @param offset
+     *         the offset the match starts at, or -1 if unknown
+     * @param length
+     *         the length of the match, or -1 if unknown
+     * @param participant
+     *         the search participant that created the match
+     * @param resource
+     *         the resource of the element
+     */
+    public MethodDeclarationMatch(IJavaElement element, int accuracy, int offset, int length, SearchParticipant participant,
+                                  IResource resource) {
+        super(element, accuracy, offset, length, participant, resource);
+    }
 
 }

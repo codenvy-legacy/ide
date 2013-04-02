@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-public interface HotKeyPressedListener
-{
+public interface HotKeyPressedListener {
 
-   void onHotKeyPressed(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode);
+    void onHotKeyPressed(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode);
 
 }

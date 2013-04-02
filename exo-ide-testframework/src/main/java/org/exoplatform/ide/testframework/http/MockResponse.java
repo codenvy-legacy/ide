@@ -23,150 +23,126 @@ import com.google.gwt.http.client.Response;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class MockResponse extends Response
-{
+public class MockResponse extends Response {
 
-   /**
-    * Response text.
-    */
-   private String text = new String();
+    /** Response text. */
+    private String text = new String();
 
-   /**
-    * Status text.
-    */
-   private String statusText = new String();
+    /** Status text. */
+    private String statusText = new String();
 
-   /**
-    * Status code.
-    */
-   private int statusCode;
+    /** Status code. */
+    private int statusCode;
 
-   /**
-    * Headers.
-    */
-   private Header[] headers;
+    /** Headers. */
+    private Header[] headers;
 
-   /**
-    * 
-    */
-   public MockResponse()
-   {
-   }
+    /**
+     *
+     */
+    public MockResponse() {
+    }
 
-   /**
-    * @param text
-    * @param statusText
-    * @param statusCode
-    * @param headers
-    */
-   public MockResponse(String text, String statusText, int statusCode, Header[] headers)
-   {
-      this.text = text;
-      this.statusText = statusText;
-      this.statusCode = statusCode;
-      this.headers = headers;
-   }
+    /**
+     * @param text
+     * @param statusText
+     * @param statusCode
+     * @param headers
+     */
+    public MockResponse(String text, String statusText, int statusCode, Header[] headers) {
+        this.text = text;
+        this.statusText = statusText;
+        this.statusCode = statusCode;
+        this.headers = headers;
+    }
 
-   /**
-    * @param text
-    * @param statusCode
-    */
-   public MockResponse(String text, int statusCode)
-   {
-      this.text = text;
-      this.statusCode = statusCode;
-   }
+    /**
+     * @param text
+     * @param statusCode
+     */
+    public MockResponse(String text, int statusCode) {
+        this.text = text;
+        this.statusCode = statusCode;
+    }
 
-   /**
-    * @param text
-    */
-   public MockResponse(String text)
-   {
-      this.text = text;
-   }
+    /** @param text */
+    public MockResponse(String text) {
+        this.text = text;
+    }
 
-   /**
-    * @param text the text to set
-    */
-   public void setText(String text)
-   {
-      this.text = text;
-   }
+    /**
+     * @param text
+     *         the text to set
+     */
+    public void setText(String text) {
+        this.text = text;
+    }
 
-   /**
-    * @param statusText the statusText to set
-    */
-   public void setStatusText(String statusText)
-   {
-      this.statusText = statusText;
-   }
+    /**
+     * @param statusText
+     *         the statusText to set
+     */
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
+    }
 
-   /**
-    * @param statusCode the statusCode to set
-    */
-   public void setStatusCode(int statusCode)
-   {
-      this.statusCode = statusCode;
-   }
+    /**
+     * @param statusCode
+     *         the statusCode to set
+     */
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
-   /**
-    * @param headers the headers to set
-    */
-   public void setHeaders(Header[] headers)
-   {
-      this.headers = headers;
-   }
+    /**
+     * @param headers
+     *         the headers to set
+     */
+    public void setHeaders(Header[] headers) {
+        this.headers = headers;
+    }
 
-   @Override
-   public String getHeader(String header)
-   {
-      for (Header h : headers)
-      {
-         if (header.equals(h.getName()))
-         {
-            return h.getValue();
-         }
-      }
-      return null;
-   }
+    @Override
+    public String getHeader(String header) {
+        for (Header h : headers) {
+            if (header.equals(h.getName())) {
+                return h.getValue();
+            }
+        }
+        return null;
+    }
 
-   @Override
-   public Header[] getHeaders()
-   {
-      return headers;
-   }
+    @Override
+    public Header[] getHeaders() {
+        return headers;
+    }
 
-   @Override
-   public String getHeadersAsString()
-   {
-      String result = new String();
-      for (Header header : headers)
-      {
-         result += "\n" + header.getName() + " : " + header.getValue();
-      }
-      return result.substring(1);
-   }
+    @Override
+    public String getHeadersAsString() {
+        String result = new String();
+        for (Header header : headers) {
+            result += "\n" + header.getName() + " : " + header.getValue();
+        }
+        return result.substring(1);
+    }
 
-   @Override
-   public int getStatusCode()
-   {
-      return statusCode;
-   }
+    @Override
+    public int getStatusCode() {
+        return statusCode;
+    }
 
-   @Override
-   public String getStatusText()
-   {
-      return statusText;
-   }
+    @Override
+    public String getStatusText() {
+        return statusText;
+    }
 
-   @Override
-   public String getText()
-   {
-      return text;
-   }
+    @Override
+    public String getText() {
+        return text;
+    }
 
 }

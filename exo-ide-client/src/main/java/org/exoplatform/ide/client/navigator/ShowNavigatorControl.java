@@ -31,70 +31,58 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 @RolesAllowed({"developer"})
-public class ShowNavigatorControl extends SimpleControl implements IDEControl, ViewOpenedHandler, ViewClosedHandler
-{
+public class ShowNavigatorControl extends SimpleControl implements IDEControl, ViewOpenedHandler, ViewClosedHandler {
 
-   public static final String ID = "Window/Show View/Navigator";
+    public static final String ID = "Window/Show View/Navigator";
 
-   private static final String TITLE = "Navigator";
+    private static final String TITLE = "Navigator";
 
-   private static final String PROMPT = "Navigator";
+    private static final String PROMPT = "Navigator";
 
-   /**
-    * 
-    */
-   public ShowNavigatorControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.navigator(), IDEImageBundle.INSTANCE.navigatorDisabled());
-      setEvent(new ShowNavigatorEvent());
-   }
+    /**
+     *
+     */
+    public ShowNavigatorControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.navigator(), IDEImageBundle.INSTANCE.navigatorDisabled());
+        setEvent(new ShowNavigatorEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ViewOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      setEnabled(true);
-      setVisible(true);
-   }
+        setEnabled(true);
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay)
-      {
-         setSelected(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay) {
+            setSelected(false);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
-    */
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay)
-      {
-         setSelected(true);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewOpenedEvent) */
+    @Override
+    public void onViewOpened(ViewOpenedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay) {
+            setSelected(true);
+        }
+    }
 
 }

@@ -21,9 +21,8 @@ package org.exoplatform.ide.codeassistant.asm.test;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- *
  */
 public @interface AnnotationWithAnnotationParameter {
-   
-   Bar foo() default @Bar(); 
+
+    Bar foo() default @Bar();
 }

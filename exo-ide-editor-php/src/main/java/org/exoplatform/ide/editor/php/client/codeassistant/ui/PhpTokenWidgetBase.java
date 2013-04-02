@@ -33,93 +33,71 @@ import java.util.List;
 
 /**
  * Base part implementation of {@link TokenWidget}, uses frol all PHP token widgets.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public abstract class PhpTokenWidgetBase extends TokenWidget
-{
+public abstract class PhpTokenWidgetBase extends TokenWidget {
 
-   protected Grid grid;
+    protected Grid grid;
 
-   protected List<Modifier> modifieres;
+    protected List<Modifier> modifieres;
 
-   /**
-    * @param token
-    */
-   @SuppressWarnings("unchecked")
-   public PhpTokenWidgetBase(Token token)
-   {
-      super(token);
-      modifieres = new ArrayList<Modifier>();
+    /** @param token */
+    @SuppressWarnings("unchecked")
+    public PhpTokenWidgetBase(Token token) {
+        super(token);
+        modifieres = new ArrayList<Modifier>();
 
-      if (token.hasProperty(TokenProperties.MODIFIERS))
-      {
-         modifieres.addAll((Collection<Modifier>)token.getProperty(TokenProperties.MODIFIERS).isObjectProperty()
-            .objectValue());
-      }
-   }
+        if (token.hasProperty(TokenProperties.MODIFIERS)) {
+            modifieres.addAll((Collection<Modifier>)token.getProperty(TokenProperties.MODIFIERS).isObjectProperty()
+                                                         .objectValue());
+        }
+    }
 
-   protected String getModifiers()
-   {
+    protected String getModifiers() {
 
-      String span =
-         "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; "
-            + "height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">";
-      span += (modifieres.contains(Modifier.ABSTRACT)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
-      // span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
-      span += (modifieres.contains(Modifier.STATIC)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
-      span += "</span>";
-      return span;
-   }
+        String span =
+                "<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; "
+                + "height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">";
+        span += (modifieres.contains(Modifier.ABSTRACT)) ? "<font color ='#004e00' style='float: right;'>A</font>" : "";
+        // span += (ModifierHelper.isFinal(modifieres)) ? "<font color ='#174c83' style='float: right;'>F</font>" : "";
+        span += (modifieres.contains(Modifier.STATIC)) ? "<font color ='#6d0000' style='float: right;'>S</font>" : "";
+        span += "</span>";
+        return span;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenName()
-    */
-   @Override
-   public String getTokenName()
-   {
-      return getToken().getName();
-   }
+    /** @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#getTokenName() */
+    @Override
+    public String getTokenName() {
+        return getToken().getName();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setSelectedStyle()
-    */
-   @Override
-   public void setSelectedStyle()
-   {
-      setStyleName(PhpClientBundle.INSTANCE.css().selectedItem());
-   }
+    /** @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setSelectedStyle() */
+    @Override
+    public void setSelectedStyle() {
+        setStyleName(PhpClientBundle.INSTANCE.css().selectedItem());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setDefaultStyle()
-    */
-   @Override
-   public void setDefaultStyle()
-   {
-      setStyleName(PhpClientBundle.INSTANCE.css().item());
-   }
+    /** @see org.exoplatform.ide.client.framework.codeassistant.TokenWidget#setDefaultStyle() */
+    @Override
+    public void setDefaultStyle() {
+        setStyleName(PhpClientBundle.INSTANCE.css().item());
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue()
-    */
-   @Override
-   public String getTokenValue()
-   {
-      if (token.hasProperty(TokenProperties.CODE))
-         return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
-      else
-         return token.getName();
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenValue() */
+    @Override
+    public String getTokenValue() {
+        if (token.hasProperty(TokenProperties.CODE))
+            return token.getProperty(TokenProperties.CODE).isStringProperty().stringValue();
+        else
+            return token.getName();
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenDecription()
-    */
-   @Override
-   public Widget getTokenDecription()
-   {
-      return null;
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget#getTokenDecription() */
+    @Override
+    public Widget getTokenDecription() {
+        return null;
+    }
 
 }

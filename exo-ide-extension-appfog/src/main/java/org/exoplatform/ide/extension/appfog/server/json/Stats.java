@@ -23,34 +23,28 @@ package org.exoplatform.ide.extension.appfog.server.json;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class Stats
-{
-   private String state;
-   private StatsInfo stats;
+public class Stats {
+    private String    state;
+    private StatsInfo stats;
 
-   public String getState()
-   {
-      return state;
-   }
+    public String getState() {
+        return state;
+    }
 
-   public void setState(String state)
-   {
-      this.state = state;
-   }
+    public void setState(String state) {
+        this.state = state;
+    }
 
-   public StatsInfo getStats()
-   {
-      return stats;
-   }
+    public StatsInfo getStats() {
+        return stats;
+    }
 
-   public void setStats(StatsInfo stats)
-   {
-      this.stats = stats;
-   }
+    public void setStats(StatsInfo stats) {
+        this.stats = stats;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "Stats [state=" + state + ", stats=" + stats + "]";
-   }
+    @Override
+    public String toString() {
+        return "Stats [state=" + state + ", stats=" + stats + "]";
+    }
 }

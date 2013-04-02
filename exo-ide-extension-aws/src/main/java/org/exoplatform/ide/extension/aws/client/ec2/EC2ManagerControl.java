@@ -25,37 +25,31 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
  * Control to manage Amazon EC2 virtual sever instances.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EC2ManagerControl.java Sep 21, 2012 9:55:35 AM azatsarynnyy $
- *
  */
-public class EC2ManagerControl extends SimpleControl implements IDEControl
-{
-   private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlId();
+public class EC2ManagerControl extends SimpleControl implements IDEControl {
+    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlId();
 
-   private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlTitle();
+    private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlTitle();
 
-   private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlPrompt();
+    private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlPrompt();
 
-   public EC2ManagerControl()
-   {
-      super(ID);
-      setImages(AWSClientBundle.INSTANCE.ec2(), AWSClientBundle.INSTANCE.ec2Disabled());
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+    public EC2ManagerControl() {
+        super(ID);
+        setImages(AWSClientBundle.INSTANCE.ec2(), AWSClientBundle.INSTANCE.ec2Disabled());
+        setTitle(TITLE);
+        setPrompt(PROMPT);
 
-      setEvent(new ShowEC2ManagerEvent());
-   }
+        setEvent(new ShowEC2ManagerEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

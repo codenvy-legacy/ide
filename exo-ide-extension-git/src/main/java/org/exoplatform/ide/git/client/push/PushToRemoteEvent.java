@@ -23,35 +23,25 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event occurs, when user tries to push changes from local repository to remote one. Implement {@link PushToRemoteHandler}
  * handler to process the event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 9:32:53 AM anya $
- * 
  */
-public class PushToRemoteEvent extends GwtEvent<PushToRemoteHandler>
-{
+public class PushToRemoteEvent extends GwtEvent<PushToRemoteHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<PushToRemoteHandler> TYPE = new GwtEvent.Type<PushToRemoteHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<PushToRemoteHandler> TYPE = new GwtEvent.Type<PushToRemoteHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<PushToRemoteHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<PushToRemoteHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(PushToRemoteHandler handler)
-   {
-      handler.onPushToRemote(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(PushToRemoteHandler handler) {
+        handler.onPushToRemote(this);
+    }
 
 }

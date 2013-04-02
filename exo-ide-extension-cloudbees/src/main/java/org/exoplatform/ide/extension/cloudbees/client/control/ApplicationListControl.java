@@ -31,52 +31,43 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2011 evgen $
- * 
  */
-public class ApplicationListControl extends SimpleControl implements IDEControl, VfsChangedHandler
-{
+public class ApplicationListControl extends SimpleControl implements IDEControl, VfsChangedHandler {
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   /**
-    * 
-    */
-   public ApplicationListControl()
-   {
-      super(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListId());
-      setTitle(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListTitle());
-      setPrompt(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListPrompt());
-      setImages(CloudBeesClientBundle.INSTANCE.appList(), CloudBeesClientBundle.INSTANCE.appListDisabled());
-      setEvent(new ShowApplicationListEvent());
-   }
+    /**
+     *
+     */
+    public ApplicationListControl() {
+        super(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListId());
+        setTitle(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListTitle());
+        setPrompt(CloudBeesExtension.LOCALIZATION_CONSTANT.controlAppListPrompt());
+        setImages(CloudBeesClientBundle.INSTANCE.appList(), CloudBeesClientBundle.INSTANCE.appListDisabled());
+        setEvent(new ShowApplicationListEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      refresh();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        refresh();
+    }
 
-   /**
-    * 
-    */
-   private void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /**
+     *
+     */
+    private void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 
 }

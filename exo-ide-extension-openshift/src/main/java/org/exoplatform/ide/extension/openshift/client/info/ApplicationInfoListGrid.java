@@ -27,67 +27,56 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
  * Grid for displaying application information.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 1, 2011 3:02:57 PM anya $
- * 
  */
-public class ApplicationInfoListGrid extends ListGrid<Property>
-{
-   private final String ID = "ide.OpenShift.ApplicationInfo.ListGrid";
+public class ApplicationInfoListGrid extends ListGrid<Property> {
+    private final String ID = "ide.OpenShift.ApplicationInfo.ListGrid";
 
-   private final String NAME = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
+    private final String NAME = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridNameField();
 
-   private final String VALUE = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
+    private final String VALUE = OpenShiftExtension.LOCALIZATION_CONSTANT.applicationInfoGridValueField();
 
-   public ApplicationInfoListGrid()
-   {
-      super();
+    public ApplicationInfoListGrid() {
+        super();
 
-      setID(ID);
+        setID(ID);
 
-      Column<Property, SafeHtml> nameColumn = new Column<Property, SafeHtml>(new SafeHtmlCell())
-      {
+        Column<Property, SafeHtml> nameColumn = new Column<Property, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final Property property)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final Property property) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  return property.getName();
-               }
-            };
-            return html;
-         }
-      };
+                    @Override
+                    public String asString() {
+                        return property.getName();
+                    }
+                };
+                return html;
+            }
+        };
 
-      Column<Property, SafeHtml> valueColumn = new Column<Property, SafeHtml>(new SafeHtmlCell())
-      {
-         @Override
-         public SafeHtml getValue(final Property property)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+        Column<Property, SafeHtml> valueColumn = new Column<Property, SafeHtml>(new SafeHtmlCell()) {
+            @Override
+            public SafeHtml getValue(final Property property) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  return property.getValue();
-               }
-            };
-            return html;
-         }
-      };
+                    @Override
+                    public String asString() {
+                        return property.getValue();
+                    }
+                };
+                return html;
+            }
+        };
 
-      getCellTable().addColumn(nameColumn, NAME);
-      getCellTable().setColumnWidth(nameColumn, "35%");
-      getCellTable().addColumn(valueColumn, VALUE);
-      getCellTable().setColumnWidth(valueColumn, "65%");
-   }
+        getCellTable().addColumn(nameColumn, NAME);
+        getCellTable().setColumnWidth(nameColumn, "35%");
+        getCellTable().addColumn(valueColumn, VALUE);
+        getCellTable().setColumnWidth(valueColumn, "65%");
+    }
 }

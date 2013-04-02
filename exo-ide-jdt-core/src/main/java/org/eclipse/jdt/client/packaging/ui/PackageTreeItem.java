@@ -33,101 +33,83 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class PackageTreeItem extends PackageExplorerTreeItem
-{
+public class PackageTreeItem extends PackageExplorerTreeItem {
 
-   public PackageTreeItem(Package p)
-   {
-      super(p);
-   }
+    public PackageTreeItem(Package p) {
+        super(p);
+    }
 
-   @Override
-   protected ImageResource getItemIcon()
-   {
-      for (FileModel file : ((Package)getUserObject()).getFiles())
-      {
-         if (!DirectoryFilter.get().matchWithPattern(file.getName()))
-         {
-            return JdtClientBundle.INSTANCE.packageFolder();
-         }
-      }
+    @Override
+    protected ImageResource getItemIcon() {
+        for (FileModel file : ((Package)getUserObject()).getFiles()) {
+            if (!DirectoryFilter.get().matchWithPattern(file.getName())) {
+                return JdtClientBundle.INSTANCE.packageFolder();
+            }
+        }
 
-      return JdtClientBundle.INSTANCE.packageEmptyFolder();
-   }
+        return JdtClientBundle.INSTANCE.packageEmptyFolder();
+    }
 
-   @Override
-   protected String getItemTitle()
-   {
-      return ((Package)getUserObject()).getPackageName();
-   }
+    @Override
+    protected String getItemTitle() {
+        return ((Package)getUserObject()).getPackageName();
+    }
 
-   @Override
-   public List<Item> getItems()
-   {
-      List<Item> items = new ArrayList<Item>();
+    @Override
+    public List<Item> getItems() {
+        List<Item> items = new ArrayList<Item>();
 
-      List<FileModel> files = ((Package)getUserObject()).getFiles();
-      for (FileModel file : files)
-      {
-         if (!DirectoryFilter.get().matchWithPattern(file.getName()))
-         {
-            items.add(file);
-         }
-      }
+        List<FileModel> files = ((Package)getUserObject()).getFiles();
+        for (FileModel file : files) {
+            if (!DirectoryFilter.get().matchWithPattern(file.getName())) {
+                items.add(file);
+            }
+        }
 
-      return items;
-   }
+        return items;
+    }
 
-   @Override
-   public void refresh(boolean expand)
-   {
-      render();
+    @Override
+    public void refresh(boolean expand) {
+        render();
 
       /*
        * Does not refresh children if tree item closed
        */
-      if (!getState() && !expand)
-      {
-         return;
-      }
+        if (!getState() && !expand) {
+            return;
+        }
 
       /*
        * Remove nonexistent
        */
-      removeNonexistendTreeItems();
+        removeNonexistendTreeItems();
 
-      Package p = (Package)getUserObject();
-      Collections.sort(p.getFiles(), COMPARATOR);
+        Package p = (Package)getUserObject();
+        Collections.sort(p.getFiles(), COMPARATOR);
 
-      int index = 0;
-      for (FileModel file : p.getFiles())
-      {
-         if (DirectoryFilter.get().matchWithPattern(file.getName()))
-         {
-            continue;
-         }
+        int index = 0;
+        for (FileModel file : p.getFiles()) {
+            if (DirectoryFilter.get().matchWithPattern(file.getName())) {
+                continue;
+            }
 
-         PackageExplorerTreeItem child = getChildByItemId(file.getId());
-         if (child == null)
-         {
-            child = new FileTreeItem(file);
-            insertItem(index, child);
-         }
-         else
-         {
-            child.setUserObject(file);
-            child.refresh(false);
-         }
+            PackageExplorerTreeItem child = getChildByItemId(file.getId());
+            if (child == null) {
+                child = new FileTreeItem(file);
+                insertItem(index, child);
+            } else {
+                child.setUserObject(file);
+                child.refresh(false);
+            }
 
-         index++;
-      }
+            index++;
+        }
 
-      if (expand)
-      {
-         setState(true);
-      }
-   }
+        if (expand) {
+            setState(true);
+        }
+    }
 
 }

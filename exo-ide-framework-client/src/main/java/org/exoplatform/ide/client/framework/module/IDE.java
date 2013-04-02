@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.module;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
@@ -29,205 +31,193 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: IDE Feb 4, 2011 11:01:38 AM evgen $
- * 
  */
-public abstract class IDE
-{
+public abstract class IDE {
 
-   private static IDE instance;
-   
-   public static String userId;
+    private static IDE instance;
 
-   private static List<Extension> extensions = new ArrayList<Extension>();
+    public static String userId;
 
-   private static HandlerManager eventBus = new SafeHandlerManager();
+    private static List<Extension> extensions = new ArrayList<Extension>();
 
-   /**
-    * Message bus for communicate over WebSocket.
-    */
-   private static MessageBus wsMessageBus;
+    private static HandlerManager eventBus = new SafeHandlerManager();
 
-   /**
-    * @return the instance
-    */
-   public static IDE getInstance()
-   {
-      return instance;
-   }
+    /** Message bus for communicate over WebSocket. */
+    private static MessageBus wsMessageBus;
 
-   /**
-    * Get list of registered extensions.
-    * 
-    * @return list of registered extensions
-    */
-   public static List<Extension> getExtensions()
-   {
-      return extensions;
-   }
+    /** @return the instance */
+    public static IDE getInstance() {
+        return instance;
+    }
 
-   public static void registerExtension(Extension extension)
-   {
-      extensions.add(extension);
-   }
+    /**
+     * Get list of registered extensions.
+     *
+     * @return list of registered extensions
+     */
+    public static List<Extension> getExtensions() {
+        return extensions;
+    }
 
-   protected IDE()
-   {
-      instance = this;
-   }
+    public static void registerExtension(Extension extension) {
+        extensions.add(extension);
+    }
 
-   /**
-    * Returns EventBus.
-    * 
-    * @return EventBus.
-    */
-   public static HandlerManager eventBus()
-   {
-      return eventBus;
-   }
+    protected IDE() {
+        instance = this;
+    }
 
-   /**
-    * Add handler to EventBus.
-    * 
-    * @param type
-    * @param handler
-    * @return
-    */
-   public static <H extends EventHandler> HandlerRegistration addHandler(GwtEvent.Type<H> type, final H handler)
-   {
-      return eventBus.addHandler(type, handler);
-   }
+    /**
+     * Returns EventBus.
+     *
+     * @return EventBus.
+     */
+    public static HandlerManager eventBus() {
+        return eventBus;
+    }
 
-   /**
-    * Remove handler from EventBus.
-    * 
-    * @param type
-    * @param handler
-    */
-   public static <H extends EventHandler> void removeHandler(GwtEvent.Type<H> type, final H handler)
-   {
-      eventBus.removeHandler(type, handler);
-   }
+    /**
+     * Add handler to EventBus.
+     *
+     * @param type
+     * @param handler
+     * @return
+     */
+    public static <H extends EventHandler> HandlerRegistration addHandler(GwtEvent.Type<H> type, final H handler) {
+        return eventBus.addHandler(type, handler);
+    }
 
-   /**
-    * Fire event to EventBus.
-    * 
-    * @param event
-    */
-   public static void fireEvent(GwtEvent<?> event)
-   {
-      eventBus.fireEvent(event);
-   }
+    /**
+     * Remove handler from EventBus.
+     *
+     * @param type
+     * @param handler
+     */
+    public static <H extends EventHandler> void removeHandler(GwtEvent.Type<H> type, final H handler) {
+        eventBus.removeHandler(type, handler);
+    }
 
-   /**
-    * Returns EventBus.
-    * 
-    * @return EventBus.
-    */
-   public static void setMessageBus(MessageBus messageBus)
-   {
-      wsMessageBus = messageBus;
-   }
+    /**
+     * Fire event to EventBus.
+     *
+     * @param event
+     */
+    public static void fireEvent(GwtEvent<?> event) {
+        eventBus.fireEvent(event);
+    }
 
-   /**
-    * Returns EventBus.
-    * 
-    * @return EventBus.
-    */
-   public static MessageBus messageBus()
-   {
-      return wsMessageBus;
-   }
+    /**
+     * Returns EventBus.
+     *
+     * @return EventBus.
+     */
+    public static void setMessageBus(MessageBus messageBus) {
+        wsMessageBus = messageBus;
+    }
 
-   /**
-    * Add control to main menu/tool bar or status bar
-    * 
-    * @param control
-    * @param docking where control dock(toolbar/statusbar)
-    */
-   public abstract void addControl(Control<?> control, Docking docking);
+    /**
+     * Returns EventBus.
+     *
+     * @return EventBus.
+     */
+    public static MessageBus messageBus() {
+        return wsMessageBus;
+    }
 
-   /**
-    * Add control to main menu
-    * 
-    * @param control control to be added
-    */
-   public abstract void addControl(Control<?> control);
+    /**
+     * Add control to main menu/tool bar or status bar
+     *
+     * @param control
+     * @param docking
+     *         where control dock(toolbar/statusbar)
+     */
+    public abstract void addControl(Control<?> control, Docking docking);
 
-   /**
-    * Add formatter for IDE controls.
-    * 
-    * @param controlsFormatter formatter to be added
-    */
-   public abstract void addControlsFormatter(ControlsFormatter controlsFormatter);
+    /**
+     * Add control to main menu
+     *
+     * @param control
+     *         control to be added
+     */
+    public abstract void addControl(Control<?> control);
 
-   /**
-    * Get list of controls.
-    * 
-    * @return
-    */
-   public abstract List<Control> getControls();
+    /**
+     * Add formatter for IDE controls.
+     *
+     * @param controlsFormatter
+     *         formatter to be added
+     */
+    public abstract void addControlsFormatter(ControlsFormatter controlsFormatter);
 
-   /**
-    * Open {@link View}
-    * 
-    * @param view to open
-    */
-   public abstract void openView(View view);
+    /**
+     * Get list of controls.
+     *
+     * @return
+     */
+    public abstract List<Control> getControls();
 
-   /**
-    * Close {@link View}
-    * 
-    * @param viewId ID of view
-    */
-   public abstract void closeView(String viewId);
+    /**
+     * Open {@link View}
+     *
+     * @param view
+     *         to open
+     */
+    public abstract void openView(View view);
 
-   // /**
-   // * Add new editor.
-   // *
-   // * @param editor
-   // */
-   // public abstract void addEditor(Editor editor);
-   //
-   // /**
-   // * Returns array of EditorBuilder for mimeType
-   // *
-   // * @param mimeType of file
-   // * @return {@link EditorBuilder} for mimeType
-   // * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
-   // */
-   // public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
+    /**
+     * Close {@link View}
+     *
+     * @param viewId
+     *         ID of view
+     */
+    public abstract void closeView(String viewId);
 
-   /**
-    * Returns FileTypeRegistry.
-    * 
-    * @return
-    */
-   public abstract FileTypeRegistry getFileTypeRegistry();
+    // /**
+    // * Add new editor.
+    // *
+    // * @param editor
+    // */
+    // public abstract void addEditor(Editor editor);
+    //
+    // /**
+    // * Returns array of EditorBuilder for mimeType
+    // *
+    // * @param mimeType of file
+    // * @return {@link EditorBuilder} for mimeType
+    // * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
+    // */
+    // public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
 
-   /**
-    * Add new outline item creator extension
-    * 
-    * @param outlineItemCreator
-    */
-   public abstract void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator);
+    /**
+     * Returns FileTypeRegistry.
+     *
+     * @return
+     */
+    public abstract FileTypeRegistry getFileTypeRegistry();
 
-   /**
-    * Get OutlineItemCreator for mimeType
-    * 
-    * @param mimeType of file
-    * @return {@link OutlineItemCreator} for mimeType
-    */
-   public abstract OutlineItemCreator getOutlineItemCreator(String mimeType);
+    /**
+     * Add new outline item creator extension
+     *
+     * @param outlineItemCreator
+     */
+    public abstract void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator);
 
-   public abstract List<PaaS> getPaaSes();
+    /**
+     * Get OutlineItemCreator for mimeType
+     *
+     * @param mimeType
+     *         of file
+     * @return {@link OutlineItemCreator} for mimeType
+     */
+    public abstract OutlineItemCreator getOutlineItemCreator(String mimeType);
 
-   public abstract void registerPaaS(PaaS paas);
+    public abstract List<PaaS> getPaaSes();
+
+    public abstract void registerPaaS(PaaS paas);
 }

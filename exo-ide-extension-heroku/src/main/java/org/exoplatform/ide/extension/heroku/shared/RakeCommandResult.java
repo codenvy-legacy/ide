@@ -20,26 +20,25 @@ package org.exoplatform.ide.extension.heroku.shared;
 
 /**
  * Interface describing result of the rake command.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: RakeCommandResult.java Mar 19, 2012 2:57:20 PM azatsarynnyy $
- *
  */
-public interface RakeCommandResult
-{
+public interface RakeCommandResult {
 
-   /**
-    * Returns the result result of the rake command.
-    * 
-    * @return {@link String} rake command result.
-    */
-   public String getResult();
+    /**
+     * Returns the result result of the rake command.
+     *
+     * @return {@link String} rake command result.
+     */
+    public String getResult();
 
-   /**
-    * Change the result of the rake command.
-    * 
-    * @param result rake command result.
-    */
-   public void setResult(String result);
+    /**
+     * Change the result of the rake command.
+     *
+     * @param result
+     *         rake command result.
+     */
+    public void setResult(String result);
 
 }

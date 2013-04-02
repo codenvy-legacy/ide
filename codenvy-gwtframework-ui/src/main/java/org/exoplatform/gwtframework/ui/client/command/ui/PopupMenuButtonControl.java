@@ -20,6 +20,9 @@
 
 package org.exoplatform.gwtframework.ui.client.command.ui;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+
 import org.exoplatform.gwtframework.ui.client.command.ControlStateListener;
 import org.exoplatform.gwtframework.ui.client.command.PopupMenuControl;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -28,157 +31,127 @@ import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
-
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class PopupMenuButtonControl extends PopupMenuButton implements ControlStateListener
-{
-   
-   private final static String DISABLED_SUFFIX = "_Disabled";   
-   
-   private HandlerManager eventBus;
-   
-   private PopupMenuControl popupMenuControl;
-   
-   private Toolbar toolbar;
+public class PopupMenuButtonControl extends PopupMenuButton implements ControlStateListener {
 
-   public PopupMenuButtonControl(HandlerManager eventBus, PopupMenuControl popupMenuControl, Toolbar toolbar)
-   {
-      super(null, null);
-      
-      this.eventBus = eventBus;
-      this.popupMenuControl = popupMenuControl;
-      this.toolbar = toolbar;
-      
-      setIcon(getControlIcon());
-      setDisabledIcon(getControlDisabledIcon());
-      setEnabled(popupMenuControl.isEnabled());
-      setTitle(popupMenuControl.getPrompt());
-      
-      refreshPopupMenuItems();
-   }
-   
-   protected String getControlIcon() {
-      String icon = "";
-      if (popupMenuControl.getNormalImage() != null)
-      {
-         icon = ImageHelper.getImageHTML(popupMenuControl.getNormalImage());
-      }
-      else if (popupMenuControl.getIcon() != null)
-      {
-         icon = ImageHelper.getImageHTML(popupMenuControl.getIcon());
-      }
+    private final static String DISABLED_SUFFIX = "_Disabled";
 
-      return icon;
-   }
-   
-   protected String getControlDisabledIcon() {
-      String disabledIcon = "";
-      if (popupMenuControl.getDisabledImage() != null)
-      {
-         disabledIcon = ImageHelper.getImageHTML(popupMenuControl.getDisabledImage());
-      }
-      else if (popupMenuControl.getIcon() != null)
-      {
-         String disabledIconURL = popupMenuControl.getIcon();
-         disabledIconURL = popupMenuControl.getIcon().substring(0, popupMenuControl.getIcon().lastIndexOf("."));
-         disabledIconURL += DISABLED_SUFFIX;
-         disabledIconURL += popupMenuControl.getIcon().substring(popupMenuControl.getIcon().lastIndexOf("."));
-         disabledIcon = ImageHelper.getImageHTML(disabledIconURL);
-      }
+    private HandlerManager eventBus;
 
-      return disabledIcon;
-   }
-   
-   public void refreshPopupMenuItems()
-   {
-      getMenuItems().clear();
-      
-      for (SimpleControl command : popupMenuControl.getCommands())
-      {
-         String icon = getMenuItemIcon(command);
+    private PopupMenuControl popupMenuControl;
 
-         if (command.hasDelimiterBefore())
-         {
-            addItem(null);
-         }
+    private Toolbar toolbar;
 
-         MenuItem menuItem = addItem(icon, command.getTitle());
-         Command c = new MenuItemControl(eventBus, menuItem, command);
-      }
-   }   
-   
-   protected String getMenuItemIcon(SimpleControl command) {
-      String icon;
+    public PopupMenuButtonControl(HandlerManager eventBus, PopupMenuControl popupMenuControl, Toolbar toolbar) {
+        super(null, null);
 
-      if (command.isEnabled())
-      {
-         if (command.getNormalImage() != null)
-         {
-            icon = ImageHelper.getImageHTML(command.getNormalImage());
-         }
-         else
-         {
-            icon = ImageHelper.getImageHTML(command.getIcon());
-         }
-      }
-      else
-      {
-         if (command.getDisabledImage() != null)
-         {
-            icon = ImageHelper.getImageHTML(command.getDisabledImage());
-         }
-         else
-         {
-            icon = ImageHelper.getImageHTML(command.getIcon());
-         }
+        this.eventBus = eventBus;
+        this.popupMenuControl = popupMenuControl;
+        this.toolbar = toolbar;
 
-      }
+        setIcon(getControlIcon());
+        setDisabledIcon(getControlDisabledIcon());
+        setEnabled(popupMenuControl.isEnabled());
+        setTitle(popupMenuControl.getPrompt());
 
-      return icon;
-   }   
-   
-   @Override
-   protected void onAttach()
-   {
-      super.onAttach();
-      getParent().setVisible(popupMenuControl.isVisible());
-      popupMenuControl.getStateListeners().add(this);
-   }
-   
-   @Override
-   protected void onDetach()
-   {
-      super.onDetach();
-      popupMenuControl.getStateListeners().remove(this);
-   }
+        refreshPopupMenuItems();
+    }
 
-   public void updateControlEnabling(boolean enabled)
-   {
-      setEnabled(enabled);
-   }
+    protected String getControlIcon() {
+        String icon = "";
+        if (popupMenuControl.getNormalImage() != null) {
+            icon = ImageHelper.getImageHTML(popupMenuControl.getNormalImage());
+        } else if (popupMenuControl.getIcon() != null) {
+            icon = ImageHelper.getImageHTML(popupMenuControl.getIcon());
+        }
 
-   public void updateControlVisibility(boolean visible)
-   {
-      getParent().setVisible(visible);
-      toolbar.hideDuplicatedDelimiters();
-   }
+        return icon;
+    }
 
-   public void updateControlPrompt(String prompt)
-   {
-      setTitle(prompt);
-   }
+    protected String getControlDisabledIcon() {
+        String disabledIcon = "";
+        if (popupMenuControl.getDisabledImage() != null) {
+            disabledIcon = ImageHelper.getImageHTML(popupMenuControl.getDisabledImage());
+        } else if (popupMenuControl.getIcon() != null) {
+            String disabledIconURL = popupMenuControl.getIcon();
+            disabledIconURL = popupMenuControl.getIcon().substring(0, popupMenuControl.getIcon().lastIndexOf("."));
+            disabledIconURL += DISABLED_SUFFIX;
+            disabledIconURL += popupMenuControl.getIcon().substring(popupMenuControl.getIcon().lastIndexOf("."));
+            disabledIcon = ImageHelper.getImageHTML(disabledIconURL);
+        }
 
-   public void updateControlIcon(String icon)
-   {
-   }
+        return disabledIcon;
+    }
+
+    public void refreshPopupMenuItems() {
+        getMenuItems().clear();
+
+        for (SimpleControl command : popupMenuControl.getCommands()) {
+            String icon = getMenuItemIcon(command);
+
+            if (command.hasDelimiterBefore()) {
+                addItem(null);
+            }
+
+            MenuItem menuItem = addItem(icon, command.getTitle());
+            Command c = new MenuItemControl(eventBus, menuItem, command);
+        }
+    }
+
+    protected String getMenuItemIcon(SimpleControl command) {
+        String icon;
+
+        if (command.isEnabled()) {
+            if (command.getNormalImage() != null) {
+                icon = ImageHelper.getImageHTML(command.getNormalImage());
+            } else {
+                icon = ImageHelper.getImageHTML(command.getIcon());
+            }
+        } else {
+            if (command.getDisabledImage() != null) {
+                icon = ImageHelper.getImageHTML(command.getDisabledImage());
+            } else {
+                icon = ImageHelper.getImageHTML(command.getIcon());
+            }
+
+        }
+
+        return icon;
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        getParent().setVisible(popupMenuControl.isVisible());
+        popupMenuControl.getStateListeners().add(this);
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        popupMenuControl.getStateListeners().remove(this);
+    }
+
+    public void updateControlEnabling(boolean enabled) {
+        setEnabled(enabled);
+    }
+
+    public void updateControlVisibility(boolean visible) {
+        getParent().setVisible(visible);
+        toolbar.hideDuplicatedDelimiters();
+    }
+
+    public void updateControlPrompt(String prompt) {
+        setTitle(prompt);
+    }
+
+    public void updateControlIcon(String icon) {
+    }
 
 }

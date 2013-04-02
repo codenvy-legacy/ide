@@ -36,72 +36,59 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 30, 2012 10:28:36 AM anya $
- * 
  */
-public class OAuthLoginView extends ViewImpl implements OAuthLoginPresenter.Display
-{
+public class OAuthLoginView extends ViewImpl implements OAuthLoginPresenter.Display {
 
-   private static final String ID = "ideOAuthLoginView";
+    private static final String ID = "ideOAuthLoginView";
 
-   private static final int WIDTH = 450;
+    private static final int WIDTH = 450;
 
-   private static final int HEIGHT = 180;
+    private static final int HEIGHT = 180;
 
-   private static final String LABEL_ID = "ideOAuthLoginViewLabel";
+    private static final String LABEL_ID = "ideOAuthLoginViewLabel";
 
-   private static final String AUTH_BUTTON_ID = "ideOAuthLoginViewAuthButton";
+    private static final String AUTH_BUTTON_ID = "ideOAuthLoginViewAuthButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideOAuthLoginViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideOAuthLoginViewCancelButton";
 
-   private static OAuthLoginViewUiBinder uiBinder = GWT.create(OAuthLoginViewUiBinder.class);
+    private static OAuthLoginViewUiBinder uiBinder = GWT.create(OAuthLoginViewUiBinder.class);
 
-   interface OAuthLoginViewUiBinder extends UiBinder<Widget, OAuthLoginView>
-   {
-   }
+    interface OAuthLoginViewUiBinder extends UiBinder<Widget, OAuthLoginView> {
+    }
 
-   @UiField
-   ImageButton oauthButton;
+    @UiField
+    ImageButton oauthButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   Label label;
+    @UiField
+    Label label;
 
-   public OAuthLoginView()
-   {
-      super(ID, ViewType.MODAL, SamplesExtension.LOCALIZATION_CONSTANT.loginOAuthTitle(), new Image(
-         SamplesClientBundle.INSTANCE.gitHub()), WIDTH, HEIGHT, true);
-      add(uiBinder.createAndBindUi(this));
-      label.setID(LABEL_ID);
-      oauthButton.setId(AUTH_BUTTON_ID);
-      cancelButton.setId(CANCEL_BUTTON_ID);
-   }
+    public OAuthLoginView() {
+        super(ID, ViewType.MODAL, SamplesExtension.LOCALIZATION_CONSTANT.loginOAuthTitle(), new Image(
+                SamplesClientBundle.INSTANCE.gitHub()), WIDTH, HEIGHT, true);
+        add(uiBinder.createAndBindUi(this));
+        label.setID(LABEL_ID);
+        oauthButton.setId(AUTH_BUTTON_ID);
+        cancelButton.setId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display#getLoginButton()
-    */
-   @Override
-   public HasClickHandlers getLoginButton()
-   {
-      return oauthButton;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display#getLoginButton() */
+    @Override
+    public HasClickHandlers getLoginButton() {
+        return oauthButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display#getLabel()
-    */
-   @Override
-   public HasValue<String> getLabel()
-   {
-      return label;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display#getLabel() */
+    @Override
+    public HasValue<String> getLabel() {
+        return label;
+    }
 }
