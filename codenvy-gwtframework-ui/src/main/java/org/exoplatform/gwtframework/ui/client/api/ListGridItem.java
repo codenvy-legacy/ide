@@ -19,25 +19,24 @@
  */
 package org.exoplatform.gwtframework.ui.client.api;
 
-import java.util.List;
-
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ListGridItem<T> extends 
-      HasValue<List<T>>, 
-      HasSelectionHandlers<T>,
-      HasSelectedItem<T>,
-      HasClickHandlers, 
-      HasDoubleClickHandlers
-{
+public interface ListGridItem<T> extends
+                                 HasValue<List<T>>,
+                                 HasSelectionHandlers<T>,
+                                 HasSelectedItem<T>,
+                                 HasClickHandlers,
+                                 HasDoubleClickHandlers {
 }

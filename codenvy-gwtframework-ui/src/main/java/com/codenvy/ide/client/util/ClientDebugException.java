@@ -23,24 +23,24 @@ package com.codenvy.ide.client.util;
  * suspected of generating them. NOTE: Once we'll have stack traces for these
  * NPEs in all browsers the use of this exception should cease.
  */
-public class ClientDebugException extends RuntimeException
-{
+public class ClientDebugException extends RuntimeException {
 
-   /**
-    * @param message Some useful message about the exception
-    */
-   public ClientDebugException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     *         Some useful message about the exception
+     */
+    public ClientDebugException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param message Some useful message about the exception
-    * @param cause   The original exception to be wrapped.
-    */
-   public ClientDebugException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     *         Some useful message about the exception
+     * @param cause
+     *         The original exception to be wrapped.
+     */
+    public ClientDebugException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

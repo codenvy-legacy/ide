@@ -25,46 +25,36 @@ import org.exoplatform.gwtframework.ui.client.WindowResource;
 
 /**
  * Button for closing window (displayed at the right upper corner).
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 3, 2011 11:09:49 AM anya $
- *
  */
-public class CloseButton extends WindowButton
-{
-   /**
-    * Handler for close click action.
-    */
-   private CloseClickHandler closeClickHandler;
+public class CloseButton extends WindowButton {
+    /** Handler for close click action. */
+    private CloseClickHandler closeClickHandler;
 
-   /**
-    * @param closeHandler close click window handler
-    */
-   public CloseButton(CloseClickHandler closeClickHandler)
-   {
-      super(WindowResource.INSTANCE.closeWindowButton(), WindowResource.INSTANCE.closeWindowButtonOver(),
-         WindowResource.INSTANCE.closeWindowButtonDisabled());
-      this.closeClickHandler = closeClickHandler;
-      setPrompt("Close");
+    /**
+     * @param closeHandler
+     *         close click window handler
+     */
+    public CloseButton(CloseClickHandler closeClickHandler) {
+        super(WindowResource.INSTANCE.closeWindowButton(), WindowResource.INSTANCE.closeWindowButtonOver(),
+              WindowResource.INSTANCE.closeWindowButtonDisabled());
+        this.closeClickHandler = closeClickHandler;
+        setPrompt("Close");
 
-      addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            doClick();
-         }
-      });
-   }
+        addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                doClick();
+            }
+        });
+    }
 
-   /**
-    * Perform actions on close button's click.
-    */
-   public void doClick()
-   {
-      if (closeClickHandler != null)
-      {
-         closeClickHandler.onCloseClick();
-      }
-   }
+    /** Perform actions on close button's click. */
+    public void doClick() {
+        if (closeClickHandler != null) {
+            closeClickHandler.onCloseClick();
+        }
+    }
 
 }

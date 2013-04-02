@@ -19,67 +19,59 @@
  */
 package org.exoplatform.gwtframework.ui.client.command.ui;
 
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 
-import com.google.gwt.event.shared.GwtEvent;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class SetToolbarItemsEvent extends GwtEvent<SetToolbarItemsHandler>
-{
+public class SetToolbarItemsEvent extends GwtEvent<SetToolbarItemsHandler> {
 
-   public static final GwtEvent.Type<SetToolbarItemsHandler> TYPE = new GwtEvent.Type<SetToolbarItemsHandler>();
+    public static final GwtEvent.Type<SetToolbarItemsHandler> TYPE = new GwtEvent.Type<SetToolbarItemsHandler>();
 
-   private List<Control> commands;
+    private List<Control> commands;
 
-   private String toolbarId;
+    private String toolbarId;
 
-   private List<String> toolBarItems;
+    private List<String> toolBarItems;
 
-   public SetToolbarItemsEvent(List<String> toolBarItems, List<Control> commands)
-   {
-      this(null, toolBarItems, commands);
-   }
+    public SetToolbarItemsEvent(List<String> toolBarItems, List<Control> commands) {
+        this(null, toolBarItems, commands);
+    }
 
-   public SetToolbarItemsEvent(String toolbarId, List<String> toolBarItems, List<Control> commands)
-   {
-      this.toolbarId = toolbarId;
-      this.toolBarItems = toolBarItems;
-      this.commands = commands;
-   }
+    public SetToolbarItemsEvent(String toolbarId, List<String> toolBarItems, List<Control> commands) {
+        this.toolbarId = toolbarId;
+        this.toolBarItems = toolBarItems;
+        this.commands = commands;
+    }
 
-   @Override
-   protected void dispatch(SetToolbarItemsHandler handler)
-   {
-      handler.onSetToolbarItems(this);
-   }
+    @Override
+    protected void dispatch(SetToolbarItemsHandler handler) {
+        handler.onSetToolbarItems(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SetToolbarItemsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SetToolbarItemsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public List<Control> getCommands()
-   {
-      return commands;
-   }
+    public List<Control> getCommands() {
+        return commands;
+    }
 
-   public String getToolbarId()
-   {
-      return toolbarId;
-   }
+    public String getToolbarId() {
+        return toolbarId;
+    }
 
-   public List<String> getToolBarItems()
-   {
-      return toolBarItems;
-   }
+    public List<String> getToolBarItems() {
+        return toolBarItems;
+    }
 
 }

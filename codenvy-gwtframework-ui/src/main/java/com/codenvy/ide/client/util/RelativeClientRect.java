@@ -16,63 +16,52 @@ package com.codenvy.ide.client.util;
 
 import elemental.html.ClientRect;
 
-/**
- * A {@link ClientRect} which is relative to a given point.
- */
-public class RelativeClientRect implements ClientRect
-{
+/** A {@link ClientRect} which is relative to a given point. */
+public class RelativeClientRect implements ClientRect {
 
-   public static ClientRect relativeToRect(ClientRect relativeParent, ClientRect rect)
-   {
-      return new RelativeClientRect((int)relativeParent.getLeft(), (int)relativeParent.getTop(), rect);
-   }
+    public static ClientRect relativeToRect(ClientRect relativeParent, ClientRect rect) {
+        return new RelativeClientRect((int)relativeParent.getLeft(), (int)relativeParent.getTop(), rect);
+    }
 
-   private final ClientRect rect;
+    private final ClientRect rect;
 
-   private final int offsetLeft;
+    private final int offsetLeft;
 
-   private final int offsetTop;
+    private final int offsetTop;
 
-   public RelativeClientRect(int offsetLeft, int offsetTop, ClientRect rect)
-   {
-      this.offsetLeft = offsetLeft;
-      this.offsetTop = offsetTop;
-      this.rect = rect;
-   }
+    public RelativeClientRect(int offsetLeft, int offsetTop, ClientRect rect) {
+        this.offsetLeft = offsetLeft;
+        this.offsetTop = offsetTop;
+        this.rect = rect;
+    }
 
-   @Override
-   public double getBottom()
-   {
-      return rect.getBottom() - offsetTop;
-   }
+    @Override
+    public double getBottom() {
+        return rect.getBottom() - offsetTop;
+    }
 
-   @Override
-   public double getHeight()
-   {
-      return rect.getHeight();
-   }
+    @Override
+    public double getHeight() {
+        return rect.getHeight();
+    }
 
-   @Override
-   public double getLeft()
-   {
-      return rect.getLeft() - offsetLeft;
-   }
+    @Override
+    public double getLeft() {
+        return rect.getLeft() - offsetLeft;
+    }
 
-   @Override
-   public double getRight()
-   {
-      return rect.getRight() - offsetLeft;
-   }
+    @Override
+    public double getRight() {
+        return rect.getRight() - offsetLeft;
+    }
 
-   @Override
-   public double getTop()
-   {
-      return rect.getTop() - offsetTop;
-   }
+    @Override
+    public double getTop() {
+        return rect.getTop() - offsetTop;
+    }
 
-   @Override
-   public double getWidth()
-   {
-      return rect.getWidth();
-   }
+    @Override
+    public double getWidth() {
+        return rect.getWidth();
+    }
 }

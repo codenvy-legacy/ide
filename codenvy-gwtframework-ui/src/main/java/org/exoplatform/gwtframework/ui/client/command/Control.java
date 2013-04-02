@@ -19,223 +19,194 @@
  */
 package org.exoplatform.gwtframework.ui.client.command;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.resources.client.ImageResource;
-
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public abstract class Control<T extends Control<?>>
-{
+public abstract class Control<T extends Control<?>> {
 
-   private String id;
+    private String id;
 
-   private String icon;
+    private String icon;
 
-   private ImageResource normalImage;
+    private ImageResource normalImage;
 
-   private ImageResource disabledImage;
+    private ImageResource disabledImage;
 
-   private String prompt;
+    private String prompt;
 
-   private boolean enabled;
+    private boolean enabled;
 
-   private boolean visible;
+    private boolean visible;
 
-   private boolean hasDelimiterBefore;
+    private boolean hasDelimiterBefore;
 
-   public Control(String id)
-   {
-      this.id = id;
-   }
+    public Control(String id) {
+        this.id = id;
+    }
 
-   /**
-    * List of command state listeners.
-    * Listeners are uses for enabling, disabling, showing or hiding item in menu or toolbar.
-    */
-   private List<ControlStateListener> stateListeners = new ArrayList<ControlStateListener>();
+    /**
+     * List of command state listeners.
+     * Listeners are uses for enabling, disabling, showing or hiding item in menu or toolbar.
+     */
+    private List<ControlStateListener> stateListeners = new ArrayList<ControlStateListener>();
 
-   public String getId()
-   {
-      return id;
-   }
+    public String getId() {
+        return id;
+    }
 
-   public ImageResource getNormalImage()
-   {
-      return normalImage;
-   }
+    public ImageResource getNormalImage() {
+        return normalImage;
+    }
 
-   @SuppressWarnings("unchecked")
-   public T setNormalImage(ImageResource normalImage)
-   {
-      this.normalImage = normalImage;
-      return (T)this;
-   }
+    @SuppressWarnings("unchecked")
+    public T setNormalImage(ImageResource normalImage) {
+        this.normalImage = normalImage;
+        return (T)this;
+    }
 
-   public ImageResource getDisabledImage()
-   {
-      return disabledImage;
-   }
+    public ImageResource getDisabledImage() {
+        return disabledImage;
+    }
 
-   @SuppressWarnings("unchecked")
-   public T setDisabledImage(ImageResource disabledImage)
-   {
-      this.disabledImage = disabledImage;
-      return (T)this;
-   }
+    @SuppressWarnings("unchecked")
+    public T setDisabledImage(ImageResource disabledImage) {
+        this.disabledImage = disabledImage;
+        return (T)this;
+    }
 
-   @SuppressWarnings("unchecked")
-   public T setImages(ImageResource normalImage, ImageResource disabledImage)
-   {
-      if (this.normalImage == normalImage && this.disabledImage == disabledImage)
-      {
-         return (T)this;
-      }
+    @SuppressWarnings("unchecked")
+    public T setImages(ImageResource normalImage, ImageResource disabledImage) {
+        if (this.normalImage == normalImage && this.disabledImage == disabledImage) {
+            return (T)this;
+        }
 
-      this.normalImage = normalImage;
-      this.disabledImage = disabledImage;
+        this.normalImage = normalImage;
+        this.disabledImage = disabledImage;
 
-      for (ControlStateListener listener : stateListeners)
-      {
-         listener.updateControlIcon(icon);
-      }
-      
-      return (T)this;
-   }
+        for (ControlStateListener listener : stateListeners) {
+            listener.updateControlIcon(icon);
+        }
 
-   public String getIcon()
-   {
-      return icon;
-   }
+        return (T)this;
+    }
 
-   @SuppressWarnings("unchecked")
-   public T setIcon(String icon)
-   {
-      if (this.icon == icon)
-      {
-         return (T)this;
-      }
+    public String getIcon() {
+        return icon;
+    }
 
-      this.icon = icon;
-      for (ControlStateListener listener : stateListeners)
-      {
-         listener.updateControlIcon(icon);
-      }
-      
-      return (T)this;
-   }
+    @SuppressWarnings("unchecked")
+    public T setIcon(String icon) {
+        if (this.icon == icon) {
+            return (T)this;
+        }
 
-   public String getPrompt()
-   {
-      return prompt;
-   }
+        this.icon = icon;
+        for (ControlStateListener listener : stateListeners) {
+            listener.updateControlIcon(icon);
+        }
 
-   @SuppressWarnings("unchecked")
-   public T setPrompt(String prompt)
-   {
-      if (this.prompt == prompt)
-      {
-         return (T)this;
-      }
+        return (T)this;
+    }
 
-      this.prompt = prompt;
-      for (ControlStateListener listener : stateListeners)
-      {
-         listener.updateControlPrompt(prompt);
-      }      
-      
-      return (T)this;
-   }
+    public String getPrompt() {
+        return prompt;
+    }
 
-   public boolean isEnabled()
-   {
-      return enabled;
-   }
+    @SuppressWarnings("unchecked")
+    public T setPrompt(String prompt) {
+        if (this.prompt == prompt) {
+            return (T)this;
+        }
 
-   @SuppressWarnings("unchecked")
-   public T setEnabled(boolean enabled)
-   {
-      if (this.enabled == enabled)
-      {
-         return (T)this;
-      }
+        this.prompt = prompt;
+        for (ControlStateListener listener : stateListeners) {
+            listener.updateControlPrompt(prompt);
+        }
 
-      this.enabled = enabled;
-      for (ControlStateListener listener : stateListeners)
-      {
-         listener.updateControlEnabling(enabled);
-      }
-      
-      return (T)this;
-   }
-   
-   @SuppressWarnings("unchecked")
-   public T enable() {
-      setEnabled(true);
-      return (T)this;
-   }
-   
-   @SuppressWarnings("unchecked")
-   public T disable() {
-      setEnabled(false);
-      return (T)this;
-   }
+        return (T)this;
+    }
 
-   public boolean isVisible()
-   {
-      return visible;
-   }
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-   @SuppressWarnings("unchecked")
-   public T setVisible(boolean visible)
-   {
-      if (this.visible == visible)
-      {
-         return (T)this;
-      }
+    @SuppressWarnings("unchecked")
+    public T setEnabled(boolean enabled) {
+        if (this.enabled == enabled) {
+            return (T)this;
+        }
 
-      this.visible = visible;
-      for (ControlStateListener listener : stateListeners)
-      {
-         listener.updateControlVisibility(visible);
-      }
-      
-      return (T)this;
-   }
-   
-   @SuppressWarnings("unchecked")
-   public T show() {
-      setVisible(true);
-      return (T)this;
-   }
-   
-   @SuppressWarnings("unchecked")
-   public T hide() {
-      setVisible(false);
-      return (T)this;
-   }
+        this.enabled = enabled;
+        for (ControlStateListener listener : stateListeners) {
+            listener.updateControlEnabling(enabled);
+        }
 
-   public List<ControlStateListener> getStateListeners()
-   {
-      return stateListeners;
-   }
+        return (T)this;
+    }
 
-   public boolean hasDelimiterBefore()
-   {
-      return hasDelimiterBefore;
-   }
+    @SuppressWarnings("unchecked")
+    public T enable() {
+        setEnabled(true);
+        return (T)this;
+    }
 
-   @SuppressWarnings("unchecked")
-   public T setDelimiterBefore(boolean hasDelimiterBefore)
-   {
-      this.hasDelimiterBefore = hasDelimiterBefore;
-      return (T)this;
-   }
+    @SuppressWarnings("unchecked")
+    public T disable() {
+        setEnabled(false);
+        return (T)this;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T setVisible(boolean visible) {
+        if (this.visible == visible) {
+            return (T)this;
+        }
+
+        this.visible = visible;
+        for (ControlStateListener listener : stateListeners) {
+            listener.updateControlVisibility(visible);
+        }
+
+        return (T)this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T show() {
+        setVisible(true);
+        return (T)this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T hide() {
+        setVisible(false);
+        return (T)this;
+    }
+
+    public List<ControlStateListener> getStateListeners() {
+        return stateListeners;
+    }
+
+    public boolean hasDelimiterBefore() {
+        return hasDelimiterBefore;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T setDelimiterBefore(boolean hasDelimiterBefore) {
+        this.hasDelimiterBefore = hasDelimiterBefore;
+        return (T)this;
+    }
 
 }

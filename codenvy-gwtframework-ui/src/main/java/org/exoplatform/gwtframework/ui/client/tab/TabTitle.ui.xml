@@ -1,31 +1,31 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-   <g:HTMLPanel styleName="tabTitlePanel">
-      <table cellspacing="0" cellpadding="0" class="tabTitleTable">
-         <tr class="tabMiddle">
-            <td class="tabMiddleLeft">
-               <div class="tabMiddleLeftInner"></div>
-            </td>
-            <td>
-               <table cellspacing="0" cellpadding="0" class="tabMiddleCenterInner">
-                  <tr>
-                     <td class="tabTitleIcon" ui:field="iconPanel">
-                     </td>
+    <g:HTMLPanel styleName="tabTitlePanel">
+        <table cellspacing="0" cellpadding="0" class="tabTitleTable">
+            <tr class="tabMiddle">
+                <td class="tabMiddleLeft">
+                    <div class="tabMiddleLeftInner"></div>
+                </td>
+                <td>
+                    <table cellspacing="0" cellpadding="0" class="tabMiddleCenterInner">
+                        <tr>
+                            <td class="tabTitleIcon" ui:field="iconPanel">
+                            </td>
 
-                     <td class="tabTitleText" nowrap="nowrap" ui:field="textElement"></td>
+                            <td class="tabTitleText" nowrap="nowrap" ui:field="textElement"></td>
 
-                     <td>
-                        <g:HTML styleName="tabTitleCloseButton" ui:field="closeButton"></g:HTML>
-                     </td>
+                            <td>
+                                <g:HTML styleName="tabTitleCloseButton" ui:field="closeButton"></g:HTML>
+                            </td>
 
-                  </tr>
-               </table>
-            </td>
-            <td class="tabMiddleRight">
-               <div class="tabMiddleRightInner"></div>
-            </td>
-         </tr>
-      </table>
-   </g:HTMLPanel>
+                        </tr>
+                    </table>
+                </td>
+                <td class="tabMiddleRight">
+                    <div class="tabMiddleRightInner"></div>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
 </ui:UiBinder> 

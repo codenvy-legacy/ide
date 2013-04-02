@@ -22,46 +22,36 @@ package com.codenvy.ide.client.scheduler;
  * scheduled/cancelled. Because it is associated with a specific task, it may be
  * efficiently implemented to avoid unecessary object creation and other
  * overheads when scheduling.
- *
+ * <p/>
  * Rather than having the interface mandate mutability through a setter for the
  * runnable task, a factory interface is instead provided for most uses.
  *
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public interface SimpleTimer
-{
-   /**
-    * Factory to create a simple timer.
-    */
-   public interface Factory
-   {
-      /**
-       * Factory method
-       */
-      SimpleTimer create(Runnable runnable);
-   }
+public interface SimpleTimer {
+    /** Factory to create a simple timer. */
+    public interface Factory {
+        /** Factory method */
+        SimpleTimer create(Runnable runnable);
+    }
 
-   /**
-    * @return The current time in millis, as a double
-    */
-   double getTime();
+    /** @return The current time in millis, as a double */
+    double getTime();
 
-   /**
-    * Run the task at the next available opportunity. Implicitly cancels any
-    * other scheduling.
-    */
-   void schedule();
+    /**
+     * Run the task at the next available opportunity. Implicitly cancels any
+     * other scheduling.
+     */
+    void schedule();
 
-   /**
-    * Run the task at the next available opportunity, but no earlier than the
-    * given time. Implicitly cancels any other scheduling.
-    *
-    * @param when
-    */
-   void schedule(double when);
+    /**
+     * Run the task at the next available opportunity, but no earlier than the
+     * given time. Implicitly cancels any other scheduling.
+     *
+     * @param when
+     */
+    void schedule(double when);
 
-   /**
-    * Cancel any scheduled running of the task.
-    */
-   void cancel();
+    /** Cancel any scheduled running of the task. */
+    void cancel();
 }

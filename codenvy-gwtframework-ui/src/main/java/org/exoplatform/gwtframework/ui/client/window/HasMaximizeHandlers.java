@@ -21,19 +21,18 @@ package org.exoplatform.gwtframework.ui.client.window;
 
 /**
  * Implementer will contain registered {@link MaximizeHandler} handlers.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 4, 2011 11:29:48 AM anya $
- *
  */
-public interface HasMaximizeHandlers
-{
-   
-   /**
-    * Adds {@link MaximizeHandler} handler.
-    * 
-    * @param handler maximize window handler
-    */
-   void addMaximizeHandler(MaximizeHandler handler);
-   
+public interface HasMaximizeHandlers {
+
+    /**
+     * Adds {@link MaximizeHandler} handler.
+     *
+     * @param handler
+     *         maximize window handler
+     */
+    void addMaximizeHandler(MaximizeHandler handler);
+
 }

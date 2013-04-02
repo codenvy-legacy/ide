@@ -23,53 +23,47 @@ import com.google.gwt.user.client.Command;
  * Simple synchronization tool that waits for some fixed number of calls to
  * {@link #tick()}, and invokes a command on the last one. Any further calls to
  * {@link #tick()} produce an error.
- * <p>
+ * <p/>
  * The intended use case for this class is a gate that waits for some set of
  * asynchronous tasks to complete.
  */
-public final class CountdownLatch
-{
-   /**
-    * Command to execute when the all ticks have occurred.
-    */
-   private final Command whenZero;
+public final class CountdownLatch {
+    /** Command to execute when the all ticks have occurred. */
+    private final Command whenZero;
 
-   /**
-    * Number of expected ticks.
-    */
-   private int count;
+    /** Number of expected ticks. */
+    private int count;
 
-   private CountdownLatch(int count, Command whenZero)
-   {
-      this.whenZero = whenZero;
-      this.count = count;
-   }
+    private CountdownLatch(int count, Command whenZero) {
+        this.whenZero = whenZero;
+        this.count = count;
+    }
 
-   /**
-    * Creates a countdown latch.
-    *
-    * @param count    number of ticks
-    * @param whenZero command to execute after {@code count} ticks
-    * @return a new latch.
-    */
-   public static CountdownLatch create(int count, Command whenZero)
-   {
-      return new CountdownLatch(count, whenZero);
-   }
+    /**
+     * Creates a countdown latch.
+     *
+     * @param count
+     *         number of ticks
+     * @param whenZero
+     *         command to execute after {@code count} ticks
+     * @return a new latch.
+     */
+    public static CountdownLatch create(int count, Command whenZero) {
+        return new CountdownLatch(count, whenZero);
+    }
 
-   /**
-    * Ticks this counter.
-    *
-    * @throws IllegalStateException if this counter has already been ticked the
-    *                               expected number of times.
-    */
-   public void tick()
-   {
-      Preconditions.checkState(count > 0);
-      count--;
-      if (count == 0)
-      {
-         whenZero.execute();
-      }
-   }
+    /**
+     * Ticks this counter.
+     *
+     * @throws IllegalStateException
+     *         if this counter has already been ticked the
+     *         expected number of times.
+     */
+    public void tick() {
+        Preconditions.checkState(count > 0);
+        count--;
+        if (count == 0) {
+            whenZero.execute();
+        }
+    }
 }

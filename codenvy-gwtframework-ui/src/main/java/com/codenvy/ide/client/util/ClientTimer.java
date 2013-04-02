@@ -16,44 +16,34 @@ package com.codenvy.ide.client.util;
 
 import org.exoplatform.ide.shared.util.Timer;
 
-/**
- * A client implementation of {@link org.exoplatform.ide.shared.util.Timer}.
- */
-public class ClientTimer implements Timer
-{
+/** A client implementation of {@link org.exoplatform.ide.shared.util.Timer}. */
+public class ClientTimer implements Timer {
 
-   public static Factory FACTORY = new Factory()
-   {
-      @Override
-      public Timer createTimer(Runnable runnable)
-      {
-         return new ClientTimer(runnable);
-      }
-   };
+    public static Factory FACTORY = new Factory() {
+        @Override
+        public Timer createTimer(Runnable runnable) {
+            return new ClientTimer(runnable);
+        }
+    };
 
-   private final elemental.util.Timer timer;
+    private final elemental.util.Timer timer;
 
-   private ClientTimer(final Runnable runnable)
-   {
-      timer = new elemental.util.Timer()
-      {
-         @Override
-         public void run()
-         {
-            runnable.run();
-         }
-      };
-   }
+    private ClientTimer(final Runnable runnable) {
+        timer = new elemental.util.Timer() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        };
+    }
 
-   @Override
-   public void schedule(int delayMs)
-   {
-      timer.schedule(delayMs);
-   }
+    @Override
+    public void schedule(int delayMs) {
+        timer.schedule(delayMs);
+    }
 
-   @Override
-   public void cancel()
-   {
-      timer.cancel();
-   }
+    @Override
+    public void cancel() {
+        timer.cancel();
+    }
 }

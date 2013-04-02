@@ -24,12 +24,11 @@ import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface TextFieldItem extends HasValue<String>, HasAllKeyHandlers
-{
+public interface TextFieldItem extends HasValue<String>, HasAllKeyHandlers {
 
 }

@@ -1,54 +1,54 @@
 @CHARSET "UTF-8";
 
 .selectItem {
-	font-size: 11px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	display: table;
+    font-size: 11px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    display: table;
 }
 
 .selectItemDisabled {
-	color: #AAA;
+    color: #AAA;
 }
 
 .selectItemTitle {
-	white-space: nowrap;
-	visibility: visible;
+    white-space: nowrap;
+    visibility: visible;
 }
 
 .selectItemTitleHidden {
-	visibility: hidden;
-	display: none;
+    visibility: hidden;
+    display: none;
 }
 
 .labelOrientationTop {
-	margin-bottom: 2px;
-	float: left;
-	width: 100%;
+    margin-bottom: 2px;
+    float: left;
+    width: 100%;
 }
 
 .labelOrientationLeft {
-	margin-right: 5px;
-	float:left;
+    margin-right: 5px;
+    float: left;
 }
 
 .labelOrientationRight {
-	width: 100%;
-	margin-left: 5px;
+    width: 100%;
+    margin-left: 5px;
 }
 
 .labelAlignLeft {
-	text-align: left;
+    text-align: left;
 }
 
 .labelAlignRight {
-	text-align: right;
+    text-align: right;
 }
 
 .labelAlignCenter {
-	text-align: center;
+    text-align: center;
 }
 
 .editableSelect {
-  background: #FFF url(images/component/select/arrow-down.png) right center no-repeat;
-  padding-right: 13px;
+    background: #FFF url(images/component/select/arrow-down.png) right center no-repeat;
+    padding-right: 13px;
 }

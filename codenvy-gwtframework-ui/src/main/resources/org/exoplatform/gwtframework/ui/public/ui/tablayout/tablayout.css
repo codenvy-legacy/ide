@@ -3,180 +3,179 @@
 TABSET
 
 *************************************************************************************/
-.gwt-TabLayoutPanelTab,.gwt-TabLayoutPanelTab-selected {
-	
+.gwt-TabLayoutPanelTab, .gwt-TabLayoutPanelTab-selected {
+
 }
 
 .gwt-TabLayoutPanelTab {
-	background: none !important;
-	padding: 0px !important;
+    background: none !important;
+    padding: 0px !important;
 }
 
 .gwt-TabLayoutPanelContentContainer {
-	border-style: none;
+    border-style: none;
 }
 
 .gwt-TabLayoutPanelContent {
-	padding: 0px !important;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	border-top:  1px solid #C0C3C7  !important;
-	border-bottom: 1px solid #C0C3C7 !important;
-	border-left: 1px solid #C0C3C7 !important;
-	border-right: 1px solid #C0C3C7 !important;
+    padding: 0px !important;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-top: 1px solid #C0C3C7 !important;
+    border-bottom: 1px solid #C0C3C7 !important;
+    border-left: 1px solid #C0C3C7 !important;
+    border-right: 1px solid #C0C3C7 !important;
 }
 
 .tabTop {
-	display: none;
+    display: none;
 }
 
-.tabMiddleLeft,.tabMiddleCenter,.tabMiddleRight {
-	background: none !important;
+.tabMiddleLeft, .tabMiddleCenter, .tabMiddleRight {
+    background: none !important;
 }
 
 .tabMiddleCenter {
-	padding: 0px !important;
+    padding: 0px !important;
 }
 
-.tabMiddleLeftInner,.tabMiddleRightInner {
-	width: 6px !important;
+.tabMiddleLeftInner, .tabMiddleRightInner {
+    width: 6px !important;
 }
 
-.tabMiddleLeftInner,.tabMiddleCenterInner,.tabMiddleRightInner {
-	height: 23px !important; /* old value - 23px */
+.tabMiddleLeftInner, .tabMiddleCenterInner, .tabMiddleRightInner {
+    height: 23px !important; /* old value - 23px */
 }
 
 .tabMiddleLeftInner {
-	background: url("t-start.png") no-repeat;
+    background: url("t-start.png") no-repeat;
 }
 
 .gwt-TabLayoutPanelTabInner {
-	
+
 }
 
 .tabMiddleCenterInner {
-	background: url("t-stretch.png") repeat-x;
+    background: url("t-stretch.png") repeat-x;
 }
 
 .tabMiddleRightInner {
-	background: url("t-end.png") no-repeat;
+    background: url("t-end.png") no-repeat;
 }
 
 .gwt-TabLayoutPanelTab {
-	margin-left: 2px !important;
+    margin-left: 2px !important;
 }
 
 .gwt-TabBarItem-wrapper:hover {
-	background-position: 0px -27px;
+    background-position: 0px -27px;
 }
 
-.gwt-TabLayoutPanelTab-selected .tabMiddleLeftInner,.gwt-TabLayoutPanelTab-selected .tabMiddleCenterInner,.gwt-TabLayoutPanelTab-selected .tabMiddleRightInner
-	{
-	background-position: 0px -27px !important;
+.gwt-TabLayoutPanelTab-selected .tabMiddleLeftInner, .gwt-TabLayoutPanelTab-selected .tabMiddleCenterInner, .gwt-TabLayoutPanelTab-selected .tabMiddleRightInner {
+    background-position: 0px -27px !important;
 }
 
 .gwt-TabLayoutPanelTab-selected td {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .gwt-TabLayoutPanelTabs {
-	position: relative !important;
-	/* background: url("tab-bar-background.png") repeat-x; */
+    position: relative !important;
+    /* background: url("tab-bar-background.png") repeat-x; */
 }
 
 .gwt-DecoratedTabBar {
-	position: relative;
+    position: relative;
 }
 
 .gwt-TabPanelBottom {
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	border-top: none;
-	border-bottom: 1px solid #C0C3C7 !important;
-	border-left: 1px solid #C0C3C7 !important;
-	border-right: 1px solid #C0C3C7 !important;
-	height: 100%;
-	padding: 0px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-top: none;
+    border-bottom: 1px solid #C0C3C7 !important;
+    border-left: 1px solid #C0C3C7 !important;
+    border-right: 1px solid #C0C3C7 !important;
+    height: 100%;
+    padding: 0px;
 }
 
-.gwt-TabBarFirst,.gwt-TabBarRest {
-	height: 23px !important;
-	border-bottom: 1px solid #C0C3C7 !important;
+.gwt-TabBarFirst, .gwt-TabBarRest {
+    height: 23px !important;
+    border-bottom: 1px solid #C0C3C7 !important;
 }
 
 .tabTitlePanel {
-	border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 .tabTitleTable {
-	height: 23px;
+    height: 23px;
 }
 
 .tabTitleTable tr {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 .tabTitleIcon {
-	width: 16px;
-	height: 16px;
-	overflow: hidden;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
 }
 
 .tabTitleText {
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-weight: normal;
-	font-style: normal;
-	line-height: 12px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 12px;
 }
 
 .tabTitleCloseButton {
-	display: block;
-	background-image: url("close.png");
-	width: 10px;
-	background-repeat: no-repeat;
-	background-position: 0 0;
-	height: 10px;
-	overflow: hidden;
+    display: block;
+    background-image: url("close.png");
+    width: 10px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    height: 10px;
+    overflow: hidden;
 }
 
 .tabTitleCloseButtonOver {
-	background-position: 0px -10px;
+    background-position: 0px -10px;
 }
 
 .tabPanelScroller {
-	width: 39px;
-	height: 24px;
-	float: right;
-	border-bottom: 1px solid #C0C3C7 !important;
-	-moz-box-sizing: border-box !important;
-	box-sizing: border-box !important;
+    width: 39px;
+    height: 24px;
+    float: right;
+    border-bottom: 1px solid #C0C3C7 !important;
+    -moz-box-sizing: border-box !important;
+    box-sizing: border-box !important;
 }
 
 .tabPanelScrollerTable {
-	width: 39px;
-	height: 24px;
-	border-collapse: collapse;
+    width: 39px;
+    height: 24px;
+    border-collapse: collapse;
 }
 
-.tabPanelScrollerLeft,.tabPanelScrollerRight {
-	width: 19px;
-	height: 24px;
-	background: url("tab_scroller3.png") no-repeat;
+.tabPanelScrollerLeft, .tabPanelScrollerRight {
+    width: 19px;
+    height: 24px;
+    background: url("tab_scroller3.png") no-repeat;
 }
 
 .tabPanelScrollerLeft {
-	background-position: 0px 0px;
+    background-position: 0px 0px;
 }
 
 .tabPanelScrollerLeftOver {
-	background-position: 0px -24px;
+    background-position: 0px -24px;
 }
 
 .tabPanelScrollerRight {
-	background-position: -19px 0px;
+    background-position: -19px 0px;
 }
 
 .tabPanelScrollerRightOver {
-	background-position: -19px -24px;
+    background-position: -19px -24px;
 }

@@ -22,14 +22,13 @@ package org.exoplatform.gwtframework.ui.client.dialog;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public interface StringValueReceivedHandler
-{
+public interface StringValueReceivedHandler {
 
-   void stringValueReceived(String value);
+    void stringValueReceived(String value);
 
 }

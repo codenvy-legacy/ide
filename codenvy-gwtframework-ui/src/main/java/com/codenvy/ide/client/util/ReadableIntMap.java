@@ -19,68 +19,57 @@ package com.codenvy.ide.client.util;
 
 /**
  * A read-only interface to a map of ints to V.
- *
+ * <p/>
  * We define this in favor of using a java.util collections interface
  * so that we can write an optimized implementation for GWT.
- *
+ * <p/>
  * Null is not permitted as a key.
- *
+ * <p/>
  * Implementations must distinguish between null values and unset keys.
  *
- * @param <V> type of values in the map
+ * @param <V>
+ *         type of values in the map
  * @author ohler@google.com (Christian Ohler)
  */
-public interface ReadableIntMap<V>
-{
-   // Maybe add a primitive hasEntry(key, value) that returns true if an
-   // entry for the key exists AND the value is equal to value.
+public interface ReadableIntMap<V> {
+    // Maybe add a primitive hasEntry(key, value) that returns true if an
+    // entry for the key exists AND the value is equal to value.
 
-   /**
-    * A procedure that accepts a key and the corresponding value from the map.
-    */
-   public interface ProcV<V>
-   {
-      public void apply(int key, V value);
-   }
+    /** A procedure that accepts a key and the corresponding value from the map. */
+    public interface ProcV<V> {
+        public void apply(int key, V value);
+    }
 
-   /**
-    * Return the value associated with key.  Must only be called if there
-    * is one.
-    */
-   V getExisting(int key);
+    /**
+     * Return the value associated with key.  Must only be called if there
+     * is one.
+     */
+    V getExisting(int key);
 
-   /**
-    * Return the value associated with key, or defaultValue if there is none.
-    */
-   V get(int key, V defaultValue);
+    /** Return the value associated with key, or defaultValue if there is none. */
+    V get(int key, V defaultValue);
 
-   /**
-    * Return the value associated with key, or null if there is none
-    */
-   V get(int key);
+    /** Return the value associated with key, or null if there is none */
+    V get(int key);
 
-   /**
-    * Return true iff this map contains a value for the key key.
-    */
-   boolean containsKey(int key);
+    /** Return true iff this map contains a value for the key key. */
+    boolean containsKey(int key);
 
-   /**
-    * Return true iff this map does not contain a value for any key.
-    */
-   boolean isEmpty();
+    /** Return true iff this map does not contain a value for any key. */
+    boolean isEmpty();
 
-   /**
-    * Call the callback for every key-value pair in the map, in undefined
-    * order.
-    */
-   void each(ProcV<V> callback);
+    /**
+     * Call the callback for every key-value pair in the map, in undefined
+     * order.
+     */
+    void each(ProcV<V> callback);
 
-   /**
-    * Count the number of key-value pairs in the map.
-    *
-    * Note: Depending on the underlying map implementation, this may be a
-    * time-consuming operation.
-    */
-   int countEntries();
+    /**
+     * Count the number of key-value pairs in the map.
+     * <p/>
+     * Note: Depending on the underlying map implementation, this may be a
+     * time-consuming operation.
+     */
+    int countEntries();
 
 }

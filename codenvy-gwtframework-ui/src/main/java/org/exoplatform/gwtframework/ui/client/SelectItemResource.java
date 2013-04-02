@@ -25,58 +25,53 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * The resources for the {@link SelectItemOld} component.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 1, 2011 5:21:24 PM anya $
- *
  */
-public interface SelectItemResource extends ClientBundle
-{
-   @Source("eXoStyle/skin/default/SelectItem.css")
-   Style css();
-   
-   @Source("eXoStyle/skin/default/images/select/arrow-down.png")
-   ImageResource arrow();
+public interface SelectItemResource extends ClientBundle {
+    @Source("eXoStyle/skin/default/SelectItem.css")
+    Style css();
 
-   /**
-    * CSS style resources.
-    */
-   public interface Style extends CssResource
-   {
-      String selectItem();
+    @Source("eXoStyle/skin/default/images/select/arrow-down.png")
+    ImageResource arrow();
 
-      String selectItemDisabled();
+    /** CSS style resources. */
+    public interface Style extends CssResource {
+        String selectItem();
 
-      String selectItemTitle();
+        String selectItemDisabled();
 
-      String selectItemTitleHidden();
-      
-      String labelOrientationTop();
-      
-      String labelOrientationLeft();
-      
-      String labelOrientationRight();
-      
-      String labelAlignCenter();
-      
-      String labelAlignLeft();
-      
-      String labelAlignRight();
-      
-      String editableSelect();
-      
-      String comboboxSelectPanel();
-      
-      String comboBox();
-      
-      String comboBoxInput();
-      
-      @ClassName("combobox-grid")
-      String comboBoxGrid();
-      
-      String comboBoxImageButton();
-      
-      String comboBoxDocPanel();
-      
-   }
+        String selectItemTitle();
+
+        String selectItemTitleHidden();
+
+        String labelOrientationTop();
+
+        String labelOrientationLeft();
+
+        String labelOrientationRight();
+
+        String labelAlignCenter();
+
+        String labelAlignLeft();
+
+        String labelAlignRight();
+
+        String editableSelect();
+
+        String comboboxSelectPanel();
+
+        String comboBox();
+
+        String comboBoxInput();
+
+        @ClassName("combobox-grid")
+        String comboBoxGrid();
+
+        String comboBoxImageButton();
+
+        String comboBoxDocPanel();
+
+    }
 }

@@ -33,108 +33,92 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class Wrapper extends Composite implements RequiresResize
-{
+public class Wrapper extends Composite implements RequiresResize {
 
-   public static final int DEFAULT_PADDING = 5;
+    public static final int DEFAULT_PADDING = 5;
 
-   private static WrapperUiBinder uiBinder = GWT.create(WrapperUiBinder.class);
+    private static WrapperUiBinder uiBinder = GWT.create(WrapperUiBinder.class);
 
-   interface WrapperUiBinder extends UiBinder<Widget, Wrapper>
-   {
-   }
+    interface WrapperUiBinder extends UiBinder<Widget, Wrapper> {
+    }
 
-   interface Style extends CssResource
-   {
+    interface Style extends CssResource {
 
-      String contentCellHighlited();
+        String contentCellHighlited();
 
-   }
+    }
 
-   @UiField
-   Style style;
+    @UiField
+    Style style;
 
-   @UiField
-   SimplePanel contentPanel;
+    @UiField
+    SimplePanel contentPanel;
 
-   @UiField
-   TableElement wraperTable;
+    @UiField
+    TableElement wraperTable;
 
-   @UiField
-   TableCellElement contentCell;
+    @UiField
+    TableCellElement contentCell;
 
-   private boolean highlited = false;
+    private boolean highlited = false;
 
-   private int padding = DEFAULT_PADDING;
+    private int padding = DEFAULT_PADDING;
 
-   public Wrapper()
-   {
-      this(DEFAULT_PADDING);
-   }
+    public Wrapper() {
+        this(DEFAULT_PADDING);
+    }
 
-   public Wrapper(int padding)
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-      setPadding(padding);
+    public Wrapper(int padding) {
+        initWidget(uiBinder.createAndBindUi(this));
+        setPadding(padding);
 
-      DOM.setElementAttribute(getElement(), "component-name", "wrapper");
-      DOM.setElementAttribute(contentPanel.getElement(), "component-name", "wrapper-content-panel");
-   }
+        DOM.setElementAttribute(getElement(), "component-name", "wrapper");
+        DOM.setElementAttribute(contentPanel.getElement(), "component-name", "wrapper-content-panel");
+    }
 
-   public void add(Widget w)
-   {
-      contentPanel.add(w);
-   }
+    public void add(Widget w) {
+        contentPanel.add(w);
+    }
 
-   public void setPadding(int padding)
-   {
-      this.padding = padding;
-      contentCell.getStyle().setProperty("borderWidth", padding + "px");
-   }
+    public void setPadding(int padding) {
+        this.padding = padding;
+        contentCell.getStyle().setProperty("borderWidth", padding + "px");
+    }
 
-   public boolean isHighlited()
-   {
-      return highlited;
-   }
+    public boolean isHighlited() {
+        return highlited;
+    }
 
-   public void setHighlited(boolean highlited)
-   {
-      if (this.highlited != highlited)
-      {
-         if (highlited)
-         {
-            contentCell.addClassName(style.contentCellHighlited());
-         }
-         else
-         {
-            contentCell.removeClassName(style.contentCellHighlited());
-         }
-      }
+    public void setHighlited(boolean highlited) {
+        if (this.highlited != highlited) {
+            if (highlited) {
+                contentCell.addClassName(style.contentCellHighlited());
+            } else {
+                contentCell.removeClassName(style.contentCellHighlited());
+            }
+        }
 
-      this.highlited = highlited;
-   }
+        this.highlited = highlited;
+    }
 
-   @Override
-   protected void onAttach()
-   {
-      super.onAttach();
-      DOM.setStyleAttribute(getParent().getElement(), "overflow", "hidden");
-   }
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        DOM.setStyleAttribute(getParent().getElement(), "overflow", "hidden");
+    }
 
-   @Override
-   public void onResize()
-   {
+    @Override
+    public void onResize() {
 //      int w = getOffsetWidth();
 //      int h = getOffsetHeight();
 //      resize(w, h);
-   }
+    }
 
 //   @Override
 //   public void resize(int width, int height)

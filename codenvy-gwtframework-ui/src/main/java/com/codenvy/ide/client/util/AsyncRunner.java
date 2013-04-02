@@ -14,103 +14,89 @@
 
 package com.codenvy.ide.client.util;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 import elemental.events.EventListener;
 import elemental.html.Document.Event;
 import elemental.js.events.JsEvent;
+
+import com.google.gwt.core.client.JavaScriptObject;
 
 /*
  * TODO: Make a scheduler so there's only one event listener for
  * ALL things that want to asyncrun
  */
 
-/**
- * An utility class to execute some logic asynchronously as soon as possible.
- */
-public abstract class AsyncRunner implements Runnable
-{
+/** An utility class to execute some logic asynchronously as soon as possible. */
+public abstract class AsyncRunner implements Runnable {
 
-   private static final String EVENT_MESSAGE = "message";
+    private static final String EVENT_MESSAGE = "message";
 
-   private static class MessageEvent extends JsEvent implements Event
-   {
-      protected MessageEvent()
-      {
-      }
+    private static class MessageEvent extends JsEvent implements Event {
+        protected MessageEvent() {
+        }
 
-      public final native Object getData() /*-{
-         return this.data;
-      }-*/;
+        public final native Object getData() /*-{
+            return this.data;
+        }-*/;
 
-      public final native JavaScriptObject getSource() /*-{
-         return this.source;
-      }-*/;
-   }
+        public final native JavaScriptObject getSource() /*-{
+            return this.source;
+        }-*/;
+    }
 
-   private static int instanceId = 0;
+    private static int instanceId = 0;
 
-   private final String messageName = "test" + ":AsyncRunner." + instanceId++;
+    private final String messageName = "test" + ":AsyncRunner." + instanceId++;
 
-   private final String targetOrigin = Elements.getDocument().getLocation().getProtocol() + "//" + Elements.getDocument().getLocation().getHost();
+    private final String targetOrigin =
+            Elements.getDocument().getLocation().getProtocol() + "//" + Elements.getDocument().getLocation().getHost();
 
-   private boolean isCancelled;
+    private boolean isCancelled;
 
-   private boolean isAttached = false;
+    private boolean isAttached = false;
 
-   private EventListener messageHandler = new EventListener()
-   {
-      @Override
-      public void handleEvent(elemental.events.Event rawEvent)
-      {
-         MessageEvent event = (MessageEvent)rawEvent;
-         if (!isCancelled && event.getData().equals(messageName))
-         {
-            detachMessageHandler();
-            event.stopPropagation();
-            run();
-         }
-      }
-   };
+    private EventListener messageHandler = new EventListener() {
+        @Override
+        public void handleEvent(elemental.events.Event rawEvent) {
+            MessageEvent event = (MessageEvent)rawEvent;
+            if (!isCancelled && event.getData().equals(messageName)) {
+                detachMessageHandler();
+                event.stopPropagation();
+                run();
+            }
+        }
+    };
 
-   public AsyncRunner()
-   {
-   }
+    public AsyncRunner() {
+    }
 
-   public void cancel()
-   {
-      isCancelled = true;
-      detachMessageHandler();
-   }
+    public void cancel() {
+        isCancelled = true;
+        detachMessageHandler();
+    }
 
-   public void schedule()
-   {
-      isCancelled = false;
-      attachMessageHandler();
-      scheduleJs();
-   }
+    public void schedule() {
+        isCancelled = false;
+        attachMessageHandler();
+        scheduleJs();
+    }
 
-   private void attachMessageHandler()
-   {
-      if (!isAttached)
-      {
-         Elements.getWindow().addEventListener(EVENT_MESSAGE, messageHandler, true);
-         isAttached = true;
-      }
-   }
+    private void attachMessageHandler() {
+        if (!isAttached) {
+            Elements.getWindow().addEventListener(EVENT_MESSAGE, messageHandler, true);
+            isAttached = true;
+        }
+    }
 
-   private void detachMessageHandler()
-   {
-      if (isAttached)
-      {
-         Elements.getWindow().removeEventListener(EVENT_MESSAGE, messageHandler, true);
-         isAttached = false;
-      }
-   }
+    private void detachMessageHandler() {
+        if (isAttached) {
+            Elements.getWindow().removeEventListener(EVENT_MESSAGE, messageHandler, true);
+            isAttached = false;
+        }
+    }
 
-   private native void scheduleJs() /*-{
-      // This is more responsive than setTimeout(0)
-      $wnd.postMessage(this.@com.codenvy.ide.client.util.AsyncRunner::messageName, this.
-         @com.codenvy.ide.client.util.AsyncRunner::targetOrigin);
-   }-*/;
+    private native void scheduleJs() /*-{
+        // This is more responsive than setTimeout(0)
+        $wnd.postMessage(this.@com.codenvy.ide.client.util.AsyncRunner::messageName, this.
+            @com.codenvy.ide.client.util.AsyncRunner::targetOrigin);
+    }-*/;
 }

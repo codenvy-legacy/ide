@@ -25,14 +25,13 @@ import com.google.gwt.user.client.ui.Widget;
  *
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public interface KeySignalListener
-{
+public interface KeySignalListener {
 
-   /**
-    * @param sender
-    * @param signal
-    * @return true if the event was "handled" for some meaning of handled
-    *         Usually this means the caller won't handle it themselves.
-    */
-   boolean onKeySignal(Widget sender, SignalEvent signal);
+    /**
+     * @param sender
+     * @param signal
+     * @return true if the event was "handled" for some meaning of handled
+     *         Usually this means the caller won't handle it themselves.
+     */
+    boolean onKeySignal(Widget sender, SignalEvent signal);
 }

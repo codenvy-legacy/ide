@@ -24,11 +24,8 @@ package com.codenvy.ide.client.util;
  *
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public interface VolatileComparable<T> extends Comparable<T>
-{
+public interface VolatileComparable<T> extends Comparable<T> {
 
-   /**
-    * @return true if it makes sense for this object to be compared to a similar object.
-    */
-   boolean isComparable();
+    /** @return true if it makes sense for this object to be compared to a similar object. */
+    boolean isComparable();
 }

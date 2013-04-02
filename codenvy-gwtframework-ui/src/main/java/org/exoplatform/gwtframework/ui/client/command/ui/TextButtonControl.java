@@ -20,113 +20,95 @@
 
 package org.exoplatform.gwtframework.ui.client.command.ui;
 
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.Command;
+
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControlStateListener;
 import org.exoplatform.gwtframework.ui.client.component.TextButton;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.Command;
-
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TextButtonControl extends TextButton implements StatusTextControlStateListener
-{
+public class TextButtonControl extends TextButton implements StatusTextControlStateListener {
 
-   private HandlerManager eventBus;
+    private HandlerManager eventBus;
 
-   private StatusTextControl statusTextControl;
+    private StatusTextControl statusTextControl;
 
-   private Toolbar toolbar;
+    private Toolbar toolbar;
 
-   public TextButtonControl(HandlerManager eventBus, StatusTextControl statusTextControl, Toolbar toolbar)
-   {
-      super(statusTextControl.getText());
+    public TextButtonControl(HandlerManager eventBus, StatusTextControl statusTextControl, Toolbar toolbar) {
+        super(statusTextControl.getText());
 
-      getElement().setAttribute("control-id", statusTextControl.getId());
+        getElement().setAttribute("control-id", statusTextControl.getId());
 
-      this.eventBus = eventBus;
-      this.statusTextControl = statusTextControl;
-      this.toolbar = toolbar;
+        this.eventBus = eventBus;
+        this.statusTextControl = statusTextControl;
+        this.toolbar = toolbar;
 
-      setTitle(statusTextControl.getPrompt());
+        setTitle(statusTextControl.getPrompt());
 
-      if (statusTextControl.getEvent() != null)
-      {
-         setCommand(textButtonCommand);
-      }
+        if (statusTextControl.getEvent() != null) {
+            setCommand(textButtonCommand);
+        }
 
-      if (statusTextControl.getSize() >= 0)
-      {
-         setWidth(statusTextControl.getSize());
-      }
+        if (statusTextControl.getSize() >= 0) {
+            setWidth(statusTextControl.getSize());
+        }
 
-      setTextAlignment(statusTextControl.getTextAlignment());
-   }
+        setTextAlignment(statusTextControl.getTextAlignment());
+    }
 
-   @Override
-   protected void onAttach()
-   {
-      super.onAttach();
-      getParent().setVisible(statusTextControl.isVisible());
-      statusTextControl.getStateListeners().add(this);
-   }
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        getParent().setVisible(statusTextControl.isVisible());
+        statusTextControl.getStateListeners().add(this);
+    }
 
-   @Override
-   protected void onDetach()
-   {
-      super.onDetach();
-      statusTextControl.getStateListeners().remove(this);
-   }
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        statusTextControl.getStateListeners().remove(this);
+    }
 
-   public void updateControlEnabling(boolean enabled)
-   {
-   }
+    public void updateControlEnabling(boolean enabled) {
+    }
 
-   public void updateControlVisibility(boolean visible)
-   {
-      getParent().setVisible(visible);
-      toolbar.hideDuplicatedDelimiters();
+    public void updateControlVisibility(boolean visible) {
+        getParent().setVisible(visible);
+        toolbar.hideDuplicatedDelimiters();
 
-      if (statusTextControl.getEvent() != null)
-      {
-         setCommand(textButtonCommand);
-      }
-      else
-      {
-         setCommand(null);
-      }
-   }
+        if (statusTextControl.getEvent() != null) {
+            setCommand(textButtonCommand);
+        } else {
+            setCommand(null);
+        }
+    }
 
-   public void updateControlPrompt(String prompt)
-   {
-      setTitle(prompt);
-   }
+    public void updateControlPrompt(String prompt) {
+        setTitle(prompt);
+    }
 
-   public void updateControlIcon(String icon)
-   {
-   }
+    public void updateControlIcon(String icon) {
+    }
 
-   public void updateStatusText(String text)
-   {
-      setText(text);
-   }
+    public void updateStatusText(String text) {
+        setText(text);
+    }
 
-   private Command textButtonCommand = new Command()
-   {
-      public void execute()
-      {
-         if (statusTextControl.getEvent() != null)
-         {
-            eventBus.fireEvent(statusTextControl.getEvent());
-         }
-      }
-   };
+    private Command textButtonCommand = new Command() {
+        public void execute() {
+            if (statusTextControl.getEvent() != null) {
+                eventBus.fireEvent(statusTextControl.getEvent());
+            }
+        }
+    };
 
 }

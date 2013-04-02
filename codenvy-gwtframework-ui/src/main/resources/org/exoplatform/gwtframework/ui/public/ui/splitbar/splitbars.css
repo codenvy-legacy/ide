@@ -6,10 +6,9 @@ VerticalSplitPanel
 *************************************************************************************/
 
 .hsplitter, .gwt-SplitLayoutPanel-HDragger {
-	background: #91C0EF url(vsplit.png) repeat-y !important;
+    background: #91C0EF url(vsplit.png) repeat-y !important;
 }
 
-.vsplitter, .gwt-SplitLayoutPanel-VDragger
-{
-	background: #91C0EF url(hsplit.png) repeat-x !important;
+.vsplitter, .gwt-SplitLayoutPanel-VDragger {
+    background: #91C0EF url(hsplit.png) repeat-x !important;
 }

@@ -19,7 +19,6 @@
 package org.exoplatform.gwtframework.ui.client.tab;
 
 import com.google.gwt.dom.client.Style.Float;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -29,80 +28,72 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This panel is a container for user defined buttons which are shows in the right upper corner.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TabControlsPanel extends ComplexPanel implements RequiresResize
-{
+public class TabControlsPanel extends ComplexPanel implements RequiresResize {
 
-   /**
-    *Parent panel for ScrollLeft and ScrollRight buttons.
-    */
-   private FlowPanel panel;
+    /** Parent panel for ScrollLeft and ScrollRight buttons. */
+    private FlowPanel panel;
 
-   /**
-    * Creates new instance of TabControlsPanel which is based on Table cell element. 
-    * 
-    * @param e table cell element
-    */
-   public TabControlsPanel(Element e)
-   {
-      setElement(e);
-      onAttach();
+    /**
+     * Creates new instance of TabControlsPanel which is based on Table cell element.
+     *
+     * @param e
+     *         table cell element
+     */
+    public TabControlsPanel(Element e) {
+        setElement(e);
+        onAttach();
 
-      panel = new FlowPanel();
-      panel.setHeight("24px");
-      DOM.setStyleAttribute(panel.getElement(), "overflow", "hidden");
-      panel.getElement().getStyle().setFloat(Float.RIGHT);
-      add(panel, getElement());
+        panel = new FlowPanel();
+        panel.setHeight("24px");
+        DOM.setStyleAttribute(panel.getElement(), "overflow", "hidden");
+        panel.getElement().getStyle().setFloat(Float.RIGHT);
+        add(panel, getElement());
 
-      DOM.setStyleAttribute(getElement(), "overflow", "hidden");
-      setWidth("0px");
-   }
+        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        setWidth("0px");
+    }
 
-   /**
-    * Adds a new child widget to the panel.
-    * 
-    * @param w the widget to be added
-    */
-   @Override
-   public void add(Widget w)
-   {
-      panel.add(w);
-   }
+    /**
+     * Adds a new child widget to the panel.
+     *
+     * @param w
+     *         the widget to be added
+     */
+    @Override
+    public void add(Widget w) {
+        panel.add(w);
+    }
 
-   /**
-    * Removes specified widget from this Panel. 
-    * 
-    * @see com.google.gwt.user.client.ui.ComplexPanel#remove(com.google.gwt.user.client.ui.Widget)
-    */
-   @Override
-   public boolean remove(Widget w)
-   {
-      return panel.remove(w);
-   }
+    /**
+     * Removes specified widget from this Panel.
+     *
+     * @see com.google.gwt.user.client.ui.ComplexPanel#remove(com.google.gwt.user.client.ui.Widget)
+     */
+    @Override
+    public boolean remove(Widget w) {
+        return panel.remove(w);
+    }
 
-   /**
-    * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
-    */
-   @Override
-   public void onResize()
-   {
-      int panelWidth = 0;
+    /** @see com.google.gwt.user.client.ui.RequiresResize#onResize() */
+    @Override
+    public void onResize() {
+        int panelWidth = 0;
 
-      for (int i = 0; i < panel.getWidgetCount(); i++)
-      {
-         Widget w = panel.getWidget(i);
+        for (int i = 0; i < panel.getWidgetCount(); i++) {
+            Widget w = panel.getWidget(i);
 
-         int wWidth = w.getOffsetWidth();
-         panelWidth += wWidth;
-      }
+            int wWidth = w.getOffsetWidth();
+            panelWidth += wWidth;
+        }
 
-      setWidth(panelWidth + "px");
-   }
+        setWidth(panelWidth + "px");
+    }
 
 }

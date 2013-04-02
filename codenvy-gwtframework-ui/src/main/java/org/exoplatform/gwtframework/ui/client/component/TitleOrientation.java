@@ -20,11 +20,10 @@ package org.exoplatform.gwtframework.ui.client.component;
 
 /**
  * The possible title's orientation enumeration.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Feb 22, 2011 10:36:09 AM anya $
- *
  */
 public enum TitleOrientation {
-   TOP, LEFT, RIGHT;
+    TOP, LEFT, RIGHT;
 }

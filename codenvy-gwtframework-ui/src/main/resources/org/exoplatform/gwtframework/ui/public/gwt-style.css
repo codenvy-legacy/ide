@@ -1,212 +1,209 @@
 /* Dialog box*/
 .gwt-DialogBox {
-	font-size: 11px;
-	font-family: Arial, Verdana, sans-serif;
+    font-size: 11px;
+    font-family: Arial, Verdana, sans-serif;
 }
 
 .gwt-DialogBox .dialogTop {
-	height: 23px;
+    height: 23px;
 }
 
 .gwt-DialogBox .Caption {
-	font-size: 11px;
-	font-family: Arial, Verdana, sans-serif;
-	font-weight: bold;
-	padding: 0px;
-	background-color: transparent;
-	border: none;
-	background-image: none;
-	vertical-align: middle;
-	float: left;
-	margin-top: 1px;
+    font-size: 11px;
+    font-family: Arial, Verdana, sans-serif;
+    font-weight: bold;
+    padding: 0px;
+    background-color: transparent;
+    border: none;
+    background-image: none;
+    vertical-align: middle;
+    float: left;
+    margin-top: 1px;
 }
 
 .gwt-DialogBox .dialogTopLeft {
-	width: 6px;
-	background: url("images/window/window_TL.png") no-repeat;
+    width: 6px;
+    background: url("images/window/window_TL.png") no-repeat;
 }
 
 .gwt-DialogBox .dialogTopLeftInner {
-	
+
 }
 
 .gwt-DialogBox .dialogTopCenter {
-	background: url("images/window/window_T.png") repeat-x;
+    background: url("images/window/window_T.png") repeat-x;
 }
 
 .gwt-DialogBox .dialogTopCenterInner {
-	
+
 }
 
 .gwt-DialogBox .dialogTopRight {
-	width: 6px;
-	background: url("images/window/window_TR.png") no-repeat;
+    width: 6px;
+    background: url("images/window/window_TR.png") no-repeat;
 }
 
 .gwt-DialogBox .dialogTopRightInner {
-	width: 6px;
+    width: 6px;
 }
 
 .gwt-DialogBox .dialogMiddle {
-	
+
 }
 
 .gwt-DialogBox .dialogMiddleLeft {
-	width: 6px;
-	background: url("images/window/window_L.png") repeat-y;
+    width: 6px;
+    background: url("images/window/window_L.png") repeat-y;
 }
 
 .gwt-DialogBox .dialogMiddleLeftInner {
-	
+
 }
 
 .gwt-DialogBox .dialogMiddleCenter {
-	padding: 0px;
+    padding: 0px;
 }
 
 .gwt-DialogBox .dialogMiddleCenterInner {
-	
+
 }
 
 .gwt-DialogBox .dialogContent {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .gwt-DialogBox .dialogMiddleRight {
-	width: 6px;
-	background: url("images/window/window_R.png") repeat-y;
+    width: 6px;
+    background: url("images/window/window_R.png") repeat-y;
 }
 
 .gwt-DialogBox .dialogMiddleRightInner {
-	
+
 }
 
 .gwt-DialogBox .dialogBottom {
-	height: 6px;
+    height: 6px;
 }
 
 .gwt-DialogBox .dialogBottomLeft {
-	height: 6px;
-	width: 6px;
-	background: url("images/window/window_BL.png") no-repeat;
+    height: 6px;
+    width: 6px;
+    background: url("images/window/window_BL.png") no-repeat;
 }
 
 .gwt-DialogBox .dialogBottomLeftInner {
-	width: 6px;
-	height: 6px;
+    width: 6px;
+    height: 6px;
 }
 
 .gwt-DialogBox .dialogBottomCenter {
-	height: 6px;
-	background: url("images/window/window_B.png") repeat-x;
+    height: 6px;
+    background: url("images/window/window_B.png") repeat-x;
 }
 
 .gwt-DialogBox .dialogBottomCenterInner {
-	
+
 }
 
 .gwt-DialogBox .dialogBottomRight {
-	height: 6px;
-	width: 6px;
-	background: url("images/window/window_BR.png") no-repeat;
+    height: 6px;
+    width: 6px;
+    background: url("images/window/window_BR.png") no-repeat;
 }
 
 .gwt-DialogBox .dialogBottomRightInner {
-	width: 6px;
-	height: 6px;
+    width: 6px;
+    height: 6px;
 }
 
 /* Label*/
 .gwt-Label {
-	font-size: 11px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
 }
 
 /* Tree */
 .gwt-Tree .gwt-TreeItem {
-	padding: 1px 0px;
-	margin: 0px;
-	white-space: nowrap;
-	cursor: hand;
-	cursor: pointer;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-weight: normal;
-	font-style: normal;
-	height: 20px;
+    padding: 1px 0px;
+    margin: 0px;
+    white-space: nowrap;
+    cursor: hand;
+    cursor: pointer;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+    height: 20px;
 }
 
 /* to reduce tree item height */
 .gwt-Tree .gwt-TreeItem td {
-	padding: 0px;
+    padding: 0px;
 }
 
 .ide-Tree-label {
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-weight: normal;
-	font-style: normal;
-	white-space: nowrap;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+    white-space: nowrap;
 }
 
 .gwt-Tree .gwt-TreeItem-selected {
-	background: #93c2f1 url("images/autoComplete/row-selected.png") repeat-x
-		0px -1463px;
+    background: #93c2f1 url("images/autoComplete/row-selected.png") repeat-x 0px -1463px;
 }
 
 .ide-Tree-item-selected {
-	width: 100%;
-	height: 20px;
-	position: absolute;
-	left: 0px;
-	background-image: url("images/autoComplete/row-selected.png");
-	background-repeat: repeat-x;
-	z-index: -1;
+    width: 100%;
+    height: 20px;
+    position: absolute;
+    left: 0px;
+    background-image: url("images/autoComplete/row-selected.png");
+    background-repeat: repeat-x;
+    z-index: -1;
 }
 
 .comboboxSelectPanel .item-selected {
-	-moz-background-clip: border;
-	-moz-background-origin: padding;
-	-moz-background-size: auto auto;
-	background-attachment: scroll;
-	background-color: #B7D6F6;
-	background-image: none;
-	background-position: 0 0;
-	background-repeat: repeat;
+    -moz-background-clip: border;
+    -moz-background-origin: padding;
+    -moz-background-size: auto auto;
+    background-attachment: scroll;
+    background-color: #B7D6F6;
+    background-image: none;
+    background-position: 0 0;
+    background-repeat: repeat;
 }
 
 .comboboxSelectPanel table {
-	width: 100%;
+    width: 100%;
 }
 
 .gwt-TextBox {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	border-width: 1px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-width: 1px;
 }
 
 .gwt-TextArea {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	border-width: 1px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-width: 1px;
 }
 
-.gwt-PasswordTextBox
-{
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	border-width: 1px;
+.gwt-PasswordTextBox {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border-width: 1px;
 }
-
 
 .gwt-CheckBox {
-	font-size: 11px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-weight: normal;
-	font-style: normal;
-	white-space: nowrap;
+    font-size: 11px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    white-space: nowrap;
 }

@@ -22,103 +22,89 @@ package org.exoplatform.gwtframework.ui.client.dialog;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class Dialog
-{
+public class Dialog {
 
-   public enum Type {
+    public enum Type {
 
-      ASK,
+        ASK,
 
-      ASKVALUE,
+        ASKVALUE,
 
-      INFO,
+        INFO,
 
-      WARNING
+        WARNING
 
-   }
+    }
 
-   private BooleanValueReceivedHandler booleanValueReceivedHandler;
+    private BooleanValueReceivedHandler booleanValueReceivedHandler;
 
-   private String defaultValue;
+    private String defaultValue;
 
-   private String message;
+    private String message;
 
-   private StringValueReceivedHandler stringValueReceivedHandler;
+    private StringValueReceivedHandler stringValueReceivedHandler;
 
-   private String title;
+    private String title;
 
-   private Type type;
+    private Type type;
 
-   public Dialog(String title, String message, Type type)
-   {
-      this.title = title;
-      this.message = message;
-      this.type = type;
-   }
+    public Dialog(String title, String message, Type type) {
+        this.title = title;
+        this.message = message;
+        this.type = type;
+    }
 
-   public BooleanValueReceivedHandler getBooleanValueReceivedHandler()
-   {
-      return booleanValueReceivedHandler;
-   }
+    public BooleanValueReceivedHandler getBooleanValueReceivedHandler() {
+        return booleanValueReceivedHandler;
+    }
 
-   public String getDefaultValue()
-   {
-      return defaultValue;
-   }
+    public String getDefaultValue() {
+        return defaultValue;
+    }
 
-   public String getMessage()
-   {
-      return message;
-   }
+    public String getMessage() {
+        return message;
+    }
 
-   public StringValueReceivedHandler getStringValueReceivedHandler()
-   {
-      return stringValueReceivedHandler;
-   }
+    public StringValueReceivedHandler getStringValueReceivedHandler() {
+        return stringValueReceivedHandler;
+    }
 
-   public String getTitle()
-   {
-      return title;
-   }
+    public String getTitle() {
+        return title;
+    }
 
-   public Type getType()
-   {
-      return type;
-   }
+    public Type getType() {
+        return type;
+    }
 
-   public void setBooleanValueReceivedHandler(BooleanValueReceivedHandler booleanValueReceivedHandler)
-   {
-      this.booleanValueReceivedHandler = booleanValueReceivedHandler;
-   }
+    public void setBooleanValueReceivedHandler(BooleanValueReceivedHandler booleanValueReceivedHandler) {
+        this.booleanValueReceivedHandler = booleanValueReceivedHandler;
+    }
 
-   public void setDefaultValue(String defaultValue)
-   {
-      this.defaultValue = defaultValue;
-   }
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 
-   public void setMessage(String message)
-   {
-      this.message = message;
-   }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-   public void setStringValueReceivedHandler(StringValueReceivedHandler stringValueReceivedHandler)
-   {
-      this.stringValueReceivedHandler = stringValueReceivedHandler;
-   }
+    public void setStringValueReceivedHandler(StringValueReceivedHandler stringValueReceivedHandler) {
+        this.stringValueReceivedHandler = stringValueReceivedHandler;
+    }
 
-   public void setTitle(String title)
-   {
-      this.title = title;
-   }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-   public void setType(Type type)
-   {
-      this.type = type;
-   }
+    public void setType(Type type) {
+        this.type = type;
+    }
 
 }

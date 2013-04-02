@@ -23,14 +23,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface SetToolbarItemsHandler extends EventHandler
-{
+public interface SetToolbarItemsHandler extends EventHandler {
 
-   void onSetToolbarItems(SetToolbarItemsEvent event);
+    void onSetToolbarItems(SetToolbarItemsEvent event);
 
 }

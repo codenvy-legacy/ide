@@ -20,17 +20,13 @@ package org.exoplatform.gwtframework.ui.client.window;
 
 /**
  * Handler for user's close click action on window (popup).
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id:  Mar 3, 2011 2:15:38 PM anya $
- *
  */
-public interface CloseClickHandler
-{
-   
-   /**
-    * Perform actions on close window click.
-    */
-   void onCloseClick();
-   
+public interface CloseClickHandler {
+
+    /** Perform actions on close window click. */
+    void onCloseClick();
+
 }

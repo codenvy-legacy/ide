@@ -17,108 +17,91 @@
 
 package com.codenvy.ide.client.scheduler;
 
-import com.google.gwt.core.client.Duration;
-import com.google.gwt.core.client.GWT;
 import com.codenvy.ide.client.scheduler.Scheduler.IncrementalTask;
 import com.codenvy.ide.client.scheduler.Scheduler.Priority;
 import com.codenvy.ide.client.scheduler.Scheduler.Schedulable;
 import com.codenvy.ide.client.scheduler.Scheduler.Task;
+import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.client.GWT;
 
-/**
- * Implements a TimerService using the Wave client's Scheduler package.
- */
-public class SchedulerTimerService implements TimerService
-{
-   /**
-    * Scheduler to use for scheduling tasks.
-    */
-   private final Scheduler scheduler;
+/** Implements a TimerService using the Wave client's Scheduler package. */
+public class SchedulerTimerService implements TimerService {
+    /** Scheduler to use for scheduling tasks. */
+    private final Scheduler scheduler;
 
-   /**
-    * Priority jobs will be run at.
-    */
-   private final Priority priority;
+    /** Priority jobs will be run at. */
+    private final Priority priority;
 
-   /**
-    * The start time of when SchedulerTimerService is created.
-    */
-   private final double start = currentTimeMillis();
+    /** The start time of when SchedulerTimerService is created. */
+    private final double start = currentTimeMillis();
 
-   /**
-    * Creates a new TimerService that runs all tasks at LOW priority by default.
-    *
-    * @param scheduler Scheduler to use.
-    */
-   public SchedulerTimerService(Scheduler scheduler)
-   {
-      this(scheduler, Priority.LOW);
-   }
+    /**
+     * Creates a new TimerService that runs all tasks at LOW priority by default.
+     *
+     * @param scheduler
+     *         Scheduler to use.
+     */
+    public SchedulerTimerService(Scheduler scheduler) {
+        this(scheduler, Priority.LOW);
+    }
 
-   /**
-    * Creates a new TimerService that runs tasks at the given priority.
-    *
-    * @param scheduler Scheduler to use.
-    * @param priority  Priority to run scheduled jobs at.
-    */
-   public SchedulerTimerService(Scheduler scheduler, Priority priority)
-   {
-      this.scheduler = scheduler;
-      this.priority = priority;
-   }
+    /**
+     * Creates a new TimerService that runs tasks at the given priority.
+     *
+     * @param scheduler
+     *         Scheduler to use.
+     * @param priority
+     *         Priority to run scheduled jobs at.
+     */
+    public SchedulerTimerService(Scheduler scheduler, Priority priority) {
+        this.scheduler = scheduler;
+        this.priority = priority;
+    }
 
-   @Override
-   public void schedule(Task task)
-   {
-      scheduler.schedule(priority, task);
-   }
+    @Override
+    public void schedule(Task task) {
+        scheduler.schedule(priority, task);
+    }
 
-   @Override
-   public void schedule(IncrementalTask process)
-   {
-      scheduler.schedule(priority, process);
-   }
+    @Override
+    public void schedule(IncrementalTask process) {
+        scheduler.schedule(priority, process);
+    }
 
-   @Override
-   public void scheduleDelayed(Task task, int minimumTime)
-   {
-      scheduler.scheduleDelayed(priority, task, minimumTime);
-   }
+    @Override
+    public void scheduleDelayed(Task task, int minimumTime) {
+        scheduler.scheduleDelayed(priority, task, minimumTime);
+    }
 
-   @Override
-   public void scheduleDelayed(IncrementalTask process, int minimumTime)
-   {
-      scheduler.scheduleDelayed(priority, process, minimumTime);
-   }
+    @Override
+    public void scheduleDelayed(IncrementalTask process, int minimumTime) {
+        scheduler.scheduleDelayed(priority, process, minimumTime);
+    }
 
-   @Override
-   public void scheduleRepeating(IncrementalTask process, int minimumTime, int interval)
-   {
-      scheduler.scheduleRepeating(priority, process, minimumTime, interval);
-   }
+    @Override
+    public void scheduleRepeating(IncrementalTask process, int minimumTime, int interval) {
+        scheduler.scheduleRepeating(priority, process, minimumTime, interval);
+    }
 
-   @Override
-   public void cancel(Schedulable job)
-   {
-      scheduler.cancel(job);
-   }
+    @Override
+    public void cancel(Schedulable job) {
+        scheduler.cancel(job);
+    }
 
-   @Override
-   public boolean isScheduled(Schedulable job)
-   {
-      return scheduler.isScheduled(job);
-   }
+    @Override
+    public boolean isScheduled(Schedulable job) {
+        return scheduler.isScheduled(job);
+    }
 
-   @Override
-   public int elapsedMillis()
-   {
-      return (int)(currentTimeMillis() - start);
-   }
+    @Override
+    public int elapsedMillis() {
+        return (int)(currentTimeMillis() - start);
+    }
 
-   @Override
-   public double currentTimeMillis()
-   {
-      // Replace this with just Duration.currentTimeMillis() when it is itself
-      // implemented with a GWT.isClient() check.
-      return GWT.isClient() ? Duration.currentTimeMillis() : System.currentTimeMillis();
-   }
+    @Override
+    public double currentTimeMillis() {
+        // Replace this with just Duration.currentTimeMillis() when it is itself
+        // implemented with a GWT.isClient() check.
+        return GWT.isClient() ? Duration.currentTimeMillis() : System.currentTimeMillis();
+    }
 }

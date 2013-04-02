@@ -24,24 +24,21 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public abstract class TextEnteredEvent<T extends EventHandler> extends GwtEvent<T>
-{
+public abstract class TextEnteredEvent<T extends EventHandler> extends GwtEvent<T> {
 
-   private String text;
+    private String text;
 
-   public void setText(String text)
-   {
-      this.text = text;
-   }
+    public void setText(String text) {
+        this.text = text;
+    }
 
-   public String getText()
-   {
-      return text;
-   }
+    public String getText() {
+        return text;
+    }
 
 }

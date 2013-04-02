@@ -29,62 +29,56 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ImageHelper
-{
+public class ImageHelper {
 
-   /**
-    * 
-    */
-   private static AbsolutePanel imagePanel;
+    /**
+     *
+     */
+    private static AbsolutePanel imagePanel;
 
-   /**
-    * @param image
-    * @return
-    */
-   public static final String getImageHTML(Image image)
-   {
-      if (imagePanel == null)
-      {
-         imagePanel = new AbsolutePanel();
-         imagePanel.getElement().getStyle().setWidth(16, Unit.PX);
-         imagePanel.getElement().getStyle().setHeight(16, Unit.PX);
-         imagePanel.getElement().getStyle().setOverflow(Overflow.HIDDEN);
-         RootPanel.get().add(imagePanel, -10000, -10000);
-      }
+    /**
+     * @param image
+     * @return
+     */
+    public static final String getImageHTML(Image image) {
+        if (imagePanel == null) {
+            imagePanel = new AbsolutePanel();
+            imagePanel.getElement().getStyle().setWidth(16, Unit.PX);
+            imagePanel.getElement().getStyle().setHeight(16, Unit.PX);
+            imagePanel.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+            RootPanel.get().add(imagePanel, -10000, -10000);
+        }
 
-      imagePanel.add(image);
-      String imageHTML = DOM.getInnerHTML(imagePanel.getElement());
-      imagePanel.clear();
-      return imageHTML;
-   }
+        imagePanel.add(image);
+        String imageHTML = DOM.getInnerHTML(imagePanel.getElement());
+        imagePanel.clear();
+        return imageHTML;
+    }
 
-   /**
-    * @param imageResource
-    * @return
-    */
-   public static final String getImageHTML(ImageResource imageResource)
-   {
-      Image image = new Image(imageResource);
-      return getImageHTML(image);
-   }
+    /**
+     * @param imageResource
+     * @return
+     */
+    public static final String getImageHTML(ImageResource imageResource) {
+        Image image = new Image(imageResource);
+        return getImageHTML(image);
+    }
 
-   /**
-    * @param imageURL
-    * @return
-    */
-   public static String getImageHTML(String imageURL)
-   {
-      if (imageURL == null) {
-         imageURL = "";
-      }
-      return "<img src=\"" + imageURL + "\" />";
-   }
+    /**
+     * @param imageURL
+     * @return
+     */
+    public static String getImageHTML(String imageURL) {
+        if (imageURL == null) {
+            imageURL = "";
+        }
+        return "<img src=\"" + imageURL + "\" />";
+    }
 
 }

@@ -20,74 +20,67 @@
 
 package org.exoplatform.gwtframework.ui.client.testcase.cases;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+
 import org.exoplatform.gwtframework.ui.client.menu.MenuBar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 import org.exoplatform.gwtframework.ui.client.testcase.ShowCaseImageBundle;
 import org.exoplatform.gwtframework.ui.client.testcase.TestCase;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class MenuTestCase extends TestCase
-{
+public class MenuTestCase extends TestCase {
 
-   @Override
-   public void draw()
-   {
-      //border: 1px solid rgb(204, 204, 204);
-      DOM.setStyleAttribute(testCasePanel().getElement(), "border", "none");
-      MenuBar menu = new MenuBar();
-      testCasePanel().add(menu);
+    @Override
+    public void draw() {
+        //border: 1px solid rgb(204, 204, 204);
+        DOM.setStyleAttribute(testCasePanel().getElement(), "border", "none");
+        MenuBar menu = new MenuBar();
+        testCasePanel().add(menu);
 
-      MenuItem fileItem = menu.addItem("File");
-      {
+        MenuItem fileItem = menu.addItem("File");
+        {
 
-         MenuItem newItem = fileItem.addItem("New");
-         newItem.setHotKey("Ctrl+N");
+            MenuItem newItem = fileItem.addItem("New");
+            newItem.setHotKey("Ctrl+N");
 
-         newItem.addItem("XML File", new Command()
-         {
-            public void execute()
-            {
-               Window.alert("File/New/XML File Item Selected");
+            newItem.addItem("XML File", new Command() {
+                public void execute() {
+                    Window.alert("File/New/XML File Item Selected");
+                }
+            });
+
+            newItem.addItem("HTML File");
+            newItem.addItem(null);
+            newItem.addItem("File from template...");
+
+            fileItem.addItem(ImageHelper.getImageHTML(ShowCaseImageBundle.INSTANCE.search()), "Search");
+            MenuItem saveAllItem = fileItem.addItem(ImageHelper.getImageHTML(ShowCaseImageBundle.INSTANCE.remove()), "Delete");
+            saveAllItem.setEnabled(false);
+
+            fileItem.addItem(null);
+            fileItem.addItem(ImageHelper.getImageHTML(ShowCaseImageBundle.INSTANCE.ok()), "Refresh");
+        }
+
+        MenuItem helpItem = menu.addItem("Help");
+        helpItem.addItem("About");
+        helpItem.setCommand(new Command() {
+            public void execute() {
+                Window.alert("Help/About Item Selected");
             }
-         });
+        });
 
-         newItem.addItem("HTML File");
-         newItem.addItem(null);
-         newItem.addItem("File from template...");
-
-         fileItem.addItem(ImageHelper.getImageHTML(ShowCaseImageBundle.INSTANCE.search()), "Search");
-         MenuItem saveAllItem = fileItem.addItem(ImageHelper.getImageHTML(ShowCaseImageBundle.INSTANCE.remove()), "Delete");
-         saveAllItem.setEnabled(false);
-         
-         fileItem.addItem(null);
-         fileItem.addItem(ImageHelper.getImageHTML(ShowCaseImageBundle.INSTANCE.ok()), "Refresh");
-      }
-
-      MenuItem helpItem = menu.addItem("Help");
-      helpItem.addItem("About");
-      helpItem.setCommand(new Command()
-      {
-         public void execute()
-         {
-            Window.alert("Help/About Item Selected");
-         }
-      });
-      
-      System.out.println("= MENU DUMP ============================");
-      System.out.println("" + menu);
-      System.out.println("========================================");
-   }
+        System.out.println("= MENU DUMP ============================");
+        System.out.println("" + menu);
+        System.out.println("========================================");
+    }
 
 }

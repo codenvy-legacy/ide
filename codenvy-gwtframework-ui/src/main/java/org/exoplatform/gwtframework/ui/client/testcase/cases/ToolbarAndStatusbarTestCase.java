@@ -20,12 +20,6 @@
 
 package org.exoplatform.gwtframework.ui.client.testcase.cases;
 
-import org.exoplatform.gwtframework.ui.client.component.TextButton;
-import org.exoplatform.gwtframework.ui.client.component.Toolbar;
-import org.exoplatform.gwtframework.ui.client.testcase.TestCase;
-import org.exoplatform.gwtframework.ui.client.testcase.TestCaseEntryPoint;
-import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
@@ -33,111 +27,108 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 
+import org.exoplatform.gwtframework.ui.client.component.TextButton;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.gwtframework.ui.client.testcase.TestCase;
+import org.exoplatform.gwtframework.ui.client.testcase.TestCaseEntryPoint;
+import org.exoplatform.gwtframework.ui.client.util.UIHelper;
+
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ToolbarAndStatusbarTestCase extends TestCase
-{
+public class ToolbarAndStatusbarTestCase extends TestCase {
 
-   private Toolbar toolbar;
+    private Toolbar toolbar;
 
-   private Toolbar statusbar;
+    private Toolbar statusbar;
 
-   private String statusTextContent;
+    private String statusTextContent;
 
-   private CheckBox dockingTypeCheckBox;
-   
-   @Override
-   public void draw()
-   {
-      FlowPanel panel = new FlowPanel();
-      DOM.setStyleAttribute(panel.getElement(), "position", "relative");
-      DOM.setStyleAttribute(panel.getElement(), "left", "10px");
-      DOM.setStyleAttribute(panel.getElement(), "top", "50px");
-      DOM.setStyleAttribute(panel.getElement(), "width", "600px");
-      DOM.setStyleAttribute(panel.getElement(), "height", "250px");
-      //DOM.setStyleAttribute(panel.getElement(), "background", "#FFAAEE");
-      DOM.setStyleAttribute(panel.getElement(), "borderWidth", "1px");
-      DOM.setStyleAttribute(panel.getElement(), "borderStyle", "solid");
-      DOM.setStyleAttribute(panel.getElement(), "borderColor", "#AAAAAA");
-      testCasePanel().add(panel);
+    private CheckBox dockingTypeCheckBox;
 
-      toolbar = new Toolbar();
-      panel.add(toolbar);
+    @Override
+    public void draw() {
+        FlowPanel panel = new FlowPanel();
+        DOM.setStyleAttribute(panel.getElement(), "position", "relative");
+        DOM.setStyleAttribute(panel.getElement(), "left", "10px");
+        DOM.setStyleAttribute(panel.getElement(), "top", "50px");
+        DOM.setStyleAttribute(panel.getElement(), "width", "600px");
+        DOM.setStyleAttribute(panel.getElement(), "height", "250px");
+        //DOM.setStyleAttribute(panel.getElement(), "background", "#FFAAEE");
+        DOM.setStyleAttribute(panel.getElement(), "borderWidth", "1px");
+        DOM.setStyleAttribute(panel.getElement(), "borderStyle", "solid");
+        DOM.setStyleAttribute(panel.getElement(), "borderColor", "#AAAAAA");
+        testCasePanel().add(panel);
 
-      HTML html = new HTML();
-      html.setHeight("" + (250 - 32 - 50) + "px");
-      //DOM.setStyleAttribute(html.getElement(), "borderBottom", "#AAAAAA 1px solid");
-      panel.add(html);
+        toolbar = new Toolbar();
+        panel.add(toolbar);
 
-      statusbar = new Toolbar();
-      statusbar.setHeight("30px");
-      String background =
-         UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
-      statusbar.setBackgroundImage(background);
-      statusbar.setItemsTopPadding(3);
-      panel.add(statusbar);
+        HTML html = new HTML();
+        html.setHeight("" + (250 - 32 - 50) + "px");
+        //DOM.setStyleAttribute(html.getElement(), "borderBottom", "#AAAAAA 1px solid");
+        panel.add(html);
 
-      createButton("Add <b>Status Text</b> in Toolbar", addIconButtonInToolbar);
-      createButton("Add <b>Status Text</b> in Statusbar", addIconButtonInStatusbar);
+        statusbar = new Toolbar();
+        statusbar.setHeight("30px");
+        String background =
+                UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
+        statusbar.setBackgroundImage(background);
+        statusbar.setItemsTopPadding(3);
+        panel.add(statusbar);
 
-      dockingTypeCheckBox = new CheckBox("Right docking");
-      controlsPanel().add(dockingTypeCheckBox);
+        createButton("Add <b>Status Text</b> in Toolbar", addIconButtonInToolbar);
+        createButton("Add <b>Status Text</b> in Statusbar", addIconButtonInStatusbar);
 
-      String originalText = "/dev-monit/my folder";
+        dockingTypeCheckBox = new CheckBox("Right docking");
+        controlsPanel().add(dockingTypeCheckBox);
 
-      statusTextContent =
-         "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:16px; border-collapse: collapse;\"><tr>"
-            + "<td style=\"width:3px;\"><div style=\"width:1px; height:1px;\"></td>"
-            + "<td style=\"width:16px; height:16px;\">"
-            + "<img src=\""
-            + TestCaseEntryPoint.Images.SEARCH
-            + "\" style=\"width:16px; height:16px;\">"
-            + "</td><td "
-            + " style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; \"><nobr>&nbsp;"
-            + originalText
-            + "</nobr></td><td style=\"width:3px;\"><div style=\"width:1px; height:1px;\"></td></tr></table>";
-   }
+        String originalText = "/dev-monit/my folder";
 
-   private Command addIconButtonInToolbar = new Command()
-   {
-      public void execute()
-      {
-         TextButton statusText = new TextButton(statusTextContent);
-         statusText.setCommand(new Command()
-         {
-            public void execute()
-            {
-               Window.alert("On click!");
-            }
-         });
+        statusTextContent =
+                "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"height:16px; border-collapse: collapse;\"><tr>"
+                + "<td style=\"width:3px;\"><div style=\"width:1px; height:1px;\"></td>"
+                + "<td style=\"width:16px; height:16px;\">"
+                + "<img src=\""
+                + TestCaseEntryPoint.Images.SEARCH
+                + "\" style=\"width:16px; height:16px;\">"
+                + "</td><td "
+                +
+                " style=\"border: none; font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px; font-style:normal; " +
+                "\"><nobr>&nbsp;"
+                + originalText
+                + "</nobr></td><td style=\"width:3px;\"><div style=\"width:1px; height:1px;\"></td></tr></table>";
+    }
 
-         boolean right = dockingTypeCheckBox.getValue();
-         toolbar.addItem(statusText, right);
-      }
-   };
+    private Command addIconButtonInToolbar = new Command() {
+        public void execute() {
+            TextButton statusText = new TextButton(statusTextContent);
+            statusText.setCommand(new Command() {
+                public void execute() {
+                    Window.alert("On click!");
+                }
+            });
 
-   private Command addIconButtonInStatusbar = new Command()
-   {
-      public void execute()
-      {
-         TextButton statusText = new TextButton(statusTextContent);
-         statusText.setCommand(new Command()
-         {
-            public void execute()
-            {
-               Window.alert("On click!");
-            }
-         });
+            boolean right = dockingTypeCheckBox.getValue();
+            toolbar.addItem(statusText, right);
+        }
+    };
 
-         boolean right = dockingTypeCheckBox.getValue();
-         statusbar.addItem(statusText, right);
-      }
-   };
+    private Command addIconButtonInStatusbar = new Command() {
+        public void execute() {
+            TextButton statusText = new TextButton(statusTextContent);
+            statusText.setCommand(new Command() {
+                public void execute() {
+                    Window.alert("On click!");
+                }
+            });
+
+            boolean right = dockingTypeCheckBox.getValue();
+            statusbar.addItem(statusText, right);
+        }
+    };
 
 }

@@ -16,21 +16,17 @@ package com.codenvy.ide.client.util;
 
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 
-/**
- * Generic callback for any requests that return a single value.
- */
-public interface QueryCallback<E>
-{
+/** Generic callback for any requests that return a single value. */
+public interface QueryCallback<E> {
 
-   /**
-    * Failure callback.
-    *
-    * @param reason the reason for the failure, should not be null
-    */
-   void onFail(FailureReason reason);
+    /**
+     * Failure callback.
+     *
+     * @param reason
+     *         the reason for the failure, should not be null
+     */
+    void onFail(FailureReason reason);
 
-   /**
-    * Callback for queries to the ProjectModel.
-    */
-   void onQuerySuccess(E result);
+    /** Callback for queries to the ProjectModel. */
+    void onQuerySuccess(E result);
 }

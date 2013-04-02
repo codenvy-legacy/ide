@@ -23,12 +23,11 @@ package com.codenvy.ide.client.util;
  *
  * @author danilatos@google.com (Daniel Danilatos)
  */
-public interface ChecksComparability
-{
+public interface ChecksComparability {
 
-   /**
-    * @return true if it makes sense for this object to be compared to a similar
-    *         object.
-    */
-   boolean isComparable();
+    /**
+     * @return true if it makes sense for this object to be compared to a similar
+     *         object.
+     */
+    boolean isComparable();
 }

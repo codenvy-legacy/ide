@@ -16,32 +16,26 @@ package com.codenvy.ide.client.util;
 
 import elemental.events.Event;
 
-/**
- * Utility methods for dealing with {@link SignalEvent}.
- */
-public class SignalEventUtils
-{
+/** Utility methods for dealing with {@link SignalEvent}. */
+public class SignalEventUtils {
 
-   public static SignalEvent create(Event rawEvent)
-   {
-      return SignalEventImpl.create((com.google.gwt.user.client.Event)rawEvent, true);
-   }
+    public static SignalEvent create(Event rawEvent) {
+        return SignalEventImpl.create((com.google.gwt.user.client.Event)rawEvent, true);
+    }
 
-   public static SignalEvent create(Event rawEvent, boolean cancelBubbleIfNullified)
-   {
-      return SignalEventImpl.create((com.google.gwt.user.client.Event)rawEvent, cancelBubbleIfNullified);
-   }
+    public static SignalEvent create(Event rawEvent, boolean cancelBubbleIfNullified) {
+        return SignalEventImpl.create((com.google.gwt.user.client.Event)rawEvent, cancelBubbleIfNullified);
+    }
 
-   /**
-    * Returns the paste contents from a "paste" event, or null if it is not a
-    * paste event or cannot be retrieved.
-    */
-   public static native String getPasteContents(Event event) /*-{
-      if (!event.clipboardData || !event.clipboardData.getData)
-      {
-         return null;
-      }
+    /**
+     * Returns the paste contents from a "paste" event, or null if it is not a
+     * paste event or cannot be retrieved.
+     */
+    public static native String getPasteContents(Event event) /*-{
+        if (!event.clipboardData || !event.clipboardData.getData) {
+            return null;
+        }
 
-      return event.clipboardData.getData('text/plain');
-   }-*/;
+        return event.clipboardData.getData('text/plain');
+    }-*/;
 }

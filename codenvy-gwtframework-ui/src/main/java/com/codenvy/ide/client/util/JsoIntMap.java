@@ -23,136 +23,109 @@ import java.util.Map;
 /**
  * An implementation of IntMap<V> based on JavaScript objects.
  *
- * @param <V> type of values in the map
+ * @param <V>
+ *         type of values in the map
  * @author ohler@google.com (Christian Ohler)
  */
-public class JsoIntMap<V> implements IntMap<V>
-{
+public class JsoIntMap<V> implements IntMap<V> {
 
-   final IntMapJsoView<V> backend = IntMapJsoView.create();
+    final IntMapJsoView<V> backend = IntMapJsoView.create();
 
-   private JsoIntMap()
-   {
-   }
+    private JsoIntMap() {
+    }
 
-   public static <V> JsoIntMap<V> create()
-   {
-      return new JsoIntMap<V>();
-   }
+    public static <V> JsoIntMap<V> create() {
+        return new JsoIntMap<V>();
+    }
 
-   @Override
-   public void clear()
-   {
-      backend.clear();
-   }
+    @Override
+    public void clear() {
+        backend.clear();
+    }
 
-   @Override
-   public boolean containsKey(int key)
-   {
-      return backend.has(key);
-   }
+    @Override
+    public boolean containsKey(int key) {
+        return backend.has(key);
+    }
 
-   @Override
-   public V getExisting(int key)
-   {
-      return backend.get(key);
-   }
+    @Override
+    public V getExisting(int key) {
+        return backend.get(key);
+    }
 
-   @Override
-   public V get(int key, V defaultValue)
-   {
-      if (backend.has(key))
-      {
-         return backend.get(key);
-      }
-      else
-      {
-         return defaultValue;
-      }
-   }
+    @Override
+    public V get(int key, V defaultValue) {
+        if (backend.has(key)) {
+            return backend.get(key);
+        } else {
+            return defaultValue;
+        }
+    }
 
-   @Override
-   public V get(int key)
-   {
-      return backend.get(key);
-   }
+    @Override
+    public V get(int key) {
+        return backend.get(key);
+    }
 
-   @Override
-   public void put(int key, V value)
-   {
-      backend.put(key, value);
-   }
+    @Override
+    public void put(int key, V value) {
+        backend.put(key, value);
+    }
 
-   @Override
-   public void putAll(ReadableIntMap<V> pairsToAdd)
-   {
-      // TODO(ohler): check instanceof here and implement a fallback.
-      ((JsoIntMap<V>)pairsToAdd).backend.addToMap(this.backend);
-   }
+    @Override
+    public void putAll(ReadableIntMap<V> pairsToAdd) {
+        // TODO(ohler): check instanceof here and implement a fallback.
+        ((JsoIntMap<V>)pairsToAdd).backend.addToMap(this.backend);
+    }
 
-   @Override
-   public void putAll(Map<Integer, V> pairsToAdd)
-   {
-      for (Map.Entry<Integer, V> e : pairsToAdd.entrySet())
-      {
-         backend.put(e.getKey(), e.getValue());
-      }
-   }
+    @Override
+    public void putAll(Map<Integer, V> pairsToAdd) {
+        for (Map.Entry<Integer, V> e : pairsToAdd.entrySet()) {
+            backend.put(e.getKey(), e.getValue());
+        }
+    }
 
-   @Override
-   public void remove(int key)
-   {
-      backend.remove(key);
-   }
+    @Override
+    public void remove(int key) {
+        backend.remove(key);
+    }
 
-   @Override
-   public void each(final ProcV<V> callback)
-   {
-      backend.each(new ProcV<V>()
-      {
-         @Override
-         public void apply(int key, V item)
-         {
-            callback.apply(key, item);
-         }
-      });
-   }
-
-   @Override
-   public void filter(final EntryFilter<V> filter)
-   {
-      backend.each(new ProcV<V>()
-      {
-         @Override
-         public void apply(int key, V item)
-         {
-            if (filter.apply(key, item))
-            {
-               // entry stays
+    @Override
+    public void each(final ProcV<V> callback) {
+        backend.each(new ProcV<V>() {
+            @Override
+            public void apply(int key, V item) {
+                callback.apply(key, item);
             }
-            else
-            {
-               backend.remove(key);
+        });
+    }
+
+    @Override
+    public void filter(final EntryFilter<V> filter) {
+        backend.each(new ProcV<V>() {
+            @Override
+            public void apply(int key, V item) {
+                if (filter.apply(key, item)) {
+                    // entry stays
+                } else {
+                    backend.remove(key);
+                }
             }
-         }
-      });
-   }
+        });
+    }
 
-   @Override
-   public boolean isEmpty()
-   {
-      return backend.isEmpty();
-   }
+    @Override
+    public boolean isEmpty() {
+        return backend.isEmpty();
+    }
 
-   @Override
-   public int countEntries()
-   {
-      return backend.countEntries();
-   }
+    @Override
+    public int countEntries() {
+        return backend.countEntries();
+    }
 
-   @Override
-   public String toString()
-   {
-      return JsoMapStringBuilder.toString(backend);
-   }
+    @Override
+    public String toString() {
+        return JsoMapStringBuilder.toString(backend);
+    }
 }

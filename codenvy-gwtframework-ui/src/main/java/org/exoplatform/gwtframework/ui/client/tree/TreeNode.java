@@ -24,129 +24,98 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TreeNode
-{
+public class TreeNode {
 
-   /**
-    * List of children 
-    */
-   private List<TreeNode> children = new ArrayList<TreeNode>();
+    /** List of children */
+    private List<TreeNode> children = new ArrayList<TreeNode>();
 
-   /**
-    * URL to Icon
-    * If icon is not set then default icons are used from TreeRecord.Images ( for collections and simple items ) 
-    */
-   private String icon;
+    /**
+     * URL to Icon
+     * If icon is not set then default icons are used from TreeRecord.Images ( for collections and simple items )
+     */
+    private String icon;
 
-   /**
-    * Name of a tree node
-    */
-   private String name;
+    /** Name of a tree node */
+    private String name;
 
-   /**
-    * Is Folder status
-    */
-   private boolean isFolder = true;
+    /** Is Folder status */
+    private boolean isFolder = true;
 
-   /**
-    * Entry used for storing any object which is binded with this tree node
-    */
-   private Object entry;
+    /** Entry used for storing any object which is binded with this tree node */
+    private Object entry;
 
-   public TreeNode(String name)
-   {
-      this.name = name;
-   }
+    public TreeNode(String name) {
+        this.name = name;
+    }
 
-   public TreeNode(String name, String icon)
-   {
-      this.name = name;
-      this.icon = icon;
-   }
+    public TreeNode(String name, String icon) {
+        this.name = name;
+        this.icon = icon;
+    }
 
-   public TreeNode(String name, Object entry)
-   {
-      this.name = name;
-      this.entry = entry;
-   }
+    public TreeNode(String name, Object entry) {
+        this.name = name;
+        this.entry = entry;
+    }
 
-   public TreeNode(String name, Object entry, boolean isFolder)
-   {
-      this.name = name;
-      this.entry = entry;
-      this.isFolder = isFolder;
-   }
+    public TreeNode(String name, Object entry, boolean isFolder) {
+        this.name = name;
+        this.entry = entry;
+        this.isFolder = isFolder;
+    }
 
-   public TreeNode(String name, String icon, Object entry)
-   {
-      this.name = name;
-      this.icon = icon;
-      this.entry = entry;
-   }
+    public TreeNode(String name, String icon, Object entry) {
+        this.name = name;
+        this.icon = icon;
+        this.entry = entry;
+    }
 
-   /**
-    * @return list of children
-    */
-   public List<TreeNode> getChildren()
-   {
-      return children;
-   }
+    /** @return list of children */
+    public List<TreeNode> getChildren() {
+        return children;
+    }
 
-   /**
-    * @return url to icon
-    */
-   public String getIcon()
-   {
-      return icon;
-   }
+    /** @return url to icon */
+    public String getIcon() {
+        return icon;
+    }
 
-   /**
-    * @return name of tree node
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @return name of tree node */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @return is folder status
-    */
-   public boolean isFolder()
-   {
-      return isFolder;
-   }
+    /** @return is folder status */
+    public boolean isFolder() {
+        return isFolder;
+    }
 
-   /**
-    * Set Is Folder status
-    * 
-    * @param isFolder
-    */
-   public void setIsFolder(boolean isFolder)
-   {
-      this.isFolder = isFolder;
-   }
+    /**
+     * Set Is Folder status
+     *
+     * @param isFolder
+     */
+    public void setIsFolder(boolean isFolder) {
+        this.isFolder = isFolder;
+    }
 
-   /**
-    * @return entry
-    */
-   public Object getEntry()
-   {
-      return entry;
-   }
+    /** @return entry */
+    public Object getEntry() {
+        return entry;
+    }
 
-   /**
-    * Set entry
-    * 
-    * @param entry
-    */
-   public void setEntry(Object entry)
-   {
-      this.entry = entry;
-   }
+    /**
+     * Set entry
+     *
+     * @param entry
+     */
+    public void setEntry(Object entry) {
+        this.entry = entry;
+    }
 
 }

@@ -18,18 +18,9 @@
  */
 package org.exoplatform.gwtframework.ui.client.tab;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -40,197 +31,164 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Button which can be added to the TabPanel and can be displayed at the upper right corner of the TabPanel.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class TabButton extends Composite implements HasClickHandlers
-{
+public class TabButton extends Composite implements HasClickHandlers {
 
-   /**
-    * UIBinder for this TabButton.
-    */
-   private static TabButtonUiBinder uiBinder = GWT.create(TabButtonUiBinder.class);
+    /** UIBinder for this TabButton. */
+    private static TabButtonUiBinder uiBinder = GWT.create(TabButtonUiBinder.class);
 
-   /**
-    *UIBinder class for this TabButton.
-    */
-   interface TabButtonUiBinder extends UiBinder<Widget, TabButton>
-   {
-   }
+    /** UIBinder class for this TabButton. */
+    interface TabButtonUiBinder extends UiBinder<Widget, TabButton> {
+    }
 
-   /**
-    * Style Resource for this TabButton.
-    */
-   interface Style extends CssResource
-   {
+    /** Style Resource for this TabButton. */
+    interface Style extends CssResource {
 
-      String buttonOver();
+        String buttonOver();
 
-      String buttonDown();
+        String buttonDown();
 
-   }
+    }
 
-   /**
-    * Instance of Style Resource.
-    */
-   @UiField
-   Style style;
+    /** Instance of Style Resource. */
+    @UiField
+    Style style;
 
-   @UiField
-   HTML controlPanel;
+    @UiField
+    HTML controlPanel;
 
-   @UiField
-   DivElement buttonPanel;
+    @UiField
+    DivElement buttonPanel;
 
-   @UiField
-   DivElement iconPanel;
+    @UiField
+    DivElement iconPanel;
 
-   private Image image;
+    private Image image;
 
-   private Image disabledImage;
+    private Image disabledImage;
 
-   boolean enabled = true;
+    boolean enabled = true;
 
-   private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
+    private List<ClickHandler> clickHandlers = new ArrayList<ClickHandler>();
 
-   public TabButton(Image image, Image disabledImage)
-   {
-      this(null, image, disabledImage);
-   }
+    public TabButton(Image image, Image disabledImage) {
+        this(null, image, disabledImage);
+    }
 
-   public TabButton(String id, Image image, Image disabledImage)
-   {
-      this.image = image;
-      this.disabledImage = disabledImage;
+    public TabButton(String id, Image image, Image disabledImage) {
+        this.image = image;
+        this.disabledImage = disabledImage;
 
-      initWidget(uiBinder.createAndBindUi(this));
-      iconPanel.appendChild(image.getElement());
+        initWidget(uiBinder.createAndBindUi(this));
+        iconPanel.appendChild(image.getElement());
 
-      if (id != null)
-      {
-         getElement().setId(id);
-      }
-   }
+        if (id != null) {
+            getElement().setId(id);
+        }
+    }
 
-   @UiHandler("controlPanel")
-   void onMouseOver(MouseOverEvent e)
-   {
-      if (!enabled)
-      {
-         return;
-      }
+    @UiHandler("controlPanel")
+    void onMouseOver(MouseOverEvent e) {
+        if (!enabled) {
+            return;
+        }
 
-      buttonPanel.addClassName(style.buttonOver());
-   }
+        buttonPanel.addClassName(style.buttonOver());
+    }
 
-   @UiHandler("controlPanel")
-   void onMouseOut(MouseOutEvent e)
-   {
-      if (!enabled)
-      {
-         return;
-      }
+    @UiHandler("controlPanel")
+    void onMouseOut(MouseOutEvent e) {
+        if (!enabled) {
+            return;
+        }
 
-      buttonPanel.removeClassName(style.buttonOver());
-      buttonPanel.removeClassName(style.buttonDown());
-   }
+        buttonPanel.removeClassName(style.buttonOver());
+        buttonPanel.removeClassName(style.buttonDown());
+    }
 
-   @UiHandler("controlPanel")
-   void onMouseDown(MouseDownEvent e)
-   {
-      if (!enabled)
-      {
-         return;
-      }
+    @UiHandler("controlPanel")
+    void onMouseDown(MouseDownEvent e) {
+        if (!enabled) {
+            return;
+        }
 
-      buttonPanel.addClassName(style.buttonDown());
-   }
+        buttonPanel.addClassName(style.buttonDown());
+    }
 
-   @UiHandler("controlPanel")
-   void onMouseUp(MouseUpEvent e)
-   {
-      if (!enabled)
-      {
-         return;
-      }
+    @UiHandler("controlPanel")
+    void onMouseUp(MouseUpEvent e) {
+        if (!enabled) {
+            return;
+        }
 
-      buttonPanel.removeClassName(style.buttonDown());
-   }
+        buttonPanel.removeClassName(style.buttonDown());
+    }
 
-   @UiHandler("controlPanel")
-   void onClick(ClickEvent e)
-   {
-      if (!enabled)
-      {
-         return;
-      }
-      
-      for (ClickHandler clickHandler : clickHandlers)
-      {
-         clickHandler.onClick(e);
-      }
-   }
+    @UiHandler("controlPanel")
+    void onClick(ClickEvent e) {
+        if (!enabled) {
+            return;
+        }
 
-   @Override
-   public HandlerRegistration addClickHandler(ClickHandler handler)
-   {
-      clickHandlers.add(handler);
-      return new ClickHandlerRegistration(handler);
-   }
+        for (ClickHandler clickHandler : clickHandlers) {
+            clickHandler.onClick(e);
+        }
+    }
 
-   public boolean isEnabled()
-   {
-      return enabled;
-   }
+    @Override
+    public HandlerRegistration addClickHandler(ClickHandler handler) {
+        clickHandlers.add(handler);
+        return new ClickHandlerRegistration(handler);
+    }
 
-   public void setEnabled(boolean enabled)
-   {
-      if (this.enabled == enabled)
-      {
-         return;
-      }
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-      this.enabled = enabled;
+    public void setEnabled(boolean enabled) {
+        if (this.enabled == enabled) {
+            return;
+        }
 
-      while (iconPanel.hasChildNodes())
-      {
-         iconPanel.getFirstChild().removeFromParent();
-      }
+        this.enabled = enabled;
 
-      if (enabled)
-      {
-         iconPanel.appendChild(image.getElement());
-      }
-      else
-      {
-         buttonPanel.removeClassName(style.buttonOver());
-         buttonPanel.removeClassName(style.buttonDown());
-         iconPanel.appendChild(disabledImage.getElement());
-      }
-   }
+        while (iconPanel.hasChildNodes()) {
+            iconPanel.getFirstChild().removeFromParent();
+        }
 
-   private class ClickHandlerRegistration implements HandlerRegistration
-   {
+        if (enabled) {
+            iconPanel.appendChild(image.getElement());
+        } else {
+            buttonPanel.removeClassName(style.buttonOver());
+            buttonPanel.removeClassName(style.buttonDown());
+            iconPanel.appendChild(disabledImage.getElement());
+        }
+    }
 
-      private ClickHandler handler;
+    private class ClickHandlerRegistration implements HandlerRegistration {
 
-      public ClickHandlerRegistration(ClickHandler handler)
-      {
-         this.handler = handler;
-      }
+        private ClickHandler handler;
 
-      @Override
-      public void removeHandler()
-      {
-         clickHandlers.remove(handler);
-      }
+        public ClickHandlerRegistration(ClickHandler handler) {
+            this.handler = handler;
+        }
 
-   }
+        @Override
+        public void removeHandler() {
+            clickHandlers.remove(handler);
+        }
+
+    }
 
 }

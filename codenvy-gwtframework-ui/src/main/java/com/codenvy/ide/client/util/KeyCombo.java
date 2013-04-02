@@ -17,240 +17,233 @@
 
 package com.codenvy.ide.client.util;
 
-public enum KeyCombo
-{
+public enum KeyCombo {
 
-   /**
-    * These names are self-explanatory...
-    */
-   SPACE,
+    /** These names are self-explanatory... */
+    SPACE,
 
-   /***/
-   SHIFT_SPACE,
+    /***/
+    SHIFT_SPACE,
 
-   /***/
-   CTRL_SPACE,
+    /***/
+    CTRL_SPACE,
 
-   /***/
-   CTRL_SHIFT_SPACE,
+    /***/
+    CTRL_SHIFT_SPACE,
 
-   /***/
-   TAB,
+    /***/
+    TAB,
 
-   /***/
-   SHIFT_TAB,
+    /***/
+    SHIFT_TAB,
 
-   /***/
-   UP,
+    /***/
+    UP,
 
-   /***/
-   DOWN,
+    /***/
+    DOWN,
 
-   /***/
-   LEFT,
+    /***/
+    LEFT,
 
-   /***/
-   RIGHT,
+    /***/
+    RIGHT,
 
-   /***/
-   HOME,
+    /***/
+    HOME,
 
-   /***/
-   END,
+    /***/
+    END,
 
-   /***/
-   PAGE_UP,
+    /***/
+    PAGE_UP,
 
-   /***/
-   PAGE_DOWN,
+    /***/
+    PAGE_DOWN,
 
-   /***/
-   ESC,
+    /***/
+    ESC,
 
-   /***/
-   ENTER,
+    /***/
+    ENTER,
 
-   /***/
-   SHIFT_ENTER,
+    /***/
+    SHIFT_ENTER,
 
-   /***/
-   CTRL_ENTER,
+    /***/
+    CTRL_ENTER,
 
-   /***/
-   CTRL_EQUALS,
+    /***/
+    CTRL_EQUALS,
 
-   /***/
-   CTRL_R,
+    /***/
+    CTRL_R,
 
-   /***/
-   CTRL_E,
+    /***/
+    CTRL_E,
 
-   /***/
-   BACKSPACE,
+    /***/
+    BACKSPACE,
 
-   /***/
-   SHIFT_BACKSPACE,
+    /***/
+    SHIFT_BACKSPACE,
 
-   /***/
-   DELETE,
+    /***/
+    DELETE,
 
-   /***/
-   SHIFT_DELETE,
+    /***/
+    SHIFT_DELETE,
 
-   /***/
-   INSERT,
+    /***/
+    INSERT,
 
-   /***/
-   SHIFT_INSERT,
+    /***/
+    SHIFT_INSERT,
 
-   /***/
-   CTRL_INSERT,
+    /***/
+    CTRL_INSERT,
 
-   /***/
-   CTRL_B,
+    /***/
+    CTRL_B,
 
-   /***/
-   CTRL_D,
+    /***/
+    CTRL_D,
 
-   /***/
-   CTRL_H,
+    /***/
+    CTRL_H,
 
-   /***/
-   CTRL_I,
+    /***/
+    CTRL_I,
 
-   /***/
-   CTRL_G,
+    /***/
+    CTRL_G,
 
-   /***/
-   CTRL_K,
+    /***/
+    CTRL_K,
 
-   /***/
-   CTRL_U,
+    /***/
+    CTRL_U,
 
-   /***/
-   CTRL_A,
+    /***/
+    CTRL_A,
 
-   /***/
-   CTRL_L,
+    /***/
+    CTRL_L,
 
-   /***/
-   CTRL_W,
+    /***/
+    CTRL_W,
 
-   /***/
-   CTRL_SHIFT_L,
+    /***/
+    CTRL_SHIFT_L,
 
-   /***/
-   CTRL_ALT_F,
+    /***/
+    CTRL_ALT_F,
 
-   /***/
-   CTRL_ALT_D,
+    /***/
+    CTRL_ALT_D,
 
-   /***/
-   ORDER_C,
+    /***/
+    ORDER_C,
 
-   /***/
-   ORDER_X,
+    /***/
+    ORDER_X,
 
-   /***/
-   ORDER_V,
+    /***/
+    ORDER_V,
 
-   /***/
-   ORDER_Z,
+    /***/
+    ORDER_Z,
 
-   /***/
-   CTRL_F,
+    /***/
+    CTRL_F,
 
-   /***/
-   META_LEFT,
+    /***/
+    META_LEFT,
 
-   /***/
-   META_RIGHT,
+    /***/
+    META_RIGHT,
 
-   /***/
-   META_HOME,
+    /***/
+    META_HOME,
 
-   /***/
-   ORDER_O,
+    /***/
+    ORDER_O,
 
-   /***/
-   ORDER_R,
+    /***/
+    ORDER_R,
 
-   /***/
-   ORDER_SHIFT_R,
+    /***/
+    ORDER_SHIFT_R,
 
-   /***/
-   ORDER_SHIFT_V,
+    /***/
+    ORDER_SHIFT_V,
 
-   /***/
-   ORDER_ALT_SHIFT_V,
+    /***/
+    ORDER_ALT_SHIFT_V,
 
-   /***/
-   ORDER_FULLSTOP,
+    /***/
+    ORDER_FULLSTOP,
 
-   /***/
-   ORDER_F,
+    /***/
+    ORDER_F,
 
-   /***/
-   ORDER_G,
+    /***/
+    ORDER_G,
 
-   /***/
-   ORDER_D,
+    /***/
+    ORDER_D,
 
-   /***/
-   ORDER_N,
+    /***/
+    ORDER_N,
 
-   /***/
-   CTRL_O,
+    /***/
+    CTRL_O,
 
-   /***/
-   ORDER_T,
+    /***/
+    ORDER_T,
 
-   /***/
-   ORDER_A,
+    /***/
+    ORDER_A,
 
-   /***/
-   ORDER_P,
+    /***/
+    ORDER_P,
 
-   /***/
-   CTRL_ALT_G,
+    /***/
+    CTRL_ALT_G,
 
-   /***/
-   CTRL_ALT_S,
+    /***/
+    CTRL_ALT_S,
 
-   /***/
-   ORDER_W,
+    /***/
+    ORDER_W,
 
-   /***/
-   ORDER_Q,
+    /***/
+    ORDER_Q,
 
-   /***/
-   ORDER_L,
+    /***/
+    ORDER_L,
 
-   /***/
-   ORDER_K,
+    /***/
+    ORDER_K,
 
-   /***/
-   ORDER_SHIFT_K,
+    /***/
+    ORDER_SHIFT_K,
 
-   /**
-    * Formatting combos
-    */
-   ORDER_B,
+    /** Formatting combos */
+    ORDER_B,
 
-   /***/
-   ORDER_U,
+    /***/
+    ORDER_U,
 
-   /***/
-   ORDER_I,
+    /***/
+    ORDER_I,
 
-   /**
-    * Shortcuts for Canned response insertion
-    */
-   CTRL_SHIFT_1,
-   /***/
-   CTRL_SHIFT_2,
-   /***/
-   CTRL_SHIFT_3,
+    /** Shortcuts for Canned response insertion */
+    CTRL_SHIFT_1,
+    /***/
+    CTRL_SHIFT_2,
+    /***/
+    CTRL_SHIFT_3,
 
-   OTHER,
+    OTHER,
 }

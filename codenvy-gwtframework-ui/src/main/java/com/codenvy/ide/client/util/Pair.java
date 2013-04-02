@@ -19,115 +19,96 @@ package com.codenvy.ide.client.util;
 
 /**
  * An immutable ordered pair of typed objects.
- *
+ * <p/>
  * Essentially the same as com.google.common.base.Pair.
  * (we avoid external dependencies from model/)
  *
- * @param <A> Type of value 1
- * @param <B> Type of value 2
+ * @param <A>
+ *         Type of value 1
+ * @param <B>
+ *         Type of value 2
  */
-public class Pair<A, B>
-{
+public class Pair<A, B> {
 
-   /**
-    * Static constructor to save typing on generic arguments.
-    */
-   public static <A, B> Pair<A, B> of(A a, B b)
-   {
-      return new Pair<A, B>(a, b);
-   }
+    /** Static constructor to save typing on generic arguments. */
+    public static <A, B> Pair<A, B> of(A a, B b) {
+        return new Pair<A, B>(a, b);
+    }
 
-   /**
-    * The first element of the pair; see also {@link #getFirst}.
-    */
-   public final A first;
+    /** The first element of the pair; see also {@link #getFirst}. */
+    public final A first;
 
-   /**
-    * The second element of the pair; see also {@link #getSecond}.
-    */
-   public final B second;
+    /** The second element of the pair; see also {@link #getSecond}. */
+    public final B second;
 
-   /**
-    * Pair constructor
-    *
-    * @param first  Value 1
-    * @param second Value 2
-    */
-   public Pair(A first, B second)
-   {
-      this.first = first;
-      this.second = second;
-   }
+    /**
+     * Pair constructor
+     *
+     * @param first
+     *         Value 1
+     * @param second
+     *         Value 2
+     */
+    public Pair(A first, B second) {
+        this.first = first;
+        this.second = second;
+    }
 
-   /**
-    * Copy constructor
-    *
-    * @param pair Pair to shallow copy from
-    */
-   public Pair(Pair<? extends A, ? extends B> pair)
-   {
-      first = pair.first;
-      second = pair.second;
-   }
+    /**
+     * Copy constructor
+     *
+     * @param pair
+     *         Pair to shallow copy from
+     */
+    public Pair(Pair<? extends A, ? extends B> pair) {
+        first = pair.first;
+        second = pair.second;
+    }
 
-   /**
-    * Returns the first element of this pair; see also {@link #first}.
-    */
-   public A getFirst()
-   {
-      return first;
-   }
+    /** Returns the first element of this pair; see also {@link #first}. */
+    public A getFirst() {
+        return first;
+    }
 
-   /**
-    * Returns the second element of this pair; see also {@link #second}.
-    */
-   public B getSecond()
-   {
-      return second;
-   }
+    /** Returns the second element of this pair; see also {@link #second}. */
+    public B getSecond() {
+        return second;
+    }
 
-   /**
-    * {@inheritDoc}
-    *
-    * NOTE: Not safe to override this method, hence final.
-    */
-   @Override
-   public final boolean equals(Object o)
-   {
-      if (o == null)
-      {
-         return false;
-      }
-      if (o == this)
-      {
-         return true;
-      }
-      if (o instanceof Pair)
-      {
-         Pair<?, ?> p = (Pair<?, ?>)o;
-         return (p.first == first || (first != null && first.equals(
-            p.first))) && (p.second == second || (second != null && second.equals(p.second)));
-      }
-      return false;
-   }
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * NOTE: Not safe to override this method, hence final.
+     */
+    @Override
+    public final boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        if (o instanceof Pair) {
+            Pair<?, ?> p = (Pair<?, ?>)o;
+            return (p.first == first || (first != null && first.equals(
+                    p.first))) && (p.second == second || (second != null && second.equals(p.second)));
+        }
+        return false;
+    }
 
-   /**
-    * {@inheritDoc}
-    *
-    * NOTE: Not safe to override this method, hence final.
-    */
-   @Override
-   public final int hashCode()
-   {
-      return (first == null ? 0 : first.hashCode()) + 37 * (second == null ? 0 : second.hashCode());
-   }
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * NOTE: Not safe to override this method, hence final.
+     */
+    @Override
+    public final int hashCode() {
+        return (first == null ? 0 : first.hashCode()) + 37 * (second == null ? 0 : second.hashCode());
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString()
-   {
-      return "(" + String.valueOf(first) + "," + String.valueOf(second) + ")";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "(" + String.valueOf(first) + "," + String.valueOf(second) + ")";
+    }
 }
