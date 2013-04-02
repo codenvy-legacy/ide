@@ -20,58 +20,44 @@ package com.codenvy.ide;
 
 import com.codenvy.commons.env.EnvironmentContext;
 
+import javax.servlet.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+public class SetEnvironmentContextFilter implements Filter {
+    private Map<String, Object> env;
 
-public class SetEnvironmentContextFilter implements Filter
-{
-   private Map<String, Object> env;
+    /** Set current {@link EnvironmentContext} */
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+                                                                                                     ServletException {
+        try {
+            EnvironmentContext environment = EnvironmentContext.getCurrent();
+            for (Map.Entry<String, Object> entry : env.entrySet()) {
+                environment.setVariable(entry.getKey(), entry.getValue());
+            }
 
-   /** Set current {@link EnvironmentContext} */
-   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-      ServletException
-   {
-      try
-      {
-         EnvironmentContext environment = EnvironmentContext.getCurrent();
-         for (Map.Entry<String, Object> entry : env.entrySet())
-         {
-            environment.setVariable(entry.getKey(), entry.getValue());
-         }
+            chain.doFilter(request, response);
+        } finally {
+            EnvironmentContext.reset();
+        }
+    }
 
-         chain.doFilter(request, response);
-      }
-      finally
-      {
-         EnvironmentContext.reset();
-      }
-   }
+    @Override
+    public void destroy() {
+    }
 
-   @Override
-   public void destroy()
-   {
-   }
-
-   @Override
-   public void init(FilterConfig filterConfig) throws ServletException
-   {
-      Map<String, Object> myEnv = new HashMap<String, Object>();
-      myEnv.put(EnvironmentContext.WORKSPACE_NAME, "dev-monit");
-      myEnv.put(EnvironmentContext.WORKSPACE_ID, "dev-monit");
-      myEnv.put(EnvironmentContext.GIT_SERVER, "git");
-      myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
-      myEnv.put(EnvironmentContext.VFS_ROOT_DIR, new File("../temp/fs-root"));
-      myEnv.put(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
-      this.env = Collections.unmodifiableMap(myEnv);
-   }
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        Map<String, Object> myEnv = new HashMap<String, Object>();
+        myEnv.put(EnvironmentContext.WORKSPACE_NAME, "dev-monit");
+        myEnv.put(EnvironmentContext.WORKSPACE_ID, "dev-monit");
+        myEnv.put(EnvironmentContext.GIT_SERVER, "git");
+        myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
+        myEnv.put(EnvironmentContext.VFS_ROOT_DIR, new File("../temp/fs-root"));
+        myEnv.put(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
+        this.env = Collections.unmodifiableMap(myEnv);
+    }
 }

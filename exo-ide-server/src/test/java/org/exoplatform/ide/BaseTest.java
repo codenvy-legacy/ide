@@ -24,33 +24,31 @@ import org.exoplatform.container.StandaloneContainer;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public abstract class BaseTest
-{
+public abstract class BaseTest {
 
-   protected StandaloneContainer container;
+    protected StandaloneContainer container;
 
-   public ResourceLauncher launcher;
+    public ResourceLauncher launcher;
 
-   public void setUp() throws Exception
-   {
-      String containerConf = BaseTest.class.getResource("/conf/standalone/test-configuration.xml").toString();
+    public void setUp() throws Exception {
+        String containerConf = BaseTest.class.getResource("/conf/standalone/test-configuration.xml").toString();
 
-      StandaloneContainer.addConfigurationURL(containerConf);
+        StandaloneContainer.addConfigurationURL(containerConf);
 
-      container = StandaloneContainer.getInstance();
+        container = StandaloneContainer.getInstance();
 
-      if (System.getProperty("java.security.auth.login.config") == null)
-         System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
-            .getResource("login.conf").toString());
-      if (System.getProperty("org.exoplatform.ide.server.user-config-path") == null)
-         System.setProperty("org.exoplatform.ide.server.user-config-path", "/ide-home/users/");
+        if (System.getProperty("java.security.auth.login.config") == null)
+            System.setProperty("java.security.auth.login.config", Thread.currentThread().getContextClassLoader()
+                                                                        .getResource("login.conf").toString());
+        if (System.getProperty("org.exoplatform.ide.server.user-config-path") == null)
+            System.setProperty("org.exoplatform.ide.server.user-config-path", "/ide-home/users/");
 
-      RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
-      launcher = new ResourceLauncher(handler);
+        RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
+        launcher = new ResourceLauncher(handler);
 
-   }
+    }
 }

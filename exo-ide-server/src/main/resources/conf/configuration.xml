@@ -8,17 +8,17 @@
 	site: http://www.fsf.org. -->
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-	xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-   <component>
+    <component>
         <type>org.exoplatform.ide.IDEServiceApplication</type>
-	</component>
-	
-	<!-- JRebel consumer service -->
-	<component>
-		<type>org.exoplatform.ide.jrebel.server.JRebelConsumerApplication</type>
-	</component>
+    </component>
 
-        
+    <!-- JRebel consumer service -->
+    <component>
+        <type>org.exoplatform.ide.jrebel.server.JRebelConsumerApplication</type>
+    </component>
+
+
 </configuration>

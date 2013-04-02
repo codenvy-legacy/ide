@@ -23,56 +23,58 @@ package org.exoplatform.ide.project;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class ProjectPrepareException extends Exception
-{
-   private int status = 500;
+public class ProjectPrepareException extends Exception {
+    private int status = 500;
 
-   /**
-    * @param message the detail message about exception
-    * @param cause the cause
-    */
-   public ProjectPrepareException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * @param message
+     *         the detail message about exception
+     * @param cause
+     *         the cause
+     */
+    public ProjectPrepareException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-   /**
-    * @param message the detail message about exception
-    */
-   public ProjectPrepareException(String message)
-   {
-      super(message);
-   }
+    /**
+     * @param message
+     *         the detail message about exception
+     */
+    public ProjectPrepareException(String message) {
+        super(message);
+    }
 
-   /**
-    * @param status the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
-    *           this exception
-    * @param message the detail message about exception
-    * @param cause the cause
-    */
-   public ProjectPrepareException(int status, String message, Throwable cause)
-   {
-      super(message, cause);
-      this.status = status;
-   }
+    /**
+     * @param status
+     *         the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
+     *         this exception
+     * @param message
+     *         the detail message about exception
+     * @param cause
+     *         the cause
+     */
+    public ProjectPrepareException(int status, String message, Throwable cause) {
+        super(message, cause);
+        this.status = status;
+    }
 
-   /**
-    * @param status the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
-    *           this exception
-    * @param message the detail message about exception
-    */
-   public ProjectPrepareException(int status, String message)
-   {
-      super(message);
-      this.status = status;
-   }
+    /**
+     * @param status
+     *         the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for
+     *         this exception
+     * @param message
+     *         the detail message about exception
+     */
+    public ProjectPrepareException(int status, String message) {
+        super(message);
+        this.status = status;
+    }
 
-   /**
-    * @return the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for this
-    *         exception
-    */
-   public int getStatus()
-   {
-      return status;
-   }
+    /**
+     * @return the HTTP status that should be used in response if any {@link javax.ws.rs.ext.ExceptionMapper} available for this
+     *         exception
+     */
+    public int getStatus() {
+        return status;
+    }
 }

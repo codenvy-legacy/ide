@@ -47,136 +47,122 @@ import java.util.List;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContactsClient.java Aug 27, 2012 11:36:45 AM azatsarynnyy $
  */
-public class GoogleContactsClient
-{
-   /**
-    * Service for access to the Google Contacts data API.
-    */
-   private ContactsService service;
+public class GoogleContactsClient {
+    /** Service for access to the Google Contacts data API. */
+    private ContactsService service;
 
-   private final OAuthTokenProvider oAuthTokenProvider;
+    private final OAuthTokenProvider oAuthTokenProvider;
 
-   /**
-    * Constructs new {@link GoogleContactsClient} instance.
-    *
-    * @param oAuthTokenProvider
-    * @throws IOException
-    *    OAuth provider with Google account
-    *    if any i/o errors occur
-    */
-   public GoogleContactsClient(OAuthTokenProvider oAuthTokenProvider) throws IOException
-   {
-      this.oAuthTokenProvider = oAuthTokenProvider;
-      service = new ContactsService("exo.ide");
-   }
+    /**
+     * Constructs new {@link GoogleContactsClient} instance.
+     *
+     * @param oAuthTokenProvider
+     * @throws IOException
+     *         OAuth provider with Google account
+     *         if any i/o errors occur
+     */
+    public GoogleContactsClient(OAuthTokenProvider oAuthTokenProvider) throws IOException {
+        this.oAuthTokenProvider = oAuthTokenProvider;
+        service = new ContactsService("exo.ide");
+    }
 
-   /**
-    * Returns contact photo as string encoded in Base64.
-    *
-    * @param contact
-    *    Google Contact for getting photo
-    * @return contact photo in binary format
-    * @throws IOException
-    *    if any i/o errors occur
-    * @throws ServiceException
-    *    if any error in Google Contacts Service
-    */
-   public String getContactPhotoAsBase64(ContactEntry contact) throws IOException, ServiceException
-   {
-      byte[] photo = getPhoto(contact);
-      if (photo != null)
-      {
-         return Base64.encodeBase64String(photo);
-      }
-      return null;
-   }
+    /**
+     * Returns contact photo as string encoded in Base64.
+     *
+     * @param contact
+     *         Google Contact for getting photo
+     * @return contact photo in binary format
+     * @throws IOException
+     *         if any i/o errors occur
+     * @throws ServiceException
+     *         if any error in Google Contacts Service
+     */
+    public String getContactPhotoAsBase64(ContactEntry contact) throws IOException, ServiceException {
+        byte[] photo = getPhoto(contact);
+        if (photo != null) {
+            return Base64.encodeBase64String(photo);
+        }
+        return null;
+    }
 
-   /**
-    * Returns all user's contacts from Google Contacts Service.
-    *
-    * @return all user's contacts from Google Contacts Service
-    * @throws IOException
-    *    if any i/o errors occur
-    * @throws ServiceException
-    *    if any error in Google Contacts Service
-    */
-   public List<ContactEntry> getAllContacts() throws IOException, ServiceException
-   {
-      Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod());
-      credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
-      service.setOAuth2Credentials(credentials);
-      ContactFeed feed;
-      Query query = new Query(new URL("https://www.google.com/m8/feeds/contacts/default/full"));
-      query.addCustomParameter(new CustomParameter("xoauth_requestor_id", getUserId()));
-      DateTime startTime = new DateTime(0);
-      query.setUpdatedMin(startTime);
-      int maxResult = 200;
-      query.setMaxResults(maxResult);
-      List<ContactEntry> googleContacts = new ArrayList<ContactEntry>(maxResult);
-      feed = service.query(query, ContactFeed.class);
-      googleContacts.addAll(feed.getEntries());
-      return googleContacts;
-   }
+    /**
+     * Returns all user's contacts from Google Contacts Service.
+     *
+     * @return all user's contacts from Google Contacts Service
+     * @throws IOException
+     *         if any i/o errors occur
+     * @throws ServiceException
+     *         if any error in Google Contacts Service
+     */
+    public List<ContactEntry> getAllContacts() throws IOException, ServiceException {
+        Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod());
+        credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
+        service.setOAuth2Credentials(credentials);
+        ContactFeed feed;
+        Query query = new Query(new URL("https://www.google.com/m8/feeds/contacts/default/full"));
+        query.addCustomParameter(new CustomParameter("xoauth_requestor_id", getUserId()));
+        DateTime startTime = new DateTime(0);
+        query.setUpdatedMin(startTime);
+        int maxResult = 200;
+        query.setMaxResults(maxResult);
+        List<ContactEntry> googleContacts = new ArrayList<ContactEntry>(maxResult);
+        feed = service.query(query, ContactFeed.class);
+        googleContacts.addAll(feed.getEntries());
+        return googleContacts;
+    }
 
-   /**
-    * Returns identifier of the user which is logged in.
-    *
-    * @return user identifier
-    */
-   private String getUserId()
-   {
-      return ConversationState.getCurrent().getIdentity().getUserId();
-   }
+    /**
+     * Returns identifier of the user which is logged in.
+     *
+     * @return user identifier
+     */
+    private String getUserId() {
+        return ConversationState.getCurrent().getIdentity().getUserId();
+    }
 
-   /**
-    * Returns contact photo in binary format.
-    *
-    * @param contactEntry
-    *    Google Contact for getting photo
-    * @return contact photo in binary format
-    * @throws IOException
-    *    if any i/o errors occur
-    * @throws ServiceException
-    *    if any error in Google Contacts Service
-    */
-   private byte[] getPhoto(ContactEntry contactEntry) 
-   {
-      Link photoLink = contactEntry.getContactPhotoLink();
+    /**
+     * Returns contact photo in binary format.
+     *
+     * @param contactEntry
+     *         Google Contact for getting photo
+     * @return contact photo in binary format
+     * @throws IOException
+     *         if any i/o errors occur
+     * @throws ServiceException
+     *         if any error in Google Contacts Service
+     */
+    private byte[] getPhoto(ContactEntry contactEntry) {
+        Link photoLink = contactEntry.getContactPhotoLink();
 
-      if (photoLink == null || photoLink.getEtag() == null)
-      {
-         return null;
-      }
+        if (photoLink == null || photoLink.getEtag() == null) {
+            return null;
+        }
 
-      try{
-      GDataRequest createLinkQueryRequest = service.createLinkQueryRequest(photoLink);
-      createLinkQueryRequest.execute();
+        try {
+            GDataRequest createLinkQueryRequest = service.createLinkQueryRequest(photoLink);
+            createLinkQueryRequest.execute();
 
-      InputStream responseStream = createLinkQueryRequest.getResponseStream();
+            InputStream responseStream = createLinkQueryRequest.getResponseStream();
 
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      byte[] buffer = new byte[4096];
-      while (true)
-      {
-         int read = 0;
-         if ((read = responseStream.read(buffer)) != -1)
-         {
-            out.write(buffer, 0, read);
-         }
-         else
-         {
-            break;
-         }
-      }
-      byte[] photo = out.toByteArray();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
+            while (true) {
+                int read = 0;
+                if ((read = responseStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                } else {
+                    break;
+                }
+            }
+            byte[] photo = out.toByteArray();
 
-      createLinkQueryRequest.end();
-      responseStream.close();
-      out.close();
-         return photo;
-      } catch (Exception e) {
-         return null;
-      }
+            createLinkQueryRequest.end();
+            responseStream.close();
+            out.close();
+            return photo;
+        } catch (Exception e) {
+            return null;
+        }
 
-   }
+    }
 }

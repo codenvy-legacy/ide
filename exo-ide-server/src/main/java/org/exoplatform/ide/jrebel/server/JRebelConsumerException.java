@@ -23,15 +23,12 @@ package org.exoplatform.ide.jrebel.server;
  * @version $Id: JRebelProfilerException.java 34027 19.12.12 17:06Z vzhukovskii $
  */
 @SuppressWarnings("serial")
-public class JRebelConsumerException extends Exception
-{
-   public JRebelConsumerException(String message)
-   {
-      super(message);
-   }
+public class JRebelConsumerException extends Exception {
+    public JRebelConsumerException(String message) {
+        super(message);
+    }
 
-   public JRebelConsumerException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public JRebelConsumerException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

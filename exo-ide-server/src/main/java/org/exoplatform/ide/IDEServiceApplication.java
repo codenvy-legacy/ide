@@ -28,53 +28,43 @@ import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * Created by The eXo Platform SAS.
  *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 12, 2011 5:24:37 PM evgen $
- *
  */
-public class IDEServiceApplication extends Application
-{
+public class IDEServiceApplication extends Application {
 
-   private final Set<Class<?>> classes = new HashSet<Class<?>>();
+    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   private final Set<Object> objects = new HashSet<Object>();
+    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList)
-   {
-      objects.add(new UploadServiceExceptionMapper());
-      objects.add(new ProjectPrepareExceptionMapper());
+    public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList) {
+        objects.add(new UploadServiceExceptionMapper());
+        objects.add(new ProjectPrepareExceptionMapper());
 
-      classes.add(TemplatesRestService.class);
-      classes.add(LoopbackContentService.class);
-      classes.add(IDEConfigurationService.class);
-      classes.add(RequestContextResolver.class);
-      classes.add(GoogleContactsRestService.class);
-      classes.add(ProjectPrepareService.class);
-   }
+        classes.add(TemplatesRestService.class);
+        classes.add(LoopbackContentService.class);
+        classes.add(IDEConfigurationService.class);
+        classes.add(RequestContextResolver.class);
+        classes.add(GoogleContactsRestService.class);
+        classes.add(ProjectPrepareService.class);
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return objects;
-   }
+    /** @see javax.ws.rs.core.Application#getSingletons() */
+    @Override
+    public Set<Object> getSingletons() {
+        return objects;
+    }
 }

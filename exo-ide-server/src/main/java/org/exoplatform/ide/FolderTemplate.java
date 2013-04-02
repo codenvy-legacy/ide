@@ -23,28 +23,22 @@ import java.util.List;
 
 /**
  * Folder(project) template data.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FolderTemplate.java Jul 26, 2011 5:38:07 PM vereshchaka $
- * 
  */
-public class FolderTemplate extends Template
-{
-   private List<Template> children;
+public class FolderTemplate extends Template {
+    private List<Template> children;
 
-   public FolderTemplate()
-   {
-      super("folder");
-   }
+    public FolderTemplate() {
+        super("folder");
+    }
 
-   /**
-    * @return the children
-    */
-   public List<Template> getChildren()
-   {
-      if (children == null)
-         children = new ArrayList<Template>();
-      return children;
-   }
+    /** @return the children */
+    public List<Template> getChildren() {
+        if (children == null)
+            children = new ArrayList<Template>();
+        return children;
+    }
 
 }

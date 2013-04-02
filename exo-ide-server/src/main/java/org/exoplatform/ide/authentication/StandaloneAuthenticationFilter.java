@@ -18,51 +18,40 @@
  */
 package org.exoplatform.ide.authentication;
 
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class StandaloneAuthenticationFilter implements Filter
-{
+public class StandaloneAuthenticationFilter implements Filter {
 
-   @Override
-   public void init(FilterConfig filterConfig) throws ServletException
-   {
-   }
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 
-   @Override
-   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-      ServletException
-   {
-      Principal principal = ((HttpServletRequest)request).getUserPrincipal();
-      if (principal == null || principal.getName() == null)
-      {
-         HttpServletResponse httpResponse = (HttpServletResponse)response;
-         httpResponse.setStatus(401);
-         return;
-      }
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+                                                                                                     ServletException {
+        Principal principal = ((HttpServletRequest)request).getUserPrincipal();
+        if (principal == null || principal.getName() == null) {
+            HttpServletResponse httpResponse = (HttpServletResponse)response;
+            httpResponse.setStatus(401);
+            return;
+        }
 
-      chain.doFilter(request, response);
-   }
+        chain.doFilter(request, response);
+    }
 
-   @Override
-   public void destroy()
-   {
-   }
+    @Override
+    public void destroy() {
+    }
 
 }
