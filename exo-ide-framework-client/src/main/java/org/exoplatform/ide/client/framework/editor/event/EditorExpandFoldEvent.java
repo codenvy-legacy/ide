@@ -23,48 +23,47 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: EditorFoldingCollapseEvent.java Feb 28, 2013 5:08:29 PM azatsarynnyy $
+ * @version $Id: EditorExpandFoldEvent.java Feb 28, 2013 5:08:29 PM azatsarynnyy $
  *
  */
-public class EditorFoldingCollapseEvent extends GwtEvent<EditorFoldingCollapseHandler>
+public class EditorExpandFoldEvent extends GwtEvent<EditorExpandFoldHandler>
 {
-   private boolean collapseAll;
+   private boolean expandAll;
 
-   public EditorFoldingCollapseEvent()
+   public EditorExpandFoldEvent()
    {
       super();
    }
 
-   public EditorFoldingCollapseEvent(boolean collapseAll)
+   public EditorExpandFoldEvent(boolean expandAll)
    {
       super();
-      this.collapseAll = collapseAll;
+      this.expandAll = expandAll;
    }
 
-   public static final GwtEvent.Type<EditorFoldingCollapseHandler> TYPE =
-      new GwtEvent.Type<EditorFoldingCollapseHandler>();
+   public static final GwtEvent.Type<EditorExpandFoldHandler> TYPE = new GwtEvent.Type<EditorExpandFoldHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(EditorFoldingCollapseHandler handler)
+   protected void dispatch(EditorExpandFoldHandler handler)
    {
-      handler.onEditorCollapse(this);
+      handler.onEditorExpand(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFoldingCollapseHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorExpandFoldHandler> getAssociatedType()
    {
       return TYPE;
    }
 
-   public boolean isCollapseAll()
+   public boolean isExpandAll()
    {
-      return collapseAll;
+      return expandAll;
    }
 
 }

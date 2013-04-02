@@ -23,12 +23,12 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: EditorFoldingCollapseHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
+ * @version $Id: EditorCollapseFoldHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
  *
  */
-public interface EditorFoldingCollapseHandler extends EventHandler
+public interface EditorCollapseFoldHandler extends EventHandler
 {
 
-   void onEditorCollapse(EditorFoldingCollapseEvent event);
+   void onEditorCollapse(EditorCollapseFoldEvent event);
 
 }
