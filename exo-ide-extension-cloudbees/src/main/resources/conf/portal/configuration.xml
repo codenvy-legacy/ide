@@ -72,9 +72,6 @@
       </init-params>
    </component>
 
-   <component><type>org.exoplatform.ide.extension.cloudbees.server.CloudBeesAuthenticator</type></component>
-   <component><type>org.exoplatform.ide.security.paas.UserProfileCredentialStore</type></component>
-   
    <!-- End Cloudbees -->
    
 </configuration>
