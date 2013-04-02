@@ -19,9 +19,9 @@
 package org.exoplatform.ide.editor.gtmpl.client.codeassistant;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.GroovyCodeAssistant;
 import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
@@ -32,40 +32,34 @@ import java.util.List;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyTamplateCodeAssistant Mar 3, 2011 5:06:09 PM evgen $
- * 
  */
-public class GroovyTemplateCodeAssistant extends GroovyCodeAssistant
-{
+public class GroovyTemplateCodeAssistant extends GroovyCodeAssistant {
 
-   /**
-    * @param factory
-    * @param errorHandler
-    */
-   public GroovyTemplateCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory,
-      JavaCodeAssistantErrorHandler errorHandler)
-   {
-      super(service, factory, errorHandler);
-   }
+    /**
+     * @param factory
+     * @param errorHandler
+     */
+    public GroovyTemplateCodeAssistant(CodeAssistantService service, TokenWidgetFactory factory,
+                                       JavaCodeAssistantErrorHandler errorHandler) {
+        super(service, factory, errorHandler);
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.client.api.Editor,
-    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
-    *      org.exoplatform.ide.editor.api.codeassitant.Token)
-    */
-   @Override
-   public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
-      String lineMimeType, Token currentToken)
-   {
+    /**
+     * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.client
+     * .api.Editor,
+     *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
+     *      org.exoplatform.ide.editor.api.codeassitant.Token)
+     */
+    @Override
+    public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
+                                   String lineMimeType, Token currentToken) {
 
-      if (MimeType.APPLICATION_GROOVY.equals(lineMimeType))
-      {
-         super.autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType, currentToken);
-      }
-      else
-      {
-         new HtmlCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType,
-            currentToken);
-      }
-   }
+        if (MimeType.APPLICATION_GROOVY.equals(lineMimeType)) {
+            super.autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType, currentToken);
+        } else {
+            new HtmlCodeAssistant().autocompleteCalled(editor, cursorOffsetX, cursorOffsetY, tokenList, lineMimeType,
+                                                       currentToken);
+        }
+    }
 
 }

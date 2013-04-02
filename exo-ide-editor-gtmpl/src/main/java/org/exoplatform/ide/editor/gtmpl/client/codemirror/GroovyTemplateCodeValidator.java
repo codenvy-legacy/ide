@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.editor.gtmpl.client.codemirror;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.CodeLine.CodeType;
@@ -30,60 +26,54 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.codemirror.CodeValidator;
 import org.exoplatform.ide.editor.groovy.client.codemirror.GroovyCodeValidator;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- * 
  */
-public class GroovyTemplateCodeValidator extends CodeValidator
-{
+public class GroovyTemplateCodeValidator extends CodeValidator {
 
-   List<? extends Token> groovyCode;
+    List<? extends Token> groovyCode;
 
-   GroovyCodeValidator groovyCodeValidator = new GroovyCodeValidator();
+    GroovyCodeValidator groovyCodeValidator = new GroovyCodeValidator();
 
-   /**
-    * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList
-    * 
-    * @param tokenList
-    */
-   public List<CodeLine> getCodeErrorList(List<? extends Token> tokenList)
-   {
-      if (tokenList == null || tokenList.isEmpty())
-      {
-         return new ArrayList<CodeLine>();
-      }
+    /**
+     * Updates list of code errors and error marks. Also updates the fqn of tokens within the tokenList
+     *
+     * @param tokenList
+     */
+    public List<CodeLine> getCodeErrorList(List<? extends Token> tokenList) {
+        if (tokenList == null || tokenList.isEmpty()) {
+            return new ArrayList<CodeLine>();
+        }
 
-      groovyCode =
-         extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
+        groovyCode =
+                extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
 
-      return groovyCodeValidator.getCodeErrorList(groovyCode);
-   }
+        return groovyCodeValidator.getCodeErrorList(groovyCode);
+    }
 
-   @Override
-   public CodeLine getImportStatement(List<? extends Token> tokenList, String fqn)
-   {
-      if (this.groovyCode == null)
-      {
-         this.groovyCode =
-            extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
-      }
+    @Override
+    public CodeLine getImportStatement(List<? extends Token> tokenList, String fqn) {
+        if (this.groovyCode == null) {
+            this.groovyCode =
+                    extractCode((List<TokenBeenImpl>)tokenList, new LinkedList<TokenBeenImpl>(), MimeType.APPLICATION_GROOVY);
+        }
 
-      if (groovyCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>)groovyCode, fqn))
-      {
-         int appropriateLineNumber =
-            GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
+        if (groovyCodeValidator.shouldImportStatementBeInsterted((List<TokenBeenImpl>)groovyCode, fqn)) {
+            int appropriateLineNumber =
+                    GroovyCodeValidator.getAppropriateLineNumberToInsertImportStatement((List<TokenBeenImpl>)tokenList);
 
-         if (appropriateLineNumber > 1)
-         {
-            return new CodeLine(CodeType.IMPORT_STATEMENT, "import " + fqn + "\n", appropriateLineNumber);
-         }
-         else
-         {
-            return new CodeLine(CodeType.IMPORT_STATEMENT, "<%\n  import " + fqn + "\n%>\n", 1);
-         }
-      }
+            if (appropriateLineNumber > 1) {
+                return new CodeLine(CodeType.IMPORT_STATEMENT, "import " + fqn + "\n", appropriateLineNumber);
+            } else {
+                return new CodeLine(CodeType.IMPORT_STATEMENT, "<%\n  import " + fqn + "\n%>\n", 1);
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 }

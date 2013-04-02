@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.editor.gtmpl.client.codemirror;
 
-import java.util.HashMap;
+import com.google.gwt.core.client.JavaScriptObject;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
@@ -29,97 +29,86 @@ import org.exoplatform.ide.editor.groovy.client.codemirror.GroovyParser;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlParser;
 import org.exoplatform.ide.editor.xml.client.codemirror.XmlParser;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.HashMap;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
- * 
  */
-public class GroovyTemplateParser extends CodeMirrorParserImpl
-{
+public class GroovyTemplateParser extends CodeMirrorParserImpl {
 
-   String currentContentMimeType;
+    String currentContentMimeType;
 
-   private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
+    private static HashMap<String, CodeMirrorParserImpl> factory = new HashMap<String, CodeMirrorParserImpl>();
 
-   static
-   {
-      factory.put(MimeType.TEXT_HTML, new HtmlParser());
-      factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());
-   }
+    static {
+        factory.put(MimeType.TEXT_HTML, new HtmlParser());
+        factory.put(MimeType.APPLICATION_GROOVY, new GroovyParser());
+    }
 
-   protected static CodeMirrorParserImpl getParser(String mimeType)
-   {
-      if (factory.containsKey(mimeType))
-      {
-         return factory.get(mimeType);
-      }
+    protected static CodeMirrorParserImpl getParser(String mimeType) {
+        if (factory.containsKey(mimeType)) {
+            return factory.get(mimeType);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Override
-   public void init()
-   {
-      currentContentMimeType = MimeType.TEXT_HTML;
-   }
+    @Override
+    public void init() {
+        currentContentMimeType = MimeType.TEXT_HTML;
+    }
 
-   @Override
-   public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken,
-      boolean hasParentParser)
-   {
-      // interrupt at the end of the document
-      if (node == null)
-         return currentToken;
+    @Override
+    public TokenBeenImpl parseLine(JavaScriptObject node, int lineNumber, TokenBeenImpl currentToken,
+                                   boolean hasParentParser) {
+        // interrupt at the end of the document
+        if (node == null)
+            return currentToken;
 
-      String nodeContent = Node.getContent(node).trim(); // returns text without ended space " " in the text
-      String nodeType = Node.getType(node);
+        String nodeContent = Node.getContent(node).trim(); // returns text without ended space " " in the text
+        String nodeType = Node.getType(node);
 
-      // recognize "<%" open tag within the TEXT_HTML content
-      if (isGroovyOpenNode(nodeType, nodeContent) && MimeType.TEXT_HTML.equals(currentContentMimeType))
-      {
-         TokenBeenImpl newToken =
-            new TokenBeenImpl("groovy code", TokenType.GROOVY_TAG, lineNumber, MimeType.APPLICATION_GROOVY);
-         if (currentToken != null)
-         {
-            currentToken.addSubToken(newToken);
-         }
-         currentToken = newToken;
+        // recognize "<%" open tag within the TEXT_HTML content
+        if (isGroovyOpenNode(nodeType, nodeContent) && MimeType.TEXT_HTML.equals(currentContentMimeType)) {
+            TokenBeenImpl newToken =
+                    new TokenBeenImpl("groovy code", TokenType.GROOVY_TAG, lineNumber, MimeType.APPLICATION_GROOVY);
+            if (currentToken != null) {
+                currentToken.addSubToken(newToken);
+            }
+            currentToken = newToken;
 
-         currentContentMimeType = MimeType.APPLICATION_GROOVY;
-         getParser(currentContentMimeType).init();
-      }
+            currentContentMimeType = MimeType.APPLICATION_GROOVY;
+            getParser(currentContentMimeType).init();
+        }
 
-      // recognize "%>" close tag
-      else if (isGroovyCloseNode(nodeType, nodeContent) && !MimeType.TEXT_HTML.equals(currentContentMimeType))
-      {
-         currentToken = XmlParser.closeTag(lineNumber, currentToken);
+        // recognize "%>" close tag
+        else if (isGroovyCloseNode(nodeType, nodeContent) && !MimeType.TEXT_HTML.equals(currentContentMimeType)) {
+            currentToken = XmlParser.closeTag(lineNumber, currentToken);
 
-         currentContentMimeType = MimeType.TEXT_HTML;
-         getParser(currentContentMimeType).init();
-      }
+            currentContentMimeType = MimeType.TEXT_HTML;
+            getParser(currentContentMimeType).init();
+        }
 
-      currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
+        currentToken = getParser(currentContentMimeType).parseLine(node, lineNumber, currentToken, true); // call child parser
 
-      if (node == null || Node.getName(node).equals("BR"))
-      {
-         return currentToken;
-      }
+        if (node == null || Node.getName(node).equals("BR")) {
+            return currentToken;
+        }
 
-      return parseLine(Node.getNext(node), lineNumber, currentToken, false); // call itself
+        return parseLine(Node.getNext(node), lineNumber, currentToken, false); // call itself
 
-   }
+    }
 
-   private boolean isGroovyOpenNode(String nodeType, String nodeContent)
-   {
-      return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy")
-         && nodeContent.equals("&lt;%");
-   }
+    private boolean isGroovyOpenNode(String nodeType, String nodeContent) {
+        return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy")
+               && nodeContent.equals("&lt;%");
+    }
 
-   private boolean isGroovyCloseNode(String nodeType, String nodeContent)
-   {
-      return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy")
-         && nodeContent.equals("%&gt;");
-   };
+    private boolean isGroovyCloseNode(String nodeType, String nodeContent) {
+        return (nodeType != null) && (nodeContent != null) && nodeType.equals("gtmpl-groovy")
+               && nodeContent.equals("%&gt;");
+    }
+
+    ;
 }
