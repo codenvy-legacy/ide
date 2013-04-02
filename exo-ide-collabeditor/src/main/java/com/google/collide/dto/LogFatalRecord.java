@@ -23,13 +23,13 @@ import org.exoplatform.ide.json.shared.JsonArray;
  */
 @RoutingType(type = RoutingTypes.LOGFATALRECORD)
 public interface LogFatalRecord extends ClientToServerDto {
-  String getMessage();
+    String getMessage();
 
-  String getWindowLocation();
-  
-  JsonArray<String> getRecentHistory();
+    String getWindowLocation();
 
-  String getPermutationStrongName();
+    JsonArray<String> getRecentHistory();
 
-  ThrowableDto getThrowable();
+    String getPermutationStrongName();
+
+    ThrowableDto getThrowable();
 }

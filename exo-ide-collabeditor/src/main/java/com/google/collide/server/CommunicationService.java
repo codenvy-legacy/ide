@@ -25,41 +25,38 @@ import com.google.collide.server.participants.Participants;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
 @Path("ide/collab_editor/communication")
-public class CommunicationService
-{
-   private static final Log LOG = ExoLogger.getLogger(CommunicationService.class);
+public class CommunicationService {
+    private static final Log LOG = ExoLogger.getLogger(CommunicationService.class);
 
 
-   @Inject
-   private Participants participants;
+    @Inject
+    private Participants participants;
 
-   @Inject
-   private EditSessions sessions;
+    @Inject
+    private EditSessions sessions;
 
-   @POST
-   @Path("notify/fileoperation")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void notifyFileOperation(String message)
-   {
-      FileOperationNotificationImpl fileOperationNotification = FileOperationNotificationImpl.fromJsonString(message);
-      Set<String> collaborators = new HashSet<String>(sessions.getEditSessionCollaborators(
-         fileOperationNotification.getEditSessionId()));
-      //remove requester from broadcast
-      collaborators.remove(fileOperationNotification.getUserId());
-      WSUtil.broadcastToClients(message, collaborators);
-   }
+    @POST
+    @Path("notify/fileoperation")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void notifyFileOperation(String message) {
+        FileOperationNotificationImpl fileOperationNotification = FileOperationNotificationImpl.fromJsonString(message);
+        Set<String> collaborators = new HashSet<String>(sessions.getEditSessionCollaborators(
+                fileOperationNotification.getEditSessionId()));
+        //remove requester from broadcast
+        collaborators.remove(fileOperationNotification.getUserId());
+        WSUtil.broadcastToClients(message, collaborators);
+    }
 }

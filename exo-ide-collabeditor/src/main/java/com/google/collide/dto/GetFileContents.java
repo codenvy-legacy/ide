@@ -23,10 +23,10 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  */
 @RoutingType(type = RoutingTypes.GETFILECONTENTS)
 public interface GetFileContents extends ClientToServerDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  // TODO: Make this a resource ID/EditSessionKey.
-  String getPath();
+    // TODO: Make this a resource ID/EditSessionKey.
+    String getPath();
 
-  String getClientId();
+    String getClientId();
 }

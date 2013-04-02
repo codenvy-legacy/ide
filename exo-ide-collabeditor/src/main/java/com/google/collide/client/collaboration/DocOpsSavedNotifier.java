@@ -19,12 +19,12 @@ import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.dto.DocOp;
 import com.google.collide.shared.document.Document;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 import com.google.common.base.Preconditions;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonIntegerMap;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 import java.util.List;
 
@@ -34,143 +34,135 @@ import java.util.List;
  */
 public class DocOpsSavedNotifier {
 
-  public abstract static class Callback {
-    
-    private final DocOpListener docOpListener = new DocOpListener() {
-      @Override
-      public void onDocOpAckReceived(int documentId, DocOp serverHistoryDocOp, boolean clean) {
-        Integer remainingAcks = remainingAcksByDocumentId.get(documentId);
-        if (remainingAcks == null) {
-          // We have already reached our ack count for this document ID
-          return;
+    public abstract static class Callback {
+
+        private final DocOpListener docOpListener = new DocOpListener() {
+            @Override
+            public void onDocOpAckReceived(int documentId, DocOp serverHistoryDocOp, boolean clean) {
+                Integer remainingAcks = remainingAcksByDocumentId.get(documentId);
+                if (remainingAcks == null) {
+                    // We have already reached our ack count for this document ID
+                    return;
+                }
+
+                remainingAcks--;
+                if (remainingAcks == 0) {
+                    remainingAcksByDocumentId.erase(documentId);
+                    tryCallback();
+                } else {
+                    remainingAcksByDocumentId.put(documentId, remainingAcks);
+                }
+            }
+
+            @Override
+            public void onDocOpSent(int documentId, List<DocOp> docOps) {
+            }
+        };
+
+        private RemoverManager          remover;
+        private JsonIntegerMap<Integer> remainingAcksByDocumentId;
+
+        public abstract void onAllDocOpsSaved();
+
+        private void initialize(
+                RemoverManager remover, JsonIntegerMap<Integer> remainingAcksByDocumentId) {
+            this.remover = remover;
+            this.remainingAcksByDocumentId = remainingAcksByDocumentId;
         }
-        
-        remainingAcks--;
-        if (remainingAcks == 0) {
-          remainingAcksByDocumentId.erase(documentId);
-          tryCallback();
-        } else {
-          remainingAcksByDocumentId.put(documentId, remainingAcks);
+
+        /** Stops listening for the doc ops to be saved. */
+        protected void cancel() {
+            remover.remove();
+
+            remover = null;
+            remainingAcksByDocumentId = null;
         }
-      }
 
-      @Override
-      public void onDocOpSent(int documentId, List<DocOp> docOps) {
-      }
-    };
-    
-    private RemoverManager remover;
-    private JsonIntegerMap<Integer> remainingAcksByDocumentId;
-    
-    public abstract void onAllDocOpsSaved();
+        private void tryCallback() {
+            if (!isWaiting()) {
+                // Only callback after all documents' doc ops have been acked
+                cancel();
+                onAllDocOpsSaved();
+            }
+        }
 
-    private void initialize(
-        RemoverManager remover, JsonIntegerMap<Integer> remainingAcksByDocumentId) {
-      this.remover = remover;
-      this.remainingAcksByDocumentId = remainingAcksByDocumentId;
-    }
-    
-    /**
-     * Stops listening for the doc ops to be saved.
-     */
-    protected void cancel() {
-      remover.remove();
-      
-      remover = null;
-      remainingAcksByDocumentId = null;
+        boolean isWaiting() {
+            return remainingAcksByDocumentId != null && !remainingAcksByDocumentId.isEmpty();
+        }
     }
 
-    private void tryCallback() {
-      if (!isWaiting()) {
-        // Only callback after all documents' doc ops have been acked
-        cancel();
-        onAllDocOpsSaved();
-      }
-    }
-    
-    boolean isWaiting() {
-      return remainingAcksByDocumentId != null && !remainingAcksByDocumentId.isEmpty();
-    }
-  }
+    private final DocumentManager      documentManager;
+    private final CollaborationManager collaborationManager;
 
-  private final DocumentManager documentManager;
-  private final CollaborationManager collaborationManager;
-
-  public DocOpsSavedNotifier(
-      DocumentManager documentManager, CollaborationManager collaborationManager) {
-    this.documentManager = documentManager;
-    this.collaborationManager = collaborationManager;
-  }
-  
-  /**
-   * @see #notifyForFiles(com.google.collide.client.collaboration.DocOpsSavedNotifier.Callback, String...)
-   */
-  public boolean notifyForWorkspace(Callback callback) {
-    JsonArray<Document> documents = documentManager.getDocuments();
-    int[] documentIds = new int[documents.size()];
-    for (int i = 0; i < documentIds.length; i++) {
-      documentIds[i] = documents.get(i).getId();
+    public DocOpsSavedNotifier(
+            DocumentManager documentManager, CollaborationManager collaborationManager) {
+        this.documentManager = documentManager;
+        this.collaborationManager = collaborationManager;
     }
 
-    return notifyForDocuments(callback, documentIds);
-  }
+    /** @see #notifyForFiles(com.google.collide.client.collaboration.DocOpsSavedNotifier.Callback, String...) */
+    public boolean notifyForWorkspace(Callback callback) {
+        JsonArray<Document> documents = documentManager.getDocuments();
+        int[] documentIds = new int[documents.size()];
+        for (int i = 0; i < documentIds.length; i++) {
+            documentIds[i] = documents.get(i).getId();
+        }
 
-  /**
-   * @see #notifyForDocuments(com.google.collide.client.collaboration.DocOpsSavedNotifier.Callback, int...)
-   */
-  public boolean notifyForFiles(Callback callback, String... fileEditSessionKeys) {
-    int[] documentIds = new int[fileEditSessionKeys.length];
-    for (int i = 0; i < documentIds.length; i++) {
-      Document document = documentManager.getDocumentByFileEditSessionKey(fileEditSessionKeys[i]);
-      Preconditions.checkNotNull(document,
-          "Document for given fileEditSessionKey [" + fileEditSessionKeys[i] + "] does not exist");
-
-      documentIds[i] = document.getId();
+        return notifyForDocuments(callback, documentIds);
     }
 
-    return notifyForDocuments(callback, documentIds);
-  }
+    /** @see #notifyForDocuments(com.google.collide.client.collaboration.DocOpsSavedNotifier.Callback, int...) */
+    public boolean notifyForFiles(Callback callback, String... fileEditSessionKeys) {
+        int[] documentIds = new int[fileEditSessionKeys.length];
+        for (int i = 0; i < documentIds.length; i++) {
+            Document document = documentManager.getDocumentByFileEditSessionKey(fileEditSessionKeys[i]);
+            Preconditions.checkNotNull(document,
+                                       "Document for given fileEditSessionKey [" + fileEditSessionKeys[i] + "] does not exist");
 
-  /**
-   * @return whether we are waiting for unacked or queued doc ops
-   */
-  public boolean notifyForDocuments(Callback callback, int... documentIds) {
-    RemoverManager remover = new RemoverManager();
-    JsonIntegerMap<Integer> remainingAcksByDocumentId = JsonCollections.createIntegerMap();
+            documentIds[i] = document.getId();
+        }
 
-    for (int i = 0; i < documentIds.length; i++) {
-      int documentId = documentIds[i];
-
-      if (!DocumentMetadata.isLinkedToFile(documentManager.getDocumentById(documentId))) {
-        // Ignore unlinked files
-        continue;
-      }
-      
-      DocumentCollaborationController documentCollaborationController =
-          collaborationManager.getDocumentCollaborationController(documentId);
-      Preconditions.checkNotNull(documentCollaborationController,
-          "Could not find collaboration controller document ID [" + documentId + "]");
-
-      FileConcurrencyController fileConcurrencyController =
-          documentCollaborationController.getFileConcurrencyController();
-      int remainingAcks = computeRemainingAcks(fileConcurrencyController);
-      if (remainingAcks > 0) {
-        remainingAcksByDocumentId.put(documentId, remainingAcks);
-        remover.track(
-            fileConcurrencyController.getDocOpListenerRegistrar().add(callback.docOpListener));
-      }
+        return notifyForDocuments(callback, documentIds);
     }
-    
-    callback.initialize(remover, remainingAcksByDocumentId);
-    
-    // If there aren't any unacked or queued doc ops, this will callback immediately
-    callback.tryCallback();
-    
-    return callback.isWaiting();
-  }
 
-  private static int computeRemainingAcks(FileConcurrencyController fileConcurrencyController) {
-    return fileConcurrencyController.getUnackedClientOpCount()
-        + fileConcurrencyController.getQueuedClientOpCount();
-  }
+    /** @return whether we are waiting for unacked or queued doc ops */
+    public boolean notifyForDocuments(Callback callback, int... documentIds) {
+        RemoverManager remover = new RemoverManager();
+        JsonIntegerMap<Integer> remainingAcksByDocumentId = JsonCollections.createIntegerMap();
+
+        for (int i = 0; i < documentIds.length; i++) {
+            int documentId = documentIds[i];
+
+            if (!DocumentMetadata.isLinkedToFile(documentManager.getDocumentById(documentId))) {
+                // Ignore unlinked files
+                continue;
+            }
+
+            DocumentCollaborationController documentCollaborationController =
+                    collaborationManager.getDocumentCollaborationController(documentId);
+            Preconditions.checkNotNull(documentCollaborationController,
+                                       "Could not find collaboration controller document ID [" + documentId + "]");
+
+            FileConcurrencyController fileConcurrencyController =
+                    documentCollaborationController.getFileConcurrencyController();
+            int remainingAcks = computeRemainingAcks(fileConcurrencyController);
+            if (remainingAcks > 0) {
+                remainingAcksByDocumentId.put(documentId, remainingAcks);
+                remover.track(
+                        fileConcurrencyController.getDocOpListenerRegistrar().add(callback.docOpListener));
+            }
+        }
+
+        callback.initialize(remover, remainingAcksByDocumentId);
+
+        // If there aren't any unacked or queued doc ops, this will callback immediately
+        callback.tryCallback();
+
+        return callback.isWaiting();
+    }
+
+    private static int computeRemainingAcks(FileConcurrencyController fileConcurrencyController) {
+        return fileConcurrencyController.getUnackedClientOpCount()
+               + fileConcurrencyController.getQueuedClientOpCount();
+    }
 }

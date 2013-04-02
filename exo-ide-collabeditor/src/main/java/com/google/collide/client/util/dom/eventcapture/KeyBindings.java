@@ -19,52 +19,42 @@ import com.google.collide.client.util.input.ModifierKeys;
 
 import org.exoplatform.ide.json.client.JsoStringMap;
 
-/**
- * Standard key bindings for Collide.
- */
+/** Standard key bindings for Collide. */
 public class KeyBindings {
 
-  private static final String LOCAL_REPLACE = "local_replace";
-  private static final String LOCAL_FIND = "local_find";
-  private static final String GOTO = "goto";
-  private static final String SNAPSHOT = "snapshot";
+    private static final String LOCAL_REPLACE = "local_replace";
+    private static final String LOCAL_FIND    = "local_find";
+    private static final String GOTO          = "goto";
+    private static final String SNAPSHOT      = "snapshot";
 
-  private JsoStringMap<CharCodeWithModifiers> map = JsoStringMap.create();
+    private JsoStringMap<CharCodeWithModifiers> map = JsoStringMap.create();
 
-  public KeyBindings() {
-    map.put(LOCAL_FIND, new CharCodeWithModifiers(ModifierKeys.ACTION, 'f'));
-    map.put(LOCAL_REPLACE, new CharCodeWithModifiers(ModifierKeys.ACTION, 'F'));
-    map.put(GOTO, new CharCodeWithModifiers(ModifierKeys.ACTION, 'g'));
-    map.put(SNAPSHOT, new CharCodeWithModifiers(ModifierKeys.ACTION, 's'));
+    public KeyBindings() {
+        map.put(LOCAL_FIND, new CharCodeWithModifiers(ModifierKeys.ACTION, 'f'));
+        map.put(LOCAL_REPLACE, new CharCodeWithModifiers(ModifierKeys.ACTION, 'F'));
+        map.put(GOTO, new CharCodeWithModifiers(ModifierKeys.ACTION, 'g'));
+        map.put(SNAPSHOT, new CharCodeWithModifiers(ModifierKeys.ACTION, 's'));
 
-    // TODO: Add custom key bindings.
-  }
-  
-  /**
-   * @return key for local find
-   */
-  public CharCodeWithModifiers localFind() {
-    return map.get(LOCAL_FIND);
-  }
+        // TODO: Add custom key bindings.
+    }
 
-  /**
-   * @return key for local replace
-   */
-  public CharCodeWithModifiers localReplace() {
-    return map.get(LOCAL_REPLACE);
-  }
+    /** @return key for local find */
+    public CharCodeWithModifiers localFind() {
+        return map.get(LOCAL_FIND);
+    }
 
-  /**
-   * @return keycode for goto line/etc.
-   */
-  public CharCodeWithModifiers gotoLine() {
-    return map.get(GOTO);
-  }
-  
-  /**
-   * @return keycode for making a snapshot.
-   */
-  public CharCodeWithModifiers snapshot() {
-    return map.get(SNAPSHOT);
-  }
+    /** @return key for local replace */
+    public CharCodeWithModifiers localReplace() {
+        return map.get(LOCAL_REPLACE);
+    }
+
+    /** @return keycode for goto line/etc. */
+    public CharCodeWithModifiers gotoLine() {
+        return map.get(GOTO);
+    }
+
+    /** @return keycode for making a snapshot. */
+    public CharCodeWithModifiers snapshot() {
+        return map.get(SNAPSHOT);
+    }
 }

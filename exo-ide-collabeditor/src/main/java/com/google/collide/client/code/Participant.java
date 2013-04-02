@@ -23,45 +23,45 @@ import com.google.collide.dto.client.DtoClientImpls;
  */
 public class Participant extends DtoClientImpls.ParticipantImpl {
 
-  private static final String DISPLAY_NAME_KEY = "__displayName";
+    private static final String DISPLAY_NAME_KEY = "__displayName";
 
-  private static final String DISPLAY_EMAIL_KEY = "__email";
+    private static final String DISPLAY_EMAIL_KEY = "__email";
 
-  private static final String COLOR_KEY = "__color";
+    private static final String COLOR_KEY = "__color";
 
-  private static final String IS_SELF_KEY = "__isSelf";
+    private static final String IS_SELF_KEY = "__isSelf";
 
-  public static Participant create(
-      com.google.collide.dto.Participant participantDto, String displayName,
-      String displayEmail, String color, boolean isSelf) {
-    DtoClientImpls.ParticipantImpl participantDtoImpl =
-        (DtoClientImpls.ParticipantImpl) participantDto;
+    public static Participant create(
+            com.google.collide.dto.Participant participantDto, String displayName,
+            String displayEmail, String color, boolean isSelf) {
+        DtoClientImpls.ParticipantImpl participantDtoImpl =
+                (DtoClientImpls.ParticipantImpl)participantDto;
 
-    // TODO: Wrap Participant instead of adding fields to the DTO.
-    participantDtoImpl.addField(DISPLAY_NAME_KEY, displayName);
-    participantDtoImpl.addField(DISPLAY_EMAIL_KEY, displayEmail);
-    participantDtoImpl.addField(COLOR_KEY, color);
-    participantDtoImpl.addField(IS_SELF_KEY, isSelf);
+        // TODO: Wrap Participant instead of adding fields to the DTO.
+        participantDtoImpl.addField(DISPLAY_NAME_KEY, displayName);
+        participantDtoImpl.addField(DISPLAY_EMAIL_KEY, displayEmail);
+        participantDtoImpl.addField(COLOR_KEY, color);
+        participantDtoImpl.addField(IS_SELF_KEY, isSelf);
 
-    return participantDtoImpl.cast();
-  }
+        return participantDtoImpl.cast();
+    }
 
-  protected Participant() {
-  }
+    protected Participant() {
+    }
 
-  public final String getColor() {
-    return getStringField(COLOR_KEY);
-  }
+    public final String getColor() {
+        return getStringField(COLOR_KEY);
+    }
 
-  public final String getDisplayName() {
-    return isSelf() ? "Me" : getStringField(DISPLAY_NAME_KEY);
-  }
+    public final String getDisplayName() {
+        return isSelf() ? "Me" : getStringField(DISPLAY_NAME_KEY);
+    }
 
-  public final String getDisplayEmail() { 
-    return getStringField(DISPLAY_EMAIL_KEY);
-  }
+    public final String getDisplayEmail() {
+        return getStringField(DISPLAY_EMAIL_KEY);
+    }
 
-  public final boolean isSelf() {
-    return getBooleanField(IS_SELF_KEY);
-  }
+    public final boolean isSelf() {
+        return getBooleanField(IS_SELF_KEY);
+    }
 }

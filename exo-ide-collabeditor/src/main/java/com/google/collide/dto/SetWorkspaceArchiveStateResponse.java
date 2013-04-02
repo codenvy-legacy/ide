@@ -17,18 +17,15 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Response from the server when a Workspace is archived.
- *
- */
+/** Response from the server when a Workspace is archived. */
 @RoutingType(type = RoutingTypes.SETWORKSPACEARCHIVESTATERESPONSE)
 public interface SetWorkspaceArchiveStateResponse extends ServerToClientDto {
 
-  String getWorkspaceId();
-  
-  /**
-   * The time of archival (or unarchival, though that would generally be
-   * ignored).
-   */
-  String getArchivedTime();
+    String getWorkspaceId();
+
+    /**
+     * The time of archival (or unarchival, though that would generally be
+     * ignored).
+     */
+    String getArchivedTime();
 }

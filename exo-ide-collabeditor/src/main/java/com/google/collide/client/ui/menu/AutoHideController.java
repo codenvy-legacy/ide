@@ -21,20 +21,18 @@ import elemental.html.Element;
  * weird, but less code than creating a bunch of delegates to an encapsulated
  * AutoHideComponent. We can fix this if it starts getting ugly.
  */
-/**
- * A controller that wraps the given element in a {@link AutoHideComponent}.
- * 
- */
+
+/** A controller that wraps the given element in a {@link AutoHideComponent}. */
 public class AutoHideController extends
-    AutoHideComponent<AutoHideView<Void>, AutoHideComponent.AutoHideModel> {
+                                AutoHideComponent<AutoHideView<Void>, AutoHideComponent.AutoHideModel> {
 
-  public static AutoHideController create(Element element) {
-    AutoHideView<Void> view = new AutoHideView<Void>(element);
-    AutoHideModel model = new AutoHideModel();
-    return new AutoHideController(view, model);
-  }
+    public static AutoHideController create(Element element) {
+        AutoHideView<Void> view = new AutoHideView<Void>(element);
+        AutoHideModel model = new AutoHideModel();
+        return new AutoHideController(view, model);
+    }
 
-  private AutoHideController(AutoHideView<Void> view, AutoHideComponent.AutoHideModel model) {
-    super(view, model);
-  }
+    private AutoHideController(AutoHideView<Void> view, AutoHideComponent.AutoHideModel model) {
+        super(view, model);
+    }
 }

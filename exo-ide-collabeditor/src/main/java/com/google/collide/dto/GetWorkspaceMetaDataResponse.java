@@ -26,18 +26,12 @@ import org.exoplatform.ide.json.shared.JsonArray;
 @RoutingType(type = RoutingTypes.GETWORKSPACEMETADATARESPONSE)
 public interface GetWorkspaceMetaDataResponse extends ClientToServerDto, ServerToClientDto {
 
-  /**
-   * The name of this workspace.
-   */
-  String getWorkspaceName();
-  
-  /**
-   * Returns the list of open files for the current user.
-   */
-  JsonArray<String> getLastOpenFiles();
+    /** The name of this workspace. */
+    String getWorkspaceName();
 
-  /**
-   * Returns the user's set run configuration.
-   */
-  RunTarget getRunTarget();
+    /** Returns the list of open files for the current user. */
+    JsonArray<String> getLastOpenFiles();
+
+    /** Returns the user's set run configuration. */
+    RunTarget getRunTarget();
 }

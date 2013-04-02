@@ -17,20 +17,17 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request for files and directories under a specified path.
- *
- */
+/** Request for files and directories under a specified path. */
 @RoutingType(type = RoutingTypes.GETDIRECTORY)
 public interface GetDirectory extends ClientToServerDto {
-  String getPath();
+    String getPath();
 
-  String rootId();
+    String rootId();
 
-  /**
-   * Specifies how many levels deep the tree is fetched. A depth of < 0 indicates infinite depth.
-   * The depth only applies to the directory at the specified path, not to the directories between
-   * root path and path.
-   */
-  int getDepth();
+    /**
+     * Specifies how many levels deep the tree is fetched. A depth of < 0 indicates infinite depth.
+     * The depth only applies to the directory at the specified path, not to the directories between
+     * root path and path.
+     */
+    int getDepth();
 }

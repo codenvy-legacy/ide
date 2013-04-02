@@ -21,9 +21,8 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * A DTO for sending the user's app engine app ids from the
  * server to the client.
- * 
  */
 @RoutingType(type = RoutingTypes.GETUSERAPPENGINEAPPIDSRESPONSE)
 public interface GetUserAppEngineAppIdsResponse extends ServerToClientDto {
-  JsonArray<String> getAppIds();
+    JsonArray<String> getAppIds();
 }

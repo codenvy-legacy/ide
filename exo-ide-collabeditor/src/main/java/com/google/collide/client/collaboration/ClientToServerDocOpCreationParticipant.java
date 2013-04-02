@@ -14,7 +14,6 @@
 
 package com.google.collide.client.collaboration;
 
-import com.google.collide.dto.ClientToServerDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 
 /**
@@ -22,5 +21,5 @@ import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
  * created.
  */
 public interface ClientToServerDocOpCreationParticipant {
-  void onCreateClientToServerDocOp(ClientToServerDocOpImpl message);
+    void onCreateClientToServerDocOp(ClientToServerDocOpImpl message);
 }

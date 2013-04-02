@@ -24,39 +24,39 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 @RoutingType(type = RoutingTypes.CODEBLOCKASSOCIATION)
 public interface CodeBlockAssociation extends ServerToClientDto, CompactJsonDto {
 
-  /**
-   * @return file id part of the source code block
-   * @see CodeBlock#getId()
-   */
-  @SerializationIndex(1)
-  String getSourceFileId();
+    /**
+     * @return file id part of the source code block
+     * @see CodeBlock#getId()
+     */
+    @SerializationIndex(1)
+    String getSourceFileId();
 
-  /**
-   * @return local ID part of the source code block
-   * @see CodeBlock#getId()
-   */
-  @SerializationIndex(2)
-  String getSourceLocalId();
+    /**
+     * @return local ID part of the source code block
+     * @see CodeBlock#getId()
+     */
+    @SerializationIndex(2)
+    String getSourceLocalId();
 
-  /**
-   * @return file ID part of the target code block
-   * @see CodeBlock#getId()
-   */
-  @SerializationIndex(3)
-  String getTargetFileId();
+    /**
+     * @return file ID part of the target code block
+     * @see CodeBlock#getId()
+     */
+    @SerializationIndex(3)
+    String getTargetFileId();
 
-  /**
-   * @return local ID part of the target code block
-   * @see CodeBlock#getId()
-   */
-  @SerializationIndex(4)
-  String getTargetLocalId();
+    /**
+     * @return local ID part of the target code block
+     * @see CodeBlock#getId()
+     */
+    @SerializationIndex(4)
+    String getTargetLocalId();
 
-  /**
-   * @return if {@code true}, indicate that this association should be
-   *         considered with target code block, otherwise only children of
-   *         target code block should be considered.
-   */
-  @SerializationIndex(5)
-  boolean getIsRootAssociation();
+    /**
+     * @return if {@code true}, indicate that this association should be
+     *         considered with target code block, otherwise only children of
+     *         target code block should be considered.
+     */
+    @SerializationIndex(5)
+    boolean getIsRootAssociation();
 }

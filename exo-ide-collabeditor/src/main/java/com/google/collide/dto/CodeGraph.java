@@ -20,34 +20,23 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
 /**
  * <p>Code graph structure which encapsulates a tree of code blocks,
  * and associations between code blocks.
- *
+ * <p/>
  * <p>An instance of this object may represent a subgraph, that is, some of
  * its components may be omitted.
- *
  */
 public interface CodeGraph {
-  /**
-   * @return a mapping of file name to the file scope code block
-   */
-  JsonStringMap<CodeBlock> getCodeBlockMap();
+    /** @return a mapping of file name to the file scope code block */
+    JsonStringMap<CodeBlock> getCodeBlockMap();
 
-  /**
-   * @return the default package code block
-   */
-  CodeBlock getDefaultPackage();
+    /** @return the default package code block */
+    CodeBlock getDefaultPackage();
 
-  /**
-   * @return inheritance associations between code blocks
-   */
-  JsonArray<InheritanceAssociation> getInheritanceAssociations();
+    /** @return inheritance associations between code blocks */
+    JsonArray<InheritanceAssociation> getInheritanceAssociations();
 
-  /**
-   * @return type associations between code blocks
-   */
-  JsonArray<TypeAssociation> getTypeAssociations();
+    /** @return type associations between code blocks */
+    JsonArray<TypeAssociation> getTypeAssociations();
 
-  /**
-   * @return import associations between code blocks
-   */
-  JsonArray<ImportAssociation> getImportAssociations();
+    /** @return import associations between code blocks */
+    JsonArray<ImportAssociation> getImportAssociations();
 }

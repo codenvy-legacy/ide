@@ -22,5 +22,5 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 @RoutingType(type = RoutingTypes.CREATEWORKSPACERESPONSE)
 public interface CreateWorkspaceResponse extends ServerToClientDto {
 
-  WorkspaceInfo getWorkspace();
+    WorkspaceInfo getWorkspace();
 }

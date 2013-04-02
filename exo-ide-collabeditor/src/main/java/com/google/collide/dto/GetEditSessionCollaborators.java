@@ -22,7 +22,6 @@ import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 @RoutingType(type = RoutingTypes.GETEDITSESSIONCOLLABORATORS)
-public interface GetEditSessionCollaborators extends ClientToServerDto
-{
-   String getEditSessionId();
+public interface GetEditSessionCollaborators extends ClientToServerDto {
+    String getEditSessionId();
 }

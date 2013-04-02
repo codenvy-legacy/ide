@@ -14,16 +14,14 @@
 
 package com.google.collide.dto;
 
-/**
- * Basic information common to files and directories.
- */
+/** Basic information common to files and directories. */
 public interface TreeNodeInfo {
-  public static final int DIR_TYPE = 0;
-  public static final int FILE_TYPE = 1;
-  
-  String getName();
-  
-  int getNodeType();
-  
-  String getFileEditSessionKey();
+    public static final int DIR_TYPE  = 0;
+    public static final int FILE_TYPE = 1;
+
+    String getName();
+
+    int getNodeType();
+
+    String getFileEditSessionKey();
 }

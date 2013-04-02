@@ -26,7 +26,7 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 @RoutingType(type = RoutingTypes.GETDEPLOYINFORMATION)
 public interface GetDeployInformation extends ClientToServerDto {
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  String getClientId();
+    String getClientId();
 }

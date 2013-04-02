@@ -22,23 +22,18 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 /**
  * Message sent to clients to indicate a change in the resolution status of a
  * conflict chunk in a text file.
- *
  */
 @RoutingType(type = RoutingTypes.CONFLICTCHUNKRESOLVED)
 public interface ConflictChunkResolved extends ServerToClientDto {
 
-  String getFileEditSessionKey();
+    String getFileEditSessionKey();
 
-  /**
-   * Array index of the conflict chunk within the file.
-   */
-  int getConflictChunkIndex();
+    /** Array index of the conflict chunk within the file. */
+    int getConflictChunkIndex();
 
-  /**
-   * Whether the conflict chunk is now resolved.
-   */
-  boolean isResolved();
+    /** Whether the conflict chunk is now resolved. */
+    boolean isResolved();
 
-  /** An opaque handle identifying an out of date conflict */
-  ConflictHandle getConflictHandle();
+    /** An opaque handle identifying an out of date conflict */
+    ConflictHandle getConflictHandle();
 }

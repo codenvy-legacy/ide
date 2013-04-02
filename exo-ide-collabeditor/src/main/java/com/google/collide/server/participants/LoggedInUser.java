@@ -19,28 +19,24 @@
 package com.google.collide.server.participants;
 
 /** A logged in user. */
-public final class LoggedInUser
-{
-   private final String name;
-   /**
-    * Unique user identifier. Even if the same user (with the same username) logged in from different browser this id
-    * must be unique for each user.
-    */
-   private final String id;
+public final class LoggedInUser {
+    private final String name;
+    /**
+     * Unique user identifier. Even if the same user (with the same username) logged in from different browser this id
+     * must be unique for each user.
+     */
+    private final String id;
 
-   public LoggedInUser(String name, String id)
-   {
-      this.name = name;
-      this.id = id;
-   }
+    public LoggedInUser(String name, String id) {
+        this.name = name;
+        this.id = id;
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public String getId()
-   {
-      return id;
-   }
+    public String getId() {
+        return id;
+    }
 }

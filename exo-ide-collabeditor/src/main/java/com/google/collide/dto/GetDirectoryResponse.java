@@ -23,19 +23,15 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  */
 @RoutingType(type = RoutingTypes.GETDIRECTORYRESPONSE)
 public interface GetDirectoryResponse extends ServerToClientDto {
-  /**
-   * The path of the base directory. If it refers to the workspace root then it
-   * will be "/".
-   */
-  String getPath();
+    /**
+     * The path of the base directory. If it refers to the workspace root then it
+     * will be "/".
+     */
+    String getPath();
 
-  /**
-   * The tree of files and directories.
-   */
-  DirInfo getBaseDirectory();
+    /** The tree of files and directories. */
+    DirInfo getBaseDirectory();
 
-  /**
-   * The tree's version number.
-   */
-  String getRootId();
+    /** The tree's version number. */
+    String getRootId();
 }

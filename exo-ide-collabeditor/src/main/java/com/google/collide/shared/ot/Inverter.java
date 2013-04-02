@@ -24,35 +24,32 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * Inverts document operations such that A composed with the inverse of A is an
  * identity document operation.
- *
  */
 public class Inverter {
 
-  /**
-   * Inverts the given document operation.
-   */
-  public static DocOp invert(DocOpFactory factory, DocOp docOp) {
-    DocOp invertedDocOp = factory.createDocOp();
-    JsonArray<DocOpComponent> invertedDocOpComponents = invertedDocOp.getComponents();
+    /** Inverts the given document operation. */
+    public static DocOp invert(DocOpFactory factory, DocOp docOp) {
+        DocOp invertedDocOp = factory.createDocOp();
+        JsonArray<DocOpComponent> invertedDocOpComponents = invertedDocOp.getComponents();
 
-    JsonArray<DocOpComponent> components = docOp.getComponents();
-    for (int i = 0, n = components.size(); i < n; i++) {
-      invertedDocOpComponents.add(invertComponent(factory, components.get(i)));
+        JsonArray<DocOpComponent> components = docOp.getComponents();
+        for (int i = 0, n = components.size(); i < n; i++) {
+            invertedDocOpComponents.add(invertComponent(factory, components.get(i)));
+        }
+
+        return invertedDocOp;
     }
 
-    return invertedDocOp;
-  }
+    private static DocOpComponent invertComponent(DocOpFactory factory, DocOpComponent component) {
+        switch (component.getType()) {
+            case DocOpComponent.Type.INSERT:
+                return factory.createDelete(((Insert)component).getText());
 
-  private static DocOpComponent invertComponent(DocOpFactory factory, DocOpComponent component) {
-    switch (component.getType()) {
-      case DocOpComponent.Type.INSERT:
-        return factory.createDelete(((Insert) component).getText());
+            case DocOpComponent.Type.DELETE:
+                return factory.createInsert(((Insert)component).getText());
 
-      case DocOpComponent.Type.DELETE:
-        return factory.createInsert(((Insert) component).getText());
-
-      default:
-        return component;
+            default:
+                return component;
+        }
     }
-  }
 }

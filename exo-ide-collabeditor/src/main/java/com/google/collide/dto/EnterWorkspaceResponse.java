@@ -20,53 +20,34 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response to a client's request to enter a workspace.
- * 
- */
+/** Response to a client's request to enter a workspace. */
 @RoutingType(type = RoutingTypes.ENTERWORKSPACERESPONSE)
 public interface EnterWorkspaceResponse extends ServerToClientDto {
-  boolean isReadOnly();
+    boolean isReadOnly();
 
-  /**
-   * @return the file tree
-   */
-  GetDirectoryResponse getFileTree();
+    /** @return the file tree */
+    GetDirectoryResponse getFileTree();
 
-  /**
-   * @return the current workspace participants, including this user
-   */
-  JsonArray<ParticipantUserDetails> getParticipants();
-  
-  /**
-   * @return the version of the participants returned by {@link #getParticipants()}
-   */
-  String getParticipantsNextVersion();
+    /** @return the current workspace participants, including this user */
+    JsonArray<ParticipantUserDetails> getParticipants();
 
-  /**
-   * @return the sync state of the workspace
-   */
-  SyncState getSyncState();
+    /** @return the version of the participants returned by {@link #getParticipants()} */
+    String getParticipantsNextVersion();
 
-  /**
-   * @return the current user-specific workspace settings.
-   */
-  GetWorkspaceMetaDataResponse getUserWorkspaceMetadata();
-  
-  /**
-   * @return the keep-alive timer's interval in ms.
-   */
-  int getKeepAliveTimerIntervalMs();
+    /** @return the sync state of the workspace */
+    SyncState getSyncState();
 
-  /**
-   * @return the workspaceId of this response
-   */
-  String getWorkspaceId();
-  
-  /**
-   * @return retrieves the workspace info for this workspace
-   */
-  WorkspaceInfo getWorkspaceInfo();
+    /** @return the current user-specific workspace settings. */
+    GetWorkspaceMetaDataResponse getUserWorkspaceMetadata();
 
-  String getWorkspaceSessionHost();
+    /** @return the keep-alive timer's interval in ms. */
+    int getKeepAliveTimerIntervalMs();
+
+    /** @return the workspaceId of this response */
+    String getWorkspaceId();
+
+    /** @return retrieves the workspace info for this workspace */
+    WorkspaceInfo getWorkspaceInfo();
+
+    String getWorkspaceSessionHost();
 }

@@ -16,14 +16,12 @@ package com.google.collide.dto;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * A single search result.
- */
+/** A single search result. */
 public interface SearchResult {
 
-  JsonArray<Snippet> getSnippets();
+    JsonArray<Snippet> getSnippets();
 
-  String getTitle();
+    String getTitle();
 
-  String getUrl();
+    String getUrl();
 }

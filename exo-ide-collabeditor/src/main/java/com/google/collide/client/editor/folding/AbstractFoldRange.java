@@ -23,15 +23,12 @@ import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 
 /**
  * A base implementation of a text range that may be collapsible.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: AbstractFoldRange.java Mar 18, 2013 12:18:43 PM azatsarynnyy $
- *
  */
-public abstract class AbstractFoldRange extends Position implements IProjectionPosition
-{
-   public AbstractFoldRange(int offset, int length)
-   {
-      super(offset, length);
-   }
+public abstract class AbstractFoldRange extends Position implements IProjectionPosition {
+    public AbstractFoldRange(int offset, int length) {
+        super(offset, length);
+    }
 }

@@ -14,29 +14,26 @@
 
 package com.google.collide.client.editor.input;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
-
-import org.exoplatform.ide.json.shared.JsonStringMap;
 import com.codenvy.ide.client.util.SignalEvent;
 
-/**
- * Default implementation that executed actions placed in map.
- *
- */
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonStringMap;
+
+/** Default implementation that executed actions placed in map. */
 public class DefaultActionExecutor implements ActionExecutor {
 
-  private final JsonStringMap<Shortcut> actions = JsonCollections.createMap();
+    private final JsonStringMap<Shortcut> actions = JsonCollections.createMap();
 
-  @Override
-  public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
-    Shortcut shortcut = actions.get(actionName);
-    if (shortcut == null) {
-      return false;
+    @Override
+    public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
+        Shortcut shortcut = actions.get(actionName);
+        if (shortcut == null) {
+            return false;
+        }
+        return shortcut.event(scheme, event);
     }
-    return shortcut.event(scheme, event);
-  }
 
-  protected void addAction(String actionName, Shortcut executor) {
-    actions.put(actionName, executor);
-  }
+    protected void addAction(String actionName, Shortcut executor) {
+        actions.put(actionName, executor);
+    }
 }

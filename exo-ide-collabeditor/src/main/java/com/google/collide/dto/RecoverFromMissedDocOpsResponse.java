@@ -21,18 +21,17 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * Provides the list of doc ops that have been applied on the server since some
  * revision.
- *
  */
 @RoutingType(type = RoutingTypes.RECOVERFROMMISSEDDOCOPSRESPONSE)
 public interface RecoverFromMissedDocOpsResponse extends ServerToClientDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * The applied doc ops, ordered by revision.
-   *
-   * <p>
-   * The first doc op here will be the client current's revision (as specified
-   * by {@link RecoverFromMissedDocOps#getCurrentCcRevision()}) + 1.
-   */
-  JsonArray<ServerToClientDocOp> getDocOps();
+    /**
+     * The applied doc ops, ordered by revision.
+     * <p/>
+     * <p/>
+     * The first doc op here will be the client current's revision (as specified
+     * by {@link RecoverFromMissedDocOps#getCurrentCcRevision()}) + 1.
+     */
+    JsonArray<ServerToClientDocOp> getDocOps();
 }

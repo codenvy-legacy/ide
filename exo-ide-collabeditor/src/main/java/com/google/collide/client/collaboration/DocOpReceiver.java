@@ -14,169 +14,169 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.client.util.ClientTimer;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer.Receiver;
 import com.google.collide.client.collaboration.cc.GenericOperationChannel.ReceiveOpChannel;
 import com.google.collide.client.collaboration.cc.RevisionProvider;
-import com.codenvy.ide.client.util.ClientTimer;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.ServerToClientDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
 import com.google.collide.shared.Pair;
+import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.shared.util.Reorderer;
 import org.exoplatform.ide.shared.util.Reorderer.ItemSink;
 import org.exoplatform.ide.shared.util.Reorderer.TimeoutCallback;
-import com.google.common.base.Preconditions;
-
-import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Helper to receive messages from the transport and pass it onto the local
  * concurrency control library.
- *
  */
 class DocOpReceiver implements ReceiveOpChannel<DocOp> {
 
-  private ReceiveOpChannel.Listener<DocOp> listener;
-  
-  final Receiver unorderedDocOpReceiver = new Receiver() {
-    @Override
-    public void onDocOpReceived(ServerToClientDocOpImpl message, DocOp docOp) {
-      // We just received this doc op from the wire, pass it to the reorderer
-      docOpReorderer.acceptItem(Pair.of(message, docOp), message.getAppliedCcRevision());
-    }
-  };
+    private ReceiveOpChannel.Listener<DocOp> listener;
 
-  private final ItemSink<Pair<ServerToClientDocOpImpl, DocOp>> orderedDocOpSink =
-      new ItemSink<Pair<ServerToClientDocOpImpl, DocOp>>() {
+    final Receiver unorderedDocOpReceiver = new Receiver() {
         @Override
-        public void onItem(Pair<ServerToClientDocOpImpl, DocOp> docOpPair, int version) {
-          onReceivedOrderedDocOp(docOpPair.first, docOpPair.second, false);
+        public void onDocOpReceived(ServerToClientDocOpImpl message, DocOp docOp) {
+            // We just received this doc op from the wire, pass it to the reorderer
+            docOpReorderer.acceptItem(Pair.of(message, docOp), message.getAppliedCcRevision());
         }
-      };
+    };
 
-  private Reorderer<Pair<ServerToClientDocOpImpl, DocOp>> docOpReorderer;
-  private final TimeoutCallback outOfOrderTimeoutCallback;
-  private final int outOfOrderTimeoutMs;
-  
-  private final String fileEditSessionKey;
-  /** Valid only for a partial scope of messageReceiver */
-  private String currentMessageClientId;
-  /** Valid only for a partial scope of messageReceiver */
-  private DocumentSelection currentMessageSelection;
-  private final IncomingDocOpDemultiplexer docOpDemux;
-  
-  private boolean isPaused;
-  private final JsonArray<ServerToClientDocOp> queuedOrderedServerToClientDocOps = JsonCollections
-      .createArray();
-  
-  private RevisionProvider revisionProvider;
+    private final ItemSink<Pair<ServerToClientDocOpImpl, DocOp>> orderedDocOpSink =
+            new ItemSink<Pair<ServerToClientDocOpImpl, DocOp>>() {
+                @Override
+                public void onItem(Pair<ServerToClientDocOpImpl, DocOp> docOpPair, int version) {
+                    onReceivedOrderedDocOp(docOpPair.first, docOpPair.second, false);
+                }
+            };
 
-  DocOpReceiver(IncomingDocOpDemultiplexer docOpDemux, String fileEditSessionKey,
-      TimeoutCallback outOfOrderTimeoutCallback, int outOfOrderTimeoutMs) {
-    this.docOpDemux = docOpDemux;
-    this.fileEditSessionKey = fileEditSessionKey;
-    this.outOfOrderTimeoutCallback = outOfOrderTimeoutCallback;
-    this.outOfOrderTimeoutMs = outOfOrderTimeoutMs;
-  }
+    private       Reorderer<Pair<ServerToClientDocOpImpl, DocOp>> docOpReorderer;
+    private final TimeoutCallback                                 outOfOrderTimeoutCallback;
+    private final int                                             outOfOrderTimeoutMs;
 
-  void setRevisionProvider(RevisionProvider revisionProvider) {
-    this.revisionProvider = revisionProvider;
-  }
-  
-  @Override
-  public void connect(int revision, ReceiveOpChannel.Listener<DocOp> listener) {
-    Preconditions.checkState(revisionProvider != null, "Must have set revisionProvider by now");
-    
-    this.listener = listener;
-    
-    int nextExpectedVersion = revision + 1;
-    this.docOpReorderer = Reorderer.create(
-        nextExpectedVersion, orderedDocOpSink, outOfOrderTimeoutMs, outOfOrderTimeoutCallback,
-        ClientTimer.FACTORY);
-    docOpDemux.setReceiver(fileEditSessionKey, unorderedDocOpReceiver);
-  }
+    private final String                     fileEditSessionKey;
+    /** Valid only for a partial scope of messageReceiver */
+    private       String                     currentMessageClientId;
+    /** Valid only for a partial scope of messageReceiver */
+    private       DocumentSelection          currentMessageSelection;
+    private final IncomingDocOpDemultiplexer docOpDemux;
 
-  @Override
-  public void disconnect() {
-    docOpDemux.setReceiver(fileEditSessionKey, null);
-  }
+    private boolean isPaused;
+    private final JsonArray<ServerToClientDocOp> queuedOrderedServerToClientDocOps = JsonCollections
+            .createArray();
 
-  /**
-   * Pauses the processing (calling back to listener) of received doc ops. While paused, any
-   * received doc ops will be stored in a queue which can be retrieved via
-   * {@link #getOrderedQueuedServerToClientDocOps()}. This queue will only contain doc ops from this
-   * point forward.
-   *
-   * <p>
-   * This method can be called multiple times without calling {@link #resume(int)}.
-   */
-  void pause() {
-    if (isPaused) {
-      return;
+    private RevisionProvider revisionProvider;
+
+    DocOpReceiver(IncomingDocOpDemultiplexer docOpDemux, String fileEditSessionKey,
+                  TimeoutCallback outOfOrderTimeoutCallback, int outOfOrderTimeoutMs) {
+        this.docOpDemux = docOpDemux;
+        this.fileEditSessionKey = fileEditSessionKey;
+        this.outOfOrderTimeoutCallback = outOfOrderTimeoutCallback;
+        this.outOfOrderTimeoutMs = outOfOrderTimeoutMs;
     }
-    
-    isPaused = true;
-    docOpReorderer.setTimeoutEnabled(false);
-    
-    // Clear queue so it will contain only doc ops after this pause
-    queuedOrderedServerToClientDocOps.clear();
-  }
-  
-  JsonArray<ServerToClientDocOp> getOrderedQueuedServerToClientDocOps() {
-    return queuedOrderedServerToClientDocOps;
-  }
 
-  /**
-   * Resumes the processing of received doc ops.
-   * 
-   * <p>
-   * While this was paused, doc ops were accumulated in the queue
-   * {@link #getOrderedQueuedServerToClientDocOps()}. Those will not be processed
-   * automatically.
-   * 
-   * <p>
-   * This method cannot be called when already resumed.
-   */
-  void resume(int nextExpectedVersion) {
-    Preconditions.checkState(isPaused, "Cannot resume if already resumed");
-    
-    isPaused = false;
-    docOpReorderer.setTimeoutEnabled(true);
-    docOpReorderer.skipToVersion(nextExpectedVersion);
-  }
-  
-  String getClientId() {
-    return currentMessageClientId;
-  }
+    void setRevisionProvider(RevisionProvider revisionProvider) {
+        this.revisionProvider = revisionProvider;
+    }
 
-  DocumentSelection getSelection() {
-    return currentMessageSelection;
-  }
-  
-  /**
-   * @param bypassPaused whether to process the doc op immediately even if
-   *        {@link #pause()} has been called
-   */
-  void simulateOrderedDocOpReceived(ServerToClientDocOpImpl message, boolean bypassPaused) {
-    DocOp docOp = message.getDocOp2();    
-    onReceivedOrderedDocOp(message, docOp, bypassPaused);
-  }
-  
-  private void onReceivedOrderedDocOp(
-      ServerToClientDocOpImpl message, DocOp docOp, boolean bypassPaused) {
-    if (isPaused && !bypassPaused) {
-      // Just queue the doc op messages instead
-      queuedOrderedServerToClientDocOps.add(message);
-      return;
+    @Override
+    public void connect(int revision, ReceiveOpChannel.Listener<DocOp> listener) {
+        Preconditions.checkState(revisionProvider != null, "Must have set revisionProvider by now");
+
+        this.listener = listener;
+
+        int nextExpectedVersion = revision + 1;
+        this.docOpReorderer = Reorderer.create(
+                nextExpectedVersion, orderedDocOpSink, outOfOrderTimeoutMs, outOfOrderTimeoutCallback,
+                ClientTimer.FACTORY);
+        docOpDemux.setReceiver(fileEditSessionKey, unorderedDocOpReceiver);
     }
-    
-    if (revisionProvider.revision() >= message.getAppliedCcRevision()) {
-      // Already seen this
-      return;
+
+    @Override
+    public void disconnect() {
+        docOpDemux.setReceiver(fileEditSessionKey, null);
     }
+
+    /**
+     * Pauses the processing (calling back to listener) of received doc ops. While paused, any
+     * received doc ops will be stored in a queue which can be retrieved via
+     * {@link #getOrderedQueuedServerToClientDocOps()}. This queue will only contain doc ops from this
+     * point forward.
+     * <p/>
+     * <p/>
+     * This method can be called multiple times without calling {@link #resume(int)}.
+     */
+    void pause() {
+        if (isPaused) {
+            return;
+        }
+
+        isPaused = true;
+        docOpReorderer.setTimeoutEnabled(false);
+
+        // Clear queue so it will contain only doc ops after this pause
+        queuedOrderedServerToClientDocOps.clear();
+    }
+
+    JsonArray<ServerToClientDocOp> getOrderedQueuedServerToClientDocOps() {
+        return queuedOrderedServerToClientDocOps;
+    }
+
+    /**
+     * Resumes the processing of received doc ops.
+     * <p/>
+     * <p/>
+     * While this was paused, doc ops were accumulated in the queue
+     * {@link #getOrderedQueuedServerToClientDocOps()}. Those will not be processed
+     * automatically.
+     * <p/>
+     * <p/>
+     * This method cannot be called when already resumed.
+     */
+    void resume(int nextExpectedVersion) {
+        Preconditions.checkState(isPaused, "Cannot resume if already resumed");
+
+        isPaused = false;
+        docOpReorderer.setTimeoutEnabled(true);
+        docOpReorderer.skipToVersion(nextExpectedVersion);
+    }
+
+    String getClientId() {
+        return currentMessageClientId;
+    }
+
+    DocumentSelection getSelection() {
+        return currentMessageSelection;
+    }
+
+    /**
+     * @param bypassPaused
+     *         whether to process the doc op immediately even if
+     *         {@link #pause()} has been called
+     */
+    void simulateOrderedDocOpReceived(ServerToClientDocOpImpl message, boolean bypassPaused) {
+        DocOp docOp = message.getDocOp2();
+        onReceivedOrderedDocOp(message, docOp, bypassPaused);
+    }
+
+    private void onReceivedOrderedDocOp(
+            ServerToClientDocOpImpl message, DocOp docOp, boolean bypassPaused) {
+        if (isPaused && !bypassPaused) {
+            // Just queue the doc op messages instead
+            queuedOrderedServerToClientDocOps.add(message);
+            return;
+        }
+
+        if (revisionProvider.revision() >= message.getAppliedCcRevision()) {
+            // Already seen this
+            return;
+        }
             
     /*
      * Later in the stack, we need this valuable information for rendering the
@@ -191,16 +191,16 @@ class DocOpReceiver implements ReceiveOpChannel<DocOp> {
      * also remove this workaround and make position transformation a
      * first-class feature inside the forked CC library.
      */
-    currentMessageClientId = message.getClientId();
-    currentMessageSelection = message.getSelection();
+        currentMessageClientId = message.getClientId();
+        currentMessageSelection = message.getSelection();
 
-    try {
-      listener.onMessage(message.getAppliedCcRevision(), message.getClientId(), docOp);
-    } catch (Throwable t) {
-      Log.error(getClass(), "Could not handle received doc op", t);
+        try {
+            listener.onMessage(message.getAppliedCcRevision(), message.getClientId(), docOp);
+        } catch (Throwable t) {
+            Log.error(getClass(), "Could not handle received doc op", t);
+        }
+
+        currentMessageClientId = null;
+        currentMessageSelection = null;
     }
-
-    currentMessageClientId = null;
-    currentMessageSelection = null;
-  }
 }

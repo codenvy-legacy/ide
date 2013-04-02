@@ -17,13 +17,10 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * DTO in response to resolving a tree conflict.
- * 
- */
+/** DTO in response to resolving a tree conflict. */
 @RoutingType(type = RoutingTypes.RESOLVETREECONFLICTRESPONSE)
 public interface ResolveTreeConflictResponse extends ServerToClientDto {
 
-  String getRefreshPath();
+    String getRefreshPath();
 
 }

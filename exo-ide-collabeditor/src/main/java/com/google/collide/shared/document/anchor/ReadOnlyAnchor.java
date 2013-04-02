@@ -16,58 +16,51 @@ package com.google.collide.shared.document.anchor;
 
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
+
 import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
-/**
- * A read-only interface to {@link Anchor}.
- */
+/** A read-only interface to {@link Anchor}. */
 public interface ReadOnlyAnchor {
 
-  /**
-   * @see Anchor.ShiftListener
-   */
-  public interface ShiftListener extends Anchor.ShiftListenerImpl<ReadOnlyAnchor> {
-  }
-  
-  /**
-   * @see Anchor.MoveListener
-   */
-  public interface MoveListener extends Anchor.MoveListenerImpl<ReadOnlyAnchor> {
-  }
-  
-  /**
-   * @see Anchor.RemoveListener
-   */
-  public interface RemoveListener extends Anchor.RemoveListenerImpl<ReadOnlyAnchor> {
-  }
-  
-  int getColumn();
-  
-  int getId();
+    /** @see Anchor.ShiftListener */
+    public interface ShiftListener extends Anchor.ShiftListenerImpl<ReadOnlyAnchor> {
+    }
 
-  <T> T getValue();
-  
-  AnchorType getType();
-  
-  Line getLine();
-  
-  int getLineNumber();
-  
-  boolean isLineAnchor();
-  
-  RemovalStrategy getRemovalStrategy();
-  
-  boolean hasLineNumber();
-  
-  boolean isAttached();
-  
-  InsertionPlacementStrategy getInsertionPlacementStrategy();
-  
-  ListenerRegistrar<ShiftListener> getReadOnlyShiftListenerRegistrar();
-  
-  ListenerRegistrar<MoveListener> getReadOnlyMoveListenerRegistrar();
-  
-  ListenerRegistrar<RemoveListener> getReadOnlyRemoveListenerRegistrar();
+    /** @see Anchor.MoveListener */
+    public interface MoveListener extends Anchor.MoveListenerImpl<ReadOnlyAnchor> {
+    }
 
-  boolean hasColumn();
+    /** @see Anchor.RemoveListener */
+    public interface RemoveListener extends Anchor.RemoveListenerImpl<ReadOnlyAnchor> {
+    }
+
+    int getColumn();
+
+    int getId();
+
+    <T> T getValue();
+
+    AnchorType getType();
+
+    Line getLine();
+
+    int getLineNumber();
+
+    boolean isLineAnchor();
+
+    RemovalStrategy getRemovalStrategy();
+
+    boolean hasLineNumber();
+
+    boolean isAttached();
+
+    InsertionPlacementStrategy getInsertionPlacementStrategy();
+
+    ListenerRegistrar<ShiftListener> getReadOnlyShiftListenerRegistrar();
+
+    ListenerRegistrar<MoveListener> getReadOnlyMoveListenerRegistrar();
+
+    ListenerRegistrar<RemoveListener> getReadOnlyRemoveListenerRegistrar();
+
+    boolean hasColumn();
 }

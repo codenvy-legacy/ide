@@ -20,21 +20,21 @@ import org.exoplatform.ide.dtogen.server.JsonSerializable;
 
 /** Utility for wrapping and unwrapping serialized Dtos. */
 public class Dto {
-   public static String get(JsonValue message) {
-     JsonValue jsonDto = message.getElement("dto");
-     if (jsonDto == null) {
-       throw new IllegalArgumentException("Missing dto field in message. ");
-     }
-     return jsonDto.getStringValue();
-   }
+    public static String get(JsonValue message) {
+        JsonValue jsonDto = message.getElement("dto");
+        if (jsonDto == null) {
+            throw new IllegalArgumentException("Missing dto field in message. ");
+        }
+        return jsonDto.getStringValue();
+    }
 
-  public static <T extends JsonSerializable> JsonValue wrap(T dto) {
-    return wrap(dto.toJson());
-  }
+    public static <T extends JsonSerializable> JsonValue wrap(T dto) {
+        return wrap(dto.toJson());
+    }
 
-  public static JsonValue wrap(String serializedDto) {
-    ObjectValue result = new ObjectValue();
-    result.addElement("dto", new org.everrest.core.impl.provider.json.StringValue(serializedDto));
-    return result;
-  }
+    public static JsonValue wrap(String serializedDto) {
+        ObjectValue result = new ObjectValue();
+        result.addElement("dto", new org.everrest.core.impl.provider.json.StringValue(serializedDto));
+        return result;
+    }
 }

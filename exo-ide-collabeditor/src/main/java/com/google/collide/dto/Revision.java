@@ -20,34 +20,32 @@ package com.google.collide.dto;
  * fetch the file contents at that revision.
  */
 public interface Revision {
-  public enum RevisionType {
-    BRANCH,
+    public enum RevisionType {
+        BRANCH,
+        /** SYNC_SOURCE contains the content from parent. */
+        SYNC_SOURCE,
+        /**
+         * SYNC_MERGED contains the merged content from parent and local. It may
+         * have conflicts.
+         */
+        SYNC_MERGED, AUTO_SAVE, DELETE, MOVE, COPY;
+    }
+
+    String getTimestamp();
+
+    String getNodeId();
+
+    String getRootId();
+
+    RevisionType getRevisionType();
+
+    boolean getHasUnresolvedConflicts();
+
+    boolean getIsFinalResolution();
+
     /**
-     * SYNC_SOURCE contains the content from parent.
+     * Get the number of nodes skipped between previous node and this node.-1
+     * means UNKNOWN number of skipped nodes.
      */
-    SYNC_SOURCE,
-    /**
-     * SYNC_MERGED contains the merged content from parent and local. It may
-     * have conflicts.
-     */
-    SYNC_MERGED, AUTO_SAVE, DELETE, MOVE, COPY;
-  }
-
-  String getTimestamp();
-
-  String getNodeId();
-
-  String getRootId();
-
-  RevisionType getRevisionType();
-
-  boolean getHasUnresolvedConflicts();
-
-  boolean getIsFinalResolution(); 
-
-  /**
-   * Get the number of nodes skipped between previous node and this node.-1
-   * means UNKNOWN number of skipped nodes.
-   */
-  int getPreviousNodesSkipped();
+    int getPreviousNodesSkipped();
 }

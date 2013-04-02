@@ -19,14 +19,15 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * Factory that produces mode-specific {@link Token}s.
  *
- * @param <T> specific state type
+ * @param <T>
+ *         specific state type
  */
 public interface TokenFactory<T extends State> {
 
-  /**
-   * Creates tokens based on parser, mode and parse results, and appends them to
-   * tokens array.
-   */
-  void push(String stylePrefix, T state, String tokenType, String tokenValue,
-      JsonArray<Token> tokens);
+    /**
+     * Creates tokens based on parser, mode and parse results, and appends them to
+     * tokens array.
+     */
+    void push(String stylePrefix, T state, String tokenType, String tokenValue,
+              JsonArray<Token> tokens);
 }

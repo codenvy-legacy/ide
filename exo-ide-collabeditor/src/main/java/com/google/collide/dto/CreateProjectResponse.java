@@ -22,5 +22,5 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 @RoutingType(type = RoutingTypes.CREATEPROJECTRESPONSE)
 public interface CreateProjectResponse extends ServerToClientDto {
 
-  ProjectInfo getProject();
+    ProjectInfo getProject();
 }

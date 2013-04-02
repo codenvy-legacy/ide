@@ -15,16 +15,13 @@ package com.google.collide.codemirror2;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Object that represents css-parser state.
- *
- */
+/** Object that represents css-parser state. */
 public class CssState extends CmState {
 
-  protected CssState() {
-  }
+    protected CssState() {
+    }
 
-  final native JsonArray<String> getStack() /*-{
-    return this.stack;
-  }-*/;
+    final native JsonArray<String> getStack() /*-{
+        return this.stack;
+    }-*/;
 }

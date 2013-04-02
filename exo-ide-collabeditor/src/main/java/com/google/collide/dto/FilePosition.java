@@ -13,28 +13,17 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
-import org.exoplatform.ide.dtogen.shared.CompactJsonDto;
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.SerializationIndex;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.dtogen.shared.*;
 
-/**
- * Represents character position in a single file.
- * 
- */
+/** Represents character position in a single file. */
 @RoutingType(type = RoutingTypes.FILEPOSITION)
 public interface FilePosition extends ClientToServerDto, ServerToClientDto, CompactJsonDto {
 
-  /**
-   * @return line number starting from 0
-   */
-  @SerializationIndex(1)
-  int getLineNumber();
+    /** @return line number starting from 0 */
+    @SerializationIndex(1)
+    int getLineNumber();
 
-  /**
-   * @return column number starting from 0
-   */
-  @SerializationIndex(2)
-  int getColumn();
+    /** @return column number starting from 0 */
+    @SerializationIndex(2)
+    int getColumn();
 }

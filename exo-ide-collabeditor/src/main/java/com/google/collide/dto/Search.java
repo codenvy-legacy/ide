@@ -17,15 +17,12 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request for search results within a given Workspace ID.
- *
- */
+/** Request for search results within a given Workspace ID. */
 @RoutingType(type = RoutingTypes.SEARCH)
 public interface Search extends ClientToServerDto {
-  int getPage();
-  
-  String getQuery();
+    int getPage();
 
-  String getWorkspaceId();
+    String getQuery();
+
+    String getWorkspaceId();
 }

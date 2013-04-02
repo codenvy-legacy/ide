@@ -23,7 +23,6 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
 @RoutingType(type = RoutingTypes.GETEDITSESSIONCOLLABORATORSRESPONSE)
-public interface GetEditSessionCollaboratorsResponse extends ServerToClientDto
-{
-   JsonArray<ParticipantUserDetails> getParticipants();
+public interface GetEditSessionCollaboratorsResponse extends ServerToClientDto {
+    JsonArray<ParticipantUserDetails> getParticipants();
 }

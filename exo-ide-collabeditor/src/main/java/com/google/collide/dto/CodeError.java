@@ -13,29 +13,18 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-/**
- * Information about one coding error (syntax, bad reference, etc.).
- *
- */
+/** Information about one coding error (syntax, bad reference, etc.). */
 public interface CodeError {
 
-  /**
-   * @return compiler message for this error
-   */
-  String getMessage();
+    /** @return compiler message for this error */
+    String getMessage();
 
-  /**
-   * @return file position where this error starts
-   */
-  FilePosition getErrorStart();
+    /** @return file position where this error starts */
+    FilePosition getErrorStart();
 
-  /**
-   * @return file position where this error ends (inclusive)
-   */
-  FilePosition getErrorEnd();
-  
-  /**
-   * @return true if this error and false if warning
-   */
-  boolean isError();
+    /** @return file position where this error ends (inclusive) */
+    FilePosition getErrorEnd();
+
+    /** @return true if this error and false if warning */
+    boolean isError();
 }

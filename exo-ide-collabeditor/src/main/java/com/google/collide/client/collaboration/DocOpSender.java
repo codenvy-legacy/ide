@@ -23,8 +23,6 @@ import com.google.collide.dto.ServerToClientDocOps;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.DocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
@@ -32,107 +30,108 @@ import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.client.Jso;
 import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import java.util.List;
 
 /**
  * Helper to take outgoing doc ops from the local concurrency control library
  * and send them to the server.
- *
  */
 class DocOpSender implements SendOpService<DocOp>, LastClientToServerDocOpProvider {
 
-  private final ListenerManager<DocOpListener> docOpListenerManager;  
-  private final int documentId;
-  private final String fileEditSessionKey;
-  private final FrontendApi frontendApi;
-  private final IncomingDocOpDemultiplexer docOpDemux;
-  
-  private ClientToServerDocOpCreationParticipant clientToServerDocOpCreationParticipant;
-  private ClientToServerDocOpImpl lastClientToServerDocOpMsg;
-  private final DocOpRecoveryInitiator docOpRecoveryInitiator;
+    private final ListenerManager<DocOpListener> docOpListenerManager;
+    private final int                            documentId;
+    private final String                         fileEditSessionKey;
+    private final FrontendApi                    frontendApi;
+    private final IncomingDocOpDemultiplexer     docOpDemux;
 
-  public DocOpSender(FrontendApi frontendApi,
-      IncomingDocOpDemultiplexer docOpDemux,
-      String fileEditSessionKey,
-      int documentId,
-      ListenerManager<DocOpListener> docOpListenerManager,
-      DocOpRecoveryInitiator docOpRecoveryInitiator) {
-    this.frontendApi = frontendApi;
-    this.docOpDemux = docOpDemux;
-    this.fileEditSessionKey = fileEditSessionKey;
-    this.documentId = documentId;
-    this.docOpListenerManager = docOpListenerManager;
-    this.docOpRecoveryInitiator = docOpRecoveryInitiator;
-  }
+    private       ClientToServerDocOpCreationParticipant clientToServerDocOpCreationParticipant;
+    private       ClientToServerDocOpImpl                lastClientToServerDocOpMsg;
+    private final DocOpRecoveryInitiator                 docOpRecoveryInitiator;
 
-  @Override
-  public void callbackNotNeeded(SendOpService.Callback callback) {
-  }
+    public DocOpSender(FrontendApi frontendApi,
+                       IncomingDocOpDemultiplexer docOpDemux,
+                       String fileEditSessionKey,
+                       int documentId,
+                       ListenerManager<DocOpListener> docOpListenerManager,
+                       DocOpRecoveryInitiator docOpRecoveryInitiator) {
+        this.frontendApi = frontendApi;
+        this.docOpDemux = docOpDemux;
+        this.fileEditSessionKey = fileEditSessionKey;
+        this.documentId = documentId;
+        this.docOpListenerManager = docOpListenerManager;
+        this.docOpRecoveryInitiator = docOpRecoveryInitiator;
+    }
 
-  @Override
-  public void requestRevision(SendOpService.Callback callback) {
+    @Override
+    public void callbackNotNeeded(SendOpService.Callback callback) {
+    }
+
+    @Override
+    public void requestRevision(SendOpService.Callback callback) {
     /*
      * TODO: get revision from server, but for now this is never
      * called since we are not handling connection errors fully
      */
-    assert false;
-  }
+        assert false;
+    }
 
-  @Override
-  public void submitOperations(
-      int revision, final List<DocOp> operations, final SendOpService.Callback callback) {
-    try {
+    @Override
+    public void submitOperations(
+            int revision, final List<DocOp> operations, final SendOpService.Callback callback) {
+        try {
       /*
        * Copy the operations into the list.
        * TODO: Consider making the client code maintain this list as a native collection.
        */
-      JsoArray<String> docOps = JsoArray.create();
-      for (int i = 0, n = operations.size(); i < n; i++) {
-        docOps.add(Jso.serialize((DocOpImpl) operations.get(i)));
-      }
-      ClientToServerDocOpImpl message = ClientToServerDocOpImpl
-          .make()
-          .setFileEditSessionKey(fileEditSessionKey)
-          .setCcRevision(revision)
-          .setClientId(BootstrapSession.getBootstrapSession().getActiveClientId())
-          .setDocOps2(docOps);
+            JsoArray<String> docOps = JsoArray.create();
+            for (int i = 0, n = operations.size(); i < n; i++) {
+                docOps.add(Jso.serialize((DocOpImpl)operations.get(i)));
+            }
+            ClientToServerDocOpImpl message = ClientToServerDocOpImpl
+                    .make()
+                    .setFileEditSessionKey(fileEditSessionKey)
+                    .setCcRevision(revision)
+                    .setClientId(BootstrapSession.getBootstrapSession().getActiveClientId())
+                    .setDocOps2(docOps);
 
-      if (clientToServerDocOpCreationParticipant != null) {
-        clientToServerDocOpCreationParticipant.onCreateClientToServerDocOp(message);
-      }
+            if (clientToServerDocOpCreationParticipant != null) {
+                clientToServerDocOpCreationParticipant.onCreateClientToServerDocOp(message);
+            }
 
-      frontendApi.MUTATE_FILE.send(message, new ApiCallback<ServerToClientDocOps>() {
-        @Override
-        public void onFail(FailureReason reason) {
-          if (reason == FailureReason.MISSING_WORKSPACE_SESSION) {
-            docOpRecoveryInitiator.teardown();
-          } else {
-            docOpRecoveryInitiator.recover();
-          }
-        }
+            frontendApi.MUTATE_FILE.send(message, new ApiCallback<ServerToClientDocOps>() {
+                @Override
+                public void onFail(FailureReason reason) {
+                    if (reason == FailureReason.MISSING_WORKSPACE_SESSION) {
+                        docOpRecoveryInitiator.teardown();
+                    } else {
+                        docOpRecoveryInitiator.recover();
+                    }
+                }
 
-        @Override
-        public void onMessageReceived(ServerToClientDocOps message) {
-          for (int i = 0; i < message.getDocOps().size(); i++) {
-            docOpDemux.handleServerToClientDocOpMsg(
-                (ServerToClientDocOpImpl) message.getDocOps().get(i));
-          }
-        }        
-      });
-      
-      lastClientToServerDocOpMsg = message;
+                @Override
+                public void onMessageReceived(ServerToClientDocOps message) {
+                    for (int i = 0; i < message.getDocOps().size(); i++) {
+                        docOpDemux.handleServerToClientDocOpMsg(
+                                (ServerToClientDocOpImpl)message.getDocOps().get(i));
+                    }
+                }
+            });
 
-      docOpListenerManager.dispatch(new Dispatcher<DocOpListener>() {
-        @Override
-        public void dispatch(DocOpListener listener) {
-          listener.onDocOpSent(documentId, operations);
-        }
-      });
+            lastClientToServerDocOpMsg = message;
 
-      Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-        @Override
-        public void execute() {
+            docOpListenerManager.dispatch(new Dispatcher<DocOpListener>() {
+                @Override
+                public void dispatch(DocOpListener listener) {
+                    listener.onDocOpSent(documentId, operations);
+                }
+            });
+
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
           /*
            * Need to defer this since the client is not expecting a success
            * reply from within the same call stack
@@ -148,37 +147,38 @@ class DocOpSender implements SendOpService<DocOp>, LastClientToServerDocOpProvid
            * it expects, but since we give an unexpected value, it does nothing
            * with it.
            */
-          callback.onSuccess(Integer.MIN_VALUE);
+                    callback.onSuccess(Integer.MIN_VALUE);
+                }
+            });
+
+        } catch (Throwable t) {
+            callback.onFatalError(t);
         }
-      });
-
-    } catch (Throwable t) {
-      callback.onFatalError(t);
     }
-  }
 
-  void setDocOpCreationParticipant(ClientToServerDocOpCreationParticipant participant) {
-    clientToServerDocOpCreationParticipant = participant;
-  }
-
-  @Override
-  public ClientToServerDocOpImpl getLastClientToServerDocOpMsg() {
-    return lastClientToServerDocOpMsg;
-  }
-
-  /**
-   * Clears the message that would be returned by
-   * {@link #getLastClientToServerDocOpMsg()}.
-   * 
-   * @param clientToServerDocOpMsgToDelete if provided, the current message must
-   *        match the given message for it to be cleared
-   */
-  @Override
-  public void clearLastClientToServerDocOpMsg(
-      ClientToServerDocOpImpl clientToServerDocOpMsgToDelete) {
-    if (clientToServerDocOpMsgToDelete == null
-        || clientToServerDocOpMsgToDelete == lastClientToServerDocOpMsg) {
-      lastClientToServerDocOpMsg = null;
+    void setDocOpCreationParticipant(ClientToServerDocOpCreationParticipant participant) {
+        clientToServerDocOpCreationParticipant = participant;
     }
-  }
+
+    @Override
+    public ClientToServerDocOpImpl getLastClientToServerDocOpMsg() {
+        return lastClientToServerDocOpMsg;
+    }
+
+    /**
+     * Clears the message that would be returned by
+     * {@link #getLastClientToServerDocOpMsg()}.
+     *
+     * @param clientToServerDocOpMsgToDelete
+     *         if provided, the current message must
+     *         match the given message for it to be cleared
+     */
+    @Override
+    public void clearLastClientToServerDocOpMsg(
+            ClientToServerDocOpImpl clientToServerDocOpMsgToDelete) {
+        if (clientToServerDocOpMsgToDelete == null
+            || clientToServerDocOpMsgToDelete == lastClientToServerDocOpMsg) {
+            lastClientToServerDocOpMsg = null;
+        }
+    }
 }

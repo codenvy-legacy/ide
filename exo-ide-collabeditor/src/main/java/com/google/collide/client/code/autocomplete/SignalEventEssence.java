@@ -13,50 +13,50 @@
 // limitations under the License.
 package com.google.collide.client.code.autocomplete;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.SignalEvent.KeySignalType;
+import com.google.common.annotations.VisibleForTesting;
 
 // TODO: Replace with CharCodeWithModifiers.
+
 /**
  * Immutable holder of essential properties of
  * {@link com.codenvy.ide.client.util.SignalEvent}
  */
 public class SignalEventEssence {
-  public final int keyCode;
-  public final boolean ctrlKey;
-  public final boolean altKey;
-  public final boolean shiftKey;
-  public final boolean metaKey;
-  public final KeySignalType type;
+    public final int           keyCode;
+    public final boolean       ctrlKey;
+    public final boolean       altKey;
+    public final boolean       shiftKey;
+    public final boolean       metaKey;
+    public final KeySignalType type;
 
-  @VisibleForTesting
-  public SignalEventEssence(int keyCode, boolean ctrlKey, boolean altKey, boolean shiftKey,
-      boolean metaKey, KeySignalType type) {
-    this.keyCode = keyCode;
-    this.ctrlKey = ctrlKey;
-    this.altKey = altKey;
-    this.shiftKey = shiftKey;
-    this.metaKey = metaKey;
-    this.type = type;
-  }
-
-  @VisibleForTesting
-  public SignalEventEssence(int keyCode) {
-    this(keyCode, false, false, false, false, KeySignalType.INPUT);
-  }
-
-  // TODO: Replace additional constructors with static methods.
-  public SignalEventEssence(SignalEvent source) {
-    this(source.getKeyCode(), source.getCtrlKey(), source.getAltKey(), source.getShiftKey(),
-        source.getMetaKey(), source.getKeySignalType());
-  }
-
-  public char getChar() {
-    if (ctrlKey || altKey || metaKey || (type != KeySignalType.INPUT)) {
-      return 0;
+    @VisibleForTesting
+    public SignalEventEssence(int keyCode, boolean ctrlKey, boolean altKey, boolean shiftKey,
+                              boolean metaKey, KeySignalType type) {
+        this.keyCode = keyCode;
+        this.ctrlKey = ctrlKey;
+        this.altKey = altKey;
+        this.shiftKey = shiftKey;
+        this.metaKey = metaKey;
+        this.type = type;
     }
-    return (char) keyCode;
-  }
+
+    @VisibleForTesting
+    public SignalEventEssence(int keyCode) {
+        this(keyCode, false, false, false, false, KeySignalType.INPUT);
+    }
+
+    // TODO: Replace additional constructors with static methods.
+    public SignalEventEssence(SignalEvent source) {
+        this(source.getKeyCode(), source.getCtrlKey(), source.getAltKey(), source.getShiftKey(),
+             source.getMetaKey(), source.getKeySignalType());
+    }
+
+    public char getChar() {
+        if (ctrlKey || altKey || metaKey || (type != KeySignalType.INPUT)) {
+            return 0;
+        }
+        return (char)keyCode;
+    }
 }

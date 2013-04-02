@@ -17,17 +17,14 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Message sent to indicate that a workspace should be archived.
- * 
- */
+/** Message sent to indicate that a workspace should be archived. */
 @RoutingType(type = RoutingTypes.SETWORKSPACEARCHIVESTATE)
 public interface SetWorkspaceArchiveState extends ClientToServerDto {
 
-  String getProjectId();
+    String getProjectId();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  boolean archive();
+    boolean archive();
 
 }

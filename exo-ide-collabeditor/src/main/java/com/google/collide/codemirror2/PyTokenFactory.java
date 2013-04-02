@@ -14,45 +14,41 @@
 
 package com.google.collide.codemirror2;
 
-import static com.google.collide.codemirror2.Token.LITERAL_PERIOD;
-
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 import org.exoplatform.ide.shared.util.StringUtils;
 
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonStringSet;
+import static com.google.collide.codemirror2.Token.LITERAL_PERIOD;
 
-/**
- * Token factory that splits some PY tokens to more canonical ones.
- *
- */
+/** Token factory that splits some PY tokens to more canonical ones. */
 class PyTokenFactory implements TokenFactory<State> {
 
-  private static final JsonStringSet KEYWORD_OPERATORS = JsonCollections.createStringSet(
-      "and", "in", "is", "not", "or");
+    private static final JsonStringSet KEYWORD_OPERATORS = JsonCollections.createStringSet(
+            "and", "in", "is", "not", "or");
 
-  @Override
-  public void push(String stylePrefix, State state, String tokenType, String tokenValue,
-      JsonArray<Token> tokens) {
-    TokenType type = TokenType.resolveTokenType(tokenType, tokenValue);
-    if (TokenType.VARIABLE == type) {
-      if (tokenValue.startsWith(LITERAL_PERIOD)) {
-        tokens.add(new Token(stylePrefix, TokenType.NULL, LITERAL_PERIOD));
-        tokenValue = tokenValue.substring(1);
-        // TODO: Also cut whitespace (after fixes in CodeMirror).
-      }
-    } else if (TokenType.OPERATOR == type) {
-      if (KEYWORD_OPERATORS.contains(tokenValue)) {
-        type = TokenType.KEYWORD;
-      }
-    } else if (TokenType.ERROR == type) {
-      // When parser finds ":" it pushes a new context and specifies indention
-      // equal to previous indention + some configured amount. If the next line
-      // indention is less than specified then whitespace is marked as ERROR.
-      if (StringUtils.isNullOrWhitespace(tokenValue)) {
-        type = TokenType.WHITESPACE;
-      }
+    @Override
+    public void push(String stylePrefix, State state, String tokenType, String tokenValue,
+                     JsonArray<Token> tokens) {
+        TokenType type = TokenType.resolveTokenType(tokenType, tokenValue);
+        if (TokenType.VARIABLE == type) {
+            if (tokenValue.startsWith(LITERAL_PERIOD)) {
+                tokens.add(new Token(stylePrefix, TokenType.NULL, LITERAL_PERIOD));
+                tokenValue = tokenValue.substring(1);
+                // TODO: Also cut whitespace (after fixes in CodeMirror).
+            }
+        } else if (TokenType.OPERATOR == type) {
+            if (KEYWORD_OPERATORS.contains(tokenValue)) {
+                type = TokenType.KEYWORD;
+            }
+        } else if (TokenType.ERROR == type) {
+            // When parser finds ":" it pushes a new context and specifies indention
+            // equal to previous indention + some configured amount. If the next line
+            // indention is less than specified then whitespace is marked as ERROR.
+            if (StringUtils.isNullOrWhitespace(tokenValue)) {
+                type = TokenType.WHITESPACE;
+            }
+        }
+        tokens.add(new Token(stylePrefix, type, tokenValue));
     }
-    tokens.add(new Token(stylePrefix, type, tokenValue));
-  }
 }

@@ -14,9 +14,7 @@
 
 package com.google.collide.dto;
 
-/**
- * DTO class for client-visible file information.
- */
-public interface FileInfo extends TreeNodeInfo {  
-  String getSize();
+/** DTO class for client-visible file information. */
+public interface FileInfo extends TreeNodeInfo {
+    String getSize();
 }

@@ -14,25 +14,26 @@
 
 package com.google.collide.client.editor;
 
+import elemental.events.Event;
+
+import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.client.util.UserAgent;
 import com.google.collide.client.common.Constants;
 import com.google.collide.shared.document.LineInfo;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.user.client.Timer;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 import org.exoplatform.ide.shared.util.ListenerManager;
 import org.exoplatform.ide.shared.util.ListenerRegistrar;
 import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.user.client.Timer;
-import elemental.events.Event;
-
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import com.codenvy.ide.client.util.SignalEvent;
-import com.codenvy.ide.client.util.UserAgent;
 
 /**
  * Manages mouse hover events, optionally when a key modifier combination is
  * pressed.
- *
+ * <p/>
  * <p>This class fires mouse hover events asynchronously, with the delay of
  * {@link Constants#MOUSE_HOVER_DELAY} milliseconds. The reason is that it is
  * quite expensive to calculate LineInfo and column number from a mouse move
@@ -40,243 +41,241 @@ import com.codenvy.ide.client.util.UserAgent;
  */
 public class MouseHoverManager {
 
-  public enum KeyModifier {
-    NONE(0),
-    SHIFT(KeyCodes.KEY_SHIFT),
-    CTRL(KeyCodes.KEY_CTRL),
-    ALT(KeyCodes.KEY_ALT),
-    META(91);
+    public enum KeyModifier {
+        NONE(0),
+        SHIFT(KeyCodes.KEY_SHIFT),
+        CTRL(KeyCodes.KEY_CTRL),
+        ALT(KeyCodes.KEY_ALT),
+        META(91);
+
+        /** @return {@link #META} key modifier for Mac OS, or {@link #CTRL} otherwise */
+        public static KeyModifier ctrlOrMeta() {
+            return UserAgent.isMac() ? KeyModifier.META : KeyModifier.CTRL;
+        }
+
+        private final int keyCode;
+
+        private KeyModifier(int keyCode) {
+            this.keyCode = keyCode;
+        }
+
+        public int getKeyCode() {
+            return keyCode;
+        }
+    }
+
+    public interface MouseHoverListener {
+        void onMouseHover(int x, int y, LineInfo lineInfo, int column);
+    }
+
+    private final Editor editor;
+    private final JsonStringMap<ListenerManager<MouseHoverListener>> listenerManagers =
+            JsonCollections.createMap();
 
     /**
-     * @return {@link #META} key modifier for Mac OS, or {@link #CTRL} otherwise
+     * Current key combination that we will dispatch the mouse hover events for.
+     * If {@code null}, no mouse hover events should be dispatched just yet.
      */
-    public static KeyModifier ctrlOrMeta() {
-      return UserAgent.isMac() ? KeyModifier.META : KeyModifier.CTRL;
-    }
+    private KeyModifier lastKeyModifier = KeyModifier.NONE;
 
-    private final int keyCode;
+    private ListenerRegistrar.Remover keyPressListenerRemover;
+    private ListenerRegistrar.Remover mouseMoveListenerRemover;
+    private ListenerRegistrar.Remover mouseOutListenerRemover;
+    private ListenerRegistrar.Remover nativeKeyUpListenerRemover;
 
-    private KeyModifier(int keyCode) {
-      this.keyCode = keyCode;
-    }
-
-    public int getKeyCode() {
-      return keyCode;
-    }
-  }
-
-  public interface MouseHoverListener {
-    void onMouseHover(int x, int y, LineInfo lineInfo, int column);
-  }
-
-  private final Editor editor;
-  private final JsonStringMap<ListenerManager<MouseHoverListener>> listenerManagers =
-      JsonCollections.createMap();
-
-  /**
-   * Current key combination that we will dispatch the mouse hover events for.
-   * If {@code null}, no mouse hover events should be dispatched just yet.
-   */
-  private KeyModifier lastKeyModifier = KeyModifier.NONE;
-
-  private ListenerRegistrar.Remover keyPressListenerRemover;
-  private ListenerRegistrar.Remover mouseMoveListenerRemover;
-  private ListenerRegistrar.Remover mouseOutListenerRemover;
-  private ListenerRegistrar.Remover nativeKeyUpListenerRemover;
-
-  private final Editor.NativeKeyUpListener keyUpListener = new Editor.NativeKeyUpListener() {
-    @Override
-    public boolean onNativeKeyUp(Event event) {
+    private final Editor.NativeKeyUpListener keyUpListener = new Editor.NativeKeyUpListener() {
+        @Override
+        public boolean onNativeKeyUp(Event event) {
       /*
        * Consider any key-up event releases the key modifier combination, to
        * avoid tricky stale states.
        */
-      releaseLastKeyModifier();
+            releaseLastKeyModifier();
 
-      // Do not interfere with the editor input.
-      return false;
-    }
-  };
-
-  private final Editor.KeyListener keyPressListener = new Editor.KeyListener() {
-    @Override
-    public boolean onKeyPress(SignalEvent signal) {
-      KeyModifier newKeyModifier = null;
-
-      JsonArray<String> modifierKeys = listenerManagers.getKeys();
-      for (int i = 0, n = modifierKeys.size(); i < n; ++i) {
-        KeyModifier keyModifier = KeyModifier.valueOf(modifierKeys.get(i));
-        if (keyModifier.getKeyCode() == signal.getKeyCode()) {
-          newKeyModifier = keyModifier;
-          break;
+            // Do not interfere with the editor input.
+            return false;
         }
-      }
-
-      if (lastKeyModifier != newKeyModifier) {
-        lastKeyModifier = newKeyModifier;
-        updateEditorListeners();
-      }
-
-      // Do not interfere with the editor input.
-      return false;
-    }
-  };
-
-  private class MouseListenersImpl extends Timer implements
-      Buffer.MouseMoveListener, Buffer.MouseOutListener {
-    private int x;
-    private int y;
-
-    @Override
-    public void run() {
-      handleOnMouseMove(x, y);
-    }
-
-    @Override
-    public void onMouseMove(int x, int y) {
-      this.x = x;
-      this.y = y;
-      schedule(Constants.MOUSE_HOVER_DELAY);
-    }
-
-    @Override
-    public void onMouseOut() {
-      // We are no longer hovering the editor's buffer.
-      cancel();
-
-      // We can not track the keyboard outside the buffer, just reset the state.
-      releaseLastKeyModifier();
-    }
-  }
-
-  private final MouseListenersImpl mouseListener = new MouseListenersImpl();
-
-  MouseHoverManager(Editor editor) {
-    this.editor = editor;
-  }
-
-  public Remover addMouseHoverListener(MouseHoverListener listener) {
-    return addMouseHoverListener(KeyModifier.NONE, listener);
-  }
-
-  public Remover addMouseHoverListener(
-      final KeyModifier keyModifier, final MouseHoverListener listener) {
-    String key = keyModifier.toString();
-    ListenerManager<MouseHoverListener> manager = listenerManagers.get(key);
-    if (manager == null) {
-      manager = ListenerManager.create();
-      listenerManagers.put(key, manager);
-    }
-
-    final Remover listenerRemover = manager.add(listener);
-    updateEditorListeners();
-
-    return new Remover() {
-      @Override
-      public void remove() {
-        removeMouseHoverListener(listenerRemover, keyModifier, listener);
-      }
     };
-  }
 
-  private void removeMouseHoverListener(
-      Remover listenerRemover, KeyModifier keyModifier, MouseHoverListener listener) {
-    String key = keyModifier.toString();
-    ListenerManager<MouseHoverListener> manager = listenerManagers.get(key);
-    if (manager == null) {
-      return;
+    private final Editor.KeyListener keyPressListener = new Editor.KeyListener() {
+        @Override
+        public boolean onKeyPress(SignalEvent signal) {
+            KeyModifier newKeyModifier = null;
+
+            JsonArray<String> modifierKeys = listenerManagers.getKeys();
+            for (int i = 0, n = modifierKeys.size(); i < n; ++i) {
+                KeyModifier keyModifier = KeyModifier.valueOf(modifierKeys.get(i));
+                if (keyModifier.getKeyCode() == signal.getKeyCode()) {
+                    newKeyModifier = keyModifier;
+                    break;
+                }
+            }
+
+            if (lastKeyModifier != newKeyModifier) {
+                lastKeyModifier = newKeyModifier;
+                updateEditorListeners();
+            }
+
+            // Do not interfere with the editor input.
+            return false;
+        }
+    };
+
+    private class MouseListenersImpl extends Timer implements
+                                                   Buffer.MouseMoveListener, Buffer.MouseOutListener {
+        private int x;
+        private int y;
+
+        @Override
+        public void run() {
+            handleOnMouseMove(x, y);
+        }
+
+        @Override
+        public void onMouseMove(int x, int y) {
+            this.x = x;
+            this.y = y;
+            schedule(Constants.MOUSE_HOVER_DELAY);
+        }
+
+        @Override
+        public void onMouseOut() {
+            // We are no longer hovering the editor's buffer.
+            cancel();
+
+            // We can not track the keyboard outside the buffer, just reset the state.
+            releaseLastKeyModifier();
+        }
     }
 
-    listenerRemover.remove();
-    if (manager.getCount() == 0) {
-      listenerManagers.remove(key);
+    private final MouseListenersImpl mouseListener = new MouseListenersImpl();
+
+    MouseHoverManager(Editor editor) {
+        this.editor = editor;
     }
 
-    updateEditorListeners();
-  }
-
-  private void releaseLastKeyModifier() {
-    if (lastKeyModifier != KeyModifier.NONE) {
-      lastKeyModifier = KeyModifier.NONE;
-      updateEditorListeners();
-    }
-  }
-
-  private void updateEditorListeners() {
-    if (listenerManagers.isEmpty()) {
-      removeAllEditorListeners();
-      return;
+    public Remover addMouseHoverListener(MouseHoverListener listener) {
+        return addMouseHoverListener(KeyModifier.NONE, listener);
     }
 
-    // Attach the performance-critical mouse move listener only if we really need it.
-    if (lastKeyModifier == null || listenerManagers.get(lastKeyModifier.toString()) == null) {
-      if (mouseMoveListenerRemover != null) {
-        mouseMoveListenerRemover.remove();
-        mouseMoveListenerRemover = null;
-      }
-    } else {
-      if (mouseMoveListenerRemover == null) {
-        mouseMoveListenerRemover =
-            editor.getBuffer().getMouseMoveListenerRegistrar().add(mouseListener);
-      }
+    public Remover addMouseHoverListener(
+            final KeyModifier keyModifier, final MouseHoverListener listener) {
+        String key = keyModifier.toString();
+        ListenerManager<MouseHoverListener> manager = listenerManagers.get(key);
+        if (manager == null) {
+            manager = ListenerManager.create();
+            listenerManagers.put(key, manager);
+        }
+
+        final Remover listenerRemover = manager.add(listener);
+        updateEditorListeners();
+
+        return new Remover() {
+            @Override
+            public void remove() {
+                removeMouseHoverListener(listenerRemover, keyModifier, listener);
+            }
+        };
     }
 
-    if (keyPressListenerRemover == null) {
-      keyPressListenerRemover = editor.getKeyListenerRegistrar().add(keyPressListener);
+    private void removeMouseHoverListener(
+            Remover listenerRemover, KeyModifier keyModifier, MouseHoverListener listener) {
+        String key = keyModifier.toString();
+        ListenerManager<MouseHoverListener> manager = listenerManagers.get(key);
+        if (manager == null) {
+            return;
+        }
+
+        listenerRemover.remove();
+        if (manager.getCount() == 0) {
+            listenerManagers.remove(key);
+        }
+
+        updateEditorListeners();
     }
-    if (nativeKeyUpListenerRemover == null) {
-      nativeKeyUpListenerRemover = editor.getNativeKeyUpListenerRegistrar().add(keyUpListener);
+
+    private void releaseLastKeyModifier() {
+        if (lastKeyModifier != KeyModifier.NONE) {
+            lastKeyModifier = KeyModifier.NONE;
+            updateEditorListeners();
+        }
     }
+
+    private void updateEditorListeners() {
+        if (listenerManagers.isEmpty()) {
+            removeAllEditorListeners();
+            return;
+        }
+
+        // Attach the performance-critical mouse move listener only if we really need it.
+        if (lastKeyModifier == null || listenerManagers.get(lastKeyModifier.toString()) == null) {
+            if (mouseMoveListenerRemover != null) {
+                mouseMoveListenerRemover.remove();
+                mouseMoveListenerRemover = null;
+            }
+        } else {
+            if (mouseMoveListenerRemover == null) {
+                mouseMoveListenerRemover =
+                        editor.getBuffer().getMouseMoveListenerRegistrar().add(mouseListener);
+            }
+        }
+
+        if (keyPressListenerRemover == null) {
+            keyPressListenerRemover = editor.getKeyListenerRegistrar().add(keyPressListener);
+        }
+        if (nativeKeyUpListenerRemover == null) {
+            nativeKeyUpListenerRemover = editor.getNativeKeyUpListenerRegistrar().add(keyUpListener);
+        }
 
     /*
      * We should always listen to these events, since we want to release the
      * last key modifier upon receiving it.
      */
-    if (mouseOutListenerRemover == null) {
-      mouseOutListenerRemover =
-          editor.getBuffer().getMouseOutListenerRegistrar().add(mouseListener);
-    }
-  }
-
-  private void removeAllEditorListeners() {
-    if (keyPressListenerRemover != null) {
-      keyPressListenerRemover.remove();
-      keyPressListenerRemover = null;
-    }
-    if (mouseMoveListenerRemover != null) {
-      mouseMoveListenerRemover.remove();
-      mouseMoveListenerRemover = null;
-    }
-    if (mouseOutListenerRemover != null) {
-      mouseOutListenerRemover.remove();
-      mouseOutListenerRemover = null;
-    }
-    if (nativeKeyUpListenerRemover != null) {
-      nativeKeyUpListenerRemover.remove();
-      nativeKeyUpListenerRemover = null;
-    }
-  }
-
-  private void handleOnMouseMove(final int x, final int y) {
-    if (lastKeyModifier == null || editor.getDocument() == null) {
-      return;
+        if (mouseOutListenerRemover == null) {
+            mouseOutListenerRemover =
+                    editor.getBuffer().getMouseOutListenerRegistrar().add(mouseListener);
+        }
     }
 
-    String key = lastKeyModifier.toString();
-    ListenerManager<MouseHoverListener> manager = listenerManagers.get(key);
-    if (manager == null) {
-      return;
+    private void removeAllEditorListeners() {
+        if (keyPressListenerRemover != null) {
+            keyPressListenerRemover.remove();
+            keyPressListenerRemover = null;
+        }
+        if (mouseMoveListenerRemover != null) {
+            mouseMoveListenerRemover.remove();
+            mouseMoveListenerRemover = null;
+        }
+        if (mouseOutListenerRemover != null) {
+            mouseOutListenerRemover.remove();
+            mouseOutListenerRemover = null;
+        }
+        if (nativeKeyUpListenerRemover != null) {
+            nativeKeyUpListenerRemover.remove();
+            nativeKeyUpListenerRemover = null;
+        }
     }
 
-    int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);
-    final LineInfo lineInfo = editor.getDocument().getLineFinder().findLine(lineNumber);
-    final int column = editor.getBuffer().convertXToRoundedVisibleColumn(x, lineInfo.line());
+    private void handleOnMouseMove(final int x, final int y) {
+        if (lastKeyModifier == null || editor.getDocument() == null) {
+            return;
+        }
 
-    manager.dispatch(new ListenerManager.Dispatcher<MouseHoverListener>() {
-      @Override
-      public void dispatch(MouseHoverListener listener) {
-        listener.onMouseHover(x, y, lineInfo, column);
-      }
-    });
-  }
+        String key = lastKeyModifier.toString();
+        ListenerManager<MouseHoverListener> manager = listenerManagers.get(key);
+        if (manager == null) {
+            return;
+        }
+
+        int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);
+        final LineInfo lineInfo = editor.getDocument().getLineFinder().findLine(lineNumber);
+        final int column = editor.getBuffer().convertXToRoundedVisibleColumn(x, lineInfo.line());
+
+        manager.dispatch(new ListenerManager.Dispatcher<MouseHoverListener>() {
+            @Override
+            public void dispatch(MouseHoverListener listener) {
+                listener.onMouseHover(x, y, lineInfo, column);
+            }
+        });
+    }
 }

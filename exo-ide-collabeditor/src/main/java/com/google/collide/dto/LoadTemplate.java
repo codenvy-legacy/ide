@@ -17,17 +17,14 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Load a template into a workspace.
- * 
- */
+/** Load a template into a workspace. */
 @RoutingType(type = RoutingTypes.LOADTEMPLATE)
 public interface LoadTemplate extends ClientToServerDto {
 
-  public String getProjectId();
+    public String getProjectId();
 
-  public String getWorkspaceId();
+    public String getWorkspaceId();
 
-  public String getTemplateTag();
+    public String getTemplateTag();
 
 }

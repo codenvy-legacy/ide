@@ -16,17 +16,11 @@ package com.google.collide.client.status;
 
 import elemental.html.SpanElement;
 
-/**
- * An action can be used to make a message interactive.
- */
+/** An action can be used to make a message interactive. */
 public interface StatusAction {
-  /**
-   * Called when the user initiates the action.
-   */
-  void onAction();
+    /** Called when the user initiates the action. */
+    void onAction();
 
-  /**
-   * Render the DOM for the action.
-   */
-  void renderAction(SpanElement actionContainer);
+    /** Render the DOM for the action. */
+    void renderAction(SpanElement actionContainer);
 }

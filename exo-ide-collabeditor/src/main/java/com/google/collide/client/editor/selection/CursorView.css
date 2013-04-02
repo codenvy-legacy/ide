@@ -1,39 +1,39 @@
 .root {
-   /* TODO: other stuff like name tags */
-   cursor: text;
-   position: absolute;
+    /* TODO: other stuff like name tags */
+    cursor: text;
+    position: absolute;
 }
 
 .caret {
-   height: editorLineHeight;
-   position: absolute;
-   width: 2px;
+    height: editorLineHeight;
+    position: absolute;
+    width: 2px;
 }
 
 .caret.block {
-   width: 8px;
-   opacity: 0.4;
+    width: 8px;
+    opacity: 0.4;
 }
 
-.top{
-   position: absolute;
-   width: 6px;
-   left: -2px;
-   top: -4px;
-   height: 6px;
-   font-size: 0;
-   z-index: -1;
+.top {
+    position: absolute;
+    width: 6px;
+    left: -2px;
+    top: -4px;
+    height: 6px;
+    font-size: 0;
+    z-index: -1;
 }
 
 .name {
-   position: absolute;
-   color: white;
-   top: -13px;
-   left: -2px;
-   padding: 2px;
-   white-space: nowrap;
-   font: normal 10px arial,sans-serif;
-   cursor: text;
-   border-radius: 2px;
+    position: absolute;
+    color: white;
+    top: -13px;
+    left: -2px;
+    padding: 2px;
+    white-space: nowrap;
+    font: normal 10px arial, sans-serif;
+    cursor: text;
+    border-radius: 2px;
 }
 

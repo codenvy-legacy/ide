@@ -19,61 +19,50 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
-/**
- * Wraps the CodeMirror2 syntax parser modes.
- *
- */
+/** Wraps the CodeMirror2 syntax parser modes. */
 public class CodeMirror2 {
 
-  /**
-   * External parser javascript source.
-   */
-  public interface Resources extends ClientBundle {
-    @Source("codemirror2_parsers.js")
-    TextResource parser();
+    /** External parser javascript source. */
+    public interface Resources extends ClientBundle {
+        @Source("codemirror2_parsers.js")
+        TextResource parser();
 
-    @Source("codemirror2_base.js")
-    TextResource base();
-  }
-
-  public static String getJs() {
-     Resources resources = GWT.create(Resources.class);
-    return resources.base().getText() + resources.parser().getText();
-  }
-
-  public static Parser getParser(String mimeType) {
-    SyntaxType type = SyntaxType.syntaxTypeByMimeType(mimeType);
-    CmParser parser = getParserForMime(type.getMimeType());
-    Preconditions.checkNotNull(parser);
-    parser.setType(type);
-
-    // TODO: testing no smart indentation to see how it feels
-    parser.setPreventSmartIndent(type != SyntaxType.PY);
-    return parser;
-  }
-
-  private static native CmParser getParserForMime(String mime) /*-{
-    conf = $wnd.CodeMirror.defaults;
-    if (mime == "text/x-python") {
-      conf["mode"] = {
-        version : 2
-      };
+        @Source("codemirror2_base.js")
+        TextResource base();
     }
-    return $wnd.CodeMirror.getMode(conf, mime);
-  }-*/;
 
-  /**
-   * Mode constant: JavaScript.
-   */
-  public static final String JAVASCRIPT = "javascript";
+    public static String getJs() {
+        Resources resources = GWT.create(Resources.class);
+        return resources.base().getText() + resources.parser().getText();
+    }
 
-  /**
-   * Mode constant: HTML.
-   */
-  public static final String HTML = "html";
+    public static Parser getParser(String mimeType) {
+        SyntaxType type = SyntaxType.syntaxTypeByMimeType(mimeType);
+        CmParser parser = getParserForMime(type.getMimeType());
+        Preconditions.checkNotNull(parser);
+        parser.setType(type);
 
-  /**
-   * Mode constant: CSS.
-   */
-  public static final String CSS = "css";
+        // TODO: testing no smart indentation to see how it feels
+        parser.setPreventSmartIndent(type != SyntaxType.PY);
+        return parser;
+    }
+
+    private static native CmParser getParserForMime(String mime) /*-{
+        conf = $wnd.CodeMirror.defaults;
+        if (mime == "text/x-python") {
+            conf["mode"] = {
+                version: 2
+            };
+        }
+        return $wnd.CodeMirror.getMode(conf, mime);
+    }-*/;
+
+    /** Mode constant: JavaScript. */
+    public static final String JAVASCRIPT = "javascript";
+
+    /** Mode constant: HTML. */
+    public static final String HTML = "html";
+
+    /** Mode constant: CSS. */
+    public static final String CSS = "css";
 }

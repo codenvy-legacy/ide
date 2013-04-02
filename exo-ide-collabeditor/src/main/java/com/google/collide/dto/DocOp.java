@@ -17,20 +17,20 @@ package com.google.collide.dto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
 // TODO: These should be moved to an Editor2-specific package
+
 /**
  * Models a document operation for the Collide code editor.
- * 
+ * <p/>
  * A DocOp is a description for an operation to be performed on the document. It
  * consists of one or more components that together must span the entire length
  * of the document.
- * 
+ * <p/>
  * For example, consider the following DocOp which spans the document with three
  * lines: {(RetainLine:1), (Insert:"Hello"), (Retain:5, true), (RetainLine:1)}.
  * It retains the first line, inserts "Hello" at the beginning of the second
  * line, retains the remaining 5 characters on that second line (including the
  * newline), and then retains the last line.
- * 
  */
 public interface DocOp {
-  JsonArray<DocOpComponent> getComponents();
+    JsonArray<DocOpComponent> getComponents();
 }

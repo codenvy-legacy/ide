@@ -20,62 +20,59 @@ import org.exoplatform.ide.json.shared.JsonArray;
 
 import javax.annotation.Nonnull;
 
-/**
- * Simple string multiset implementation on the base of {@link ClientStringMap}.
- *
- */
+/** Simple string multiset implementation on the base of {@link ClientStringMap}. */
 public class SimpleStringBag implements StringMultiset {
 
-  private ClientStringMap<Counter> delegate;
+    private ClientStringMap<Counter> delegate;
 
-  public SimpleStringBag() {
-    clear();
-  }
-
-  @Override
-  public void addAll(@Nonnull JsonArray<String> items) {
-    // TODO: Check if iterate is faster.
-    for (int i = 0, l = items.size(); i < l; i++) {
-      add(items.get(i));
+    public SimpleStringBag() {
+        clear();
     }
-  }
 
-  @Override
-  public void add(@Nonnull String item) {
-    Counter counter = delegate.get(item);
-    if (counter == null) {
-      counter = new Counter();
-      delegate.put(item, counter);
-    } else {
-      counter.increment();
+    @Override
+    public void addAll(@Nonnull JsonArray<String> items) {
+        // TODO: Check if iterate is faster.
+        for (int i = 0, l = items.size(); i < l; i++) {
+            add(items.get(i));
+        }
     }
-  }
 
-  @Override
-  public void removeAll(@Nonnull JsonArray<String> items) {
-    // TODO: Check if iterate is faster.
-    for (int i = 0, l = items.size(); i < l; i++) {
-      remove(items.get(i));
+    @Override
+    public void add(@Nonnull String item) {
+        Counter counter = delegate.get(item);
+        if (counter == null) {
+            counter = new Counter();
+            delegate.put(item, counter);
+        } else {
+            counter.increment();
+        }
     }
-  }
 
-  @Override
-  public void remove(@Nonnull String id) {
-    Counter counter = delegate.get(id);
-    // TODO: Remove this precondition.
-    Preconditions.checkNotNull(counter, "trying to remove item that is not in collection: %s", id);
-    if (counter.decrement()) {
-      delegate.remove(id);
+    @Override
+    public void removeAll(@Nonnull JsonArray<String> items) {
+        // TODO: Check if iterate is faster.
+        for (int i = 0, l = items.size(); i < l; i++) {
+            remove(items.get(i));
+        }
     }
-  }
 
-  @Override
-  public boolean contains(@Nonnull String item) {
-    return delegate.containsKey(item);
-  }
+    @Override
+    public void remove(@Nonnull String id) {
+        Counter counter = delegate.get(id);
+        // TODO: Remove this precondition.
+        Preconditions.checkNotNull(counter, "trying to remove item that is not in collection: %s", id);
+        if (counter.decrement()) {
+            delegate.remove(id);
+        }
+    }
 
-  @Override
-  public void clear() {
-    delegate = ClientStringMap.create();
-  }
+    @Override
+    public boolean contains(@Nonnull String item) {
+        return delegate.containsKey(item);
+    }
+
+    @Override
+    public void clear() {
+        delegate = ClientStringMap.create();
+    }
 }

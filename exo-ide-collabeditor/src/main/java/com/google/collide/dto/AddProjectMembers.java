@@ -17,19 +17,14 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Message used to add members to a project.
- * 
- */
+/** Message used to add members to a project. */
 @RoutingType(type = RoutingTypes.ADDPROJECTMEMBERS)
 public interface AddProjectMembers extends ClientToServerDto {
 
-  String getProjectId();
+    String getProjectId();
 
-  /**
-   * Returns a comma or newline delimited string of user email addresses.
-   */
-  String getUserEmails();
+    /** Returns a comma or newline delimited string of user email addresses. */
+    String getUserEmails();
 
-  ChangeRoleInfo getChangeRoleInfo();
+    ChangeRoleInfo getChangeRoleInfo();
 }

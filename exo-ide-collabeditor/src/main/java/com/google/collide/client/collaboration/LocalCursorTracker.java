@@ -15,77 +15,74 @@
 package com.google.collide.client.collaboration;
 
 import com.codenvy.ide.client.util.logging.Log;
-
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.DocumentSelectionImpl;
 import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
 import com.google.collide.shared.document.LineInfo;
+
 import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 /**
  * A class that tracks local cursor changes and eventually will aid in
  * broadcasting them to the collaborators.
- *
  */
 class LocalCursorTracker
-    implements SelectionModel.CursorListener, ClientToServerDocOpCreationParticipant {
+        implements SelectionModel.CursorListener, ClientToServerDocOpCreationParticipant {
 
-  private final DocumentCollaborationController collaborationController;
-  private boolean hasExplicitCursorChange;
-  private final SelectionModel selectionModel;
-  private final Remover cursorListenerRemover;
+    private final DocumentCollaborationController collaborationController;
+    private       boolean                         hasExplicitCursorChange;
+    private final SelectionModel                  selectionModel;
+    private final Remover                         cursorListenerRemover;
 
-  LocalCursorTracker(
-      DocumentCollaborationController collaborationController, SelectionModel selectionModel) {
-    this.collaborationController = collaborationController;
-    this.selectionModel = selectionModel;
+    LocalCursorTracker(
+            DocumentCollaborationController collaborationController, SelectionModel selectionModel) {
+        this.collaborationController = collaborationController;
+        this.selectionModel = selectionModel;
 
-    cursorListenerRemover = selectionModel.getCursorListenerRegistrar().add(this);
-    Log.debug(getClass(), "LocalCursorTracker created");
-  }
-
-  @Override
-  public void onCreateClientToServerDocOp(ClientToServerDocOpImpl message) {
-
-    if (!hasExplicitCursorChange) {
-      return;
+        cursorListenerRemover = selectionModel.getCursorListenerRegistrar().add(this);
+        Log.debug(getClass(), "LocalCursorTracker created");
     }
 
-    FilePositionImpl basePosition =
-        FilePositionImpl.make().setColumn(selectionModel.getBaseColumn()).setLineNumber(
-            selectionModel.getBaseLineNumber());
-    FilePositionImpl cursorPosition =
-        FilePositionImpl.make().setColumn(selectionModel.getCursorColumn()).setLineNumber(
-            selectionModel.getCursorLineNumber());
+    @Override
+    public void onCreateClientToServerDocOp(ClientToServerDocOpImpl message) {
 
-    DocumentSelectionImpl selection =
-        DocumentSelectionImpl.make().setBasePosition(basePosition).setCursorPosition(
-            cursorPosition).setUserId(BootstrapSession.getBootstrapSession().getUserId());
+        if (!hasExplicitCursorChange) {
+            return;
+        }
 
-    message.setSelection(selection);
+        FilePositionImpl basePosition =
+                FilePositionImpl.make().setColumn(selectionModel.getBaseColumn()).setLineNumber(
+                        selectionModel.getBaseLineNumber());
+        FilePositionImpl cursorPosition =
+                FilePositionImpl.make().setColumn(selectionModel.getCursorColumn()).setLineNumber(
+                        selectionModel.getCursorLineNumber());
 
-    // Reset
-    hasExplicitCursorChange = false;
-  }
+        DocumentSelectionImpl selection =
+                DocumentSelectionImpl.make().setBasePosition(basePosition).setCursorPosition(
+                        cursorPosition).setUserId(BootstrapSession.getBootstrapSession().getUserId());
 
-  @Override
-  public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
-    if (isExplicitChange) {
-      hasExplicitCursorChange = true;
-      collaborationController.ensureQueuedDocOp();
+        message.setSelection(selection);
+
+        // Reset
+        hasExplicitCursorChange = false;
     }
-  }
 
-  /**
-   * Forces the next client to server doc op to have our selection included.
-   */
-  void forceSendingSelection() {
-    hasExplicitCursorChange = true;
-  }
-  
-  void teardown() {
-    cursorListenerRemover.remove();
-  }
+    @Override
+    public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
+        if (isExplicitChange) {
+            hasExplicitCursorChange = true;
+            collaborationController.ensureQueuedDocOp();
+        }
+    }
+
+    /** Forces the next client to server doc op to have our selection included. */
+    void forceSendingSelection() {
+        hasExplicitCursorChange = true;
+    }
+
+    void teardown() {
+        cursorListenerRemover.remove();
+    }
 }

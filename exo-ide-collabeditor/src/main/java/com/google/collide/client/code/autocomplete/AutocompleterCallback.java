@@ -13,14 +13,9 @@
 // limitations under the License.
 package com.google.collide.client.code.autocomplete;
 
-/**
- * Interface for connecting controller to the UI.
- *
- */
+/** Interface for connecting controller to the UI. */
 interface AutocompleterCallback {
 
-  /**
-   * Schedule completion request again, to show updated proposals
-   */
-  void rescheduleCompletionRequest();
+    /** Schedule completion request again, to show updated proposals */
+    void rescheduleCompletionRequest();
 }

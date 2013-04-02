@@ -36,121 +36,123 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
 /**
  * Controller responsible for loading documents (and uneditable files) from the
  * server.
- * 
+ * <p/>
  * This class accepts multiple calls to
- * {@link #load(com.codenvy.ide.client.util.PathUtil, com.google.collide.client.document.DocumentManager.GetDocumentCallback)} for the same path and intelligently
+ * {@link #load(com.codenvy.ide.client.util.PathUtil, com.google.collide.client.document.DocumentManager.GetDocumentCallback)} for the same
+ * path and intelligently
  * batches together the callbacks so only one network request will occur.
  */
 class DocumentManagerNetworkController {
 
-  private final DocumentManager documentManager;
-  private final AppContext appContext;
+    private final DocumentManager documentManager;
+    private final AppContext      appContext;
 
-  /** Path to a list of {@link com.google.collide.client.document.DocumentManager.GetDocumentCallback} */
-  JsonStringMap<JsonArray<GetDocumentCallback>> outstandingCallbacks = JsonCollections.createMap();
+    /** Path to a list of {@link com.google.collide.client.document.DocumentManager.GetDocumentCallback} */
+    JsonStringMap<JsonArray<GetDocumentCallback>> outstandingCallbacks = JsonCollections.createMap();
 
-  private StatusMessage loadingMessage;
+    private StatusMessage loadingMessage;
 
-  DocumentManagerNetworkController(DocumentManager documentManager, AppContext appContext) {
-    this.documentManager = documentManager;
-    this.appContext = appContext;
-  }
-
-  public void teardown() {
-    if (loadingMessage != null) {
-      cancelLoadingMessage();
+    DocumentManagerNetworkController(DocumentManager documentManager, AppContext appContext) {
+        this.documentManager = documentManager;
+        this.appContext = appContext;
     }
-    
-    appContext.getMessageFilter().removeMessageRecipient(RoutingTypes.GETFILECONTENTSRESPONSE);
-  }
 
-  void load(PathUtil path, GetDocumentCallback callback) {
-    boolean shouldRequestFile = addCallback(path, callback);
+    public void teardown() {
+        if (loadingMessage != null) {
+            cancelLoadingMessage();
+        }
 
-    if (shouldRequestFile) {
-      requestFile(path);
+        appContext.getMessageFilter().removeMessageRecipient(RoutingTypes.GETFILECONTENTSRESPONSE);
     }
-  }
 
-  private boolean addCallback(PathUtil path, GetDocumentCallback callback) {
-    JsonArray<GetDocumentCallback> callbacks = outstandingCallbacks.get(path.getPathString());
+    void load(PathUtil path, GetDocumentCallback callback) {
+        boolean shouldRequestFile = addCallback(path, callback);
 
-    if (callbacks == null) {
-      callbacks = JsonCollections.createArray(callback);
-      outstandingCallbacks.put(path.getPathString(), callbacks);
-      return true;
-
-    } else {
-      callbacks.add(callback);
-      return false;
+        if (shouldRequestFile) {
+            requestFile(path);
+        }
     }
-  }
 
-  private void requestFile(final PathUtil path) {
-    delayLoadingMessage(path);
-    
-    // Fetch the file's contents
-    GetFileContentsImpl getFileContents = GetFileContentsImpl.make().setPath(path.getPathString());
-     getFileContents.setWorkspaceId(path.getWorkspaceId());
-     getFileContents.setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
-    appContext.getFrontendApi().GET_FILE_CONTENTS.send(getFileContents, 
-        new ApiCallback<GetFileContentsResponse>() {
+    private boolean addCallback(PathUtil path, GetDocumentCallback callback) {
+        JsonArray<GetDocumentCallback> callbacks = outstandingCallbacks.get(path.getPathString());
 
-          @Override
-          public void onMessageReceived(GetFileContentsResponse response) {
-              handleFileReceived(response);
-          }
+        if (callbacks == null) {
+            callbacks = JsonCollections.createArray(callback);
+            outstandingCallbacks.put(path.getPathString(), callbacks);
+            return true;
 
-          @Override
-          public void onFail(FailureReason reason) {
-            Log.error(getClass(), "Failed to retrieve file contents for path " + path);
-          }
-        });
-  }
-
-  /**
-   * Called when the file contents are received from the network. Routes to the appropriate content
-   * handling mechanism depending on whether or not the file content type is text, an image, or some
-   * other binary file.
-   */
-  private void handleFileReceived(GetFileContentsResponse response) {
-    boolean isUneditable =
-        (response.getFileContents().getContentType() == ContentType.UNKNOWN_BINARY)
-        || (response.getFileContents().getContentType() == ContentType.IMAGE);
-    PathUtil path = new PathUtil(response.getFileContents().getPath());
-
-    cancelLoadingMessage();
-
-    JsonArray<GetDocumentCallback> callbacks = outstandingCallbacks.remove(path.getPathString());
-    Preconditions.checkNotNull(callbacks);
-
-    if (!response.getFileExists()) {
-      // Dispatch to callbacks directly
-      for (int i = 0, n = callbacks.size(); i < n; i++) {
-        callbacks.get(i).onFileNotFoundReceived();
-      }
-    } else if (isUneditable) {
-      // Dispatch to callbacks directly
-      for (int i = 0, n = callbacks.size(); i < n; i++) {
-        callbacks.get(i).onUneditableFileContentsReceived(response.getFileContents());
-      }
-    } else {
-      documentManager.handleEditableFileReceived(response.getFileContents(), callbacks);
+        } else {
+            callbacks.add(callback);
+            return false;
+        }
     }
-  }
 
-  private void delayLoadingMessage(PathUtil path) {
-    cancelLoadingMessage();
-    loadingMessage =
-        new StatusMessage(appContext.getStatusManager(), MessageType.LOADING, "Loading "
-            + path.getBaseName() + "...");
-    loadingMessage.fireDelayed(StatusMessage.DEFAULT_DELAY);
-  }
+    private void requestFile(final PathUtil path) {
+        delayLoadingMessage(path);
 
-  private void cancelLoadingMessage() {
-    if (loadingMessage != null) {
-      loadingMessage.cancel();
-      loadingMessage = null;
+        // Fetch the file's contents
+        GetFileContentsImpl getFileContents = GetFileContentsImpl.make().setPath(path.getPathString());
+        getFileContents.setWorkspaceId(path.getWorkspaceId());
+        getFileContents.setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
+        appContext.getFrontendApi().GET_FILE_CONTENTS.send(getFileContents,
+                                                           new ApiCallback<GetFileContentsResponse>() {
+
+                                                               @Override
+                                                               public void onMessageReceived(GetFileContentsResponse response) {
+                                                                   handleFileReceived(response);
+                                                               }
+
+                                                               @Override
+                                                               public void onFail(FailureReason reason) {
+                                                                   Log.error(getClass(),
+                                                                             "Failed to retrieve file contents for path " + path);
+                                                               }
+                                                           });
     }
-  }
+
+    /**
+     * Called when the file contents are received from the network. Routes to the appropriate content
+     * handling mechanism depending on whether or not the file content type is text, an image, or some
+     * other binary file.
+     */
+    private void handleFileReceived(GetFileContentsResponse response) {
+        boolean isUneditable =
+                (response.getFileContents().getContentType() == ContentType.UNKNOWN_BINARY)
+                || (response.getFileContents().getContentType() == ContentType.IMAGE);
+        PathUtil path = new PathUtil(response.getFileContents().getPath());
+
+        cancelLoadingMessage();
+
+        JsonArray<GetDocumentCallback> callbacks = outstandingCallbacks.remove(path.getPathString());
+        Preconditions.checkNotNull(callbacks);
+
+        if (!response.getFileExists()) {
+            // Dispatch to callbacks directly
+            for (int i = 0, n = callbacks.size(); i < n; i++) {
+                callbacks.get(i).onFileNotFoundReceived();
+            }
+        } else if (isUneditable) {
+            // Dispatch to callbacks directly
+            for (int i = 0, n = callbacks.size(); i < n; i++) {
+                callbacks.get(i).onUneditableFileContentsReceived(response.getFileContents());
+            }
+        } else {
+            documentManager.handleEditableFileReceived(response.getFileContents(), callbacks);
+        }
+    }
+
+    private void delayLoadingMessage(PathUtil path) {
+        cancelLoadingMessage();
+        loadingMessage =
+                new StatusMessage(appContext.getStatusManager(), MessageType.LOADING, "Loading "
+                                                                                      + path.getBaseName() + "...");
+        loadingMessage.fireDelayed(StatusMessage.DEFAULT_DELAY);
+    }
+
+    private void cancelLoadingMessage() {
+        if (loadingMessage != null) {
+            loadingMessage.cancel();
+            loadingMessage = null;
+        }
+    }
 }

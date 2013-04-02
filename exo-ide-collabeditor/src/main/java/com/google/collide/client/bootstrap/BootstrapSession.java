@@ -18,72 +18,51 @@ import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Bootstrap information for the client.
- *
+ * <p/>
  * <p>It contains a description of the files contained in the project workspace,
  * as well as user identification information and a sessionID token that is sent
  * along with subsequent requests.
- *
  */
-public final class BootstrapSession
-{
+public final class BootstrapSession {
 
-   private static BootstrapSession instance;
+    private static BootstrapSession instance;
 
-   private String userId;
+    private String userId;
 
-   private String activeClientId;
+    private String activeClientId;
 
-   /**
-    * Use this method to obtain an instance of the Session object.
-    */
-   public static BootstrapSession getBootstrapSession()
-   {
-      if(instance == null)
-      {
-         instance = new BootstrapSession();
-      }
-      return instance;
-   }
+    /** Use this method to obtain an instance of the Session object. */
+    public static BootstrapSession getBootstrapSession() {
+        if (instance == null) {
+            instance = new BootstrapSession();
+        }
+        return instance;
+    }
 
-   protected BootstrapSession()
-   {
-   }
+    protected BootstrapSession() {
+    }
 
-   /**
-    * @return The active client ID for the current tab.
-    */
-   public String getActiveClientId()
-   {
-      return activeClientId;
-   }
+    /** @return The active client ID for the current tab. */
+    public String getActiveClientId() {
+        return activeClientId;
+    }
 
-   /**
-    * @return The user's handle. This is his name or email.
-    */
-   public String getUsername()
-   {
-      return IDE.userId;
-   }
+    /** @return The user's handle. This is his name or email. */
+    public String getUsername() {
+        return IDE.userId;
+    }
 
-   /**
-    * @return The user's unique ID (obfuscated GAIA ID).
-    */
-   public String getUserId()
-   {
-      return userId;
-   }
+    /** @return The user's unique ID (obfuscated GAIA ID). */
+    public String getUserId() {
+        return userId;
+    }
 
-   /**
-    *
-    * @param userId
-    */
-   public void setUserId(String userId)
-   {
-      this.userId = userId;
-   }
+    /** @param userId */
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-   public void setActiveClientId(String activeClientId)
-   {
-      this.activeClientId = activeClientId;
-   }
+    public void setActiveClientId(String activeClientId) {
+        this.activeClientId = activeClientId;
+    }
 }

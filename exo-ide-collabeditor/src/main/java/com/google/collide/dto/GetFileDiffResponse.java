@@ -18,18 +18,14 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Diff chunks for a file between two root nodes
- *
- *
- */
+/** Diff chunks for a file between two root nodes */
 @RoutingType(type = RoutingTypes.GETFILEDIFFRESPONSE)
 public interface GetFileDiffResponse extends ServerToClientDto {
-  JsonArray<DiffChunkResponse> getDiffChunks();
+    JsonArray<DiffChunkResponse> getDiffChunks();
 
-  DiffStatsDto getDiffStats();
+    DiffStatsDto getDiffStats();
 
-  String getBeforeFilePath();
+    String getBeforeFilePath();
 
-  String getAfterFilePath();
+    String getAfterFilePath();
 }

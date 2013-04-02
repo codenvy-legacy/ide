@@ -14,63 +14,59 @@
 
 package com.google.collide.client.communication;
 
-import com.codenvy.ide.client.util.PathUtil;
-
 import elemental.client.Browser;
 import elemental.html.Location;
 
-/**
- * Utility class to work with resource URIs and local paths.
- *
- */
+import com.codenvy.ide.client.util.PathUtil;
+
+/** Utility class to work with resource URIs and local paths. */
 public class ResourceUriUtils {
-  
-  /**
-   * @see #getAbsoluteResourceUri(String)
-   */
-  public static String getAbsoluteResourceUri(PathUtil path) {
-    return getAbsoluteResourceUri(path.getPathString());
-  }
 
-  /**
-   * Calculates an absolute URI of a resource by a given path.
-   *
-   * @param path relative path from the workspace root
-   * @return an absolute URI
-   */
-  public static String getAbsoluteResourceUri(String path) {
-    return getAbsoluteResourceBaseUri() + ensurePrefixSlash(path);
-  }
-
-  public static String getAbsoluteResourceBaseUri() {
-    return getBaseUri() + "/res";
-  }
-
-  private static String getBaseUri() {
-    Location location = Browser.getWindow().getLocation();
-    return location.getProtocol() + "//" + location.getHost();
-  }
-  
-  public static String extractBaseUri(String absoluteUri) {
-    int pos = absoluteUri.indexOf("://");
-    if (pos != -1) {
-      pos += 3;
-    } else {
-      pos = 0;
+    /** @see #getAbsoluteResourceUri(String) */
+    public static String getAbsoluteResourceUri(PathUtil path) {
+        return getAbsoluteResourceUri(path.getPathString());
     }
 
-    pos = absoluteUri.indexOf("/", pos);
-    if (pos != -1) {
-      return absoluteUri.substring(0, pos);
-    } else {
-      return absoluteUri;
+    /**
+     * Calculates an absolute URI of a resource by a given path.
+     *
+     * @param path
+     *         relative path from the workspace root
+     * @return an absolute URI
+     */
+    public static String getAbsoluteResourceUri(String path) {
+        return getAbsoluteResourceBaseUri() + ensurePrefixSlash(path);
     }
-  }
 
-  private static String ensurePrefixSlash(String path) {
-    if (path.startsWith("/")) {
-      return path;
+    public static String getAbsoluteResourceBaseUri() {
+        return getBaseUri() + "/res";
     }
-    return "/" + path;
-  }
+
+    private static String getBaseUri() {
+        Location location = Browser.getWindow().getLocation();
+        return location.getProtocol() + "//" + location.getHost();
+    }
+
+    public static String extractBaseUri(String absoluteUri) {
+        int pos = absoluteUri.indexOf("://");
+        if (pos != -1) {
+            pos += 3;
+        } else {
+            pos = 0;
+        }
+
+        pos = absoluteUri.indexOf("/", pos);
+        if (pos != -1) {
+            return absoluteUri.substring(0, pos);
+        } else {
+            return absoluteUri;
+        }
+    }
+
+    private static String ensurePrefixSlash(String path) {
+        if (path.startsWith("/")) {
+            return path;
+        }
+        return "/" + path;
+    }
 }

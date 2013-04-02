@@ -21,36 +21,35 @@ import com.google.common.base.Objects.ToStringHelper;
  * Represents a chunk of text that could not be automatically merged. After the
  * necessary edits, it can be marked as resolved. It can subsequently also be
  * marked as unresolved (i.e. you can undo marking it as resolved).
- *
  */
 public class ConflictChunk extends MergeChunk {
 
-  private boolean isResolved = false;
+    private boolean isResolved = false;
 
-  public ConflictChunk(MergeChunk chunk) {
-    this(chunk, false);
-  }
+    public ConflictChunk(MergeChunk chunk) {
+        this(chunk, false);
+    }
 
-  public ConflictChunk(MergeChunk chunk, boolean isResolved) {
-    super(chunk);
-    this.isResolved = isResolved;
-  }
+    public ConflictChunk(MergeChunk chunk, boolean isResolved) {
+        super(chunk);
+        this.isResolved = isResolved;
+    }
 
-  public boolean isResolved() {
-    return isResolved;
-  }
+    public boolean isResolved() {
+        return isResolved;
+    }
 
-  public void markResolved(boolean isResolved) {
-    this.isResolved = isResolved;
-  }
+    public void markResolved(boolean isResolved) {
+        this.isResolved = isResolved;
+    }
 
-  @Override
-  public String toString() {
-    return toStringFields(Objects.toStringHelper(this)).toString();
-  }
+    @Override
+    public String toString() {
+        return toStringFields(Objects.toStringHelper(this)).toString();
+    }
 
-  @Override
-  protected ToStringHelper toStringFields(ToStringHelper toStringHelper) {
-    return super.toStringFields(toStringHelper).add("isResolved", isResolved);
-  }
+    @Override
+    protected ToStringHelper toStringFields(ToStringHelper toStringHelper) {
+        return super.toStringFields(toStringHelper).add("isResolved", isResolved);
+    }
 }

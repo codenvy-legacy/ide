@@ -14,13 +14,9 @@
 
 package com.google.collide.codemirror2;
 
-/**
- * Abstraction of Codemirror StringStream object.
- */
+/** Abstraction of Codemirror StringStream object. */
 public interface Stream {
 
-  /**
-   * @return {@code true} if all data has been consumed
-   */
-  boolean isEnd();
+    /** @return {@code true} if all data has been consumed */
+    boolean isEnd();
 }

@@ -17,10 +17,7 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 
-/**
- * DTO for requesting the user's app IDs.
- *
- */
+/** DTO for requesting the user's app IDs. */
 @RoutingType(type = RoutingTypes.GETUSERAPPENGINEAPPIDS)
 public interface GetUserAppEngineAppIds extends GetAppEngineClusterType {
 

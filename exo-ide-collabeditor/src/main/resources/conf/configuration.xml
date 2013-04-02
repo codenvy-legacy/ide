@@ -23,16 +23,16 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-   <component>
-      <type>com.google.collide.server.CollaborationEditorApplication</type>
-   </component>
+    <component>
+        <type>com.google.collide.server.CollaborationEditorApplication</type>
+    </component>
 
-   <component>
-      <type>com.google.collide.server.participants.Participants</type>
-   </component>
+    <component>
+        <type>com.google.collide.server.participants.Participants</type>
+    </component>
 
-   <component>
-      <type>com.google.collide.server.documents.EditSessions</type>
-   </component>
+    <component>
+        <type>com.google.collide.server.documents.EditSessions</type>
+    </component>
 
 </configuration>

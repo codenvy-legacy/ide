@@ -18,38 +18,38 @@ package com.google.collide.mvp;
 /**
  * This class represents the Presenter (P) in the MVP pattern for constructing
  * UI.
- *
- *  The View represents some bag of element references and a definition of
+ * <p/>
+ * The View represents some bag of element references and a definition of
  * logical events sources by the View.
- *
- *  The Model is not an explicit entity in this class hierarchy, and is simply a
+ * <p/>
+ * The Model is not an explicit entity in this class hierarchy, and is simply a
  * name used to refer to the instance state used by the Presenter. Concrete
  * implementations may choose to abstract instance state behind an explicit
  * Model class if they so choose.
- *
- *  The View can be injected at any point in time.
- *
- *  Presenters contain the logic for handling events sourced by the View,
+ * <p/>
+ * The View can be injected at any point in time.
+ * <p/>
+ * Presenters contain the logic for handling events sourced by the View,
  * updating the Model, and for taking changes to the Model and propagating them
  * to the View.
  */
 public abstract class UiComponent<V extends View<?>> implements HasView<V> {
-  private V view;
+    private V view;
 
-  protected UiComponent() {
-    this(null);
-  }
+    protected UiComponent() {
+        this(null);
+    }
 
-  protected UiComponent(V view) {
-    this.view = view;
-  }
+    protected UiComponent(V view) {
+        this.view = view;
+    }
 
-  @Override
-  public V getView() {
-    return view;
-  }
+    @Override
+    public V getView() {
+        return view;
+    }
 
-  public void setView(V view) {
-    this.view = view;
-  }
+    public void setView(V view) {
+        this.view = view;
+    }
 }

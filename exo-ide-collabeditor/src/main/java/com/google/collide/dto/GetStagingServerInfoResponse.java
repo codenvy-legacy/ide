@@ -17,25 +17,20 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- *
- * DTO for getting the user's mimic app id and related information.
- *
- *
- */
+/** DTO for getting the user's mimic app id and related information. */
 @RoutingType(type = RoutingTypes.GETSTAGINGSERVERINFORESPONSE)
 public interface GetStagingServerInfoResponse extends ServerToClientDto {
 
-  String getStagingServerAppId();
+    String getStagingServerAppId();
 
-  // The latest / current mimic version ID. 
-  int getLatestMimicVersionId();
+    // The latest / current mimic version ID.
+    int getLatestMimicVersionId();
 
-  // The version ID of the user's mimic, specifically the
-  // version id that was most recently deployed.
-  int getLastKnownMimicVersionId();
+    // The version ID of the user's mimic, specifically the
+    // version id that was most recently deployed.
+    int getLastKnownMimicVersionId();
 
-  // If true, user's mimic should be auto-updated.
-  boolean getAutoUpdate();
+    // If true, user's mimic should be auto-updated.
+    boolean getAutoUpdate();
 
 }

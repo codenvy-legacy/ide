@@ -18,27 +18,23 @@
  */
 package com.google.collide.server;
 
+import javax.ws.rs.core.Application;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+public class CollaborationEditorApplication extends Application {
+    @Override
+    public Set<Object> getSingletons() {
+        return Collections.emptySet();
+    }
 
-public class CollaborationEditorApplication extends Application
-{
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return Collections.emptySet();
-   }
-
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> classes = new HashSet<Class<?>>(2);
-      classes.add(ParticipantsService.class);
-      classes.add(EditSessionsService.class);
-      classes.add(CommunicationService.class);
-      return classes;
-   }
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<Class<?>>(2);
+        classes.add(ParticipantsService.class);
+        classes.add(EditSessionsService.class);
+        classes.add(CommunicationService.class);
+        return classes;
+    }
 }

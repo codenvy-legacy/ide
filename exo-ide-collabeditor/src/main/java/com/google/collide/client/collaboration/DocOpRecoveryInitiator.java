@@ -14,10 +14,9 @@
 
 package com.google.collide.client.collaboration;
 
-/**
- * A class that can initiate doc op recovery.
- */
+/** A class that can initiate doc op recovery. */
 public interface DocOpRecoveryInitiator {
-  void recover();
-  void teardown();
+    void recover();
+
+    void teardown();
 }

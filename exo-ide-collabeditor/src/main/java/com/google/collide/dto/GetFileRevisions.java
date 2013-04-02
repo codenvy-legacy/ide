@@ -17,45 +17,38 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request to get revision information for a file
- *
- */
+/** Request to get revision information for a file */
 @RoutingType(type = RoutingTypes.GETFILEREVISIONS)
 public interface GetFileRevisions extends ClientToServerDto {
 
-  String getClientId();
+    String getClientId();
 
-  /**
-   * path is correct with respect to the PathRootId.
-   */
-  String getPathRootId();
+    /** path is correct with respect to the PathRootId. */
+    String getPathRootId();
 
-  String getPath();
+    String getPath();
 
-  String getWorkspaceId();
+    String getWorkspaceId();
 
-  /**
-   * The number of revisions to return. When filtering is true, server will
-   * apply filtering and skip unimportant nodes
-   */
-  int getNumOfRevisions();
+    /**
+     * The number of revisions to return. When filtering is true, server will
+     * apply filtering and skip unimportant nodes
+     */
+    int getNumOfRevisions();
 
-  boolean filtering();
+    boolean filtering();
 
-  /**
-   * The root at which to start the search. If null, the search will use the
-   * current tip.
-   */
-  String getRootId();
-  
-  /**
-   * Bound the search by a minimum ID.
-   */
-  String getMinId();
-  
-  boolean getIncludeBranchRevision();
+    /**
+     * The root at which to start the search. If null, the search will use the
+     * current tip.
+     */
+    String getRootId();
 
-  boolean getIncludeMostRecentRevision();
+    /** Bound the search by a minimum ID. */
+    String getMinId();
+
+    boolean getIncludeBranchRevision();
+
+    boolean getIncludeMostRecentRevision();
 
 }

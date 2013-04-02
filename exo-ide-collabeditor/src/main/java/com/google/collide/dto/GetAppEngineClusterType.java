@@ -17,21 +17,16 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * An interface for other DTOs that specify an app engine cluster type.
- *
- */
+/** An interface for other DTOs that specify an app engine cluster type. */
 @RoutingType(type = RoutingTypes.GETAPPENGINECLUSTERTYPE)
 public interface GetAppEngineClusterType extends ClientToServerDto {
 
-  /**
-   * The app engine clusters we support deploying to.
-   */
-  public enum Type {
-    PROD, CORP, QA, QA_DART;
-  }
+    /** The app engine clusters we support deploying to. */
+    public enum Type {
+        PROD, CORP, QA, QA_DART;
+    }
 
-  // The app engine cluster type to deploy to.
-  Type getClusterType();
+    // The app engine cluster type to deploy to.
+    Type getClusterType();
 
 }

@@ -19,14 +19,13 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 /**
  * Represents notification from Cube service to client.
  * The contents of this DTO may change in the future.
- *
  */
 @RoutingType(type = RoutingTypes.CUBEPING)
 public interface CubePing extends ServerToClientDto {
 
-  /**
-   * @return The new freshness of full graph that was built on Cube recently, a string
-   *         representation of java long
-   */
-  String getFullGraphFreshness();
+    /**
+     * @return The new freshness of full graph that was built on Cube recently, a string
+     *         representation of java long
+     */
+    String getFullGraphFreshness();
 }

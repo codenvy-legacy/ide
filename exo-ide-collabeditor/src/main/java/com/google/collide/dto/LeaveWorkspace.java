@@ -17,13 +17,10 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Request to leave the current workspace.
- * 
- */
+/** Request to leave the current workspace. */
 @RoutingType(type = RoutingTypes.LEAVEWORKSPACE)
 public interface LeaveWorkspace extends ClientToServerDto {
 
-  String getWorkspaceId();
-  
+    String getWorkspaceId();
+
 }

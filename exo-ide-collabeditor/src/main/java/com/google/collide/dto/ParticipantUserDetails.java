@@ -17,17 +17,12 @@ package com.google.collide.dto;
 /**
  * Represents a participant in a Workspace session, including the participants
  * {@link UserDetails}.
- * 
  */
 public interface ParticipantUserDetails {
 
-  /**
-   * @return the participant info
-   */
-  Participant getParticipant();
+    /** @return the participant info */
+    Participant getParticipant();
 
-  /**
-   * @return the user details for the participant
-   */
-  UserDetails getUserDetails();
+    /** @return the user details for the participant */
+    UserDetails getUserDetails();
 }

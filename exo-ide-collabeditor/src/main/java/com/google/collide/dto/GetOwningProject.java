@@ -23,5 +23,5 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  */
 @RoutingType(type = RoutingTypes.GETOWNINGPROJECT)
 public interface GetOwningProject extends ClientToServerDto {
-  String getWorkspaceId();
+    String getWorkspaceId();
 }

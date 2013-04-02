@@ -18,15 +18,13 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Response for requesting workspace participants.
- */
+/** Response for requesting workspace participants. */
 @RoutingType(type = RoutingTypes.GETWORKSPACEPARTICIPANTSRESPONSE)
 public interface GetWorkspaceParticipantsResponse extends ServerToClientDto {
 
-  /**
-   * Returns the list of requested workspace participants who are still in the
-   * workspace.
-   */
-  JsonArray<ParticipantUserDetails> getParticipants();
+    /**
+     * Returns the list of requested workspace participants who are still in the
+     * workspace.
+     */
+    JsonArray<ParticipantUserDetails> getParticipants();
 }

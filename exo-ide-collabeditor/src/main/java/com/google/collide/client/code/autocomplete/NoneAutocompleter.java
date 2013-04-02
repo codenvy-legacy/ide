@@ -18,39 +18,37 @@ import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.common.annotations.VisibleForTesting;
 
-/**
- * Implementation that do not propose completions.
- */
+/** Implementation that do not propose completions. */
 public class NoneAutocompleter extends LanguageSpecificAutocompleter {
 
-  private static NoneAutocompleter instance;
+    private static NoneAutocompleter instance;
 
-  public static NoneAutocompleter getInstance() {
-    if (instance == null) {
-      instance = new NoneAutocompleter(SyntaxType.NONE);
+    public static NoneAutocompleter getInstance() {
+        if (instance == null) {
+            instance = new NoneAutocompleter(SyntaxType.NONE);
+        }
+        return instance;
     }
-    return instance;
-  }
 
-  @VisibleForTesting
-  NoneAutocompleter(SyntaxType mode) {
-    super(mode);
-  }
+    @VisibleForTesting
+    NoneAutocompleter(SyntaxType mode) {
+        super(mode);
+    }
 
-  @Override
-  public AutocompleteResult computeAutocompletionResult(
-      AutocompleteProposals.ProposalWithContext proposal) {
-    throw new IllegalStateException("This method should not be invoked");
-  }
+    @Override
+    public AutocompleteResult computeAutocompletionResult(
+            AutocompleteProposals.ProposalWithContext proposal) {
+        throw new IllegalStateException("This method should not be invoked");
+    }
 
-  @Override
-  public AutocompleteProposals findAutocompletions(SelectionModel selection,
-      SignalEventEssence trigger) {
-    return AutocompleteProposals.EMPTY;
-  }
+    @Override
+    public AutocompleteProposals findAutocompletions(SelectionModel selection,
+                                                     SignalEventEssence trigger) {
+        return AutocompleteProposals.EMPTY;
+    }
 
-  @Override
-  public void cleanup() {
-    // Do nothing.
-  }
+    @Override
+    public void cleanup() {
+        // Do nothing.
+    }
 }

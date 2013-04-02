@@ -27,21 +27,19 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.FILEOPERATIONNOTIFICATION)
-public interface FileOperationNotification extends ServerToClientDto, ClientToServerDto
-{
-   public enum Operation
-   {
-      DELETE, RENAME, MOVE, REFACTORING
-   }
+public interface FileOperationNotification extends ServerToClientDto, ClientToServerDto {
+    public enum Operation {
+        DELETE, RENAME, MOVE, REFACTORING
+    }
 
-   String getFilePath();
+    String getFilePath();
 
-   String getTarget();
+    String getTarget();
 
-   String getUserId();
+    String getUserId();
 
-   String getEditSessionId();
+    String getEditSessionId();
 
-   Operation getOperation();
+    Operation getOperation();
 
 }

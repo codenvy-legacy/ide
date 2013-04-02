@@ -24,21 +24,19 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface GutterNotificationResources extends Resources
-{
+public interface GutterNotificationResources extends Resources {
 
-   @Source({"GutterNotification.css", "com/google/collide/client/editor/constants.css"})
-   NotificationCss notificationCss();
+    @Source({"GutterNotification.css", "com/google/collide/client/editor/constants.css"})
+    NotificationCss notificationCss();
 
-   @Source("mark-error.png")
-   ImageResource markError();
+    @Source("mark-error.png")
+    ImageResource markError();
 
-   @Source("mark-warning.png")
-   ImageResource markWarning();
-   
-   @Source("taskmrk.gif")
-   ImageResource markTask();
+    @Source("mark-warning.png")
+    ImageResource markWarning();
+
+    @Source("taskmrk.gif")
+    ImageResource markTask();
 
 }

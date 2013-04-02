@@ -18,13 +18,9 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.shared.JsonArray;
 
-/**
- * Bundles a list of doc ops that have been applied on the server.
- */
+/** Bundles a list of doc ops that have been applied on the server. */
 @RoutingType(type = RoutingTypes.SERVERTOCLIENTDOCOPS)
 public interface ServerToClientDocOps extends ServerToClientDto {
-  /**
-   * The applied doc ops, ordered by revision.
-   */
-  JsonArray<ServerToClientDocOp> getDocOps();
+    /** The applied doc ops, ordered by revision. */
+    JsonArray<ServerToClientDocOp> getDocOps();
 }

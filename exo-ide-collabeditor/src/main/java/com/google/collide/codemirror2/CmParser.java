@@ -22,84 +22,83 @@ import org.exoplatform.ide.json.shared.JsonArray;
 /**
  * One of the CodeMirror2 parsing modes, with utilities for saving/restoring the
  * parser state and returning a list of tokens for a string of text.
- *
  */
 public class CmParser extends JavaScriptObject implements Parser {
 
-  protected CmParser() {
-  }
-
-  private native void setTypeAndName(SyntaxType type, String name) /*-{
-    this.syntaxType = type;
-    this.parserName = name;
-  }-*/;
-
-  @Override
-  public final State defaultState() {
-    return getStartState();
-  }
-
-  @Override
-  public final void parseNext(Stream stream, State state, JsonArray<Token> tokens) {
-    String tokenName = token(stream, state);
-    String tokenValue = updateStreamPosition(stream);
-    getSyntaxType().getTokenFactory().push(getName(state), state, tokenName, tokenValue, tokens);
-  }
-
-  private native String token(Stream stream, State state) /*-{
-    return this.token(stream, state);
-  }-*/;
-
-  /**
-   * Advance the stream index pointers.
-   *
-   * @return a String with the remaining stream contents to be parsed.
-   */
-  private native String updateStreamPosition(Stream stream) /*-{
-    var value = stream.string.slice(stream.start, stream.pos);
-    stream.start = stream.pos;
-    return value;
-  }-*/;
-
-  private native CmState getStartState() /*-{
-    var state = $wnd.CodeMirror.startState(this);
-    return (state === true) ? {} : state;
-  }-*/;
-
-  @Override
-  public final native String getName(State state) /*-{
-    return state.mode || this.parserName;
-  }-*/;
-
-  @Override
-  public final native boolean hasSmartIndent() /*-{
-    return (this.indent && !this.__preventSmartIndent) ? true : false;
-  }-*/;
-
-  @Override
-  public final native int indent(State stateAbove, String text) /*-{
-    if (this.indent && stateAbove) {
-      return this.indent(stateAbove, text);
+    protected CmParser() {
     }
-    return -1;
-  }-*/;
 
-  final native void setPreventSmartIndent(boolean preventSmartIndent) /*-{
-    this.__preventSmartIndent = preventSmartIndent;
-  }-*/;
+    private native void setTypeAndName(SyntaxType type, String name) /*-{
+        this.syntaxType = type;
+        this.parserName = name;
+    }-*/;
 
-  @VisibleForTesting
-  protected final void setType(SyntaxType type) {
-    setTypeAndName(type, type.getName());
-  }
+    @Override
+    public final State defaultState() {
+        return getStartState();
+    }
 
-  @Override
-  public final native SyntaxType getSyntaxType() /*-{
-    return this.syntaxType;
-  }-*/;
+    @Override
+    public final void parseNext(Stream stream, State state, JsonArray<Token> tokens) {
+        String tokenName = token(stream, state);
+        String tokenValue = updateStreamPosition(stream);
+        getSyntaxType().getTokenFactory().push(getName(state), state, tokenName, tokenValue, tokens);
+    }
 
-  @Override
-  public final native Stream createStream(String text) /*-{
-    return new $wnd.CodeMirror.StringStream(text);
-  }-*/;
+    private native String token(Stream stream, State state) /*-{
+        return this.token(stream, state);
+    }-*/;
+
+    /**
+     * Advance the stream index pointers.
+     *
+     * @return a String with the remaining stream contents to be parsed.
+     */
+    private native String updateStreamPosition(Stream stream) /*-{
+        var value = stream.string.slice(stream.start, stream.pos);
+        stream.start = stream.pos;
+        return value;
+    }-*/;
+
+    private native CmState getStartState() /*-{
+        var state = $wnd.CodeMirror.startState(this);
+        return (state === true) ? {} : state;
+    }-*/;
+
+    @Override
+    public final native String getName(State state) /*-{
+        return state.mode || this.parserName;
+    }-*/;
+
+    @Override
+    public final native boolean hasSmartIndent() /*-{
+        return (this.indent && !this.__preventSmartIndent) ? true : false;
+    }-*/;
+
+    @Override
+    public final native int indent(State stateAbove, String text) /*-{
+        if (this.indent && stateAbove) {
+            return this.indent(stateAbove, text);
+        }
+        return -1;
+    }-*/;
+
+    final native void setPreventSmartIndent(boolean preventSmartIndent) /*-{
+        this.__preventSmartIndent = preventSmartIndent;
+    }-*/;
+
+    @VisibleForTesting
+    protected final void setType(SyntaxType type) {
+        setTypeAndName(type, type.getName());
+    }
+
+    @Override
+    public final native SyntaxType getSyntaxType() /*-{
+        return this.syntaxType;
+    }-*/;
+
+    @Override
+    public final native Stream createStream(String text) /*-{
+        return new $wnd.CodeMirror.StringStream(text);
+    }-*/;
 }

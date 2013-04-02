@@ -14,81 +14,71 @@
 
 package com.google.collide.client;
 
+import com.codenvy.ide.client.util.UserActivityManager;
+import com.codenvy.ide.client.util.WindowUnloadingController;
 import com.google.collide.client.communication.FrontendApi;
-import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.status.StatusManager;
-import com.codenvy.ide.client.util.UserActivityManager;
-
-import com.codenvy.ide.client.util.WindowUnloadingController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 
-/**
- * Application context object that exposes getters for our PushChannel and our Event Bus.
- * 
- */
+/** Application context object that exposes getters for our PushChannel and our Event Bus. */
 public class AppContext {
 
-  // This is static final for now, but could be more flexible later.
-  public static final String GWT_ROOT = "gwt_root";
+    // This is static final for now, but could be more flexible later.
+    public static final String GWT_ROOT = "gwt_root";
 
-  public static AppContext create() {
-    return new AppContext();
-  }
+    public static AppContext create() {
+        return new AppContext();
+    }
 
 //  private final KeyBindings keyBindings;
-  /**
-   * Object for making calls to the frontend api.
-   */
-  private FrontendApi frontendApi;
-  private final Resources resources = GWT.create(Resources.class);
-//  /**
+    /** Object for making calls to the frontend api. */
+    private FrontendApi frontendApi;
+    private final Resources resources = GWT.create(Resources.class);
+    //  /**
 //   * For directly handling messages/data sent to the client from the frontend.
 //   */
-  private final MessageFilter messageFilter;
-  private final StatusManager statusManager;
-//  private final UncaughtExceptionHandler uncaughtExceptionHandler;
+    private final MessageFilter             messageFilter;
+    private final StatusManager             statusManager;
+    //  private final UncaughtExceptionHandler uncaughtExceptionHandler;
 //  private final AwesomeBoxModel awesomeBoxModel;
 //  private final AwesomeBoxComponentHostModel awesomeBoxComponentHostModel;
-  private final UserActivityManager userActivityManager;
-  private final WindowUnloadingController windowUnloadingController;
-  private PushChannel pushChannel;
+    private final UserActivityManager       userActivityManager;
+    private final WindowUnloadingController windowUnloadingController;
+    private       PushChannel               pushChannel;
 
-  public AppContext() {
+    public AppContext() {
 
 //    // Things that depend on nothing
 //    this.keyBindings = new KeyBindings();
-    this.statusManager = new StatusManager();
-    this.messageFilter = new MessageFilter();
+        this.statusManager = new StatusManager();
+        this.messageFilter = new MessageFilter();
 //    this.awesomeBoxModel = new AwesomeBoxModel();
 //    this.awesomeBoxComponentHostModel = new AwesomeBoxComponentHostModel();
-    this.userActivityManager = new UserActivityManager();
-    this.windowUnloadingController = new WindowUnloadingController();
+        this.userActivityManager = new UserActivityManager();
+        this.windowUnloadingController = new WindowUnloadingController();
 //
 //    // Things that depend on message filter/frontendApi/statusManager
 //    this.uncaughtExceptionHandler = new ExceptionHandler(messageFilter, frontendApi, statusManager);
-  }
+    }
 
-   public static MessageBus getMessageBus()
-  {
-     String url;
-     boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-     if (isSecureConnection)
-     {
-        url = "wss://" + Window.Location.getHost() + "/IDE/collaboration";
-     }
-     else
-     {
-        url = "ws://" + Window.Location.getHost() + "/IDE/collaboration";
-     }
-     return new RESTMessageBus(url);
-  }
+    public static MessageBus getMessageBus() {
+        String url;
+        boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
+        if (isSecureConnection) {
+            url = "wss://" + Window.Location.getHost() + "/IDE/collaboration";
+        } else {
+            url = "ws://" + Window.Location.getHost() + "/IDE/collaboration";
+        }
+        return new RESTMessageBus(url);
+    }
 
-   //  public KeyBindings getKeyBindings() {
+    //  public KeyBindings getKeyBindings() {
 //    return keyBindings;
 //  }
 
@@ -101,47 +91,38 @@ public class AppContext {
 //  }
 //
 
-  void initializeCollaboration()
-  {
-     this.pushChannel = PushChannel.create(messageFilter, statusManager);
-     this.frontendApi = FrontendApi.create(pushChannel, statusManager);
-  }
+    void initializeCollaboration() {
+        this.pushChannel = PushChannel.create(messageFilter, statusManager);
+        this.frontendApi = FrontendApi.create(pushChannel, statusManager);
+    }
 
-  public UserActivityManager getUserActivityManager() {
-    return userActivityManager;
-  }
+    public UserActivityManager getUserActivityManager() {
+        return userActivityManager;
+    }
 
-  /**
-   * @return the frontendRequester
-   */
-  public FrontendApi getFrontendApi() {
-    return frontendApi;
-  }
+    /** @return the frontendRequester */
+    public FrontendApi getFrontendApi() {
+        return frontendApi;
+    }
 
-  /**
-   * @return the messageFilter
-   */
-  public MessageFilter getMessageFilter() {
-    return messageFilter;
-  }
+    /** @return the messageFilter */
+    public MessageFilter getMessageFilter() {
+        return messageFilter;
+    }
 
-  /**
-   * @return the push channel API
-   */
-  public PushChannel getPushChannel() {
-    return pushChannel;
-  }
+    /** @return the push channel API */
+    public PushChannel getPushChannel() {
+        return pushChannel;
+    }
 
-  /**
-   * @return the resources
-   */
-  public Resources getResources() {
-    return resources;
-  }
+    /** @return the resources */
+    public Resources getResources() {
+        return resources;
+    }
 
-  public StatusManager getStatusManager() {
-    return statusManager;
-  }
+    public StatusManager getStatusManager() {
+        return statusManager;
+    }
 //
 //  /**
 //   * @return the uncaught exception handler for the app.
@@ -150,10 +131,9 @@ public class AppContext {
 //    return uncaughtExceptionHandler;
 //  }
 //
-  /**
-   * @return the {@link WindowUnloadingController} for the app.
-   */
-  public WindowUnloadingController getWindowUnloadingController() {
-    return windowUnloadingController;
-  }
+
+    /** @return the {@link WindowUnloadingController} for the app. */
+    public WindowUnloadingController getWindowUnloadingController() {
+        return windowUnloadingController;
+    }
 }

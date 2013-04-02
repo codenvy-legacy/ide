@@ -23,10 +23,8 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  */
 @RoutingType(type = RoutingTypes.SETPROJECTHIDDEN)
 public interface SetProjectHidden extends ClientToServerDto {
-  String getProjectId();
+    String getProjectId();
 
-  /**
-   * Returns true if the project should be hidden, false if not.
-   */
-  boolean isHidden();
+    /** Returns true if the project should be hidden, false if not. */
+    boolean isHidden();
 }

@@ -16,19 +16,18 @@ package com.google.collide.client.collaboration;
 
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 
-/**
- * Interface for providing the most recently sent {@link com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl}.
- */
+/** Interface for providing the most recently sent {@link com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl}. */
 public interface LastClientToServerDocOpProvider {
-  
-  ClientToServerDocOpImpl getLastClientToServerDocOpMsg();
 
-  /**
-   * Clears the message that would be returned by
-   * {@link #getLastClientToServerDocOpMsg()}.
-   * 
-   * @param clientToServerDocOpMsgToDelete if provided, the current message must
-   *        match the given message for it to be cleared
-   */
-  void clearLastClientToServerDocOpMsg(ClientToServerDocOpImpl clientToServerDocOpMsgToDelete);
+    ClientToServerDocOpImpl getLastClientToServerDocOpMsg();
+
+    /**
+     * Clears the message that would be returned by
+     * {@link #getLastClientToServerDocOpMsg()}.
+     *
+     * @param clientToServerDocOpMsgToDelete
+     *         if provided, the current message must
+     *         match the given message for it to be cleared
+     */
+    void clearLastClientToServerDocOpMsg(ClientToServerDocOpImpl clientToServerDocOpMsgToDelete);
 }

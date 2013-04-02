@@ -17,25 +17,16 @@ package com.google.collide.dto;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 
-/**
- * Lets the client request Tango invalidation payloads from a version onward.
- *
- */
+/** Lets the client request Tango invalidation payloads from a version onward. */
 @RoutingType(type = RoutingTypes.RECOVERFROMDROPPEDTANGOINVALIDATION)
 public interface RecoverFromDroppedTangoInvalidation extends ClientToServerDto {
 
-  /**
-   * The name from the TangoObjectId.
-   */
-  String getTangoObjectIdName();
+    /** The name from the TangoObjectId. */
+    String getTangoObjectIdName();
 
-  /**
-   * Returns the version of the first payload the client is requesting.
-   */
-  int getCurrentClientVersion();
-  
-  /**
-   * If using Tango emulation for the given object, this must be set.
-   */
-  String getWorkspaceId();
+    /** Returns the version of the first payload the client is requesting. */
+    int getCurrentClientVersion();
+
+    /** If using Tango emulation for the given object, this must be set. */
+    String getWorkspaceId();
 }

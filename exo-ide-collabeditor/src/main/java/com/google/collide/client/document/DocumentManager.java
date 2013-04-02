@@ -33,169 +33,149 @@ import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 /**
  * Manager for documents and editors.
- *
- *  Note that a document can be unlinked from a file <em>while</em> it is open
+ * <p/>
+ * Note that a document can be unlinked from a file <em>while</em> it is open
  * in an editor!
- *
  */
 public class DocumentManager {
 
-  public static DocumentManager create(AppContext appContext) {
-    return new DocumentManager(appContext);
-  }
-
-  /**
-   * Listener for changes to the lifecycle of individual documents.
-   */
-  public interface LifecycleListener {
-    /**
-     * Called after the document is created.
-     */
-    void onDocumentCreated(Document document);
-
-    /**
-     * Called after the document is linked to a file.
-     */
-    void onDocumentLinkedToFile(Document document, FileContents fileContents);
-
-    /**
-     * Called after the document is opened in an editor.
-     */
-    void onDocumentOpened(Document document, Editor editor);
-
-    /**
-     * Called after the document is no longer open in an editor.
-     */
-    void onDocumentClosed(Document document, Editor editor);
-
-    /**
-     * Called <em>before</em> the document is unlinked to its file (calling the
-     * {@link DocumentMetadata} getters for file-related metadata is okay.)
-     */
-    void onDocumentUnlinkingFromFile(Document document);
-
-    /**
-     * Called after the document has been garbage collected.
-     */
-    void onDocumentGarbageCollected(Document document);
-  }
-
-  /**
-   * Listener for the loading of a document.
-   */
-  public interface GetDocumentCallback {
-    void onDocumentReceived(Document document);
-
-    void onUneditableFileContentsReceived(FileContents contents);
-
-    void onFileNotFoundReceived();
-  }
-
-  private static final int MAX_CACHED_DOCUMENTS = 4;
-
-  private final DocumentManagerNetworkController networkController;
-
-  /**
-   * All of the documents, ordered by least-recently used documents (index 0 is
-   * the least recently used).
-   */
-  private final JsonArray<Document> documents = JsonCollections.createArray();
-  private final JsonStringMap<Document> documentsByFileEditSessionKey = JsonCollections.createMap();
-
-  private final ListenerManager<LifecycleListener> lifecycleListenerManager =
-      ListenerManager.create();
-
-  /*
-   * TODO: this will need to become a Document -> Editors map
-   * eventually
-   */
-  private Editor editor;
-
-  private DocumentManager(AppContext appContext) {
-    networkController = new DocumentManagerNetworkController(this, appContext);
-  }
-
-  public void cleanup() {
-    networkController.teardown();
-
-    while (documents.size() > 0) {
-      garbageCollectDocument(documents.get(0));
-    }
-  }
-
-  public ListenerRegistrar<LifecycleListener> getLifecycleListenerRegistrar() {
-    return lifecycleListenerManager;
-  }
-
-  /**
-   * Returns a copy of the list of documents managed by this class.
-   */
-  public JsonArray<Document> getDocuments() {
-    return documents.copy();
-  }
-
-  public Document getDocumentByFileEditSessionKey(String fileEditSessionKey) {
-    return documentsByFileEditSessionKey.get(fileEditSessionKey);
-  }
-
-   public Document getDocumentByFilePath(String filePath)
-   {
-      for (Document d: documents.asIterable())
-      {
-         if (filePath.equals(DocumentMetadata.getPath(d).getPathString()))
-         {
-            return d;
-         }
-      }
-      return null;
-   }
-
-
-  public void attachToEditor(final Document document, final Editor editor) {
-    final Document oldDocument = editor.getDocument();
-    if (oldDocument != null) {
-      detachFromEditor(editor, oldDocument);
+    public static DocumentManager create(AppContext appContext) {
+        return new DocumentManager(appContext);
     }
 
-    this.editor = editor;
+    /** Listener for changes to the lifecycle of individual documents. */
+    public interface LifecycleListener {
+        /** Called after the document is created. */
+        void onDocumentCreated(Document document);
 
-    markAsActive(document);
+        /** Called after the document is linked to a file. */
+        void onDocumentLinkedToFile(Document document, FileContents fileContents);
 
-    editor.setDocument(document);
+        /** Called after the document is opened in an editor. */
+        void onDocumentOpened(Document document, Editor editor);
 
-    lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-      @Override
-      public void dispatch(LifecycleListener listener) {
-        listener.onDocumentOpened(document, editor);
-      }
-    });
-  }
+        /** Called after the document is no longer open in an editor. */
+        void onDocumentClosed(Document document, Editor editor);
 
-  public void detachFromEditor(final Editor editor, final Document document) {
-    lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-      @Override
-      public void dispatch(LifecycleListener listener) {
-        listener.onDocumentClosed(document, editor);
-      }
-    });
+        /**
+         * Called <em>before</em> the document is unlinked to its file (calling the
+         * {@link DocumentMetadata} getters for file-related metadata is okay.)
+         */
+        void onDocumentUnlinkingFromFile(Document document);
 
-    clearDocumentState(document);
-  }
-
-  /*
-   * TODO: in the future, different features will remove
-   * non-persistent stuff themselves. For now, clear everything.
-   */
-  private void clearDocumentState(final Document document) {
-    for (Line line = document.getFirstLine(); line != null; line = line.getNextLine()) {
-      line.clearTags();
+        /** Called after the document has been garbage collected. */
+        void onDocumentGarbageCollected(Document document);
     }
 
-    // Column anchors exist on the line via a tag, so those get cleared above
-    document.getAnchorManager().clearLineAnchors();
-  }
+    /** Listener for the loading of a document. */
+    public interface GetDocumentCallback {
+        void onDocumentReceived(Document document);
 
-  public void getDocument(PathUtil path, GetDocumentCallback callback) {
+        void onUneditableFileContentsReceived(FileContents contents);
+
+        void onFileNotFoundReceived();
+    }
+
+    private static final int MAX_CACHED_DOCUMENTS = 4;
+
+    private final DocumentManagerNetworkController networkController;
+
+    /**
+     * All of the documents, ordered by least-recently used documents (index 0 is
+     * the least recently used).
+     */
+    private final JsonArray<Document>     documents                     = JsonCollections.createArray();
+    private final JsonStringMap<Document> documentsByFileEditSessionKey = JsonCollections.createMap();
+
+    private final ListenerManager<LifecycleListener> lifecycleListenerManager =
+            ListenerManager.create();
+
+    /*
+     * TODO: this will need to become a Document -> Editors map
+     * eventually
+     */
+    private Editor editor;
+
+    private DocumentManager(AppContext appContext) {
+        networkController = new DocumentManagerNetworkController(this, appContext);
+    }
+
+    public void cleanup() {
+        networkController.teardown();
+
+        while (documents.size() > 0) {
+            garbageCollectDocument(documents.get(0));
+        }
+    }
+
+    public ListenerRegistrar<LifecycleListener> getLifecycleListenerRegistrar() {
+        return lifecycleListenerManager;
+    }
+
+    /** Returns a copy of the list of documents managed by this class. */
+    public JsonArray<Document> getDocuments() {
+        return documents.copy();
+    }
+
+    public Document getDocumentByFileEditSessionKey(String fileEditSessionKey) {
+        return documentsByFileEditSessionKey.get(fileEditSessionKey);
+    }
+
+    public Document getDocumentByFilePath(String filePath) {
+        for (Document d : documents.asIterable()) {
+            if (filePath.equals(DocumentMetadata.getPath(d).getPathString())) {
+                return d;
+            }
+        }
+        return null;
+    }
+
+
+    public void attachToEditor(final Document document, final Editor editor) {
+        final Document oldDocument = editor.getDocument();
+        if (oldDocument != null) {
+            detachFromEditor(editor, oldDocument);
+        }
+
+        this.editor = editor;
+
+        markAsActive(document);
+
+        editor.setDocument(document);
+
+        lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+            @Override
+            public void dispatch(LifecycleListener listener) {
+                listener.onDocumentOpened(document, editor);
+            }
+        });
+    }
+
+    public void detachFromEditor(final Editor editor, final Document document) {
+        lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+            @Override
+            public void dispatch(LifecycleListener listener) {
+                listener.onDocumentClosed(document, editor);
+            }
+        });
+
+        clearDocumentState(document);
+    }
+
+    /*
+     * TODO: in the future, different features will remove
+     * non-persistent stuff themselves. For now, clear everything.
+     */
+    private void clearDocumentState(final Document document) {
+        for (Line line = document.getFirstLine(); line != null; line = line.getNextLine()) {
+            line.clearTags();
+        }
+
+        // Column anchors exist on the line via a tag, so those get cleared above
+        document.getAnchorManager().clearLineAnchors();
+    }
+
+    public void getDocument(PathUtil path, GetDocumentCallback callback) {
 //    if (fileTreeModel.getWorkspaceRoot() != null) {
 //      // FileTreeModel is populated so get the file edit session key for this path
 //      FileTreeNode node = fileTreeModel.getWorkspaceRoot().findChildNode(path);
@@ -209,31 +189,30 @@ public class DocumentManager {
 //      }
 //    }
 
-    networkController.load(path, callback);
-    // handleEditableFileReceived will be called async
-  }
+        networkController.load(path, callback);
+        // handleEditableFileReceived will be called async
+    }
 
-  public void addDocument(Document document)
-  {
-     documents.add(document);
-  }
+    public void addDocument(Document document) {
+        documents.add(document);
+    }
 
 
-  void handleEditableFileReceived(
-      FileContents fileContents, JsonArray<GetDocumentCallback> callbacks) {
+    void handleEditableFileReceived(
+            FileContents fileContents, JsonArray<GetDocumentCallback> callbacks) {
 
     /*
      * One last check to make sure we don't already have a Document for this
      * file
      */
-    Document document = documentsByFileEditSessionKey.get(fileContents.getFileEditSessionKey());
-    if (document == null) {
-       documentsByFileEditSessionKey.remove(fileContents.getFileEditSessionKey());
-    }
-      document = createDocument(fileContents.getContents(), new PathUtil(fileContents.getPath()),
-          fileContents.getFileEditSessionKey(), fileContents.getCcRevision(),
-          fileContents.getConflicts(), fileContents.getConflictHandle(), fileContents);
-      tryGarbageCollect();
+        Document document = documentsByFileEditSessionKey.get(fileContents.getFileEditSessionKey());
+        if (document == null) {
+            documentsByFileEditSessionKey.remove(fileContents.getFileEditSessionKey());
+        }
+        document = createDocument(fileContents.getContents(), new PathUtil(fileContents.getPath()),
+                                  fileContents.getFileEditSessionKey(), fileContents.getCcRevision(),
+                                  fileContents.getConflicts(), fileContents.getConflictHandle(), fileContents);
+        tryGarbageCollect();
 //    } else {
 //      /*
 //       * Ensure we have the latest path stashed in the metadata. One case where
@@ -243,52 +222,54 @@ public class DocumentManager {
 //      DocumentMetadata.putPath(document, new PathUtil(fileContents.getPath()));
 //    }
 
-    for (int i = 0, n = callbacks.size(); i < n; i++) {
-      callbacks.get(i).onDocumentReceived(document);
-    }
-  }
-
-  /**
-   * @param conflicts only required for documents that are in a conflicted state
-   * @param conflictHandle only required for documents that are in a conflicted state
-   */
-  private Document createDocument(String contents, PathUtil path, String fileEditSessionKey,
-      int ccRevision, JsonArray<ConflictChunk> conflicts, ConflictHandle conflictHandle,
-      final FileContents fileContents) {
-
-    final Document document = Document.createFromString(contents);
-
-    documents.add(document);
-
-    boolean isLinkedToFile = fileEditSessionKey != null;
-    if (isLinkedToFile) {
-      documentsByFileEditSessionKey.put(fileEditSessionKey, document);
-    }
-
-    DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
-    DocumentMetadata.putPath(document, path);
-    DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
-    DocumentMetadata.putBeginCcRevision(document, ccRevision);
-    DocumentMetadata.putConflicts(document, conflicts);
-    DocumentMetadata.putConflictHandle(document, conflictHandle);
-
-    lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-      @Override
-      public void dispatch(LifecycleListener listener) {
-        listener.onDocumentCreated(document);
-      }
-    });
-
-    if (isLinkedToFile) {
-      lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-        @Override
-        public void dispatch(LifecycleListener listener) {
-          listener.onDocumentLinkedToFile(document, fileContents);
+        for (int i = 0, n = callbacks.size(); i < n; i++) {
+            callbacks.get(i).onDocumentReceived(document);
         }
-      });
     }
 
-    // Save the fileEditSessionKey into the tree node.
+    /**
+     * @param conflicts
+     *         only required for documents that are in a conflicted state
+     * @param conflictHandle
+     *         only required for documents that are in a conflicted state
+     */
+    private Document createDocument(String contents, PathUtil path, String fileEditSessionKey,
+                                    int ccRevision, JsonArray<ConflictChunk> conflicts, ConflictHandle conflictHandle,
+                                    final FileContents fileContents) {
+
+        final Document document = Document.createFromString(contents);
+
+        documents.add(document);
+
+        boolean isLinkedToFile = fileEditSessionKey != null;
+        if (isLinkedToFile) {
+            documentsByFileEditSessionKey.put(fileEditSessionKey, document);
+        }
+
+        DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
+        DocumentMetadata.putPath(document, path);
+        DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
+        DocumentMetadata.putBeginCcRevision(document, ccRevision);
+        DocumentMetadata.putConflicts(document, conflicts);
+        DocumentMetadata.putConflictHandle(document, conflictHandle);
+
+        lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+            @Override
+            public void dispatch(LifecycleListener listener) {
+                listener.onDocumentCreated(document);
+            }
+        });
+
+        if (isLinkedToFile) {
+            lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+                @Override
+                public void dispatch(LifecycleListener listener) {
+                    listener.onDocumentLinkedToFile(document, fileContents);
+                }
+            });
+        }
+
+        // Save the fileEditSessionKey into the tree node.
 //    if (fileTreeModel.getWorkspaceRoot() != null) {
 //      FileTreeNode node = fileTreeModel.getWorkspaceRoot().findChildNode(path);
 //      if (node != null) {
@@ -296,88 +277,86 @@ public class DocumentManager {
 //      }
 //    }
 
-    return document;
-  }
-
-  private void markAsActive(Document document) {
-    if (documents.peek() != document) {
-      // Ensure it is at the top
-      documents.remove(document);
-      documents.add(document);
-    }
-  }
-
-  private void tryGarbageCollect() {
-    int removeCount = documents.size() - MAX_CACHED_DOCUMENTS;
-    for (int i = 0; i < documents.size() && removeCount > 0;) {
-      Document document = documents.get(i);
-
-      boolean documentIsOpen = editor != null && editor.getDocument() == document;
-      if (documentIsOpen) {
-        i++;
-        continue;
-      }
-
-      garbageCollectDocument(document);
-      removeCount--;
-    }
-  }
-
-  public void garbageCollectDocument(final Document document) {
-    if (DocumentMetadata.isLinkedToFile(document)) {
-      unlinkFromFile(document);
+        return document;
     }
 
-    documents.remove(document);
-
-    lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-      @Override
-      public void dispatch(LifecycleListener listener) {
-        listener.onDocumentGarbageCollected(document);
-      }
-    });
-  }
-
-  public void unlinkFromFile(final Document document) {
-    lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-      @Override
-      public void dispatch(LifecycleListener listener) {
-        listener.onDocumentUnlinkingFromFile(document);
-      }
-    });
-
-    documentsByFileEditSessionKey.remove(DocumentMetadata.getFileEditSessionKey(document));
-    DocumentMetadata.putLinkedToFile(document, false);
-  }
-
-  Document getMostRecentlyActiveDocument() {
-    return documents.peek();
-  }
-
-  /**
-   * Returns a potentially empty list of pairs of a document and an editor.
-   */
-  JsonArray<Pair<Document, Editor>> getOpenDocuments() {
-    JsonArray<Pair<Document, Editor>> result = JsonCollections.createArray();
-    if (editor == null || editor.getDocument() == null) {
-      return result;
+    private void markAsActive(Document document) {
+        if (documents.peek() != document) {
+            // Ensure it is at the top
+            documents.remove(document);
+            documents.add(document);
+        }
     }
+
+    private void tryGarbageCollect() {
+        int removeCount = documents.size() - MAX_CACHED_DOCUMENTS;
+        for (int i = 0; i < documents.size() && removeCount > 0; ) {
+            Document document = documents.get(i);
+
+            boolean documentIsOpen = editor != null && editor.getDocument() == document;
+            if (documentIsOpen) {
+                i++;
+                continue;
+            }
+
+            garbageCollectDocument(document);
+            removeCount--;
+        }
+    }
+
+    public void garbageCollectDocument(final Document document) {
+        if (DocumentMetadata.isLinkedToFile(document)) {
+            unlinkFromFile(document);
+        }
+
+        documents.remove(document);
+
+        lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+            @Override
+            public void dispatch(LifecycleListener listener) {
+                listener.onDocumentGarbageCollected(document);
+            }
+        });
+    }
+
+    public void unlinkFromFile(final Document document) {
+        lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+            @Override
+            public void dispatch(LifecycleListener listener) {
+                listener.onDocumentUnlinkingFromFile(document);
+            }
+        });
+
+        documentsByFileEditSessionKey.remove(DocumentMetadata.getFileEditSessionKey(document));
+        DocumentMetadata.putLinkedToFile(document, false);
+    }
+
+    Document getMostRecentlyActiveDocument() {
+        return documents.peek();
+    }
+
+    /** Returns a potentially empty list of pairs of a document and an editor. */
+    JsonArray<Pair<Document, Editor>> getOpenDocuments() {
+        JsonArray<Pair<Document, Editor>> result = JsonCollections.createArray();
+        if (editor == null || editor.getDocument() == null) {
+            return result;
+        }
 
     /*
      * TODO: When there are more than one editor, this will not be
      * trivial
      */
-    result.add(Pair.of(editor.getDocument(), editor));
-    return result;
-  }
-
-  public Document getDocumentById(int documentId) {
-    for (int i = 0, n = documents.size(); i < n; i++) {
-      if (documents.get(i).getId() == documentId) {
-        return documents.get(i);
-      }
+        result.add(Pair.of(editor.getDocument(), editor));
+        return result;
     }
-    
-    return null;
-  }
+
+    public Document getDocumentById(int documentId) {
+        for (int i = 0, n = documents.size(); i < n; i++) {
+            if (documents.get(i).getId() == documentId) {
+                return documents.get(i);
+            }
+        }
+
+        return null;
+    }
 }

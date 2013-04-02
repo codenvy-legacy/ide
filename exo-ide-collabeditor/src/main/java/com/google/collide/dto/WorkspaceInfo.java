@@ -18,76 +18,66 @@ import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutingType;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
-/**
- * Client-visible workspace information.
- */
+/** Client-visible workspace information. */
 @RoutingType(type = RoutingTypes.WORKSPACEINFO)
 public interface WorkspaceInfo extends ServerToClientDto, ClientToServerDto {
 
-  /**
-   * The type of this workspaces.
-   */
-  public enum WorkspaceType {
-    ACTIVE, SUBMITTED, TRUNK,   
-  }
+    /** The type of this workspaces. */
+    public enum WorkspaceType {
+        ACTIVE, SUBMITTED, TRUNK,
+    }
 
-  /**
-   * The user-specific state of the workspace.
-   */
-  public enum UserWorkspaceState {
-    ACTIVE, ARCHIVED
-  }
+    /** The user-specific state of the workspace. */
+    public enum UserWorkspaceState {
+        ACTIVE, ARCHIVED
+    }
 
-  String getOwningProjectId();
+    String getOwningProjectId();
 
-  String getDescription();
+    String getDescription();
 
-  String getId();
+    String getId();
 
-  /**
-   * The ID of the parent workspace that spawned this workspace, or -1 if one
-   * does not exists.
-   */
-  String getParentId();
+    /**
+     * The ID of the parent workspace that spawned this workspace, or -1 if one
+     * does not exists.
+     */
+    String getParentId();
 
-  String getCreatedTime();
+    String getCreatedTime();
 
-  String getArchivedTime();
+    String getArchivedTime();
 
-  String getSubmissionTime();
+    String getSubmissionTime();
 
-  /**
-   * Public workspaces are accessible to anyone with the link.
-   */
-  Visibility getVisibility();
+    /** Public workspaces are accessible to anyone with the link. */
+    Visibility getVisibility();
 
-  /**
-   * This is the time that should be used for sorting. It is dependent on the
-   * workspaceType.
-   */
-  String getSortTime();
+    /**
+     * This is the time that should be used for sorting. It is dependent on the
+     * workspaceType.
+     */
+    String getSortTime();
 
-  String getName();
+    String getName();
 
-  RunTarget getRunTarget();
+    RunTarget getRunTarget();
 
-  WorkspaceType getWorkspaceType();
+    WorkspaceType getWorkspaceType();
 
-  /**
-   * This field will be null for non-submitted workspaces.
-   */
-  UserDetails getSubmitter();
+    /** This field will be null for non-submitted workspaces. */
+    UserDetails getSubmitter();
 
-  /**
-   * Returns the current user's {@link Role} for this workspace. If the user is
-   * not a member of the workspace, the return value will be {@value Role#NONE}.
-   */
-  Role getCurrentUserRole();
+    /**
+     * Returns the current user's {@link Role} for this workspace. If the user is
+     * not a member of the workspace, the return value will be {@value Role#NONE}.
+     */
+    Role getCurrentUserRole();
 
-  /**
-   * Returns the current user's {@link Role} for the parent workspace of this
-   * workspace. If the user is not a member of the workspace, the return value
-   * will be {@value Role#NONE}.
-   */
-  Role getCurrentUserRoleForParent();
+    /**
+     * Returns the current user's {@link Role} for the parent workspace of this
+     * workspace. If the user is not a member of the workspace, the return value
+     * will be {@value Role#NONE}.
+     */
+    Role getCurrentUserRoleForParent();
 }

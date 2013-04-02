@@ -16,11 +16,9 @@ package com.google.collide.client.editor.input;
 
 import com.codenvy.ide.client.util.SignalEvent;
 
-/**
- * Abstract Shortcut class. Override event function to implement a callback.
- */
+/** Abstract Shortcut class. Override event function to implement a callback. */
 public interface Shortcut {
 
-  // TODO: separate the keybinding and action definitions
-  public abstract boolean event(InputScheme scheme, SignalEvent event);
+    // TODO: separate the keybinding and action definitions
+    public abstract boolean event(InputScheme scheme, SignalEvent event);
 }
