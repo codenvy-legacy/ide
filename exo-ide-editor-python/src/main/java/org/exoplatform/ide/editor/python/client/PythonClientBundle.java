@@ -25,15 +25,13 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: PythonClientBundle.java May 29, 2012 3:50:10 PM azatsarynnyy $
- *
  */
-public interface PythonClientBundle extends ClientBundle
-{
-   PythonClientBundle INSTANCE = GWT.create(PythonClientBundle.class);
-   
-   @Source("org/exoplatform/ide/editor/python/client/images/python.png")
-   ImageResource python();
+public interface PythonClientBundle extends ClientBundle {
+    PythonClientBundle INSTANCE = GWT.create(PythonClientBundle.class);
 
-   @Source("org/exoplatform/ide/editor/python/client/images/python-disabled.png")
-   ImageResource pythonDisabled();
+    @Source("org/exoplatform/ide/editor/python/client/images/python.png")
+    ImageResource python();
+
+    @Source("org/exoplatform/ide/editor/python/client/images/python-disabled.png")
+    ImageResource pythonDisabled();
 }
