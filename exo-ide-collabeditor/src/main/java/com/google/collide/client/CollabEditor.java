@@ -161,7 +161,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       }
 
       /**
-       * Enable/disable ignore text changes mode.
+       * This ensures that ignore text changes mode is enabled/disabled temporarily.
        * 
        * @param ignoreTextChanges <code>true</code> to ignore any text changes, <code>false</code> disable ignore mode
        */
@@ -621,8 +621,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void collapse()
    {
-      SelectionModel selectionModel = editor.getSelection();
-      final int cursorLineNumber = selectionModel.getCursorLineNumber();
+      final int cursorLineNumber = editor.getSelection().getCursorLineNumber();
       FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
       if (foldMarker != null)
       {
@@ -636,8 +635,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void expand()
    {
-      SelectionModel selectionModel = editor.getSelection();
-      final int cursorLineNumber = selectionModel.getCursorLineNumber();
+      final int cursorLineNumber = editor.getSelection().getCursorLineNumber();
       FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(cursorLineNumber, false);
       if (foldMarker != null)
       {
@@ -661,6 +659,26 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void expandAll()
    {
       editor.getFoldingManager().expandAll();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#foldSelection()
+    */
+   @Override
+   public void foldSelection()
+   {
+      final int selectionBeginLineNumber = editor.getSelection().getSelectionBeginLineNumber();
+      final int selectionEndLineNumber = editor.getSelection().getSelectionEndLineNumber();
+      try
+      {
+         int offset = document.getLineOffset(selectionBeginLineNumber);
+         int length = document.getLineOffset(selectionEndLineNumber) + document.getLineLength(selectionEndLineNumber) - offset;
+         editor.getFoldingManager().foldCustomRegion(offset, length);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
    }
 
    /**

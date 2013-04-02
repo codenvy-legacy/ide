@@ -18,6 +18,12 @@
  */
 package org.eclipse.jdt.client.outline;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.core.client.GWT;
@@ -77,7 +83,7 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
       outlineTreeViewModel = new OutlineTreeViewModel(selectionModel);
       cellTree = new CellTree(outlineTreeViewModel, null, res);
       cellTree.getElement().setId("ideOutlineTreeGrid");
-
+      cellTree.getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
       // Keyboard is disabled because of the selection problem (when selecting programmatically), if
       // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
       // and because of the focus border, when use KeyboardSelectionPolicy.ENABLED.
@@ -86,6 +92,52 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
 
       scrollPanel.add(cellTree);
       add(scrollPanel);
+
+      /**
+       * when node opened we start fixing properly appear of scrollbar
+       */
+      cellTree.addOpenHandler(new OpenHandler<TreeNode>()
+      {
+         @Override
+         public void onOpen(OpenEvent<TreeNode> event)
+         {
+            cellTreeScrollBarFix();
+         }
+      });
+
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            cellTree.getElement().getFirstChildElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
+         }
+      });
+   }
+
+   /**
+    * This fix need for properly working scrollbar in outline view, solution is not good, but for this moment it works.
+    *
+    */
+   private void cellTreeScrollBarFix()
+   {
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            NodeList<Element> elements = cellTree.getElement().getElementsByTagName("div");
+            for (int i = 0; i < elements.getLength(); i++) {
+               Element el = elements.getItem(i);
+               if (el.hasAttribute("role") && el.getAttribute("role").equals("treeitem")) {
+                  if (el.getChildCount() == 2) {
+                     com.google.gwt.user.client.Element uel = el.getChild(1).cast();
+                     uel.getStyle().clearOverflow(); // <- !!! this allow to show scrollbar
+                  }
+               }
+            }
+         }
+      });
    }
 
    /**
@@ -111,6 +163,8 @@ public class OutlineView extends ViewImpl implements OutlinePresenter.Display
       {
          outlineTreeViewModel.getDataProvider().getList().addAll(visitor.getNodes());
       }
+
+      cellTreeScrollBarFix();
    }
 
    /**

@@ -30,9 +30,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent;
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersEvent;
+import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 
 /**
  * Presenter for welcome view.
@@ -45,12 +45,12 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
 
    public interface Display extends IsView
    {
-      HasClickHandlers getSamplesLink();
+      HasClickHandlers getCloneLink();
 
       HasClickHandlers getProjectLink();
 
       HasClickHandlers getImportLink();
-      
+
       HasClickHandlers getInvitationsLink();
    }
 
@@ -64,12 +64,12 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
 
    private void bindDisplay()
    {
-      display.getSamplesLink().addClickHandler(new ClickHandler()
+      display.getCloneLink().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new ShowSamplesEvent());
+            IDE.fireEvent(new CloneRepositoryEvent());
          }
       });
 
@@ -88,7 +88,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-           IDE.fireEvent(new ImportFromGithubEvent());
+            IDE.fireEvent(new ImportFromGithubEvent());
          }
       });
 

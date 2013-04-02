@@ -1118,7 +1118,7 @@ public class Buffer extends UiComponent<Buffer.View>
    */
   private void updateBufferHeight(int lineCountDelta) {
     int lineCount = 0;
-    if (isFoldingModeEnabled()) {
+    if (foldingManager.isFoldingModeEnabled()) {
       lineCount = foldingManager.getSlaveDocument().getNumberOfLines() + lineCountDelta;
     }
     else {
@@ -1220,7 +1220,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * @return count of folded lines above the <code>lineNumber</code>
    */
   public int getFoldedLinesCountAboveLineNumber(int lineNumber) {
-    if (!isFoldingModeEnabled()) {
+    if (!foldingManager.isFoldingModeEnabled()) {
       return 0;
     }
     final int visibleLinesCount = foldingManager.getSlaveDocument().getNumberOfLines();
@@ -1236,7 +1236,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * @return the corresponding projection document's line or <code>-1</code>
    */
   public int modelLine2VisibleLine(int masterLineNumber) {
-    if (!isFoldingModeEnabled()) {
+    if (!foldingManager.isFoldingModeEnabled()) {
       return masterLineNumber;
     }
     if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
@@ -1259,7 +1259,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * @return the corresponding model line or <code>-1</code>
    */
   public int visibleLine2ModelLine(int visibleLine) {
-    if (!isFoldingModeEnabled()) {
+    if (!foldingManager.isFoldingModeEnabled()) {
       return visibleLine;
     }
     try {
@@ -1280,7 +1280,7 @@ public class Buffer extends UiComponent<Buffer.View>
    *          that is visible or <code>-1</code> if no visible line
    */
   public int getNextClosestModelLineThatIsVisible(int masterLineNumber) {
-     if (!isFoldingModeEnabled()) {
+     if (!foldingManager.isFoldingModeEnabled()) {
        return masterLineNumber;
      }
      if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
@@ -1297,10 +1297,6 @@ public class Buffer extends UiComponent<Buffer.View>
        Log.error(getClass(), e);
      }
      return -1;
-  }
-
-  private boolean isFoldingModeEnabled() {
-    return foldingManager.getInformationMapping() != null;
   }
 
 }

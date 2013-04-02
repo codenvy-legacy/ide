@@ -19,9 +19,7 @@
 package org.exoplatform.ide.extension.aws.server.ec2;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.AvailabilityZone;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
@@ -38,7 +36,6 @@ import com.amazonaws.services.ec2.model.SecurityGroup;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
-import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
@@ -48,6 +45,8 @@ import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,9 +59,9 @@ import java.util.NoSuchElementException;
  */
 public class EC2 extends AWSClient
 {
-   public EC2(AWSAuthenticator authenticator)
+   public EC2(CredentialStore credentialStore)
    {
-      super(authenticator);
+      super(credentialStore);
    }
 
    /**
@@ -80,7 +79,7 @@ public class EC2 extends AWSClient
     * @param maxItems
     *    how may items include result. If -1 then no limit of max images in result set
     * @return list of available images
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     * @throws IllegalArgumentException
     *    if skipCount parameter is negative or greater then total number of images
@@ -89,20 +88,15 @@ public class EC2 extends AWSClient
                                 boolean isPublic,
                                 Architecture architecture,
                                 int skipCount,
-                                int maxItems) throws AWSException
+                                int maxItems) throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return listImages(ec2Client, owner, isPublic, architecture, skipCount, maxItems);
+         return listImages(getEC2Client(), owner, isPublic, architecture, skipCount, maxItems);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -180,25 +174,19 @@ public class EC2 extends AWSClient
     * Return description of all key pairs available for current authorized user.
     * EC2 key pairs used to launch and access EC2 instances.
     *
-    * @return
-    *    list with objects containing key name and key fingerprint
-    * @throws AWSException
+    * @return list with objects containing key name and key fingerprint
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<KeyPairInfo> listKeyPairs() throws AWSException
+   public List<KeyPairInfo> listKeyPairs() throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return listKeyPairs(ec2Client);
+         return listKeyPairs(getEC2Client());
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -218,25 +206,19 @@ public class EC2 extends AWSClient
    /**
     * Return description about security groups available for current authorized user.
     *
-    * @return
-    *    list with objects containing description about AWS security group
-    * @throws AWSException
+    * @return list with objects containing description about AWS security group
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<SecurityGroupInfo> listSecurityGroups() throws AWSException
+   public List<SecurityGroupInfo> listSecurityGroups() throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return listSecurityGroups(ec2Client);
+         return listSecurityGroups(getEC2Client());
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -257,25 +239,19 @@ public class EC2 extends AWSClient
    /**
     * Return description about regions zones that are currently available to the account.
     *
-    * @return
-    *    list of described EC2 regions available for account
-    * @throws AWSException
+    * @return list of described EC2 regions available for account
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<RegionInfo> listRegions() throws AWSException
+   public List<RegionInfo> listRegions() throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return listRegions(ec2Client);
+         return listRegions(getEC2Client());
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -296,25 +272,19 @@ public class EC2 extends AWSClient
     * Return information about EC2 availability zones that are currently available to the account.
     * The results include zones only for the Region you're currently using
     *
-    * @return
-    *    list of described EC2 availability zones
-    * @throws AWSException
+    * @return list of described EC2 availability zones
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<String> listAvailabilityZones() throws AWSException
+   public List<String> listAvailabilityZones() throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return listAvailabilityZones(ec2Client);
+         return listAvailabilityZones(getEC2Client());
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -341,7 +311,7 @@ public class EC2 extends AWSClient
     * @param instanceType
     *    specifies the instance type for the launched instances.
     *    valid values: t1.micro | m1.small | m1.medium | m1.large | m1.xlarge | m2.xlarge | m2.2xlarge
-    *                   | m2.4xlarge | c1.medium | c1.xlarge | hi1.4xlarge | cc1.4xlarge | cc2.8xlarge | cg1.4xlarge
+    *    | m2.4xlarge | c1.medium | c1.xlarge | hi1.4xlarge | cc1.4xlarge | cc2.8xlarge | cg1.4xlarge
     * @param numberOfInstances
     *    number of instances to launch, must be greater 0
     * @param keyName
@@ -350,9 +320,8 @@ public class EC2 extends AWSClient
     *    list of security groups into which instances will be launched
     * @param availabilityZone
     *    availability zone into which instances wil be launched
-    * @return
-    *    list containing unique ID of launched instances
-    * @throws AWSException
+    * @return list containing unique ID of launched instances
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public List<String> runInstance(String imageId,
@@ -360,13 +329,12 @@ public class EC2 extends AWSClient
                                    int numberOfInstances,
                                    String keyName,
                                    List<String> securityGroupsIds,
-                                   String availabilityZone) throws AWSException
+                                   String availabilityZone) throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
          return runInstance(
-            ec2Client,
+            getEC2Client(),
             imageId,
             instanceType,
             numberOfInstances,
@@ -378,10 +346,6 @@ public class EC2 extends AWSClient
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -420,23 +384,18 @@ public class EC2 extends AWSClient
     *    unique ID of instance
     * @param force
     *    forces the instance to stop
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void stopInstance(String instanceId, boolean force) throws AWSException
+   public void stopInstance(String instanceId, boolean force) throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         stopInstance(ec2Client, instanceId, force);
+         stopInstance(getEC2Client(), instanceId, force);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -452,23 +411,18 @@ public class EC2 extends AWSClient
     *
     * @param instanceId
     *    unique ID of instance
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void startInstance(String instanceId) throws AWSException
+   public void startInstance(String instanceId) throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         startInstance(ec2Client, instanceId);
+         startInstance(getEC2Client(), instanceId);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -486,23 +440,18 @@ public class EC2 extends AWSClient
     *
     * @param instanceId
     *    unique ID of instance
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void rebootInstance(String instanceId) throws AWSException
+   public void rebootInstance(String instanceId) throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         rebootInstance(ec2Client, instanceId);
+         rebootInstance(getEC2Client(), instanceId);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -519,23 +468,18 @@ public class EC2 extends AWSClient
     *
     * @param instanceId
     *    unique ID of instance
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void terminateInstance(String instanceId) throws AWSException
+   public void terminateInstance(String instanceId) throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         terminateInstance(ec2Client, instanceId);
+         terminateInstance(getEC2Client(), instanceId);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -549,25 +493,19 @@ public class EC2 extends AWSClient
    /**
     * Returns information about instances that authorized user owns.
     *
-    * @return
-    *    list of objects which contains various information about instance
-    * @throws AWSException
+    * @return list of objects which contains various information about instance
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<InstanceInfo> getInstances() throws AWSException
+   public List<InstanceInfo> getInstances() throws AWSException, CredentialStoreException
    {
-      AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return getInstances(ec2Client);
+         return getInstances(getEC2Client());
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         ec2Client.shutdown();
       }
    }
 
@@ -595,17 +533,5 @@ public class EC2 extends AWSClient
          }
       }
       return instances;
-   }
-
-   //
-
-   protected AmazonEC2 getEC2Client() throws AWSException
-   {
-      final AWSCredentials credentials = authenticator.getCredentials();
-      if (credentials == null)
-      {
-         throw new AWSException("Authentication required.");
-      }
-      return new AmazonEC2Client(credentials);
    }
 }

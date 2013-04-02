@@ -79,19 +79,19 @@ public class FoldingManager implements Document.TextListener
    }
 
    /**
-    * A listener that is called when a fold marker's state was changed.
+    * A listener that is called when a folds state was changed.
     */
-   public interface FoldMarksStateListener
+   public interface FoldsStateListener
    {
       /**
        * Called when any fold mark added/removed or it state changed (collapsed/expanded).
        */
-      void onFoldMarksStateChaged();
+      void onFoldsStateChaged();
    }
 
    private final ListenerManager<FoldingListener> foldingListenerManager;
 
-   private final ListenerManager<FoldMarksStateListener> foldMarksStateListenerManager;
+   private final ListenerManager<FoldsStateListener> foldMarksStateListenerManager;
 
    /**
     * Manager for anchors within a document.
@@ -120,6 +120,9 @@ public class FoldingManager implements Document.TextListener
    private final Buffer buffer;
 
    private HashMap<FoldMarker, AbstractFoldRange> markerToPositionMap = new HashMap<FoldMarker, AbstractFoldRange>();
+
+   private HashMap<FoldMarker, AbstractFoldRange> customMarkerToPositionMap =
+      new HashMap<FoldMarker, AbstractFoldRange>();
 
    /**
     * CollabEditor's document.
@@ -196,7 +199,7 @@ public class FoldingManager implements Document.TextListener
       return foldingListenerManager;
    }
 
-   public ListenerRegistrar<FoldMarksStateListener> getFoldMarksStateListenerRegistrar()
+   public ListenerRegistrar<FoldsStateListener> getFoldMarksStateListenerRegistrar()
    {
       return foldMarksStateListenerManager;
    }
@@ -211,20 +214,6 @@ public class FoldingManager implements Document.TextListener
       if (foldMarker.isCollapsed())
       {
          toggleExpansionState(foldMarker);
-      }
-   }
-
-   /**
-    * Collapse all expanded fold markers.
-    */
-   public void collapseAll()
-   {
-      for (FoldMarker marker : markerToPositionMap.keySet())
-      {
-         if (!marker.isCollapsed())
-         {
-            toggleExpansionState(marker);
-         }
       }
    }
 
@@ -256,12 +245,66 @@ public class FoldingManager implements Document.TextListener
    }
 
    /**
+    * Collapse all expanded fold markers.
+    */
+   public void collapseAll()
+   {
+      for (FoldMarker marker : markerToPositionMap.keySet())
+      {
+         if (!marker.isCollapsed())
+         {
+            toggleExpansionState(marker);
+         }
+      }
+   }
+
+   /**
+    * Fold the specified text region.
+    * 
+    * @param offset text offset of a region to fold
+    * @param length text length of a region to fold
+    */
+   public void foldCustomRegion(int offset, int length)
+   {
+      FoldMarker foldMarker = new FoldMarker(false, resources);
+      AbstractFoldRange foldRange = new AbstractFoldRange(offset, length)
+      {
+         @Override
+         public IRegion[] computeProjectionRegions(IDocument document) throws BadLocationException
+         {
+            int firstLineNumber = document.getLineOfOffset(offset);
+            int firstLineLength = document.getLineLength(firstLineNumber);
+            return new Region[]{new Region(offset + firstLineLength, length - firstLineLength)};
+         }
+
+         @Override
+         public int computeCaptionOffset(IDocument document) throws BadLocationException
+         {
+            return 0;
+         }
+      };
+      customMarkerToPositionMap.put(foldMarker, foldRange);
+
+      try
+      {
+         getMasterDocument().addPosition(foldRange);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
+
+      markerToPositionMap.put(foldMarker, foldRange);
+      collapse(foldMarker);
+   }
+
+   /**
     * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, com.google.collide.json.shared.JsonArray)
     */
    @Override
    public void onTextChange(Document document, final JsonArray<TextChange> textChanges)
    {
-      updateFoldingStructure(foldOccurrencesFinder.computePositions(getMasterDocument()), true);
+      updateFoldStructureAndDispatch(foldOccurrencesFinder.findPositions(getMasterDocument()), true);
       revealRegionsWithTextChanges(textChanges);
    }
 
@@ -309,7 +352,7 @@ public class FoldingManager implements Document.TextListener
       IDocument masterDocument = document.<IDocument> getTag("IDocument");
       initializeProjection(masterDocument);
 
-      updateFoldingStructure(foldOccurrencesFinder.computePositions(masterDocument), false);
+      updateFoldStructureAndDispatch(foldOccurrencesFinder.findPositions(masterDocument), false);
    }
 
    /**
@@ -328,7 +371,7 @@ public class FoldingManager implements Document.TextListener
          foldMarker.markCollapsed();
       }
       modifyFoldMarker(foldMarker);
-      dispatchStateChaged();
+      dispatchFoldsStateChaged();
    }
 
    /**
@@ -363,12 +406,12 @@ public class FoldingManager implements Document.TextListener
             if (foldMarker.isCollapsed())
             {
                slaveDocument.removeMasterDocumentRange(startOffset, length);
-               collapseInternally(firstLineNumber, linesArray);
+               internalCollapse(firstLineNumber, linesArray);
             }
             else
             {
                slaveDocument.addMasterDocumentRange(startOffset, length);
-               expandInternally(firstLineNumber, linesArray);
+               internalExpand(firstLineNumber, linesArray);
             }
          }
       }
@@ -378,7 +421,7 @@ public class FoldingManager implements Document.TextListener
       }
    }
 
-   private void collapseInternally(int lineNumber, JsonArray<Line> linesToCollapse)
+   private void internalCollapse(int lineNumber, JsonArray<Line> linesToCollapse)
    {
       if (linesToCollapse.isEmpty())
       {
@@ -413,7 +456,7 @@ public class FoldingManager implements Document.TextListener
             lastLineFirstUntouchedColumn);
    }
 
-   private void expandInternally(int lineNumber, JsonArray<Line> linesToExpand)
+   private void internalExpand(int lineNumber, JsonArray<Line> linesToExpand)
    {
       if (linesToExpand.isEmpty())
       {
@@ -446,14 +489,14 @@ public class FoldingManager implements Document.TextListener
       });
    }
 
-   private void dispatchStateChaged()
+   private void dispatchFoldsStateChaged()
    {
-      foldMarksStateListenerManager.dispatch(new Dispatcher<FoldMarksStateListener>()
+      foldMarksStateListenerManager.dispatch(new Dispatcher<FoldsStateListener>()
       {
          @Override
-         public void dispatch(FoldMarksStateListener listener)
+         public void dispatch(FoldsStateListener listener)
          {
-            listener.onFoldMarksStateChaged();
+            listener.onFoldsStateChaged();
          }
       });
    }
@@ -516,7 +559,7 @@ public class FoldingManager implements Document.TextListener
     */
    public void ensureLineVisibility(int lineNumber)
    {
-      if (buffer.modelLine2VisibleLine(lineNumber) == -1)
+      if (isFoldingModeEnabled() && buffer.modelLine2VisibleLine(lineNumber) == -1)
       {
          FoldMarker foldMarker = getFoldMarkerOfLine(lineNumber, false);
          if (foldMarker != null && foldMarker.isCollapsed())
@@ -590,24 +633,30 @@ public class FoldingManager implements Document.TextListener
    }
 
    /**
-    * Updates folding structure according to he given <code>positions</code>.
+    * Updates the folding structure according to the given <code>positions</code> and informs all listeners.
     * 
     * @param positions list of the positions that describes the folding structure
-    * @param restoreMarkersState
+    * @param restoreFoldsState
     */
-   private void updateFoldingStructure(List<AbstractFoldRange> positions, boolean restoreMarkersState)
+   private void updateFoldStructureAndDispatch(List<AbstractFoldRange> positions, boolean restoreFoldsState)
    {
       markerToPositionMap.clear();
       for (AbstractFoldRange range : positions)
       {
          boolean isCollapsed = false;
-         if (restoreMarkersState)
+         if (restoreFoldsState)
          {
             isCollapsed = isFoldRangeCollapsed(range);
          }
          markerToPositionMap.put(new FoldMarker(isCollapsed, resources), range);
       }
-      dispatchStateChaged();
+      restoreCustomFolds();
+      dispatchFoldsStateChaged();
+   }
+
+   private void restoreCustomFolds()
+   {
+      markerToPositionMap.putAll(customMarkerToPositionMap);
    }
 
    /**
@@ -708,6 +757,16 @@ public class FoldingManager implements Document.TextListener
    public void setFoldFinder(FoldOccurrencesFinder foldOccurrencesFinder)
    {
       this.foldOccurrencesFinder = foldOccurrencesFinder;
+   }
+
+   /**
+    * Checks whether folding mode enabled.
+    * 
+    * @return <code>true</code> if folding mode is enabled, <code>false</code> otherwise
+    */
+   public boolean isFoldingModeEnabled()
+   {
+      return informationMapping != null;
    }
 
 }

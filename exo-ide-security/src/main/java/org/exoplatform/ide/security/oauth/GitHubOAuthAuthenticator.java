@@ -29,6 +29,9 @@ import com.google.api.client.json.jackson.JacksonFactory;
 
 import org.exoplatform.ide.security.shared.User;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
 import javax.mail.internet.AddressException;
@@ -42,7 +45,7 @@ import javax.mail.internet.InternetAddress;
  */
 public class GitHubOAuthAuthenticator extends OAuthAuthenticator
 {
-   protected GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
+   public GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {
       super(
          new AuthorizationCodeFlow.Builder(BearerToken.authorizationHeaderAccessMethod(),
@@ -84,5 +87,39 @@ public class GitHubOAuthAuthenticator extends OAuthAuthenticator
    public final String getOAuthProvider()
    {
       return "github";
+   }
+
+   @Override
+   public String getToken(String userId) throws IOException
+   {
+      final String token = super.getToken(userId);
+      if (!(token == null || token.isEmpty()))
+      {
+         // Need to check if token which stored is valid for requests, then if valid - we returns it to caller
+         String tokenVerifyUrl = "https://api.github.com/?access_token=" + token;
+         HttpURLConnection http = null;
+         try
+         {
+            http = (HttpURLConnection)new URL(tokenVerifyUrl).openConnection();
+            http.setInstanceFollowRedirects(false);
+            http.setRequestMethod("GET");
+            http.setRequestProperty("Accept", "application/json");
+
+            if (http.getResponseCode() == 401)
+            {
+               return null;
+            }
+         }
+         finally
+         {
+            if (http != null)
+            {
+               http.disconnect();
+            }
+         }
+
+         return token;
+      }
+      return null;
    }
 }

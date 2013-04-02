@@ -19,9 +19,7 @@
 package org.exoplatform.ide.extension.aws.server.beanstalk;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.elasticbeanstalk.AWSElasticBeanstalk;
-import com.amazonaws.services.elasticbeanstalk.AWSElasticBeanstalkClient;
 import com.amazonaws.services.elasticbeanstalk.model.ApplicationDescription;
 import com.amazonaws.services.elasticbeanstalk.model.ApplicationVersionDescription;
 import com.amazonaws.services.elasticbeanstalk.model.ConfigurationOptionDescription;
@@ -62,11 +60,8 @@ import com.amazonaws.services.elasticbeanstalk.model.UpdateConfigurationTemplate
 import com.amazonaws.services.elasticbeanstalk.model.UpdateEnvironmentRequest;
 import com.amazonaws.services.elasticbeanstalk.model.UpdateEnvironmentResult;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-
 import org.exoplatform.ide.commons.NameGenerator;
-import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
@@ -79,6 +74,8 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsSeverity;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -86,8 +83,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,11 +103,9 @@ import java.util.Map;
  */
 public class Beanstalk extends AWSClient
 {
-   private static final Log LOG = ExoLogger.getLogger(Beanstalk.class);
-
-   public Beanstalk(AWSAuthenticator authenticator)
+   public Beanstalk(CredentialStore credentialStore)
    {
-      super(authenticator);
+      super(credentialStore);
    }
 
    //
@@ -123,20 +116,15 @@ public class Beanstalk extends AWSClient
     * @return list of available solutions stacks
     *         if any error occurs when make request to Amazon API
     */
-   public List<SolutionStack> listAvailableSolutionStacks() throws AWSException
+   public List<SolutionStack> listAvailableSolutionStacks() throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return listAvailableSolutionStacks(beanstalkClient);
+         return listAvailableSolutionStacks(getBeanstalkClient());
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -158,25 +146,20 @@ public class Beanstalk extends AWSClient
     * @param solutionStackName
     *    name of solution stack
     * @return list of configuration options
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public List<ConfigurationOptionInfo> listSolutionStackConfigurationOptions(String solutionStackName)
-      throws AWSException
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return listSolutionStackConfigurationOptions(beanstalkClient,
+         return listSolutionStackConfigurationOptions(getBeanstalkClient(),
             new DescribeConfigurationOptionsRequest().withSolutionStackName(solutionStackName));
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -230,11 +213,11 @@ public class Beanstalk extends AWSClient
     * @param war
     *    URL to pre-build war file. May be present for java applications ONLY
     * @return info about newly created application
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
-    * @throws IOException
+    * @throws java.io.IOException
     *    i/o error, e.g. when try to download pre-build binary file
     */
    public ApplicationInfo createApplication(String applicationName,
@@ -243,7 +226,8 @@ public class Beanstalk extends AWSClient
                                             String s3Key,
                                             VirtualFileSystem vfs,
                                             String projectId,
-                                            URL war) throws AWSException, VirtualFileSystemException, IOException
+                                            URL war)
+      throws AWSException, VirtualFileSystemException, IOException, CredentialStoreException
    {
       if (applicationName == null || applicationName.isEmpty())
       {
@@ -254,22 +238,14 @@ public class Beanstalk extends AWSClient
          throw new IllegalArgumentException("Project directory required. ");
       }
 
-      // Be sure project is accessible before start creation an application.
-      // VirtualFileSystemException thrown if something wrong.
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
-      AmazonS3 s3Client = getS3Client();
       try
       {
-         return createApplication(beanstalkClient, s3Client, applicationName, description, s3Bucket, s3Key, vfs,
+         return createApplication(getBeanstalkClient(), getS3Client(), applicationName, description, s3Bucket, s3Key, vfs,
             projectId, war);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -283,11 +259,13 @@ public class Beanstalk extends AWSClient
                                              String projectId,
                                              URL war) throws VirtualFileSystemException, IOException
    {
-      beanstalkClient.createApplication(new CreateApplicationRequest().withApplicationName(applicationName)
-         .withDescription(description));
+      // Be sure project is accessible before start creation an application.
+      // VirtualFileSystemException thrown if something wrong.
       S3Location s3Location = war == null
          ? createS3Location(s3Client, applicationName, s3Bucket, s3Key, vfs.exportZip(projectId))
          : createS3Location(s3Client, applicationName, s3Bucket, s3Key, war);
+      beanstalkClient.createApplication(new CreateApplicationRequest().withApplicationName(applicationName)
+         .withDescription(description));
       beanstalkClient.createApplicationVersion(new CreateApplicationVersionRequest()
          .withApplicationName(applicationName)
          .withVersionLabel("initial version")
@@ -305,13 +283,13 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return info about application
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public ApplicationInfo getApplicationInfo(VirtualFileSystem vfs, String projectId) throws AWSException,
-      VirtualFileSystemException
+      VirtualFileSystemException, CredentialStoreException
    {
       return getApplicationInfo(detectApplicationName(vfs, projectId));
    }
@@ -322,15 +300,14 @@ public class Beanstalk extends AWSClient
     * @param applicationName
     *    name of application
     * @return info about application
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public ApplicationInfo getApplicationInfo(String applicationName) throws AWSException
+   public ApplicationInfo getApplicationInfo(String applicationName) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         ApplicationInfo application = getApplicationInfo(beanstalkClient, applicationName);
+         ApplicationInfo application = getApplicationInfo(getBeanstalkClient(), applicationName);
          if (application == null)
          {
             throw new AWSException("Application '" + applicationName + "' not found. ");
@@ -340,10 +317,6 @@ public class Beanstalk extends AWSClient
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -373,13 +346,13 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return info about application
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public ApplicationInfo updateApplication(VirtualFileSystem vfs, String projectId, String description)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return updateApplication(detectApplicationName(vfs, projectId), description);
    }
@@ -392,27 +365,24 @@ public class Beanstalk extends AWSClient
     * @param description
     *    new application description
     * @return info about application
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public ApplicationInfo updateApplication(String applicationName, String description) throws AWSException
+   public ApplicationInfo updateApplication(String applicationName, String description)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return updateApplication(beanstalkClient, applicationName, description);
+         return updateApplication(getBeanstalkClient(), applicationName, description);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
       }
-      finally
-      {
-         beanstalkClient.shutdown();
-      }
    }
 
-   private ApplicationInfo updateApplication(AWSElasticBeanstalk beanstalkClient, String applicationName,
+   private ApplicationInfo updateApplication(AWSElasticBeanstalk beanstalkClient,
+                                             String applicationName,
                                              String description)
    {
       ApplicationDescription awsApplication = beanstalkClient.updateApplication(new UpdateApplicationRequest()
@@ -450,9 +420,9 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return list of events
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     * @see org.exoplatform.ide.extension.aws.shared.beanstalk.Event
     */
@@ -466,7 +436,7 @@ public class Beanstalk extends AWSClient
                                            String nextToken,
                                            VirtualFileSystem vfs,
                                            String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return listApplicationEvents(detectApplicationName(vfs, projectId), versionLabel, templateName, environmentId,
          severity, startTime, endTime, maxRecords, nextToken);
@@ -494,7 +464,7 @@ public class Beanstalk extends AWSClient
     * @param nextToken
     *    token to get the next batch of results. See org.exoplatform.ide.extension.aws.shared.EventsList#getNextToken()
     * @return list of events
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     * @see org.exoplatform.ide.extension.aws.shared.beanstalk.Event
     */
@@ -506,21 +476,16 @@ public class Beanstalk extends AWSClient
                                            long startTime,
                                            long endTime,
                                            int maxRecords,
-                                           String nextToken) throws AWSException
+                                           String nextToken) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return listApplicationEvents(beanstalkClient, applicationName, versionLabel, templateName, environmentId,
+         return listApplicationEvents(getBeanstalkClient(), applicationName, versionLabel, templateName, environmentId,
             severity, startTime, endTime, maxRecords, nextToken);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -587,13 +552,13 @@ public class Beanstalk extends AWSClient
     *    virtual file system instance for reading application name from properties of project
     * @param projectId
     *    project id
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public void deleteApplication(VirtualFileSystem vfs, String projectId) throws AWSException,
-      VirtualFileSystemException
+      VirtualFileSystemException, CredentialStoreException
    {
       deleteApplication(detectApplicationName(vfs, projectId));
       writeApplicationName(vfs, projectId, null);
@@ -612,23 +577,18 @@ public class Beanstalk extends AWSClient
     *
     * @param applicationName
     *    of application to delete
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void deleteApplication(String applicationName) throws AWSException
+   public void deleteApplication(String applicationName) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         deleteApplication(beanstalkClient, applicationName);
+         deleteApplication(getBeanstalkClient(), applicationName);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -641,23 +601,18 @@ public class Beanstalk extends AWSClient
     * Get existing applications.
     *
     * @return list of applications
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<ApplicationInfo> listApplications() throws AWSException
+   public List<ApplicationInfo> listApplications() throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return listApplications(beanstalkClient);
+         return listApplications(getBeanstalkClient());
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -707,9 +662,9 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return info about application
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public Configuration createConfigurationTemplate(String templateName,
@@ -721,7 +676,7 @@ public class Beanstalk extends AWSClient
                                                     List<ConfigurationOption> options,
                                                     VirtualFileSystem vfs,
                                                     String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return createConfigurationTemplate(detectApplicationName(vfs, projectId), templateName, solutionStackName,
          sourceApplicationName, sourceTemplateName, environmentId, description, options);
@@ -749,7 +704,7 @@ public class Beanstalk extends AWSClient
     *    Set configuration options. Options specified in this list override options copied from solution stack or
     *    source configuration template.
     * @return info about newly create configuration template
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public Configuration createConfigurationTemplate(String applicationName,
@@ -759,21 +714,17 @@ public class Beanstalk extends AWSClient
                                                     String sourceTemplateName,
                                                     String environmentId,
                                                     String description,
-                                                    List<ConfigurationOption> options) throws AWSException
+                                                    List<ConfigurationOption> options)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return createConfigurationTemplate(beanstalkClient, applicationName, templateName, solutionStackName,
+         return createConfigurationTemplate(getBeanstalkClient(), applicationName, templateName, solutionStackName,
             sourceApplicationName, sourceTemplateName, environmentId, description, options);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -832,16 +783,16 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return info about updated configuration template
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public Configuration updateConfigurationTemplate(String templateName,
                                                     String description,
                                                     VirtualFileSystem vfs,
                                                     String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return updateConfigurationTemplate(detectApplicationName(vfs, projectId), templateName, description);
    }
@@ -856,25 +807,20 @@ public class Beanstalk extends AWSClient
     * @param description
     *    new description of configuration template. Length: 0 - 200 characters
     * @return info about updated configuration template
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public Configuration updateConfigurationTemplate(String applicationName,
                                                     String templateName,
-                                                    String description) throws AWSException
+                                                    String description) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return updateConfigurationTemplate(beanstalkClient, applicationName, templateName, description);
+         return updateConfigurationTemplate(getBeanstalkClient(), applicationName, templateName, description);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -910,15 +856,15 @@ public class Beanstalk extends AWSClient
     *    virtual file system instance for reading application name from properties of project
     * @param projectId
     *    project id
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     * @see #createConfigurationTemplate(String, String, String, String, String, String, java.util.List,
     *      org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
     */
    public void deleteConfigurationTemplate(String templateName, VirtualFileSystem vfs, String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       deleteConfigurationTemplate(detectApplicationName(vfs, projectId), templateName);
    }
@@ -930,24 +876,20 @@ public class Beanstalk extends AWSClient
     *    name of the application to associate with configuration template
     * @param templateName
     *    name of template to delete
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     * @see #createConfigurationTemplate(String, String, String, String, String, String, String, java.util.List)
     */
-   public void deleteConfigurationTemplate(String applicationName, String templateName) throws AWSException
+   public void deleteConfigurationTemplate(String applicationName, String templateName)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         deleteConfigurationTemplate(beanstalkClient, applicationName, templateName);
+         deleteConfigurationTemplate(getBeanstalkClient(), applicationName, templateName);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -982,11 +924,11 @@ public class Beanstalk extends AWSClient
     * @param war
     *    URL to pre-build war file. May be present for java applications ONLY
     * @return info about an application version
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
-    * @throws IOException
+    * @throws java.io.IOException
     *    i/o error, e.g. when try to download pre-build binary file
     */
    public ApplicationVersionInfo createApplicationVersion(String s3Bucket,
@@ -996,20 +938,19 @@ public class Beanstalk extends AWSClient
                                                           VirtualFileSystem vfs,
                                                           String projectId,
                                                           URL war)
-      throws AWSException, VirtualFileSystemException, IOException
+      throws AWSException, VirtualFileSystemException, IOException, CredentialStoreException
    {
       String applicationName = detectApplicationName(vfs, projectId);
       // Two possible location for project file(s).
       // 1. Location to binary file. Typically actual for Java applications.
       // 2. Get project from VFS. Typically actual for application that do not need compilation, e.g. PHP applications
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       AmazonS3 s3Client = getS3Client();
       try
       {
          S3Location s3Location = war == null
             ? createS3Location(s3Client, applicationName, s3Bucket, s3Key, vfs.exportZip(projectId))
             : createS3Location(s3Client, applicationName, s3Bucket, s3Key, war);
-         return createApplicationVersion(beanstalkClient, new CreateApplicationVersionRequest()
+         return createApplicationVersion(getBeanstalkClient(), new CreateApplicationVersionRequest()
             .withApplicationName(applicationName)
             .withVersionLabel(versionLabel)
             .withSourceBundle(s3Location)
@@ -1018,10 +959,6 @@ public class Beanstalk extends AWSClient
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1052,16 +989,16 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return application version info
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public ApplicationVersionInfo updateApplicationVersion(String versionLabel,
                                                           String description,
                                                           VirtualFileSystem vfs,
                                                           String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return updateApplicationVersion(detectApplicationName(vfs, projectId), versionLabel, description);
    }
@@ -1076,25 +1013,21 @@ public class Beanstalk extends AWSClient
     * @param description
     *    new description of application version. Length: 0 - 200 characters.
     * @return application version info
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public ApplicationVersionInfo updateApplicationVersion(String applicationName,
                                                           String versionLabel,
-                                                          String description) throws AWSException
+                                                          String description)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return updateApplicationVersion(beanstalkClient, applicationName, versionLabel, description);
+         return updateApplicationVersion(getBeanstalkClient(), applicationName, versionLabel, description);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1131,15 +1064,16 @@ public class Beanstalk extends AWSClient
     *    virtual file system instance for access properties of project.
     * @param projectId
     *    project id
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public void deleteApplicationVersion(String versionLabel,
                                         boolean deleteS3Bundle,
                                         VirtualFileSystem vfs,
-                                        String projectId) throws AWSException, VirtualFileSystemException
+                                        String projectId)
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       deleteApplicationVersion(detectApplicationName(vfs, projectId), versionLabel, deleteS3Bundle);
    }
@@ -1155,25 +1089,20 @@ public class Beanstalk extends AWSClient
     *    label of the version to delete
     * @param deleteS3Bundle
     *    if <code>true</code> also delete version application bundle uploaded to S3 when create version.
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public void deleteApplicationVersion(String applicationName,
                                         String versionLabel,
-                                        boolean deleteS3Bundle) throws AWSException
+                                        boolean deleteS3Bundle) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         deleteApplicationVersion(beanstalkClient, applicationName, versionLabel, deleteS3Bundle);
+         deleteApplicationVersion(getBeanstalkClient(), applicationName, versionLabel, deleteS3Bundle);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1194,13 +1123,13 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return application version
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VFS error occurs
     */
    public List<ApplicationVersionInfo> listApplicationVersions(VirtualFileSystem vfs, String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return listApplicationVersions(detectApplicationName(vfs, projectId));
    }
@@ -1211,23 +1140,19 @@ public class Beanstalk extends AWSClient
     * @param applicationName
     *    name of application
     * @return application version
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<ApplicationVersionInfo> listApplicationVersions(String applicationName) throws AWSException
+   public List<ApplicationVersionInfo> listApplicationVersions(String applicationName)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return listApplicationVersions(beanstalkClient, applicationName);
+         return listApplicationVersions(getBeanstalkClient(), applicationName);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1275,9 +1200,9 @@ public class Beanstalk extends AWSClient
     *    project id
     * @param options
     *    configuration options. See {@link #listSolutionStackConfigurationOptions(String)}
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VirtualFileSystem error occurs
     */
    public EnvironmentInfo createApplicationEnvironment(String environmentName,
@@ -1288,7 +1213,7 @@ public class Beanstalk extends AWSClient
                                                        VirtualFileSystem vfs,
                                                        String projectId,
                                                        List<ConfigurationOption> options)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return createApplicationEnvironment(detectApplicationName(vfs, projectId), environmentName, solutionStackName,
          templateName, versionLabel, description, options);
@@ -1314,7 +1239,7 @@ public class Beanstalk extends AWSClient
     *    optional description for created application environment. Length: 0 - 200 characters.
     * @param options
     *    configuration options. See {@link #listSolutionStackConfigurationOptions(String)}
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public EnvironmentInfo createApplicationEnvironment(String applicationName,
@@ -1323,21 +1248,17 @@ public class Beanstalk extends AWSClient
                                                        String templateName,
                                                        String versionLabel,
                                                        String description,
-                                                       List<ConfigurationOption> options) throws AWSException
+                                                       List<ConfigurationOption> options)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return createApplicationEnvironment(beanstalkClient, applicationName, environmentName, solutionStackName,
+         return createApplicationEnvironment(getBeanstalkClient(), applicationName, environmentName, solutionStackName,
             templateName, versionLabel, description, options);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1389,15 +1310,14 @@ public class Beanstalk extends AWSClient
     * @param id
     *    id of environment
     * @return info about environment
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public EnvironmentInfo getEnvironmentInfo(String id) throws AWSException
+   public EnvironmentInfo getEnvironmentInfo(String id) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         EnvironmentInfo environment = getEnvironmentInfo(beanstalkClient, id);
+         EnvironmentInfo environment = getEnvironmentInfo(getBeanstalkClient(), id);
          if (environment == null)
          {
             throw new AWSException("Environment '" + id + "' not found. ");
@@ -1407,10 +1327,6 @@ public class Beanstalk extends AWSClient
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1450,14 +1366,15 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return configuration template
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VirtualFileSystem error occurs
     */
    public Configuration getConfigurationTemplate(String templateName,
                                                  VirtualFileSystem vfs,
-                                                 String projectId) throws AWSException, VirtualFileSystemException
+                                                 String projectId)
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return getConfigurationTemplate(detectApplicationName(vfs, projectId), templateName);
    }
@@ -1470,23 +1387,19 @@ public class Beanstalk extends AWSClient
     * @param templateName
     *    name of configuration template
     * @return environment configuration
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public Configuration getConfigurationTemplate(String applicationName, String templateName) throws AWSException
+   public Configuration getConfigurationTemplate(String applicationName, String templateName)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return getConfigurations(beanstalkClient, applicationName, null, templateName).get(0);
+         return getConfigurations(getBeanstalkClient(), applicationName, null, templateName).get(0);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1502,14 +1415,15 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return environment configuration
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VirtualFileSystem error occurs
     */
    public List<Configuration> getEnvironmentConfigurations(String environmentName,
                                                            VirtualFileSystem vfs,
-                                                           String projectId) throws AWSException, VirtualFileSystemException
+                                                           String projectId)
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return getEnvironmentConfigurations(detectApplicationName(vfs, projectId), environmentName);
    }
@@ -1523,23 +1437,19 @@ public class Beanstalk extends AWSClient
     * @param environmentName
     *    name of environment
     * @return environment configuration
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<Configuration> getEnvironmentConfigurations(String applicationName, String environmentName) throws AWSException
+   public List<Configuration> getEnvironmentConfigurations(String applicationName, String environmentName)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return getConfigurations(beanstalkClient, applicationName, environmentName, null);
+         return getConfigurations(getBeanstalkClient(), applicationName, environmentName, null);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1586,27 +1496,23 @@ public class Beanstalk extends AWSClient
     * @param options
     *    environment configuration
     * @return info about environment
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public EnvironmentInfo updateEnvironment(String id,
                                             String description,
                                             String versionLabel,
                                             String templateName,
-                                            List<ConfigurationOption> options) throws AWSException
+                                            List<ConfigurationOption> options)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return updateEnvironment(beanstalkClient, id, description, versionLabel, templateName, options);
+         return updateEnvironment(getBeanstalkClient(), id, description, versionLabel, templateName, options);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1653,23 +1559,18 @@ public class Beanstalk extends AWSClient
     *
     * @param id
     *    name of environment
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void rebuildEnvironment(String id) throws AWSException
+   public void rebuildEnvironment(String id) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         rebuildEnvironment(beanstalkClient, id);
+         rebuildEnvironment(getBeanstalkClient(), id);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1684,23 +1585,18 @@ public class Beanstalk extends AWSClient
     * @param id
     *    name of environment
     * @return info about environment
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public EnvironmentInfo stopEnvironment(String id) throws AWSException
+   public EnvironmentInfo stopEnvironment(String id) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return stopEnvironment(beanstalkClient, id);
+         return stopEnvironment(getBeanstalkClient(), id);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1733,13 +1629,13 @@ public class Beanstalk extends AWSClient
     * @param projectId
     *    project id
     * @return list of environments
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws VirtualFileSystemException
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VirtualFileSystem error occurs
     */
    public List<EnvironmentInfo> listApplicationEnvironments(VirtualFileSystem vfs, String projectId)
-      throws AWSException, VirtualFileSystemException
+      throws AWSException, VirtualFileSystemException, CredentialStoreException
    {
       return listApplicationEnvironments(detectApplicationName(vfs, projectId));
    }
@@ -1750,23 +1646,19 @@ public class Beanstalk extends AWSClient
     * @param applicationName
     *    of application
     * @return list of environments
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<EnvironmentInfo> listApplicationEnvironments(String applicationName) throws AWSException
+   public List<EnvironmentInfo> listApplicationEnvironments(String applicationName)
+      throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return listApplicationEnvironments(beanstalkClient, applicationName);
+         return listApplicationEnvironments(getBeanstalkClient(), applicationName);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1804,23 +1696,18 @@ public class Beanstalk extends AWSClient
     *
     * @param environmentId
     *    id of environment
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void restartApplicationServer(String environmentId) throws AWSException
+   public void restartApplicationServer(String environmentId) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         restartApplicationServer(beanstalkClient, environmentId);
+         restartApplicationServer(getBeanstalkClient(), environmentId);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1835,23 +1722,18 @@ public class Beanstalk extends AWSClient
     * @param environmentId
     *    EC2 environment ID on which application is started
     * @return map in format: key => instanceId, value => log url
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<InstanceLog> getEnvironmentLogs(String environmentId) throws AWSException
+   public List<InstanceLog> getEnvironmentLogs(String environmentId) throws AWSException, CredentialStoreException
    {
-      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return getEnvironmentLogs(beanstalkClient, environmentId);
+         return getEnvironmentLogs(getBeanstalkClient(), environmentId);
       }
       catch (AmazonClientException e)
       {
          throw new AWSException(e);
-      }
-      finally
-      {
-         beanstalkClient.shutdown();
       }
    }
 
@@ -1888,28 +1770,6 @@ public class Beanstalk extends AWSClient
       }
 
       return result;
-   }
-
-   //
-
-   protected AWSElasticBeanstalk getBeanstalkClient() throws AWSException
-   {
-      final AWSCredentials credentials = authenticator.getCredentials();
-      if (credentials == null)
-      {
-         throw new AWSException("Authentication required.");
-      }
-      return new AWSElasticBeanstalkClient(credentials);
-   }
-
-   protected AmazonS3 getS3Client() throws AWSException
-   {
-      final AWSCredentials credentials = authenticator.getCredentials();
-      if (credentials == null)
-      {
-         throw new AWSException("Authentication required.");
-      }
-      return new AmazonS3Client(credentials);
    }
 
    //
@@ -1996,14 +1856,13 @@ public class Beanstalk extends AWSClient
       vfs.updateItem(projectId, properties, null);
    }
 
-   private String detectApplicationName(VirtualFileSystem vfs, String projectId)
-      throws VirtualFileSystemException
+   private String detectApplicationName(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException
    {
       String applicationName = null;
       if (vfs != null && projectId != null)
       {
          Item item = vfs.getItem(projectId, PropertyFilter.valueOf("aws-application"));
-         applicationName = (String)item.getPropertyValue("aws-application");
+         applicationName = item.getPropertyValue("aws-application");
       }
       if (applicationName == null || applicationName.isEmpty())
       {

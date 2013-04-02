@@ -78,11 +78,7 @@ public class VersionsTest extends JcrFileSystemTest
    public void testGetVersions() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version-history/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "version-history/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       List<File> items = ((ItemList<File>)response.getEntity()).getItems();
@@ -100,9 +96,9 @@ public class VersionsTest extends JcrFileSystemTest
    }
 
    @SuppressWarnings("unchecked")
-   public void testGetSinleVersions() throws Exception
+   public void testGetSingleVersion() throws Exception
    {
-      Node singleVersionFileNode = versionsTestNode.addNode("testGetSinleVersions", "nt:file");
+      Node singleVersionFileNode = versionsTestNode.addNode("testGetSingleVersion", "nt:file");
       Node contentNode = singleVersionFileNode.addNode("jcr:content", "nt:resource");
       contentNode.setProperty("jcr:mimeType", "text/plain");
       contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
@@ -110,11 +106,7 @@ public class VersionsTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version-history/") //
-         .append(((ExtendedNode)singleVersionFileNode).getIdentifier()) //
-         .toString();
+      String path = SERVICE_URI + "version-history/" + ((ExtendedNode)singleVersionFileNode).getIdentifier();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       List<File> items = ((ItemList<File>)response.getEntity()).getItems();
@@ -132,12 +124,7 @@ public class VersionsTest extends JcrFileSystemTest
    public void testGetVersionById() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version/") //
-         .append(fileID) //
-         .append("/2") //
-         .toString();
+      String path = SERVICE_URI + "version/" + fileID + "/2";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("__TEST__001", new String(writer.getBody()));
@@ -148,14 +135,7 @@ public class VersionsTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       Node fileNode  = ((ExtendedSession)session).getNodeByIdentifier(fileID);
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("itembypath") //
-         .append(fileNode.getPath()) //
-         .append("?") //
-         .append("versionId=") //
-         .append("2") //
-         .toString();
+      String path = SERVICE_URI + "itembypath" + fileNode.getPath() + '?' + "versionId=" + 2;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       File file = (File)response.getEntity();
@@ -165,12 +145,7 @@ public class VersionsTest extends JcrFileSystemTest
    public void testGetVersionByIdInvalidVersion() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version/") //
-         .append(fileID) //
-         .append("/5") //
-         .toString();
+      String path = SERVICE_URI + "version/" + fileID + "/5";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -179,10 +154,7 @@ public class VersionsTest extends JcrFileSystemTest
    public void testGetVersionsPagingSkipCount() throws Exception
    {
       // Get all versions.
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version-history/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "version-history/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
@@ -195,14 +167,7 @@ public class VersionsTest extends JcrFileSystemTest
       }
 
       // Skip first item in result.
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version-history/") //
-         .append(fileID) //
-         .append("?") //
-         .append("skipCount=") //
-         .append("1") //
-         .toString();
+      path = SERVICE_URI + "version-history/" + fileID + '?' + "skipCount=" + 1;
       Iterator<Object> iteratorAll = all.iterator();
       iteratorAll.next();
       iteratorAll.remove();
@@ -212,11 +177,7 @@ public class VersionsTest extends JcrFileSystemTest
    public void testGetVersionsPagingMaxItems() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version-history/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "version-history/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
@@ -231,14 +192,7 @@ public class VersionsTest extends JcrFileSystemTest
 
       all.remove(2);
 
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("version-history/") //
-         .append(fileID) //
-         .append("?") //
-         .append("maxItems=") //
-         .append("2") //
-         .toString();
+      path = SERVICE_URI + "version-history/" + fileID + '?' + "maxItems=" + 2;
 
       checkPage(path, "GET", File.class.getMethod("getVersionId"), all);
    }

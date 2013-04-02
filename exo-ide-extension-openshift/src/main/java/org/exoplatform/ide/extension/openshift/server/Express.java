@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.server;
 
+import com.codenvy.ide.commons.cache.Cache;
+import com.codenvy.ide.commons.cache.SLRUCache;
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
 import com.openshift.client.IDomain;
@@ -25,12 +27,13 @@ import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.APIResource;
 import com.openshift.internal.client.Cartridge;
-import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
-import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -38,120 +41,109 @@ import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
-import org.exoplatform.ide.utils.ExoConfigurationHelper;
-import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.services.security.ConversationState;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: $
  */
 public class Express
 {
    private static final Pattern GIT_URL_PATTERN = Pattern
       .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/~/git/(\\w+)\\.git/");
 
-   private final VirtualFileSystemRegistry vfsRegistry;
-
-   private final SshKeyProvider keyProvider;
-   private final String workspace;
-   private String config = "/ide-home/users/";
-
    private static final String OPENSHIFT_URL = "https://openshift.redhat.com";
 
-   public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, InitParams initParams)
-   {
-      this(vfsRegistry, //
-         keyProvider, //
-         ExoConfigurationHelper.readValueParam(initParams, "workspace"), //
-         ExoConfigurationHelper.readValueParam(initParams, "user-config"));
-   }
+   private final CredentialStore credentialStore;
+   private final SshKeyStore sshKeyStore;
+   private final OpenShiftConnectionFactory openShiftConnectionFactory;
+   // Provide cache for openshift-express connections.
+   // Objects look heavy enough, and they stored info between requests.
+   // Access to cache protected by lock.
+   private final Cache<String, IOpenShiftConnection> connections;
+   private final Lock lock;
 
-   public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, String workspace, String config)
+   public Express(CredentialStore credentialStore, SshKeyStore sshKeyStore)
    {
-      this.vfsRegistry = vfsRegistry;
-      this.keyProvider = keyProvider;
-      this.workspace = workspace;
-      if (config != null)
+      this.credentialStore = credentialStore;
+      this.sshKeyStore = sshKeyStore;
+      this.openShiftConnectionFactory = new OpenShiftConnectionFactory();
+      this.connections = new SLRUCache<String, IOpenShiftConnection>(20, 10)
       {
-         if (!(config.startsWith("/")))
+         @Override
+         protected void evict(String key, IOpenShiftConnection value)
          {
-            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to configuration required. ");
+            if (value instanceof APIResource)
+            {
+               ((APIResource)value).disconnect();
+            }
          }
-         this.config = config;
-         if (!this.config.endsWith("/"))
-         {
-            this.config += '/';
-         }
-      }
+      };
+      this.lock = new ReentrantLock();
    }
 
-   public void login(String rhlogin, String password) throws ExpressException,
-      ParsingResponseException, VirtualFileSystemException
+   public void login(String rhlogin, String password) throws ExpressException, CredentialStoreException
    {
-      IUser user;
+      final String userId = getUserId();
+      removeOpenShiftConnection(userId);
+      newOpenShiftConnection(rhlogin, password);
+      final Credential credential = new Credential();
+      credentialStore.load(userId, "openshift_express", credential);
+      credential.setAttribute("rhlogin", rhlogin);
+      credential.setAttribute("password", password);
+      credentialStore.save(userId, "openshift_express", credential);
+   }
+
+   public void logout() throws CredentialStoreException
+   {
+      final String userId = getUserId();
+      removeOpenShiftConnection(userId);
+      final Credential credential = new Credential();
+      credentialStore.load(userId, "openshift_express", credential);
+      credential.removeAttribute("rhlogin");
+      credential.removeAttribute("password");
+      credentialStore.save(userId, "openshift_express", credential);
+   }
+
+   private void removeOpenShiftConnection(String userId)
+   {
+      lock.lock();
       try
       {
-         IOpenShiftConnection connection = new OpenShiftConnectionFactory()
-            .getConnection("show-domain-info", rhlogin, password, OPENSHIFT_URL);
-         user = connection.getUser();
+         connections.remove(userId);
       }
-      catch (OpenShiftException e)
+      finally
       {
-         throw new ExpressException(500, "Authentication required", MediaType.TEXT_PLAIN);
+         lock.unlock();
       }
-
-      RHCloudCredentials rhCloudCredentials = new RHCloudCredentials(user.getRhlogin(), user.getPassword());
-      writeCredentials(rhCloudCredentials);
    }
 
-   public void logout() throws IOException, VirtualFileSystemException
-   {
-      removeCredentials();
-   }
-
-   public void createDomain(String namespace, boolean alter) throws ExpressException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public void createDomain(String namespace, boolean alter)
+      throws ExpressException, SshKeyStoreException, CredentialStoreException
    {
       IOpenShiftConnection connection = getOpenShiftConnection();
       createDomain(connection, namespace, alter);
    }
 
    private void createDomain(IOpenShiftConnection connection, String namespace, boolean alter)
-      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
+      throws ExpressException, SshKeyStoreException
    {
       final String host = "rhcloud.com";
 
@@ -159,60 +151,64 @@ public class Express
       if (alter)
       {
          // Update SSH keys.
-         keyProvider.removeKeys(host);
-         keyProvider.genKeyPair(host, null, null);
-         publicKey = keyProvider.getPublicKey(host);
+         sshKeyStore.removeKeys(host);
+         sshKeyStore.genKeyPair(host, null, null);
+         publicKey = sshKeyStore.getPublicKey(host);
       }
       else
       {
-         publicKey = keyProvider.getPublicKey(host);
+         publicKey = sshKeyStore.getPublicKey(host);
          if (publicKey == null)
          {
-            keyProvider.genKeyPair(host, null, null);
-            publicKey = keyProvider.getPublicKey(host);
+            sshKeyStore.genKeyPair(host, null, null);
+            publicKey = sshKeyStore.getPublicKey(host);
          }
-      }
-
-      OpenShiftSSHKey sshKey = new OpenShiftSSHKey(publicKey);
-      if (connection.getUser().getSSHKeyByName("default") != null)
-      {
-         connection.getUser().getSSHKeyByName("default").setKeyType(sshKey.getKeyType(), sshKey.getPublicKey());
-      }
-      else
-      {
-         connection.getUser().putSSHKey("default", sshKey);
       }
 
       try
       {
-         if (!connection.getUser().hasDomain(namespace))
+         OpenShiftSSHKey sshKey = new OpenShiftSSHKey(publicKey);
+         final IUser user = connection.getUser();
+         if (user.getSSHKeyByName("default") != null)
          {
-            connection.getUser().createDomain(namespace);
+            user.getSSHKeyByName("default").setKeyType(sshKey.getKeyType(), sshKey.getPublicKey());
+         }
+         else
+         {
+            user.putSSHKey("default", sshKey);
+         }
+         if (!user.hasDomain(namespace))
+         {
+            user.createDomain(namespace);
          }
       }
       catch (OpenShiftException e)
       {
-         throw new ExpressException(500, "Domain creating failed", MediaType.TEXT_PLAIN);
+         throw new ExpressException(500, e.getMessage(), "text/plain");
       }
-
    }
 
-   public AppInfo createApplication(String app, String type, File workDir) throws ExpressException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public AppInfo createApplication(String app, String type, File workDir) throws ExpressException, CredentialStoreException
    {
       IOpenShiftConnection connection = getOpenShiftConnection();
       return createApplication(connection, app, type, workDir);
    }
 
    private AppInfo createApplication(IOpenShiftConnection connection, String app, String type, File workDir)
-      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
+      throws ExpressException
    {
       validateAppType(type, connection);
-
-      IApplication application = connection.getUser().getDefaultDomain().createApplication(app, Cartridge.valueOf(type));
+      IApplication application;
+      try
+      {
+         application = connection.getUser().getDefaultDomain().createApplication(app, Cartridge.valueOf(type));
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), "text/plain");
+      }
 
       String gitUrl = application.getGitUrl();
-
       if (workDir != null)
       {
          GitConnection git = null;
@@ -244,8 +240,7 @@ public class Express
       );
    }
 
-   private void validateAppType(String type, IOpenShiftConnection connection) throws ParsingResponseException,
-      IOException, ExpressException, VirtualFileSystemException
+   private void validateAppType(String type, IOpenShiftConnection connection) throws ExpressException
    {
       Set<String> supportedTypes = frameworks(connection);
       if (!supportedTypes.contains(type))
@@ -268,8 +263,7 @@ public class Express
       }
    }
 
-   public AppInfo applicationInfo(String app, File workDir) throws ExpressException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public AppInfo applicationInfo(String app, File workDir) throws ExpressException, CredentialStoreException
    {
       if (app == null || app.isEmpty())
       {
@@ -278,8 +272,7 @@ public class Express
       return applicationInfo(getOpenShiftConnection(), app);
    }
 
-   private AppInfo applicationInfo(IOpenShiftConnection connection, String app) throws ExpressException,
-      IOException, ParsingResponseException, VirtualFileSystemException
+   private AppInfo applicationInfo(IOpenShiftConnection connection, String app) throws ExpressException
    {
       List<AppInfo> apps = userInfo(connection, true).getApps();
       if (apps != null && apps.size() > 0)
@@ -292,11 +285,10 @@ public class Express
             }
          }
       }
-      throw new ExpressException(404, "Application not found: " + app + "\n", "text/plain");
+      throw new ExpressException(404, String.format("Application '%s' not found", app), "text/plain");
    }
 
-   public void destroyApplication(String app, File workDir) throws ExpressException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public void destroyApplication(String app, File workDir) throws ExpressException, CredentialStoreException
    {
       if (app == null || app.isEmpty())
       {
@@ -306,8 +298,7 @@ public class Express
       destroyApplication(connection, app);
    }
 
-   private void destroyApplication(IOpenShiftConnection connection, String app) throws ExpressException,
-      IOException, ParsingResponseException, VirtualFileSystemException
+   private void destroyApplication(IOpenShiftConnection connection, String app) throws ExpressException
    {
       try
       {
@@ -315,160 +306,216 @@ public class Express
       }
       catch (OpenShiftException e)
       {
-         throw new ExpressException(500, "Appliaction destroy failed", MediaType.TEXT_PLAIN);
+         throw new ExpressException(500, e.getMessage(), "text/plain");
       }
    }
 
-   public Set<String> frameworks() throws ExpressException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public Set<String> frameworks() throws ExpressException, CredentialStoreException
    {
-      RHCloudCredentials rhCloudCredentials = readCredentials();
-      if (rhCloudCredentials == null)
-      {
-         throw new ExpressException(200, "Authentication required.\n", "text/plain");
-      }
       IOpenShiftConnection connection = getOpenShiftConnection();
       return frameworks(connection);
    }
 
-   private Set<String> frameworks(IOpenShiftConnection connection) throws ExpressException, IOException,
-      ParsingResponseException
+   private Set<String> frameworks(IOpenShiftConnection connection) throws ExpressException
    {
-      Set<String> frameworks = new HashSet<String>();
-      for (ICartridge cartridge : connection.getStandaloneCartridges())
+      try
       {
-         frameworks.add(cartridge.getName());
+         final List<ICartridge> cartridges = connection.getStandaloneCartridges();
+         Set<String> frameworks = new LinkedHashSet<String>(cartridges.size());
+         for (ICartridge cartridge : cartridges)
+         {
+            frameworks.add(cartridge.getName());
+         }
+         return frameworks;
       }
-      return frameworks;
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), "text/plain");
+      }
    }
 
-   public RHUserInfo userInfo(boolean appsInfo) throws ExpressException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public RHUserInfo userInfo(boolean appsInfo) throws ExpressException, CredentialStoreException
    {
       IOpenShiftConnection connection = getOpenShiftConnection();
       return userInfo(connection, appsInfo);
    }
 
-   private RHUserInfo userInfo(IOpenShiftConnection connection, boolean appsInfo) throws ExpressException,
-      IOException, ParsingResponseException, VirtualFileSystemException
+   private RHUserInfo userInfo(IOpenShiftConnection connection, boolean appsInfo) throws ExpressException
    {
-      IUser user = connection.getUser();
-      IDomain domain = null;
-
-      if (user.hasDomain())
+      try
       {
-         domain = user.getDefaultDomain();
-      }
+         IUser user = connection.getUser();
+         IDomain domain = null;
 
-      RHUserInfo userInfo =
-         new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : "Doesn't exist");
-      if (appsInfo && domain != null)
-      {
-         List<AppInfo> appInfoList = new ArrayList<AppInfo>();
-         for (IApplication application : domain.getApplications())
+         if (user.hasDomain())
          {
-            appInfoList.add(
-               new AppInfoImpl(
-                  application.getName(),
-                  application.getCartridge().getName(),
-                  application.getGitUrl(),
-                  application.getApplicationUrl(),
-                  application.getCreationTime().getTime()
-               )
-            );
+            domain = user.getDefaultDomain();
          }
-         userInfo.setApps(appInfoList);
+
+         RHUserInfo userInfo =
+            new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : "Doesn't exist");
+         if (appsInfo && domain != null)
+         {
+            List<AppInfo> appInfoList = new ArrayList<AppInfo>();
+            for (IApplication application : domain.getApplications())
+            {
+               appInfoList.add(
+                  new AppInfoImpl(
+                     application.getName(),
+                     application.getCartridge().getName(),
+                     application.getGitUrl(),
+                     application.getApplicationUrl(),
+                     application.getCreationTime().getTime()
+                  )
+               );
+            }
+            userInfo.setApps(appInfoList);
+         }
+         return userInfo;
       }
-      return userInfo;
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), "text/plain");
+      }
    }
 
-   private RHCloudCredentials readCredentials() throws VirtualFileSystemException, IOException
+   public void stopApplication(String appName) throws ExpressException, CredentialStoreException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
-      String user = ConversationState.getCurrent().getIdentity().getUserId();
-      String keyPath = config + user + "/express/rhcloud-credentials";
-      try
+      if (!(appName == null || appName.isEmpty()))
       {
-         ContentStream content = vfs.getContent(keyPath, null);
-         return readCredentials(content);
+         stopApplication(getOpenShiftConnection(), appName);
       }
-      catch (ItemNotFoundException ignored)
+      else
       {
+         throw new ExpressException(200, "Application name required. ", "text/plain");
       }
-      return null;
    }
 
-   private RHCloudCredentials readCredentials(ContentStream content) throws IOException
+   private void stopApplication(IOpenShiftConnection connection, String appName) throws ExpressException
    {
-      InputStream in = content.getStream();
-      BufferedReader r = new BufferedReader(new InputStreamReader(content.getStream()));
       try
       {
-         String email = r.readLine();
-         String password = r.readLine();
-         return new RHCloudCredentials(email, password);
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+         if (application == null)
+         {
+            throw new ExpressException(500, String.format("Application '%s' does not exist. ", appName), "text/plain");
+         }
+         application.stop();
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), "text/plain");
+      }
+   }
+
+   public void startApplication(String appName) throws ExpressException, CredentialStoreException
+   {
+      if (!(appName == null || appName.isEmpty()))
+      {
+         startApplication(getOpenShiftConnection(), appName);
+      }
+      else
+      {
+         throw new ExpressException(200, "Application name required. ", "text/plain");
+      }
+   }
+
+   private void startApplication(IOpenShiftConnection connection, String appName) throws ExpressException
+   {
+      try
+      {
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+         if (application == null)
+         {
+            throw new ExpressException(500, String.format("Application '%s' does not exist. ", appName), "text/plain");
+         }
+         application.start();
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), "text/plain");
+      }
+   }
+
+   public void restartApplication(String appName) throws ExpressException, CredentialStoreException
+   {
+      if (!(appName == null || appName.isEmpty()))
+      {
+         restartApplication(getOpenShiftConnection(), appName);
+      }
+      else
+      {
+         throw new ExpressException(500, "Application name required. ", "text/plain");
+      }
+   }
+
+   private void restartApplication(IOpenShiftConnection connection, String appName) throws ExpressException
+   {
+      try
+      {
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+         if (application == null)
+         {
+            throw new ExpressException(500, String.format("Application '%s' does not exist. ", appName), "text/plain");
+         }
+         application.restart();
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), "text/plain");
+      }
+   }
+
+   public String getApplicationHealth(String appName) throws ExpressException, CredentialStoreException
+   {
+      if (!(appName == null || appName.isEmpty()))
+      {
+         return getApplicationHealth(getOpenShiftConnection(), appName);
+      }
+      throw new ExpressException(500, "Application name required. ", "text/plain");
+   }
+
+   //Need to improve this checking
+   private String getApplicationHealth(IOpenShiftConnection connection, String appName) throws ExpressException
+   {
+      InputStream checkStream = null;
+      try
+      {
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+         if (application == null)
+         {
+            throw new ExpressException(500, String.format("Application '%s' does not exist. ", appName), "text/plain");
+         }
+         String appUrl = application.getApplicationUrl();
+         checkStream = new URL(appUrl).openStream();
+         return "STARTED";
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), "text/plain");
+      }
+      catch (IOException e)
+      {
+         if (e.getMessage().startsWith("Server returned HTTP response code: 503"))
+         {
+            return "STOPPED";
+         }
       }
       finally
       {
-         r.close();
-         in.close();
-      }
-   }
-
-   private void writeCredentials(RHCloudCredentials credentials) throws VirtualFileSystemException
-   {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
-      Folder expressConfig = getConfigParent(vfs);
-      try
-      {
-         Item credentialsFile =
-            vfs.getItemByPath(expressConfig.createPath("rhcloud-credentials"), null, PropertyFilter.NONE_FILTER);
-         InputStream newContent =
-            new ByteArrayInputStream((credentials.getRhlogin() + "\n" + credentials.getPassword()).getBytes());
-         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newContent, null);
-      }
-      catch (ItemNotFoundException e)
-      {
-         InputStream content =
-            new ByteArrayInputStream((credentials.getRhlogin() + "\n" + credentials.getPassword()).getBytes());
-         Item credentialsFile =
-            vfs.createFile(expressConfig.getId(), "rhcloud-credentials", MediaType.TEXT_PLAIN_TYPE, content);
-         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
-         String user = ConversationState.getCurrent().getIdentity().getUserId();
-         acl.add(new AccessControlEntryImpl(user, new HashSet<String>(vfs.getInfo().getPermissions())));
-         vfs.updateACL(credentialsFile.getId(), acl, true, null);
-      }
-   }
-
-   private Folder getConfigParent(VirtualFileSystem vfs) throws VirtualFileSystemException
-   {
-      String user = ConversationState.getCurrent().getIdentity().getUserId();
-      String expressPath = config + user + "/express";
-      VirtualFileSystemInfo info = vfs.getInfo();
-      Folder expressConfig;
-      try
-      {
-         Item item = vfs.getItemByPath(expressPath, null, PropertyFilter.NONE_FILTER);
-         if (ItemType.FOLDER != item.getItemType())
+         if (checkStream != null)
          {
-            throw new RuntimeException("Item " + expressPath + " is not a Folder. ");
+            try
+            {
+               checkStream.close();
+            }
+            catch (IOException ignored)
+            {
+            }
          }
-         expressConfig = (Folder)item;
       }
-      catch (ItemNotFoundException e)
-      {
-         expressConfig = vfs.createFolder(info.getRoot().getId(), expressPath.substring(1));
-      }
-      return expressConfig;
-   }
 
-   private void removeCredentials() throws VirtualFileSystemException
-   {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
-      String user = ConversationState.getCurrent().getIdentity().getUserId();
-      String keyPath = config + user + "/express/rhcloud-credentials";
-      Item credentialsFile = vfs.getItemByPath(keyPath, null, PropertyFilter.NONE_FILTER);
-      vfs.delete(credentialsFile.getId(), null);
+      return "STOPPED";
    }
 
    private static String detectAppName(File workDir)
@@ -512,225 +559,53 @@ public class Express
       return app;
    }
 
-   @Deprecated
-   private static ExpressException fault(HttpURLConnection http) throws IOException, ParsingResponseException
+   private IOpenShiftConnection getOpenShiftConnection() throws ExpressException, CredentialStoreException
    {
-      InputStream in = null;
+      final String userId = getUserId();
+      lock.lock();
       try
       {
-         return new ErrorReader(http.getResponseCode(), http.getContentType()).readObject(in = http.getErrorStream());
-      }
-      finally
-      {
-         if (in != null)
+         IOpenShiftConnection connection = connections.get(userId);
+         if (connection == null)
          {
-            in.close();
-         }
-      }
-   }
-
-   @Deprecated
-   private void writeFormData(HttpURLConnection http, String json, String password) throws IOException
-   {
-      http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-      final String encJsonData = URLEncoder.encode(json, "utf-8");
-      final String encPassword = URLEncoder.encode(password, "utf-8");
-      OutputStream out = null;
-      BufferedWriter w = null;
-      try
-      {
-         out = http.getOutputStream();
-         w = new BufferedWriter(new OutputStreamWriter(out));
-         w.write("json_data=");
-         w.write(encJsonData);
-         w.write('&');
-         w.write("password=");
-         w.write(encPassword);
-         w.flush();
-      }
-      finally
-      {
-         if (w != null)
-         {
-            w.close();
-         }
-         if (out != null)
-         {
-            out.close();
-         }
-      }
-   }
-
-
-   //------------------
-   private IOpenShiftConnection getOpenShiftConnection() throws VirtualFileSystemException, IOException, ExpressException
-   {
-      RHCloudCredentials credentials = readCredentials();
-      try
-      {
-         if (credentials == null)
-         {
-            throw new ExpressException(401, "Authentication required", MediaType.TEXT_PLAIN);
-         }
-
-         IOpenShiftConnection connection = new OpenShiftConnectionFactory()
-            .getConnection("show-domain-info", credentials.getRhlogin(), credentials.getPassword(), OPENSHIFT_URL);
-
-         if (connection.getUser() != null)
-         {
-            return connection;
-         }
-      }
-      catch (OpenShiftException e)
-      {
-         throw new ExpressException(401, "Authentication required", MediaType.TEXT_PLAIN);
-      }
-
-      throw new ExpressException(500, "Get connection error", MediaType.TEXT_PLAIN);
-   }
-
-   public void stopApplication(String appName) throws ExpressException, VirtualFileSystemException, IOException
-   {
-      if (appName != null && !appName.isEmpty())
-      {
-         stopApplication(getOpenShiftConnection(), appName);
-         return;
-      }
-      throw new ExpressException(200, "Application name null", MediaType.TEXT_PLAIN);
-   }
-
-   private void stopApplication(IOpenShiftConnection connection, String appName) throws ExpressException
-   {
-      try
-      {
-         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
-
-         if (application == null)
-         {
-            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
-         }
-
-         application.stop();
-      }
-      catch (OpenShiftException e)
-      {
-         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
-      }
-   }
-
-   public void startApplication(String appName) throws ExpressException, VirtualFileSystemException, IOException
-   {
-      if (appName != null && !appName.isEmpty())
-      {
-         startApplication(getOpenShiftConnection(), appName);
-         return;
-      }
-      throw new ExpressException(200, "Application name null", MediaType.TEXT_PLAIN);
-   }
-
-   private void startApplication(IOpenShiftConnection connection, String appName) throws ExpressException
-   {
-      try
-      {
-         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
-
-         if (application == null)
-         {
-            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
-         }
-
-         application.start();
-      }
-      catch (OpenShiftException e)
-      {
-         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
-      }
-   }
-
-   public void restartApplication(String appName) throws ExpressException, VirtualFileSystemException, IOException
-   {
-      if (appName != null && !appName.isEmpty())
-      {
-         restartApplication(getOpenShiftConnection(), appName);
-         return;
-      }
-      throw new ExpressException(500, "Application name null", MediaType.TEXT_PLAIN);
-   }
-
-   private void restartApplication(IOpenShiftConnection connection, String appName) throws ExpressException
-   {
-      try
-      {
-         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
-
-         if (application == null)
-         {
-            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
-         }
-
-         application.restart();
-      }
-      catch (OpenShiftException e)
-      {
-         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
-      }
-   }
-
-   public String getApplicationHealth(String appName) throws ExpressException, VirtualFileSystemException, IOException
-   {
-      if (appName != null && !appName.isEmpty())
-      {
-         return getApplicationHealth(getOpenShiftConnection(), appName);
-      }
-      throw new ExpressException(500, "Application name null", MediaType.TEXT_PLAIN);
-   }
-
-   //Need to improve this checking
-   private String getApplicationHealth(IOpenShiftConnection connection, String appName) throws ExpressException
-   {
-      InputStream checkStream = null;
-
-      try
-      {
-         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
-
-         if (application == null)
-         {
-            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
-         }
-
-         String appUrl = application.getApplicationUrl();
-
-         checkStream = new URL(appUrl).openStream();
-
-         return "STARTED";
-      }
-      catch (OpenShiftException e)
-      {
-         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
-      }
-      catch (IOException e)
-      {
-         if (e.getMessage().startsWith("Server returned HTTP response code: 503"))
-         {
-            return "STOPPED";
-         }
-      }
-      finally
-      {
-         if (checkStream != null)
-         {
-            try
+            final Credential credential = new Credential();
+            credentialStore.load(userId, "openshift_express", credential);
+            final String rhlogin = credential.getAttribute("rhlogin");
+            final String password = credential.getAttribute("password");
+            if (rhlogin == null || password == null)
             {
-               checkStream.close();
+               throw new ExpressException(200, "Authentication required.\n", "text/plain");
             }
-            catch (IOException e)
-            {
-               //ignored
-            }
+            connections.put(userId, connection = newOpenShiftConnection(rhlogin, password));
          }
+         return connection;
       }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, String.format("Connection error. %s", e.getMessage()), "text/plain");
+      }
+      finally
+      {
+         lock.unlock();
+      }
+   }
 
-      return "STOPPED";
+   private String getUserId()
+   {
+      return ConversationState.getCurrent().getIdentity().getUserId();
+   }
+
+   private IOpenShiftConnection newOpenShiftConnection(String rhlogin, String password) throws ExpressException
+   {
+      try
+      {
+         IOpenShiftConnection connection = openShiftConnectionFactory.getConnection("show-domain-info", rhlogin, password, OPENSHIFT_URL);
+         connection.getUser(); // Throws exception if credentials is invalid.
+         return connection;
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, String.format("Connection error. %s", e.getMessage()), "text/plain");
+      }
    }
 }

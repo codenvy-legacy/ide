@@ -84,6 +84,7 @@ public class OpenProjectTest extends ResourcesBaseTest
    }
 
    @Test
+   @Ignore
    public void openProject() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
    {
       IProject project = ws.getRoot().getProject("proj");
@@ -111,6 +112,7 @@ public class OpenProjectTest extends ResourcesBaseTest
    }
 
    @Test
+   @Ignore
    public void renameFild() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
    {
       IProject project = ws.getRoot().getProject("proj");

@@ -65,6 +65,11 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constan
       if (revisionObject == null)
          return;
 
+      Boolean fake =
+         (revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null) ? revisionObject.get(FAKE)
+            .isBoolean().booleanValue() : false;
+      revision.setFake(fake);
+
       String id =
          (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
             .isString().stringValue() : "";

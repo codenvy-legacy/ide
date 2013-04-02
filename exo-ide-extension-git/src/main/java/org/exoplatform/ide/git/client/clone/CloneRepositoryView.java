@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -48,7 +47,7 @@ public class CloneRepositoryView extends ViewImpl implements
 
    private static final String CANCEL_BUTTON_ID = "ideCloneRepositoryViewCancelButton";
 
-   private static final String WORKDIR_FIELD_ID = "ideCloneRepositoryViewWorkDirField";
+   private static final String PROJECT_NAME_FIELD_ID = "ideCloneRepositoryViewProjectNameField";
 
    private static final String REMOTE_URI_FIELD_ID = "ideCloneRepositoryViewRemoteUriField";
 
@@ -63,7 +62,7 @@ public class CloneRepositoryView extends ViewImpl implements
    ImageButton cancelButton;
 
    @UiField
-   TextInput workdirField;
+   TextInput projectNameField;
 
    @UiField
    TextInput remoteUriField;
@@ -82,8 +81,9 @@ public class CloneRepositoryView extends ViewImpl implements
       super(ID, ViewType.MODAL, GitExtension.MESSAGES.cloneTitle(), null, 480, 230, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
+      remoteUriField.getElement().setPropertyString("placeholder", GitExtension.MESSAGES.cloneRemoteUriFieldExample());
 
-      workdirField.setName(WORKDIR_FIELD_ID);
+      projectNameField.setName(PROJECT_NAME_FIELD_ID);
       remoteUriField.setName(REMOTE_URI_FIELD_ID);
       remoteNameField.setName(REMOTE_NAME_FIELD_ID);
 
@@ -92,11 +92,11 @@ public class CloneRepositoryView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display#getWorkDirValue()
+    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display#getProjectNameValue()
     */
-   public HasValue<String> getWorkDirValue()
+   public HasValue<String> getProjectNameValue()
    {
-      return workdirField;
+      return projectNameField;
    }
 
    /**

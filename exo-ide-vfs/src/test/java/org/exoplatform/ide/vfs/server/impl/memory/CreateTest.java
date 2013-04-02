@@ -225,6 +225,22 @@ public class CreateTest extends MemoryFileSystemTest
       assertNotNull("Folder was not created in expected location. ", memoryContext.getItemByPath(expectedPath));
    }
 
+   public void testCreateFolderHierarchy2() throws Exception
+   {
+      // create some items in path
+      String name = "testCreateFolderHierarchy/1/2/3";
+      String path = SERVICE_URI + "folder/" + createTestFolderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null, null);
+      assertEquals(200, response.getStatus());
+      // create the rest of path
+      name += "/4/5";
+      path = SERVICE_URI + "folder/" + createTestFolderId + '?' + "name=" + name;
+      response = launcher.service("POST", path, BASE_URI, null, null, null, null);
+      assertEquals(200, response.getStatus());
+      String expectedPath = createTestFolderPath + "/" + name;
+      assertNotNull("Folder was not created in expected location. ", memoryContext.getItemByPath(expectedPath));
+   }
+
    public void testCreateProject() throws Exception
    {
       String name = "testCreateProject";

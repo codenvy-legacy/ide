@@ -66,11 +66,7 @@ public class ImportTest extends JcrFileSystemTest
 
    public void testImport() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("import/") //
-         .append(importFolderId) //
-         .toString();
+      String path = SERVICE_URI + "import/" + importFolderId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       headers.put("Content-Type", Arrays.asList("application/zip"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, zip, null, null);
@@ -88,11 +84,7 @@ public class ImportTest extends JcrFileSystemTest
    public void testUploadZip() throws Exception
    {
       // Do the same as 'import' but send content in HTML form. 
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("uploadzip/") //
-         .append(importFolderId) //
-         .toString();
+      String path = SERVICE_URI + "uploadzip/" + importFolderId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       headers.put("Content-Type", Arrays.asList("multipart/form-data; boundary=abcdef"));
 
@@ -137,11 +129,7 @@ public class ImportTest extends JcrFileSystemTest
       byte b[] = bout.toByteArray();
       // Be sure source data for test is correct. Zero data should be compressed with very high ratio.
       assertTrue((uncompressedSize / b.length) > 100);
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("import/") //
-         .append(importFolderId) //
-         .toString();
+      String path = SERVICE_URI + "import/" + importFolderId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       headers.put("Content-Type", Arrays.asList("application/zip"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, b, null, null);

@@ -49,7 +49,7 @@ public class GetAvailableFileSystemsTest extends MemoryFileSystemTest
       VirtualFileSystemInfo vfsInfo = null;
       for (VirtualFileSystemInfo e : entity)
       {
-         if (e.getId().equals("memory"))
+         if (e.getId().equals(MY_WORKSPACE_ID))
          {
             if (vfsInfo != null)
                fail("More then one VFS with the same ID found. ");
@@ -63,7 +63,7 @@ public class GetAvailableFileSystemsTest extends MemoryFileSystemTest
       assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability());
       assertEquals("anonymous", vfsInfo.getAnonymousPrincipal());
       assertEquals("any", vfsInfo.getAnyPrincipal());
-      assertEquals("memory", vfsInfo.getId());
+      assertEquals(MY_WORKSPACE_ID, vfsInfo.getId());
       BasicPermissions[] basicPermissions = BasicPermissions.values();
       List<String> expectedPermissions = new ArrayList<String>(basicPermissions.length);
       for (BasicPermissions bp : basicPermissions)

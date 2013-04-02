@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-
-import java.io.File;
-
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 
 /**
  * Manages instances of Searcher.
@@ -31,25 +26,8 @@ import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public abstract class SearcherProvider
+public interface SearcherProvider
 {
-   protected final File indexRoot;
-
-   public SearcherProvider(InitParams initParams)
-   {
-      this(readValueParam(initParams, "index-root"));
-   }
-
-   public SearcherProvider(String indexRoot)
-   {
-      this(indexRoot != null ? new java.io.File(indexRoot) : null);
-   }
-
-   public SearcherProvider(java.io.File indexRoot)
-   {
-      this.indexRoot = indexRoot;
-   }
-
    /**
     * Get Searcher for specified MountPoint.
     *
@@ -59,5 +37,5 @@ public abstract class SearcherProvider
     * @throws VirtualFileSystemException
     * @see MountPoint
     */
-   public abstract Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException;
+   Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException;
 }

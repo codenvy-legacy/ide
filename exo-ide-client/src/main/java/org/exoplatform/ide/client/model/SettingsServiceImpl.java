@@ -66,20 +66,16 @@ public class SettingsServiceImpl extends SettingsService
 
    private Loader loader;
 
-   private String registryServiceURL;
-
    private String userName;
 
    private String restContext;
 
    private ApplicationSettings applicationSettings = new ApplicationSettings();
 
-   public SettingsServiceImpl(HandlerManager eventBus, String registryServiceURL, String userName, Loader loader,
-      String restContext)
+   public SettingsServiceImpl(HandlerManager eventBus, String userName, Loader loader,  String restContext)
    {
       this.eventBus = eventBus;
       this.loader = loader;
-      this.registryServiceURL = registryServiceURL;
       this.userName = userName;
       this.restContext = restContext;
    }

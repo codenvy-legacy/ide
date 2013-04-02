@@ -92,7 +92,7 @@ import static org.junit.Assert.assertNotNull;
    public void testNodeTypeGeneration() throws Exception
    {
       ContainerResponse response =
-         launcher.service("POST", "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + dataObject.getId()
+         launcher.service("POST", "/ide/chromattic/generate-nodetype-definition?vfsid=db1&id=" + dataObject.getId()
             + "&nodeTypeFormat=EXO", "", null, null, null, null);
       assertEquals(200, response.getStatus());
       log.info("Generated node types " + response.getEntity());
@@ -112,7 +112,7 @@ import static org.junit.Assert.assertNotNull;
    public void testNodeTypeGenerationScriptNotFound() throws Exception
    {
       ContainerResponse response =
-         launcher.service("POST", "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + dataObject.getId()
+         launcher.service("POST", "/ide/chromattic/generate-nodetype-definition?vfsid=db1&id=" + dataObject.getId()
             + "_WRONG" + "&nodeTypeFormat=EXO", "", null, null, null, null);
       assertEquals(500, response.getStatus());
       log.info("Generated node types " + response.getEntity());
@@ -122,7 +122,7 @@ import static org.junit.Assert.assertNotNull;
    public void testNodeTypeGenerationCND() throws Exception
    {
       ContainerResponse response =
-         launcher.service("POST", "/ide/chromattic/generate-nodetype-definition?vfsid=ws&id=" + dataObject.getId()
+         launcher.service("POST", "/ide/chromattic/generate-nodetype-definition?vfsid=db1&id=" + dataObject.getId()
             + "&nodeTypeFormat=CND", "", null, null, null, null);
       assertEquals(200, response.getStatus());
       log.info("Generated node types " + response.getEntity());

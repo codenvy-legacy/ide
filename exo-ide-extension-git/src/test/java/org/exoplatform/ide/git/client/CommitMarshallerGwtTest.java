@@ -38,7 +38,7 @@ public class CommitMarshallerGwtTest extends BaseGwtTest
    {
       String message = "my test commit";
 
-      CommitRequest commitRequest = new CommitRequest(message, true);
+      CommitRequest commitRequest = new CommitRequest(message, true, false);
       CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
       String json = marshaller.marshal();
 

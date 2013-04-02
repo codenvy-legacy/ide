@@ -49,8 +49,10 @@
       <f:layer>
          <g:DockLayoutPanel unit="PX">
             <g:north size="20">
-               <g:CheckBox ui:field="allField" HTML="{locale.commitAllFieldTitle}" width="100%">
-               </g:CheckBox>
+               <g:FlowPanel addStyleNames="{style.floatLeft}">
+                  <g:CheckBox ui:field="allField" HTML="{locale.commitAllFieldTitle}" width="100%" />
+                  <g:CheckBox visible="false" ui:field="amendField" HTML="{locale.commitAmendFieldTitle}" width="100%" />
+               </g:FlowPanel>
             </g:north>
             <g:center>
                <g:FlowPanel width="100%" height="55%" addStyleNames="{style.spacing}">
@@ -61,7 +63,7 @@
          </g:DockLayoutPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
-         <g:FlowPanel width="190px" styleName="{style.center}">
+         <g:FlowPanel width="200px" styleName="{style.center}">
             <f:ImageButton ui:field="commitButton" width="90" height="22" text="{locale.buttonCommit}" imageResource="{resource.ok}"
                disabledImageResource="{resource.okDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
             <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>

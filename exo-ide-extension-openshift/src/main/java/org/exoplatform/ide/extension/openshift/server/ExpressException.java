@@ -25,31 +25,11 @@ package org.exoplatform.ide.extension.openshift.server;
 @SuppressWarnings("serial")
 public class ExpressException extends Exception
 {
-   /** HTTP status of response from openshift express server. */
+   /** HTTP status of response. */
    private final int responseStatus;
 
    /** Content type of response from openshift express server. */
    private final String contentType;
-
-   /**
-    * Exit code of command execution at openshift express server. May be -1 if cannot get exit code from openshift
-    * response.
-    */
-   private final int exitCode;
-
-   /**
-    * @param responseStatus HTTP status of response from openshift express server
-    * @param exitCode exit code of command execution at openshift express server
-    * @param message text message
-    * @param contentType content type of response from openshift express server
-    */
-   public ExpressException(int responseStatus, int exitCode, String message, String contentType)
-   {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.exitCode = exitCode;
-      this.contentType = contentType;
-   }
 
    /**
     * @param responseStatus HTTP status of response from openshift express server
@@ -58,12 +38,9 @@ public class ExpressException extends Exception
     */
    public ExpressException(int responseStatus, String message, String contentType)
    {
-      this(responseStatus, -1, message, contentType);
-   }
-
-   public int getExitCode()
-   {
-      return exitCode;
+      super(message);
+      this.responseStatus = responseStatus;
+      this.contentType = contentType;
    }
 
    public int getResponseStatus()

@@ -68,11 +68,7 @@ public class GetACLTest extends JcrFileSystemTest
 
    public void testGetACL() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("acl/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "acl/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
@@ -94,11 +90,7 @@ public class GetACLTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("acl/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "acl/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));

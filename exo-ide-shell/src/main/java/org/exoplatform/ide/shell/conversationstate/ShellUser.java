@@ -29,8 +29,6 @@ public class ShellUser
 {
    private String userId;
 
-   private Collection<String> groups;
-
    private Collection<String> roles;
 
    public ShellUser()
@@ -42,10 +40,9 @@ public class ShellUser
     * @param groups the groups to set
     * @param roles the roles to set
     */
-   public ShellUser(String userId, Collection<String> groups, Collection<String> roles)
+   public ShellUser(String userId, Collection<String> roles)
    {
       this.userId = userId;
-      this.groups = groups;
       this.roles = roles;
    }
 
@@ -65,21 +62,6 @@ public class ShellUser
       this.userId = userId;
    }
 
-   /**
-    * @return the groups
-    */
-   public Collection<String> getGroups()
-   {
-      return groups;
-   }
-
-   /**
-    * @param groups the groups to set
-    */
-   public void setGroups(Collection<String> groups)
-   {
-      this.groups = groups;
-   }
 
    /**
     * @return the roles

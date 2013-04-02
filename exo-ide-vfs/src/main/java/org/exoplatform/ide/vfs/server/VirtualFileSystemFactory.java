@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -29,7 +31,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -52,18 +53,19 @@ public class VirtualFileSystemFactory
    private EventListenerList listeners;
 
    @Inject
-   RequestValidator requestValidator;
+   private RequestValidator requestValidator;
 
    @Context
    private Providers providers;
 
    @Context
-   javax.servlet.http.HttpServletRequest request;
+   private javax.servlet.http.HttpServletRequest request;
 
-   @Path("{vfsId}")
-   public VirtualFileSystem getFileSystem(@PathParam("vfsId") String vfsId) throws VirtualFileSystemException
+   @Path("v2")
+   public VirtualFileSystem getFileSystem() throws VirtualFileSystemException
    {
       validateRequest();
+      final String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
       VirtualFileSystemProvider provider = registry.getProvider(vfsId);
       return provider.newInstance(getContext(), listeners);
    }

@@ -18,58 +18,30 @@
  */
 package org.exoplatform.ide.extension.appfog.server;
 
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class Auth extends BaseAppfogAuthenticator
+class Auth extends AppfogAuthenticator
 {
-   private AppfogCredentials credentials;
    private String target;
-
    private String username;
    private String password;
 
    @Override
-   public String getTarget() throws VirtualFileSystemException, IOException
+   public String getTarget()
    {
       return target;
    }
 
    @Override
-   public AppfogCredentials readCredentials() throws VirtualFileSystemException, IOException
-   {
-      return credentials;
-   }
-
-   @Override
-   public void writeTarget(String target) throws VirtualFileSystemException, IOException
-   {
-      this.target = target;
-   }
-
-   @Override
-   public void writeCredentials(AppfogCredentials credentials) throws VirtualFileSystemException, IOException
-   {
-      this.credentials = new AppfogCredentials();
-      for (String t : credentials.getTargets())
-      {
-         this.credentials.addToken(t, credentials.getToken(t));
-      }
-   }
-
-   @Override
-   public String getUsername() throws VirtualFileSystemException, IOException
+   public String getEmail()
    {
       return username;
    }
 
    @Override
-   public String getPassword() throws VirtualFileSystemException, IOException
+   public String getPassword()
    {
       return password;
    }
@@ -86,8 +58,8 @@ class Auth extends BaseAppfogAuthenticator
       this.password = password;
    }
 
-   public void setCredentials(AppfogCredentials credentials)
+   public void setTarget(String target)
    {
-      this.credentials = credentials;
+      this.target = target;
    }
 }

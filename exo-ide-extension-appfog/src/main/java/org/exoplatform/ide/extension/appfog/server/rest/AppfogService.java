@@ -31,6 +31,7 @@ import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
 import org.exoplatform.ide.extension.appfog.shared.InfraType;
 import org.exoplatform.ide.extension.appfog.shared.Instance;
 import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -83,16 +84,15 @@ public class AppfogService
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws AppfogException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public void login(Map<String, String> credentials)
+      throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
       appfog.login(credentials.get("server"), credentials.get("email"), credentials.get("password"));
    }
 
    @Path("logout")
    @POST
-   public void logout(@QueryParam("server") String server) throws IOException, AppfogException,
-      VirtualFileSystemException
+   public void logout(@QueryParam("server") String server) throws CredentialStoreException
    {
       appfog.logout(server);
    }
@@ -100,8 +100,8 @@ public class AppfogService
    @Path("info/system")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public SystemInfo systemInfo(@QueryParam("server") String server) throws AppfogException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public SystemInfo systemInfo(@QueryParam("server") String server)
+      throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
       return appfog.systemInfo(server);
    }
@@ -109,8 +109,8 @@ public class AppfogService
    @Path("info/frameworks")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Collection<Framework> frameworks(@QueryParam("server") String server) throws AppfogException,
-      IOException, ParsingResponseException, VirtualFileSystemException
+   public Collection<Framework> frameworks(@QueryParam("server") String server)
+      throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
       return appfog.systemInfo(server).getFrameworks().values();
    }
@@ -123,7 +123,7 @@ public class AppfogService
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return appfog.applicationInfo(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId);
@@ -133,8 +133,8 @@ public class AppfogService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public AppfogApplication createApplication(Map<String, String> params) throws AppfogException,
-      ParsingResponseException, VirtualFileSystemException, IOException
+   public AppfogApplication createApplication(Map<String, String> params)
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       String debug = params.get("debug");
       DebugMode debugMode = null;
@@ -198,7 +198,7 @@ public class AppfogService
       @QueryParam("debug") String debug,
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       DebugMode debugMode = null;
       if (debug != null)
@@ -217,7 +217,7 @@ public class AppfogService
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.stopApplication(server, app,
          vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
@@ -232,7 +232,7 @@ public class AppfogService
       @QueryParam("debug") String debug,
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       DebugMode debugMode = null;
       if (debug != null)
@@ -252,7 +252,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("war") URL war //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.updateApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId, war);
@@ -268,7 +268,7 @@ public class AppfogService
       @QueryParam("instance") String instance, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return appfog.getFiles(server, app, path, instance,
          vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
@@ -283,7 +283,7 @@ public class AppfogService
       @QueryParam("instance") String instance, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return appfog.getLogs(server, app, instance,
          vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
@@ -297,7 +297,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("url") String url //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.mapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, url);
@@ -311,7 +311,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("url") String url //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.unmapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, url);
@@ -325,7 +325,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("mem") int mem //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.mem(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          mem);
@@ -339,7 +339,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("expr") String expression //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.instances(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, expression);
@@ -352,7 +352,7 @@ public class AppfogService
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return appfog.applicationInstances(server, app,
          vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
@@ -367,7 +367,7 @@ public class AppfogService
       @QueryParam("projectid") String projectId, //
       @QueryParam("key") String key, //
       @QueryParam("val") String value //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.environmentAdd(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, key, value);
@@ -381,7 +381,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("key") String key //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.environmentDelete(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId, key);
@@ -395,7 +395,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("delete-services") boolean deleteServices //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.deleteApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId, deleteServices);
@@ -409,7 +409,7 @@ public class AppfogService
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return appfog.applicationStats(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId)
          .newInstance(null, null) : null, projectId);
@@ -418,8 +418,8 @@ public class AppfogService
    @Path("apps")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public AppfogApplication[] listApplications(@QueryParam("server") String server) throws IOException,
-      ParsingResponseException, AppfogException, VirtualFileSystemException
+   public AppfogApplication[] listApplications(@QueryParam("server") String server)
+      throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
       return appfog.listApplications(server);
    }
@@ -427,8 +427,8 @@ public class AppfogService
    @Path("services")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public AppfogServices services(@QueryParam("server") String server) throws IOException,
-      ParsingResponseException, AppfogException, VirtualFileSystemException
+   public AppfogServices services(@QueryParam("server") String server)
+      throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
       return appfog.services(server);
    }
@@ -444,7 +444,7 @@ public class AppfogService
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("infra") String infra
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return appfog.createService(server, service, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId)
          .newInstance(null, null) : null, projectId, InfraType.fromValue(infra));
@@ -455,7 +455,7 @@ public class AppfogService
    public void deleteService(
       @QueryParam("server") String server, //
       @PathParam("name") String name //
-   ) throws IOException, ParsingResponseException, AppfogException, VirtualFileSystemException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
       appfog.deleteService(server, name);
    }
@@ -468,7 +468,7 @@ public class AppfogService
       @QueryParam("app") String app, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.bindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId);
@@ -482,7 +482,7 @@ public class AppfogService
       @QueryParam("app") String app, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.unbindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId);
@@ -501,7 +501,7 @@ public class AppfogService
       @QueryParam("nostart") boolean nostart, //
       @QueryParam("vfsid") String vfsId, //
       @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+   ) throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       appfog.validateAction(server, action, app, framework, url, instances, memory, nostart, vfsId != null
          ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
@@ -509,8 +509,8 @@ public class AppfogService
 
    @Path("target")
    @POST
-   public void target(@QueryParam("target") String target) throws IOException, AppfogException,
-      VirtualFileSystemException
+   public void target(@QueryParam("target") String target)
+      throws CredentialStoreException
    {
       appfog.setTarget(target);
    }
@@ -518,7 +518,7 @@ public class AppfogService
    @Path("target")
    @GET
    @Produces(MediaType.TEXT_PLAIN)
-   public String target() throws IOException, AppfogException, VirtualFileSystemException
+   public String target() throws CredentialStoreException
    {
       return appfog.getTarget();
    }
@@ -526,7 +526,7 @@ public class AppfogService
    @Path("target/all")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Collection<String> targets() throws IOException, AppfogException, VirtualFileSystemException
+   public Collection<String> targets() throws CredentialStoreException
    {
       return appfog.getTargets();
    }
@@ -537,7 +537,7 @@ public class AppfogService
    public InfraDetail[] getInfras(@QueryParam("server") String server,
                                   @QueryParam("vfsid") String vfsId,
                                   @QueryParam("projectid") String projectId)
-      throws VirtualFileSystemException, AppfogException, ParsingResponseException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return appfog.getInfras(server, vfsId != null
          ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);

@@ -27,6 +27,7 @@ import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 
 import java.util.List;
 import java.util.Map;
@@ -60,14 +61,14 @@ public class EC2Service
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws AWSException
+   public void login(Map<String, String> credentials) throws AWSException, CredentialStoreException
    {
       ec2.login(credentials.get("access_key"), credentials.get("secret_key"));
    }
 
    @Path("logout")
    @POST
-   public void logout() throws AWSException
+   public void logout() throws CredentialStoreException
    {
       ec2.logout();
    }
@@ -81,7 +82,7 @@ public class EC2Service
                                 @QueryParam("ispublic") boolean isPublic,
                                 @QueryParam("architecture") String architecture,
                                 @QueryParam("skipcount") int skipCount,
-                                @QueryParam("maxitems") int maxItems) throws AWSException
+                                @QueryParam("maxitems") int maxItems) throws AWSException, CredentialStoreException
    {
       Architecture arch = Architecture.fromValue(architecture);
 
@@ -91,7 +92,7 @@ public class EC2Service
    @Path("key_pairs")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<KeyPairInfo> listKeyPairs() throws AWSException
+   public List<KeyPairInfo> listKeyPairs() throws AWSException, CredentialStoreException
    {
       return ec2.listKeyPairs();
    }
@@ -99,7 +100,7 @@ public class EC2Service
    @Path("security_groups")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<SecurityGroupInfo> listSecurityGroups() throws AWSException
+   public List<SecurityGroupInfo> listSecurityGroups() throws AWSException, CredentialStoreException
    {
       return ec2.listSecurityGroups();
    }
@@ -107,7 +108,7 @@ public class EC2Service
    @Path("regions")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<RegionInfo> listRegions() throws AWSException
+   public List<RegionInfo> listRegions() throws AWSException, CredentialStoreException
    {
       return ec2.listRegions();
    }
@@ -115,7 +116,7 @@ public class EC2Service
    @Path("availability_zones")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<String> listAvailabilityZones() throws AWSException
+   public List<String> listAvailabilityZones() throws AWSException, CredentialStoreException
    {
       return ec2.listAvailabilityZones();
    }
@@ -123,7 +124,7 @@ public class EC2Service
    @Path("instances/run")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public List<String> runInstance(RunInstanceRequest request) throws AWSException
+   public List<String> runInstance(RunInstanceRequest request) throws AWSException, CredentialStoreException
    {
       return ec2.runInstance(
          request.getImageId(),
@@ -137,28 +138,29 @@ public class EC2Service
 
    @Path("instances/start/{id}")
    @POST
-   public void startInstance(@PathParam("id") String id) throws AWSException
+   public void startInstance(@PathParam("id") String id) throws AWSException, CredentialStoreException
    {
       ec2.startInstance(id);
    }
 
    @Path("instances/stop/{id}")
    @POST
-   public void stopInstance(@PathParam("id") String id, @QueryParam("force") Boolean force) throws AWSException
+   public void stopInstance(@PathParam("id") String id, @QueryParam("force") Boolean force)
+      throws AWSException, CredentialStoreException
    {
       ec2.stopInstance(id, force);
    }
 
    @Path("instances/reboot/{id}")
    @POST
-   public void rebootInstance(@PathParam("id") String id) throws AWSException
+   public void rebootInstance(@PathParam("id") String id) throws AWSException, CredentialStoreException
    {
       ec2.rebootInstance(id);
    }
 
    @Path("instances/terminate/{id}")
    @POST
-   public void terminateInstance(@PathParam("id") String id) throws AWSException
+   public void terminateInstance(@PathParam("id") String id) throws AWSException, CredentialStoreException
    {
       ec2.terminateInstance(id);
    }
@@ -166,7 +168,7 @@ public class EC2Service
    @Path("instances")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<InstanceInfo> getInstances() throws AWSException
+   public List<InstanceInfo> getInstances() throws AWSException, CredentialStoreException
    {
       return ec2.getInstances();
    }

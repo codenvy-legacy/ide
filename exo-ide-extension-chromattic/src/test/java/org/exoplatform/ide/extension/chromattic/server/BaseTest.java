@@ -46,7 +46,7 @@ public abstract class BaseTest
 {
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
 
-   protected final String vfs_id = "ws";
+   protected final String vfs_id = "db1";
 
    protected VirtualFileSystem virtualFileSystem;
 

@@ -150,11 +150,11 @@
             <table border="0" cellspacing="5">
                <tr>
                   <th align="right">User ID:</th>
-                  <td align="left"><input type="text" id="userId" name="j_username" value="exo"></td>
+                  <td align="left"><input type="text" id="userId" name="j_username" value="ide"></td>
                </tr>
                <tr>
                   <th align="right">Password:</th>
-                  <td align="left"><input type="password" id="userPassword" name="j_password" value="exo"></td>
+                  <td align="left"><input type="password" id="userPassword" name="j_password" value="codenvy123"></td>
                </tr>
                <tr>
                   <td align="right"><input type="submit" value="Log In" id="loginButton"/></td>
@@ -167,8 +167,8 @@
                            <td style="padding: 2" align="center">User role</td>
                         </tr>
                         <tr>
-                           <td style="padding: 2" align="left">exo/exo</td>
-                           <td style="padding: 2" align="left">administrators and developers</td>
+                           <td style="padding: 2" align="left">ide/codenvy123</td>
+                           <td style="padding: 2" align="left">developers</td>
                         </tr>
                      </table>
                   </td>

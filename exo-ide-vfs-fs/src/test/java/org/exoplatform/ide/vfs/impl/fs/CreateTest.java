@@ -302,17 +302,17 @@ public class CreateTest extends LocalFileSystemTest
 
    public void testCreateFolderHierarchy2() throws Exception
    {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      // create some items in path
       String name = "testCreateFolderHierarchy2/1/2/3";
       createDirectory(folderPath, name);
+      // create the rest of path
       name += "/4/5";
       String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      // Expect path of first folder in hierarchy.
-      // testCreateFolderHierarchy2/1/2/3 already exists create only 4/5
-      assertEquals(folderPath + "/testCreateFolderHierarchy2/1/2/3/4", ((Folder)response.getEntity()).getPath());
+      assertEquals(folderPath + "/testCreateFolderHierarchy2/1/2/3/4/5", ((Folder)response.getEntity()).getPath());
       String expectedPath = folderPath + '/' + name;
       assertTrue("Folder was not created in expected location. ", exists(expectedPath));
    }

@@ -118,9 +118,9 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
                   object.get(VFS_BASE_URL).isString().stringValue());
             }
 
-            if (object.containsKey(VFS_ID))
+            if (object.containsKey(VFS_ID) )//&& object.get(VFS_ID).isNull().toString().equals(null))
             {
-               initializationConfiguration.getIdeConfiguration().setVfsId(object.get(VFS_ID).isString().stringValue());
+               initializationConfiguration.getIdeConfiguration().setVfsId("dev-monit");//object.get(VFS_ID).isString().stringValue());
             }
 
             if (object.containsKey(IS_DISCOVERABLE))
@@ -141,6 +141,7 @@ public class IDEConfigurationUnmarshaller implements Unmarshallable<IDEInitializ
       }
       catch (Exception e)
       {
+         e.printStackTrace();
          throw new UnmarshallerException(IDE.ERRORS_CONSTANT.configurationCantParseApplicationSettings());
       }
    }

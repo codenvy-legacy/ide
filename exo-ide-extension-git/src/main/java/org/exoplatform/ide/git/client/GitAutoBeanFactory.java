@@ -25,6 +25,7 @@ import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.Status;
 
 /**
  * Created by The eXo Platform SAS.
@@ -51,5 +52,7 @@ public interface GitAutoBeanFactory extends AutoBeanFactory
    AutoBean<Credentials> githubCredentials();
 
    AutoBean<Collaborators> collaborators();
+
+   AutoBean<Status> status();
 
 }

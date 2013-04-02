@@ -64,7 +64,7 @@ public class VirtualFileSystemSwitcher implements SwitchVFSHandler, Configuratio
       }
 
       vfsId = event.getVfsID();
-      String workspaceUrl = (vfsBaseUrl.endsWith("/")) ? vfsBaseUrl + vfsId : vfsBaseUrl + "/" + vfsId;
+      String workspaceUrl = vfsBaseUrl;
 
       try
       {
