@@ -18,39 +18,33 @@
  */
 package com.codenvy.ide.resources.marshal;
 
-import com.codenvy.ide.resources.model.File;
-
 import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.rest.Unmarshallable;
-
 import com.google.gwt.http.client.Response;
 
 
 /**
  * Unmarshaller for {@link File} content.
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class FileContentUnmarshaller implements Unmarshallable<File>
-{
+public class FileContentUnmarshaller implements Unmarshallable<File> {
 
-   private final File file;
+    private final File file;
 
-   public FileContentUnmarshaller(File file)
-   {
-      this.file = file;
-   }
+    public FileContentUnmarshaller(File file) {
+        this.file = file;
+    }
 
-   @Override
-   public File getPayload()
-   {
-      return file;
-   }
+    @Override
+    public File getPayload() {
+        return file;
+    }
 
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      file.setContent(response.getText());
-   }
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        file.setContent(response.getText());
+    }
 
 }

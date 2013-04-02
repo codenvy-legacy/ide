@@ -22,103 +22,76 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * AbstractPagePresenter is an abstract base implementation of a WizardPagePresenter.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractWizardPagePresenter implements WizardPagePresenter
-{
-   protected WizardUpdateDelegate delegate;
+public abstract class AbstractWizardPagePresenter implements WizardPagePresenter {
+    protected WizardUpdateDelegate delegate;
 
-   private WizardPagePresenter previous;
+    private WizardPagePresenter previous;
 
-   private final String caption;
+    private final String caption;
 
-   private final ImageResource image;
+    private final ImageResource image;
 
-   /**
-    * Create WizardPage with given wizard page caption
-    * 
-    * @param caption
-    */
-   public AbstractWizardPagePresenter(String caption)
-   {
-      this(caption, null);
-   }
+    /**
+     * Create WizardPage with given wizard page caption
+     *
+     * @param caption
+     */
+    public AbstractWizardPagePresenter(String caption) {
+        this(caption, null);
+    }
 
-   /**
-    * Create WizardPage with given wizard page caption and wizard page image.
-    * Size of image must be less than 48px * 48px.
-    * 
-    * @param caption
-    * @param image
-    */
-   public AbstractWizardPagePresenter(String caption, ImageResource image)
-   {
-      this.caption = caption;
-      this.image = image;
-   }
+    /**
+     * Create WizardPage with given wizard page caption and wizard page image.
+     * Size of image must be less than 48px * 48px.
+     *
+     * @param caption
+     * @param image
+     */
+    public AbstractWizardPagePresenter(String caption, ImageResource image) {
+        this.caption = caption;
+        this.image = image;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getCaption()
-   {
-      return caption;
-   }
+    /** {@inheritDoc} */
+    public String getCaption() {
+        return caption;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public ImageResource getImage()
-   {
-      return image;
-   }
+    /** {@inheritDoc} */
+    public ImageResource getImage() {
+        return image;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void doFinish()
-   {
+    /** {@inheritDoc} */
+    public void doFinish() {
 
-   }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void doCancel()
-   {
+    /** {@inheritDoc} */
+    public void doCancel() {
 
-   }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void setUpdateDelegate(WizardUpdateDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    public void setUpdateDelegate(WizardUpdateDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public WizardPagePresenter flipToPrevious()
-   {
-      return previous;
-   }
+    /** {@inheritDoc} */
+    public WizardPagePresenter flipToPrevious() {
+        return previous;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void setPrevious(WizardPagePresenter previous)
-   {
-      this.previous = previous;
-   }
+    /** {@inheritDoc} */
+    public void setPrevious(WizardPagePresenter previous) {
+        this.previous = previous;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public boolean hasPrevious()
-   {
-      return previous != null;
-   }
+    /** {@inheritDoc} */
+    public boolean hasPrevious() {
+        return previous != null;
+    }
 }

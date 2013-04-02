@@ -17,180 +17,142 @@ package com.codenvy.ide.util.executor;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.executor.UserActivityManager.UserActivityListener;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.core.client.Duration;
 
 
-/**
- * A scheduler that can incrementally run a task.
- *
- */
-public class BasicIncrementalScheduler implements IncrementalScheduler
-{
+/** A scheduler that can incrementally run a task. */
+public class BasicIncrementalScheduler implements IncrementalScheduler {
 
-   private final AsyncRunner runner = new AsyncRunner()
-   {
-      @Override
-      public void run()
-      {
-         if (isPaused)
-         {
-            return;
-         }
-
-         try
-         {
-            double start = Duration.currentTimeMillis();
-            boolean keepRunning = worker.run(currentWorkAmount);
-            updateWorkAmount(Duration.currentTimeMillis() - start);
-            if (keepRunning)
-            {
-               schedule();
+    private final AsyncRunner runner = new AsyncRunner() {
+        @Override
+        public void run() {
+            if (isPaused) {
+                return;
             }
-            else
-            {
-               clearWorker();
+
+            try {
+                double start = Duration.currentTimeMillis();
+                boolean keepRunning = worker.run(currentWorkAmount);
+                updateWorkAmount(Duration.currentTimeMillis() - start);
+                if (keepRunning) {
+                    schedule();
+                } else {
+                    clearWorker();
+                }
+            } catch (Throwable t) {
+                Log.error(getClass(), "Could not run worker", t);
             }
-         }
-         catch (Throwable t)
-         {
-            Log.error(getClass(), "Could not run worker", t);
-         }
-      }
-   };
+        }
+    };
 
-   private Task worker;
+    private Task worker;
 
-   private boolean isPaused;
+    private boolean isPaused;
 
-   private int currentWorkAmount;
+    private int currentWorkAmount;
 
-   private final int targetExecutionMs;
+    private final int targetExecutionMs;
 
-   private int completedWorkAmount;
+    private int completedWorkAmount;
 
-   private double totalTimeTaken;
+    private double totalTimeTaken;
 
-   public Remover userActivityRemover;
+    public Remover userActivityRemover;
 
-   public BasicIncrementalScheduler(int targetExecutionMs, int workGuess)
-   {
-      this.targetExecutionMs = targetExecutionMs;
-      currentWorkAmount = workGuess;
-   }
+    public BasicIncrementalScheduler(int targetExecutionMs, int workGuess) {
+        this.targetExecutionMs = targetExecutionMs;
+        currentWorkAmount = workGuess;
+    }
 
-   public BasicIncrementalScheduler(UserActivityManager userActivityManager, int targetExecutionMs, int workGuess)
-   {
-      this(targetExecutionMs, workGuess);
+    public BasicIncrementalScheduler(UserActivityManager userActivityManager, int targetExecutionMs, int workGuess) {
+        this(targetExecutionMs, workGuess);
 
-      userActivityRemover = userActivityManager.getUserActivityListenerRegistrar().add(new UserActivityListener()
-      {
-         @Override
-         public void onUserActive()
-         {
-            pause();
-         }
+        userActivityRemover = userActivityManager.getUserActivityListenerRegistrar().add(new UserActivityListener() {
+            @Override
+            public void onUserActive() {
+                pause();
+            }
 
-         @Override
-         public void onUserIdle()
-         {
-            resume();
-         }
-      });
-   }
+            @Override
+            public void onUserIdle() {
+                resume();
+            }
+        });
+    }
 
-   @Override
-   public void schedule(Task worker)
-   {
-      cancel();
-      this.worker = worker;
+    @Override
+    public void schedule(Task worker) {
+        cancel();
+        this.worker = worker;
 
-      if (!isPaused)
-      {
-         runner.run();
-      }
-   }
+        if (!isPaused) {
+            runner.run();
+        }
+    }
 
-   @Override
-   public void cancel()
-   {
-      runner.cancel();
-      worker = null;
-   }
+    @Override
+    public void cancel() {
+        runner.cancel();
+        worker = null;
+    }
 
-   @Override
-   public void pause()
-   {
-      isPaused = true;
-   }
+    @Override
+    public void pause() {
+        isPaused = true;
+    }
 
-   /**
-    * Schedules the worker to resume.  This will run asychronously.
-    */
-   @Override
-   public void resume()
-   {
-      isPaused = false;
+    /** Schedules the worker to resume.  This will run asychronously. */
+    @Override
+    public void resume() {
+        isPaused = false;
 
-      if (worker != null)
-      {
-         launch();
-      }
-   }
+        if (worker != null) {
+            launch();
+        }
+    }
 
-   @Override
-   public boolean isPaused()
-   {
-      return isPaused;
-   }
+    @Override
+    public boolean isPaused() {
+        return isPaused;
+    }
 
-   @Override
-   public void teardown()
-   {
-      cancel();
+    @Override
+    public void teardown() {
+        cancel();
 
-      if (userActivityRemover != null)
-      {
-         userActivityRemover.remove();
-      }
-   }
+        if (userActivityRemover != null) {
+            userActivityRemover.remove();
+        }
+    }
 
-   /**
-    * Update the currentWorkAmount based upon the workTime it took to run the
-    * last command so running the worker will take ~targetExecutionMs.
-    *
-    * @param workTime ms the last run took
-    */
-   private void updateWorkAmount(double workTime)
-   {
-      if (workTime <= 0)
-      {
-         currentWorkAmount *= 2;
-      }
-      else
-      {
-         totalTimeTaken += workTime;
-         completedWorkAmount += currentWorkAmount;
-         currentWorkAmount = (int)Math.ceil(targetExecutionMs * completedWorkAmount / totalTimeTaken);
-      }
-   }
+    /**
+     * Update the currentWorkAmount based upon the workTime it took to run the
+     * last command so running the worker will take ~targetExecutionMs.
+     *
+     * @param workTime
+     *         ms the last run took
+     */
+    private void updateWorkAmount(double workTime) {
+        if (workTime <= 0) {
+            currentWorkAmount *= 2;
+        } else {
+            totalTimeTaken += workTime;
+            completedWorkAmount += currentWorkAmount;
+            currentWorkAmount = (int)Math.ceil(targetExecutionMs * completedWorkAmount / totalTimeTaken);
+        }
+    }
 
-   private void clearWorker()
-   {
-      worker = null;
-   }
+    private void clearWorker() {
+        worker = null;
+    }
 
-   @Override
-   public boolean isBusy()
-   {
-      return worker != null;
-   }
+    @Override
+    public boolean isBusy() {
+        return worker != null;
+    }
 
-   /**
-    * Queues the worker launch.
-    */
-   private void launch()
-   {
-      runner.schedule();
-   }
+    /** Queues the worker launch. */
+    private void launch() {
+        runner.schedule();
+    }
 }

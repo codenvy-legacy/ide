@@ -1,52 +1,52 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
 
-	<ui:with field='locale'
-		type='com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant' />
+    <ui:with field='locale'
+             type='com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant'/>
 
-	<ui:style>
-		.alignRight {
-			float: right;
-		}
-		
-		.space {
-			float: right;
-			margin-bottom: 7px;
-		}
-		
-		.label {
-			float: left;
-			margin-bottom: 5px;
-		}
-	</ui:style>
-	<g:DockLayoutPanel unit="PX" width="740px" height="300px">
-		<g:south size="26.0">
-			<g:FlowPanel width="100%" height="100%">
-				<g:Button width="90px" height="26px" addStyleNames="{style.alignRight}" ui:field="btnClose" />
-			</g:FlowPanel>
-		</g:south>
-		<g:north size="22.0">
-			<g:FlowPanel>
-				<g:Label text="{locale.boundedServices}" width="240px" styleName="{style.label}" ui:field="boundServiceLabel" />
-				<g:Label text="{locale.provisionedServices}" width="380px" styleName="{style.label}" ui:field="provisionServiceLabel" />
-			</g:FlowPanel>
-		</g:north>
-		<g:east size="100.0">
-			<g:FlowPanel>
-				<g:Button width="90px" height="26px" addStyleNames="{style.space}" ui:field="btnAdd" />
-				<g:Button width="90px" height="26px" addStyleNames="{style.space}" ui:field="btnDelete" />
-			</g:FlowPanel>
-		</g:east>
-		<g:west size="240.0">
-			<g:ScrollPanel >
-				<p1:CellTable width="100%" height="100%" ui:field="boundedServices"/>
-			</g:ScrollPanel>
-		</g:west>
-		<g:center>
-			<g:ScrollPanel >
-				<p1:CellTable width="100%" height="100%" ui:field="services"/>
-			</g:ScrollPanel>
-		</g:center>
-	</g:DockLayoutPanel>
+    <ui:style>
+        .alignRight {
+            float: right;
+        }
+
+        .space {
+            float: right;
+            margin-bottom: 7px;
+        }
+
+        .label {
+            float: left;
+            margin-bottom: 5px;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="740px" height="300px">
+        <g:south size="26.0">
+            <g:FlowPanel width="100%" height="100%">
+                <g:Button width="90px" height="26px" addStyleNames="{style.alignRight}" ui:field="btnClose"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:north size="22.0">
+            <g:FlowPanel>
+                <g:Label text="{locale.boundedServices}" width="240px" styleName="{style.label}" ui:field="boundServiceLabel"/>
+                <g:Label text="{locale.provisionedServices}" width="380px" styleName="{style.label}" ui:field="provisionServiceLabel"/>
+            </g:FlowPanel>
+        </g:north>
+        <g:east size="100.0">
+            <g:FlowPanel>
+                <g:Button width="90px" height="26px" addStyleNames="{style.space}" ui:field="btnAdd"/>
+                <g:Button width="90px" height="26px" addStyleNames="{style.space}" ui:field="btnDelete"/>
+            </g:FlowPanel>
+        </g:east>
+        <g:west size="240.0">
+            <g:ScrollPanel>
+                <p1:CellTable width="100%" height="100%" ui:field="boundedServices"/>
+            </g:ScrollPanel>
+        </g:west>
+        <g:center>
+            <g:ScrollPanel>
+                <p1:CellTable width="100%" height="100%" ui:field="services"/>
+            </g:ScrollPanel>
+        </g:center>
+    </g:DockLayoutPanel>
 </ui:UiBinder> 

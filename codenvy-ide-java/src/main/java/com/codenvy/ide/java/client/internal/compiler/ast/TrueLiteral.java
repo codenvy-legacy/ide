@@ -16,59 +16,54 @@ import com.codenvy.ide.java.client.internal.compiler.impl.BooleanConstant;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeBinding;
 
-public class TrueLiteral extends MagicLiteral
-{
+public class TrueLiteral extends MagicLiteral {
 
-   static final char[] source = {'t', 'r', 'u', 'e'};
+    static final char[] source = {'t', 'r', 'u', 'e'};
 
-   public TrueLiteral(int s, int e)
-   {
-      super(s, e);
-   }
+    public TrueLiteral(int s, int e) {
+        super(s, e);
+    }
 
-   @Override
-   public void computeConstant()
-   {
-      this.constant = BooleanConstant.fromValue(true);
-   }
+    @Override
+    public void computeConstant() {
+        this.constant = BooleanConstant.fromValue(true);
+    }
 
-   /**
-    * Code generation for the true literal
-    *
-    * @param currentScope com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope
-    * @param codeStream com.codenvy.ide.java.client.internal.compiler.codegen.CodeStream
-    * @param valueRequired boolean
-    */
-   @Override
-   public void generateCode(BlockScope currentScope, boolean valueRequired)
-   {
-   }
+    /**
+     * Code generation for the true literal
+     *
+     * @param currentScope
+     *         com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope
+     * @param codeStream
+     *         com.codenvy.ide.java.client.internal.compiler.codegen.CodeStream
+     * @param valueRequired
+     *         boolean
+     */
+    @Override
+    public void generateCode(BlockScope currentScope, boolean valueRequired) {
+    }
 
-   @Override
-   public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
-      boolean valueRequired)
-   {
-   }
+    @Override
+    public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+                                         boolean valueRequired) {
+    }
 
-   @Override
-   public TypeBinding literalType(BlockScope scope)
-   {
-      return TypeBinding.BOOLEAN;
-   }
+    @Override
+    public TypeBinding literalType(BlockScope scope) {
+        return TypeBinding.BOOLEAN;
+    }
 
-   /**
-    *
-    */
-   @Override
-   public char[] source()
-   {
-      return source;
-   }
+    /**
+     *
+     */
+    @Override
+    public char[] source() {
+        return source;
+    }
 
-   @Override
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      visitor.visit(this, scope);
-      visitor.endVisit(this, scope);
-   }
+    @Override
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        visitor.visit(this, scope);
+        visitor.endVisit(this, scope);
+    }
 }

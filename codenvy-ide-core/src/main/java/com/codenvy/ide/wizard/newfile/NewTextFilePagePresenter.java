@@ -18,12 +18,11 @@
  */
 package com.codenvy.ide.wizard.newfile;
 
-import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
-import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
-
 import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.rest.MimeType;
 import com.codenvy.ide.util.loging.Log;
@@ -34,60 +33,51 @@ import com.google.inject.Inject;
 
 /**
  * Provides creating new empty text file.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter
-{
+public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter {
 
-   /**
-    * Create presenter.
-    * 
-    * @param resources
-    * @param resourceProvider
-    */
-   @Inject
-   public NewTextFilePagePresenter(Resources resources, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
-   {
-      this(resources.newResourceIcon(), new NewGenericFilePageViewImpl(), resourceProvider, selectionAgent);
-   }
+    /**
+     * Create presenter.
+     *
+     * @param resources
+     * @param resourceProvider
+     */
+    @Inject
+    public NewTextFilePagePresenter(Resources resources, ResourceProvider resourceProvider, SelectionAgent selectionAgent) {
+        this(resources.newResourceIcon(), new NewGenericFilePageViewImpl(), resourceProvider, selectionAgent);
+    }
 
-   /**
-    * Create presenter.
-    * 
-    * For tests.
-    * 
-    * @param image
-    * @param view
-    * @param resourceProvider
-    */
-   protected NewTextFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider,
-      SelectionAgent selectionAgent)
-   {
-      super("Create a new empty text file", image, view, "txt", resourceProvider, selectionAgent);
-   }
+    /**
+     * Create presenter.
+     * <p/>
+     * For tests.
+     *
+     * @param image
+     * @param view
+     * @param resourceProvider
+     */
+    protected NewTextFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider,
+                                       SelectionAgent selectionAgent) {
+        super("Create a new empty text file", image, view, "txt", resourceProvider, selectionAgent);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void doFinish()
-   {
-      String fileName = view.getFileName() + (hasExtension() ? "" : '.' + getFileExtension());
+    /** {@inheritDoc} */
+    @Override
+    public void doFinish() {
+        String fileName = view.getFileName() + (hasExtension() ? "" : '.' + getFileExtension());
 
-      project.createFile(project, fileName, "", MimeType.TEXT_PLAIN, new AsyncCallback<File>()
-      {
-         @Override
-         public void onSuccess(File result)
-         {
-         }
+        project.createFile(project, fileName, "", MimeType.TEXT_PLAIN, new AsyncCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+            }
 
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            // TODO : Handle error to be able to display message to the User
-            Log.error(NewTextFilePagePresenter.class, caught);
-         }
-      });
-   }
+            @Override
+            public void onFailure(Throwable caught) {
+                // TODO : Handle error to be able to display message to the User
+                Log.error(NewTextFilePagePresenter.class, caught);
+            }
+        });
+    }
 }

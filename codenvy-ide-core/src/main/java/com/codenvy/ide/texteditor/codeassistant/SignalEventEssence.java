@@ -20,48 +20,42 @@ import com.codenvy.ide.util.input.SignalEvent.KeySignalType;
  * Immutable holder of essential properties of
  * {@link SignalEvent}
  */
-public class SignalEventEssence
-{
-   public final int keyCode;
+public class SignalEventEssence {
+    public final int keyCode;
 
-   public final boolean ctrlKey;
+    public final boolean ctrlKey;
 
-   public final boolean altKey;
+    public final boolean altKey;
 
-   public final boolean shiftKey;
+    public final boolean shiftKey;
 
-   public final boolean metaKey;
+    public final boolean metaKey;
 
-   public final KeySignalType type;
+    public final KeySignalType type;
 
-   public SignalEventEssence(int keyCode, boolean ctrlKey, boolean altKey, boolean shiftKey, boolean metaKey,
-      KeySignalType type)
-   {
-      this.keyCode = keyCode;
-      this.ctrlKey = ctrlKey;
-      this.altKey = altKey;
-      this.shiftKey = shiftKey;
-      this.metaKey = metaKey;
-      this.type = type;
-   }
+    public SignalEventEssence(int keyCode, boolean ctrlKey, boolean altKey, boolean shiftKey, boolean metaKey,
+                              KeySignalType type) {
+        this.keyCode = keyCode;
+        this.ctrlKey = ctrlKey;
+        this.altKey = altKey;
+        this.shiftKey = shiftKey;
+        this.metaKey = metaKey;
+        this.type = type;
+    }
 
-   public SignalEventEssence(int keyCode)
-   {
-      this(keyCode, false, false, false, false, KeySignalType.INPUT);
-   }
+    public SignalEventEssence(int keyCode) {
+        this(keyCode, false, false, false, false, KeySignalType.INPUT);
+    }
 
-   public SignalEventEssence(SignalEvent source)
-   {
-      this(source.getKeyCode(), source.getCtrlKey(), source.getAltKey(), source.getShiftKey(), source.getMetaKey(),
-         source.getKeySignalType());
-   }
+    public SignalEventEssence(SignalEvent source) {
+        this(source.getKeyCode(), source.getCtrlKey(), source.getAltKey(), source.getShiftKey(), source.getMetaKey(),
+             source.getKeySignalType());
+    }
 
-   public char getChar()
-   {
-      if (ctrlKey || altKey || metaKey || (type != KeySignalType.INPUT))
-      {
-         return 0;
-      }
-      return (char)keyCode;
-   }
+    public char getChar() {
+        if (ctrlKey || altKey || metaKey || (type != KeySignalType.INPUT)) {
+            return 0;
+        }
+        return (char)keyCode;
+    }
 }

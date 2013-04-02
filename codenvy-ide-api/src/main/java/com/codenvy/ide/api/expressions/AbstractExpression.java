@@ -19,42 +19,36 @@ package com.codenvy.ide.api.expressions;
 /**
  * Abstract Expression class. Should be used instead of dirrectly implementing {@link Expression}
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class AbstractExpression implements Expression
-{
-   private static int UNIQUE_ID = 0;
+public class AbstractExpression implements Expression {
+    private static int UNIQUE_ID = 0;
 
-   protected boolean value;
+    protected boolean value;
 
-   protected int id;
+    protected int id;
 
-   /**
-    * Construct expression with auto-generated id and register in {@link ExpressionManagerImpl} 
-    * @param value default initial value
-    */
-   public AbstractExpression(ExpressionManager expressionManager, boolean value)
-   {
-      this.value = value;
-      this.id = ++UNIQUE_ID;
-      expressionManager.registerExpression(this);
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getId()
-   {
-      return id;
-   }
+    /**
+     * Construct expression with auto-generated id and register in {@link ExpressionManagerImpl}
+     *
+     * @param value
+     *         default initial value
+     */
+    public AbstractExpression(ExpressionManager expressionManager, boolean value) {
+        this.value = value;
+        this.id = ++UNIQUE_ID;
+        expressionManager.registerExpression(this);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean getValue()
-   {
-      return value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean getValue() {
+        return value;
+    }
 }

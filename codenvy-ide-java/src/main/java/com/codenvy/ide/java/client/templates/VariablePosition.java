@@ -10,81 +10,73 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.templates;
 
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
-
-import com.codenvy.ide.runtime.Assert;
 
 
 /**
  *
  */
-public class VariablePosition extends Position
-{
+public class VariablePosition extends Position {
 
-   private MultiVariableGuess fGuess;
+    private MultiVariableGuess fGuess;
 
-   private MultiVariable fVariable;
+    private MultiVariable fVariable;
 
-   private final Document document;
+    private final Document document;
 
-   private final int sequence;
+    private final int sequence;
 
-   // public VariablePosition(IDocument document, int offset, int length, MultiVariableGuess guess, MultiVariable variable) {
-   // this(document, offset, length, guess, variable);
-   // }
+    // public VariablePosition(IDocument document, int offset, int length, MultiVariableGuess guess, MultiVariable variable) {
+    // this(document, offset, length, guess, variable);
+    // }
 
-   public VariablePosition(Document document, int offset, int length, int sequence, MultiVariableGuess guess,
-      MultiVariable variable)
-   {
-      super(offset, length);
-      this.document = document;
-      this.sequence = sequence;
-      Assert.isNotNull(guess);
-      Assert.isNotNull(variable);
-      fVariable = variable;
-      fGuess = guess;
-   }
+    public VariablePosition(Document document, int offset, int length, int sequence, MultiVariableGuess guess,
+                            MultiVariable variable) {
+        super(offset, length);
+        this.document = document;
+        this.sequence = sequence;
+        Assert.isNotNull(guess);
+        Assert.isNotNull(variable);
+        fVariable = variable;
+        fGuess = guess;
+    }
 
-   /*
-    * @see org.eclipse.jface.text.link.ProposalPosition#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object o)
-   {
-      if (o instanceof VariablePosition && super.equals(o))
-      {
-         return fGuess.equals(((VariablePosition)o).fGuess);
-      }
-      return false;
-   }
+    /*
+     * @see org.eclipse.jface.text.link.ProposalPosition#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof VariablePosition && super.equals(o)) {
+            return fGuess.equals(((VariablePosition)o).fGuess);
+        }
+        return false;
+    }
 
-   /*
-    * @see org.eclipse.jface.text.link.ProposalPosition#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      return super.hashCode() | fGuess.hashCode();
-   }
+    /*
+     * @see org.eclipse.jface.text.link.ProposalPosition#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode() | fGuess.hashCode();
+    }
 
-   /*
-    * @see org.eclipse.jface.text.link.ProposalPosition#getChoices()
-    */
-   public CompletionProposal[] getChoices()
-   {
-      return fGuess.getProposals(fVariable, offset, length);
-   }
+    /*
+     * @see org.eclipse.jface.text.link.ProposalPosition#getChoices()
+     */
+    public CompletionProposal[] getChoices() {
+        return fGuess.getProposals(fVariable, offset, length);
+    }
 
-   /**
-    * Returns the variable.
-    * 
-    * @return the variable.
-    */
-   public MultiVariable getVariable()
-   {
-      return fVariable;
-   }
+    /**
+     * Returns the variable.
+     *
+     * @return the variable.
+     */
+    public MultiVariable getVariable() {
+        return fVariable;
+    }
 
 }

@@ -18,52 +18,41 @@
  */
 package com.codenvy.ide.preferences;
 
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
-
 import com.codenvy.ide.api.ui.preferences.PreferencesAgent;
-
+import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 
 /**
  * Implements PreferencesAgent and returns all available preferences.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class PreferencesAgentImpl implements PreferencesAgent
-{
-   JsonArray<PreferencesPagePresenter> preferences;
+public class PreferencesAgentImpl implements PreferencesAgent {
+    JsonArray<PreferencesPagePresenter> preferences;
 
-   /**
-    * Create PreferencesAgent.
-    */
-   @Inject
-   public PreferencesAgentImpl()
-   {
-      preferences = JsonCollections.createArray();
-   }
+    /** Create PreferencesAgent. */
+    @Inject
+    public PreferencesAgentImpl() {
+        preferences = JsonCollections.createArray();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void addPage(PreferencesPagePresenter page)
-   {
-      preferences.add(page);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void addPage(PreferencesPagePresenter page) {
+        preferences.add(page);
+    }
 
-   /**
-    * Returns all available preferences.
-    * 
-    * @return
-    */
-   public JsonArray<PreferencesPagePresenter> getPreferences()
-   {
-      return preferences;
-   }
+    /**
+     * Returns all available preferences.
+     *
+     * @return
+     */
+    public JsonArray<PreferencesPagePresenter> getPreferences() {
+        return preferences;
+    }
 }

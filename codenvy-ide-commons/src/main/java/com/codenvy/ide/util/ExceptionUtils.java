@@ -14,51 +14,49 @@
 
 package com.codenvy.ide.util;
 
-/**
- * Utility class for common Exception related operations.
- */
+/** Utility class for common Exception related operations. */
 public class ExceptionUtils {
-  public static final int MAX_CAUSE = 10;
+    public static final int MAX_CAUSE = 10;
 
-  public static String getStackTraceAsString(Throwable e) {
-    return getThrowableAsString(e, "\n", "\t");
-  }
-
-  public static String getThrowableAsString(Throwable e, String newline, String indent) {
-    if (e == null) {
-      return "";
+    public static String getStackTraceAsString(Throwable e) {
+        return getThrowableAsString(e, "\n", "\t");
     }
-    // For each cause, print the requested number of entries of its stack
-    // trace, being careful to avoid getting stuck in an infinite loop.
-    StringBuffer s = new StringBuffer(newline);
-    Throwable currentCause = e;
-    String causedBy = "";
 
-    int causeCounter = 0;
-    for (; causeCounter < MAX_CAUSE && currentCause != null; causeCounter++) {
-      s.append(causedBy);
-      causedBy = newline + "Caused by: "; // after 1st, all say "caused by"
-      s.append(currentCause.getClass().getName());
-      s.append(": ");
-      s.append(currentCause.getMessage());
-      StackTraceElement[] stackElems = currentCause.getStackTrace();
-      if (stackElems != null) {
-        for (int i = 0; i < stackElems.length; ++i) {
-          s.append(newline);
-          s.append(indent);
-          s.append("at ");
-          s.append(stackElems[i].toString());
+    public static String getThrowableAsString(Throwable e, String newline, String indent) {
+        if (e == null) {
+            return "";
         }
-      }
+        // For each cause, print the requested number of entries of its stack
+        // trace, being careful to avoid getting stuck in an infinite loop.
+        StringBuffer s = new StringBuffer(newline);
+        Throwable currentCause = e;
+        String causedBy = "";
 
-      currentCause = currentCause.getCause();
-    }
-    if (causeCounter >= MAX_CAUSE) {
-      s.append(newline);
-      s.append(newline);
-      s.append("Exceeded the maximum number of causes.");
-    }
+        int causeCounter = 0;
+        for (; causeCounter < MAX_CAUSE && currentCause != null; causeCounter++) {
+            s.append(causedBy);
+            causedBy = newline + "Caused by: "; // after 1st, all say "caused by"
+            s.append(currentCause.getClass().getName());
+            s.append(": ");
+            s.append(currentCause.getMessage());
+            StackTraceElement[] stackElems = currentCause.getStackTrace();
+            if (stackElems != null) {
+                for (int i = 0; i < stackElems.length; ++i) {
+                    s.append(newline);
+                    s.append(indent);
+                    s.append("at ");
+                    s.append(stackElems[i].toString());
+                }
+            }
 
-    return s.toString();
-  }
+            currentCause = currentCause.getCause();
+        }
+        if (causeCounter >= MAX_CAUSE) {
+            s.append(newline);
+            s.append(newline);
+            s.append("Exceeded the maximum number of causes.");
+        }
+
+        return s.toString();
+    }
 }

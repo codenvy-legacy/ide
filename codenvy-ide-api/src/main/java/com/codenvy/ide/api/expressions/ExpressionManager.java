@@ -19,26 +19,25 @@ package com.codenvy.ide.api.expressions;
 import com.codenvy.ide.api.event.ExpressionsChangedEvent;
 
 /**
- * Centralized Expression handler, that notifies Expressions and handles their value 
+ * Centralized Expression handler, that notifies Expressions and handles their value
  * changes producing a curresponding {@link ExpressionsChangedEvent}
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface ExpressionManager
-{
+public interface ExpressionManager {
 
-   /**
-    * Register new {@link Expression} in {@link ExpressionManagerImpl}
-    * 
-    * @param expression
-    */
-   public void registerExpression(Expression expression);
+    /**
+     * Register new {@link Expression} in {@link ExpressionManagerImpl}
+     *
+     * @param expression
+     */
+    public void registerExpression(Expression expression);
 
-   /**
-    * Removes {@link Expression} from {@link ExpressionManagerImpl}
-    * 
-    * @param expression
-    */
-   public void unRegisterExpression(Expression expression);
+    /**
+     * Removes {@link Expression} from {@link ExpressionManagerImpl}
+     *
+     * @param expression
+     */
+    public void unRegisterExpression(Expression expression);
 
 }

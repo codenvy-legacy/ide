@@ -12,24 +12,18 @@ package com.codenvy.ide.java.client.refactoring;
 
 import com.codenvy.ide.text.Document;
 
-/**
- * Helper class for text file changes.
- */
-public class TextChanges
-{
+/** Helper class for text file changes. */
+public class TextChanges {
 
-   private TextChanges()
-   {
-      // no instance
-   }
+    private TextChanges() {
+        // no instance
+    }
 
-   public static RefactoringStatus isValid(Document document, int length)
-   {
-      RefactoringStatus result = new RefactoringStatus();
-      if (length != document.getLength())
-      {
-         result.addFatalError("The content of the document has changed.");
-      }
-      return result;
-   }
+    public static RefactoringStatus isValid(Document document, int length) {
+        RefactoringStatus result = new RefactoringStatus();
+        if (length != document.getLength()) {
+            result.addFatalError("The content of the document has changed.");
+        }
+        return result;
+    }
 }

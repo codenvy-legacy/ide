@@ -18,10 +18,6 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.java.client.projectmodel.Package;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -30,68 +26,67 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * @version $Id:
  */
-public class NewPackagePagePresenterTest extends WizardsBaseTest
-{
+public class NewPackagePagePresenterTest extends WizardsBaseTest {
 
-   @Mock
-   private NewPackagePageView view;
+    @Mock
+    private NewPackagePageView view;
 
-   private NewPackagePagePresenter presenter;
+    private NewPackagePagePresenter presenter;
 
-   @Mock
-   private SelectionAgent selectionAgent;
+    @Mock
+    private SelectionAgent selectionAgent;
 
-   @Before
-   public void setUp() throws Exception
-   {
-      when(view.getPackageName()).thenReturn("client");
-      presenter = new NewPackagePagePresenter(view, resourceProvider, selectionAgent);
-      presenter.setUpdateDelegate(updateDelegate);
+    @Before
+    public void setUp() throws Exception {
+        when(view.getPackageName()).thenReturn("client");
+        presenter = new NewPackagePagePresenter(view, resourceProvider, selectionAgent);
+        presenter.setUpdateDelegate(updateDelegate);
 
-   }
+    }
 
-   @Test
-   public void testFlipToNext() throws Exception
-   {
-      assertThat(presenter.flipToNext()).isNull();
-   }
+    @Test
+    public void testFlipToNext() throws Exception {
+        assertThat(presenter.flipToNext()).isNull();
+    }
 
-   @Test
-   public void testCanFinish() throws Exception
-   {
-      presenter.checkPackageName();
-      verify(updateDelegate).updateControls();
-      assertThat(presenter.canFinish()).isTrue();
-   }
+    @Test
+    public void testCanFinish() throws Exception {
+        presenter.checkPackageName();
+        verify(updateDelegate).updateControls();
+        assertThat(presenter.canFinish()).isTrue();
+    }
 
-   @Test
-   public void testIsCompleted() throws Exception
-   {
-      when(view.getPackageName()).thenReturn("public");
-      presenter.checkPackageName();
-      verify(updateDelegate).updateControls();
-      assertThat(presenter.isCompleted()).isFalse();
-   }
+    @Test
+    public void testIsCompleted() throws Exception {
+        when(view.getPackageName()).thenReturn("public");
+        presenter.checkPackageName();
+        verify(updateDelegate).updateControls();
+        assertThat(presenter.isCompleted()).isFalse();
+    }
 
-   @Test
-   public void testGetNotice() throws Exception
-   {
-      when(view.getPackageName()).thenReturn("public");
-      presenter.checkPackageName();
-      assertThat(presenter.getNotice()).contains("is not a valid Java identifier");
-   }
+    @Test
+    public void testGetNotice() throws Exception {
+        when(view.getPackageName()).thenReturn("public");
+        presenter.checkPackageName();
+        assertThat(presenter.getNotice()).contains("is not a valid Java identifier");
+    }
 
-   @SuppressWarnings("unchecked")
-   @Test
-   public void testGo() throws Exception
-   {
-      presenter.checkPackageName();
-      presenter.doFinish();
-      verify(project).createPackage(eq(sourceFolder), eq("client"), (AsyncCallback<Package>)any());
-   }
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGo() throws Exception {
+        presenter.checkPackageName();
+        presenter.doFinish();
+        verify(project).createPackage(eq(sourceFolder), eq("client"), (AsyncCallback<Package>)any());
+    }
 
 }

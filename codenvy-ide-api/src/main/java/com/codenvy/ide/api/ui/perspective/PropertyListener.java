@@ -20,19 +20,20 @@ package com.codenvy.ide.api.ui.perspective;
 
 /**
  * Interface for listening for property changes on an {@link PartPresenter}
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface PropertyListener
-{
+public interface PropertyListener {
 
-   /**
-    * Indicates that a property has changed.
-    *
-    * @param source the object whose property has changed
-    * @param propId the id of the property which has changed; property ids
-    *   are generally defined as constants on the source class
-    */
-   public void propertyChanged(PartPresenter source, int propId);
+    /**
+     * Indicates that a property has changed.
+     *
+     * @param source
+     *         the object whose property has changed
+     * @param propId
+     *         the id of the property which has changed; property ids
+     *         are generally defined as constants on the source class
+     */
+    public void propertyChanged(PartPresenter source, int propId);
 }

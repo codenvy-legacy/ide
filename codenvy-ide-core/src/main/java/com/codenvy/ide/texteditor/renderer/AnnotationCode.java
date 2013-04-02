@@ -21,51 +21,39 @@ package com.codenvy.ide.texteditor.renderer;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-class AnnotationCode
-{
+class AnnotationCode {
 
-   private DocumentPosition start;
+    private DocumentPosition start;
 
-   private DocumentPosition end;
+    private DocumentPosition end;
 
-   private String decoration;
+    private String decoration;
 
-   /**
-    * @param start
-    * @param end
-    * @param decoration
-    */
-   public AnnotationCode(DocumentPosition start, DocumentPosition end, String decoration)
-   {
-      super();
-      this.start = start;
-      this.end = end;
-      this.decoration = decoration;
-   }
+    /**
+     * @param start
+     * @param end
+     * @param decoration
+     */
+    public AnnotationCode(DocumentPosition start, DocumentPosition end, String decoration) {
+        super();
+        this.start = start;
+        this.end = end;
+        this.decoration = decoration;
+    }
 
-   /**
-    * @return file position where this Annotation starts
-    */
-   public DocumentPosition getStart()
-   {
-      return start;
-   }
+    /** @return file position where this Annotation starts */
+    public DocumentPosition getStart() {
+        return start;
+    }
 
-   /**
-    * @return file position where this Annotation ends (inclusive)
-    */
-   public DocumentPosition getEnd()
-   {
-      return end;
-   }
+    /** @return file position where this Annotation ends (inclusive) */
+    public DocumentPosition getEnd() {
+        return end;
+    }
 
-   /**
-    * @return the decoration
-    */
-   public String getDecoration()
-   {
-      return decoration;
-   }
+    /** @return the decoration */
+    public String getDecoration() {
+        return decoration;
+    }
 }

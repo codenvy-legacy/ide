@@ -20,7 +20,6 @@ package com.codenvy.ide.menu;
 
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.api.ui.menu.Selectable;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -29,128 +28,111 @@ import com.google.gwt.user.client.ui.MenuItem;
 
 /**
  * The class is the general type of menu item. It has additional state (selected/unselected).
- * It provides generate item content.  
- * 
+ * It provides generate item content.
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class Item extends MenuItem implements Selectable
-{
-   public enum ConteinerType {
-      MAIN_MENU, TOOLBAR;
-   }
+public class Item extends MenuItem implements Selectable {
+    public enum ConteinerType {
+        MAIN_MENU, TOOLBAR;
+    }
 
-   private boolean isSelected;
+    private boolean isSelected;
 
-   private MenuResources resources;
+    private MenuResources resources;
 
-   /**
-    * Create Menu Item.
-    * 
-    * @param path
-    * @param hotKey
-    * @param toolTip
-    * @param command
-    * @param selected
-    * @param resources
-    */
-   public Item(MenuPath path, String hotKey, String toolTip, ExtendedCommand command, ConteinerType type,
-      MenuResources resources)
-   {
-      super(getItem(path, hotKey, command.getIcon(), command, type, resources), true, command);
+    /**
+     * Create Menu Item.
+     *
+     * @param path
+     * @param hotKey
+     * @param toolTip
+     * @param command
+     * @param selected
+     * @param resources
+     */
+    public Item(MenuPath path, String hotKey, String toolTip, ExtendedCommand command, ConteinerType type,
+                MenuResources resources) {
+        super(getItem(path, hotKey, command.getIcon(), command, type, resources), true, command);
 
-      this.resources = resources;
-      addStyleName(resources.menuCSS().itemContainer());
-      setTitle(toolTip);
-   }
-   
-   /**
-    * Create Menu Item.
-    * 
-    * @param path
-    * @param icon
-    * @param toolTip
-    * @param subMenu
-    * @param resources
-    */
-   public Item(MenuPath path, ImageResource icon, String toolTip, MenuBar subMenu, ConteinerType type,
-      MenuResources resources)
-   {
-      super(getItem(path, null, icon, null, type, resources), true, subMenu);
+        this.resources = resources;
+        addStyleName(resources.menuCSS().itemContainer());
+        setTitle(toolTip);
+    }
 
-      this.resources = resources;
-      addStyleName(resources.menuCSS().itemContainer());
-      setTitle(toolTip);
-   }
+    /**
+     * Create Menu Item.
+     *
+     * @param path
+     * @param icon
+     * @param toolTip
+     * @param subMenu
+     * @param resources
+     */
+    public Item(MenuPath path, ImageResource icon, String toolTip, MenuBar subMenu, ConteinerType type,
+                MenuResources resources) {
+        super(getItem(path, null, icon, null, type, resources), true, subMenu);
 
-   /**
-    * Generates item content.
-    * 
-    * @param path
-    * @param hotKey
-    * @param command
-    * @param resources
-    * @return
-    */
-   private static String getItem(MenuPath path, String hotKey, ImageResource iconResource, ExtendedCommand command,
-      ConteinerType type, MenuResources resources)
-   {
-      int depth = path.getSize() - 1;
-      Image icon = null;
+        this.resources = resources;
+        addStyleName(resources.menuCSS().itemContainer());
+        setTitle(toolTip);
+    }
 
-      if (iconResource != null)
-      {
-         icon = new Image(iconResource);
-         icon.addStyleName(resources.menuCSS().itemIcon());
-      }
+    /**
+     * Generates item content.
+     *
+     * @param path
+     * @param hotKey
+     * @param command
+     * @param resources
+     * @return
+     */
+    private static String getItem(MenuPath path, String hotKey, ImageResource iconResource, ExtendedCommand command,
+                                  ConteinerType type, MenuResources resources) {
+        int depth = path.getSize() - 1;
+        Image icon = null;
 
-      String title = path.getPathElementAt(depth);
-      String itemContent;
-      if (type.equals(ConteinerType.MAIN_MENU))
-      {
-         itemContent =
-            (depth != 0 && icon != null ? icon.toString() : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
-               + "<span class=\"" + resources.menuCSS().itemTitle() + "\">" + title + "</span>"
-               + (depth != 0 && hotKey != null ? "<span class=\"" + resources.menuCSS().hotKey() + "\">" + hotKey
-                  + "</span>" : "");
-      }
-      else
-      {
-         itemContent =
-            (icon != null ? icon.toString() : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
-               + (depth != 1 ? "<span class=\"" + resources.menuCSS().itemTitle() + "\">" + title + "</span>" : "")
-               + (depth != 1 && hotKey != null ? "<span class=\"" + resources.menuCSS().hotKey() + "\">" + hotKey
-                  + "</span>" : "");
-      }
-      
-      return itemContent;
-   }
+        if (iconResource != null) {
+            icon = new Image(iconResource);
+            icon.addStyleName(resources.menuCSS().itemIcon());
+        }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isSelected()
-   {
-      return isSelected;
-   }
+        String title = path.getPathElementAt(depth);
+        String itemContent;
+        if (type.equals(ConteinerType.MAIN_MENU)) {
+            itemContent =
+                    (depth != 0 && icon != null ? icon.toString() : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
+                    + "<span class=\"" + resources.menuCSS().itemTitle() + "\">" + title + "</span>"
+                    + (depth != 0 && hotKey != null ? "<span class=\"" + resources.menuCSS().hotKey() + "\">" + hotKey
+                                                      + "</span>" : "");
+        } else {
+            itemContent =
+                    (icon != null ? icon.toString() : "<div class=\"" + resources.menuCSS().itemIcon() + "\"></div>")
+                    + (depth != 1 ? "<span class=\"" + resources.menuCSS().itemTitle() + "\">" + title + "</span>" : "")
+                    + (depth != 1 && hotKey != null ? "<span class=\"" + resources.menuCSS().hotKey() + "\">" + hotKey
+                                                      + "</span>" : "");
+        }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setSelected(boolean isSelected)
-   {
-      this.isSelected = isSelected;
+        return itemContent;
+    }
 
-      if (isSelected)
-      {
-         this.removeStyleName(resources.menuCSS().uncheckedItem());
-         this.addStyleName(resources.menuCSS().checkedItem());
-      }
-      else
-      {
-         this.removeStyleName(resources.menuCSS().checkedItem());
-         this.addStyleName(resources.menuCSS().uncheckedItem());
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+
+        if (isSelected) {
+            this.removeStyleName(resources.menuCSS().uncheckedItem());
+            this.addStyleName(resources.menuCSS().checkedItem());
+        } else {
+            this.removeStyleName(resources.menuCSS().checkedItem());
+            this.addStyleName(resources.menuCSS().uncheckedItem());
+        }
+    }
 }

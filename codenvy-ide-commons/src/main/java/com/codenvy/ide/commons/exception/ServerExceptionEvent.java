@@ -25,31 +25,28 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public abstract class ServerExceptionEvent<H extends EventHandler> extends GwtEvent<H>
-{
+public abstract class ServerExceptionEvent<H extends EventHandler> extends GwtEvent<H> {
 
-   private Throwable exception;
-   
-   public ServerExceptionEvent() {
-   }
-   
-   public ServerExceptionEvent(Throwable exception) {
-      this.exception = exception;
-   }
+    private Throwable exception;
 
-   public void setException(Throwable exception)
-   {
-      this.exception = exception;
-   }
+    public ServerExceptionEvent() {
+    }
 
-   public Throwable getException()
-   {
-      return exception;
-   }
+    public ServerExceptionEvent(Throwable exception) {
+        this.exception = exception;
+    }
+
+    public void setException(Throwable exception) {
+        this.exception = exception;
+    }
+
+    public Throwable getException() {
+        return exception;
+    }
 
 }

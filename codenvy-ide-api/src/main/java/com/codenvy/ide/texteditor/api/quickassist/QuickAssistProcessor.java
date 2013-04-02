@@ -29,47 +29,50 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
  * </p>
  * <p>
  * This interface can be implemented by clients.</p>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface QuickAssistProcessor
-{
+public interface QuickAssistProcessor {
 
-   /**
-    * Returns a list of quick assist and quick fix proposals for the
-    * given invocation context.
-    *
-    * @param invocationContext the invocation context
-    * @return an array of completion proposals or <code>null</code> if no proposals are available
-    */
-   CompletionProposal[] computeQuickAssistProposals(QuickAssistInvocationContext invocationContext);
+    /**
+     * Returns a list of quick assist and quick fix proposals for the
+     * given invocation context.
+     *
+     * @param invocationContext
+     *         the invocation context
+     * @return an array of completion proposals or <code>null</code> if no proposals are available
+     */
+    CompletionProposal[] computeQuickAssistProposals(QuickAssistInvocationContext invocationContext);
 
-   /**
-    * Returns the reason why this quick assist processor
-    * was unable to produce any completion proposals.
-    *
-    * @return an error message or <code>null</code> if no error occurred
-    */
-   String getErrorMessage();
+    /**
+     * Returns the reason why this quick assist processor
+     * was unable to produce any completion proposals.
+     *
+     * @return an error message or <code>null</code> if no error occurred
+     */
+    String getErrorMessage();
 
-   /** 
-    * Tells whether this processor has a fix for the given annotation.
-    * <p>
-    * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
-    * <code>true</code> even though there might be no quick fix.
-    * </p>
-    *
-    * @param annotation the annotation
-    * @return <code>true</code> if the assistant has a fix for the given annotation
-    */
-   boolean canFix(Annotation annotation);
+    /**
+     * Tells whether this processor has a fix for the given annotation.
+     * <p>
+     * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
+     * <code>true</code> even though there might be no quick fix.
+     * </p>
+     *
+     * @param annotation
+     *         the annotation
+     * @return <code>true</code> if the assistant has a fix for the given annotation
+     */
+    boolean canFix(Annotation annotation);
 
-   /**
-    * Tells whether this assistant has assists for the given invocation context.
-    *
-    * @param invocationContext the invocation context
-    * @return <code>true</code> if the assistant has a fix for the given annotation
-    */
-   boolean canAssist(QuickAssistInvocationContext invocationContext);
+    /**
+     * Tells whether this assistant has assists for the given invocation context.
+     *
+     * @param invocationContext
+     *         the invocation context
+     * @return <code>true</code> if the assistant has a fix for the given annotation
+     */
+    boolean canAssist(QuickAssistInvocationContext invocationContext);
 
 }

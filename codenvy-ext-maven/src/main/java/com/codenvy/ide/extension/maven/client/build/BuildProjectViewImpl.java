@@ -25,76 +25,53 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
- */
+/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @Singleton
-public class BuildProjectViewImpl extends Composite implements BuildProjectView
-{
-   private static BuildProjectViewImplUiBinder uiBinder = GWT.create(BuildProjectViewImplUiBinder.class);
+public class BuildProjectViewImpl extends Composite implements BuildProjectView {
+    private static BuildProjectViewImplUiBinder uiBinder = GWT.create(BuildProjectViewImplUiBinder.class);
 
-   interface BuildProjectViewImplUiBinder extends UiBinder<Widget, BuildProjectViewImpl>
-   {
-   }
+    interface BuildProjectViewImplUiBinder extends UiBinder<Widget, BuildProjectViewImpl> {
+    }
 
-   @Inject
-   protected BuildProjectViewImpl()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-      // TODO IDEX-57
-      // This view is empty. Need to add some elements and etc.
-   }
+    @Inject
+    protected BuildProjectViewImpl() {
+        initWidget(uiBinder.createAndBindUi(this));
+        // TODO IDEX-57
+        // This view is empty. Need to add some elements and etc.
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      // TODO Auto-generated method stub
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        // TODO Auto-generated method stub
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void showMessageInOutput(String text)
-   {
-      // TODO Auto-generated method stub
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void showMessageInOutput(String text) {
+        // TODO Auto-generated method stub
+    }
 
-   @Override
-   public void startAnimation()
-   {
-      // TODO Auto-generated method stub
-   }
+    @Override
+    public void startAnimation() {
+        // TODO Auto-generated method stub
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void stopAnimation()
-   {
-      // TODO Auto-generated method stub
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void stopAnimation() {
+        // TODO Auto-generated method stub
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void clearOutput()
-   {
-      // TODO Auto-generated method stub
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void clearOutput() {
+        // TODO Auto-generated method stub
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setClearOutputButtonEnabled(boolean isEnabled)
-   {
-      // TODO Auto-generated method stub
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setClearOutputButtonEnabled(boolean isEnabled) {
+        // TODO Auto-generated method stub
+    }
 }

@@ -19,58 +19,50 @@ import com.codenvy.ide.texteditor.Buffer;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
 
-public class LeftGutterManager
-{
+public class LeftGutterManager {
 
-   private final Buffer buffer;
+    private final Buffer buffer;
 
-   private DocumentModel document;
+    private DocumentModel document;
 
-   private DocumentModel.LineCountListener lineCountListener = new DocumentModel.LineCountListener()
-   {
-      @Override
-      public void onLineCountChanged(DocumentModel document, int lineCount)
-      {
-         updateWidthFromLineCount(lineCount);
-      }
-   };
+    private DocumentModel.LineCountListener lineCountListener = new DocumentModel.LineCountListener() {
+        @Override
+        public void onLineCountChanged(DocumentModel document, int lineCount) {
+            updateWidthFromLineCount(lineCount);
+        }
+    };
 
-   private final Gutter gutter;
+    private final Gutter gutter;
 
-   private Remover lineCountListenerRemover;
+    private Remover lineCountListenerRemover;
 
-   public LeftGutterManager(Gutter gutter, Buffer buffer)
-   {
-      this.buffer = buffer;
-      this.gutter = gutter;
-   }
+    public LeftGutterManager(Gutter gutter, Buffer buffer) {
+        this.buffer = buffer;
+        this.gutter = gutter;
+    }
 
-   public Gutter getGutter()
-   {
-      return gutter;
-   }
+    public Gutter getGutter() {
+        return gutter;
+    }
 
-   public void handleDocumentChanged(DocumentModel newDocument)
-   {
+    public void handleDocumentChanged(DocumentModel newDocument) {
 
-      if (lineCountListenerRemover != null)
-      {
-         lineCountListenerRemover.remove();
-      }
+        if (lineCountListenerRemover != null) {
+            lineCountListenerRemover.remove();
+        }
 
-      this.document = newDocument;
+        this.document = newDocument;
 
-      lineCountListenerRemover = document.getLineCountListenerRegistrar().add(lineCountListener);
-      updateWidthFromLineCount(document.getLineCount());
-   }
+        lineCountListenerRemover = document.getLineCountListenerRegistrar().add(lineCountListener);
+        updateWidthFromLineCount(document.getLineCount());
+    }
 
-   private void updateWidthFromLineCount(int lineCount)
-   {
+    private void updateWidthFromLineCount(int lineCount) {
       /*
        * We want to know how many digits are in the current line count (hence the
        * log)
        */
-      int width = (int)(((float)Math.log10(lineCount) + 1) * buffer.getEditorCharacterWidth());
-      gutter.setWidth(width);
-   }
+        int width = (int)(((float)Math.log10(lineCount) + 1) * buffer.getEditorCharacterWidth());
+        gutter.setWidth(width);
+    }
 }

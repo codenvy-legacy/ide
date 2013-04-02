@@ -18,13 +18,11 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
-import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
-import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
-
 import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.util.StringUtils;
@@ -37,179 +35,138 @@ import com.google.inject.Inject;
 
 /**
  * Provides creating new generic project.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate
-{
-   private NewGenericProjectPageView view;
+public class NewGenericProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate {
+    private NewGenericProjectPageView view;
 
-   private ResourceProvider resourceProvider;
+    private ResourceProvider resourceProvider;
 
-   private boolean hasIncorrectSymbol;
+    private boolean hasIncorrectSymbol;
 
-   private boolean hasProjectList;
+    private boolean hasProjectList;
 
-   private boolean hasSameProject;
+    private boolean hasSameProject;
 
-   private JsonArray<String> projectList;
+    private JsonArray<String> projectList;
 
-   /**
-    * Create presenter
-    * 
-    * @param resources
-    * @param view
-    * @param resourceProvider
-    */
-   @Inject
-   protected NewGenericProjectPagePresenter(NewGenericProjectWizardResource resources, NewGenericProjectPageView view,
-      ResourceProvider resourceProvider)
-   {
-      super("New generic project wizard", resources.genericProjectIcon());
-      this.view = view;
-      this.view.setDelegate(this);
-      this.resourceProvider = resourceProvider;
-      
-      this.resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
-      {
-         @Override
-         public void onSuccess(JsonArray<String> result)
-         {
-            projectList = result;
-            hasProjectList = true;
-         }
-         
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Log.error(NewGenericProjectPagePresenter.class, caught);
-         }
-      });
-   }
+    /**
+     * Create presenter
+     *
+     * @param resources
+     * @param view
+     * @param resourceProvider
+     */
+    @Inject
+    protected NewGenericProjectPagePresenter(NewGenericProjectWizardResource resources, NewGenericProjectPageView view,
+                                             ResourceProvider resourceProvider) {
+        super("New generic project wizard", resources.genericProjectIcon());
+        this.view = view;
+        this.view.setDelegate(this);
+        this.resourceProvider = resourceProvider;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public WizardPagePresenter flipToNext()
-   {
-      AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
-      CreateProjectHandler createProjectHandler = getCreateProjectHandler();
-      createProjectHandler.setProjectName(view.getProjectName());
-      paasWizardPage.setCreateProjectHandler(createProjectHandler);
-      paasWizardPage.setPrevious(this);
-      paasWizardPage.setUpdateDelegate(delegate);
+        this.resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+            @Override
+            public void onSuccess(JsonArray<String> result) {
+                projectList = result;
+                hasProjectList = true;
+            }
 
-      return paasWizardPage;
-   }
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(NewGenericProjectPagePresenter.class, caught);
+            }
+        });
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean canFinish()
-   {
-      return isCompleted() && !hasNext();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public WizardPagePresenter flipToNext() {
+        AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
+        CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+        createProjectHandler.setProjectName(view.getProjectName());
+        paasWizardPage.setCreateProjectHandler(createProjectHandler);
+        paasWizardPage.setPrevious(this);
+        paasWizardPage.setUpdateDelegate(delegate);
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean hasNext()
-   {
-      return getPaaSWizardPage() != null;
-   }
+        return paasWizardPage;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isCompleted()
-   {
-      return !view.getProjectName().isEmpty() && !hasIncorrectSymbol && hasProjectList && !hasSameProject;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean canFinish() {
+        return isCompleted() && !hasNext();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getNotice()
-   {
-      if (view.getProjectName().isEmpty())
-      {
-         return "Please, enter a project name.";
-      }
-      else if (!hasProjectList)
-      {
-         return "Please wait, checking project list";
-      }
-      else if (hasSameProject)
-      {
-         return "Project with this name already exists.";
-      }
-      else if (hasIncorrectSymbol)
-      {
-         return "Incorrect project name.";
-      }
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasNext() {
+        return getPaaSWizardPage() != null;
+    }
 
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean isCompleted() {
+        return !view.getProjectName().isEmpty() && !hasIncorrectSymbol && hasProjectList && !hasSameProject;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(view);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getNotice() {
+        if (view.getProjectName().isEmpty()) {
+            return "Please, enter a project name.";
+        } else if (!hasProjectList) {
+            return "Please wait, checking project list";
+        } else if (hasSameProject) {
+            return "Project with this name already exists.";
+        } else if (hasIncorrectSymbol) {
+            return "Incorrect project name.";
+        }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void checkProjectName()
-   {
-      hasIncorrectSymbol = false;
-      String projectName = view.getProjectName();
-      for (int i = 0; i < projectName.length() && hasIncorrectSymbol == false; i++)
-      {
-         Character ch = projectName.charAt(i);
-         hasIncorrectSymbol = !(StringUtils.isWhitespace(ch) || StringUtils.isAlphaNumOrUnderscore(ch));
-      }
+        return null;
+    }
 
-      hasSameProject = false;
-      for (int i = 0; i < projectList.size() && hasSameProject == false; i++)
-      {
-         String name = projectList.get(i);
-         hasSameProject = projectName.compareTo(name) == 0;
-      }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+    }
 
-      delegate.updateControls();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void checkProjectName() {
+        hasIncorrectSymbol = false;
+        String projectName = view.getProjectName();
+        for (int i = 0; i < projectName.length() && hasIncorrectSymbol == false; i++) {
+            Character ch = projectName.charAt(i);
+            hasIncorrectSymbol = !(StringUtils.isWhitespace(ch) || StringUtils.isAlphaNumOrUnderscore(ch));
+        }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void doFinish()
-   {
-      CreateProjectHandler createProjectHandler = getCreateProjectHandler();
-      createProjectHandler.setProjectName(view.getProjectName());
-      createProjectHandler.create(new AsyncCallback<Project>()
-      {
-         @Override
-         public void onSuccess(Project result)
-         {
-            // do nothing
-         }
+        hasSameProject = false;
+        for (int i = 0; i < projectList.size() && hasSameProject == false; i++) {
+            String name = projectList.get(i);
+            hasSameProject = projectName.compareTo(name) == 0;
+        }
 
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            // do nothing
-         }
-      });
-   }
+        delegate.updateControls();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void doFinish() {
+        CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+        createProjectHandler.setProjectName(view.getProjectName());
+        createProjectHandler.create(new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                // do nothing
+            }
+        });
+    }
 }

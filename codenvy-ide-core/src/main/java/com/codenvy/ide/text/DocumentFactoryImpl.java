@@ -21,26 +21,20 @@ package com.codenvy.ide.text;
 /**
  * Default implementation of the DocumentFactory.
  * Use {@link DocumentImpl} as implementation of Document interface
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class DocumentFactoryImpl implements DocumentFactory
-{
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Document get()
-   {
-      return new DocumentImpl();
-   }
+public class DocumentFactoryImpl implements DocumentFactory {
+    /** {@inheritDoc} */
+    @Override
+    public Document get() {
+        return new DocumentImpl();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Document get(String initialContent)
-   {
-      return new DocumentImpl(initialContent);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Document get(String initialContent) {
+        return new DocumentImpl(initialContent);
+    }
 }

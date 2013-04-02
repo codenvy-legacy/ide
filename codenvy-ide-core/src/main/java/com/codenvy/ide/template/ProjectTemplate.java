@@ -23,39 +23,34 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Jul 26, 2012 12:38:17 PM anya $
- *
  */
-public interface ProjectTemplate extends FolderTemplate
-{
+public interface ProjectTemplate extends FolderTemplate {
 
-   /**
-    * @return the classPathLocation
-    */
-   String getClassPathLocation();
+    /** @return the classPathLocation */
+    String getClassPathLocation();
 
-   /**
-    * @param classPathLocation the classPathLocation to set
-    */
-   void setClassPathLocation(String classPathLocation);
+    /**
+     * @param classPathLocation
+     *         the classPathLocation to set
+     */
+    void setClassPathLocation(String classPathLocation);
 
-   /**
-    * @return the type
-    */
-   String getType();
+    /** @return the type */
+    String getType();
 
-   /**
-    * @param type the type to set
-    */
-   void setType(String type);
+    /**
+     * @param type
+     *         the type to set
+     */
+    void setType(String type);
 
-   /**
-    * @return the destination
-    */
-   List<String> getTargets();
+    /** @return the destination */
+    List<String> getTargets();
 
-   /**
-    * @param destination the destination to set
-    */
-   void setTargets(List<String> targets);
+    /**
+     * @param destination
+     *         the destination to set
+     */
+    void setTargets(List<String> targets);
 
 }

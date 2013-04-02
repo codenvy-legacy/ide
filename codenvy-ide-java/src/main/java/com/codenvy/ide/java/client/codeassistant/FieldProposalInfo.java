@@ -13,32 +13,27 @@ package com.codenvy.ide.java.client.codeassistant;
 import com.codenvy.ide.java.client.core.CompletionProposal;
 import com.codenvy.ide.java.client.core.Signature;
 
-/**
- * Proposal info that computes the javadoc lazily when it is queried.
- */
-public final class FieldProposalInfo extends MemberProposalInfo
-{
+/** Proposal info that computes the javadoc lazily when it is queried. */
+public final class FieldProposalInfo extends MemberProposalInfo {
 
-   /**
-    * Creates a new proposal info.
-    * 
-    * @param project the java project to reference when resolving types
-    * @param proposal the proposal to generate information for
-    */
-   public FieldProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
-   {
-      super(proposal, projectId, docContext, vfsId);
-   }
+    /**
+     * Creates a new proposal info.
+     *
+     * @param project
+     *         the java project to reference when resolving types
+     * @param proposal
+     *         the proposal to generate information for
+     */
+    public FieldProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId) {
+        super(proposal, projectId, docContext, vfsId);
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.codeassistant.MemberProposalInfo#getURL()
-    */
-   @Override
-   protected String getURL()
-   {
-      if (fProposal.getDeclarationSignature() == null)
-         return null;
-      return docContext + Signature.toString(new String(fProposal.getDeclarationSignature())) + "%23"
-         + new String(fProposal.getName()) + "&projectid=" + projectId + "&vfsid=" + vfsId + "&isclass=false";
-   }
+    /** @see com.codenvy.ide.java.client.codeassistant.MemberProposalInfo#getURL() */
+    @Override
+    protected String getURL() {
+        if (fProposal.getDeclarationSignature() == null)
+            return null;
+        return docContext + Signature.toString(new String(fProposal.getDeclarationSignature())) + "%23"
+               + new String(fProposal.getName()) + "&projectid=" + projectId + "&vfsid=" + vfsId + "&isclass=false";
+    }
 }

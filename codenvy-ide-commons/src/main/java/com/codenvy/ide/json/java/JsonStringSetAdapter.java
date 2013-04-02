@@ -24,74 +24,73 @@ import java.util.Set;
 /**
  * Server wrapper for a {@link java.util.Set} that implements
  * {@link JsonStringSet}.
- *
  */
 public class JsonStringSetAdapter implements JsonStringSet {
-  private final Set<String> delegate;
+    private final Set<String> delegate;
 
-  public JsonStringSetAdapter(Set<String> delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public boolean contains(String key) {
-    return delegate.contains(key);
-  }
-
-  @Override
-  public JsonArray<String> getKeys() {
-    return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate));
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return delegate.isEmpty();
-  }
-
-  @Override
-  public void iterate(IterationCallback callback) {
-    for (String key : delegate) {
-      callback.onIteration(key);
+    public JsonStringSetAdapter(Set<String> delegate) {
+        this.delegate = delegate;
     }
-  }
 
-  @Override
-  public void add(String key) {
-    delegate.add(key);
-  }
-
-  @Override
-  public void addAll(JsonArray<String> keys) {
-    for (int i = 0, n = keys.size(); i < n; i++) {
-      add(keys.get(i));
+    @Override
+    public boolean contains(String key) {
+        return delegate.contains(key);
     }
-  }
 
-  @Override
-  public boolean remove(String key) {
-    return delegate.remove(key);
-  }
-
-  @Override
-  public void clear() {
-    delegate.clear();
-  }
-
-  @Override
-  public int hashCode() {
-    return delegate.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof JsonStringSetAdapter) {
-      return delegate.equals(((JsonStringSetAdapter) obj).delegate);
+    @Override
+    public JsonArray<String> getKeys() {
+        return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate));
     }
-    return false;
-  }
 
-  @Override
-  public String toString() {
-    return delegate.toString();
-  }
+    @Override
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
+
+    @Override
+    public void iterate(IterationCallback callback) {
+        for (String key : delegate) {
+            callback.onIteration(key);
+        }
+    }
+
+    @Override
+    public void add(String key) {
+        delegate.add(key);
+    }
+
+    @Override
+    public void addAll(JsonArray<String> keys) {
+        for (int i = 0, n = keys.size(); i < n; i++) {
+            add(keys.get(i));
+        }
+    }
+
+    @Override
+    public boolean remove(String key) {
+        return delegate.remove(key);
+    }
+
+    @Override
+    public void clear() {
+        delegate.clear();
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof JsonStringSetAdapter) {
+            return delegate.equals(((JsonStringSetAdapter)obj).delegate);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
 }

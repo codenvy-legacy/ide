@@ -20,27 +20,19 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.mvp.View;
 
-import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
+/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+public interface BuildProjectView extends View<BuildProjectView.ActionDelegate> {
+    public interface ActionDelegate {
+        public void onClearOutputClicked();
+    }
 
-/**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
- */
-public interface BuildProjectView extends View<BuildProjectView.ActionDelegate>
-{
-   public interface ActionDelegate
-   {
-      public void onClearOutputClicked();
-   }
+    public void showMessageInOutput(String text);
 
-   public void showMessageInOutput(String text);
+    public void startAnimation();
 
-   public void startAnimation();
+    public void stopAnimation();
 
-   public void stopAnimation();
+    public void clearOutput();
 
-   public void clearOutput();
-
-   public void setClearOutputButtonEnabled(boolean isEnabled);
+    public void setClearOutputButtonEnabled(boolean isEnabled);
 }

@@ -23,58 +23,51 @@ import com.codenvy.ide.text.Document;
 
 /**
  * Text edit to delete a range in a document.
- * <p>
+ * <p/>
  * A delete edit is equivalent to <code>ReplaceEdit(
  * offset, length, "")</code>.
- * 
  */
-public final class DeleteEdit extends TextEdit
-{
+public final class DeleteEdit extends TextEdit {
 
-   /**
-    * Constructs a new delete edit.
-    * 
-    * @param offset the offset of the range to replace
-    * @param length the length of the range to replace
-    */
-   public DeleteEdit(int offset, int length)
-   {
-      super(offset, length);
-   }
+    /**
+     * Constructs a new delete edit.
+     *
+     * @param offset
+     *         the offset of the range to replace
+     * @param length
+     *         the length of the range to replace
+     */
+    public DeleteEdit(int offset, int length) {
+        super(offset, length);
+    }
 
-   /* Copy constructor */
-   private DeleteEdit(DeleteEdit other)
-   {
-      super(other);
-   }
+    /* Copy constructor */
+    private DeleteEdit(DeleteEdit other) {
+        super(other);
+    }
 
-   /* @see TextEdit#doCopy */
-   protected TextEdit doCopy()
-   {
-      return new DeleteEdit(this);
-   }
+    /* @see TextEdit#doCopy */
+    protected TextEdit doCopy() {
+        return new DeleteEdit(this);
+    }
 
-   /* @see TextEdit#accept0 */
-   protected void accept0(TextEditVisitor visitor)
-   {
-      boolean visitChildren = visitor.visit(this);
-      if (visitChildren)
-      {
-         acceptChildren(visitor);
-      }
-   }
+    /* @see TextEdit#accept0 */
+    protected void accept0(TextEditVisitor visitor) {
+        boolean visitChildren = visitor.visit(this);
+        if (visitChildren) {
+            acceptChildren(visitor);
+        }
+    }
 
-   /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(Document document) throws BadLocationException
-   {
-      document.replace(getOffset(), getLength(), ""); //$NON-NLS-1$
-      fDelta = -getLength();
-      return fDelta;
-   }
+    /* @see TextEdit#performDocumentUpdating */
+    int performDocumentUpdating(Document document) throws BadLocationException {
+        document.replace(getOffset(), getLength(), ""); //$NON-NLS-1$
+        fDelta = -getLength();
+        return fDelta;
+    }
 
-   /* @see TextEdit#deleteChildren */
-   boolean deleteChildren()
-   {
-      return true;
-   }
+    /* @see TextEdit#deleteChildren */
+    boolean deleteChildren() {
+        return true;
+    }
 }

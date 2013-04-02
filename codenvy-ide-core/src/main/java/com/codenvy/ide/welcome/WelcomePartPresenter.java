@@ -16,10 +16,8 @@
  */
 package com.codenvy.ide.welcome;
 
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-
 import com.codenvy.ide.api.parts.WelcomePart;
-
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ImageResource;
@@ -32,65 +30,50 @@ import com.google.inject.Singleton;
 
 /**
  * Simple Welcome Page
- * TODO : reimplement MVP 
+ * TODO : reimplement MVP
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart
-{
+public class WelcomePartPresenter extends AbstractPartPresenter implements WelcomePart {
 
-   private static WelcomePartPresenterUiBinder uiBinder = GWT.create(WelcomePartPresenterUiBinder.class);
+    private static WelcomePartPresenterUiBinder uiBinder = GWT.create(WelcomePartPresenterUiBinder.class);
 
-   private Element element;
+    private Element element;
 
-   interface WelcomePartPresenterUiBinder extends UiBinder<Element, WelcomePartPresenter>
-   {
-   }
+    interface WelcomePartPresenterUiBinder extends UiBinder<Element, WelcomePartPresenter> {
+    }
 
-   @Inject
-   public WelcomePartPresenter()
-   {
-      element = uiBinder.createAndBindUi(this);
-   }
+    @Inject
+    public WelcomePartPresenter() {
+        element = uiBinder.createAndBindUi(this);
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      HTML h = new HTML();
-      h.getElement().appendChild(element);
-      h.setSize("100%", "100%");
-      container.setWidget(h);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        HTML h = new HTML();
+        h.getElement().appendChild(element);
+        h.setSize("100%", "100%");
+        container.setWidget(h);
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle()
-    */
-   @Override
-   public String getTitle()
-   {
-      return "Welcome";
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle() */
+    @Override
+    public String getTitle() {
+        return "Welcome";
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage()
-    */
-   @Override
-   public ImageResource getTitleImage()
-   {
-      return null;
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage() */
+    @Override
+    public ImageResource getTitleImage() {
+        return null;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip()
-    */
-   @Override
-   public String getTitleToolTip()
-   {
-      return "This is Welcome page, it shows general information about Project Development.";
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip() */
+    @Override
+    public String getTitleToolTip() {
+        return "This is Welcome page, it shows general information about Project Development.";
+    }
 
 }

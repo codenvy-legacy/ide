@@ -25,12 +25,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -40,119 +35,93 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplicationView
-{
-   private static DeleteApplicationViewImplUiBinder uiBinder = GWT.create(DeleteApplicationViewImplUiBinder.class);
+public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplicationView {
+    private static DeleteApplicationViewImplUiBinder uiBinder = GWT.create(DeleteApplicationViewImplUiBinder.class);
 
-   @UiField
-   Button btnCancel;
+    @UiField
+    Button btnCancel;
 
-   @UiField
-   Button btnDelete;
+    @UiField
+    Button btnDelete;
 
-   @UiField
-   CheckBox deleteServicesField;
+    @UiField
+    CheckBox deleteServicesField;
 
-   @UiField
-   Label askLabel;
+    @UiField
+    Label askLabel;
 
-   interface DeleteApplicationViewImplUiBinder extends UiBinder<Widget, DeleteApplicationViewImpl>
-   {
-   }
+    interface DeleteApplicationViewImplUiBinder extends UiBinder<Widget, DeleteApplicationViewImpl> {
+    }
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   /**
-    * Create view.
-    * 
-    * @param constants
-    * @param resources
-    */
-   @Inject
-   protected DeleteApplicationViewImpl(CloudFoundryLocalizationConstant constants, CloudFoundryResources resources)
-   {
-      Widget widget = uiBinder.createAndBindUi(this);
+    /**
+     * Create view.
+     *
+     * @param constants
+     * @param resources
+     */
+    @Inject
+    protected DeleteApplicationViewImpl(CloudFoundryLocalizationConstant constants, CloudFoundryResources resources) {
+        Widget widget = uiBinder.createAndBindUi(this);
 
-      this.setText("Delete application from CloudFoundry");
-      this.setWidget(widget);
+        this.setText("Delete application from CloudFoundry");
+        this.setWidget(widget);
 
-      btnCancel.setHTML(new Image(resources.cancelButton()) + " " + constants.cancelButton());
-      btnDelete.setHTML(new Image(resources.okButton()) + " " + constants.deleteButton());
-   }
+        btnCancel.setHTML(new Image(resources.cancelButton()) + " " + constants.cancelButton());
+        btnDelete.setHTML(new Image(resources.okButton()) + " " + constants.deleteButton());
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isDeleteServices()
-   {
-      return deleteServicesField.getValue();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean isDeleteServices() {
+        return deleteServicesField.getValue();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeleteServices(boolean isDeleted)
-   {
-      deleteServicesField.setValue(isDeleted);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDeleteServices(boolean isDeleted) {
+        deleteServicesField.setValue(isDeleted);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setAskMessage(String message)
-   {
-      askLabel.setText(message);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setAskMessage(String message) {
+        askLabel.setText(message);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setAskDeleteServices(String text)
-   {
-      deleteServicesField.setText(text);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setAskDeleteServices(String text) {
+        deleteServicesField.setText(text);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void showDialog()
-   {
-      this.center();
-      this.show();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void showDialog() {
+        this.center();
+        this.show();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void close()
-   {
-      this.hide();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        this.hide();
+    }
 
-   @UiHandler("btnDelete")
-   void onBtnDeleteClick(ClickEvent event)
-   {
-      delegate.onDeleteClicked();
-   }
+    @UiHandler("btnDelete")
+    void onBtnDeleteClick(ClickEvent event) {
+        delegate.onDeleteClicked();
+    }
 
-   @UiHandler("btnCancel")
-   void onBtnCancelClick(ClickEvent event)
-   {
-      delegate.onCancelClicked();
-   }
+    @UiHandler("btnCancel")
+    void onBtnCancelClick(ClickEvent event) {
+        delegate.onCancelClicked();
+    }
 }

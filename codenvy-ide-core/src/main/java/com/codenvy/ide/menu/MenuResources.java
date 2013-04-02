@@ -24,33 +24,31 @@ import com.google.gwt.resources.client.DataResource;
 
 /**
  * Resources of menu.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface MenuResources extends ClientBundle
-{
-   public interface ToolbarCSS extends CssResource
-   {
-      String checkedItem();
+public interface MenuResources extends ClientBundle {
+    public interface ToolbarCSS extends CssResource {
+        String checkedItem();
 
-      String uncheckedItem();
+        String uncheckedItem();
 
-      String menuHorizontal();
-      
-      String menuVertical();
+        String menuHorizontal();
 
-      String itemIcon();
+        String menuVertical();
 
-      String itemTitle();
+        String itemIcon();
 
-      String hotKey();
+        String itemTitle();
 
-      String itemContainer();
-   }
+        String hotKey();
 
-   @Source({"com/codenvy/ide/menu/Menu.css", "com/codenvy/ide/common/constants.css"})
-   ToolbarCSS menuCSS();
+        String itemContainer();
+    }
 
-   @Source("com/codenvy/ide/menu/check.png")
-   DataResource checkIcon();
+    @Source({"com/codenvy/ide/menu/Menu.css", "com/codenvy/ide/common/constants.css"})
+    ToolbarCSS menuCSS();
+
+    @Source("com/codenvy/ide/menu/check.png")
+    DataResource checkIcon();
 }

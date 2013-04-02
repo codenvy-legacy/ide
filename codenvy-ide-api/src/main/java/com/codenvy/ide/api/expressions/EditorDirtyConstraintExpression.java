@@ -22,12 +22,11 @@ import com.codenvy.ide.api.editor.EditorPartPresenter;
 
 /**
  * Expression that chages it's state depending on dirty flag of current Editor
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
-public interface EditorDirtyConstraintExpression extends Expression
-{
+public interface EditorDirtyConstraintExpression extends Expression {
 
-   boolean onEditorDirtyChanged(EditorPartPresenter editor);
+    boolean onEditorDirtyChanged(EditorPartPresenter editor);
 
 }

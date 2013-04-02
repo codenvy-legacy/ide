@@ -19,41 +19,34 @@
 package com.codenvy.ide.api.expressions;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Expression that chages it's state depending on dirty flag of any opened Editor 
- * 
+ * Expression that chages it's state depending on dirty flag of any opened Editor
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
-public class EditorsDirtyExpression extends AbstractExpression implements EditorDirtyConstraintExpression
-{
-   private JsonArray<EditorPartPresenter> dirtyEditors;
+public class EditorsDirtyExpression extends AbstractExpression implements EditorDirtyConstraintExpression {
+    private JsonArray<EditorPartPresenter> dirtyEditors;
 
-   @Inject
-   public EditorsDirtyExpression(ExpressionManager expressionManager)
-   {
-      super(expressionManager, false);
-      dirtyEditors = JsonCollections.createArray();
-   }
+    @Inject
+    public EditorsDirtyExpression(ExpressionManager expressionManager) {
+        super(expressionManager, false);
+        dirtyEditors = JsonCollections.createArray();
+    }
 
-   @Override
-   public boolean onEditorDirtyChanged(EditorPartPresenter editor)
-   {
-      if (editor.isDirty())
-      {
-         dirtyEditors.add(editor);
-      }
-      else
-      {
-         dirtyEditors.remove(editor);
-      }
-      value = !dirtyEditors.isEmpty();
-      return value;
-   }
+    @Override
+    public boolean onEditorDirtyChanged(EditorPartPresenter editor) {
+        if (editor.isDirty()) {
+            dirtyEditors.add(editor);
+        } else {
+            dirtyEditors.remove(editor);
+        }
+        value = !dirtyEditors.isEmpty();
+        return value;
+    }
 }

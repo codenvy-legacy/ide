@@ -20,21 +20,24 @@ package com.codenvy.ide.text;
 
 /**
  * Factory interface to receive new instance of the {@link Document}
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface DocumentFactory
-{
-   /**
-    * Create new the empty Document.
-    * @return the new Document.
-    */
-   Document get();
+public interface DocumentFactory {
+    /**
+     * Create new the empty Document.
+     *
+     * @return the new Document.
+     */
+    Document get();
 
-   /**
-    * Create new Document with initial content.
-    * @param initialContent the initial content of the new Document.
-    * @return the new Document.
-    */
-   Document get(String initialContent);
+    /**
+     * Create new Document with initial content.
+     *
+     * @param initialContent
+     *         the initial content of the new Document.
+     * @return the new Document.
+     */
+    Document get(String initialContent);
 }

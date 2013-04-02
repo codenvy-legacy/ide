@@ -21,22 +21,20 @@ import com.google.gwt.core.client.JavaScriptObject;
  * dictionary of mode-specific state information, such as a stack of HTML tags
  * to close or the next expected character.
  */
-public class CmState extends JavaScriptObject implements State
-{
-   protected CmState()
-   {
-   }
+public class CmState extends JavaScriptObject implements State {
+    protected CmState() {
+    }
 
-   @Override
-   public final native State copy(Parser mode) /*-{
-		var copiedState = $wnd.CodeMirror.copyState(mode, this);
+    @Override
+    public final native State copy(Parser mode) /*-{
+        var copiedState = $wnd.CodeMirror.copyState(mode, this);
 
-		// Workaround for Chrome devmode: Remove the devmode workaround for Chrome
-		// object identity. For 100% correctness, this should iterate through
-		// and remove all instances of __gwtObjectId, but the top-level was
-		// sufficient from my testing.
-		delete copiedState.__gwt_ObjectId;
+        // Workaround for Chrome devmode: Remove the devmode workaround for Chrome
+        // object identity. For 100% correctness, this should iterate through
+        // and remove all instances of __gwtObjectId, but the top-level was
+        // sufficient from my testing.
+        delete copiedState.__gwt_ObjectId;
 
-		return copiedState;
-   }-*/;
+        return copiedState;
+    }-*/;
 }

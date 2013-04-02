@@ -30,171 +30,149 @@ import java.util.EnumSet;
 
 /**
  * A class that is the entry point for the rendering of the editor.
- *
+ * <p/>
  * The lifecycle of this class is tied to the current document. If the document
  * is replaced, a new instance of this class is created for the new document.
- *
  */
-public class Renderer
-{
+public class Renderer {
 
-   public static Renderer create(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-      SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager, TextEditorViewImpl editor, Resources res,
-      RenderTimeExecutor renderTimeExecutor)
-   {
-      return new Renderer(document, viewport, buffer, leftGutter, selection, focusManager, editor, res,
-         renderTimeExecutor);
-   }
+    public static Renderer create(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
+                                  SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager,
+                                  TextEditorViewImpl editor, Resources res,
+                                  RenderTimeExecutor renderTimeExecutor) {
+        return new Renderer(document, viewport, buffer, leftGutter, selection, focusManager, editor, res,
+                            renderTimeExecutor);
+    }
 
-   /**
-    * Listener that is notified when the rendering is finished.
-    */
-   public interface CompletionListener
-   {
-      void onRenderCompleted();
-   }
+    /** Listener that is notified when the rendering is finished. */
+    public interface CompletionListener {
+        void onRenderCompleted();
+    }
 
-   /**
-    * Listener that is notified on creation and garbage collection of a
-    * rendered line.
-    */
-   public interface LineLifecycleListener
-   {
-      void onRenderedLineCreated(Line line, int lineNumber);
+    /**
+     * Listener that is notified on creation and garbage collection of a
+     * rendered line.
+     */
+    public interface LineLifecycleListener {
+        void onRenderedLineCreated(Line line, int lineNumber);
 
-      void onRenderedLineGarbageCollected(Line line);
+        void onRenderedLineGarbageCollected(Line line);
 
-      void onRenderedLineShifted(Line line, int lineNumber);
-   }
+        void onRenderedLineShifted(Line line, int lineNumber);
+    }
 
-   private final ChangeTracker changeTracker;
+    private final ChangeTracker changeTracker;
 
-   private final ListenerManager<CompletionListener> completionListenerManager;
+    private final ListenerManager<CompletionListener> completionListenerManager;
 
-   private final ListenerManager<LineLifecycleListener> lineLifecycleListenerManager;
+    private final ListenerManager<LineLifecycleListener> lineLifecycleListenerManager;
 
-   private final LineNumberRenderer lineNumberRenderer;
+    private final LineNumberRenderer lineNumberRenderer;
 
-   private final ListenerManager.Dispatcher<CompletionListener> renderCompletedDispatcher =
-      new ListenerManager.Dispatcher<CompletionListener>()
-      {
-         @Override
-         public void dispatch(CompletionListener listener)
-         {
-            listener.onRenderCompleted();
-         }
-      };
+    private final ListenerManager.Dispatcher<CompletionListener> renderCompletedDispatcher =
+            new ListenerManager.Dispatcher<CompletionListener>() {
+                @Override
+                public void dispatch(CompletionListener listener) {
+                    listener.onRenderCompleted();
+                }
+            };
 
-   private final ViewportRenderer viewportRenderer;
+    private final ViewportRenderer viewportRenderer;
 
-   private final ViewportModel viewport;
+    private final ViewportModel viewport;
 
-   private final RenderTimeExecutor renderTimeExecutor;
+    private final RenderTimeExecutor renderTimeExecutor;
 
-   private Renderer(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-      SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager, TextEditorViewImpl editor, Resources res,
-      RenderTimeExecutor renderTimeExecutor)
-   {
-      this.viewport = viewport;
-      this.renderTimeExecutor = renderTimeExecutor;
-      this.completionListenerManager = ListenerManager.create();
-      this.lineLifecycleListenerManager = ListenerManager.create();
-      this.changeTracker = new ChangeTracker(this, buffer, document, viewport, selection, focusManager);
-      this.viewportRenderer =
-         new ViewportRenderer(document, buffer, viewport, editor.getView(), lineLifecycleListenerManager);
-      this.lineNumberRenderer = new LineNumberRenderer(buffer, res, leftGutter, viewport, selection, editor);
+    private Renderer(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
+                     SelectionModel selection, com.codenvy.ide.texteditor.api.FocusManager focusManager, TextEditorViewImpl editor,
+                     Resources res,
+                     RenderTimeExecutor renderTimeExecutor) {
+        this.viewport = viewport;
+        this.renderTimeExecutor = renderTimeExecutor;
+        this.completionListenerManager = ListenerManager.create();
+        this.lineLifecycleListenerManager = ListenerManager.create();
+        this.changeTracker = new ChangeTracker(this, buffer, document, viewport, selection, focusManager);
+        this.viewportRenderer =
+                new ViewportRenderer(document, buffer, viewport, editor.getView(), lineLifecycleListenerManager);
+        this.lineNumberRenderer = new LineNumberRenderer(buffer, res, leftGutter, viewport, selection, editor);
 
-   }
+    }
 
-   public void addLineRenderer(LineRenderer lineRenderer)
-   {
-      viewportRenderer.addLineRenderer(lineRenderer);
-   }
+    public void addLineRenderer(LineRenderer lineRenderer) {
+        viewportRenderer.addLineRenderer(lineRenderer);
+    }
 
-   public ListenerRegistrar<CompletionListener> getCompletionListenerRegistrar()
-   {
-      return completionListenerManager;
-   }
+    public ListenerRegistrar<CompletionListener> getCompletionListenerRegistrar() {
+        return completionListenerManager;
+    }
 
-   public ListenerRegistrar<LineLifecycleListener> getLineLifecycleListenerRegistrar()
-   {
-      return lineLifecycleListenerManager;
-   }
+    public ListenerRegistrar<LineLifecycleListener> getLineLifecycleListenerRegistrar() {
+        return lineLifecycleListenerManager;
+    }
 
-   public void removeLineRenderer(LineRenderer lineRenderer)
-   {
-      viewportRenderer.removeLineRenderer(lineRenderer);
-   }
+    public void removeLineRenderer(LineRenderer lineRenderer) {
+        viewportRenderer.removeLineRenderer(lineRenderer);
+    }
 
-   public void renderAll()
-   {
-      viewportRenderer.render();
-      renderTimeExecutor.executeQueuedCommands();
-      handleRenderCompleted();
-   }
+    public void renderAll() {
+        viewportRenderer.render();
+        renderTimeExecutor.executeQueuedCommands();
+        handleRenderCompleted();
+    }
 
-   public void renderChanges()
-   {
-      EnumSet<ChangeType> changes = changeTracker.getChanges();
+    public void renderChanges() {
+        EnumSet<ChangeType> changes = changeTracker.getChanges();
 
-      int viewportTopmostContentChangedLine =
-         Math.max(viewport.getTopLineNumber(), changeTracker.getTopmostContentChangedLineNumber());
+        int viewportTopmostContentChangedLine =
+                Math.max(viewport.getTopLineNumber(), changeTracker.getTopmostContentChangedLineNumber());
 
-      if (changes.contains(ChangeType.VIEWPORT_LINE_NUMBER))
-      {
+        if (changes.contains(ChangeType.VIEWPORT_LINE_NUMBER)) {
 
-         lineNumberRenderer.render();
+            lineNumberRenderer.render();
 
-         viewportRenderer.renderViewportLineNumbersChanged(changeTracker.getViewportLineNumberChangedEdges());
-      }
+            viewportRenderer.renderViewportLineNumbersChanged(changeTracker.getViewportLineNumberChangedEdges());
+        }
 
-      if (changes.contains(ChangeType.VIEWPORT_CONTENT))
-      {
+        if (changes.contains(ChangeType.VIEWPORT_CONTENT)) {
 
-         viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedLine,
-            changeTracker.getViewportRemovedLines());
+            viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedLine,
+                                                         changeTracker.getViewportRemovedLines());
 
-         if (changeTracker.hadContentChangeThatUpdatesFollowingLines())
-         {
+            if (changeTracker.hadContentChangeThatUpdatesFollowingLines()) {
 
-            lineNumberRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
-         }
-      }
+                lineNumberRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
+            }
+        }
 
-      if (changes.contains(ChangeType.VIEWPORT_SHIFT))
-      {
+        if (changes.contains(ChangeType.VIEWPORT_SHIFT)) {
 
-         viewportRenderer.renderViewportShift(false);
-         lineNumberRenderer.render();
-      }
+            viewportRenderer.renderViewportShift(false);
+            lineNumberRenderer.render();
+        }
 
-      if (changes.contains(ChangeType.DIRTY_LINE))
-      {
+        if (changes.contains(ChangeType.DIRTY_LINE)) {
 
-         viewportRenderer.renderDirtyLines(changeTracker.getDirtyLines());
-      }
+            viewportRenderer.renderDirtyLines(changeTracker.getDirtyLines());
+        }
 
-      renderTimeExecutor.executeQueuedCommands();
+        renderTimeExecutor.executeQueuedCommands();
 
-      handleRenderCompleted();
+        handleRenderCompleted();
 
-   }
+    }
 
-   private void handleRenderCompleted()
-   {
-      viewportRenderer.handleRenderCompleted();
-      completionListenerManager.dispatch(renderCompletedDispatcher);
-   }
+    private void handleRenderCompleted() {
+        viewportRenderer.handleRenderCompleted();
+        completionListenerManager.dispatch(renderCompletedDispatcher);
+    }
 
-   public void requestRenderLine(Line line)
-   {
-      changeTracker.requestRenderLine(line);
-   }
+    public void requestRenderLine(Line line) {
+        changeTracker.requestRenderLine(line);
+    }
 
-   public void teardown()
-   {
-      changeTracker.teardown();
-      viewportRenderer.teardown();
-      lineNumberRenderer.teardown();
-   }
+    public void teardown() {
+        changeTracker.teardown();
+        viewportRenderer.teardown();
+        lineNumberRenderer.teardown();
+    }
 }

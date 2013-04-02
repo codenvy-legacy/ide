@@ -19,16 +19,17 @@
 package com.codenvy.ide.text;
 
 /**
- * 
+ *
  */
-public interface DocumentPartitioningListener
-{
+public interface DocumentPartitioningListener {
 
-   /**
-    * Signals the change of document partitionings.
-    * <p>
-    * @param event the event describing the change
-    * @see Document#addDocumentPartitioningListener(DocumentPartitioningListener)
-    */
-   void documentPartitioningChanged(DocumentPartitioningChangedEvent event);
+    /**
+     * Signals the change of document partitionings.
+     * <p/>
+     *
+     * @param event
+     *         the event describing the change
+     * @see Document#addDocumentPartitioningListener(DocumentPartitioningListener)
+     */
+    void documentPartitioningChanged(DocumentPartitioningChangedEvent event);
 }

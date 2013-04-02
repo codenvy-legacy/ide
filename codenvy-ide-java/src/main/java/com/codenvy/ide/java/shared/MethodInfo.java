@@ -22,90 +22,83 @@ import java.util.List;
 
 /**
  * Represent information about class method. Can be transform to JSON. <code>
- *  {
- *     "generic": "public boolean java.lang.String.equals(java.lang.Object)",
- *     "exceptionTypes": [],
- *     "declaringClass": "java.lang.String",
- *     "name": "equals",
- *     "genericParameterTypes": "(java.lang.Object)",
- *     "modifiers": 1,
- *     "returnType": "boolean",
- *     "parameterTypes": "(Object)",
- *     "genericReturnType": "boolean"
- *   }
+ * {
+ * "generic": "public boolean java.lang.String.equals(java.lang.Object)",
+ * "exceptionTypes": [],
+ * "declaringClass": "java.lang.String",
+ * "name": "equals",
+ * "genericParameterTypes": "(java.lang.Object)",
+ * "modifiers": 1,
+ * "returnType": "boolean",
+ * "parameterTypes": "(Object)",
+ * "genericReturnType": "boolean"
+ * }
  * </code>
- * 
  */
-public interface MethodInfo extends Member
-{
+public interface MethodInfo extends Member {
 
-   String getDeclaringClass();
+    String getDeclaringClass();
 
-   List<String> getExceptionTypes();
+    List<String> getExceptionTypes();
 
-   /**
-    * @return the parameterNames
-    */
-   List<String> getParameterNames();
+    /** @return the parameterNames */
+    List<String> getParameterNames();
 
-   /**
-    * @return the parameterTypes
-    */
-   List<String> getParameterTypes();
+    /** @return the parameterTypes */
+    List<String> getParameterTypes();
 
-   String getReturnType();
-   
-   /**
-    * @return the method's descriptor.   
-    */
-   String getDescriptor();
-   
-   /**
-    * return the signature of the method. May be <tt>null</tt>.
-    */
-   String getSignature();
-   
-   /**
-    * The default value of this annotation interface method.
-    * May be <tt>null</tt>.
-    * @return
-    */
-   AnnotationValue getAnnotationDefault();
+    String getReturnType();
 
-   /**
-    * @return the isConstructor
-    */
-   boolean isConstructor();
+    /** @return the method's descriptor. */
+    String getDescriptor();
 
-   /**
-    * @param isConstructor the isConstructor to set
-    */
-   void setConstructor(boolean isConstructor);
+    /** return the signature of the method. May be <tt>null</tt>. */
+    String getSignature();
 
-   void setDeclaringClass(String declaringClass);
+    /**
+     * The default value of this annotation interface method.
+     * May be <tt>null</tt>.
+     *
+     * @return
+     */
+    AnnotationValue getAnnotationDefault();
 
-   void setExceptionTypes(List<String> exceptionTypes);
+    /** @return the isConstructor */
+    boolean isConstructor();
 
-   /**
-    * @param parameterNames the parameterNames to set
-    */
-   void setParameterNames(List<String> parameterNames);
+    /**
+     * @param isConstructor
+     *         the isConstructor to set
+     */
+    void setConstructor(boolean isConstructor);
 
-   /**
-    * @param parameterTypes the parameterTypes to set
-    */
-   void setParameterTypes(List<String> parameterTypes);
+    void setDeclaringClass(String declaringClass);
 
-   void setReturnType(String returnType);
-   
-   void setDescriptor(String descriptor);
-   
-   /**
-    * set signature of the method. May be <tt>null</tt>.
-    * @param signature
-    */
-   void setSignature(String signature);
+    void setExceptionTypes(List<String> exceptionTypes);
 
-   void setAnnotationDefault(AnnotationValue value);
+    /**
+     * @param parameterNames
+     *         the parameterNames to set
+     */
+    void setParameterNames(List<String> parameterNames);
+
+    /**
+     * @param parameterTypes
+     *         the parameterTypes to set
+     */
+    void setParameterTypes(List<String> parameterTypes);
+
+    void setReturnType(String returnType);
+
+    void setDescriptor(String descriptor);
+
+    /**
+     * set signature of the method. May be <tt>null</tt>.
+     *
+     * @param signature
+     */
+    void setSignature(String signature);
+
+    void setAnnotationDefault(AnnotationValue value);
 
 }

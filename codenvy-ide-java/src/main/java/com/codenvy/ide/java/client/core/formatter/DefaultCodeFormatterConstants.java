@@ -25,9 +25,7 @@ import java.util.Map;
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class DefaultCodeFormatterConstants
-{
-
+public class DefaultCodeFormatterConstants{
    /**
     * <pre>
     * FORMATTER / Value to set a brace location at the end of a line.
@@ -4864,181 +4862,162 @@ public class DefaultCodeFormatterConstants
    /* Private constants. Not in javadoc */
    private static final IllegalArgumentException WRONG_ARGUMENT = new IllegalArgumentException();
 
-   /**
-    * Create a new alignment value according to the given values. This must be used to set up the alignment options.
-    * 
-    * @param forceSplit the given force value
-    * @param wrapStyle the given wrapping style
-    * @param indentStyle the given indent style
-    * 
-    * @return the new alignement value
-    */
-   public static String createAlignmentValue(boolean forceSplit, int wrapStyle, int indentStyle)
-   {
-      int alignmentValue = 0;
-      switch (wrapStyle)
-      {
-         case WRAP_COMPACT :
-            alignmentValue |= Alignment.M_COMPACT_SPLIT;
-            break;
-         case WRAP_COMPACT_FIRST_BREAK :
-            alignmentValue |= Alignment.M_COMPACT_FIRST_BREAK_SPLIT;
-            break;
-         case WRAP_NEXT_PER_LINE :
-            alignmentValue |= Alignment.M_NEXT_PER_LINE_SPLIT;
-            break;
-         case WRAP_NEXT_SHIFTED :
-            alignmentValue |= Alignment.M_NEXT_SHIFTED_SPLIT;
-            break;
-         case WRAP_ONE_PER_LINE :
-            alignmentValue |= Alignment.M_ONE_PER_LINE_SPLIT;
-            break;
-      }
-      if (forceSplit)
-      {
-         alignmentValue |= Alignment.M_FORCE;
-      }
-      switch (indentStyle)
-      {
-         case INDENT_BY_ONE :
-            alignmentValue |= Alignment.M_INDENT_BY_ONE;
-            break;
-         case INDENT_ON_COLUMN :
-            alignmentValue |= Alignment.M_INDENT_ON_COLUMN;
-      }
-      return String.valueOf(alignmentValue);
-   }
+    /**
+     * Create a new alignment value according to the given values. This must be used to set up the alignment options.
+     *
+     * @param forceSplit
+     *         the given force value
+     * @param wrapStyle
+     *         the given wrapping style
+     * @param indentStyle
+     *         the given indent style
+     * @return the new alignement value
+     */
+    public static String createAlignmentValue(boolean forceSplit, int wrapStyle, int indentStyle) {
+        int alignmentValue = 0;
+        switch (wrapStyle) {
+            case WRAP_COMPACT:
+                alignmentValue |= Alignment.M_COMPACT_SPLIT;
+                break;
+            case WRAP_COMPACT_FIRST_BREAK:
+                alignmentValue |= Alignment.M_COMPACT_FIRST_BREAK_SPLIT;
+                break;
+            case WRAP_NEXT_PER_LINE:
+                alignmentValue |= Alignment.M_NEXT_PER_LINE_SPLIT;
+                break;
+            case WRAP_NEXT_SHIFTED:
+                alignmentValue |= Alignment.M_NEXT_SHIFTED_SPLIT;
+                break;
+            case WRAP_ONE_PER_LINE:
+                alignmentValue |= Alignment.M_ONE_PER_LINE_SPLIT;
+                break;
+        }
+        if (forceSplit) {
+            alignmentValue |= Alignment.M_FORCE;
+        }
+        switch (indentStyle) {
+            case INDENT_BY_ONE:
+                alignmentValue |= Alignment.M_INDENT_BY_ONE;
+                break;
+            case INDENT_ON_COLUMN:
+                alignmentValue |= Alignment.M_INDENT_ON_COLUMN;
+        }
+        return String.valueOf(alignmentValue);
+    }
 
-   /**
-    * Returns the default Eclipse formatter settings
-    * 
-    * @return the Eclipse default settings
-    * @since 3.1
-    */
-   public static Map getEclipseDefaultSettings()
-   {
-      return DefaultCodeFormatterOptions.getEclipseDefaultSettings().getMap();
-   }
+    /**
+     * Returns the default Eclipse formatter settings
+     *
+     * @return the Eclipse default settings
+     * @since 3.1
+     */
+    public static Map getEclipseDefaultSettings() {
+        return DefaultCodeFormatterOptions.getEclipseDefaultSettings().getMap();
+    }
 
-   /**
-    * <p>
-    * Return the force value of the given alignment value. The given alignment value should be created using the
-    * <code>createAlignmentValue(boolean, int, int)</code> API.
-    * </p>
-    * 
-    * @param value the given alignment value
-    * @return the force value of the given alignment value
-    * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
-    */
-   public static boolean getForceWrapping(String value)
-   {
-      if (value == null)
-      {
-         throw WRONG_ARGUMENT;
-      }
-      try
-      {
-         int existingValue = Integer.parseInt(value);
-         return (existingValue & Alignment.M_FORCE) != 0;
-      }
-      catch (NumberFormatException e)
-      {
-         throw WRONG_ARGUMENT;
-      }
-   }
+    /**
+     * <p>
+     * Return the force value of the given alignment value. The given alignment value should be created using the
+     * <code>createAlignmentValue(boolean, int, int)</code> API.
+     * </p>
+     *
+     * @param value
+     *         the given alignment value
+     * @return the force value of the given alignment value
+     * @throws IllegalArgumentException
+     *         if the given alignment value is null, or if it doesn't have a valid format.
+     * @see #createAlignmentValue(boolean, int, int)
+     */
+    public static boolean getForceWrapping(String value) {
+        if (value == null) {
+            throw WRONG_ARGUMENT;
+        }
+        try {
+            int existingValue = Integer.parseInt(value);
+            return (existingValue & Alignment.M_FORCE) != 0;
+        } catch (NumberFormatException e) {
+            throw WRONG_ARGUMENT;
+        }
+    }
 
-   /**
-    * <p>
-    * Return the indentation style of the given alignment value. The given alignment value should be created using the
-    * <code>createAlignmentValue(boolean, int, int)</code> API.
-    * </p>
-    * 
-    * @param value the given alignment value
-    * @return the indentation style of the given alignment value
-    * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
-    */
-   public static int getIndentStyle(String value)
-   {
-      if (value == null)
-      {
-         throw WRONG_ARGUMENT;
-      }
-      try
-      {
-         int existingValue = Integer.parseInt(value);
-         if ((existingValue & Alignment.M_INDENT_BY_ONE) != 0)
-         {
-            return INDENT_BY_ONE;
-         }
-         else if ((existingValue & Alignment.M_INDENT_ON_COLUMN) != 0)
-         {
-            return INDENT_ON_COLUMN;
-         }
-         else
-         {
-            return INDENT_DEFAULT;
-         }
-      }
-      catch (NumberFormatException e)
-      {
-         throw WRONG_ARGUMENT;
-      }
-   }
+    /**
+     * <p>
+     * Return the indentation style of the given alignment value. The given alignment value should be created using the
+     * <code>createAlignmentValue(boolean, int, int)</code> API.
+     * </p>
+     *
+     * @param value
+     *         the given alignment value
+     * @return the indentation style of the given alignment value
+     * @throws IllegalArgumentException
+     *         if the given alignment value is null, or if it doesn't have a valid format.
+     * @see #createAlignmentValue(boolean, int, int)
+     */
+    public static int getIndentStyle(String value) {
+        if (value == null) {
+            throw WRONG_ARGUMENT;
+        }
+        try {
+            int existingValue = Integer.parseInt(value);
+            if ((existingValue & Alignment.M_INDENT_BY_ONE) != 0) {
+                return INDENT_BY_ONE;
+            } else if ((existingValue & Alignment.M_INDENT_ON_COLUMN) != 0) {
+                return INDENT_ON_COLUMN;
+            } else {
+                return INDENT_DEFAULT;
+            }
+        } catch (NumberFormatException e) {
+            throw WRONG_ARGUMENT;
+        }
+    }
 
-   /**
-    * Returns the settings according to the Java conventions.
-    * 
-    * @return the settings according to the Java conventions
-    * @since 3.0
-    */
-   public static Map getJavaConventionsSettings()
-   {
-      return DefaultCodeFormatterOptions.getJavaConventionsSettings().getMap();
-   }
+    /**
+     * Returns the settings according to the Java conventions.
+     *
+     * @return the settings according to the Java conventions
+     * @since 3.0
+     */
+    public static Map getJavaConventionsSettings() {
+        return DefaultCodeFormatterOptions.getJavaConventionsSettings().getMap();
+    }
 
-   /**
-    * <p>
-    * Return the wrapping style of the given alignment value. The given alignment value should be created using the
-    * <code>createAlignmentValue(boolean, int, int)</code> API.
-    * </p>
-    * 
-    * @param value the given alignment value
-    * @return the wrapping style of the given alignment value
-    * @see #createAlignmentValue(boolean, int, int)
-    * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
-    */
-   public static int getWrappingStyle(String value)
-   {
-      if (value == null)
-      {
-         throw WRONG_ARGUMENT;
-      }
-      try
-      {
-         int existingValue = Integer.parseInt(value) & Alignment.SPLIT_MASK;
-         switch (existingValue)
-         {
-            case Alignment.M_COMPACT_SPLIT :
-               return WRAP_COMPACT;
-            case Alignment.M_COMPACT_FIRST_BREAK_SPLIT :
-               return WRAP_COMPACT_FIRST_BREAK;
-            case Alignment.M_NEXT_PER_LINE_SPLIT :
-               return WRAP_NEXT_PER_LINE;
-            case Alignment.M_NEXT_SHIFTED_SPLIT :
-               return WRAP_NEXT_SHIFTED;
-            case Alignment.M_ONE_PER_LINE_SPLIT :
-               return WRAP_ONE_PER_LINE;
-            default :
-               return WRAP_NO_SPLIT;
-         }
-      }
-      catch (NumberFormatException e)
-      {
-         throw WRONG_ARGUMENT;
-      }
-   }
+    /**
+     * <p>
+     * Return the wrapping style of the given alignment value. The given alignment value should be created using the
+     * <code>createAlignmentValue(boolean, int, int)</code> API.
+     * </p>
+     *
+     * @param value
+     *         the given alignment value
+     * @return the wrapping style of the given alignment value
+     * @throws IllegalArgumentException
+     *         if the given alignment value is null, or if it doesn't have a valid format.
+     * @see #createAlignmentValue(boolean, int, int)
+     */
+    public static int getWrappingStyle(String value) {
+        if (value == null) {
+            throw WRONG_ARGUMENT;
+        }
+        try {
+            int existingValue = Integer.parseInt(value) & Alignment.SPLIT_MASK;
+            switch (existingValue) {
+                case Alignment.M_COMPACT_SPLIT:
+                    return WRAP_COMPACT;
+                case Alignment.M_COMPACT_FIRST_BREAK_SPLIT:
+                    return WRAP_COMPACT_FIRST_BREAK;
+                case Alignment.M_NEXT_PER_LINE_SPLIT:
+                    return WRAP_NEXT_PER_LINE;
+                case Alignment.M_NEXT_SHIFTED_SPLIT:
+                    return WRAP_NEXT_SHIFTED;
+                case Alignment.M_ONE_PER_LINE_SPLIT:
+                    return WRAP_ONE_PER_LINE;
+                default:
+                    return WRAP_NO_SPLIT;
+            }
+        } catch (NumberFormatException e) {
+            throw WRONG_ARGUMENT;
+        }
+    }
 
    /**
     * <p>
@@ -5052,27 +5031,21 @@ public class DefaultCodeFormatterConstants
     * @see #createAlignmentValue(boolean, int, int)
     * @exception IllegalArgumentException if the given alignment value is null, or if it doesn't have a valid format.
     */
-   public static String setForceWrapping(String value, boolean force)
-   {
-      if (value == null)
-      {
-         throw WRONG_ARGUMENT;
-      }
-      try
-      {
-         int existingValue = Integer.parseInt(value);
-         // clear existing force bit
-         existingValue &= ~Alignment.M_FORCE;
-         if (force)
-         {
-            existingValue |= Alignment.M_FORCE;
-         }
-         return String.valueOf(existingValue);
-      }
-      catch (NumberFormatException e)
-      {
-         throw WRONG_ARGUMENT;
-      }
+   public static String setForceWrapping(String value, boolean force) {
+       if (value == null) {
+           throw WRONG_ARGUMENT;
+       }
+       try {
+           int existingValue = Integer.parseInt(value);
+           // clear existing force bit
+           existingValue &= ~Alignment.M_FORCE;
+           if (force) {
+               existingValue |= Alignment.M_FORCE;
+           }
+           return String.valueOf(existingValue);
+       } catch (NumberFormatException e) {
+           throw WRONG_ARGUMENT;
+       }
    }
 
    /**
@@ -5091,40 +5064,33 @@ public class DefaultCodeFormatterConstants
     * @exception IllegalArgumentException if the given alignment value is null, if the given indentation style is not one of the
     *               possible indentation styles, or if the given alignment value doesn't have a valid format.
     */
-   public static String setIndentStyle(String value, int indentStyle)
-   {
-      if (value == null)
-      {
-         throw WRONG_ARGUMENT;
-      }
-      switch (indentStyle)
-      {
-         case INDENT_BY_ONE :
-         case INDENT_DEFAULT :
-         case INDENT_ON_COLUMN :
-            break;
-         default :
-            throw WRONG_ARGUMENT;
-      }
-      try
-      {
-         int existingValue = Integer.parseInt(value);
-         // clear existing indent bits
-         existingValue &= ~(Alignment.M_INDENT_BY_ONE | Alignment.M_INDENT_ON_COLUMN);
-         switch (indentStyle)
-         {
-            case INDENT_BY_ONE :
-               existingValue |= Alignment.M_INDENT_BY_ONE;
+   public static String setIndentStyle(String value, int indentStyle) {
+       if (value == null) {
+           throw WRONG_ARGUMENT;
+       }
+       switch (indentStyle) {
+           case INDENT_BY_ONE:
+           case INDENT_DEFAULT:
+           case INDENT_ON_COLUMN:
                break;
-            case INDENT_ON_COLUMN :
-               existingValue |= Alignment.M_INDENT_ON_COLUMN;
-         }
-         return String.valueOf(existingValue);
-      }
-      catch (NumberFormatException e)
-      {
-         throw WRONG_ARGUMENT;
-      }
+           default:
+               throw WRONG_ARGUMENT;
+       }
+       try {
+           int existingValue = Integer.parseInt(value);
+           // clear existing indent bits
+           existingValue &= ~(Alignment.M_INDENT_BY_ONE | Alignment.M_INDENT_ON_COLUMN);
+           switch (indentStyle) {
+               case INDENT_BY_ONE:
+                   existingValue |= Alignment.M_INDENT_BY_ONE;
+                   break;
+               case INDENT_ON_COLUMN:
+                   existingValue |= Alignment.M_INDENT_ON_COLUMN;
+           }
+           return String.valueOf(existingValue);
+       } catch (NumberFormatException e) {
+           throw WRONG_ARGUMENT;
+       }
    }
 
    /**
@@ -5146,52 +5112,45 @@ public class DefaultCodeFormatterConstants
     * @exception IllegalArgumentException if the given alignment value is null, if the given wrapping style is not one of the
     *               possible wrapping styles, or if the given alignment value doesn't have a valid format.
     */
-   public static String setWrappingStyle(String value, int wrappingStyle)
-   {
-      if (value == null)
-      {
-         throw WRONG_ARGUMENT;
-      }
-      switch (wrappingStyle)
-      {
-         case WRAP_COMPACT :
-         case WRAP_COMPACT_FIRST_BREAK :
-         case WRAP_NEXT_PER_LINE :
-         case WRAP_NEXT_SHIFTED :
-         case WRAP_NO_SPLIT :
-         case WRAP_ONE_PER_LINE :
-            break;
-         default :
-            throw WRONG_ARGUMENT;
-      }
-      try
-      {
-         int existingValue = Integer.parseInt(value);
-         // clear existing split bits
-         existingValue &= ~(Alignment.SPLIT_MASK);
-         switch (wrappingStyle)
-         {
-            case WRAP_COMPACT :
-               existingValue |= Alignment.M_COMPACT_SPLIT;
+   public static String setWrappingStyle(String value, int wrappingStyle) {
+       if (value == null) {
+           throw WRONG_ARGUMENT;
+       }
+       switch (wrappingStyle) {
+           case WRAP_COMPACT:
+           case WRAP_COMPACT_FIRST_BREAK:
+           case WRAP_NEXT_PER_LINE:
+           case WRAP_NEXT_SHIFTED:
+           case WRAP_NO_SPLIT:
+           case WRAP_ONE_PER_LINE:
                break;
-            case WRAP_COMPACT_FIRST_BREAK :
-               existingValue |= Alignment.M_COMPACT_FIRST_BREAK_SPLIT;
-               break;
-            case WRAP_NEXT_PER_LINE :
-               existingValue |= Alignment.M_NEXT_PER_LINE_SPLIT;
-               break;
-            case WRAP_NEXT_SHIFTED :
-               existingValue |= Alignment.M_NEXT_SHIFTED_SPLIT;
-               break;
-            case WRAP_ONE_PER_LINE :
-               existingValue |= Alignment.M_ONE_PER_LINE_SPLIT;
-               break;
-         }
-         return String.valueOf(existingValue);
-      }
-      catch (NumberFormatException e)
-      {
-         throw WRONG_ARGUMENT;
-      }
+           default:
+               throw WRONG_ARGUMENT;
+       }
+       try {
+           int existingValue = Integer.parseInt(value);
+           // clear existing split bits
+           existingValue &= ~(Alignment.SPLIT_MASK);
+           switch (wrappingStyle) {
+               case WRAP_COMPACT:
+                   existingValue |= Alignment.M_COMPACT_SPLIT;
+                   break;
+               case WRAP_COMPACT_FIRST_BREAK:
+                   existingValue |= Alignment.M_COMPACT_FIRST_BREAK_SPLIT;
+                   break;
+               case WRAP_NEXT_PER_LINE:
+                   existingValue |= Alignment.M_NEXT_PER_LINE_SPLIT;
+                   break;
+               case WRAP_NEXT_SHIFTED:
+                   existingValue |= Alignment.M_NEXT_SHIFTED_SPLIT;
+                   break;
+               case WRAP_ONE_PER_LINE:
+                   existingValue |= Alignment.M_ONE_PER_LINE_SPLIT;
+                   break;
+           }
+           return String.valueOf(existingValue);
+       } catch (NumberFormatException e) {
+           throw WRONG_ARGUMENT;
+       }
    }
 }

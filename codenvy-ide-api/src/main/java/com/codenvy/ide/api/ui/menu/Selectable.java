@@ -20,22 +20,22 @@ package com.codenvy.ide.api.ui.menu;
 
 /**
  * The interface provides additional state.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface Selectable
-{
-   /**
-    * Returns the state of item.
-    * 
-    * @return <code>true</code> if the item is selected and <code>false</code> otherwise 
-    */
-   public boolean isSelected();
+public interface Selectable {
+    /**
+     * Returns the state of item.
+     *
+     * @return <code>true</code> if the item is selected and <code>false</code> otherwise
+     */
+    public boolean isSelected();
 
-   /**
-    * Sets state of item.
-    * 
-    * @param isSelected <code>true</code> to select the item, <code>false</code> to unselect it.
-    */
-   public void setSelected(boolean isSelected);
+    /**
+     * Sets state of item.
+     *
+     * @param isSelected
+     *         <code>true</code> to select the item, <code>false</code> to unselect it.
+     */
+    public void setSelected(boolean isSelected);
 }

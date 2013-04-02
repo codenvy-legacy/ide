@@ -19,7 +19,6 @@
 package com.codenvy.ide.api.ui.keybinding;
 
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
 
@@ -29,29 +28,30 @@ import com.codenvy.ide.util.input.CharCodeWithModifiers;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface Scheme
-{
+public interface Scheme {
 
-   /**
-    * Get id of the scheme.
-    *
-    * @return the scheme id
-    */
-   String getSchemeId();
+    /**
+     * Get id of the scheme.
+     *
+     * @return the scheme id
+     */
+    String getSchemeId();
 
-   /**
-    * Get scheme description
-    *
-    * @return the scheme description
-    */
-   String getDescription();
+    /**
+     * Get scheme description
+     *
+     * @return the scheme description
+     */
+    String getDescription();
 
-   /**
-    * Add key binding for command.
-    *
-    * @param keyBinging the key sequence.
-    * @param command    the command which keys bind.
-    */
-   void addKeyBinding(CharCodeWithModifiers keyBinging, ExtendedCommand command);
+    /**
+     * Add key binding for command.
+     *
+     * @param keyBinging
+     *         the key sequence.
+     * @param command
+     *         the command which keys bind.
+     */
+    void addKeyBinding(CharCodeWithModifiers keyBinging, ExtendedCommand command);
 
 }

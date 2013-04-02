@@ -38,118 +38,91 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class RenameApplicationViewImpl extends DialogBox implements RenameApplicationView
-{
-   private static RenameApplicationViewImplUiBinder uiBinder = GWT.create(RenameApplicationViewImplUiBinder.class);
+public class RenameApplicationViewImpl extends DialogBox implements RenameApplicationView {
+    private static RenameApplicationViewImplUiBinder uiBinder = GWT.create(RenameApplicationViewImplUiBinder.class);
 
-   @UiField
-   Button btnRename;
+    @UiField
+    Button btnRename;
 
-   @UiField
-   Button btnCancel;
+    @UiField
+    Button btnCancel;
 
-   @UiField
-   TextBox nameField;
+    @UiField
+    TextBox nameField;
 
-   interface RenameApplicationViewImplUiBinder extends UiBinder<Widget, RenameApplicationViewImpl>
-   {
-   }
+    interface RenameApplicationViewImplUiBinder extends UiBinder<Widget, RenameApplicationViewImpl> {
+    }
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   /**
-    * Create view.
-    * 
-    * @param constants
-    */
-   @Inject
-   protected RenameApplicationViewImpl(CloudFoundryLocalizationConstant constants)
-   {
-      Widget widget = uiBinder.createAndBindUi(this);
+    /**
+     * Create view.
+     *
+     * @param constants
+     */
+    @Inject
+    protected RenameApplicationViewImpl(CloudFoundryLocalizationConstant constants) {
+        Widget widget = uiBinder.createAndBindUi(this);
 
-      this.setText(constants.renameApplicationViewTitle());
-      this.setWidget(widget);
-   }
+        this.setText(constants.renameApplicationViewTitle());
+        this.setWidget(widget);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void selectValueInRenameField()
-   {
-      nameField.selectAll();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void selectValueInRenameField() {
+        nameField.selectAll();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setEnableRenameButton(boolean isEnabled)
-   {
-      btnRename.setEnabled(isEnabled);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setEnableRenameButton(boolean isEnabled) {
+        btnRename.setEnabled(isEnabled);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getName()
-   {
-      return nameField.getText();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getName() {
+        return nameField.getText();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setName(String name)
-   {
-      nameField.setText(name);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setName(String name) {
+        nameField.setText(name);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void showDialog()
-   {
-      this.center();
-      this.show();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void showDialog() {
+        this.center();
+        this.show();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void close()
-   {
-      this.hide();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        this.hide();
+    }
 
-   @UiHandler("btnRename")
-   void onBtnRenameClick(ClickEvent event)
-   {
-      delegate.onRenameClicked();
-   }
+    @UiHandler("btnRename")
+    void onBtnRenameClick(ClickEvent event) {
+        delegate.onRenameClicked();
+    }
 
-   @UiHandler("btnCancel")
-   void onBtnCancelClick(ClickEvent event)
-   {
-      delegate.onCancelClicked();
-   }
+    @UiHandler("btnCancel")
+    void onBtnCancelClick(ClickEvent event) {
+        delegate.onCancelClicked();
+    }
 
-   @UiHandler("nameField")
-   void onNameFieldKeyUp(KeyUpEvent event)
-   {
-      delegate.onNameChanged();
-   }
+    @UiHandler("nameField")
+    void onNameFieldKeyUp(KeyUpEvent event) {
+        delegate.onNameChanged();
+    }
 }

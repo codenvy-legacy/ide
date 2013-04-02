@@ -26,78 +26,74 @@ import com.codenvy.ide.json.JsonArray;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface CloudFoundryPageView extends View<CloudFoundryPageView.ActionDelegate>
-{
-   /**
-    * Needs for delegate some function into CloudFoundryPage view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having changed application name.
-       */
-      public void onNameChanged();
+public interface CloudFoundryPageView extends View<CloudFoundryPageView.ActionDelegate> {
+    /** Needs for delegate some function into CloudFoundryPage view. */
+    public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response to the user
+         * having changed application name.
+         */
+        public void onNameChanged();
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having changed url.
-       */
-      public void onUrlChanged();
+        /**
+         * Performs any actions appropriate in response to the user
+         * having changed url.
+         */
+        public void onUrlChanged();
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having changed server.
-       */
-      public void onServerChanged();
-   }
+        /**
+         * Performs any actions appropriate in response to the user
+         * having changed server.
+         */
+        public void onServerChanged();
+    }
 
-   /**
-    * Returns application's name.
-    * 
-    * @return application's name
-    */
-   public String getName();
+    /**
+     * Returns application's name.
+     *
+     * @return application's name
+     */
+    public String getName();
 
-   /**
-    * Sets application's name.
-    * 
-    * @param name
-    */
-   public void setName(String name);
+    /**
+     * Sets application's name.
+     *
+     * @param name
+     */
+    public void setName(String name);
 
-   /**
-    * Returns application's url.
-    * 
-    * @return url
-    */
-   public String getUrl();
+    /**
+     * Returns application's url.
+     *
+     * @return url
+     */
+    public String getUrl();
 
-   /**
-    * Sets application's url.
-    * 
-    * @param url
-    */
-   public void setUrl(String url);
+    /**
+     * Sets application's url.
+     *
+     * @param url
+     */
+    public void setUrl(String url);
 
-   /**
-    * Returns server.
-    * 
-    * @return server
-    */
-   public String getServer();
+    /**
+     * Returns server.
+     *
+     * @return server
+     */
+    public String getServer();
 
-   /**
-    * Sets server.
-    *  
-    * @param server
-    */
-   public void setServer(String server);
+    /**
+     * Sets server.
+     *
+     * @param server
+     */
+    public void setServer(String server);
 
-   /**
-    * Set the list of servers.
-    * 
-    * @param servers
-    */
-   void setServerValues(JsonArray<String> servers);
+    /**
+     * Set the list of servers.
+     *
+     * @param servers
+     */
+    void setServerValues(JsonArray<String> servers);
 }

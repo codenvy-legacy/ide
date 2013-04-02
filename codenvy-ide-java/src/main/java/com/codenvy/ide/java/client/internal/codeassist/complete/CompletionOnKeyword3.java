@@ -14,45 +14,37 @@ import com.codenvy.ide.java.client.internal.compiler.ast.SingleNameReference;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeBinding;
 
-public class CompletionOnKeyword3 extends SingleNameReference implements CompletionOnKeyword
-{
-   private char[][] possibleKeywords;
+public class CompletionOnKeyword3 extends SingleNameReference implements CompletionOnKeyword {
+    private char[][] possibleKeywords;
 
-   public CompletionOnKeyword3(char[] token, long pos, char[] possibleKeyword)
-   {
-      this(token, pos, new char[][]{possibleKeyword});
-   }
+    public CompletionOnKeyword3(char[] token, long pos, char[] possibleKeyword) {
+        this(token, pos, new char[][]{possibleKeyword});
+    }
 
-   public CompletionOnKeyword3(char[] token, long pos, char[][] possibleKeywords)
-   {
-      super(token, pos);
-      this.token = token;
-      this.possibleKeywords = possibleKeywords;
-   }
+    public CompletionOnKeyword3(char[] token, long pos, char[][] possibleKeywords) {
+        super(token, pos);
+        this.token = token;
+        this.possibleKeywords = possibleKeywords;
+    }
 
-   public boolean canCompleteEmptyToken()
-   {
-      return false;
-   }
+    public boolean canCompleteEmptyToken() {
+        return false;
+    }
 
-   public char[] getToken()
-   {
-      return this.token;
-   }
+    public char[] getToken() {
+        return this.token;
+    }
 
-   public char[][] getPossibleKeywords()
-   {
-      return this.possibleKeywords;
-   }
+    public char[][] getPossibleKeywords() {
+        return this.possibleKeywords;
+    }
 
-   public StringBuffer printExpression(int indent, StringBuffer output)
-   {
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-      return output.append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
-   }
+        return output.append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
+    }
 
-   public TypeBinding resolveType(BlockScope scope)
-   {
-      throw new CompletionNodeFound(this, scope);
-   }
+    public TypeBinding resolveType(BlockScope scope) {
+        throw new CompletionNodeFound(this, scope);
+    }
 }

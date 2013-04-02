@@ -25,93 +25,84 @@ import com.codenvy.ide.ui.tree.NodeRenderer;
 /**
  * Model object that holds essential navigation structure data data and sends
  * notifications when data is changed.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class OutlineModel
-{
-   /**
-    * OutlineModel notifications listener interface.
-    */
-   public interface OutlineModelListener
-   {
-      public void rootChanged(CodeBlock newRoot);
+public class OutlineModel {
+    /** OutlineModel notifications listener interface. */
+    public interface OutlineModelListener {
+        public void rootChanged(CodeBlock newRoot);
 
-      void rootUpdated();
-   }
+        void rootUpdated();
+    }
 
-   private OutlineModelListener listener;
+    private OutlineModelListener listener;
 
-   private CodeBlock root;
+    private CodeBlock root;
 
-   private NodeRenderer<CodeBlock> renderer;
+    private NodeRenderer<CodeBlock> renderer;
 
-   /**
-    * Instantiate Outline Model
-    * 
-    * @param renderer
-    */
-   public OutlineModel(NodeRenderer<CodeBlock> renderer)
-   {
-      this.renderer = renderer;
-   }
+    /**
+     * Instantiate Outline Model
+     *
+     * @param renderer
+     */
+    public OutlineModel(NodeRenderer<CodeBlock> renderer) {
+        this.renderer = renderer;
+    }
 
-   /**
-    * @return Root Block
-    */
-   public CodeBlock getRoot()
-   {
-      return root;
-   }
+    /** @return Root Block */
+    public CodeBlock getRoot() {
+        return root;
+    }
 
-   /**
-    * Set Listener 
-    * @param listener
-    */
-   public void setListener(OutlineModelListener listener)
-   {
-      this.listener = listener;
-   }
+    /**
+     * Set Listener
+     *
+     * @param listener
+     */
+    public void setListener(OutlineModelListener listener) {
+        this.listener = listener;
+    }
 
-   /**
-    * Set children's for root code block. 
-    * @param nodes new children's 
-    */
-   public void setRootChildren(JsonArray<CodeBlock> nodes)
-   {
-      JsonArray<CodeBlock> rootChildren = root.getChildren();
-      rootChildren.clear();
-      rootChildren.addAll(nodes);
-      if (listener != null)
-      {
-         listener.rootUpdated();
-      }
-   }
+    /**
+     * Set children's for root code block.
+     *
+     * @param nodes
+     *         new children's
+     */
+    public void setRootChildren(JsonArray<CodeBlock> nodes) {
+        JsonArray<CodeBlock> rootChildren = root.getChildren();
+        rootChildren.clear();
+        rootChildren.addAll(nodes);
+        if (listener != null) {
+            listener.rootUpdated();
+        }
+    }
 
-   /**
-    * Set new root code block
-    * @param root code block
-    */
-   public void updateRoot(CodeBlock root)
-   {
-      Assert.isNotNull(root);
+    /**
+     * Set new root code block
+     *
+     * @param root
+     *         code block
+     */
+    public void updateRoot(CodeBlock root) {
+        Assert.isNotNull(root);
 
-      this.root = root;
-      if (listener != null)
-      {
-         listener.rootChanged(root);
-      }
-   }
+        this.root = root;
+        if (listener != null) {
+            listener.rootChanged(root);
+        }
+    }
 
-   /**
-    * Provides CodeBlock Node Renderer
-    * 
-    * @return Renderer for code blocks
-    */
-   public NodeRenderer<CodeBlock> getRenderer()
-   {
-      return renderer;
-   }
+    /**
+     * Provides CodeBlock Node Renderer
+     *
+     * @return Renderer for code blocks
+     */
+    public NodeRenderer<CodeBlock> getRenderer() {
+        return renderer;
+    }
 
 }

@@ -36,44 +36,38 @@ import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.MethodScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeBinding;
 
-public class CompletionOnSingleNameReference extends SingleNameReference
-{
+public class CompletionOnSingleNameReference extends SingleNameReference {
 
-   public char[][] possibleKeywords;
+    public char[][] possibleKeywords;
 
-   public boolean canBeExplicitConstructor;
+    public boolean canBeExplicitConstructor;
 
-   public boolean isInsideAnnotationAttribute;
+    public boolean isInsideAnnotationAttribute;
 
-   public boolean isPrecededByModifiers;
+    public boolean isPrecededByModifiers;
 
-   public CompletionOnSingleNameReference(char[] source, long pos, boolean isInsideAnnotationAttribute)
-   {
-      this(source, pos, null, false, isInsideAnnotationAttribute);
-   }
+    public CompletionOnSingleNameReference(char[] source, long pos, boolean isInsideAnnotationAttribute) {
+        this(source, pos, null, false, isInsideAnnotationAttribute);
+    }
 
-   public CompletionOnSingleNameReference(char[] source, long pos, char[][] possibleKeywords,
-      boolean canBeExplicitConstructor, boolean isInsideAnnotationAttribute)
-   {
-      super(source, pos);
-      this.possibleKeywords = possibleKeywords;
-      this.canBeExplicitConstructor = canBeExplicitConstructor;
-      this.isInsideAnnotationAttribute = isInsideAnnotationAttribute;
-   }
+    public CompletionOnSingleNameReference(char[] source, long pos, char[][] possibleKeywords,
+                                           boolean canBeExplicitConstructor, boolean isInsideAnnotationAttribute) {
+        super(source, pos);
+        this.possibleKeywords = possibleKeywords;
+        this.canBeExplicitConstructor = canBeExplicitConstructor;
+        this.isInsideAnnotationAttribute = isInsideAnnotationAttribute;
+    }
 
-   public StringBuffer printExpression(int indent, StringBuffer output)
-   {
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-      output.append("<CompleteOnName:"); //$NON-NLS-1$
-      return super.printExpression(0, output).append('>');
-   }
+        output.append("<CompleteOnName:"); //$NON-NLS-1$
+        return super.printExpression(0, output).append('>');
+    }
 
-   public TypeBinding resolveType(BlockScope scope)
-   {
-      if (scope instanceof MethodScope)
-      {
-         throw new CompletionNodeFound(this, scope, ((MethodScope)scope).insideTypeAnnotation);
-      }
-      throw new CompletionNodeFound(this, scope);
-   }
+    public TypeBinding resolveType(BlockScope scope) {
+        if (scope instanceof MethodScope) {
+            throw new CompletionNodeFound(this, scope, ((MethodScope)scope).insideTypeAnnotation);
+        }
+        throw new CompletionNodeFound(this, scope);
+    }
 }

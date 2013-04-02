@@ -15,56 +15,47 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class MapCleanUpOptions extends CleanUpOptions
-{
+public class MapCleanUpOptions extends CleanUpOptions {
 
-   private final Map<String, String> fOptions;
+    private final Map<String, String> fOptions;
 
-   /**
-    * Create new CleanUpOptions instance. <code>options</code>
-    * maps named clean ups keys to {@link CleanUpOptions#TRUE},
-    * {@link CleanUpOptions#FALSE} or any String value
-    *
-    * @param options map from String to String
-    * @see CleanUpConstants
-    */
-   public MapCleanUpOptions(Map<String, String> options)
-   {
-      super(options);
-      fOptions = options;
-   }
+    /**
+     * Create new CleanUpOptions instance. <code>options</code>
+     * maps named clean ups keys to {@link CleanUpOptions#TRUE},
+     * {@link CleanUpOptions#FALSE} or any String value
+     *
+     * @param options
+     *         map from String to String
+     * @see CleanUpConstants
+     */
+    public MapCleanUpOptions(Map<String, String> options) {
+        super(options);
+        fOptions = options;
+    }
 
-   public MapCleanUpOptions()
-   {
-      this(new HashMap<String, String>());
-   }
+    public MapCleanUpOptions() {
+        this(new HashMap<String, String>());
+    }
 
-   /**
-    * @return all options as map, modifying the map modifies this object
-    */
-   public Map<String, String> getMap()
-   {
-      return fOptions;
-   }
+    /** @return all options as map, modifying the map modifies this object */
+    public Map<String, String> getMap() {
+        return fOptions;
+    }
 
-   /**
-    * @param options the options to add to this options
-    */
-   public void addAll(CleanUpOptions options)
-   {
-      if (options instanceof MapCleanUpOptions)
-      {
-         fOptions.putAll(((MapCleanUpOptions)options).getMap());
-      }
-      else
-      {
-         Set<String> keys = options.getKeys();
-         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();)
-         {
-            String key = iterator.next();
-            fOptions.put(key, options.getValue(key));
-         }
-      }
-   }
+    /**
+     * @param options
+     *         the options to add to this options
+     */
+    public void addAll(CleanUpOptions options) {
+        if (options instanceof MapCleanUpOptions) {
+            fOptions.putAll(((MapCleanUpOptions)options).getMap());
+        } else {
+            Set<String> keys = options.getKeys();
+            for (Iterator<String> iterator = keys.iterator(); iterator.hasNext(); ) {
+                String key = iterator.next();
+                fOptions.put(key, options.getValue(key));
+            }
+        }
+    }
 
 }

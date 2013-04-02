@@ -16,11 +16,8 @@ package com.codenvy.ide.texteditor.input;
 
 import com.codenvy.ide.util.input.SignalEvent;
 
-/**
- * Interface used to resolve and execute action.
- */
-public interface ActionExecutor
-{
+/** Interface used to resolve and execute action. */
+public interface ActionExecutor {
 
-   boolean execute(String actionName, InputScheme scheme, SignalEvent event);
+    boolean execute(String actionName, InputScheme scheme, SignalEvent event);
 }

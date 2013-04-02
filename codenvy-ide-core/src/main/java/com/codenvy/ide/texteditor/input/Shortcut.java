@@ -16,12 +16,9 @@ package com.codenvy.ide.texteditor.input;
 
 import com.codenvy.ide.util.input.SignalEvent;
 
-/**
- * Abstract Shortcut class. Override event function to implement a callback.
- */
-public interface Shortcut
-{
+/** Abstract Shortcut class. Override event function to implement a callback. */
+public interface Shortcut {
 
-   // TODO: separate the keybinding and action definitions
-   public abstract boolean event(InputScheme scheme, SignalEvent event);
+    // TODO: separate the keybinding and action definitions
+    public abstract boolean event(InputScheme scheme, SignalEvent event);
 }

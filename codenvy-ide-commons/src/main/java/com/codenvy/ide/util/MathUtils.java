@@ -14,15 +14,11 @@
 
 package com.codenvy.ide.util;
 
-/**
- * Utility methods for math-related functionality.
- */
+/** Utility methods for math-related functionality. */
 public class MathUtils {
 
-  /**
-   * Returns whether the {@code number} is in the given inclusive range.
-   */
-  public static boolean isInRangeInclusive(int number, int lowerBound, int upperBound) {
-    return lowerBound <= number && number <= upperBound;
-  }
+    /** Returns whether the {@code number} is in the given inclusive range. */
+    public static boolean isInRangeInclusive(int number, int lowerBound, int upperBound) {
+        return lowerBound <= number && number <= upperBound;
+    }
 }

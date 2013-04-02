@@ -18,23 +18,21 @@ package com.codenvy.ide.commons.exception;
 
 /**
  * Created by The eXo Platform SAS. Notifies about unmarshalling error accured.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 @SuppressWarnings("serial")
-public class UnmarshallerException extends Exception
-{
+public class UnmarshallerException extends Exception {
 
-   /**
-    * Creates an Instance of {@link UnauthorizedException} with message and root cause
-    * 
-    * @param message
-    * @param cause
-    */
-   public UnmarshallerException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    /**
+     * Creates an Instance of {@link UnauthorizedException} with message and root cause
+     *
+     * @param message
+     * @param cause
+     */
+    public UnmarshallerException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

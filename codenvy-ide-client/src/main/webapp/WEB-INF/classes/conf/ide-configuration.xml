@@ -20,73 +20,74 @@
 
 -->
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-   <component>
-      <key>org.exoplatform.ide.invite.InviteUserService</key>
-      <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
-   </component>
+    <component>
+        <key>org.exoplatform.ide.invite.InviteUserService</key>
+        <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
+    </component>
 
-<!-- 
-***************************************************************************************
-********************** eXo IDE Commons Components *************************************
-***************************************************************************************
--->
-   <component>
-      <type>org.exoplatform.ide.IDEServiceApplication</type>
-      <init-params>
-         <value-param>
-            <name>defaultEntryPoint</name>
-            <value>dev-monit</value>
-         </value-param>
-         <value-param>
-            <name>discoverable</name>
-            <value>true</value>
-         </value-param>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
-         </value-param>
-         <value-param>
-            <name>template-config</name>
-            <value>/ide-home/templates</value>
-         </value-param>
-      </init-params>
-   </component>
+    <!--
+    ***************************************************************************************
+    ********************** eXo IDE Commons Components *************************************
+    ***************************************************************************************
+    -->
+    <component>
+        <type>org.exoplatform.ide.IDEServiceApplication</type>
+        <init-params>
+            <value-param>
+                <name>defaultEntryPoint</name>
+                <value>dev-monit</value>
+            </value-param>
+            <value-param>
+                <name>discoverable</name>
+                <value>true</value>
+            </value-param>
+            <value-param>
+                <name>workspace</name>
+                <value>production</value>
+            </value-param>
+            <value-param>
+                <name>user-config</name>
+                <value>/ide-home/users/</value>
+            </value-param>
+            <value-param>
+                <name>template-config</name>
+                <value>/ide-home/templates</value>
+            </value-param>
+        </init-params>
+    </component>
 
-<!-- VirtualFileSystem -->
-   <component>
-      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
-   </component>
+    <!-- VirtualFileSystem -->
+    <component>
+        <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
+    </component>
 
-   <component>
-      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
-   </component>
+    <component>
+        <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
+    </component>
 
-   <component>
-      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
-   </component>
+    <component>
+        <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
+    </component>
 
-   <component>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
-      <init-params>
-         <values-param>
-            <name>workspaces</name>
-            <value>dev-monit</value>
-            <value>production</value>
-         </values-param>
-      </init-params>
-   </component>
+    <component>
+        <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
+        <init-params>
+            <values-param>
+                <name>workspaces</name>
+                <value>dev-monit</value>
+                <value>production</value>
+            </values-param>
+        </init-params>
+    </component>
 
-   <component>
-      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
-   </component>
-   
+    <component>
+        <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
+    </component>
+
     <!--component>
       <type>org.exoplatform.ide.davmount.WebDavFolderBinder</type>
       <description>Bind WebDavFolder</description>
@@ -118,87 +119,87 @@
          </value-param>
       </init-params>
    </component-->
-   
-<!-- End VirtualFileSystem -->  
 
-<!-- Java -->
-   <component>
-      <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
-   </component>
-   
-   <component>
-      <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
-   </component>
+    <!-- End VirtualFileSystem -->
 
-   <component>
-      <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient</type>
-      <init-params>
-         <value-param>
-            <name>codeassistant-storage-base-url</name>
-            <value>http://localhost:8080/codeassistant-storage </value>
-         </value-param>
-      </init-params>
-   </component>
-<!-- End Java -->
+    <!-- Java -->
+    <component>
+        <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
+    </component>
 
-<!-- 
-***************************************************************************************
-**************************** Builder System Supporting ********************************
-***************************************************************************************
--->
+    <component>
+        <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
+    </component>
 
-   <!--component>
-      <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
-   </component-->
+    <component>
+        <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient</type>
+        <init-params>
+            <value-param>
+                <name>codeassistant-storage-base-url</name>
+                <value>http://localhost:8080/codeassistant-storage</value>
+            </value-param>
+        </init-params>
+    </component>
+    <!-- End Java -->
 
-   <component>
-      <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
-   </component>
+    <!--
+    ***************************************************************************************
+    **************************** Builder System Supporting ********************************
+    ***************************************************************************************
+    -->
 
-   <component>
-      <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-      <init-params>
-         <value-param>
-            <name>build-server-base-url</name>
-            <value>http://localhost:8080/builder</value>
-         </value-param>
-      </init-params>
-   </component>
+    <!--component>
+       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
+    </component-->
 
-<!-- CloudFoundry -->
+    <component>
+        <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
+    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
-   </component>
+    <component>
+        <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
+        <init-params>
+            <value-param>
+                <name>build-server-base-url</name>
+                <value>http://localhost:8080/builder</value>
+            </value-param>
+        </init-params>
+    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
-   </component>
+    <!-- CloudFoundry -->
 
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
-   </component>
+    <component>
+        <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
+    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
-      <init-params>
-         <object-param>
-            <name>CF1</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.cfet.exoplatform.org</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>eXoAdmin12321</string>
-               </field>
-            </object>
-         </object-param>
-      </init-params>
-   </component>
+    <component>
+        <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
+    </component>
 
-<!-- End CloudFoundry -->
+    <component>
+        <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
+        <init-params>
+            <object-param>
+                <name>CF1</name>
+                <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
+                    <field name="target">
+                        <string>http://api.cfet.exoplatform.org</string>
+                    </field>
+                    <field name="user">
+                        <string>support@cloud-ide.com</string>
+                    </field>
+                    <field name="password">
+                        <string>eXoAdmin12321</string>
+                    </field>
+                </object>
+            </object-param>
+        </init-params>
+    </component>
+
+    <!-- End CloudFoundry -->
 
 </configuration>

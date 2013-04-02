@@ -26,62 +26,51 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * The class helps to work with status of application.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 9:35:47 AM anya $
  */
-public class CreateApplicationRequestStatusHandler implements RequestStatusHandler
-{
-   private String applicationName;
+public class CreateApplicationRequestStatusHandler implements RequestStatusHandler {
+    private String applicationName;
 
-   private EventBus eventBus;
+    private EventBus eventBus;
 
-   private CloudFoundryLocalizationConstant constant;
+    private CloudFoundryLocalizationConstant constant;
 
-   /**
-    * Create application request status handler.
-    * 
-    * @param applicationName
-    * @param eventBus
-    */
-   public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus,
-      CloudFoundryLocalizationConstant constant)
-   {
-      this.applicationName = applicationName;
-      this.eventBus = eventBus;
-      this.constant = constant;
-   }
+    /**
+     * Create application request status handler.
+     *
+     * @param applicationName
+     * @param eventBus
+     */
+    public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus,
+                                                 CloudFoundryLocalizationConstant constant) {
+        this.applicationName = applicationName;
+        this.eventBus = eventBus;
+        this.constant = constant;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(constant.createApplicationStarted(applicationName));
-      eventBus.fireEvent(new JobChangeEvent(job));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(constant.createApplicationStarted(applicationName));
+        eventBus.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(constant.createApplicationFinished(applicationName));
-      eventBus.fireEvent(new JobChangeEvent(job));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(constant.createApplicationFinished(applicationName));
+        eventBus.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void requestError(String id, Throwable exception)
-   {
-      Job job = new Job(id, JobStatus.ERROR);
-      job.setError(exception);
-      eventBus.fireEvent(new JobChangeEvent(job));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void requestError(String id, Throwable exception) {
+        Job job = new Job(id, JobStatus.ERROR);
+        job.setError(exception);
+        eventBus.fireEvent(new JobChangeEvent(job));
+    }
 }

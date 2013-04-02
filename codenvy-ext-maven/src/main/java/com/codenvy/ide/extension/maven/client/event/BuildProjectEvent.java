@@ -23,113 +23,94 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to build project by maven builder.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectEvent.java Feb 17, 2012 4:04:56 PM azatsarynnyy $
  */
-public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
-{
-   /**
-    * Project for build.
-    */
-   private Project project;
+public class BuildProjectEvent extends GwtEvent<BuildProjectHandler> {
+    /** Project for build. */
+    private Project project;
 
-   private final boolean publish;
+    private final boolean publish;
 
-   private final boolean force;
+    private final boolean force;
 
-   public BuildProjectEvent()
-   {
-      this(false);
-   }
+    public BuildProjectEvent() {
+        this(false);
+    }
 
-   /**
-    * If <code>publish</code> artifact will be in public repository after build.
-    * By default set to false
-    * @param publish
-    */
-   public BuildProjectEvent(boolean publish)
-   {
-      this(null, publish);
-   }
+    /**
+     * If <code>publish</code> artifact will be in public repository after build.
+     * By default set to false
+     *
+     * @param publish
+     */
+    public BuildProjectEvent(boolean publish) {
+        this(null, publish);
+    }
 
-   /**
-    * If <code>publish</code> artifact will be in public repository after build.
-    * <code>force</code> project will be build  even if it not change from last build
-    * By default set to false
-    * @param publish
-    */
-   public BuildProjectEvent(boolean publish, boolean force)
-   {
-      this(null, publish, force);
-   }
+    /**
+     * If <code>publish</code> artifact will be in public repository after build.
+     * <code>force</code> project will be build  even if it not change from last build
+     * By default set to false
+     *
+     * @param publish
+     */
+    public BuildProjectEvent(boolean publish, boolean force) {
+        this(null, publish, force);
+    }
 
-   /**
-    * @param project
-    */
-   public BuildProjectEvent(Project project)
-   {
-      this(project, false);
-   }
+    /** @param project */
+    public BuildProjectEvent(Project project) {
+        this(project, false);
+    }
 
-   /**
-    * If <code>publish</code> artifact will be in public repository after build.
-    * By default set to false
-    * @param project
-    * @param publish
-    */
-   public BuildProjectEvent(Project project, boolean publish)
-   {
-      this(project, publish, false);
-   }
+    /**
+     * If <code>publish</code> artifact will be in public repository after build.
+     * By default set to false
+     *
+     * @param project
+     * @param publish
+     */
+    public BuildProjectEvent(Project project, boolean publish) {
+        this(project, publish, false);
+    }
 
-   public BuildProjectEvent(Project project, boolean publish, boolean force)
-   {
-      this.project = project;
-      this.publish = publish;
-      this.force = force;
-   }
+    public BuildProjectEvent(Project project, boolean publish, boolean force) {
+        this.project = project;
+        this.publish = publish;
+        this.force = force;
+    }
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<BuildProjectHandler> TYPE = new GwtEvent.Type<BuildProjectHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<BuildProjectHandler> TYPE = new GwtEvent.Type<BuildProjectHandler>();
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void dispatch(BuildProjectHandler handler)
-   {
-      handler.onBuildProject(this);
-   }
+    /** {@inheritDoc} */
+    @Override
+    protected void dispatch(BuildProjectHandler handler) {
+        handler.onBuildProject(this);
+    }
 
-   /**
-    * Get the project for build.
-    * 
-    * @return the project
-    */
-   public Project getProject()
-   {
-      return project;
-   }
+    /**
+     * Get the project for build.
+     *
+     * @return the project
+     */
+    public Project getProject() {
+        return project;
+    }
 
-   public boolean isPublish()
-   {
-      return publish;
-   }
+    public boolean isPublish() {
+        return publish;
+    }
 
-   public boolean isForce()
-   {
-      return force;
-   }
+    public boolean isForce() {
+        return force;
+    }
 }

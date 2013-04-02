@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.4.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.4.0/distro-source/core/src/gwt-module.dtd">
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.4.0//EN"
+        "http://google-web-toolkit.googlecode.com/svn/tags/2.4.0/distro-source/core/src/gwt-module.dtd">
 <module>
-   <!-- Generator that builds ExtensionManager from ExtensionDefinition annotations. -->
-   <generate-with class="com.codenvy.ide.extension.ExtensionRegistryGenerator">
-      <when-type-assignable class="com.codenvy.ide.extension.ExtensionRegistry" />
-   </generate-with>
+    <!-- Generator that builds ExtensionManager from ExtensionDefinition annotations. -->
+    <generate-with class="com.codenvy.ide.extension.ExtensionRegistryGenerator">
+        <when-type-assignable class="com.codenvy.ide.extension.ExtensionRegistry"/>
+    </generate-with>
 
-   <inherits name="com.google.gwt.user.User" />
-   
-   <inherits name="elemental.Elemental" />
-   <inherits name="com.codenvy.ide.Commons" />
-   <inherits name="com.codenvy.ide.Api" />
-   <inherits name="com.google.gwt.json.JSON" />
-   <inherits name="com.google.gwt.inject.Inject" />
+    <inherits name="com.google.gwt.user.User"/>
 
-   <source path="ui" />
-   <source path="wizard" />
-   <source path="menu" />
-   <source path="part" />
-   <source path="preferences" />
-   <source path="toolbar" />
-   <source path="perspective" />
-   <source path="openproject" />
-   <source path="console" />
-   <source path="" />
+    <inherits name="elemental.Elemental"/>
+    <inherits name="com.codenvy.ide.Commons"/>
+    <inherits name="com.codenvy.ide.Api"/>
+    <inherits name="com.google.gwt.json.JSON"/>
+    <inherits name="com.google.gwt.inject.Inject"/>
+
+    <source path="ui"/>
+    <source path="wizard"/>
+    <source path="menu"/>
+    <source path="part"/>
+    <source path="preferences"/>
+    <source path="toolbar"/>
+    <source path="perspective"/>
+    <source path="openproject"/>
+    <source path="console"/>
+    <source path=""/>
 </module>

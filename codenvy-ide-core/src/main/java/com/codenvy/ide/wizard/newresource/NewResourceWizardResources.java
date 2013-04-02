@@ -23,11 +23,10 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Contains of resource for new resource wizard page view.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewResourceWizardResources extends ClientBundle
-{
-   @Source("com/codenvy/ide/wizard/images/NewResourceIcon.png")
-   ImageResource newResourceIcon();
+public interface NewResourceWizardResources extends ClientBundle {
+    @Source("com/codenvy/ide/wizard/images/NewResourceIcon.png")
+    ImageResource newResourceIcon();
 }

@@ -22,15 +22,15 @@ package com.codenvy.ide.text.undo;
  * Clients may implement this interface.
  * </p>
  */
-public interface DocumentUndoListener
-{
+public interface DocumentUndoListener {
 
-   /**
-    * The document is involved in an undo-related change.  Notify listeners
-    * with an event describing the change.
-    *
-    * @param event the document undo event that describes the particular notification
-    */
-   void documentUndoNotification(DocumentUndoEvent event);
+    /**
+     * The document is involved in an undo-related change.  Notify listeners
+     * with an event describing the change.
+     *
+     * @param event
+     *         the document undo event that describes the particular notification
+     */
+    void documentUndoNotification(DocumentUndoEvent event);
 
 }

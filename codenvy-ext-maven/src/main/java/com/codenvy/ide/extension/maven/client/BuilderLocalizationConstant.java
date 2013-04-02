@@ -23,67 +23,65 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * Localization constants.
  * Interface to represent the constants contained in resource bundle: 'BuilderLocalizationConstant.properties'.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderLocalizationConstant.java Feb 21, 2012 3:06:29 PM azatsarynnyy $
- *
  */
-public interface BuilderLocalizationConstant extends Messages
-{
-   /*
-    * Controls
-    */
-   @Key("control.buildProject.id")
-   String buildProjectControlId();
+public interface BuilderLocalizationConstant extends Messages {
+    /*
+     * Controls
+     */
+    @Key("control.buildProject.id")
+    String buildProjectControlId();
 
-   @Key("control.buildProject.title")
-   String buildProjectControlTitle();
+    @Key("control.buildProject.title")
+    String buildProjectControlTitle();
 
-   @Key("control.buildProject.prompt")
-   String buildProjectControlPrompt();
+    @Key("control.buildProject.prompt")
+    String buildProjectControlPrompt();
 
-   @Key("control.buildAndPublishProject.id")
-   String buildAndPublishProjectControlId();
-   
-   @Key("control.buildAndPublishProject.title")
-   String buildAndPublishProjectControlTitle();
-   
-   @Key("control.buildAndPublishProject.prompt")
-   String buildAndPublishProjectControlPrompt();
+    @Key("control.buildAndPublishProject.id")
+    String buildAndPublishProjectControlId();
 
-   /*
-    * Messages
-    */
-   @Key("messages.buildInProgress")
-   String buildInProgress(String project);
+    @Key("control.buildAndPublishProject.title")
+    String buildAndPublishProjectControlTitle();
 
-   @Key("messages.buildSuccess")
-   String buildSuccess();
+    @Key("control.buildAndPublishProject.prompt")
+    String buildAndPublishProjectControlPrompt();
 
-   @Key("messages.buildFailed")
-   String buildFailed();
+    /*
+     * Messages
+     */
+    @Key("messages.buildInProgress")
+    String buildInProgress(String project);
 
-   @Key("messages.selectedItemsFail")
-   String selectedItemsFail();
+    @Key("messages.buildSuccess")
+    String buildSuccess();
 
-   /*
-    * BuildProjectView
-    */
-   @Key("buildProject.id")
-   String buildProjectId();
+    @Key("messages.buildFailed")
+    String buildFailed();
 
-   @Key("buildProject.title")
-   String buildProjectTitle();
+    @Key("messages.selectedItemsFail")
+    String selectedItemsFail();
 
-   @Key("buildProject.outputClear")
-   String outputClear();
+    /*
+     * BuildProjectView
+     */
+    @Key("buildProject.id")
+    String buildProjectId();
 
-   /*
-    * InitRequestHandler
-    */
-   @Key("build.started")
-   String buildStarted(String project);
+    @Key("buildProject.title")
+    String buildProjectTitle();
 
-   @Key("build.finished")
-   String buildFinished(String project);
+    @Key("buildProject.outputClear")
+    String outputClear();
+
+    /*
+     * InitRequestHandler
+     */
+    @Key("build.started")
+    String buildStarted(String project);
+
+    @Key("build.finished")
+    String buildFinished(String project);
 }

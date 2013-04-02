@@ -23,32 +23,24 @@ import com.codenvy.ide.java.client.codeassistant.ui.StyledString.Styler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 12:30:04 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
  */
-public class DefaultStyler extends Styler
-{
+public class DefaultStyler extends Styler {
 
-   private String className;
+    private String className;
 
-   /**
-    * @param className
-    */
-   public DefaultStyler(String className)
-   {
-      super();
-      this.className = className;
-   }
+    /** @param className */
+    public DefaultStyler(String className) {
+        super();
+        this.className = className;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.codeassistant.ui.StyledString.Styler#applyStyles(java.lang.String)
-    */
-   @Override
-   public String applyStyles(String text)
-   {
-      StringBuilder b = new StringBuilder();
-      b.append("<span ").append("class=\"").append(className).append("\">");
-      b.append(text).append("</span>");
-      return b.toString();
-   }
+    /** @see org.eclipse.jdt.client.codeassistant.ui.StyledString.Styler#applyStyles(java.lang.String) */
+    @Override
+    public String applyStyles(String text) {
+        StringBuilder b = new StringBuilder();
+        b.append("<span ").append("class=\"").append(className).append("\">");
+        b.append(text).append("</span>");
+        return b.toString();
+    }
 
 }

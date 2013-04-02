@@ -17,98 +17,83 @@
 package com.codenvy.ide.api.event;
 
 import com.codenvy.ide.resources.model.Resource;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 
 /**
  * Event that describes the fact that Project Action has be performed
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ResourceChangedEvent extends GwtEvent<ResourceChangedHandler>
-{
+public class ResourceChangedEvent extends GwtEvent<ResourceChangedHandler> {
 
-   public static Type<ResourceChangedHandler> TYPE = new Type<ResourceChangedHandler>();
+    public static Type<ResourceChangedHandler> TYPE = new Type<ResourceChangedHandler>();
 
-   public static enum ResourceAction {
-      CREATED, DELETED, TREE_REFRESHED, RENAMED, MOVED;
-   }
+    public static enum ResourceAction {
+        CREATED, DELETED, TREE_REFRESHED, RENAMED, MOVED;
+    }
 
-   private final Resource resource;
+    private final Resource resource;
 
-   private final ResourceAction resourceAction;
+    private final ResourceAction resourceAction;
 
-   public static ResourceChangedEvent createResourceCreatedEvent(Resource resource)
-   {
-      return new ResourceChangedEvent(resource, ResourceAction.CREATED);
-   }
+    public static ResourceChangedEvent createResourceCreatedEvent(Resource resource) {
+        return new ResourceChangedEvent(resource, ResourceAction.CREATED);
+    }
 
-   public static ResourceChangedEvent createResourceDeletedEvent(Resource resource)
-   {
-      return new ResourceChangedEvent(resource, ResourceAction.DELETED);
-   }
+    public static ResourceChangedEvent createResourceDeletedEvent(Resource resource) {
+        return new ResourceChangedEvent(resource, ResourceAction.DELETED);
+    }
 
-   public static ResourceChangedEvent createResourceRenamedEvent(Resource resource)
-   {
-      return new ResourceChangedEvent(resource, ResourceAction.RENAMED);
-   }
-   
-   public static ResourceChangedEvent createResourceTreeRefreshedEvent(Resource resource)
-   {
-      return new ResourceChangedEvent(resource, ResourceAction.TREE_REFRESHED);
-   }
+    public static ResourceChangedEvent createResourceRenamedEvent(Resource resource) {
+        return new ResourceChangedEvent(resource, ResourceAction.RENAMED);
+    }
 
-   public static ResourceChangedEvent createResourceMovedEvent(Resource resource)
-   {
-      return new ResourceChangedEvent(resource, ResourceAction.MOVED);
-   }
+    public static ResourceChangedEvent createResourceTreeRefreshedEvent(Resource resource) {
+        return new ResourceChangedEvent(resource, ResourceAction.TREE_REFRESHED);
+    }
 
-   protected ResourceChangedEvent(Resource resource, ResourceAction projectAction)
-   {
-      this.resource = resource;
-      this.resourceAction = projectAction;
-   }
+    public static ResourceChangedEvent createResourceMovedEvent(Resource resource) {
+        return new ResourceChangedEvent(resource, ResourceAction.MOVED);
+    }
 
-   @Override
-   public Type<ResourceChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    protected ResourceChangedEvent(Resource resource, ResourceAction projectAction) {
+        this.resource = resource;
+        this.resourceAction = projectAction;
+    }
 
-   public Resource getResource()
-   {
-      return resource;
-   }
+    @Override
+    public Type<ResourceChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public ResourceAction getProjectAction()
-   {
-      return resourceAction;
-   }
+    public Resource getResource() {
+        return resource;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   protected void dispatch(ResourceChangedHandler handler)
-   {
-      switch (resourceAction)
-      {
-         case CREATED :
-            handler.onResourceCreated(this);
-            break;
-         case DELETED :
-            handler.onResourceDeleted(this);
-            break;
-         case RENAMED :
-            handler.onResourceRenamed(this);
-            break;
-         case MOVED :
-            handler.onResourceMoved(this);
-            break;
-         default :
-            break;
-      }
+    public ResourceAction getProjectAction() {
+        return resourceAction;
+    }
 
-   }
+    /** {@inheritDoc} */
+    @Override
+    protected void dispatch(ResourceChangedHandler handler) {
+        switch (resourceAction) {
+            case CREATED:
+                handler.onResourceCreated(this);
+                break;
+            case DELETED:
+                handler.onResourceDeleted(this);
+                break;
+            case RENAMED:
+                handler.onResourceRenamed(this);
+                break;
+            case MOVED:
+                handler.onResourceMoved(this);
+                break;
+            default:
+                break;
+        }
+
+    }
 }

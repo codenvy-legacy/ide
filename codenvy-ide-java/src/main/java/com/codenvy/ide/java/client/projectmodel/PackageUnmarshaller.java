@@ -20,51 +20,38 @@ package com.codenvy.ide.java.client.projectmodel;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
-
-import com.google.gwt.json.client.JSONParser;
-
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
 
 
 /**
  * Unmarshaller for {@link Package}
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class PackageUnmarshaller implements Unmarshallable<Package>
-{
+public class PackageUnmarshaller implements Unmarshallable<Package> {
 
-   private final Package pack;
+    private final Package pack;
 
-   public PackageUnmarshaller(Package pack)
-   {
-      this.pack = pack;
-   }
+    public PackageUnmarshaller(Package pack) {
+        this.pack = pack;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         pack.init(JSONParser.parseLenient(response.getText()).isObject());
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse package", e);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            pack.init(JSONParser.parseLenient(response.getText()).isObject());
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't parse package", e);
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Package getPayload()
-   {
-      return pack;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Package getPayload() {
+        return pack;
+    }
 
 }

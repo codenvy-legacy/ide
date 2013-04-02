@@ -20,18 +20,17 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * Common interface for Presenters that are responsible for driving the UI
- * 
+ * <p/>
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 24, 2012  
+ * exo@exoplatform.com
+ * Jul 24, 2012
  */
-public interface Presenter
-{
-   /**
-    * Allows presenter to expose it's view to the container.
-    * 
-    * @param container
-    */
-   void go(final AcceptsOneWidget container);
+public interface Presenter {
+    /**
+     * Allows presenter to expose it's view to the container.
+     *
+     * @param container
+     */
+    void go(final AcceptsOneWidget container);
 }

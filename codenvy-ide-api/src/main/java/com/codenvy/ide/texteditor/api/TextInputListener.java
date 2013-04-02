@@ -24,17 +24,18 @@ import com.codenvy.ide.text.Document;
  * Text input listeners registered with an
  * {@link TextEditorPartView} are informed if the document
  * serving as the text viewer's model is replaced.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface TextInputListener
-{
-   /**
-    * Called after the input document has been replaced.
-    *
-    * @param oldDocument the text display's previous input document
-    * @param newDocument the text display's new input document
-    */
-   void inputDocumentChanged(Document oldDocument, Document newDocument);
+public interface TextInputListener {
+    /**
+     * Called after the input document has been replaced.
+     *
+     * @param oldDocument
+     *         the text display's previous input document
+     * @param newDocument
+     *         the text display's new input document
+     */
+    void inputDocumentChanged(Document oldDocument, Document newDocument);
 }

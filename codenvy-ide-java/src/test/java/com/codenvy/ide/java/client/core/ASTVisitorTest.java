@@ -28,54 +28,43 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 4, 2012 2:50:05 PM evgen $
- * 
  */
-public class ASTVisitorTest extends ParserBaseTest
-{
-   @Test
-   public void testTypeDeclarationVisitor() throws Exception
-   {
-      TypeDeclarationVisitor visitor = new TypeDeclarationVisitor();
-      unit.accept(visitor);
-      Assert.assertEquals(2, visitor.typeCount);
+public class ASTVisitorTest extends ParserBaseTest {
+    @Test
+    public void testTypeDeclarationVisitor() throws Exception {
+        TypeDeclarationVisitor visitor = new TypeDeclarationVisitor();
+        unit.accept(visitor);
+        Assert.assertEquals(2, visitor.typeCount);
 
-   }
-   @Test
-   public void testMethodDeclarationVisitor() throws Exception
-   {
-      MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();
-      TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
-      type.getTypes()[0].accept(visitor);
-      Assert.assertEquals(19, visitor.methodCount);
-   }
+    }
 
-   private static class MethodDeclarationVisitor extends ASTVisitor
-   {
-      private int methodCount;
+    @Test
+    public void testMethodDeclarationVisitor() throws Exception {
+        MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();
+        TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
+        type.getTypes()[0].accept(visitor);
+        Assert.assertEquals(19, visitor.methodCount);
+    }
 
-      /**
-       * @see com.codenvy.ide.java.client.core.dom.ASTVisitor#visit(com.codenvy.ide.java.client.core.dom.MethodDeclaration)
-       */
-      @Override
-      public boolean visit(MethodDeclaration node)
-      {
-         methodCount++;
-         return super.visit(node);
-      }
-   }
+    private static class MethodDeclarationVisitor extends ASTVisitor {
+        private int methodCount;
 
-   private static class TypeDeclarationVisitor extends ASTVisitor
-   {
-      private int typeCount;
+        /** @see com.codenvy.ide.java.client.core.dom.ASTVisitor#visit(com.codenvy.ide.java.client.core.dom.MethodDeclaration) */
+        @Override
+        public boolean visit(MethodDeclaration node) {
+            methodCount++;
+            return super.visit(node);
+        }
+    }
 
-      /**
-       * @see com.codenvy.ide.java.client.core.dom.ASTVisitor#visit(com.codenvy.ide.java.client.core.dom.TypeDeclaration)
-       */
-      @Override
-      public boolean visit(TypeDeclaration node)
-      {
-         typeCount++;
-         return super.visit(node);
-      }
-   }
+    private static class TypeDeclarationVisitor extends ASTVisitor {
+        private int typeCount;
+
+        /** @see com.codenvy.ide.java.client.core.dom.ASTVisitor#visit(com.codenvy.ide.java.client.core.dom.TypeDeclaration) */
+        @Override
+        public boolean visit(TypeDeclaration node) {
+            typeCount++;
+            return super.visit(node);
+        }
+    }
 }

@@ -23,32 +23,30 @@ package com.codenvy.ide.text;
  * <p>
  * This class is not intended to be serialized.
  * </p>
- * 
+ *
  * @see Document
  */
-public class BadPartitioningException extends Exception
-{
+public class BadPartitioningException extends Exception {
 
-   /**
-    * Serial version UID for this class.
-    * <p>
-    * Note: This class is not intended to be serialized.
-    * </p>
-    */
-   private static final long serialVersionUID = 3256439205327876408L;
+    /**
+     * Serial version UID for this class.
+     * <p>
+     * Note: This class is not intended to be serialized.
+     * </p>
+     */
+    private static final long serialVersionUID = 3256439205327876408L;
 
-   /** Creates a new bad partitioning exception. */
-   public BadPartitioningException()
-   {
-   }
+    /** Creates a new bad partitioning exception. */
+    public BadPartitioningException() {
+    }
 
-   /**
-    * Creates a new bad partitioning exception.
-    * 
-    * @param message message describing the exception
-    */
-   public BadPartitioningException(String message)
-   {
-      super(message);
-   }
+    /**
+     * Creates a new bad partitioning exception.
+     *
+     * @param message
+     *         message describing the exception
+     */
+    public BadPartitioningException(String message) {
+        super(message);
+    }
 }

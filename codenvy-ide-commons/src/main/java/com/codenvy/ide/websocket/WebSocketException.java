@@ -20,31 +20,26 @@ package com.codenvy.ide.websocket;
 
 /**
  * Thrown when there was a problem with WebSocket connection.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
  */
 @SuppressWarnings("serial")
-public class WebSocketException extends Exception
-{
+public class WebSocketException extends Exception {
 
-   public WebSocketException()
-   {
-      super();
-   }
+    public WebSocketException() {
+        super();
+    }
 
-   public WebSocketException(String message)
-   {
-      super(message);
-   }
+    public WebSocketException(String message) {
+        super(message);
+    }
 
-   public WebSocketException(Throwable cause)
-   {
-      super(cause);
-   }
+    public WebSocketException(Throwable cause) {
+        super(cause);
+    }
 
-   public WebSocketException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public WebSocketException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

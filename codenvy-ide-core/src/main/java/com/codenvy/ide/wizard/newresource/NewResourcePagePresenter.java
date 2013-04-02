@@ -18,13 +18,11 @@
  */
 package com.codenvy.ide.wizard.newresource;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
-
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newresource.NewResourcePageView.ActionDelegate;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -33,110 +31,100 @@ import com.google.inject.Singleton;
 
 /**
  * Provides selecting kind of file which user wish to create.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NewResourcePagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
-{
-   private NewResourcePageView view;
+public class NewResourcePagePresenter extends AbstractWizardPagePresenter implements ActionDelegate {
+    private NewResourcePageView view;
 
-   private WizardPagePresenter next;
+    private WizardPagePresenter next;
 
-   /**
-    * Create presenter.
-    * 
-    * @param resources
-    * @param wizardAgent
-    * @param project
-    */
-   @Inject
-   public NewResourcePagePresenter(Resources resources, WizardAgentImpl wizardAgent)
-   {
-      this("Create a new resource", resources.newResourceIcon(), wizardAgent, new NewResourcePageViewImpl(resources,
-         wizardAgent.getNewResourceWizards()));
-   }
+    /**
+     * Create presenter.
+     *
+     * @param resources
+     * @param wizardAgent
+     * @param project
+     */
+    @Inject
+    public NewResourcePagePresenter(Resources resources, WizardAgentImpl wizardAgent) {
+        this("Create a new resource", resources.newResourceIcon(), wizardAgent, new NewResourcePageViewImpl(resources,
+                                                                                                            wizardAgent
 
-   /**
-    * Create presenter.
-    * 
-    * For tests
-    * 
-    * @param caption
-    * @param image
-    * @param wizardAgent
-    * @param project
-    * @param view
-    */
-   protected NewResourcePagePresenter(String caption, ImageResource image, WizardAgentImpl wizardAgent,
-      NewResourcePageView view)
-   {
-      super(caption, image);
-      this.view = view;
-      view.setDelegate(this);
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public boolean isCompleted()
-   {
-      return next != null;
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public boolean hasNext()
-   {
-      return next != null;
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public WizardPagePresenter flipToNext()
-   {
-      next.setPrevious(this);
-      next.setUpdateDelegate(delegate);
-      return next;
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getNotice()
-   {
-      if (next == null)
-      {
-         return "Please, select resource type.";
-      }
 
-      return null;
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(view);
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void selectedFileType(NewResourceWizardData newResourceWizard)
-   {
-      next = newResourceWizard.getWizardPage();
-      delegate.updateControls();
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public boolean canFinish()
-   {
-      return false;
-   }
+
+
+
+
+
+                                                                                                                    .getNewResourceWizards()));
+    }
+
+    /**
+     * Create presenter.
+     * <p/>
+     * For tests
+     *
+     * @param caption
+     * @param image
+     * @param wizardAgent
+     * @param project
+     * @param view
+     */
+    protected NewResourcePagePresenter(String caption, ImageResource image, WizardAgentImpl wizardAgent,
+                                       NewResourcePageView view) {
+        super(caption, image);
+        this.view = view;
+        view.setDelegate(this);
+    }
+
+    /** {@inheritDoc} */
+    public boolean isCompleted() {
+        return next != null;
+    }
+
+    /** {@inheritDoc} */
+    public boolean hasNext() {
+        return next != null;
+    }
+
+    /** {@inheritDoc} */
+    public WizardPagePresenter flipToNext() {
+        next.setPrevious(this);
+        next.setUpdateDelegate(delegate);
+        return next;
+    }
+
+    /** {@inheritDoc} */
+    public String getNotice() {
+        if (next == null) {
+            return "Please, select resource type.";
+        }
+
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+    }
+
+    /** {@inheritDoc} */
+    public void selectedFileType(NewResourceWizardData newResourceWizard) {
+        next = newResourceWizard.getWizardPage();
+        delegate.updateControls();
+    }
+
+    /** {@inheritDoc} */
+    public boolean canFinish() {
+        return false;
+    }
 }

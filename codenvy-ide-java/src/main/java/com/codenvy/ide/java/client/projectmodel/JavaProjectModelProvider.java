@@ -19,38 +19,29 @@
 package com.codenvy.ide.java.client.projectmodel;
 
 import com.codenvy.ide.api.resources.ModelProvider;
-
 import com.codenvy.ide.resources.model.Project;
-
 import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
  * Model provider for Java projects.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaProjectModelProvider implements ModelProvider
-{
+public class JavaProjectModelProvider implements ModelProvider {
 
-   private final EventBus eventBus;
+    private final EventBus eventBus;
 
-   /**
-    * @param eventBus
-    */
-   public JavaProjectModelProvider(EventBus eventBus)
-   {
-      this.eventBus = eventBus;
-   }
+    /** @param eventBus */
+    public JavaProjectModelProvider(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Project createProjectInstance()
-   {
-      return new JavaProject(eventBus);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Project createProjectInstance() {
+        return new JavaProject(eventBus);
+    }
 
 }

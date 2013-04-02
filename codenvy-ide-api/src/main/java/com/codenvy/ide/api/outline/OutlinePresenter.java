@@ -22,11 +22,10 @@ import com.codenvy.ide.api.mvp.Presenter;
 
 /**
  * Marker interface for Outline
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface OutlinePresenter extends Presenter
-{
-   
+public interface OutlinePresenter extends Presenter {
+
 }

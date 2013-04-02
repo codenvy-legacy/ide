@@ -18,12 +18,10 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
-
 import com.codenvy.ide.api.paas.PaaS;
-
 import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.WizardAgentImpl;
@@ -33,138 +31,108 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * Provides selecting kind of project which user wish to create.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate
-{
-   private AbstractNewProjectWizardPage next;
+public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate {
+    private AbstractNewProjectWizardPage next;
 
-   private NewProjectPageView view;
+    private NewProjectPageView view;
 
-   private JsonArray<NewProjectWizardData> wizards;
+    private JsonArray<NewProjectWizardData> wizards;
 
-   private PaaS selectedPaaS;
+    private PaaS selectedPaaS;
 
-   private JsonArray<PaaS> paases;
+    private JsonArray<PaaS> paases;
 
-   /**
-    * Create presenter
-    * 
-    * @param wizardAgent
-    * @param resources
-    * @param paasAgent
-    */
-   public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources,
-      PaaSAgentImpl paasAgent)
-   {
-      this(wizardAgent, resources.newProjectIcon(), new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards(),
-         paasAgent.getPaaSes()), paasAgent);
-   }
+    /**
+     * Create presenter
+     *
+     * @param wizardAgent
+     * @param resources
+     * @param paasAgent
+     */
+    public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources,
+                                   PaaSAgentImpl paasAgent) {
+        this(wizardAgent, resources.newProjectIcon(), new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards(),
+                                                                                 paasAgent.getPaaSes()), paasAgent);
+    }
 
-   /**
-    * Create presenter
-    * 
-    * For tests
-    * 
-    * @param wizardAgent
-    * @param image
-    * @param view
-    */
-   protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, ImageResource image, NewProjectPageView view,
-      PaaSAgentImpl paasAgent)
-   {
-      super("Select a wizard", image);
-      this.view = view;
-      view.setDelegate(this);
-      this.wizards = wizardAgent.getNewProjectWizards();
-      this.paases = paasAgent.getPaaSes();
-   }
+    /**
+     * Create presenter
+     * <p/>
+     * For tests
+     *
+     * @param wizardAgent
+     * @param image
+     * @param view
+     */
+    protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, ImageResource image, NewProjectPageView view,
+                                      PaaSAgentImpl paasAgent) {
+        super("Select a wizard", image);
+        this.view = view;
+        view.setDelegate(this);
+        this.wizards = wizardAgent.getNewProjectWizards();
+        this.paases = paasAgent.getPaaSes();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public WizardPagePresenter flipToNext()
-   {
-      next.setPrevious(this);
-      next.setUpdateDelegate(delegate);
-      next.setPaaSWizardPage(selectedPaaS.getWizardPage());
-      return next;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public WizardPagePresenter flipToNext() {
+        next.setPrevious(this);
+        next.setUpdateDelegate(delegate);
+        next.setPaaSWizardPage(selectedPaaS.getWizardPage());
+        return next;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean canFinish()
-   {
-      return false;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean canFinish() {
+        return false;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean hasNext()
-   {
-      return next != null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasNext() {
+        return next != null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isCompleted()
-   {
-      return next != null && selectedPaaS != null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean isCompleted() {
+        return next != null && selectedPaaS != null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getNotice()
-   {
-      if (next ==null)
-      {
-         return "Please, choose technology";
-      }
-      else if (selectedPaaS == null)
-      {
-         return "Please, choose PaaS";
-      }
-      
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getNotice() {
+        if (next == null) {
+            return "Please, choose technology";
+        } else if (selectedPaaS == null) {
+            return "Please, choose PaaS";
+        }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(view);
-   }
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onProjectTypeSelected(int id)
-   {
-      next = wizards.get(id).getWizardPage();
-      selectedPaaS = null;
-      delegate.updateControls();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onPaaSSelected(int id)
-   {
-      selectedPaaS = paases.get(id);
-      delegate.updateControls();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onProjectTypeSelected(int id) {
+        next = wizards.get(id).getWizardPage();
+        selectedPaaS = null;
+        delegate.updateControls();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onPaaSSelected(int id) {
+        selectedPaaS = paases.get(id);
+        delegate.updateControls();
+    }
 }

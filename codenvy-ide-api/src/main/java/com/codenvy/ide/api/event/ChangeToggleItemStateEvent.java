@@ -22,50 +22,41 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event that notifies of changed Toggle item state Expressions.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class ChangeToggleItemStateEvent extends GwtEvent<ChangeToggleItemStateHandler>
-{
-   public static final GwtEvent.Type<ChangeToggleItemStateHandler> TYPE = new Type<ChangeToggleItemStateHandler>();
+public class ChangeToggleItemStateEvent extends GwtEvent<ChangeToggleItemStateHandler> {
+    public static final GwtEvent.Type<ChangeToggleItemStateHandler> TYPE = new Type<ChangeToggleItemStateHandler>();
 
-   private final int idExpression;
+    private final int idExpression;
 
-   /**
-    * Create event.
-    * 
-    * @param idExpression
-    */
-   public ChangeToggleItemStateEvent(int idExpression)
-   {
-      this.idExpression = idExpression;
-   }
+    /**
+     * Create event.
+     *
+     * @param idExpression
+     */
+    public ChangeToggleItemStateEvent(int idExpression) {
+        this.idExpression = idExpression;
+    }
 
-   /**
-    * Resturns expressions id.
-    * 
-    * @return
-    */
-   public int getIdExpression()
-   {
-      return idExpression;
-   }
+    /**
+     * Resturns expressions id.
+     *
+     * @return
+     */
+    public int getIdExpression() {
+        return idExpression;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ChangeToggleItemStateHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ChangeToggleItemStateHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void dispatch(ChangeToggleItemStateHandler handler)
-   {
-      handler.onStateChanged(this);
-   }
+    /** {@inheritDoc} */
+    @Override
+    protected void dispatch(ChangeToggleItemStateHandler handler) {
+        handler.onStateChanged(this);
+    }
 }

@@ -10,21 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.rewrite;
 
-import static org.junit.Assert.*;
-
-import com.codenvy.ide.java.client.core.dom.AST;
-import com.codenvy.ide.java.client.core.dom.ASTNode;
-import com.codenvy.ide.java.client.core.dom.Block;
-import com.codenvy.ide.java.client.core.dom.ClassInstanceCreation;
-import com.codenvy.ide.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.java.client.core.dom.ExpressionStatement;
-import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
-import com.codenvy.ide.java.client.core.dom.MethodInvocation;
-import com.codenvy.ide.java.client.core.dom.SimpleType;
-import com.codenvy.ide.java.client.core.dom.SuperConstructorInvocation;
-import com.codenvy.ide.java.client.core.dom.SuperMethodInvocation;
-import com.codenvy.ide.java.client.core.dom.Type;
-import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.*;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
@@ -33,292 +19,288 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class ASTRewritingExpressionsTest extends ASTRewritingTest
-{
+import static org.junit.Assert.assertTrue;
 
-   @Test
-   public void testClassInstanceCreation2() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E<A> {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        new Inner();\n");
-      buf.append("        new <A>Inner();\n");
-      buf.append("        new<A>Inner();\n");
-      buf.append("        new <A, A>Inner();\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      ICompilationUnit cu =
-         new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+public class ASTRewritingExpressionsTest extends ASTRewritingTest {
 
-      CompilationUnit astRoot = createAST3(cu);
-      ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
+    @Test
+    public void testClassInstanceCreation2() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E<A> {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        new Inner();\n");
+        buf.append("        new <A>Inner();\n");
+        buf.append("        new<A>Inner();\n");
+        buf.append("        new <A, A>Inner();\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        ICompilationUnit cu =
+                new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
-      AST ast = astRoot.getAST();
+        CompilationUnit astRoot = createAST3(cu);
+        ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
 
-      assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
-      TypeDeclaration type = findTypeDeclaration(astRoot, "E");
-      MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
-      Block block = methodDecl.getBody();
-      List statements = block.statements();
-      assertTrue("Number of statements not 3", statements.size() == 4);
-      { // add type argument
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(0);
-         ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
+        AST ast = astRoot.getAST();
 
-         Type newTypeArg = ast.newSimpleType(ast.newSimpleName("A"));
-         ListRewrite listRewrite = rewrite.getListRewrite(creation, ClassInstanceCreation.TYPE_ARGUMENTS_PROPERTY);
-         listRewrite.insertFirst(newTypeArg, null);
+        assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
+        TypeDeclaration type = findTypeDeclaration(astRoot, "E");
+        MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
+        Block block = methodDecl.getBody();
+        List statements = block.statements();
+        assertTrue("Number of statements not 3", statements.size() == 4);
+        { // add type argument
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(0);
+            ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
 
-      }
-      { // remove type argument
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(1);
-         ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
+            Type newTypeArg = ast.newSimpleType(ast.newSimpleName("A"));
+            ListRewrite listRewrite = rewrite.getListRewrite(creation, ClassInstanceCreation.TYPE_ARGUMENTS_PROPERTY);
+            listRewrite.insertFirst(newTypeArg, null);
 
-         List typeArgs = creation.typeArguments();
-         rewrite.remove((ASTNode)typeArgs.get(0), null);
-      }
-      { // remove type argument
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(2);
-         ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
+        }
+        { // remove type argument
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(1);
+            ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
 
-         List typeArgs = creation.typeArguments();
-         rewrite.remove((ASTNode)typeArgs.get(0), null);
-      }
-      { // add type argument to existing
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(3);
-         ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
+            List typeArgs = creation.typeArguments();
+            rewrite.remove((ASTNode)typeArgs.get(0), null);
+        }
+        { // remove type argument
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(2);
+            ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
 
-         Type newTypeArg = ast.newSimpleType(ast.newSimpleName("String"));
+            List typeArgs = creation.typeArguments();
+            rewrite.remove((ASTNode)typeArgs.get(0), null);
+        }
+        { // add type argument to existing
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(3);
+            ClassInstanceCreation creation = (ClassInstanceCreation)stmt.getExpression();
 
-         ListRewrite listRewrite = rewrite.getListRewrite(creation, ClassInstanceCreation.TYPE_ARGUMENTS_PROPERTY);
-         listRewrite.insertLast(newTypeArg, null);
-      }
+            Type newTypeArg = ast.newSimpleType(ast.newSimpleName("String"));
 
-      String preview = evaluateRewrite(cu, rewrite);
+            ListRewrite listRewrite = rewrite.getListRewrite(creation, ClassInstanceCreation.TYPE_ARGUMENTS_PROPERTY);
+            listRewrite.insertLast(newTypeArg, null);
+        }
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E<A> {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        new <A> Inner();\n");
-      buf.append("        new Inner();\n");
-      buf.append("        new Inner();\n");
-      buf.append("        new <A, A, String>Inner();\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      assertEqualString(preview, buf.toString());
-   }
+        String preview = evaluateRewrite(cu, rewrite);
 
-   @Test
-   public void testMethodInvocation2() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        this.foo(3);\n");
-      buf.append("        this.<String>foo(3);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      ICompilationUnit cu =
-         new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E<A> {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        new <A> Inner();\n");
+        buf.append("        new Inner();\n");
+        buf.append("        new Inner();\n");
+        buf.append("        new <A, A, String>Inner();\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        assertEqualString(preview, buf.toString());
+    }
 
-      CompilationUnit astRoot = createAST3(cu);
-      AST ast = astRoot.getAST();
-      ASTRewrite rewrite = ASTRewrite.create(ast);
+    @Test
+    public void testMethodInvocation2() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        this.foo(3);\n");
+        buf.append("        this.<String>foo(3);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        ICompilationUnit cu =
+                new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
-      assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
-      TypeDeclaration type = findTypeDeclaration(astRoot, "E");
-      MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
-      Block block = methodDecl.getBody();
-      List statements = block.statements();
-      assertTrue("Number of statements not 2", statements.size() == 2);
-      { // add type arguments
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(0);
-         MethodInvocation invocation = (MethodInvocation)stmt.getExpression();
-         SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
-         ListRewrite listRewriter = rewrite.getListRewrite(invocation, MethodInvocation.TYPE_ARGUMENTS_PROPERTY);
-         listRewriter.insertFirst(newType, null);
-      }
-      { // remove type arguments
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(1);
-         MethodInvocation invocation = (MethodInvocation)stmt.getExpression();
-         rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
-      }
-      String preview = evaluateRewrite(cu, rewrite);
+        CompilationUnit astRoot = createAST3(cu);
+        AST ast = astRoot.getAST();
+        ASTRewrite rewrite = ASTRewrite.create(ast);
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        this.<String>foo(3);\n");
-      buf.append("        this.foo(3);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      assertEqualString(preview, buf.toString());
+        assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
+        TypeDeclaration type = findTypeDeclaration(astRoot, "E");
+        MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
+        Block block = methodDecl.getBody();
+        List statements = block.statements();
+        assertTrue("Number of statements not 2", statements.size() == 2);
+        { // add type arguments
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(0);
+            MethodInvocation invocation = (MethodInvocation)stmt.getExpression();
+            SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
+            ListRewrite listRewriter = rewrite.getListRewrite(invocation, MethodInvocation.TYPE_ARGUMENTS_PROPERTY);
+            listRewriter.insertFirst(newType, null);
+        }
+        { // remove type arguments
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(1);
+            MethodInvocation invocation = (MethodInvocation)stmt.getExpression();
+            rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
+        }
+        String preview = evaluateRewrite(cu, rewrite);
 
-   }
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        this.<String>foo(3);\n");
+        buf.append("        this.foo(3);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        assertEqualString(preview, buf.toString());
 
-   @Test
-   public void testSuperConstructorInvocation2() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public E() {\n");
-      buf.append("        x.super();\n");
-      buf.append("    }\n");
-      buf.append("    public E(int i) {\n");
-      buf.append("        x.<String>super(i);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      ICompilationUnit cu =
-         new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+    }
 
-      CompilationUnit astRoot = createAST3(cu);
-      AST ast = astRoot.getAST();
-      ASTRewrite rewrite = ASTRewrite.create(ast);
+    @Test
+    public void testSuperConstructorInvocation2() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public E() {\n");
+        buf.append("        x.super();\n");
+        buf.append("    }\n");
+        buf.append("    public E(int i) {\n");
+        buf.append("        x.<String>super(i);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        ICompilationUnit cu =
+                new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
-      assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
-      TypeDeclaration type = findTypeDeclaration(astRoot, "E");
-      assertTrue("Number of methods not 2", type.bodyDeclarations().size() == 2);
-      { // add type arguments
-         MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(0);
-         SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
-         SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
-         ListRewrite listRewriter =
-            rewrite.getListRewrite(invocation, SuperConstructorInvocation.TYPE_ARGUMENTS_PROPERTY);
-         listRewriter.insertFirst(newType, null);
-      }
-      { // remove type arguments
-         MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(1);
-         SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
+        CompilationUnit astRoot = createAST3(cu);
+        AST ast = astRoot.getAST();
+        ASTRewrite rewrite = ASTRewrite.create(ast);
 
-         rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
+        assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
+        TypeDeclaration type = findTypeDeclaration(astRoot, "E");
+        assertTrue("Number of methods not 2", type.bodyDeclarations().size() == 2);
+        { // add type arguments
+            MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(0);
+            SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
+            SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
+            ListRewrite listRewriter =
+                    rewrite.getListRewrite(invocation, SuperConstructorInvocation.TYPE_ARGUMENTS_PROPERTY);
+            listRewriter.insertFirst(newType, null);
+        }
+        { // remove type arguments
+            MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(1);
+            SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
 
-      }
-      String preview = evaluateRewrite(cu, rewrite);
+            rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public E() {\n");
-      buf.append("        x.<String>super();\n");
-      buf.append("    }\n");
-      buf.append("    public E(int i) {\n");
-      buf.append("        x.super(i);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      assertEqualString(preview, buf.toString());
+        }
+        String preview = evaluateRewrite(cu, rewrite);
 
-   }
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public E() {\n");
+        buf.append("        x.<String>super();\n");
+        buf.append("    }\n");
+        buf.append("    public E(int i) {\n");
+        buf.append("        x.super(i);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        assertEqualString(preview, buf.toString());
 
-   @Test
-   public void testSuperConstructorInvocation4() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public E() {\n");
-      buf.append("        x.super();\n");
-      buf.append("    }\n");
-      buf.append("    public E(int i) {\n");
-      buf.append("        x.<String>super(i);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      ICompilationUnit cu =
-         new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+    }
 
-      CompilationUnit astRoot = createAST3(cu);
-      AST ast = astRoot.getAST();
-      ASTRewrite rewrite = ASTRewrite.create(ast);
+    @Test
+    public void testSuperConstructorInvocation4() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public E() {\n");
+        buf.append("        x.super();\n");
+        buf.append("    }\n");
+        buf.append("    public E(int i) {\n");
+        buf.append("        x.<String>super(i);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        ICompilationUnit cu =
+                new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
-      assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
-      TypeDeclaration type = findTypeDeclaration(astRoot, "E");
-      assertTrue("Number of methods not 2", type.bodyDeclarations().size() == 2);
-      { // add type arguments
-         MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(0);
-         SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
-         rewrite.remove(invocation.getExpression(), null);
-         SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
-         ListRewrite listRewriter =
-            rewrite.getListRewrite(invocation, SuperConstructorInvocation.TYPE_ARGUMENTS_PROPERTY);
-         listRewriter.insertFirst(newType, null);
-      }
-      { // remove type arguments
-         MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(1);
-         SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
+        CompilationUnit astRoot = createAST3(cu);
+        AST ast = astRoot.getAST();
+        ASTRewrite rewrite = ASTRewrite.create(ast);
 
-         rewrite.remove(invocation.getExpression(), null);
-         rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
+        assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
+        TypeDeclaration type = findTypeDeclaration(astRoot, "E");
+        assertTrue("Number of methods not 2", type.bodyDeclarations().size() == 2);
+        { // add type arguments
+            MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(0);
+            SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
+            rewrite.remove(invocation.getExpression(), null);
+            SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
+            ListRewrite listRewriter =
+                    rewrite.getListRewrite(invocation, SuperConstructorInvocation.TYPE_ARGUMENTS_PROPERTY);
+            listRewriter.insertFirst(newType, null);
+        }
+        { // remove type arguments
+            MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(1);
+            SuperConstructorInvocation invocation = (SuperConstructorInvocation)methodDecl.getBody().statements().get(0);
 
-      }
-      String preview = evaluateRewrite(cu, rewrite);
+            rewrite.remove(invocation.getExpression(), null);
+            rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public E() {\n");
-      buf.append("        <String>super();\n");
-      buf.append("    }\n");
-      buf.append("    public E(int i) {\n");
-      buf.append("        super(i);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      assertEqualString(preview, buf.toString());
+        }
+        String preview = evaluateRewrite(cu, rewrite);
 
-   }
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public E() {\n");
+        buf.append("        <String>super();\n");
+        buf.append("    }\n");
+        buf.append("    public E(int i) {\n");
+        buf.append("        super(i);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        assertEqualString(preview, buf.toString());
 
-   @Test
-   public void testSuperMethodInvocation2() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        X.super.foo(3);\n");
-      buf.append("        X.super.<String>foo(3);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      ICompilationUnit cu =
-         new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+    }
 
-      CompilationUnit astRoot = createAST3(cu);
-      AST ast = astRoot.getAST();
-      ASTRewrite rewrite = ASTRewrite.create(ast);
+    @Test
+    public void testSuperMethodInvocation2() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        X.super.foo(3);\n");
+        buf.append("        X.super.<String>foo(3);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        ICompilationUnit cu =
+                new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
-      assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
-      TypeDeclaration type = findTypeDeclaration(astRoot, "E");
-      MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
-      Block block = methodDecl.getBody();
-      List statements = block.statements();
-      assertTrue("Number of statements not 2", statements.size() == 2);
-      { // add type arguments
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(0);
-         SuperMethodInvocation invocation = (SuperMethodInvocation)stmt.getExpression();
-         SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
-         ListRewrite listRewriter = rewrite.getListRewrite(invocation, SuperMethodInvocation.TYPE_ARGUMENTS_PROPERTY);
-         listRewriter.insertFirst(newType, null);
-      }
-      { // remove type arguments
-         ExpressionStatement stmt = (ExpressionStatement)statements.get(1);
-         SuperMethodInvocation invocation = (SuperMethodInvocation)stmt.getExpression();
-         rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
-      }
-      String preview = evaluateRewrite(cu, rewrite);
+        CompilationUnit astRoot = createAST3(cu);
+        AST ast = astRoot.getAST();
+        ASTRewrite rewrite = ASTRewrite.create(ast);
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        X.super.<String>foo(3);\n");
-      buf.append("        X.super.foo(3);\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      assertEqualString(preview, buf.toString());
+        assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
+        TypeDeclaration type = findTypeDeclaration(astRoot, "E");
+        MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
+        Block block = methodDecl.getBody();
+        List statements = block.statements();
+        assertTrue("Number of statements not 2", statements.size() == 2);
+        { // add type arguments
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(0);
+            SuperMethodInvocation invocation = (SuperMethodInvocation)stmt.getExpression();
+            SimpleType newType = ast.newSimpleType(ast.newSimpleName("String"));
+            ListRewrite listRewriter = rewrite.getListRewrite(invocation, SuperMethodInvocation.TYPE_ARGUMENTS_PROPERTY);
+            listRewriter.insertFirst(newType, null);
+        }
+        { // remove type arguments
+            ExpressionStatement stmt = (ExpressionStatement)statements.get(1);
+            SuperMethodInvocation invocation = (SuperMethodInvocation)stmt.getExpression();
+            rewrite.remove((ASTNode)invocation.typeArguments().get(0), null);
+        }
+        String preview = evaluateRewrite(cu, rewrite);
 
-   }
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        X.super.<String>foo(3);\n");
+        buf.append("        X.super.foo(3);\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        assertEqualString(preview, buf.toString());
+
+    }
 
 }

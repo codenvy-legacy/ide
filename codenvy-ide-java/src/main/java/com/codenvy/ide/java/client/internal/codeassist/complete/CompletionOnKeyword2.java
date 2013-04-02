@@ -13,37 +13,31 @@ package com.codenvy.ide.java.client.internal.codeassist.complete;
 import com.codenvy.ide.java.client.internal.compiler.ClassFileConstants;
 import com.codenvy.ide.java.client.internal.compiler.ast.ImportReference;
 
-public class CompletionOnKeyword2 extends ImportReference implements CompletionOnKeyword
-{
-   private char[] token;
+public class CompletionOnKeyword2 extends ImportReference implements CompletionOnKeyword {
+    private char[] token;
 
-   private char[][] possibleKeywords;
+    private char[][] possibleKeywords;
 
-   public CompletionOnKeyword2(char[] token, long pos, char[][] possibleKeywords)
-   {
-      super(new char[][]{token}, new long[]{pos}, false, ClassFileConstants.AccDefault);
-      this.token = token;
-      this.possibleKeywords = possibleKeywords;
-   }
+    public CompletionOnKeyword2(char[] token, long pos, char[][] possibleKeywords) {
+        super(new char[][]{token}, new long[]{pos}, false, ClassFileConstants.AccDefault);
+        this.token = token;
+        this.possibleKeywords = possibleKeywords;
+    }
 
-   public boolean canCompleteEmptyToken()
-   {
-      return false;
-   }
+    public boolean canCompleteEmptyToken() {
+        return false;
+    }
 
-   public char[] getToken()
-   {
-      return this.token;
-   }
+    public char[] getToken() {
+        return this.token;
+    }
 
-   public char[][] getPossibleKeywords()
-   {
-      return this.possibleKeywords;
-   }
+    public char[][] getPossibleKeywords() {
+        return this.possibleKeywords;
+    }
 
-   public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand)
-   {
+    public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand) {
 
-      return printIndent(indent, output).append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
-   }
+        return printIndent(indent, output).append("<CompleteOnKeyword:").append(this.token).append('>'); //$NON-NLS-1$
+    }
 }

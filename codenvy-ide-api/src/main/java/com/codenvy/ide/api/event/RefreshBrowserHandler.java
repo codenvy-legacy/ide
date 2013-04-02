@@ -21,19 +21,18 @@ package com.codenvy.ide.api.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handles requests to refresh Views, such Project Explorer and others that 
+ * Handles requests to refresh Views, such Project Explorer and others that
  * displays Project content.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  */
-public interface RefreshBrowserHandler extends EventHandler
-{
+public interface RefreshBrowserHandler extends EventHandler {
 
-   /**
-    * Project or it's properties changed event
-    * 
-    * @param event
-    */
-   void onRefreshBrowser(RefreshBrowserEvent event);
+    /**
+     * Project or it's properties changed event
+     *
+     * @param event
+     */
+    void onRefreshBrowser(RefreshBrowserEvent event);
 
 }

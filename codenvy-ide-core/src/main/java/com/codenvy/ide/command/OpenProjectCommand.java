@@ -16,100 +16,74 @@
  */
 package com.codenvy.ide.command;
 
-import com.codenvy.ide.api.expressions.Expression;
-
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.resources.ResourceProvider;
-import com.codenvy.ide.openproject.OpenProjectPresenter;
-
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.openproject.OpenProjectPresenter;
 import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 
 
 /**
- * Command that handles the process of project opening. It shows dilog with all the project available and 
- * allows user to open one. 
+ * Command that handles the process of project opening. It shows dilog with all the project available and
+ * allows user to open one.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class OpenProjectCommand implements ExtendedCommand
-{
-   private final ResourceProvider resourceProvider;
+public class OpenProjectCommand implements ExtendedCommand {
+    private final ResourceProvider resourceProvider;
 
-   private final Resources resources;
+    private final Resources resources;
 
-   /**
-    * Instantiates command
-    */
-   @Inject
-   public OpenProjectCommand(ResourceProvider resourceProvider, Resources resources)
-   {
-      this.resourceProvider = resourceProvider;
-      this.resources = resources;
-   }
+    /** Instantiates command */
+    @Inject
+    public OpenProjectCommand(ResourceProvider resourceProvider, Resources resources) {
+        this.resourceProvider = resourceProvider;
+        this.resources = resources;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void execute()
-   {
-      resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
-      {
-         @Override
-         public void onSuccess(JsonArray<String> result)
-         {
-            OpenProjectPresenter presenter = new OpenProjectPresenter(resourceProvider, resources, result);
-            presenter.show();
-         }
+    /** {@inheritDoc} */
+    @Override
+    public void execute() {
+        resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+            @Override
+            public void onSuccess(JsonArray<String> result) {
+                OpenProjectPresenter presenter = new OpenProjectPresenter(resourceProvider, resources, result);
+                presenter.show();
+            }
 
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Log.error(OpenProjectCommand.class, "can't list projects", caught);
-         }
-      });
-   }
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(OpenProjectCommand.class, "can't list projects", caught);
+            }
+        });
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression inContext()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression inContext() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression canExecute()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression canExecute() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "Open project";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "Open project";
+    }
 }

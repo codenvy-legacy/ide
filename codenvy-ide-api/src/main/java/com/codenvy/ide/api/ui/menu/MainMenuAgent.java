@@ -25,29 +25,28 @@ import com.codenvy.ide.api.extension.SDK;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @SDK(title = "ide.api.ui.menu")
-public interface MainMenuAgent
-{
-   /**
-    * Adds new item to the Main Menu, that invokes given command on click.
-    * ExtendedCommand interface allows you to add Icon and define Expression
-    * that controls visible and enabled states of the item. It is safe to
-    * provide Null as an expression. This is thought to be always visible
-    * and enabled.
-    *
-    * @param path
-    * @param command
-    */
-   public void addMenuItem(String path, ExtendedCommand command);
+public interface MainMenuAgent {
+    /**
+     * Adds new item to the Main Menu, that invokes given command on click.
+     * ExtendedCommand interface allows you to add Icon and define Expression
+     * that controls visible and enabled states of the item. It is safe to
+     * provide Null as an expression. This is thought to be always visible
+     * and enabled.
+     *
+     * @param path
+     * @param command
+     */
+    public void addMenuItem(String path, ExtendedCommand command);
 
-   /**
-    * Adds new toggle item to the Main Menu, that invokes given command on click.
-    * ToggleCommand interface allows to add Icon and define Expression
-    * that controls visible, enabled and selected states of the item. It is safe to provide
-    * Null as an expression. This is thought to be always visible and enabled. Selected expression
-    * don't have to be Null.
-    * 
-    * @param path
-    * @param command
-    */
-   public void addMenuItem(String path, ToggleCommand command);
+    /**
+     * Adds new toggle item to the Main Menu, that invokes given command on click.
+     * ToggleCommand interface allows to add Icon and define Expression
+     * that controls visible, enabled and selected states of the item. It is safe to provide
+     * Null as an expression. This is thought to be always visible and enabled. Selected expression
+     * don't have to be Null.
+     *
+     * @param path
+     * @param command
+     */
+    public void addMenuItem(String path, ToggleCommand command);
 }

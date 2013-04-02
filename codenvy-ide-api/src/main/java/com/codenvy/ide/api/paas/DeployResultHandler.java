@@ -23,21 +23,19 @@ import com.codenvy.ide.resources.model.Project;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 26, 2012 5:56:12 PM anya $
- * 
  */
-public interface DeployResultHandler
-{
-   /**
-    * Fired, when deploy finished 
-    * 
-    * @param success
-    */
-   void onDeployFinished(boolean success);
+public interface DeployResultHandler {
+    /**
+     * Fired, when deploy finished
+     *
+     * @param success
+     */
+    void onDeployFinished(boolean success);
 
-   /**
-    * Fired when project created
-    * 
-    * @param project
-    */
-   void onProjectCreated(Project project);
+    /**
+     * Fired when project created
+     *
+     * @param project
+     */
+    void onProjectCreated(Project project);
 }

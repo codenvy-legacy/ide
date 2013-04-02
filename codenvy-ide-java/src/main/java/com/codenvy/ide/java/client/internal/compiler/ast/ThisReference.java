@@ -19,158 +19,136 @@ import com.codenvy.ide.java.client.internal.compiler.lookup.ClassScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.MethodScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeBinding;
 
-public class ThisReference extends Reference
-{
+public class ThisReference extends Reference {
 
-   public static ThisReference implicitThis()
-   {
+    public static ThisReference implicitThis() {
 
-      ThisReference implicitThis = new ThisReference(0, 0);
-      implicitThis.bits |= IsImplicitThis;
-      return implicitThis;
-   }
+        ThisReference implicitThis = new ThisReference(0, 0);
+        implicitThis.bits |= IsImplicitThis;
+        return implicitThis;
+    }
 
-   public ThisReference(int sourceStart, int sourceEnd)
-   {
+    public ThisReference(int sourceStart, int sourceEnd) {
 
-      this.sourceStart = sourceStart;
-      this.sourceEnd = sourceEnd;
-   }
+        this.sourceStart = sourceStart;
+        this.sourceEnd = sourceEnd;
+    }
 
-   /*
-    * @see Reference#analyseAssignment(...)
-    */
-   @Override
-   public FlowInfo analyseAssignment(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo,
-      Assignment assignment, boolean isCompound)
-   {
+    /*
+     * @see Reference#analyseAssignment(...)
+     */
+    @Override
+    public FlowInfo analyseAssignment(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo,
+                                      Assignment assignment, boolean isCompound) {
 
-      return flowInfo; // this cannot be assigned
-   }
+        return flowInfo; // this cannot be assigned
+    }
 
-   public boolean checkAccess(MethodScope methodScope)
-   {
+    public boolean checkAccess(MethodScope methodScope) {
 
-      // this/super cannot be used in constructor call
-      if (methodScope.isConstructorCall)
-      {
-         methodScope.problemReporter().fieldsOrThisBeforeConstructorInvocation(this);
-         return false;
-      }
+        // this/super cannot be used in constructor call
+        if (methodScope.isConstructorCall) {
+            methodScope.problemReporter().fieldsOrThisBeforeConstructorInvocation(this);
+            return false;
+        }
 
-      // static may not refer to this/super
-      if (methodScope.isStatic)
-      {
-         methodScope.problemReporter().errorThisSuperInStatic(this);
-         return false;
-      }
-      return true;
-   }
+        // static may not refer to this/super
+        if (methodScope.isStatic) {
+            methodScope.problemReporter().errorThisSuperInStatic(this);
+            return false;
+        }
+        return true;
+    }
 
-   /*
-    * @see Reference#generateAssignment(...)
-    */
-   @Override
-   public void generateAssignment(BlockScope currentScope, Assignment assignment, boolean valueRequired)
-   {
+    /*
+     * @see Reference#generateAssignment(...)
+     */
+    @Override
+    public void generateAssignment(BlockScope currentScope, Assignment assignment, boolean valueRequired) {
 
-      // this cannot be assigned
-   }
+        // this cannot be assigned
+    }
 
-   @Override
-   public void generateCode(BlockScope currentScope, boolean valueRequired)
-   {
-   }
+    @Override
+    public void generateCode(BlockScope currentScope, boolean valueRequired) {
+    }
 
-   /*
-    * @see Reference#generateCompoundAssignment(...)
-    */
-   @Override
-   public void generateCompoundAssignment(BlockScope currentScope, Expression expression, int operator,
-      int assignmentImplicitConversion, boolean valueRequired)
-   {
+    /*
+     * @see Reference#generateCompoundAssignment(...)
+     */
+    @Override
+    public void generateCompoundAssignment(BlockScope currentScope, Expression expression, int operator,
+                                           int assignmentImplicitConversion, boolean valueRequired) {
 
-      // this cannot be assigned
-   }
+        // this cannot be assigned
+    }
 
-   /*
-    * @see com.codenvy.ide.java.client.internal.compiler.ast.Reference#generatePostIncrement()
-    */
-   @Override
-   public void generatePostIncrement(BlockScope currentScope, CompoundAssignment postIncrement, boolean valueRequired)
-   {
+    /*
+     * @see com.codenvy.ide.java.client.internal.compiler.ast.Reference#generatePostIncrement()
+     */
+    @Override
+    public void generatePostIncrement(BlockScope currentScope, CompoundAssignment postIncrement, boolean valueRequired) {
 
-      // this cannot be assigned
-   }
+        // this cannot be assigned
+    }
 
-   @Override
-   public boolean isImplicitThis()
-   {
+    @Override
+    public boolean isImplicitThis() {
 
-      return (this.bits & IsImplicitThis) != 0;
-   }
+        return (this.bits & IsImplicitThis) != 0;
+    }
 
-   @Override
-   public boolean isThis()
-   {
+    @Override
+    public boolean isThis() {
 
-      return true;
-   }
+        return true;
+    }
 
-   @Override
-   public int nullStatus(FlowInfo flowInfo)
-   {
-      return FlowInfo.NON_NULL;
-   }
+    @Override
+    public int nullStatus(FlowInfo flowInfo) {
+        return FlowInfo.NON_NULL;
+    }
 
-   @Override
-   public StringBuffer printExpression(int indent, StringBuffer output)
-   {
+    @Override
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-      if (isImplicitThis())
-      {
-         return output;
-      }
-      return output.append("this"); //$NON-NLS-1$
-   }
+        if (isImplicitThis()) {
+            return output;
+        }
+        return output.append("this"); //$NON-NLS-1$
+    }
 
-   @Override
-   public TypeBinding resolveType(BlockScope scope)
-   {
+    @Override
+    public TypeBinding resolveType(BlockScope scope) {
 
-      this.constant = Constant.NotAConstant;
-      if (!isImplicitThis() && !checkAccess(scope.methodScope()))
-      {
-         return null;
-      }
-      return this.resolvedType = scope.enclosingReceiverType();
-   }
+        this.constant = Constant.NotAConstant;
+        if (!isImplicitThis() && !checkAccess(scope.methodScope())) {
+            return null;
+        }
+        return this.resolvedType = scope.enclosingReceiverType();
+    }
 
-   @Override
-   public void traverse(ASTVisitor visitor, BlockScope blockScope)
-   {
+    @Override
+    public void traverse(ASTVisitor visitor, BlockScope blockScope) {
 
-      visitor.visit(this, blockScope);
-      visitor.endVisit(this, blockScope);
-   }
+        visitor.visit(this, blockScope);
+        visitor.endVisit(this, blockScope);
+    }
 
-   @Override
-   public void traverse(ASTVisitor visitor, ClassScope blockScope)
-   {
+    @Override
+    public void traverse(ASTVisitor visitor, ClassScope blockScope) {
 
-      visitor.visit(this, blockScope);
-      visitor.endVisit(this, blockScope);
-   }
+        visitor.visit(this, blockScope);
+        visitor.endVisit(this, blockScope);
+    }
 
-   @Override
-   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
-   {
-      if (!isImplicitThis())
-      {
-         // explicit this reference, not allowed in static context
-         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=335780
-         currentScope.resetEnclosingMethodStaticFlag();
-      }
-      return super.analyseCode(currentScope, flowContext, flowInfo);
-   }
+    @Override
+    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo) {
+        if (!isImplicitThis()) {
+            // explicit this reference, not allowed in static context
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=335780
+            currentScope.resetEnclosingMethodStaticFlag();
+        }
+        return super.analyseCode(currentScope, flowContext, flowInfo);
+    }
 }

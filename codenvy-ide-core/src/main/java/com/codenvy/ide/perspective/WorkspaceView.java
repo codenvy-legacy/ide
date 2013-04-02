@@ -19,42 +19,37 @@
 package com.codenvy.ide.perspective;
 
 import com.codenvy.ide.api.mvp.View;
-
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 
 /**
- * Workspace view interface. 
- * 
+ * Workspace view interface.
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
-{
-   /**
-    * Returns central panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getPerspectivePanel();
+public interface WorkspaceView extends View<WorkspaceView.ActionDelegate> {
+    /**
+     * Returns central panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getPerspectivePanel();
 
-   /**
-    * Returns menu panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getMenuPanel();
+    /**
+     * Returns menu panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getMenuPanel();
 
-   /**
-    * Returns toolbar panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getToolbarPanel();
+    /**
+     * Returns toolbar panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getToolbarPanel();
 
-   /**
-    * Needs for delegate some function into Workspace view.
-    */
-   public interface ActionDelegate
-   {
-   }
+    /** Needs for delegate some function into Workspace view. */
+    public interface ActionDelegate {
+    }
 }

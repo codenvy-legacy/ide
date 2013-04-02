@@ -21,37 +21,35 @@ package com.codenvy.ide.websocket;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: Message.java Dec 4, 2012 3:07:48 PM azatsarynnyy $
- *
  */
-public interface Message
-{
-   /**
-    * Get message UUID. If specified for request message then response message gets the same UUID.
-    *
-    * @return message unique identifier
-    */
-   String getUuid();
+public interface Message {
+    /**
+     * Get message UUID. If specified for request message then response message gets the same UUID.
+     *
+     * @return message unique identifier
+     */
+    String getUuid();
 
-   /**
-    * Set message UUID. If specified for request message then response message gets the same UUID.
-    *
-    * @param uuid
-    *    message unique identifier
-    */
-   void setUuid(String uuid);
+    /**
+     * Set message UUID. If specified for request message then response message gets the same UUID.
+     *
+     * @param uuid
+     *         message unique identifier
+     */
+    void setUuid(String uuid);
 
-   /**
-    * Get message body.
-    *
-    * @return message body
-    */
-   String getBody();
+    /**
+     * Get message body.
+     *
+     * @return message body
+     */
+    String getBody();
 
-   /**
-    * Set message body.
-    *
-    * @param body
-    *    message body
-    */
-   void setBody(String body);
+    /**
+     * Set message body.
+     *
+     * @param body
+     *         message body
+     */
+    void setBody(String body);
 }

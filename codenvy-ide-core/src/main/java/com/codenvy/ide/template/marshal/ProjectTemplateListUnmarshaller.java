@@ -33,45 +33,34 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectTemplateListUnmarshaller.java Jul 28, 2011 1:09:44 PM vereshchaka $
- * 
  */
-public class ProjectTemplateListUnmarshaller implements Unmarshallable<List<ProjectTemplate>>
-{
-   private List<ProjectTemplate> projectTemplates;
+public class ProjectTemplateListUnmarshaller implements Unmarshallable<List<ProjectTemplate>> {
+    private List<ProjectTemplate> projectTemplates;
 
-   public ProjectTemplateListUnmarshaller(List<ProjectTemplate> projectTemplates)
-   {
-      this.projectTemplates = projectTemplates;
-   }
+    public ProjectTemplateListUnmarshaller(List<ProjectTemplate> projectTemplates) {
+        this.projectTemplates = projectTemplates;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
-      if (jsonArray == null)
-      {
-         return;
-      }
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+        if (jsonArray == null) {
+            return;
+        }
 
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         String payload = jsonArray.get(i).isObject().toString();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            String payload = jsonArray.get(i).isObject().toString();
 
-         AutoBean<ProjectTemplate> projectTemplateBean =
-            AutoBeanCodex.decode(TemplateAutoBeanFactory.AUTO_BEAN_FACTORY, ProjectTemplate.class, payload);
-         projectTemplates.add(projectTemplateBean.as());
-      }
-   }
+            AutoBean<ProjectTemplate> projectTemplateBean =
+                    AutoBeanCodex.decode(TemplateAutoBeanFactory.AUTO_BEAN_FACTORY, ProjectTemplate.class, payload);
+            projectTemplates.add(projectTemplateBean.as());
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public List<ProjectTemplate> getPayload()
-   {
-      return projectTemplates;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public List<ProjectTemplate> getPayload() {
+        return projectTemplates;
+    }
 }

@@ -23,16 +23,15 @@ import com.codenvy.ide.json.JsonStringMap;
  * Currently for information purposes only
  * TODO: connect with ExtensionInitializer or ExtensionManager
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface ExtensionRegistry
-{
+public interface ExtensionRegistry {
 
-   /**
-    * Returns the map of Extension ID to {@link ExtensionDescription}.
-    * 
-    * @return  
-    */
-   public JsonStringMap<ExtensionDescription> getExtensionDescriptions();
+    /**
+     * Returns the map of Extension ID to {@link ExtensionDescription}.
+     *
+     * @return
+     */
+    public JsonStringMap<ExtensionDescription> getExtensionDescriptions();
 
 }

@@ -31,30 +31,25 @@ import com.google.gwt.resources.client.CssResource.NotStrict;
 
 /**
  * Interface for resources, e.g., css, images, text files, etc.
- * 
- * Tree.Resources, 
- * FileTreeNodeRenderer.Resources, 
- * Editor.Resources, 
+ * <p/>
+ * Tree.Resources,
+ * FileTreeNodeRenderer.Resources,
+ * Editor.Resources,
  * LineNumberRenderer.Resources,
- * EditableContentArea.Resources, 
- * PartStackUIResources, 
+ * EditableContentArea.Resources,
+ * PartStackUIResources,
  * impleList.Resources
- * 
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
-   LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources, MenuResources
-{
+                                   LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
+                                   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources, MenuResources {
 
-   /**
-    * Interface for css resources.
-    */
-   public interface CoreCss extends CssResource
-   {
-      String simpleListContainer();
-   }
+    /** Interface for css resources. */
+    public interface CoreCss extends CssResource {
+        String simpleListContainer();
+    }
 
-   @Source({"Core.css", "com/codenvy/ide/common/constants.css"})
-   @NotStrict
-   CoreCss coreCss();
+    @Source({"Core.css", "com/codenvy/ide/common/constants.css"})
+    @NotStrict
+    CoreCss coreCss();
 }

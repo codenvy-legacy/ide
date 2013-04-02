@@ -12,7 +12,6 @@ package com.codenvy.ide.java.client.quickassist.api;
 
 import com.codenvy.ide.java.client.core.dom.ASTNode;
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
-
 import com.codenvy.ide.text.Document;
 
 
@@ -25,46 +24,44 @@ import com.codenvy.ide.text.Document;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface InvocationContext
-{
+public interface InvocationContext {
 
-   //	/**
-   //	 * @return Returns the current compilation unit.
-   //	 */
-   //	ICompilationUnit getCompilationUnit();
+    //	/**
+    //	 * @return Returns the current compilation unit.
+    //	 */
+    //	ICompilationUnit getCompilationUnit();
 
-   Document getDocument();
+    Document getDocument();
 
-   /**
-    * @return Returns the offset of the current selection
-    */
-   int getSelectionOffset();
+    /** @return Returns the offset of the current selection */
+    int getSelectionOffset();
 
-   /**
-    * @return Returns the length of the current selection
-    */
-   int getSelectionLength();
+    /** @return Returns the length of the current selection */
+    int getSelectionLength();
 
-   /**
-    * Returns an AST of the compilation unit, possibly only a partial AST focused on the selection
-    * offset (see {@link org.eclipse.jdt.core.dom.ASTParser#setFocalPosition(int)}).
-    * The returned AST is shared and therefore protected and cannot be modified.
-    * The client must check the AST API level and do nothing if they are given an AST
-    * they can't handle. (see {@link org.eclipse.jdt.core.dom.AST#apiLevel()}).
-    * @return Returns the root of the AST corresponding to the current compilation unit.
-    */
-   CompilationUnit getASTRoot();
+    /**
+     * Returns an AST of the compilation unit, possibly only a partial AST focused on the selection
+     * offset (see {@link org.eclipse.jdt.core.dom.ASTParser#setFocalPosition(int)}).
+     * The returned AST is shared and therefore protected and cannot be modified.
+     * The client must check the AST API level and do nothing if they are given an AST
+     * they can't handle. (see {@link org.eclipse.jdt.core.dom.AST#apiLevel()}).
+     *
+     * @return Returns the root of the AST corresponding to the current compilation unit.
+     */
+    CompilationUnit getASTRoot();
 
-   /**
-    * Convenience method to evaluate the AST node covering the current selection.
-    * @return Returns the node that covers the location of the problem
-    */
-   ASTNode getCoveringNode();
+    /**
+     * Convenience method to evaluate the AST node covering the current selection.
+     *
+     * @return Returns the node that covers the location of the problem
+     */
+    ASTNode getCoveringNode();
 
-   /**
-    * Convenience method to evaluate the AST node that is covered by the current selection.
-    * @return Returns the node that is covered by the location of the problem
-    */
-   ASTNode getCoveredNode();
+    /**
+     * Convenience method to evaluate the AST node that is covered by the current selection.
+     *
+     * @return Returns the node that is covered by the location of the problem
+     */
+    ASTNode getCoveredNode();
 
 }

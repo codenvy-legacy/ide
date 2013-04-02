@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
-
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;
@@ -43,27 +42,21 @@ import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPageView
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
-/**
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
- */
+/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
 @ExtensionGinModule
-public class CloudFoundryGinModule extends AbstractGinModule
-{
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void configure()
-   {
-      bind(LoginView.class).to(LoginViewImpl.class).in(Singleton.class);
-      bind(ApplicationsView.class).to(ApplicationsViewImpl.class).in(Singleton.class);
-      bind(CreateApplicationView.class).to(CreateApplicationViewImpl.class).in(Singleton.class);
-      bind(CloudFoundryProjectView.class).to(CloudFoundryProjectViewImpl.class).in(Singleton.class);
-      bind(DeleteApplicationView.class).to(DeleteApplicationViewImpl.class).in(Singleton.class);
-      bind(ManageServicesView.class).to(ManageServicesViewImpl.class).in(Singleton.class);
-      bind(CreateServiceView.class).to(CreateServiceViewImpl.class).in(Singleton.class);
-      bind(ApplicationInfoView.class).to(ApplicationInfoViewImpl.class).in(Singleton.class);
-      bind(UnmapUrlView.class).to(UnmapUrlViewImpl.class).in(Singleton.class);
-      bind(CloudFoundryPageView.class).to(CloudFoundryPageViewImpl.class).in(Singleton.class);
-   }
+public class CloudFoundryGinModule extends AbstractGinModule {
+    /** {@inheritDoc} */
+    @Override
+    protected void configure() {
+        bind(LoginView.class).to(LoginViewImpl.class).in(Singleton.class);
+        bind(ApplicationsView.class).to(ApplicationsViewImpl.class).in(Singleton.class);
+        bind(CreateApplicationView.class).to(CreateApplicationViewImpl.class).in(Singleton.class);
+        bind(CloudFoundryProjectView.class).to(CloudFoundryProjectViewImpl.class).in(Singleton.class);
+        bind(DeleteApplicationView.class).to(DeleteApplicationViewImpl.class).in(Singleton.class);
+        bind(ManageServicesView.class).to(ManageServicesViewImpl.class).in(Singleton.class);
+        bind(CreateServiceView.class).to(CreateServiceViewImpl.class).in(Singleton.class);
+        bind(ApplicationInfoView.class).to(ApplicationInfoViewImpl.class).in(Singleton.class);
+        bind(UnmapUrlView.class).to(UnmapUrlViewImpl.class).in(Singleton.class);
+        bind(CloudFoundryPageView.class).to(CloudFoundryPageViewImpl.class).in(Singleton.class);
+    }
 }

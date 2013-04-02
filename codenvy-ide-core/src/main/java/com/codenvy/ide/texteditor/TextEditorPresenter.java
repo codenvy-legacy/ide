@@ -18,12 +18,11 @@
  */
 package com.codenvy.ide.texteditor;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.AbstractTextEditorPresenter;
 import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
-
-import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.editor.SelectionProvider;
 import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.api.outline.OutlinePresenter;
 import com.codenvy.ide.outline.OutlineImpl;
@@ -43,146 +42,110 @@ import com.google.inject.Inject;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class TextEditorPresenter extends AbstractTextEditorPresenter
-{
+public class TextEditorPresenter extends AbstractTextEditorPresenter {
 
-   protected TextEditorViewImpl editor;
+    protected TextEditorViewImpl editor;
 
-   private final TextListener textListener = new TextListener()
-   {
+    private final TextListener textListener = new TextListener() {
 
-      @Override
-      public void onTextChange(TextChange textChange)
-      {
-         if (!isDirty())
-         {
-            updateDirtyState(true);
-         }
-      }
-   };
+        @Override
+        public void onTextChange(TextChange textChange) {
+            if (!isDirty()) {
+                updateDirtyState(true);
+            }
+        }
+    };
 
-   private Resources resources;
+    private Resources resources;
 
-   private UserActivityManager userActivityManager;
+    private UserActivityManager userActivityManager;
 
-   @Inject
-   public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager)
-   {
-      this.resources = resources;
-      this.userActivityManager = userActivityManager;
-   }
+    @Inject
+    public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager) {
+        this.resources = resources;
+        this.userActivityManager = userActivityManager;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void initializeEditor()
-   {
-      editor.configure(configuration);
-      documentProvider.getDocument(input, new DocumentCallback()
-      {
+    /** {@inheritDoc} */
+    @Override
+    protected void initializeEditor() {
+        editor.configure(configuration);
+        documentProvider.getDocument(input, new DocumentCallback() {
 
-         @Override
-         public void onDocument(Document document)
-         {
-            TextEditorPresenter.this.document = document;
-            AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
-            editor.setDocument(document, annotationModel);
-            firePropertyChange(PROP_INPUT);
-         }
-      });
-   }
+            @Override
+            public void onDocument(Document document) {
+                TextEditorPresenter.this.document = document;
+                AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
+                editor.setDocument(document, annotationModel);
+                firePropertyChange(PROP_INPUT);
+            }
+        });
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean)
-    */
-   @Override
-   public void close(boolean save)
-   {
-      // TODO Auto-generated method stub
+    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#close(boolean) */
+    @Override
+    public void close(boolean save) {
+        // TODO Auto-generated method stub
 
-   }
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#isEditable()
-    */
-   @Override
-   public boolean isEditable()
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
+    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#isEditable() */
+    @Override
+    public boolean isEditable() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#doRevertToSaved()
-    */
-   @Override
-   public void doRevertToSaved()
-   {
-      // TODO Auto-generated method stub
+    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#doRevertToSaved() */
+    @Override
+    public void doRevertToSaved() {
+        // TODO Auto-generated method stub
 
-   }
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getSelectionProvider()
-    */
-   @Override
-   public SelectionProvider getSelectionProvider()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getSelectionProvider() */
+    @Override
+    public SelectionProvider getSelectionProvider() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public OutlinePresenter getOutline()
-   {
-      OutlineModel outlineModel = configuration.getOutline(editor);
-      if (outlineModel != null)
-      {
-         OutlineImpl outline = new OutlineImpl(resources, outlineModel, editor, this);
-         return outline;
-      }
-      else
-      {
-         return null;
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public OutlinePresenter getOutline() {
+        OutlineModel outlineModel = configuration.getOutline(editor);
+        if (outlineModel != null) {
+            OutlineImpl outline = new OutlineImpl(resources, outlineModel, editor, this);
+            return outline;
+        } else {
+            return null;
+        }
+    }
 
-   protected Widget getWidget()
-   {
-      HTML h = new HTML();
-      h.getElement().appendChild(editor.getElement());
-      return h;
-   }
+    protected Widget getWidget() {
+        HTML h = new HTML();
+        h.getElement().appendChild(editor.getElement());
+        return h;
+    }
 
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(getWidget());
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(getWidget());
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip()
-    */
-   @Override
-   public String getTitleToolTip()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleToolTip() */
+    @Override
+    public String getTitleToolTip() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-   @Override
-   public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider)
-   {
-      super.initialize(configuration, documentProvider);
-      editor = new TextEditorViewImpl(resources, userActivityManager);
-      editor.getTextListenerRegistrar().add(textListener);
-   }
+    @Override
+    public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider) {
+        super.initialize(configuration, documentProvider);
+        editor = new TextEditorViewImpl(resources, userActivityManager);
+        editor.getTextListenerRegistrar().add(textListener);
+    }
 }

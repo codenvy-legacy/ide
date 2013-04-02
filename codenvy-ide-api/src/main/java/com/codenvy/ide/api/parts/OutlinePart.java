@@ -21,9 +21,8 @@ import com.codenvy.ide.api.ui.perspective.PartPresenter;
 /**
  * Part that contains Outline view
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface OutlinePart extends PartPresenter
-{
+public interface OutlinePart extends PartPresenter {
 
 }

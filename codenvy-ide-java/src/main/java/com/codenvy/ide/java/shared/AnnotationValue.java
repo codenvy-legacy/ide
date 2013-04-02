@@ -21,55 +21,56 @@ package com.codenvy.ide.java.shared;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface AnnotationValue
-{
+public interface AnnotationValue {
 
-   /**
-    * Must return two element array.
-    * First element name of primitive type:
-    * <ul>
-    * <li> char
-    * <li> byte
-    * <li> boolean
-    * <li> int
-    * <li>float
-    * ...
-    * </ul>
-    * Second element is value of primitive type
-    * @return
-    */
-   String[] getPrimitiveType();
+    /**
+     * Must return two element array.
+     * First element name of primitive type:
+     * <ul>
+     * <li> char
+     * <li> byte
+     * <li> boolean
+     * <li> int
+     * <li>float
+     * ...
+     * </ul>
+     * Second element is value of primitive type
+     *
+     * @return
+     */
+    String[] getPrimitiveType();
 
-   /**
-    * Must return array with of values, where first value is Array type
-    * @return
-    */
-   String[] getArrayType();
+    /**
+     * Must return array with of values, where first value is Array type
+     *
+     * @return
+     */
+    String[] getArrayType();
 
-   String getClassSignature();
+    String getClassSignature();
 
-   /**
-    * Must return two element array, where first element is FQN of enum,
-    * second element is constant name;
-    * @return
-    */
-   String[] getEnumConstant();
+    /**
+     * Must return two element array, where first element is FQN of enum,
+     * second element is constant name;
+     *
+     * @return
+     */
+    String[] getEnumConstant();
 
-   Annotation getAnnotation();
+    Annotation getAnnotation();
 
-   Annotation[] getAnnotations();
-   
-   void setPrimitiveType(String[] value);
+    Annotation[] getAnnotations();
 
-   void setArrayType(String[] value);
+    void setPrimitiveType(String[] value);
 
-   void setClassSignature(String value);
+    void setArrayType(String[] value);
 
-   void setEnumConstant(String[] value);
+    void setClassSignature(String value);
 
-   void setAnnotation(Annotation annotation);
-   
-   void setAnnotations(Annotation[] annotation);
+    void setEnumConstant(String[] value);
+
+    void setAnnotation(Annotation annotation);
+
+    void setAnnotations(Annotation[] annotation);
 }

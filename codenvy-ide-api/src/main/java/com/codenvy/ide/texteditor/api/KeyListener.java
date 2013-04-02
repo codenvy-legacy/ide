@@ -20,11 +20,8 @@ package com.codenvy.ide.texteditor.api;
 
 import com.codenvy.ide.util.input.SignalEvent;
 
-/**
- * A listener that is called when the user presses a key.
- */
-public interface KeyListener
-{
+/** A listener that is called when the user presses a key. */
+public interface KeyListener {
    /*
     * The reason for preventDefault() not preventing default behavior is that
     * Firefox does not have support the defaultPrevented attribute, so we have
@@ -33,14 +30,16 @@ public interface KeyListener
     * this would not catch the case that the implementor interacts directly to
     * the native event.
     */
-   /**
-    * @param event the event for the key press. Note: Calling preventDefault()
-    *        may not prevent the default behavior in some cases. The return
-    *        value of this method is a better channel for indicating the
-    *        default behavior should be prevented.
-    * @return true if the event was handled (the default behavior will not run
-    *         in this case), false to proceed with the default behavior. Even
-    *         if true is returned, other listeners will still get the callback
-    */
-   boolean onKeyPress(SignalEvent event);
+
+    /**
+     * @param event
+     *         the event for the key press. Note: Calling preventDefault()
+     *         may not prevent the default behavior in some cases. The return
+     *         value of this method is a better channel for indicating the
+     *         default behavior should be prevented.
+     * @return true if the event was handled (the default behavior will not run
+     *         in this case), false to proceed with the default behavior. Even
+     *         if true is returned, other listeners will still get the callback
+     */
+    boolean onKeyPress(SignalEvent event);
 }

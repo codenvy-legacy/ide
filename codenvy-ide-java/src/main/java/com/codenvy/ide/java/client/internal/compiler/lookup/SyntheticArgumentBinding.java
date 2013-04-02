@@ -24,32 +24,29 @@ package com.codenvy.ide.java.client.internal.compiler.lookup;
 import com.codenvy.ide.java.client.core.compiler.CharOperation;
 import com.codenvy.ide.java.client.internal.compiler.ClassFileConstants;
 
-public class SyntheticArgumentBinding extends LocalVariableBinding
-{
+public class SyntheticArgumentBinding extends LocalVariableBinding {
 
-   {
-      this.tagBits |= TagBits.IsArgument;
-      this.useFlag = USED;
-   }
+    {
+        this.tagBits |= TagBits.IsArgument;
+        this.useFlag = USED;
+    }
 
-   // if the argument is mapping to an outer local variable, this denotes the outer actual variable
-   public LocalVariableBinding actualOuterLocalVariable;
+    // if the argument is mapping to an outer local variable, this denotes the outer actual variable
+    public LocalVariableBinding actualOuterLocalVariable;
 
-   // if the argument has a matching synthetic field
-   public FieldBinding matchingField;
+    // if the argument has a matching synthetic field
+    public FieldBinding matchingField;
 
-   public SyntheticArgumentBinding(LocalVariableBinding actualOuterLocalVariable)
-   {
+    public SyntheticArgumentBinding(LocalVariableBinding actualOuterLocalVariable) {
 
-      super(CharOperation.concat(TypeConstants.SYNTHETIC_OUTER_LOCAL_PREFIX, actualOuterLocalVariable.name),
-         actualOuterLocalVariable.type, ClassFileConstants.AccFinal, true);
-      this.actualOuterLocalVariable = actualOuterLocalVariable;
-   }
+        super(CharOperation.concat(TypeConstants.SYNTHETIC_OUTER_LOCAL_PREFIX, actualOuterLocalVariable.name),
+              actualOuterLocalVariable.type, ClassFileConstants.AccFinal, true);
+        this.actualOuterLocalVariable = actualOuterLocalVariable;
+    }
 
-   public SyntheticArgumentBinding(ReferenceBinding enclosingType)
-   {
+    public SyntheticArgumentBinding(ReferenceBinding enclosingType) {
 
-      super(CharOperation.concat(TypeConstants.SYNTHETIC_ENCLOSING_INSTANCE_PREFIX,
-         String.valueOf(enclosingType.depth()).toCharArray()), enclosingType, ClassFileConstants.AccFinal, true);
-   }
+        super(CharOperation.concat(TypeConstants.SYNTHETIC_ENCLOSING_INSTANCE_PREFIX,
+                                   String.valueOf(enclosingType.depth()).toCharArray()), enclosingType, ClassFileConstants.AccFinal, true);
+    }
 }

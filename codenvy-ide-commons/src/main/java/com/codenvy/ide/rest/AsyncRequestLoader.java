@@ -21,22 +21,17 @@ package com.codenvy.ide.rest;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ * <p/>
  * Something to show while request is calling
  */
 
-public interface AsyncRequestLoader
-{
+public interface AsyncRequestLoader {
 
-   /**
-    * show something
-    */
-   void show();
+    /** show something */
+    void show();
 
-   
-   /**
-    * hide this
-    */
-   void hide();
+
+    /** hide this */
+    void hide();
 
 }

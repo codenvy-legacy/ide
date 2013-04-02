@@ -25,24 +25,23 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Provides a way to register a new PaaS Extension.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @SDK(title = "ide.api.ui.paas")
-public interface PaaSAgent
-{
-   /**
-    * Registers new PaaS.
-    * 
-    * @param id
-    * @param title
-    * @param image
-    * @param providesTemplate
-    * @param requiredTypes
-    * @param wizardPage
-    * @param preferencePage
-    */
-   public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
-      PreferencesPagePresenter preferencePage);
+public interface PaaSAgent {
+    /**
+     * Registers new PaaS.
+     *
+     * @param id
+     * @param title
+     * @param image
+     * @param providesTemplate
+     * @param requiredTypes
+     * @param wizardPage
+     * @param preferencePage
+     */
+    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
+                             JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
+                             PreferencesPagePresenter preferencePage);
 }

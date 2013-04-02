@@ -16,18 +16,12 @@
  */
 package com.codenvy.ide.java.client.perspective;
 
+import com.codenvy.ide.api.parts.ConsolePart;
+import com.codenvy.ide.api.parts.OutlinePart;
+import com.codenvy.ide.api.parts.ProjectExplorerPart;
 import com.codenvy.ide.api.ui.perspective.EditorPartStack;
 import com.codenvy.ide.api.ui.perspective.PartStack;
-
-import com.codenvy.ide.api.parts.OutlinePart;
-
-import com.codenvy.ide.api.parts.ConsolePart;
-
-import com.codenvy.ide.api.parts.ProjectExplorerPart;
-
 import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
-
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -36,29 +30,27 @@ import com.google.inject.Singleton;
 /**
  * Standard Java Perspective
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class JavaPerspectivePresenter extends PerspectivePresenter
-{
-   /**
-    * Setups and initializes Java Perspective
-    * 
-    * @param view
-    * @param editorPartStackPresenter
-    * @param partStackProvider
-    * @param outlinePart
-    * @param consolePart
-    * @param projectExplorerPart
-    */
-   @Inject
-   public JavaPerspectivePresenter(JavaPerspectiveView view, EditorPartStack editorPartStackPresenter,
-      Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
-      ProjectExplorerPart projectExplorerPart)
-   {
-      super(view, editorPartStackPresenter, partStackProvider);
-      openPart(projectExplorerPart, PartStackType.NAVIGATION);
-      openPart(outlinePart, PartStackType.TOOLING);
-      openPart(consolePart, PartStackType.INFORMATION);
-   }
+public class JavaPerspectivePresenter extends PerspectivePresenter {
+    /**
+     * Setups and initializes Java Perspective
+     *
+     * @param view
+     * @param editorPartStackPresenter
+     * @param partStackProvider
+     * @param outlinePart
+     * @param consolePart
+     * @param projectExplorerPart
+     */
+    @Inject
+    public JavaPerspectivePresenter(JavaPerspectiveView view, EditorPartStack editorPartStackPresenter,
+                                    Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
+                                    ProjectExplorerPart projectExplorerPart) {
+        super(view, editorPartStackPresenter, partStackProvider);
+        openPart(projectExplorerPart, PartStackType.NAVIGATION);
+        openPart(outlinePart, PartStackType.TOOLING);
+        openPart(consolePart, PartStackType.INFORMATION);
+    }
 }

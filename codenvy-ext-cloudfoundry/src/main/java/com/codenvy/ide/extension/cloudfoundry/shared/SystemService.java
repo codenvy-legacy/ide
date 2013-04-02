@@ -18,24 +18,21 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
-/**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- */
-public interface SystemService
-{
-   String getVendor();
+/** @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a> */
+public interface SystemService {
+    String getVendor();
 
-   void setVendor(String vendor);
+    void setVendor(String vendor);
 
-   String getType();
+    String getType();
 
-   void setType(String type);
+    void setType(String type);
 
-   String getVersion();
+    String getVersion();
 
-   void setVersion(String version);
+    void setVersion(String version);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 }

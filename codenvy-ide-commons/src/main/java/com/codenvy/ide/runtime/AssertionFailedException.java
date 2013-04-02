@@ -26,25 +26,24 @@ package com.codenvy.ide.runtime;
  * <p>
  * This class is not intended to be instantiated or sub-classed by clients.
  * </p>
- * 
- * @see Assert
- * @since org.eclipse.equinox.common 3.2
+ *
  * @noextend This class is not intended to be subclassed by clients.
  * @noinstantiate This class is not intended to be instantiated by clients.
+ * @see Assert
+ * @since org.eclipse.equinox.common 3.2
  */
-public class AssertionFailedException extends RuntimeException
-{
+public class AssertionFailedException extends RuntimeException {
 
-   /** All serializable objects should have a stable serialVersionUID */
-   private static final long serialVersionUID = 1L;
+    /** All serializable objects should have a stable serialVersionUID */
+    private static final long serialVersionUID = 1L;
 
-   /**
-    * Constructs a new exception with the given message.
-    * 
-    * @param detail the message
-    */
-   public AssertionFailedException(String detail)
-   {
-      super(detail);
-   }
+    /**
+     * Constructs a new exception with the given message.
+     *
+     * @param detail
+     *         the message
+     */
+    public AssertionFailedException(String detail) {
+        super(detail);
+    }
 }

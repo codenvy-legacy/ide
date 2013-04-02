@@ -17,39 +17,30 @@
 package com.codenvy.ide.resources.model;
 
 import com.codenvy.ide.api.resources.ModelProvider;
-
 import com.google.inject.Inject;
-
 import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
- * Model provider for generic Project 
- * 
+ * Model provider for generic Project
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class GenericModelProvider implements ModelProvider
-{
+public class GenericModelProvider implements ModelProvider {
 
-   private final EventBus eventBus;
+    private final EventBus eventBus;
 
-   /**
-    * Creates GenericModel provider
-    */
-   @Inject
-   public GenericModelProvider(EventBus eventBus)
-   {
-      this.eventBus = eventBus;
+    /** Creates GenericModel provider */
+    @Inject
+    public GenericModelProvider(EventBus eventBus) {
+        this.eventBus = eventBus;
 
-   }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Project createProjectInstance()
-   {
-      return new Project(eventBus);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Project createProjectInstance() {
+        return new Project(eventBus);
+    }
 
 }

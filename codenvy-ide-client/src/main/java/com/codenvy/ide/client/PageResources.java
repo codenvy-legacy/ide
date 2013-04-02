@@ -23,20 +23,19 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * The class provides access to resources. These resources is used for tabs.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface PageResources extends ClientBundle
-{
-   @Source("com/codenvy/ide/client/images/welcome.png")
-   ImageResource welcomePageIcon();
+public interface PageResources extends ClientBundle {
+    @Source("com/codenvy/ide/client/images/welcome.png")
+    ImageResource welcomePageIcon();
 
-   @Source("com/codenvy/ide/client/images/extention.png")
-   ImageResource extentionPageIcon();
+    @Source("com/codenvy/ide/client/images/extention.png")
+    ImageResource extentionPageIcon();
 
-   @Source("com/codenvy/ide/client/images/project.png")
-   ImageResource projectExplorerIcon();
-   
-   @Source("com/codenvy/ide/client/images/outline.png")
-   ImageResource outlineIcon();
+    @Source("com/codenvy/ide/client/images/project.png")
+    ImageResource projectExplorerIcon();
+
+    @Source("com/codenvy/ide/client/images/outline.png")
+    ImageResource outlineIcon();
 }

@@ -22,21 +22,17 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of new resource view.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewResourcePageView extends View<NewResourcePageView.ActionDelegate>
-{
-   /**
-    * Needs for delegate some function into NewResource view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Returns wizard for selected resource type.
-       * 
-       * @param newFileWizard
-       */
-      void selectedFileType(NewResourceWizardData newFileWizard);
-   }
+public interface NewResourcePageView extends View<NewResourcePageView.ActionDelegate> {
+    /** Needs for delegate some function into NewResource view. */
+    public interface ActionDelegate {
+        /**
+         * Returns wizard for selected resource type.
+         *
+         * @param newFileWizard
+         */
+        void selectedFileType(NewResourceWizardData newFileWizard);
+    }
 }

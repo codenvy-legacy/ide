@@ -18,71 +18,59 @@
  */
 package com.codenvy.ide.resources.marshal;
 
+import com.codenvy.ide.commons.exception.UnmarshallerException;
+import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo.ACLCapability;
 import com.codenvy.ide.resources.model.VirtualFileSystemInfo.QueryCapability;
-
-import com.codenvy.ide.resources.model.Folder;
-
-import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: VFSInfoUnmarshaller Feb 2, 2011 2:16:15 PM evgen $
- * 
  */
-public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo>
-{
+public class VFSInfoUnmarshaller implements Unmarshallable<VirtualFileSystemInfo> {
 
-   private final VirtualFileSystemInfo virtualFileSystemInfo;
+    private final VirtualFileSystemInfo virtualFileSystemInfo;
 
-   /**
-    * @param virtualFileSystemInfo
-    */
-   public VFSInfoUnmarshaller(VirtualFileSystemInfo virtualFileSystemInfo)
-   {
-      this.virtualFileSystemInfo = virtualFileSystemInfo;
-   }
+    /** @param virtualFileSystemInfo */
+    public VFSInfoUnmarshaller(VirtualFileSystemInfo virtualFileSystemInfo) {
+        this.virtualFileSystemInfo = virtualFileSystemInfo;
+    }
 
-   /**
-    * @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-      virtualFileSystemInfo.setId(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject.get("id")));
-      virtualFileSystemInfo.setVersioningSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
-         .get("versioningSupported"))); //
-      virtualFileSystemInfo.setLockSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
-         .get("lockSupported"))); //
-      virtualFileSystemInfo.setAnonymousPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
-         .get("anonymousPrincipal"))); //
-      virtualFileSystemInfo.setAnyPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
-         .get("anyPrincipal"))); //
-      virtualFileSystemInfo.setPermissions(JSONDeserializer.STRING_DESERIALIZER.toList(jsonObject.get("permissions"))); //
-      virtualFileSystemInfo.setAclCapability(ACLCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
-         jsonObject.get("aclCapability")).toLowerCase())); //
-      virtualFileSystemInfo.setQueryCapability(QueryCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
-         jsonObject.get("queryCapability")).toLowerCase()));
-      virtualFileSystemInfo.setUrlTemplates(JSONDeserializer.LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")));
+    /** @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
+        virtualFileSystemInfo.setId(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject.get("id")));
+        virtualFileSystemInfo.setVersioningSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
+                                                                                                            .get("versioningSupported")))
+        ; //
+        virtualFileSystemInfo.setLockSupported(JSONDeserializer.BOOLEAN_DESERIALIZER.toObject(jsonObject
+                                                                                                      .get("lockSupported"))); //
+        virtualFileSystemInfo.setAnonymousPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
+                                                                                                          .get("anonymousPrincipal"))); //
+        virtualFileSystemInfo.setAnyPrincipal(JSONDeserializer.STRING_DESERIALIZER.toObject(jsonObject
+                                                                                                    .get("anyPrincipal"))); //
+        virtualFileSystemInfo.setPermissions(JSONDeserializer.STRING_DESERIALIZER.toList(jsonObject.get("permissions"))); //
+        virtualFileSystemInfo.setAclCapability(ACLCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
+                jsonObject.get("aclCapability")).toLowerCase())); //
+        virtualFileSystemInfo.setQueryCapability(QueryCapability.fromValue(JSONDeserializer.STRING_DESERIALIZER.toObject(
+                jsonObject.get("queryCapability")).toLowerCase()));
+        virtualFileSystemInfo.setUrlTemplates(JSONDeserializer.LINK_DESERIALIZER.toMap(jsonObject.get("urlTemplates")));
 
-      JSONObject root = jsonObject.get("root").isObject();
+        JSONObject root = jsonObject.get("root").isObject();
 
-      virtualFileSystemInfo.setRoot(new Folder(root));
-   }
+        virtualFileSystemInfo.setRoot(new Folder(root));
+    }
 
-   @Override
-   public VirtualFileSystemInfo getPayload()
-   {
-      return this.virtualFileSystemInfo;
-   }
+    @Override
+    public VirtualFileSystemInfo getPayload() {
+        return this.virtualFileSystemInfo;
+    }
 
 }

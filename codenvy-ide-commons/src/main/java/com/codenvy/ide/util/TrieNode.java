@@ -20,74 +20,62 @@ import com.codenvy.ide.json.JsonCollections;
 /**
  * A node in a trie that can be used for efficient autocompletion lookup.
  *
- * @param <T> value object type
+ * @param <T>
+ *         value object type
  */
-public final class TrieNode<T>
-{
-   private final String prefix;
+public final class TrieNode<T> {
+    private final String prefix;
 
-   private final JsonArray<TrieNode<T>> children;
+    private final JsonArray<TrieNode<T>> children;
 
-   private T value;
+    private T value;
 
-   private TrieNode(String prefix)
-   {
-      this.prefix = prefix;
-      this.value = null;
-      this.children = JsonCollections.createArray();
-   }
+    private TrieNode(String prefix) {
+        this.prefix = prefix;
+        this.value = null;
+        this.children = JsonCollections.createArray();
+    }
 
-   public static <T> TrieNode<T> makeNode(String prefix)
-   {
-      return new TrieNode<T>(prefix);
-   }
+    public static <T> TrieNode<T> makeNode(String prefix) {
+        return new TrieNode<T>(prefix);
+    }
 
-   public JsonArray<TrieNode<T>> getChildren()
-   {
-      return children;
-   }
+    public JsonArray<TrieNode<T>> getChildren() {
+        return children;
+    }
 
-   TrieNode<T> findInsertionBranch(String prefix)
-   {
-      for (int i = 0, size = children.size(); i < size; i++)
-      {
-         TrieNode<T> child = children.get(i);
-         if (prefix.startsWith(child.getPrefix()))
-         {
-            return child;
-         }
-      }
-      return null;
-   }
+    TrieNode<T> findInsertionBranch(String prefix) {
+        for (int i = 0, size = children.size(); i < size; i++) {
+            TrieNode<T> child = children.get(i);
+            if (prefix.startsWith(child.getPrefix())) {
+                return child;
+            }
+        }
+        return null;
+    }
 
-   public void addChild(TrieNode<T> child)
-   {
-      children.add(child);
-   }
+    public void addChild(TrieNode<T> child) {
+        children.add(child);
+    }
 
-   public boolean getIsLeaf()
-   {
-      return this.value != null;
-   }
+    public boolean getIsLeaf() {
+        return this.value != null;
+    }
 
-   public String getPrefix()
-   {
-      return this.prefix;
-   }
+    public String getPrefix() {
+        return this.prefix;
+    }
 
-   public void setValue(T value)
-   {
-      this.value = value;
-   }
+    public void setValue(T value) {
+        this.value = value;
+    }
 
-   public T getValue()
-   {
-      return this.value;
-   }
+    public T getValue() {
+        return this.value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return this.prefix;
-   }
+    @Override
+    public String toString() {
+        return this.prefix;
+    }
 }

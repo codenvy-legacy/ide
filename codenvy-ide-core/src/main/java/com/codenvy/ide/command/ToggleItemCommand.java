@@ -18,107 +18,83 @@
  */
 package com.codenvy.ide.command;
 
-import com.codenvy.ide.api.event.ChangeToggleItemStateEvent;
-
-import com.codenvy.ide.api.expressions.Expression;
-
-import com.codenvy.ide.api.ui.menu.ToggleCommand;
-
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.event.ChangeToggleItemStateEvent;
+import com.codenvy.ide.api.expressions.Expression;
+import com.codenvy.ide.api.ui.menu.ToggleCommand;
 import com.codenvy.ide.toolbar.ToggleItemExpression;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
  * Command to change toggle item.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class ToggleItemCommand implements ToggleCommand
-{
-   private final Expression inContext;
+public class ToggleItemCommand implements ToggleCommand {
+    private final Expression inContext;
 
-   private final Expression canExecute;
+    private final Expression canExecute;
 
-   private final ToggleItemExpression stateExpression;
+    private final ToggleItemExpression stateExpression;
 
-   private final EventBus eventBus;
+    private final EventBus eventBus;
 
-   private final Resources resources;
+    private final Resources resources;
 
-   /**
-    * Create command.
-    * 
-    * @param resources
-    * @param eventBus
-    * @param inContext
-    * @param canExecute
-    * @param stateExpression
-    */
-   public ToggleItemCommand(Resources resources, EventBus eventBus, Expression inContext, Expression canExecute,
-      ToggleItemExpression stateExpression)
-   {
-      this.eventBus = eventBus;
-      this.inContext = inContext;
-      this.canExecute = canExecute;
-      this.stateExpression = stateExpression;
-      this.resources = resources;
-   }
+    /**
+     * Create command.
+     *
+     * @param resources
+     * @param eventBus
+     * @param inContext
+     * @param canExecute
+     * @param stateExpression
+     */
+    public ToggleItemCommand(Resources resources, EventBus eventBus, Expression inContext, Expression canExecute,
+                             ToggleItemExpression stateExpression) {
+        this.eventBus = eventBus;
+        this.inContext = inContext;
+        this.canExecute = canExecute;
+        this.stateExpression = stateExpression;
+        this.resources = resources;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void execute()
-   {
-      stateExpression.onStateChanged();
-      eventBus.fireEvent(new ChangeToggleItemStateEvent(stateExpression.getId()));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void execute() {
+        stateExpression.onStateChanged();
+        eventBus.fireEvent(new ChangeToggleItemStateEvent(stateExpression.getId()));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      return resources.folderOpen();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        return resources.folderOpen();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression inContext()
-   {
-      return inContext;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression inContext() {
+        return inContext;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression canExecute()
-   {
-      return canExecute;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression canExecute() {
+        return canExecute;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ToggleItemExpression getState()
-   {
-      return stateExpression;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ToggleItemExpression getState() {
+        return stateExpression;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "ToolTip";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "ToolTip";
+    }
 }

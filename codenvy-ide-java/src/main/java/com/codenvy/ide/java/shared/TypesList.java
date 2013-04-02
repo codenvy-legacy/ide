@@ -22,13 +22,13 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface TypesList
-{
-   void setTypes(List<ShortTypeInfo> types);
-   
-   List<ShortTypeInfo> getTypes();
+ */
+public interface TypesList {
+    void setTypes(List<ShortTypeInfo> types);
+
+    List<ShortTypeInfo> getTypes();
 
 }

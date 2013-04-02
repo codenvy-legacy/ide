@@ -21,13 +21,12 @@ import com.codenvy.ide.resources.model.Project;
 /**
  * Handles the event when Current Project changed
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface ProjectConstraintExpression extends Expression
-{
-   /**
-    * @param project
-    * @return new value of the expression
-    */
-   public boolean onProjectChanged(Project project);
+public interface ProjectConstraintExpression extends Expression {
+    /**
+     * @param project
+     * @return new value of the expression
+     */
+    public boolean onProjectChanged(Project project);
 }

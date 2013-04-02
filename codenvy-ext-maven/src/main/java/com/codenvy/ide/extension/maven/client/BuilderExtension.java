@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
-
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
 import com.codenvy.ide.loader.EmptyLoader;
 import com.google.gwt.core.client.GWT;
@@ -28,29 +27,25 @@ import com.google.inject.Singleton;
 
 /**
  * Maven builder extension entry point.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
  */
 @Singleton
 @Extension(title = "Maven Support.", version = "3.0.0")
-public class BuilderExtension
-{
-   public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
+public class BuilderExtension {
+    public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
 
-   /** Channel for the messages containing status of the Maven build job. */
-   public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
+    /** Channel for the messages containing status of the Maven build job. */
+    public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
 
-   /**
-    * Localization constants.
-    */
-   public static final BuilderLocalizationConstant LOCALIZATION_CONSTANT = GWT
-      .create(BuilderLocalizationConstant.class);
+    /** Localization constants. */
+    public static final BuilderLocalizationConstant LOCALIZATION_CONSTANT = GWT
+            .create(BuilderLocalizationConstant.class);
 
-   @Inject
-   public BuilderExtension(BuildProjectPresenter buildProjectPresenter)
-   {
-      String restContext = "/rest/private";
-      new BuilderClientServiceImpl(restContext, new EmptyLoader());
-   }
+    @Inject
+    public BuilderExtension(BuildProjectPresenter buildProjectPresenter) {
+        String restContext = "/rest/private";
+        new BuilderClientServiceImpl(restContext, new EmptyLoader());
+    }
 }

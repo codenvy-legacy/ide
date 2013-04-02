@@ -19,16 +19,14 @@ import com.codenvy.ide.java.client.internal.compiler.CompilationResult;
  *
  * should only be thrown from within problem handlers.
  */
-public class AbortCompilationUnit extends AbortCompilation
-{
+public class AbortCompilationUnit extends AbortCompilation {
 
-   private static final long serialVersionUID = -4253893529982226734L; // backward compatible
+    private static final long serialVersionUID = -4253893529982226734L; // backward compatible
 
-   public String encoding;
+    public String encoding;
 
-   public AbortCompilationUnit(CompilationResult compilationResult, CategorizedProblem problem)
-   {
-      super(compilationResult, problem);
-   }
+    public AbortCompilationUnit(CompilationResult compilationResult, CategorizedProblem problem) {
+        super(compilationResult, problem);
+    }
 
 }

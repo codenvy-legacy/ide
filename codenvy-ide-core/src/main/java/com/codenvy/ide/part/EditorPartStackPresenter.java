@@ -17,65 +17,49 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-
 import com.codenvy.ide.api.ui.perspective.EditorPartStack;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-
-
 import com.codenvy.ide.util.loging.Log;
-
-
-import com.google.inject.Singleton;
-
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * EditorPartStackPresenter is a special PartStackPresenter that is shared among all
- * Perspectives and used to display Editors. 
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * Perspectives and used to display Editors.
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack
-{
+public class EditorPartStackPresenter extends PartStackPresenter implements EditorPartStack {
 
-   /**
-    * @param view
-    * @param partStackResources
-    * @param eventBus
-    */
-   @Inject
-   public EditorPartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus,
-      PartStackEventHandler partStackEventHandler)
-   {
-      super(view, partStackResources, eventBus, partStackEventHandler);
-   }
+    /**
+     * @param view
+     * @param partStackResources
+     * @param eventBus
+     */
+    @Inject
+    public EditorPartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus,
+                                    PartStackEventHandler partStackEventHandler) {
+        super(view, partStackResources, eventBus, partStackEventHandler);
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void addPart(PartPresenter part)
-   {
-      if (!(part instanceof EditorPartPresenter))
-      {
-         Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
-      }
-      super.addPart(part);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void addPart(PartPresenter part) {
+        if (!(part instanceof EditorPartPresenter)) {
+            Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
+        }
+        super.addPart(part);
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void setActivePart(PartPresenter part)
-   {
-      if (!(part instanceof EditorPartPresenter))
-      {
-         Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
-      }
-      super.setActivePart(part);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setActivePart(PartPresenter part) {
+        if (!(part instanceof EditorPartPresenter)) {
+            Log.warn(getClass(), "EditorPartStack is not intended to be used to open non-Editor Parts.");
+        }
+        super.setActivePart(part);
+    }
 
 }

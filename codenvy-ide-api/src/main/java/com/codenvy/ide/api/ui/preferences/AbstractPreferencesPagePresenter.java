@@ -23,53 +23,42 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * Abstract base implementation for all preference page implementations.
  * It's simpler to get started using Preferences.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractPreferencesPagePresenter implements PreferencesPagePresenter
-{
-   protected DirtyStateListener delegate;
+public abstract class AbstractPreferencesPagePresenter implements PreferencesPagePresenter {
+    protected DirtyStateListener delegate;
 
-   private String title;
+    private String title;
 
-   private ImageResource icon;
+    private ImageResource icon;
 
-   /**
-    * Create preference page.
-    * 
-    * @param title
-    * @param icon
-    */
-   public AbstractPreferencesPagePresenter(String title, ImageResource icon)
-   {
-      this.title = title;
-      this.icon = icon;
-   }
+    /**
+     * Create preference page.
+     *
+     * @param title
+     * @param icon
+     */
+    public AbstractPreferencesPagePresenter(String title, ImageResource icon) {
+        this.title = title;
+        this.icon = icon;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setUpdateDelegate(DirtyStateListener delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setUpdateDelegate(DirtyStateListener delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getTitle()
-   {
-      return title;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return title;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      return icon;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        return icon;
+    }
 }

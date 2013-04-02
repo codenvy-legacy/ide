@@ -18,11 +18,10 @@
  */
 package com.codenvy.ide.extension.css.wizard;
 
-import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
-import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.wizard.newfile.AbstractNewFilePagePresenter;
+import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
 import com.codenvy.ide.extension.css.CssExtensionResource;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.rest.MimeType;
@@ -34,59 +33,53 @@ import com.google.inject.Inject;
 
 /**
  * Provides creating new CSS file.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewCSSFilePagePresenter extends AbstractNewFilePagePresenter
-{
-   /**
-    * Create presenter.
-    * 
-    * @param view generic NewFileView
-    * @param resourceProvider
-    * @param selectionAgent
-    */
-   @Inject
-   public NewCSSFilePagePresenter(CssExtensionResource resources, NewGenericFilePageView view, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
-   {
-      this(resources.file(), view, resourceProvider, selectionAgent);
-   }
+public class NewCSSFilePagePresenter extends AbstractNewFilePagePresenter {
+    /**
+     * Create presenter.
+     *
+     * @param view
+     *         generic NewFileView
+     * @param resourceProvider
+     * @param selectionAgent
+     */
+    @Inject
+    public NewCSSFilePagePresenter(CssExtensionResource resources, NewGenericFilePageView view, ResourceProvider resourceProvider,
+                                   SelectionAgent selectionAgent) {
+        this(resources.file(), view, resourceProvider, selectionAgent);
+    }
 
-   /**
-    * Create presenter.
-    * 
-    * For tests.
-    * 
-    * @param image
-    * @param view
-    * @param resourceProvider
-    */
-   protected NewCSSFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
-   {
-      super("Create a new CSS file", image, view, "css", resourceProvider, selectionAgent);
-   }
+    /**
+     * Create presenter.
+     * <p/>
+     * For tests.
+     *
+     * @param image
+     * @param view
+     * @param resourceProvider
+     */
+    protected NewCSSFilePagePresenter(ImageResource image, NewGenericFilePageView view, ResourceProvider resourceProvider,
+                                      SelectionAgent selectionAgent) {
+        super("Create a new CSS file", image, view, "css", resourceProvider, selectionAgent);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void doFinish()
-   {
-      String fileName = view.getFileName() + (hasExtension() ? "" : '.' + getFileExtension());
+    /** {@inheritDoc} */
+    @Override
+    public void doFinish() {
+        String fileName = view.getFileName() + (hasExtension() ? "" : '.' + getFileExtension());
 
-      project.createFile(project, fileName, "@CHARSET \"UTF-8\";", MimeType.TEXT_CSS, new AsyncCallback<File>()
-      {
-         @Override
-         public void onSuccess(File result)
-         {
-         }
+        project.createFile(project, fileName, "@CHARSET \"UTF-8\";", MimeType.TEXT_CSS, new AsyncCallback<File>() {
+            @Override
+            public void onSuccess(File result) {
+            }
 
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            // TODO : Handle error to be able to display message to the User
-            Log.error(NewCSSFilePagePresenter.class, caught);
-         }
-      });
-   }
+            @Override
+            public void onFailure(Throwable caught) {
+                // TODO : Handle error to be able to display message to the User
+                Log.error(NewCSSFilePagePresenter.class, caught);
+            }
+        });
+    }
 }

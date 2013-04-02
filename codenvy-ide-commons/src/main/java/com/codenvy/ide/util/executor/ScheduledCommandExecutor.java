@@ -16,49 +16,47 @@ package com.codenvy.ide.util.executor;
 
 import com.google.gwt.core.client.Scheduler;
 
-/**
- * Executor of a cancellable scheduled command.
- */
+/** Executor of a cancellable scheduled command. */
 public abstract class ScheduledCommandExecutor {
 
-  private boolean scheduled;
-  private boolean cancelled;
+    private boolean scheduled;
+    private boolean cancelled;
 
-  private final Scheduler.ScheduledCommand scheduledCommand = new Scheduler.ScheduledCommand() {
+    private final Scheduler.ScheduledCommand scheduledCommand = new Scheduler.ScheduledCommand() {
 
-    @Override
-    public void execute() {
-      scheduled = false;
+        @Override
+        public void execute() {
+            scheduled = false;
 
-      if (cancelled) {
-        return;
-      }
+            if (cancelled) {
+                return;
+            }
 
-      ScheduledCommandExecutor.this.execute();
+            ScheduledCommandExecutor.this.execute();
+        }
+    };
+
+    protected abstract void execute();
+
+    public void scheduleFinally() {
+        cancelled = false;
+
+        if (!scheduled) {
+            scheduled = true;
+            Scheduler.get().scheduleFinally(scheduledCommand);
+        }
     }
-  };
 
-  protected abstract void execute();
+    public void scheduleDeferred() {
+        cancelled = false;
 
-  public void scheduleFinally() {
-    cancelled = false;
-
-    if (!scheduled) {
-      scheduled = true;
-      Scheduler.get().scheduleFinally(scheduledCommand);
+        if (!scheduled) {
+            scheduled = true;
+            Scheduler.get().scheduleDeferred(scheduledCommand);
+        }
     }
-  }
 
-  public void scheduleDeferred() {
-    cancelled = false;
-
-    if (!scheduled) {
-      scheduled = true;
-      Scheduler.get().scheduleDeferred(scheduledCommand);
+    public void cancel() {
+        cancelled = true;
     }
-  }
-
-  public void cancel() {
-    cancelled = true;
-  }
 }

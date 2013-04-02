@@ -20,27 +20,22 @@ package com.codenvy.ide.java.client.editor;
 
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment;
-
 import com.codenvy.ide.resources.model.File;
-
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface AstProvider
-{
-   public interface AstListener
-   {
-      void onCompilationUnitChanged(CompilationUnit cUnit);
-   }
+public interface AstProvider {
+    public interface AstListener {
+        void onCompilationUnitChanged(CompilationUnit cUnit);
+    }
 
-   Remover addAstListener(AstListener listener);
-   
-   INameEnvironment getNameEnvironment();
-   
-   File getFile();
+    Remover addAstListener(AstListener listener);
+
+    INameEnvironment getNameEnvironment();
+
+    File getFile();
 }

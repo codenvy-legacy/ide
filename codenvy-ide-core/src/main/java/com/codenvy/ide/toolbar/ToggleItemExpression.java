@@ -25,29 +25,24 @@ import com.codenvy.ide.api.expressions.ToggleStateExpression;
 
 /**
  * The implementation of {@link ToggleStateExpression}.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class ToggleItemExpression extends AbstractExpression implements ToggleStateExpression
-{
-   /**
-    * Create expression.
-    * 
-    * @param expressionManager
-    * @param value
-    */
-   public ToggleItemExpression(ExpressionManager expressionManager, boolean value)
-   {
-      super(expressionManager, value);
-   }
+public class ToggleItemExpression extends AbstractExpression implements ToggleStateExpression {
+    /**
+     * Create expression.
+     *
+     * @param expressionManager
+     * @param value
+     */
+    public ToggleItemExpression(ExpressionManager expressionManager, boolean value) {
+        super(expressionManager, value);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean onStateChanged()
-   {
-      value = !value;
-      return value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean onStateChanged() {
+        value = !value;
+        return value;
+    }
 }

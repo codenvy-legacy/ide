@@ -20,10 +20,7 @@ package com.codenvy.ide.websocket.events;
 
 import com.codenvy.ide.websocket.Message;
 
-/**
- * Handler messages sent to you on the message bus by subscription.
- */
-public interface MessageHandler
-{
-   void onMessage(Message message);
+/** Handler messages sent to you on the message bus by subscription. */
+public interface MessageHandler {
+    void onMessage(Message message);
 }

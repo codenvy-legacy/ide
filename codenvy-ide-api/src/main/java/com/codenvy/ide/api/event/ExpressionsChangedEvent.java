@@ -17,46 +17,39 @@
 package com.codenvy.ide.api.event;
 
 import com.codenvy.ide.json.JsonIntegerMap;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 
 /**
  * Event that notifies of changed Core Expressions
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ExpressionsChangedEvent extends GwtEvent<ExpressionsChangedHandler>
-{
-   public static Type<ExpressionsChangedHandler> TYPE = new Type<ExpressionsChangedHandler>();
+public class ExpressionsChangedEvent extends GwtEvent<ExpressionsChangedHandler> {
+    public static Type<ExpressionsChangedHandler> TYPE = new Type<ExpressionsChangedHandler>();
 
-   private final JsonIntegerMap<Boolean> expressions;
+    private final JsonIntegerMap<Boolean> expressions;
 
-   /**
-    * @param expressions the map of ID's and current values
-    */
-   public ExpressionsChangedEvent(JsonIntegerMap<Boolean> expressions)
-   {
-      this.expressions = expressions;
-   }
+    /**
+     * @param expressions
+     *         the map of ID's and current values
+     */
+    public ExpressionsChangedEvent(JsonIntegerMap<Boolean> expressions) {
+        this.expressions = expressions;
+    }
 
-   @Override
-   public Type<ExpressionsChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<ExpressionsChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @return the map, having identifier of the expressions and their new values
-    */
-   public JsonIntegerMap<Boolean> getChangedExpressions()
-   {
-      return expressions;
-   }
+    /** @return the map, having identifier of the expressions and their new values */
+    public JsonIntegerMap<Boolean> getChangedExpressions() {
+        return expressions;
+    }
 
-   @Override
-   protected void dispatch(ExpressionsChangedHandler handler)
-   {
-      handler.onExpressionsChanged(this);
-   }
+    @Override
+    protected void dispatch(ExpressionsChangedHandler handler) {
+        handler.onExpressionsChanged(this);
+    }
 }

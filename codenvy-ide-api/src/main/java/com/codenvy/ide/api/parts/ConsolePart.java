@@ -19,7 +19,6 @@
 package com.codenvy.ide.api.parts;
 
 import com.codenvy.ide.api.extension.SDK;
-
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 
@@ -29,12 +28,11 @@ import com.codenvy.ide.api.ui.perspective.PartPresenter;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @SDK(title = "ide.api.ui.console")
-public interface ConsolePart extends PartPresenter
-{
-   /**
-    * Print message on console.
-    * 
-    * @param message
-    */
-   public void print(String message);
+public interface ConsolePart extends PartPresenter {
+    /**
+     * Print message on console.
+     *
+     * @param message
+     */
+    public void print(String message);
 }

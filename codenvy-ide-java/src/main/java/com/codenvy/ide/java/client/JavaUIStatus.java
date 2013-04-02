@@ -11,45 +11,34 @@
 package com.codenvy.ide.java.client;
 
 import com.codenvy.ide.java.client.core.JavaCore;
-
 import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.runtime.Status;
 
 
+/** Convenience class for error exceptions thrown inside JavaUI plugin. */
+public class JavaUIStatus extends Status {
 
-/**
- * Convenience class for error exceptions thrown inside JavaUI plugin.
- */
-public class JavaUIStatus extends Status
-{
+    private JavaUIStatus(int severity, int code, String message, Throwable throwable) {
+        super(severity, JavaCore.PLUGIN_ID, code, message, throwable);
+    }
 
-   private JavaUIStatus(int severity, int code, String message, Throwable throwable)
-   {
-      super(severity, JavaCore.PLUGIN_ID, code, message, throwable);
-   }
+    public static IStatus createError(int code, Throwable throwable) {
+        String message = throwable.getMessage();
+        if (message == null) {
+            message = throwable.getClass().getName();
+        }
+        return new JavaUIStatus(IStatus.ERROR, code, message, throwable);
+    }
 
-   public static IStatus createError(int code, Throwable throwable)
-   {
-      String message = throwable.getMessage();
-      if (message == null)
-      {
-         message = throwable.getClass().getName();
-      }
-      return new JavaUIStatus(IStatus.ERROR, code, message, throwable);
-   }
+    public static IStatus createError(int code, String message, Throwable throwable) {
+        return new JavaUIStatus(IStatus.ERROR, code, message, throwable);
+    }
 
-   public static IStatus createError(int code, String message, Throwable throwable)
-   {
-      return new JavaUIStatus(IStatus.ERROR, code, message, throwable);
-   }
+    public static IStatus createWarning(int code, String message, Throwable throwable) {
+        return new JavaUIStatus(IStatus.WARNING, code, message, throwable);
+    }
 
-   public static IStatus createWarning(int code, String message, Throwable throwable)
-   {
-      return new JavaUIStatus(IStatus.WARNING, code, message, throwable);
-   }
-
-   public static IStatus createInfo(int code, String message, Throwable throwable)
-   {
-      return new JavaUIStatus(IStatus.INFO, code, message, throwable);
-   }
+    public static IStatus createInfo(int code, String message, Throwable throwable) {
+        return new JavaUIStatus(IStatus.INFO, code, message, throwable);
+    }
 }

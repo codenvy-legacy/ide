@@ -22,17 +22,16 @@ package com.codenvy.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Runtime
-{
-   String getName();
+public interface Runtime {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getVersion();
+    String getVersion();
 
-   void setVersion(String version);
+    void setVersion(String version);
 
-   String getDescription();
+    String getDescription();
 
-   void setDescription(String description);
+    void setDescription(String description);
 }
