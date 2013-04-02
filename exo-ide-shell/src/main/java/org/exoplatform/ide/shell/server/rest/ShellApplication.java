@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.shell.server.rest;
 
+import javax.ws.rs.core.Application;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -30,13 +30,12 @@ import javax.ws.rs.core.Application;
  */
 public class ShellApplication extends Application
 {
-   private Set<Class<?>> classes = new HashSet<Class<?>>(3);
+   private Set<Class<?>> classes = new HashSet<Class<?>>(2);
 
    
 
    public ShellApplication()
    {
-      classes.add(CRaSHService.class);
       classes.add(CLIResourcesService.class);
       classes.add(ShellConfigurationService.class);
    }

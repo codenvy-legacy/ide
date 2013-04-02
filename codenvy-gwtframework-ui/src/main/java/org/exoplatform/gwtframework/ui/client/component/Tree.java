@@ -198,7 +198,6 @@ public abstract class Tree<T> extends Composite implements TreeGridItem<T>, Doub
    {
       HandlerRegistration openHandler = tree.addOpenHandler(new OpenHandler<TreeItem>()
       {
-
          @Override
          public void onOpen(OpenEvent<TreeItem> event)
          {

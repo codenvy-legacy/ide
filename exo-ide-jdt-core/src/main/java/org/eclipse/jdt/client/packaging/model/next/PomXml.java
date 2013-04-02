@@ -55,27 +55,21 @@ public class PomXml
 
    private List<String> sourceDirectories = new ArrayList<String>();
 
-   private IDEProject project;
-
    private FileModel pomFile;
 
-   public PomXml(IDEProject project) throws Exception
+   public PomXml(FileModel pomFile)
    {
-      for (Item item : project.getChildren().getItems())
-      {
-         if ("pom.xml".equals(item.getName()))
-         {
-            pomFile = (FileModel)item;
-            return;
-         }
-      }
-      
-      throw new Exception("Project " + project.getPath() + " does not contains pom.xml");
+      this.pomFile = pomFile;
    }
 
    public FileModel getPomFile()
    {
       return pomFile;
+   }
+   
+   public void setPomFile(FileModel pomFile)
+   {
+      this.pomFile = pomFile;
    }
 
    public Map<String, String> getProperties()

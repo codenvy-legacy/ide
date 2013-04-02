@@ -40,25 +40,25 @@ import java.util.List;
  */
 public class JavaProject extends IDEProject
 {
-   
+
    private class UpdateManager
    {
-      
+
       private ArrayList<Command> commands = new ArrayList<Command>();
-      
+
       private AsyncCallback<Boolean> callback;
-      
+
       public void addCommand(Command command)
       {
          commands.add(command);
       }
-      
+
       public void update(AsyncCallback<Boolean> callback)
       {
          this.callback = callback;
          updateNext();
       }
-      
+
       public void updateNext()
       {
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
@@ -71,13 +71,11 @@ public class JavaProject extends IDEProject
                   callback.onSuccess(true);
                   return;
                }
-               
+
                commands.remove(0).execute();
             }
          });
       }
-      
-      
 
       public void updateFailed(final Throwable caught)
       {
@@ -91,13 +89,17 @@ public class JavaProject extends IDEProject
             }
          });
       }
-      
+
    }
-   
+
    private PomXml pom;
-   
+
    private List<ProjectModel> modules = new ArrayList<ProjectModel>();
-   
+
+   private List<SourceDirectory> sourceDirectories = new ArrayList<SourceDirectory>();
+
+   private List<ClasspathFolder> classpathFolders = new ArrayList<ClasspathFolder>();
+
    public JavaProject(ProjectModel project)
    {
       super(project);
@@ -108,10 +110,6 @@ public class JavaProject extends IDEProject
       return modules;
    }
 
-   private List<SourceDirectory> sourceDirectories = new ArrayList<SourceDirectory>();
-
-   private List<ClasspathFolder> classpathFolders = new ArrayList<ClasspathFolder>();
-   
    public List<SourceDirectory> getSourceDirectories()
    {
       return sourceDirectories;
@@ -121,9 +119,9 @@ public class JavaProject extends IDEProject
    {
       return classpathFolders;
    }
-   
+
    private FolderChangedHandler originalFolderChangedHandler;
-   
+
    @Override
    public void setFolderChangedHandler(FolderChangedHandler folderChangedHandler)
    {
@@ -145,9 +143,9 @@ public class JavaProject extends IDEProject
             {
                System.out.println("Update " + JavaProject.this.getPath() + " failed");
                caught.printStackTrace();
-               
+
                if (originalFolderChangedHandler != null)
-               {                  
+               {
                   originalFolderChangedHandler.onFolderChanged(folder);
                }
             }
@@ -157,16 +155,16 @@ public class JavaProject extends IDEProject
             {
                if (originalFolderChangedHandler != null)
                {
-                  originalFolderChangedHandler.onFolderChanged(folder);                  
+                  originalFolderChangedHandler.onFolderChanged(folder);
                }
             }
-         });         
+         });
       }
    };
 
    @Override
    public void refresh(FolderModel folder, final AsyncCallback<Folder> callback)
-   { 
+   {
       super.refresh(folder, new AsyncCallback<Folder>()
       {
          @Override
@@ -178,11 +176,9 @@ public class JavaProject extends IDEProject
          @Override
          public void onSuccess(final Folder resultFolder)
          {
-            //new ProjectDump().dumpProjectTree(JavaProject.this);
-            
             UpdateManager updateManager = new UpdateManager();
             update(updateManager);
-            
+
             updateManager.update(new AsyncCallback<Boolean>()
             {
                @Override
@@ -200,26 +196,41 @@ public class JavaProject extends IDEProject
          }
       });
    }
-   
+
    protected void update(final UpdateManager updateManager)
    {
       updateManager.addCommand(new Command()
       {
          @Override
          public void execute()
-         {            
+         {
+            // Search pom.xml
+            FileModel pomXmlFile = null;
+            for (Item item : JavaProject.this.getChildren().getItems())
+            {
+               if ("pom.xml".equals(item.getName()) && item instanceof FileModel)
+               {
+                  pomXmlFile = (FileModel)item;
+               }
+            }
+
+            if (pomXmlFile == null)
+            {
+               pom = null;
+               modules.clear();
+               sourceDirectories.clear();
+               classpathFolders.clear();
+               updateManager.updateNext();
+               return;
+            }
+
             if (pom == null)
             {
-               try
-               {                  
-                  pom = new PomXml(JavaProject.this);
-               }
-               catch (Exception e)
-               {
-                  e.printStackTrace();
-                  updateManager.updateNext();
-                  return;
-               }
+               pom = new PomXml(pomXmlFile);
+            }
+            else if (!pom.getPomFile().getId().equals(pomXmlFile.getId()))
+            {
+               pom.setPomFile(pomXmlFile);
             }
 
             try
@@ -243,11 +254,11 @@ public class JavaProject extends IDEProject
             catch (Exception e)
             {
                updateManager.updateFailed(e);
-            }            
+            }
          }
       });
    }
-   
+
    private void updateProjectStructure(final UpdateManager updateManager)
    {
       updateManager.addCommand(new Command()
@@ -263,26 +274,26 @@ public class JavaProject extends IDEProject
          }
       });
    }
-   
+
    private void updateModules(final UpdateManager updateManager)
    {
       getModules().clear();
-      
+
       for (Item item : getChildren().getItems())
       {
          if (item instanceof JavaProject)
          {
             JavaProject javaProject = (JavaProject)item;
             getModules().add(javaProject);
-            javaProject.update(updateManager);            
+            javaProject.update(updateManager);
          }
-      }                  
+      }
    }
 
    private void updateSourceDirectories()
    {
       sourceDirectories.clear();
-      
+
       for (String dir : pom.getSourceDirectories())
       {
          try
@@ -301,11 +312,11 @@ public class JavaProject extends IDEProject
          }
       }
    }
-   
+
    private void updatePackages(SourceDirectory sourceDirectory) throws Exception
    {
       sourceDirectory.getPackages().clear();
-      
+
       // Add default package
       Package defaultPackage = new Package(sourceDirectory, "");
       sourceDirectory.getPackages().add(defaultPackage);
@@ -317,7 +328,7 @@ public class JavaProject extends IDEProject
          Package pack = new Package(folder, packageName);
          sourceDirectory.getPackages().add(pack);
       }
-      
+
       for (Package pack : sourceDirectory.getPackages())
       {
          for (Item item : pack.getChildren().getItems())
@@ -326,27 +337,27 @@ public class JavaProject extends IDEProject
             {
                pack.getFiles().add((FileModel)item);
             }
-         }         
+         }
       }
-      
+
    }
-   
+
    private String getPackageName(String folderPath, String sourceDirectory)
    {
       while (sourceDirectory.startsWith("/"))
       {
          sourceDirectory = sourceDirectory.substring(1);
       }
-      
+
       while (sourceDirectory.endsWith("/"))
       {
          sourceDirectory = sourceDirectory.substring(0, sourceDirectory.length() - 1);
       }
-      
-      String packageName = folderPath.substring((getPath() + "/" + sourceDirectory + "/") .length());
+
+      String packageName = folderPath.substring((getPath() + "/" + sourceDirectory + "/").length());
       return packageName.replaceAll("/", ".");
    }
-   
+
    private List<FolderModel> scanFolders(FolderModel folder) throws Exception
    {
       List<Item> items = new ArrayList<Item>();
@@ -367,10 +378,10 @@ public class JavaProject extends IDEProject
    private void updateProjectReferences()
    {
       classpathFolders.clear();
-      
+
       ClasspathFolder classpathFolder = new ClasspathFolder("Maven Dependencies");
       classpathFolders.add(classpathFolder);
-      
+
       List<String> dependencies = pom.getMavenDependencies();
       for (String dependency : dependencies)
       {
@@ -378,12 +389,12 @@ public class JavaProject extends IDEProject
          classpathFolder.getClasspathList().add(classpath);
       }
    }
-   
+
    @Override
    public void resourceChanged(Item resource)
    {
       super.resourceChanged(resource);
-      
+
       if (resource instanceof FileModel)
       {
          FileModel file = (FileModel)resource;

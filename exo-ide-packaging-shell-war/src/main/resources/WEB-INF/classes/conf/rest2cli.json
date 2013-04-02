@@ -1,18 +1,5 @@
 [
 {
-    "command": ["jcr man", "jcr cd", "jcr commit", "jcr cp", "jcr ls", "jcr mixin", "jcr mv", "jcr node", "jcr pwd", "jcr rm", "jcr rollback", "jcr select", "jcr setperm", "jcr version", "jcr xpath", "jcr ws login", "jcr ws logout"],
-    "path": "/ide/crash/command",
-    "method": "POST",
-    "description": "To view command help try : [command] -h",
-    "params": [
-      {
-        "mandatory": true,
-        "name": "cmd",
-        "type": "BODY"
-      }
-    ]
-},
-{
     "command": ["git init"],
     "path": "/ide/git/init",
     "method": "POST",

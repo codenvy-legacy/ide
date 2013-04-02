@@ -23,17 +23,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.Timer;
 
-import org.eclipse.jdt.client.packaging.model.Package;
-import org.eclipse.jdt.client.packaging.model.Project;
-import org.eclipse.jdt.client.packaging.model.ResourceDirectory;
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -43,7 +33,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
@@ -78,15 +67,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
-import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Lock;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,30 +84,30 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    ProjectOpenedHandler, ProjectClosedHandler, SelectItemHandler,
    EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler, ItemsSelectedHandler, TreeRefreshedHandler,
-   ItemLockedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler
+   AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler
 {
 
    private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
 
-   private static final String RECEIVE_CHILDREN_ERROR_MSG = "Service is not deployed.<br>Parent folder not found.";
-
-   private static final String MESSAGE_LOAD_PROJECT = "Loading project structure...";
-
-   private static final String MESSAGE_UPDATE_PROJECT = "Updating project structure...";
+//   private static final String RECEIVE_CHILDREN_ERROR_MSG = "Service is not deployed.<br>Parent folder not found.";
+//
+//   private static final String MESSAGE_LOAD_PROJECT = "Loading project structure...";
+//
+//   private static final String MESSAGE_UPDATE_PROJECT = "Updating project structure...";
 
    private PackageExplorerDisplay display;
 
-   private ProjectModel openedProject;
 
+   private IDEProject project;
+   
+
+//   private Item selectedItem;
+   
    //private Project projectItem;
 
-   private Item selectedItem;
-
-   private Item itemToSelect;
+//   private Item itemToSelect;
 
    //private ProjectTreeParser treeParser;
-
-   private static PackageExplorerPresenter instance;
 
    private boolean linkWithEditor = false;
 
@@ -133,15 +117,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    
    private Map<String, Editor> openedEditors = new HashMap<String, Editor>();
 
-   public static PackageExplorerPresenter getInstance()
-   {
-      return instance;
-   }
-
    public PackageExplorerPresenter()
    {
-      instance = this;
-
       IDE.getInstance().addControl(new ShowPackageExplorerControl(), Docking.TOOLBAR);
 
       IDE.addHandler(ShowPackageExplorerEvent.TYPE, this);
@@ -161,12 +138,12 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(TreeRefreshedEvent.TYPE, this);
-      IDE.addHandler(ItemLockedEvent.TYPE, this);
+      //IDE.addHandler(ItemLockedEvent.TYPE, this);
       IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
       
-      for (String type : ProjectTypes.getList())
+      for (String type : JavaProjects.getList())
       {
          ProjectBuilder.addBuilder(type, new Builder()
          {
@@ -185,12 +162,12 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       if (display == null)
       {
-         if (openedProject == null)
+         if (project == null)
          {
             return;
          }
 
-         if (!ProjectTypes.contains(openedProject))
+         if (!JavaProjects.contains(project))
          {
             return;
          }
@@ -207,53 +184,53 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
    private void bindDisplay()
    {
-      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
-      {
-         @Override
-         public void onOpen(final OpenEvent<Item> event)
-         {
-            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-            {
-               @Override
-               public void execute()
-               {
-                  FolderModel folder = (FolderModel)event.getTarget();
-                  List<Item> children = display.getTreeChildren(folder);
-                  IDE.fireEvent(new FolderOpenedEvent(folder, children));
-               }
-            });            
-         }
-      });
+//      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
+//      {
+//         @Override
+//         public void onOpen(final OpenEvent<Item> event)
+//         {
+//            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//            {
+//               @Override
+//               public void execute()
+//               {
+//                  FolderModel folder = (FolderModel)event.getTarget();
+//                  List<Item> children = display.getTreeChildren(folder);
+//                  IDE.fireEvent(new FolderOpenedEvent(folder, children));
+//               }
+//            });            
+//         }
+//      });
       
-      display.getBrowserTree().addDoubleClickHandler(new DoubleClickHandler()
-      {
-         @Override
-         public void onDoubleClick(DoubleClickEvent event)
-         {
-            Object selectedObject = display.getSelectedObject();
-            if (selectedObject instanceof FileModel)
-            {
-               FileModel file = (FileModel)selectedObject;
-               IDE.fireEvent(new OpenFileEvent(file));
-            }
-         }
-      });
+//      display.getBrowserTree().addDoubleClickHandler(new DoubleClickHandler()
+//      {
+//         @Override
+//         public void onDoubleClick(DoubleClickEvent event)
+//         {
+//            Object selectedObject = display.getSelectedObject();
+//            if (selectedObject instanceof FileModel)
+//            {
+//               FileModel file = (FileModel)selectedObject;
+//               IDE.fireEvent(new OpenFileEvent(file));
+//            }
+//         }
+//      });
 
-      display.getBrowserTree().addSelectionHandler(new SelectionHandler<Item>()
-      {
-         @Override
-         public void onSelection(SelectionEvent<Item> event)
-         {
-            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-            {
-               @Override
-               public void execute()
-               {
-                  treeItemSelected();
-               }
-            });
-         }
-      });
+//      display.getBrowserTree().addSelectionHandler(new SelectionHandler<Item>()
+//      {
+//         @Override
+//         public void onSelection(SelectionEvent<Item> event)
+//         {
+//            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//            {
+//               @Override
+//               public void execute()
+//               {
+//                  treeItemSelected();
+//               }
+//            });
+//         }
+//      });
 
       display.getLinkWithEditorButton().addClickHandler(new ClickHandler()
       {
@@ -265,47 +242,52 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       });
 
       display.setLinkWithEditorButtonSelected(linkWithEditor);
-      display.setLockTokens(applicationSettings.getValueAsMap("lock-tokens"));      
+      
+      //display.setLockTokens(applicationSettings.getValueAsMap("lock-tokens"));      
    }
 
    private void treeItemSelected()
    {
-      Object selectedObject = display.getSelectedObject();
+      Item selectedItem = display.getSelectedItem();
       
-      if (selectedObject instanceof Project)
-      {
-         selectedItem = ((Project)selectedObject).getProject();
-      }
-      else if (selectedObject instanceof ResourceDirectory)
-      {
-         selectedItem = ((ResourceDirectory)selectedObject).getFolder();
-      }
-      else if (selectedObject instanceof Package)
-      {
-         selectedItem = ((Package)selectedObject).getPackageFolder();
-      }
-      else if (selectedObject instanceof FolderModel)
-      {
-         selectedItem = (FolderModel)selectedObject;
-      }
-      else if (selectedObject instanceof FileModel)
-      {
-         selectedItem = (FileModel)selectedObject;
-      }
-      else
-      {
-         selectedItem = null;
-      }
+//      Object selectedObject = display.getSelectedObject();
+//      
+//      if (selectedObject instanceof Project)
+//      {
+//         selectedItem = ((Project)selectedObject).getProject();
+//      }
+//      else if (selectedObject instanceof ResourceDirectory)
+//      {
+//         selectedItem = ((ResourceDirectory)selectedObject).getFolder();
+//      }
+//      else if (selectedObject instanceof Package)
+//      {
+//         selectedItem = ((Package)selectedObject).getPackageFolder();
+//      }
+//      else if (selectedObject instanceof FolderModel)
+//      {
+//         selectedItem = (FolderModel)selectedObject;
+//      }
+//      else if (selectedObject instanceof FileModel)
+//      {
+//         selectedItem = (FileModel)selectedObject;
+//      }
+//      else
+//      {
+//         selectedItem = null;
+//      }
 
-      List<Item> selectedItems = new ArrayList<Item>();
+//      List<Item> selectedItems = new ArrayList<Item>();
+//      if (selectedItem != null)
+//      {
+//         selectedItems.add(selectedItem);
+//      }
+
       if (selectedItem != null)
-      {
-         selectedItems.add(selectedItem);
+      {         
+         changeActiveFile(selectedItem);
+         IDE.fireEvent(new ItemsSelectedEvent(selectedItem, display.asView()));
       }
-
-      changeActiveFile(selectedItem);
-
-      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
    }
 
    /**
@@ -375,7 +357,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       if (linkWithEditor && editorActiveFile != null)
       {
-         goToItem(editorActiveFile, false);
+         display.selectItem(editorActiveFile);
       }
    }
 
@@ -391,43 +373,44 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          return;
       }
 
-      goToItem(event.getFile(), false);
+      display.selectItem(event.getFile());
+//      goToItem(event.getFile(), false);
    }
 
-   /**
-    * Navigate to item in the project tree.
-    *
-    * @param item item to navigate
-    * @param collapseBranches is need to collapse tree branches
-    */
-   private void goToItem(final Item item, final boolean collapseBranches)
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            if (!collapseBranches)
-            {
-               Object selectedObject = display.getSelectedObject();
-               if (selectedObject instanceof FileModel && item instanceof FileModel
-                  && ((FileModel)selectedObject).getId().equals(((FileModel)item).getId()))
-               {
-                  return;
-               }
-            }
-
-            try
-            {
-               display.selectItem(item);               
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();  
-            }
-         }
-      });
-   }
+//   /**
+//    * Navigate to item in the project tree.
+//    *
+//    * @param item item to navigate
+//    * @param collapseBranches is need to collapse tree branches
+//    */
+//   private void goToItem(final Item item, final boolean collapseBranches)
+//   {
+//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//      {
+//         @Override
+//         public void execute()
+//         {
+//            if (!collapseBranches)
+//            {
+//               Item selectedObject = display.getSelectedObject();
+//               if (selectedObject instanceof FileModel && item instanceof FileModel
+//                  && ((FileModel)selectedObject).getId().equals(((FileModel)item).getId()))
+//               {
+//                  return;
+//               }
+//            }
+//
+//            try
+//            {
+//               display.selectItem(item);               
+//            }
+//            catch (Exception e)
+//            {
+//               e.printStackTrace();  
+//            }
+//         }
+//      });
+//   }
 
    @Override
    public void onEditorFileClosed(EditorFileClosedEvent event)
@@ -462,79 +445,54 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      openedProject = event.getProject();
+      project = (IDEProject)event.getProject();
       
       if (display == null)
       {
-          if (ProjectTypes.contains(openedProject))
+          if (JavaProjects.contains(project))
           {
              display = GWT.create(PackageExplorerDisplay.class);
              bindDisplay();
              IDE.getInstance().openView(display.asView());                  
-             
-             
-//             new Timer()
-//             {
-//                @Override
-//                public void run()
-//                {
-//                   display = GWT.create(PackageExplorerDisplay.class);
-//                   bindDisplay();
-//                   IDE.getInstance().openView(display.asView());
-//                }
-//             }.schedule(500);
-             
-             
-//            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//            {
-//               @Override
-//               public void execute()
-//               {
-//                  display = GWT.create(PackageExplorerDisplay.class);
-//                  bindDisplay();
-//                  IDE.getInstance().openView(display.asView());                  
-//               }
-//            });
-             
-             
           }
    
           return;         
       }
 
-      if (!ProjectTypes.contains(openedProject))
+      if (!JavaProjects.contains(project))
       {
          IDE.getInstance().closeView(display.asView().getId());
          return;
       }
 
-      display.setPackageExplorerTreeVisible(true);
-      display.getBrowserTree().setValue(openedProject);
-      //display.setProject(openedProject);
+      display.setProject(project);
    }
-   
+
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-      openedProject = null;
+      project = null;
 
       if (display == null)
       {
          return;
       }
+      
+      display.setProject(null);
 
-      display.getBrowserTree().setValue(null);
-      //display.setProject(null);
-      display.setPackageExplorerTreeVisible(false);
+//      display.getBrowserTree().setValue(null);
+//      display.setPackageExplorerTreeVisible(false);
    }
-   
+
    @Override
    public void onViewOpened(ViewOpenedEvent event)
    {
-      if (event.getView() instanceof PackageExplorerDisplay && openedProject != null)
+      if (event.getView() instanceof PackageExplorerDisplay && project != null)
       {
-         display.setPackageExplorerTreeVisible(true);
-         display.getBrowserTree().setValue(openedProject);
+         display.setProject(project);
+         
+//         display.setPackageExplorerTreeVisible(true);
+//         display.getBrowserTree().setValue(openedProject);
          
 //         Scheduler.get().scheduleDeferred(new ScheduledCommand()
 //         {
@@ -547,7 +505,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //         });
       }
    }
-   
+
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -577,7 +535,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       if (display != null)
       {
          //System.out.println("tree refreshed. item to select >> " + itemToSelect);
-         display.getBrowserTree().setValue(event.getFolder());
+         //display.getBrowserTree().setValue(event.getFolder());
+         display.refreshTree();
          
          if (event.getItemToSelect() != null)
          {
@@ -596,23 +555,23 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       }
    }
 
-   @Override
-   public void onItemLocked(ItemLockedEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
-      
-      Item item = event.getItem();
-      if (item instanceof FileModel)
-      {
-         FileModel file = (FileModel)item;
-         file.setLocked(true);
-         file.setLock(new Lock("", event.getLockToken().getLockToken(), 0));
-         display.updateItemState(file);
-      }      
-   }
+//   @Override
+//   public void onItemLocked(ItemLockedEvent event)
+//   {
+//      if (display == null)
+//      {
+//         return;
+//      }
+//      
+//      Item item = event.getItem();
+//      if (item instanceof FileModel)
+//      {
+//         FileModel file = (FileModel)item;
+//         file.setLocked(true);
+//         file.setLock(new Lock("", event.getLockToken().getLockToken(), 0));
+//         display.updateItemState(file);
+//      }      
+//   }
    
    /**
     * @see org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler#onAddItemTreeIcon(org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent)
@@ -657,6 +616,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             display.refreshTree();
          }
       });      
-   }
+   }   
    
 }

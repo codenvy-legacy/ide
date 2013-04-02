@@ -103,7 +103,7 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
          setVisible(true);
       }
       
-      setEnabled(ProjectTypes.contains(project));
+      setEnabled(JavaProjects.contains(project));
    }
 
    @Override
@@ -143,7 +143,7 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       project = event.getProject();
-      setEnabled(ProjectTypes.contains(project));
+      setEnabled(JavaProjects.contains(project));
       //setEnabled(isAvailableForProject());
    }
 
