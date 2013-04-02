@@ -23,12 +23,10 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id:$
- * 
  */
-public interface Images
-{
-   String IMAGE_URL = UIHelper.getGadgetImagesURL();
+public interface Images {
+    String IMAGE_URL = UIHelper.getGadgetImagesURL();
 
-   String RUBY = IMAGE_URL + "ruby.png";
+    String RUBY = IMAGE_URL + "ruby.png";
 
 }

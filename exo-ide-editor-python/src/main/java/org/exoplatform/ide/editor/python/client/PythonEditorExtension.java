@@ -48,8 +48,10 @@ public class PythonEditorExtension extends Extension implements InitializeServic
                         .setGroupName(GroupNames.NEW_SCRIPT));
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
-     * .client.framework.application.event.InitializeServicesEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     *      .client.framework.application.event.InitializeServicesEvent)
+     */
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
         IDE.getInstance().getFileTypeRegistry().addFileType(
