@@ -270,13 +270,30 @@ public interface Editor extends IsWidget
     */
    int getCursorOffsetTop();
 
+   /**
+    * Collapse a fold. Depends on the current caret position.
+    */
    void collapse();
 
+   /**
+    * Expand a fold. Depends on the current caret position.
+    */
    void expand();
 
+   /**
+    * Collapse all existing folds in the editor.
+    */
    void collapseAll();
 
+   /**
+    * Expand all existing folds in the editor.
+    */
    void expandAll();
+
+   /**
+    * Fold custom selected text block in the editor.
+    */
+   void foldSelection();
 
    /**
     * @param handler

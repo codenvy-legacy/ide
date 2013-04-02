@@ -36,10 +36,8 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Presenter for add changes to index view. The view must implement {@link AddToIndexPresenter.Display}. Add view to View.gwt.xml.
@@ -130,7 +128,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          Display d = GWT.create(Display.class);
          IDE.getInstance().openView(d.asView());
          bindDisplay(d);
-//         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
          String workDir = getSelectedProject().getPath();
          display.getMessage().setValue(formMessage(workDir), true);
       }
@@ -147,11 +144,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       {
          return "";
       }
-      
-//      if (selectedItems == null || selectedItems.size() <= 0)
-//         return "";
-//      Item selectedItem = selectedItems.get(0);
-      
       String pattern = selectedItem.getPath().replaceFirst(workdir, "");
       pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
@@ -176,12 +168,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private void doAdd()
    {
-//      if (selectedItems == null || selectedItems.size() <= 0)
-//      {
-//         return;
-//      }
-//
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       ProjectModel project = getSelectedProject();
 
       boolean update = display.getUpdateValue().getValue();
@@ -249,9 +235,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private String[] getFilePatterns()
    {
-//      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-//      String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
-      
       String projectPath = getSelectedProject().getPath();
       String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
 

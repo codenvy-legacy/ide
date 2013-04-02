@@ -92,6 +92,9 @@ public class ProjectChatView extends ViewImpl implements Display
       View view = new View();
       participantList = ParticipantList.create(view);
       participantsPanel.getElement().appendChild((Node)view.getElement());
+      participantsPanel.getElement().setId("ideParticipants");
+      chatPanel.getElement().setId("ideChatMessages");
+      chatMessageInput.setId("ideChatInput");
    }
 
    /**
@@ -109,17 +112,22 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void addMessage(Participant participant, String message, long time)
    {
+      addMessage(participant, message, time, null);
+   }
+
+   @Override
+   public void addMessage(Participant participant, String message, long time, MessageCallback callback)
+   {
       Date d = new Date(time);
       DivElement messageElement;
       if (participant.getClientId().equals(lastClientId))
       {
-         messageElement = getMessageElement(message, "...", d, participant.isCurrentUser());
+         messageElement = getMessageElement(message, "...", d, callback);
          lastMessageElement.appendChild(messageElement);
       }
       else
       {
-         messageElement = getMessageElement(message, participant.getDisplayName() + ":", d,
-            participant.isCurrentUser());
+         messageElement = getMessageElement(message, participant.getDisplayName() + ":", d, callback);
          chatPanel.getElement().appendChild((Node)messageElement);
          lastClientId = participant.getClientId();
          lastMessageElement = messageElement;
@@ -131,21 +139,40 @@ public class ProjectChatView extends ViewImpl implements Display
       chatPanel.scrollToBottom();
    }
 
-   private DivElement getMessageElement(String message, String name, Date d, boolean isCurrentUser)
+   private DivElement getMessageElement(String message, String name, Date d, MessageCallback callback)
    {
       DivElement messageElement = Elements.createDivElement();
-      DivElement timeElement = Elements.createDivElement(css.chatTime());
-      timeElement.setInnerHTML("[" + timeFormat.format(d) + "]&nbsp;");
+      DivElement timeElement = getTimeElement(d);
       messageElement.appendChild(timeElement);
 
-      SpanElement nameElement = Elements.createSpanElement(css.chatName());
-      nameElement.setInnerHTML(name);
+      SpanElement nameElement = getNameElement(name);
       messageElement.appendChild(nameElement);
-
-      DivElement messageDiv = Elements.createDivElement(css.chatMessage());
-      messageDiv.setInnerHTML("&nbsp;" + message);
-      messageElement.appendChild(messageDiv);
+      if (callback != null)
+      {
+         AnchorElement anchorElement = createAnchorElement(message, callback);
+         messageElement.appendChild(anchorElement);
+      }
+      else
+      {
+         DivElement messageDiv = Elements.createDivElement(css.chatMessage());
+         messageDiv.setInnerHTML(message);
+         messageElement.appendChild(messageDiv);
+      }
       return messageElement;
+   }
+
+   private SpanElement getNameElement(String name)
+   {
+      SpanElement nameElement = Elements.createSpanElement(css.chatName());
+      nameElement.setInnerHTML(name + "&nbsp;");
+      return nameElement;
+   }
+
+   private DivElement getTimeElement(Date d)
+   {
+      DivElement timeElement = Elements.createDivElement(css.chatTime());
+      timeElement.setInnerHTML("[" + timeFormat.format(d) + "]");
+      return timeElement;
    }
 
    /**
@@ -194,7 +221,7 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void removeParticipant(Participant participant)
    {
-     participantList.participantRemoved(participant);
+      participantList.participantRemoved(participant);
    }
 
    /**
@@ -212,7 +239,7 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void removeEditParticipant(String clientId)
    {
-     participantList.removeEditParticipant(clientId);
+      participantList.removeEditParticipant(clientId);
    }
 
    /**
@@ -255,7 +282,7 @@ public class ProjectChatView extends ViewImpl implements Display
          messageElement.appendChild(Elements.createTextNode(split[1]));
       }
       lastClientId = "";
-      chatPanel.getElement().appendChild((Node) messageElement);
+      chatPanel.getElement().appendChild((Node)messageElement);
       chatPanel.scrollToBottom();
    }
 

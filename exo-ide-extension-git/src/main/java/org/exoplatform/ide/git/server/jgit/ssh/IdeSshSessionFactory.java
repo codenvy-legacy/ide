@@ -21,17 +21,14 @@ package org.exoplatform.ide.git.server.jgit.ssh;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-
-import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.util.FS;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
-import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStore;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.picocontainer.Startable;
-
-import java.io.IOException;
 
 /**
  * SSH session factory that use SshKeyProvider to get access to private keys. Factory does not support user
@@ -42,9 +39,9 @@ import java.io.IOException;
  */
 public class IdeSshSessionFactory extends JschConfigSessionFactory implements Startable
 {
-   private SshKeyProvider keyProvider;
+   private final SshKeyStore keyProvider;
 
-   public IdeSshSessionFactory(SshKeyProvider keyProvider)
+   public IdeSshSessionFactory(SshKeyStore keyProvider)
    {
       this.keyProvider = keyProvider;
       init();
@@ -86,11 +83,7 @@ public class IdeSshSessionFactory extends JschConfigSessionFactory implements St
          jsch.addIdentity(key.getIdentifier(), key.getBytes(), null, null);
          return jsch;
       }
-      catch (IOException e)
-      {
-         throw new JSchException(e.getMessage(), e);
-      }
-      catch (VirtualFileSystemException e)
+      catch (SshKeyStoreException e)
       {
          throw new JSchException(e.getMessage(), e);
       }

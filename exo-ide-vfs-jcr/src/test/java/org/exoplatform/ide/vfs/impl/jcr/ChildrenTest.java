@@ -88,10 +88,7 @@ public class ChildrenTest extends JcrFileSystemTest
    public void testGetChildren() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId).toString();
+      String path = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -116,10 +113,7 @@ public class ChildrenTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId).toString();
+      String path = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -129,10 +123,7 @@ public class ChildrenTest extends JcrFileSystemTest
    public void testGetChildrenPagingSkipCount() throws Exception
    {
       // Get all children.
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId).toString();
+      String path = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
@@ -145,14 +136,7 @@ public class ChildrenTest extends JcrFileSystemTest
       iteratorAll.remove();
 
       // Skip first item in result.
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId) //
-         .append("?") //
-         .append("skipCount=") //
-         .append("1") //
-         .toString();
+      path = SERVICE_URI + "children/" + folderId + '?' + "skipCount=" + 1;
       checkPage(path, "GET", ItemImpl.class.getMethod("getName"), all);
    }
 
@@ -160,10 +144,7 @@ public class ChildrenTest extends JcrFileSystemTest
    public void testGetChildrenPagingMaxItems() throws Exception
    {
       // Get all children.
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId).toString();
+      String path = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
@@ -172,14 +153,7 @@ public class ChildrenTest extends JcrFileSystemTest
          all.add(i.getName());
 
       // Exclude last item from result.
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId) //
-         .append("?") //
-         .append("maxItems=") //
-         .append("2") //
-         .toString();
+      path = SERVICE_URI + "children/" + folderId + '?' + "maxItems=" + 2;
       all.remove(2);
       checkPage(path, "GET", ItemImpl.class.getMethod("getName"), all);
    }
@@ -189,11 +163,7 @@ public class ChildrenTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       // Get children without filter.
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId) //
-         .toString();
+      String path = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -212,14 +182,7 @@ public class ChildrenTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       // Get children and apply filter for properties.
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId) //
-         .append("?") //
-         .append("propertyFilter=") //
-         .append(propertyFilter) //
-         .toString();
+      String path = SERVICE_URI + "children/" + folderId + '?' + "propertyFilter=" + propertyFilter;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -232,18 +195,12 @@ public class ChildrenTest extends JcrFileSystemTest
       }
    }
 
+   @SuppressWarnings("unchecked")
    public void testGetChildrenTypeFilter() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       // Get children and apply filter for properties.
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(folderId) //
-         .append("?") //
-         .append("itemType=") //
-         .append("folder") //
-         .toString();
+      String path = SERVICE_URI + "children/" + folderId + '?' + "itemType=" + "folder";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());

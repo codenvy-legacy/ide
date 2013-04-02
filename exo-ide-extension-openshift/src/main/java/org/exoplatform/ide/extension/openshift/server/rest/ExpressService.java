@@ -20,9 +20,10 @@ package org.exoplatform.ide.extension.openshift.server.rest;
 
 import org.exoplatform.ide.extension.openshift.server.Express;
 import org.exoplatform.ide.extension.openshift.server.ExpressException;
-import org.exoplatform.ide.extension.openshift.server.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -35,7 +36,6 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,15 +81,14 @@ public class ExpressService
    @POST
    @Path("login")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws ExpressException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public void login(Map<String, String> credentials) throws ExpressException, CredentialStoreException
    {
       express.login(credentials.get("rhlogin"), credentials.get("password"));
    }
 
    @POST
    @Path("logout")
-   public void logout() throws IOException, VirtualFileSystemException
+   public void logout() throws CredentialStoreException
    {
       express.logout();
    }
@@ -97,7 +96,7 @@ public class ExpressService
    @POST
    @Path("domain/create")
    public void createDomain(@QueryParam("namespace") String namespace, @QueryParam("alter") boolean alter)
-      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
+      throws ExpressException, SshKeyStoreException, CredentialStoreException
    {
       express.createDomain(namespace, alter);
    }
@@ -105,8 +104,8 @@ public class ExpressService
    @POST
    @Path("apps/create")
    @Produces(MediaType.APPLICATION_JSON)
-   public AppInfo createApplication(@QueryParam("type") String type) throws ExpressException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public AppInfo createApplication(@QueryParam("type") String type)
+      throws ExpressException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       AppInfo application =
@@ -115,8 +114,8 @@ public class ExpressService
 
       if (projectId != null)
       {
-         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-         LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+         Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
             + "# PAAS#OpenShift#");
       }
       return application;
@@ -125,8 +124,7 @@ public class ExpressService
    @GET
    @Path("apps/type")
    @Produces(MediaType.APPLICATION_JSON)
-   public Set<String> applicationTypes() throws ExpressException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public Set<String> applicationTypes() throws ExpressException, CredentialStoreException
    {
       return express.frameworks();
    }
@@ -134,8 +132,7 @@ public class ExpressService
    @GET
    @Path("apps/info")
    @Produces(MediaType.APPLICATION_JSON)
-   public AppInfo applicationInfo() throws ExpressException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public AppInfo applicationInfo() throws ExpressException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return express.applicationInfo(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
@@ -144,8 +141,7 @@ public class ExpressService
 
    @POST
    @Path("apps/destroy")
-   public void destroyApplication() throws ExpressException, IOException, ParsingResponseException,
-      VirtualFileSystemException
+   public void destroyApplication() throws ExpressException, VirtualFileSystemException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
@@ -164,40 +160,35 @@ public class ExpressService
    @GET
    @Path("user/info")
    @Produces(MediaType.APPLICATION_JSON)
-   public RHUserInfo userInfo(@QueryParam("appsinfo") boolean appsInfo) throws ExpressException, IOException,
-      ParsingResponseException, VirtualFileSystemException
+   public RHUserInfo userInfo(@QueryParam("appsinfo") boolean appsInfo) throws ExpressException, CredentialStoreException
    {
       return express.userInfo(appsInfo);
    }
 
    @POST
    @Path("apps/stop")
-   public void stopApplication(@QueryParam("appname") String appName)
-      throws IOException, ExpressException, VirtualFileSystemException
+   public void stopApplication(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException
    {
       express.stopApplication(appName);
    }
 
    @POST
    @Path("apps/start")
-   public void startApplication(@QueryParam("appname") String appName)
-      throws IOException, ExpressException, VirtualFileSystemException
+   public void startApplication(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException
    {
       express.startApplication(appName);
    }
 
    @POST
    @Path("apps/restart")
-   public void restartApplication(@QueryParam("appname") String appName)
-      throws IOException, ExpressException, VirtualFileSystemException
+   public void restartApplication(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException
    {
       express.restartApplication(appName);
    }
 
    @GET
    @Path("apps/health")
-   public String getApplicationHealth(@QueryParam("appname") String appName)
-      throws IOException, ExpressException, VirtualFileSystemException
+   public String getApplicationHealth(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException
    {
       return express.getApplicationHealth(appName);
    }

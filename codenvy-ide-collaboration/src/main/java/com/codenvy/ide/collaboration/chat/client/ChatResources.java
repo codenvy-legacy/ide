@@ -36,17 +36,12 @@ public interface ChatResources extends ClientBundle
 
       String chatTime();
 
-      @ClassName("chatNotificationName")
-      String notificationName();
-
-      @ClassName("chatNotificationMessage")
-      String notificationMessage();
-
       String messageNotDelivered();
 
       String chatNotification();
 
       String link();
+
    }
 
    @Source("Chat.css")
@@ -63,4 +58,7 @@ public interface ChatResources extends ClientBundle
 
    @Source("animation.gif")
    ImageResource collaboratorsAnimation();
+
+   @Source("blank.png")
+   ImageResource blank();
 }

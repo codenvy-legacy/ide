@@ -144,10 +144,10 @@ public class NavigationModule implements InitializeServicesHandler
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      String workspace =
-         (event.getApplicationConfiguration().getVfsBaseUrl().endsWith("/")) ? event.getApplicationConfiguration()
-            .getVfsBaseUrl() + event.getApplicationConfiguration().getVfsId() : event.getApplicationConfiguration()
-            .getVfsBaseUrl() + "/" + event.getApplicationConfiguration().getVfsId();
+      String workspace = event.getApplicationConfiguration().getVfsBaseUrl();
+//         (event.getApplicationConfiguration().getVfsBaseUrl().endsWith("/")) ? event.getApplicationConfiguration()
+//            .getVfsBaseUrl() + event.getApplicationConfiguration().getVfsId() : event.getApplicationConfiguration()
+//            .getVfsBaseUrl() + "/" + event.getApplicationConfiguration().getVfsId();
       new VirtualFileSystem(workspace, new GWTLoader());
    }
 }

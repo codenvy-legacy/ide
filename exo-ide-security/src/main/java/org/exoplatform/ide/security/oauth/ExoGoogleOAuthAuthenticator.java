@@ -63,10 +63,11 @@ public class ExoGoogleOAuthAuthenticator extends GoogleOAuthAuthenticator
          throw new IllegalArgumentException("Invalid credentials type " + type + " .Must be 'web' or 'installed'. ");
       }
       GoogleClientSecrets.Details cfg = new GoogleClientSecrets.Details();
-      cfg.setClientId(ContainerUtils.readValueParam(initParams, "client-id")).setClientSecret(ContainerUtils
-         .readValueParam(initParams, "client-secret")).setAuthUri(ContainerUtils.readValueParam(initParams,
-         "auth-uri")).setTokenUri(ContainerUtils.readValueParam(initParams,
-         "token-uri")).setRedirectUris(ContainerUtils.readValuesParam(initParams, "redirect-uris"));
+      cfg.setClientId(ContainerUtils.readValueParam(initParams, "client-id"))
+         .setClientSecret(ContainerUtils.readValueParam(initParams, "client-secret"))
+         .setAuthUri(ContainerUtils.readValueParam(initParams, "auth-uri"))
+         .setTokenUri(ContainerUtils.readValueParam(initParams, "token-uri"))
+         .setRedirectUris(ContainerUtils.readValuesParam(initParams, "redirect-uris"));
       return "web".equals(type) ? new GoogleClientSecrets().setWeb(cfg) : new GoogleClientSecrets().setInstalled(cfg);
    }
 }

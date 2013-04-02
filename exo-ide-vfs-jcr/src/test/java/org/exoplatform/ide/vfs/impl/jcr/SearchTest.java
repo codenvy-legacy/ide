@@ -90,14 +90,8 @@ public class SearchTest extends JcrFileSystemTest
    public void testSearchStatement() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("search") //
-         .append("?") //
-         .append("statement=") //
-         //.append("SELECT%20*%20FROM%20nt:file%20WHERE%20MyProperty%20IS%20NOT%20NULL") //
-         .append("SELECT%20MyProperty%20FROM%20nt:file%20WHERE%20MyProperty%20IS%20NOT%20NULL") //
-         .toString();
+      String path = SERVICE_URI + "search" + '?' +
+         "statement=SELECT%20MyProperty%20FROM%20nt:file%20WHERE%20MyProperty%20IS%20NOT%20NULL";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -119,10 +113,7 @@ public class SearchTest extends JcrFileSystemTest
    public void testSearchBuildStatement() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("search") //
-         .toString();
+      String path = SERVICE_URI + "search";
       String sql = "name=SearchTest_FILE01&mediaType=text/plain&text=__TEST__&path=" + searchTestNode.getPath();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
@@ -147,10 +138,7 @@ public class SearchTest extends JcrFileSystemTest
    public void testSearchPagingSkipCount() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("search") //
-         .toString();
+      String path = SERVICE_URI + "search";
       String sql = "name=SearchTest&mediaType=text/plain&text=__TEST__&path=" + searchTestNode.getPath();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
@@ -170,13 +158,7 @@ public class SearchTest extends JcrFileSystemTest
       iteratorAll.next();
       iteratorAll.remove();
 
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("search") //
-         .append("?") //
-         .append("skipCount=") //
-         .append("1") //
-         .toString();
+      path = SERVICE_URI + "search" + '?' + "skipCount=" + 1;
       
       checkPage(path, "POST", h, sql.getBytes(), File.class.getMethod("getId"), all);
    }
@@ -184,10 +166,7 @@ public class SearchTest extends JcrFileSystemTest
    public void testSearchPagingMaxItems() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("search") //
-         .toString();
+      String path = SERVICE_URI + "search";
       String sql = "name=SearchTest&mediaType=text/plain&text=__TEST__&path=" + searchTestNode.getPath();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
@@ -204,13 +183,7 @@ public class SearchTest extends JcrFileSystemTest
       }
       all.remove(2);
 
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("search") //
-         .append("?") //
-         .append("maxItems=") //
-         .append("2") //
-         .toString();
+      path = SERVICE_URI + "search" + '?' + "maxItems=" + 2;
       
       checkPage(path, "POST", h, sql.getBytes(), File.class.getMethod("getId"), all);
    }

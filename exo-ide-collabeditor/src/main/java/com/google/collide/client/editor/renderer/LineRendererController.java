@@ -181,79 +181,64 @@ class LineRendererController {
       }
     }
 
-    final FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
-    if (foldMarker != null)
-    {
-       if (!foldMarker.isCollapsed())
-       {
-          Element expandElement = line.getTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT);
-          if (expandElement != null)
-          {
-             expandElement.removeFromParent();
-             line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, null);
-          }
-       }
-       else
-       {
-          Element expandElement = createExpandMarkerElement(contentElement, lineNumber);
-          line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
-
-          expandElement.addEventListener(Event.MOUSEDOWN, new EventListener() {
-             @Override
-             public void handleEvent(Event evt) {
-               foldingManager.expand(foldMarker);
-             }
-         }, false);
-       }
+    final FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(lineNumber, true);
+    if (foldMarker != null && foldMarker.isCollapsed()) {
+      Element expandElement = createFoldingSignElement(contentElement, foldMarker, lineNumber);
+      line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
     }
+  }
+
+  private static Element createLastChunkElement(Element parent) {
+     // we need to give them a whitespace element so that it can be styled.
+     Element whitespaceElement = Elements.createSpanElement();
+     whitespaceElement.setTextContent("\u00A0");
+     whitespaceElement.getStyle().setDisplay("inline-block");
+     parent.appendChild(whitespaceElement);
+     return whitespaceElement;
   }
 
   /**
    * Creates element for expanding collapsed text block.
    * 
    * @param parent parent element
-   * @param lineNumber linen number to generate element ID (for Selenium tests)
+   * @param foldMarker <code>foldMarker</code> to expand
+   * @param lineNumber line number to generate element ID (for Selenium tests)
    * @return created element for expanding folded text block 
    */
-  Element createExpandMarkerElement(Element parent, int lineNumber) {
-     SpanElement element = Elements.createSpanElement();
+  Element createFoldingSignElement(Element parent, final FoldMarker foldMarker, int lineNumber) {
+     final SpanElement element = Elements.createSpanElement(resources.workspaceEditorBufferCss().expandMarker());
      // TODO: file a Chrome bug, place link here
      element.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);
-//     setTextContentSafely(element, "...");
-//     applyStyles(element);
-
-     element.getStyle().setBorderStyle("solid");
-     element.getStyle().setBorderColor("gray");
-     element.getStyle().setBorderWidth("1px");
-     element.getStyle().setProperty("border-radius", "3px");
-     element.getStyle().setCursor("pointer");
-     element.getStyle().setHeight("9px");
-     element.getStyle().setWidth("18px");
-     element.getStyle().setProperty("vertical-align", "middle");
-     element.getStyle().setMarginLeft("1px");
-     element.getStyle().setMarginTop("-2px");
-     element.getStyle().setProperty("box-shadow", "0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset");
      element.setId("expandMarker_line:" + (lineNumber+1));
 
+     element.addEventListener(Event.MOUSEOVER, new EventListener() {
+       @Override
+       public void handleEvent(Event evt) {
+         element.addClassName(resources.workspaceEditorBufferCss().expandMarkerOver());
+       }
+     }, false);
+     element.addEventListener(Event.MOUSEOUT, new EventListener() {
+        @Override
+        public void handleEvent(Event evt) {
+           element.removeClassName(resources.workspaceEditorBufferCss().expandMarkerOver());
+        }
+     }, false);
+     element.addEventListener(Event.MOUSEDOWN, new EventListener() {
+        @Override
+        public void handleEvent(Event evt) {
+           foldingManager.expand(foldMarker);
+        }
+     }, false);
+
      com.google.gwt.user.client.Element expandImageElement = new Image(resources.expandArrows()).getElement();
-     expandImageElement.getStyle().setWidth(16, Unit.PX);
-     expandImageElement.getStyle().setHeight(7, Unit.PX);
-     expandImageElement.getStyle().setMarginLeft(1, Unit.PX);
+     expandImageElement.getStyle().setWidth(20, Unit.PX);
+     expandImageElement.getStyle().setOpacity(0.5);
      expandImageElement.getStyle().setMarginBottom(4, Unit.PX);
      element.appendChild((Node)expandImageElement);
 
      parent.appendChild(element);
 
      return element;
-  }
-
-  private static Element createLastChunkElement(Element parent) {
-    // we need to give them a whitespace element so that it can be styled.
-    Element whitespaceElement = Elements.createSpanElement();
-    whitespaceElement.setTextContent("\u00A0");
-    whitespaceElement.getStyle().setDisplay("inline-block");
-    parent.appendChild(whitespaceElement);
-    return whitespaceElement;
   }
 
   /**

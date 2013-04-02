@@ -23,6 +23,5 @@
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
   <import>cf-configuration.xml</import>
-  <import>organization-configuration.xml</import>
   <import>ide-configuration.xml</import>
 </configuration>

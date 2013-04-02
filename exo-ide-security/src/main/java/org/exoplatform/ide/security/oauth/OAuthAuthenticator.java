@@ -27,9 +27,8 @@ import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.json.JsonHttpParser;
-
 import org.exoplatform.ide.commons.JsonHelper;
-import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.commons.JsonParseException;
 import org.exoplatform.ide.security.shared.User;
 
 import java.io.IOException;
@@ -240,7 +239,7 @@ public abstract class OAuthAuthenticator
          urlInputStream = urlConnection.getInputStream();
          return JsonHelper.fromJson(urlInputStream, userClass, null);
       }
-      catch (ParsingResponseException e)
+      catch (JsonParseException e)
       {
          throw new OAuthAuthenticationException(e.getMessage(), e);
       }
@@ -278,7 +277,7 @@ public abstract class OAuthAuthenticator
     * @throws IOException
     * @see OAuthTokenProvider#getToken(String, String)
     */
-   public final String getToken(String userId) throws IOException
+   public String getToken(String userId) throws IOException
    {
       Credential credential = flow.loadCredential(userId);
       if (credential != null)

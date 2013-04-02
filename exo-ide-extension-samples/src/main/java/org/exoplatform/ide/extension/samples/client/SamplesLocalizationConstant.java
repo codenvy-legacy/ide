@@ -36,7 +36,7 @@ public interface SamplesLocalizationConstant extends Messages
     */
    @Key("button.ok")
    String okButton();
-   
+
    @Key("button.cancel")
    String cancelButton();
 
@@ -70,11 +70,11 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("welcome.tutorial.text")
    String tutorialText();
 
-   @Key("welcome.sample.title")
-   String sampleTitle();
+   @Key("welcome.clone.title")
+   String cloneTitle();
 
-   @Key("welcome.sample.text")
-   String sampleText();
+   @Key("welcome.clone.text")
+   String cloneText();
 
    @Key("welcome.title")
    String welcomeTitle();
@@ -114,13 +114,13 @@ public interface SamplesLocalizationConstant extends Messages
 
    @Key("welcome.survey.text")
    String surverText();
-   
+
    @Key("welcome.invitation.title")
    String invitationTitle();
 
    @Key("welcome.invitation.text")
    String invitationText();
-   
+
    /*
     * SamplesListGrid
     */

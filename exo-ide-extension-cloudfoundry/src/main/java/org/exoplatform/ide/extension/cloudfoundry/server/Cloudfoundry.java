@@ -22,7 +22,12 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.commons.FileUtils;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.JsonParseException;
+import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.commons.ZipUtils;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.ApplicationFile;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Crashes;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
@@ -41,6 +46,9 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -49,6 +57,7 @@ import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -59,6 +68,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -81,24 +91,18 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.JsonHelper.*;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
-import static org.exoplatform.ide.commons.ZipUtils.zipDir;
-
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class Cloudfoundry
 {
-   private static final class Credential
+   private static final class CloudfoundryCredential
    {
-      String target;
-      String token;
+      final String target;
+      final String token;
 
-      Credential(String target, String token)
+      CloudfoundryCredential(String target, String token)
       {
          this.target = target;
          this.token = token;
@@ -129,11 +133,13 @@ public class Cloudfoundry
 
    private static final Log LOG = ExoLogger.getLogger(Cloudfoundry.class);
 
-   private final BaseCloudfoundryAuthenticator authenticator;
+   private final CloudfoundryAuthenticator authenticator;
+   private final CredentialStore credentialStore;
 
-   public Cloudfoundry(BaseCloudfoundryAuthenticator authenticator)
+   public Cloudfoundry(CloudfoundryAuthenticator authenticator, CredentialStore credentialStore)
    {
       this.authenticator = authenticator;
+      this.credentialStore = credentialStore;
       // Create a trust manager that does not validate certificate chains
       TrustManager trustAllManager = new X509TrustManager()
       {
@@ -162,19 +168,36 @@ public class Cloudfoundry
       }
    }
 
-   public void setTarget(String server) throws VirtualFileSystemException, IOException
+   public void setTarget(String server) throws CredentialStoreException
    {
-      authenticator.writeTarget(server);
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "cloudfoundry", credential);
+      credential.setAttribute("current_target", server);
+      credentialStore.save(userId, "cloudfoundry", credential);
    }
 
-   public String getTarget() throws VirtualFileSystemException, IOException
+   public String getTarget() throws CredentialStoreException
    {
-      return authenticator.getTarget();
+      final Credential credential = new Credential();
+      credentialStore.load(getUserId(), "cloudfoundry", credential);
+      return credential.getAttribute("current_target");
    }
 
-   public Collection<String> getTargets() throws CloudfoundryException, VirtualFileSystemException, IOException
+   public Collection<String> getTargets() throws CredentialStoreException
    {
-      return authenticator.readCredentials().getTargets();
+      final Credential credential = new Credential();
+      credentialStore.load(getUserId(), "cloudfoundry", credential);
+      List<String> targets = new ArrayList<String>(2);
+      for (Map.Entry<String, String> entry : credential.getAttributes().entrySet())
+      {
+         String key = entry.getKey();
+         if (key.startsWith("http://") || key.startsWith("https://"))
+         {
+            targets.add(key);
+         }
+      }
+      return targets;
    }
 
    /**
@@ -191,41 +214,45 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
-    * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> name is not provided and we try to
-    *    determine it from IDE project properties.
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public void login(String server, String email, String password) throws CloudfoundryException,
-      ParsingResponseException, VirtualFileSystemException, IOException
+   public void login(String server, String email, String password)
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException
    {
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "cloudfoundry", credential);
       if (server == null)
       {
-         server = authenticator.getTarget();
+         server = credential.getAttribute("current_target");
       }
-      authenticator.login(server, email, password);
+      authenticator.login(server, email, password, credential);
+      credentialStore.save(userId, "cloudfoundry", credential);
    }
 
-   public void login() throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+   public void login() throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException
    {
-      authenticator.login();
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "cloudfoundry", credential);
+      authenticator.login(credential);
+      credentialStore.save(userId, "cloudfoundry", credential);
    }
 
-   /**
-    * Remove locally saved authentication token. Need use {@link #login(String, String, String)} again.
-    *
-    * @param server
-    *    location of Cloud Foundry instance for logout, e.g. http://api.cloudfoundry.com
-    * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> name is not provided and we try to
-    *    determine it from IDE project properties
-    * @throws IOException
-    *    id any i/o errors occurs
-    */
-   public void logout(String server) throws CloudfoundryException, VirtualFileSystemException, IOException
+   /** Remove locally saved authentication token. Need use {@link #login(String, String, String)} again. */
+   public void logout(String server) throws CredentialStoreException
    {
-      authenticator.logout(server);
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "cloudfoundry", credential);
+      credential.removeAttribute(server);
+      credentialStore.save(userId, "cloudfoundry", credential);
+   }
+
+   private String getUserId()
+   {
+      return ConversationState.getCurrent().getIdentity().getUserId();
    }
 
    /**
@@ -240,23 +267,23 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
-    * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> name is not provided and we try to
-    *    determine it from IDE project properties.
+    * @throws CredentialStoreException
+    *    any user credential store error. It may happen if <code>server</code> name is not provided and we try to
+    *    determine it from user credential store.
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public SystemInfo systemInfo(String server) throws CloudfoundryException, ParsingResponseException,
-      VirtualFileSystemException, IOException
+   public SystemInfo systemInfo(String server)
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException
    {
-      return systemInfo(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server));
+      return systemInfo(getCredential(server));
    }
 
-   private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
-      ParsingResponseException
+   private SystemInfo systemInfo(CloudfoundryCredential cloudfoundryCredential)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      SystemInfoImpl systemInfo = fromJson(
-         getJson(credential.target + "/info", credential.token, 200), SystemInfoImpl.class, null);
+      SystemInfoImpl systemInfo = parseJsonResponse(
+         getJson(cloudfoundryCredential.target + "/info", cloudfoundryCredential.token, 200), SystemInfoImpl.class, null);
 
       if (systemInfo.getUser() == null)
       {
@@ -302,6 +329,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -309,17 +338,17 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public CloudFoundryApplication applicationInfo(String server, String app, VirtualFileSystem vfs, String projectId)
-      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return applicationInfo(
          getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
    }
 
-   private CloudFoundryApplication applicationInfo(Credential credential, String app) throws CloudfoundryException,
-      IOException, ParsingResponseException
+   private CloudFoundryApplication applicationInfo(CloudfoundryCredential cloudfoundryCredential, String app)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.target + "/apps/" + app, credential.token, 200),
+      return parseJsonResponse(getJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, 200),
          CloudFoundryApplication.class, null);
    }
 
@@ -352,8 +381,8 @@ public class Cloudfoundry
     * @param command
     *    the command to run application. This parameter required for standalone applications. Example:
     *    <pre>
-    *                                                                java -cp my_application.jar org.example.Main
-    *                                                          </pre>
+    *       java -cp my_application.jar org.example.Main
+    *    </pre>
     * @param debugMode
     *    must be not <code>null</code> if need run application under debugger
     * @param vfs
@@ -367,9 +396,10 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
-    *    name is not provided and we try to determine it from IDE project properties
+    *    any virtual file system error
     * @throws IOException
     *    if any i/o errors occurs
     */
@@ -386,14 +416,15 @@ public class Cloudfoundry
                                                     VirtualFileSystem vfs,
                                                     String projectId,
                                                     URL war)
-      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return createApplication(server, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
          vfs, projectId, war, null);
    }
 
    /**
-    * Make possible to use additional options when create application. This method is not accessible through REST API directly.
+    * Make possible to use additional options when create application. This method is not accessible through REST API
+    * directly.
     */
    public CloudFoundryApplication createApplication(String server,
                                                     String app,
@@ -409,7 +440,7 @@ public class Cloudfoundry
                                                     String projectId,
                                                     URL war,
                                                     Map<String, String> options)
-      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
       {
@@ -423,14 +454,14 @@ public class Cloudfoundry
       {
          throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
       }
-      Credential credential = getCredential(server);
-      return createApplication(credential, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
+      CloudfoundryCredential cloudfoundryCredential = getCredential(server);
+      return createApplication(cloudfoundryCredential, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
          vfs, projectId, war, options);
    }
 
    private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
 
-   private CloudFoundryApplication createApplication(Credential credential,
+   private CloudFoundryApplication createApplication(CloudfoundryCredential cloudfoundryCredential,
                                                      String app,
                                                      String frameworkName,
                                                      String appUrl,
@@ -448,13 +479,13 @@ public class Cloudfoundry
    {
       final long start = System.currentTimeMillis();
       LOG.debug("createApplication START");
-      SystemInfo systemInfo = systemInfo(credential);
+      SystemInfo systemInfo = systemInfo(cloudfoundryCredential);
       SystemResources limits = systemInfo.getLimits();
       SystemResources usage = systemInfo.getUsage();
 
       checkApplicationNumberLimit(limits, usage);
 
-      checkApplicationName(credential, app);
+      checkApplicationName(cloudfoundryCredential, app);
 
       CloudFoundryApplication appInfo;
       java.io.File path = null;
@@ -470,7 +501,7 @@ public class Cloudfoundry
             }
             else
             {
-               path = downloadFile(null, "vmc_" + app, ".war", url);
+               path = FileUtils.downloadFile(null, "vmc_" + app, ".war", url);
                cleanup = true; // remove only downloaded file.
             }
          }
@@ -499,7 +530,7 @@ public class Cloudfoundry
             {
                throw new IllegalArgumentException("Command required for standalone application. ");
             }
-            Map runtimes = getRuntimes(credential);
+            Map runtimes = getRuntimes(cloudfoundryCredential);
             if (runtimes.get(runtime) == null)
             {
                throw new IllegalArgumentException(
@@ -533,7 +564,7 @@ public class Cloudfoundry
          }
          if (appUrl == null || appUrl.isEmpty())
          {
-            Matcher m = suggestUrlPattern.matcher(credential.target);
+            Matcher m = suggestUrlPattern.matcher(cloudfoundryCredential.target);
             m.matches();
             appUrl = app + m.group(4);
          }
@@ -544,29 +575,29 @@ public class Cloudfoundry
          {
             payload.getOptions().putAll(options);
          }
-         String json = postJson(credential.target + "/apps", credential.token, toJson(payload), 302);
-         CreateResponse resp = fromJson(json, CreateResponse.class, null);
-         appInfo = fromJson(doRequest(resp.getRedirect(), "GET", credential.token, null, null, 200),
+         String json = postJson(cloudfoundryCredential.target + "/apps", cloudfoundryCredential.token, JsonHelper.toJson(payload), 302);
+         CreateResponse resp = parseJsonResponse(json, CreateResponse.class, null);
+         appInfo = parseJsonResponse(doRequest(resp.getRedirect(), "GET", cloudfoundryCredential.token, null, null, 200),
             CloudFoundryApplication.class, null);
 
-         uploadApplication(credential, app, vfs, projectId, path);
+         uploadApplication(cloudfoundryCredential, app, vfs, projectId, path);
 
          if (vfs != null && projectId != null)
          {
             writeApplicationName(vfs, projectId, app);
-            writeServerName(vfs, projectId, credential.target);
+            writeServerName(vfs, projectId, cloudfoundryCredential.target);
          }
 
          if (!noStart)
          {
-            appInfo = startApplication(credential, app, debugMode != null ? debugMode.getMode() : null, false);
+            appInfo = startApplication(cloudfoundryCredential, app, debugMode != null ? debugMode.getMode() : null, false);
          }
       }
       finally
       {
          if (path != null && cleanup)
          {
-            deleteRecursive(path);
+            FileUtils.deleteRecursive(path);
          }
          final long time = System.currentTimeMillis() - start;
          LOG.debug("createApplication END, time: {} ms", time);
@@ -600,6 +631,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -611,25 +644,25 @@ public class Cloudfoundry
                                                    DebugMode debugMode,
                                                    VirtualFileSystem vfs,
                                                    String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return startApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
          debugMode != null ? debugMode.getMode() : null, true);
    }
 
-   private CloudFoundryApplication startApplication(Credential credential,
+   private CloudFoundryApplication startApplication(CloudfoundryCredential cloudfoundryCredential,
                                                     String app,
                                                     String debug,
                                                     boolean failIfStarted)
-      throws IOException, ParsingResponseException, CloudfoundryException
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       String name = appInfo.getName();
       if (debug != null)
       {
          String runtime = appInfo.getStaging().getStack();
-         RuntimeInfo runtimeInfo = getRuntimeInfo(runtime, credential);
+         RuntimeInfo runtimeInfo = getRuntimeInfo(runtime, cloudfoundryCredential);
          Set<String> debugModes = runtimeInfo != null ? runtimeInfo.getDebug_modes() : Collections.<String>emptySet();
          if (!debugModes.contains(debug))
          {
@@ -654,7 +687,7 @@ public class Cloudfoundry
       {
          appInfo.setState("STARTED"); // Update application state.
          appInfo.setDebug(debug);
-         putJson(credential.target + "/apps/" + name, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + name, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
          // Check is application started.
          final int attempts = 30;
          final int sleepTime = 2000;
@@ -670,12 +703,12 @@ public class Cloudfoundry
             {
             }
             LOG.debug("startApplication. Check is started, attempt: {}", (i + 1));
-            appInfo = applicationInfo(credential, name);
+            appInfo = applicationInfo(cloudfoundryCredential, name);
             started = appInfo.getInstances() == appInfo.getRunningInstances();
          }
          if (!started)
          {
-            Crashes.Crash[] crashes = applicationCrashes(credential, name).getCrashes();
+            Crashes.Crash[] crashes = applicationCrashes(cloudfoundryCredential, name).getCrashes();
             if (crashes != null && crashes.length > 0)
             {
                throw new CloudfoundryException(400, "Application '" + name + "' failed to start. ", "text/plain");
@@ -711,6 +744,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -718,20 +753,20 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public void stopApplication(String server, String app, VirtualFileSystem vfs, String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       stopApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
    }
 
-   private void stopApplication(Credential credential, String app, boolean failIfStopped) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void stopApplication(CloudfoundryCredential cloudfoundryCredential, String app, boolean failIfStopped)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       if (!"STOPPED".equals(appInfo.getState()))
       {
          appInfo.setState("STOPPED"); // Update application state.
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
       }
       else if (failIfStopped)
       {
@@ -764,31 +799,38 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public CloudFoundryApplication restartApplication(String server, String app, DebugMode debugMode,
-                                                     VirtualFileSystem vfs, String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+   public CloudFoundryApplication restartApplication(String server,
+                                                     String app,
+                                                     DebugMode debugMode,
+                                                     VirtualFileSystem vfs,
+                                                     String projectId)
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return restartApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
          debugMode == null ? null : debugMode.getMode());
    }
 
-   private CloudFoundryApplication restartApplication(Credential credential, String app, String debug)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private CloudFoundryApplication restartApplication(CloudfoundryCredential cloudfoundryCredential, String app, String debug)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      stopApplication(credential, app, false);
-      return startApplication(credential, app, debug, false);
+      stopApplication(cloudfoundryCredential, app, false);
+      return startApplication(cloudfoundryCredential, app, debug, false);
    }
 
-   private Crashes applicationCrashes(Credential credential, String app) throws IOException, ParsingResponseException, CloudfoundryException
+   private Crashes applicationCrashes(CloudfoundryCredential cloudfoundryCredential, String app)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.target + "/apps/" + app + "/crashes", credential.token, 200), Crashes.class, null);
+      return parseJsonResponse(
+         getJson(cloudfoundryCredential.target + "/apps/" + app + "/crashes", cloudfoundryCredential.token, 200), Crashes.class, null);
    }
 
    /**
@@ -813,14 +855,20 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public void updateApplication(String server, String app, VirtualFileSystem vfs, String projectId, URL war)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+   public void updateApplication(String server,
+                                 String app,
+                                 VirtualFileSystem vfs,
+                                 String projectId,
+                                 URL war)
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if ((vfs == null || projectId == null) && war == null)
       {
@@ -831,10 +879,14 @@ public class Cloudfoundry
          vfs, projectId, war);
    }
 
-   private void updateApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, URL url)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+   private void updateApplication(CloudfoundryCredential cloudfoundryCredential,
+                                  String app,
+                                  VirtualFileSystem vfs,
+                                  String projectId,
+                                  URL url)
+      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
 
       java.io.File path = null;
       boolean cleanup = false;
@@ -849,27 +901,27 @@ public class Cloudfoundry
             }
             else
             {
-               path = downloadFile(null, "vmc_" + app, ".war", url);
+               path = FileUtils.downloadFile(null, "vmc_" + app, ".war", url);
                cleanup = true;
             }
-            uploadApplication(credential, app, vfs, projectId, path);
+            uploadApplication(cloudfoundryCredential, app, vfs, projectId, path);
          }
          else
          {
-            uploadApplication(credential, app, vfs, projectId, null);
+            uploadApplication(cloudfoundryCredential, app, vfs, projectId, null);
          }
       }
       finally
       {
          if (path != null && cleanup)
          {
-            deleteRecursive(path);
+            FileUtils.deleteRecursive(path);
          }
       }
 
       if ("STARTED".equals(appInfo.getState()))
       {
-         restartApplication(credential, app, appInfo.getMeta().getDebug());
+         restartApplication(cloudfoundryCredential, app, appInfo.getMeta().getDebug());
       }
    }
 
@@ -900,30 +952,38 @@ public class Cloudfoundry
     *    this case <code>app</code> parameter must be not <code>null</code>
     * @throws CloudfoundryException
     *    if cloudfoundry server return unexpected or error status for request
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public String getFiles(String server, String app, String path, String instance, VirtualFileSystem vfs, String projectId)
-      throws CloudfoundryException, VirtualFileSystemException, IOException
+   public String getFiles(String server,
+                          String app,
+                          String path,
+                          String instance,
+                          VirtualFileSystem vfs,
+                          String projectId)
+      throws CloudfoundryException, CredentialStoreException, VirtualFileSystemException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
+      CloudfoundryCredential cloudfoundryCredential =
+         getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(vfs, projectId, true);
       }
-      return getFiles(credential, app, path == null || path.isEmpty() ? "/" : path,
+      return getFiles(cloudfoundryCredential, app, path == null || path.isEmpty() ? "/" : path,
          instance == null || instance.isEmpty() ? "0" : instance);
    }
 
-   private String getFiles(Credential credential, String app, String path, String instance)
+   private String getFiles(CloudfoundryCredential cloudfoundryCredential, String app, String path, String instance)
       throws CloudfoundryException, IOException
    {
       return doRequest(
-         credential.target + "/apps/" + app + "/instances/" + instance + "/files/" + URLEncoder.encode(path, "UTF-8"),
-         "GET", credential.token, null, null, 200);
+         cloudfoundryCredential.target + "/apps/" + app + "/instances/" + instance + "/files/" + URLEncoder.encode(path, "UTF-8"),
+         "GET", cloudfoundryCredential.token, null, null, 200);
    }
 
    /**
@@ -946,6 +1006,8 @@ public class Cloudfoundry
     *    this case <code>app</code> parameter must be not <code>null</code>
     * @throws CloudfoundryException
     *    if cloudfoundry server return unexpected or error status for request
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -953,21 +1015,23 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public String getLogs(String server, String app, String instance, VirtualFileSystem vfs, String projectId)
-      throws CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, CredentialStoreException, VirtualFileSystemException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
-      return getLogs(credential, app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
+      CloudfoundryCredential cloudfoundryCredential =
+         getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
+      return getLogs(cloudfoundryCredential, app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
          instance == null || instance.isEmpty() ? "0" : instance);
    }
 
-   private String getLogs(Credential credential, String app, String instance) throws CloudfoundryException, IOException
+   private String getLogs(CloudfoundryCredential cloudfoundryCredential, String app, String instance)
+      throws CloudfoundryException, IOException
    {
-      String[] lines = getFiles(credential, app, "/logs", instance).split("\n");
+      String[] lines = getFiles(cloudfoundryCredential, app, "/logs", instance).split("\n");
       StringBuilder logs = new StringBuilder();
       for (String line : lines)
       {
          String path = "/logs/" + line.split("\\s+")[0];
-         String content = getFiles(credential, app, path, instance);
+         String content = getFiles(cloudfoundryCredential, app, path, instance);
          if (!(content == null || content.isEmpty()))
          {
             logs.append("====> ");
@@ -1006,6 +1070,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1013,7 +1079,7 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public void mapUrl(String server, String app, VirtualFileSystem vfs, String projectId, String url)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (url == null)
       {
@@ -1023,10 +1089,10 @@ public class Cloudfoundry
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, url);
    }
 
-   private void mapUrl(Credential credential, String app, String url) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   private void mapUrl(CloudfoundryCredential cloudfoundryCredential, String app, String url)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       // Cloud foundry server send URL without schema.
       if (url.startsWith("http://"))
       {
@@ -1052,7 +1118,7 @@ public class Cloudfoundry
       // If have something to update then do that.
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
       }
    }
 
@@ -1078,6 +1144,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1085,7 +1153,7 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public void unmapUrl(String server, String app, VirtualFileSystem vfs, String projectId, String url)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (url == null)
       {
@@ -1095,10 +1163,11 @@ public class Cloudfoundry
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, url);
    }
 
-   private void unmapUrl(Credential credential, String app, String url) throws IOException, ParsingResponseException,
+   private void unmapUrl(CloudfoundryCredential cloudfoundryCredential, String app, String url)
+      throws IOException, ParsingResponseException,
       CloudfoundryException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       // Cloud foundry server send URL without schema.
       if (url.startsWith("http://"))
       {
@@ -1111,7 +1180,7 @@ public class Cloudfoundry
       List<String> uris = appInfo.getUris();
       if (uris != null && uris.size() > 0 && uris.remove(url))
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
       }
    }
 
@@ -1138,6 +1207,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1145,7 +1216,7 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public void mem(String server, String app, VirtualFileSystem vfs, String projectId, int memory)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (memory < 0)
       {
@@ -1155,14 +1226,14 @@ public class Cloudfoundry
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, memory, true);
    }
 
-   private void mem(Credential credential, String app, int memory, boolean restart) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void mem(CloudfoundryCredential cloudfoundryCredential, String app, int memory, boolean restart)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       int currentMem = appInfo.getResources().getMemory();
       if (memory != currentMem)
       {
-         SystemInfo systemInfo = systemInfo(credential);
+         SystemInfo systemInfo = systemInfo(cloudfoundryCredential);
          SystemResources limits = systemInfo.getLimits();
          SystemResources usage = systemInfo.getUsage();
          if (limits != null && usage != null //
@@ -1173,10 +1244,10 @@ public class Cloudfoundry
                + " but " + (appInfo.getInstances() * memory) + "M required. ");
          }
          appInfo.getResources().setMemory(memory);
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(cloudfoundryCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1202,6 +1273,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties.
@@ -1209,17 +1282,17 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public Instance[] applicationInstances(String server, String app, VirtualFileSystem vfs, String projectId)
-      throws ParsingResponseException, CloudfoundryException, IOException, VirtualFileSystemException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return applicationInstances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
    }
 
-   private Instance[] applicationInstances(Credential credential, String app)
+   private Instance[] applicationInstances(CloudfoundryCredential cloudfoundryCredential, String app)
       throws ParsingResponseException, CloudfoundryException, IOException
    {
       InstanceInfo[] instancesInfo =
-         fromJson(getJson(credential.target + "/apps/" + app + "/instances", credential.token, 200),
+         parseJsonResponse(getJson(cloudfoundryCredential.target + "/apps/" + app + "/instances", cloudfoundryCredential.token, 200),
             InstancesInfo.class, null).getInstances();
       if (instancesInfo != null && instancesInfo.length > 0)
       {
@@ -1261,6 +1334,8 @@ public class Cloudfoundry
     *    if cloud foundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1268,7 +1343,7 @@ public class Cloudfoundry
     *    id any i/o errors occurs
     */
    public void instances(String server, String app, VirtualFileSystem vfs, String projectId, String expression)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       instances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, expression, false);
@@ -1277,8 +1352,8 @@ public class Cloudfoundry
    /** Instance update expression pattern. */
    private static final Pattern instanceUpdateExpr = Pattern.compile("([+-])?(\\d+)");
 
-   private void instances(Credential credential, String app, String expression, boolean restart) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void instances(CloudfoundryCredential cloudfoundryCredential, String app, String expression, boolean restart)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
       Matcher m = instanceUpdateExpr.matcher(expression);
       if (!m.matches())
@@ -1288,7 +1363,7 @@ public class Cloudfoundry
       String sign = m.group(1);
       String val = m.group(2);
 
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       int currentInst = appInfo.getInstances();
       int newInst = sign == null //
          ? Integer.parseInt(expression) //
@@ -1303,10 +1378,10 @@ public class Cloudfoundry
       if (currentInst != newInst)
       {
          appInfo.setInstances(newInst);
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(cloudfoundryCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1333,6 +1408,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1340,18 +1417,18 @@ public class Cloudfoundry
     *    id any i/o errors occurs
     */
    public void deleteApplication(String server, String app, VirtualFileSystem vfs, String projectId, boolean deleteServices)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       deleteApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, deleteServices, vfs, projectId);
    }
 
-   private void deleteApplication(Credential credential, String app, boolean deleteServices, VirtualFileSystem vfs,
+   private void deleteApplication(CloudfoundryCredential cloudfoundryCredential, String app, boolean deleteServices, VirtualFileSystem vfs,
                                   String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
-      deleteJson(credential.target + "/apps/" + app, credential.token, 200);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
+      deleteJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, 200);
       if (vfs != null && projectId != null)
       {
          writeApplicationName(vfs, projectId, null);
@@ -1364,7 +1441,7 @@ public class Cloudfoundry
          {
             for (String service : services)
             {
-               deleteService(credential, service);
+               deleteService(cloudfoundryCredential, service);
             }
          }
       }
@@ -1392,6 +1469,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1402,18 +1481,18 @@ public class Cloudfoundry
                                                                           String app,
                                                                           VirtualFileSystem vfs,
                                                                           String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return applicationStats(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
    }
 
    @SuppressWarnings({"serial", "rawtypes", "unchecked"})
-   private Map<String, CloudfoundryApplicationStatistics> applicationStats(Credential credential, String app)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private Map<String, CloudfoundryApplicationStatistics> applicationStats(CloudfoundryCredential cloudfoundryCredential, String app)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
       Map cloudStats =
-         fromJson(getJson(credential.target + "/apps/" + app + "/stats", credential.token, 200), Map.class,
+         parseJsonResponse(getJson(cloudfoundryCredential.target + "/apps/" + app + "/stats", cloudfoundryCredential.token, 200), Map.class,
             new HashMap<String, Stats>(0)
             {
             }.getClass().getGenericSuperclass());
@@ -1464,17 +1543,17 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
-    * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
-    *    name is not provided and we try to determine it from IDE project properties
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public CloudFoundryApplication[] listApplications(String server) throws ParsingResponseException,
-      CloudfoundryException, VirtualFileSystemException, IOException
+   public CloudFoundryApplication[] listApplications(String server)
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server);
-      return fromJson(getJson(credential.target + "/apps", credential.token, 200), CloudFoundryApplication[].class, null);
+      CloudfoundryCredential cloudfoundryCredential = getCredential(server);
+      return parseJsonResponse(
+         getJson(cloudfoundryCredential.target + "/apps", cloudfoundryCredential.token, 200), CloudFoundryApplication[].class, null);
    }
 
    /**
@@ -1489,30 +1568,58 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
-    * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
-    *    name is not provided and we try to determine it from IDE project properties
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public CloudfoundryServices services(String server) throws CloudfoundryException, ParsingResponseException,
-      VirtualFileSystemException, IOException
+   public CloudfoundryServices services(String server)
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server);
-      return new CloudfoundryServicesImpl(systemServices(credential), provisionedServices(credential));
+      CloudfoundryCredential cloudfoundryCredential = getCredential(server);
+      return new CloudfoundryServicesImpl(systemServices(cloudfoundryCredential), provisionedServices(cloudfoundryCredential));
    }
 
-   private SystemService[] systemServices(Credential credential) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   private SystemService[] systemServices(CloudfoundryCredential cloudfoundryCredential)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
       // Hard for parsing JSON for system services :( , so need do some manually job.
-      return parseSystemServices(getJson(credential.target + "/info/services", credential.token, 200));
+      try
+      {
+         JsonValue jsonServices = JsonHelper.parseJson(getJson(cloudfoundryCredential.target + "/info/services", cloudfoundryCredential.token, 200));
+         List<SystemService> result = new ArrayList<SystemService>();
+         for (Iterator<String> types = jsonServices.getKeys(); types.hasNext(); )
+         {
+            String type = types.next();
+            for (Iterator<String> vendors = jsonServices.getElement(type).getKeys(); vendors.hasNext(); )
+            {
+               String vendor = vendors.next();
+               for (Iterator<String> versions = jsonServices.getElement(type).getElement(vendor).getKeys(); versions
+                  .hasNext(); )
+               {
+                  String version = versions.next();
+                  result.add(ObjectBuilder.createObject(SystemServiceImpl.class,
+                     jsonServices.getElement(type).getElement(vendor).getElement(version)));
+               }
+            }
+         }
+         return result.toArray(new SystemService[result.size()]);
+      }
+      catch (JsonException e)
+      {
+         throw new ParsingResponseException(e.getMessage(), e);
+      }
+      catch (JsonParseException e)
+      {
+         throw new ParsingResponseException(e.getMessage(), e);
+      }
    }
 
-   private ProvisionedService[] provisionedServices(Credential credential) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private ProvisionedService[] provisionedServices(CloudfoundryCredential cloudfoundryCredential)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.target + "/services", credential.token, 200), ProvisionedService[].class, null);
+      return parseJsonResponse(
+         getJson(cloudfoundryCredential.target + "/services", cloudfoundryCredential.token, 200), ProvisionedService[].class, null);
    }
 
    /**
@@ -1540,6 +1647,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1552,7 +1661,7 @@ public class Cloudfoundry
                                            String app,
                                            VirtualFileSystem vfs,
                                            String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (service == null || service.isEmpty())
       {
@@ -1565,10 +1674,10 @@ public class Cloudfoundry
          service, name, app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, false) : app);
    }
 
-   private ProvisionedService createService(Credential credential, String service, String name, String app)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private ProvisionedService createService(CloudfoundryCredential cloudfoundryCredential, String service, String name, String app)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      SystemService[] available = systemServices(credential);
+      SystemService[] available = systemServices(cloudfoundryCredential);
       SystemService target = null;
       for (int i = 0; i < available.length && target == null; i++)
       {
@@ -1584,18 +1693,18 @@ public class Cloudfoundry
       // Generate service name if not specified.
       if (name == null || name.isEmpty())
       {
-         name = generate(service + '-', 8);
+         name = NameGenerator.generate(service + '-', 8);
       }
 
       CreateService req = new CreateService(name, target.getType(), service, target.getVersion());
-      postJson(credential.target + "/services", credential.token, toJson(req), 200);
+      postJson(cloudfoundryCredential.target + "/services", cloudfoundryCredential.token, JsonHelper.toJson(req), 200);
 
       // Be sure service available.
-      ProvisionedService res = findService(credential, name);
+      ProvisionedService res = findService(cloudfoundryCredential, name);
 
       if (app != null)
       {
-         bindService(credential, name, app, true);
+         bindService(cloudfoundryCredential, name, app, true);
       }
 
       return res;
@@ -1614,14 +1723,13 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
-    * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
-    *    name is not provided and we try to determine it from IDE project properties
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public void deleteService(String server, String name) throws ParsingResponseException, CloudfoundryException,
-      VirtualFileSystemException, IOException
+   public void deleteService(String server, String name)
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -1630,11 +1738,11 @@ public class Cloudfoundry
       deleteService(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server), name);
    }
 
-   private void deleteService(Credential credential, String name) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   private void deleteService(CloudfoundryCredential cloudfoundryCredential, String name)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      findService(credential, name);
-      deleteJson(credential.target + "/services/" + name, credential.token, 200);
+      findService(cloudfoundryCredential, name);
+      deleteJson(cloudfoundryCredential.target + "/services/" + name, cloudfoundryCredential.token, 200);
    }
 
    /**
@@ -1659,6 +1767,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1666,7 +1776,7 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public void bindService(String server, String name, String app, VirtualFileSystem vfs, String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -1676,11 +1786,11 @@ public class Cloudfoundry
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
    }
 
-   private void bindService(Credential credential, String name, String app, boolean restart) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void bindService(CloudfoundryCredential cloudfoundryCredential, String name, String app, boolean restart)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
-      findService(credential, name);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
+      findService(cloudfoundryCredential, name);
       boolean updated = false;
       List<String> services = appInfo.getServices();
       if (services == null)
@@ -1696,10 +1806,10 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(cloudfoundryCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1726,6 +1836,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1733,7 +1845,7 @@ public class Cloudfoundry
     *    id any i/o errors occurs
     */
    public void unbindService(String server, String name, String app, VirtualFileSystem vfs, String projectId)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -1743,18 +1855,18 @@ public class Cloudfoundry
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
    }
 
-   private void unbindService(Credential credential, String name, String app, boolean restart) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void unbindService(CloudfoundryCredential cloudfoundryCredential, String name, String app, boolean restart)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
-      findService(credential, name);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
+      findService(cloudfoundryCredential, name);
       List<String> services = appInfo.getServices();
       if (services != null && services.size() > 0 && services.remove(name))
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(cloudfoundryCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1783,6 +1895,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1790,7 +1904,7 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public void environmentAdd(String server, String app, VirtualFileSystem vfs, String projectId, String key, String val)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (key == null || key.isEmpty())
       {
@@ -1800,10 +1914,10 @@ public class Cloudfoundry
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, key, val, true);
    }
 
-   private void environmentAdd(Credential credential, String app, String key, String val, boolean restart)
-      throws IOException, ParsingResponseException, CloudfoundryException
+   private void environmentAdd(CloudfoundryCredential cloudfoundryCredential, String app, String key, String val, boolean restart)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       boolean updated = false;
       List<String> env = appInfo.getEnv();
       String kv = key + "=" + (val == null ? "" : val);
@@ -1820,10 +1934,10 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(cloudfoundryCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1850,6 +1964,8 @@ public class Cloudfoundry
     *    if cloudfoundry server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
+    * @throws CredentialStoreException
+    *    if any error occurs when try to access PaaS credential from CredentialStore
     * @throws VirtualFileSystemException
     *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
     *    name is not provided and we try to determine it from IDE project properties
@@ -1857,7 +1973,7 @@ public class Cloudfoundry
     *    if any i/o errors occurs
     */
    public void environmentDelete(String server, String app, VirtualFileSystem vfs, String projectId, String key)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (key == null || key.isEmpty())
       {
@@ -1867,10 +1983,10 @@ public class Cloudfoundry
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, key, true);
    }
 
-   private void environmentDelete(Credential credential, String app, String key, boolean restart) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private void environmentDelete(CloudfoundryCredential cloudfoundryCredential, String app, String key, boolean restart)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
+      CloudFoundryApplication appInfo = applicationInfo(cloudfoundryCredential, app);
       boolean updated = false;
       List<String> env = appInfo.getEnv();
       if (env != null && env.size() > 0)
@@ -1888,10 +2004,10 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(cloudfoundryCredential.target + "/apps/" + app, cloudfoundryCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(cloudfoundryCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1906,7 +2022,7 @@ public class Cloudfoundry
                               boolean noStart,
                               VirtualFileSystem vfs,
                               String projectId)
-      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws CloudfoundryException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if ("create".equals(action))
       {
@@ -1925,15 +2041,15 @@ public class Cloudfoundry
          {
             throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
          }
-         Credential credential = getCredential(server);
+         CloudfoundryCredential cloudfoundryCredential = getCredential(server);
 
-         SystemInfo systemInfo = systemInfo(credential);
+         SystemInfo systemInfo = systemInfo(cloudfoundryCredential);
          SystemResources limits = systemInfo.getLimits();
          SystemResources usage = systemInfo.getUsage();
 
          checkApplicationNumberLimit(limits, usage);
 
-         checkApplicationName(credential, app);
+         checkApplicationName(cloudfoundryCredential, app);
 
          Framework cfg = null;
          if (frameworkName != null)
@@ -1991,12 +2107,12 @@ public class Cloudfoundry
       }
    }
 
-   private void checkApplicationName(Credential credential, String app) throws IOException, ParsingResponseException,
-      CloudfoundryException
+   private void checkApplicationName(CloudfoundryCredential cloudfoundryCredential, String app)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
       try
       {
-         applicationInfo(credential, app);
+         applicationInfo(cloudfoundryCredential, app);
          throw new IllegalArgumentException("Application '" + app + "' already exists. Use update or delete. ");
       }
       catch (CloudfoundryException e)
@@ -2022,25 +2138,25 @@ public class Cloudfoundry
          "Unsupported framework '" + frameworkName + "'. List of supported frameworks: " + systemInfo.getFrameworks().keySet());
    }
 
-   private RuntimeInfo getRuntimeInfo(String runtime, Credential credential)
+   private RuntimeInfo getRuntimeInfo(String runtime, CloudfoundryCredential cloudfoundryCredential)
       throws CloudfoundryException, ParsingResponseException, IOException
    {
-      return (RuntimeInfo)getRuntimes(credential).get(runtime);
+      return (RuntimeInfo)getRuntimes(cloudfoundryCredential).get(runtime);
    }
 
-   private Map getRuntimes(Credential credential)
+   private Map getRuntimes(CloudfoundryCredential cloudfoundryCredential)
       throws CloudfoundryException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.target + "/info/runtimes", credential.token, 200), Map.class,
+      return parseJsonResponse(getJson(cloudfoundryCredential.target + "/info/runtimes", cloudfoundryCredential.token, 200), Map.class,
          new HashMap<String, RuntimeInfo>(0)
          {
          }.getClass().getGenericSuperclass());
    }
 
-   private ProvisionedService findService(Credential credential, String name) throws IOException,
-      ParsingResponseException, CloudfoundryException
+   private ProvisionedService findService(CloudfoundryCredential cloudfoundryCredential, String name)
+      throws CloudfoundryException, ParsingResponseException, IOException
    {
-      for (ProvisionedService service : provisionedServices(credential))
+      for (ProvisionedService service : provisionedServices(cloudfoundryCredential))
       {
          if (name.equals(service.getName()))
          {
@@ -2050,20 +2166,23 @@ public class Cloudfoundry
       throw new IllegalArgumentException("Service '" + name + "' not found. ");
    }
 
-   private Credential getCredential(String server) throws CloudfoundryException, VirtualFileSystemException,
-      IOException
+   private CloudfoundryCredential getCredential(String server) throws CloudfoundryException, CredentialStoreException
    {
-      CloudfoundryCredentials credentials = authenticator.readCredentials();
-      String token = credentials.getToken(server);
+      final Credential credential = new Credential();
+      credentialStore.load(getUserId(), "cloudfoundry", credential);
+      if (server == null || server.isEmpty())
+      {
+         server = credential.getAttribute("current_target");
+      }
+      String token = credential.getAttribute(server);
       if (token == null)
       {
          throw new CloudfoundryException(200, 200, "Authentication required.\n", "text/plain");
       }
-      return new Credential(server, token);
+      return new CloudfoundryCredential(server, token);
    }
 
-   private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name)
-      throws VirtualFileSystemException
+   private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name) throws VirtualFileSystemException
    {
       Property p = new PropertyImpl("cloudfoundry-application", name);
       List<Property> properties = new ArrayList<Property>(1);
@@ -2072,13 +2191,13 @@ public class Cloudfoundry
    }
 
    private String detectApplicationName(VirtualFileSystem vfs, String projectId, boolean failIfCannotDetect)
-      throws VirtualFileSystemException, IOException
+      throws VirtualFileSystemException
    {
       String app = null;
       if (vfs != null && projectId != null)
       {
          Item item = vfs.getItem(projectId, PropertyFilter.valueOf("cloudfoundry-application"));
-         app = (String)item.getPropertyValue("cloudfoundry-application");
+         app = item.getPropertyValue("cloudfoundry-application");
       }
       if (failIfCannotDetect && (app == null || app.isEmpty()))
       {
@@ -2097,13 +2216,13 @@ public class Cloudfoundry
       vfs.updateItem(projectId, properties, null);
    }
 
-   private String detectServer(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException, IOException
+   private String detectServer(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException
    {
       String server = null;
       if (vfs != null && projectId != null)
       {
          Item item = vfs.getItem(projectId, PropertyFilter.valueOf("vmc-target"));
-         server = (String)item.getPropertyValue("vmc-target");
+         server = item.getPropertyValue("vmc-target");
       }
       if (server == null)
       {
@@ -2120,8 +2239,12 @@ public class Cloudfoundry
    private static final byte[] PUT = "put".getBytes();
    private static final byte[] CONTENT_TYPE_ZIP = "Content-type: application/zip\r\n\r\n".getBytes();
 
-   private void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, java.io.File path)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+   private void uploadApplication(CloudfoundryCredential cloudfoundryCredential,
+                                  String app,
+                                  VirtualFileSystem vfs,
+                                  String projectId,
+                                  java.io.File path)
+      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       LOG.debug("uploadApplication START");
       final long start = System.currentTimeMillis();
@@ -2131,7 +2254,7 @@ public class Cloudfoundry
       java.io.File uploadDir = null;
       try
       {
-         uploadDir = createTempDirectory(null, "vmc_" + app);
+         uploadDir = FileUtils.createTempDirectory(null, "vmc_" + app);
 
          if (path != null)
          {
@@ -2140,12 +2263,12 @@ public class Cloudfoundry
                String name = path.getName();
                if (name.endsWith(".war") || name.endsWith(".zip") || name.endsWith(".jar"))
                {
-                  unzip(path, uploadDir);
+                  ZipUtils.unzip(path, uploadDir);
                }
             }
             else
             {
-               copy(path, uploadDir, null);
+               FileUtils.copy(path, uploadDir, null);
             }
          }
          else
@@ -2153,7 +2276,7 @@ public class Cloudfoundry
             Utils.copy(vfs, projectId, uploadDir);
          }
 
-         List<java.io.File> files = list(uploadDir, GIT_FILTER);
+         List<java.io.File> files = FileUtils.list(uploadDir, FileUtils.GIT_FILTER);
 
          long totalSize = 0;
          for (java.io.File f : files)
@@ -2185,8 +2308,8 @@ public class Cloudfoundry
             final long timeSHA1 = System.currentTimeMillis() - startSHA1;
             LOG.debug("Count SHA1 for {} files in {} ms", files.size(), timeSHA1);
 
-            resources = fromJson(postJson(credential.target + "/resources", credential.token, toJson(fingerprints), 200),
-               ApplicationFile[].class, null);
+            resources = parseJsonResponse(postJson(cloudfoundryCredential.target + "/resources", cloudfoundryCredential.token,
+               JsonHelper.toJson(fingerprints), 200), ApplicationFile[].class, null);
 
             String uploadDirPath = uploadDir.getAbsolutePath() + '/';
 
@@ -2205,7 +2328,7 @@ public class Cloudfoundry
 
          final long startZIP = System.currentTimeMillis();
          zip = new java.io.File(System.getProperty("java.io.tmpdir"), app + ".zip");
-         zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter()
+         ZipUtils.zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter()
          {
             @Override
             public boolean accept(java.io.File parent, String name)
@@ -2222,10 +2345,10 @@ public class Cloudfoundry
          LOG.debug("zip application in {} ms", timeZIP);
 
          // Upload application data.
-         http = (HttpURLConnection)new URL(credential.target + "/apps/" + app + "/application").openConnection();
+         http = (HttpURLConnection)new URL(cloudfoundryCredential.target + "/apps/" + app + "/application").openConnection();
          http.setInstanceFollowRedirects(false);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Authorization", credential.token);
+         http.setRequestProperty("Authorization", cloudfoundryCredential.token);
          http.setRequestProperty("Accept", "*/*");
          final String boundary = "----------" + System.currentTimeMillis();
          http.setRequestProperty("Content-type", "multipart/form-data; boundary=" + boundary);
@@ -2241,7 +2364,7 @@ public class Cloudfoundry
 
             output.write(NEW_LINE);
             output.write(CONTENT_DISPOSITION_RESOURCES);
-            output.write(toJson(resources).getBytes());
+            output.write(JsonHelper.toJson(resources).getBytes());
 
             output.write(NEW_LINE);
             output.write(HYPHENS);
@@ -2304,7 +2427,7 @@ public class Cloudfoundry
       {
          if (uploadDir != null)
          {
-            deleteRecursive(uploadDir);
+            FileUtils.deleteRecursive(uploadDir);
          }
          if (zip != null)
          {
@@ -2320,28 +2443,40 @@ public class Cloudfoundry
       }
    }
 
+   private <O> O parseJsonResponse(String json, Class<O> clazz, Type type) throws ParsingResponseException
+   {
+      try
+      {
+         return JsonHelper.fromJson(json, clazz, type);
+      }
+      catch (JsonParseException e)
+      {
+         throw new ParsingResponseException(e.getMessage(), e);
+      }
+   }
+
    /* ------------------------- HTTP --------------------------- */
 
-   private String getJson(String url, String authToken, int success) throws CloudfoundryException, IOException,
-      ParsingResponseException
+   private String getJson(String url, String authToken, int success)
+      throws CloudfoundryException, IOException
    {
       return doRequest(url, "GET", authToken, null, null, success);
    }
 
-   private String postJson(String url, String authToken, String body, int success) throws CloudfoundryException,
-      IOException, ParsingResponseException
+   private String postJson(String url, String authToken, String body, int success)
+      throws CloudfoundryException, IOException
    {
       return doRequest(url, "POST", authToken, body, "application/json", success);
    }
 
-   private String putJson(String url, String authToken, String body, int success) throws CloudfoundryException,
-      IOException, ParsingResponseException
+   private String putJson(String url, String authToken, String body, int success)
+      throws CloudfoundryException, IOException
    {
       return doRequest(url, "PUT", authToken, body, "application/json", success);
    }
 
-   private String deleteJson(String url, String authToken, int success) throws CloudfoundryException, IOException,
-      ParsingResponseException
+   private String deleteJson(String url, String authToken, int success)
+      throws CloudfoundryException, IOException
    {
       return doRequest(url, "DELETE", authToken, null, null, success);
    }
@@ -2511,34 +2646,4 @@ public class Cloudfoundry
       seconds -= minutes * 60;
       return days + "d:" + hours + "h:" + minutes + "m:" + seconds + 's';
    }
-
-   private static SystemService[] parseSystemServices(String json) throws ParsingResponseException
-   {
-      try
-      {
-         JsonValue jsonServices = parseJson(json);
-         List<SystemService> result = new ArrayList<SystemService>();
-         for (Iterator<String> types = jsonServices.getKeys(); types.hasNext(); )
-         {
-            String type = types.next();
-            for (Iterator<String> vendors = jsonServices.getElement(type).getKeys(); vendors.hasNext(); )
-            {
-               String vendor = vendors.next();
-               for (Iterator<String> versions = jsonServices.getElement(type).getElement(vendor).getKeys(); versions
-                  .hasNext(); )
-               {
-                  String version = versions.next();
-                  result.add(ObjectBuilder.createObject(SystemServiceImpl.class,
-                     jsonServices.getElement(type).getElement(vendor).getElement(version)));
-               }
-            }
-         }
-         return result.toArray(new SystemService[result.size()]);
-      }
-      catch (JsonException e)
-      {
-         throw new ParsingResponseException(e.getMessage(), e);
-      }
-   }
-
 }

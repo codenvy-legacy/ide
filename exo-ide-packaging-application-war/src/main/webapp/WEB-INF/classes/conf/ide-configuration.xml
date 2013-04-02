@@ -25,11 +25,6 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
 
-  <component>
-      <key>org.exoplatform.ide.invite.InviteUserService</key>
-      <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
-   </component>
-
 <!-- 
 ***************************************************************************************
 ********************** eXo IDE Commons Components *************************************
@@ -37,28 +32,6 @@
 -->
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
-      <init-params>
-         <value-param>
-            <name>defaultEntryPoint</name>
-            <value>dev-monit</value>
-         </value-param>
-         <value-param>
-            <name>discoverable</name>
-            <value>true</value>
-         </value-param>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
-         </value-param>
-         <value-param>
-            <name>template-config</name>
-            <value>/ide-home/templates</value>
-         </value-param>
-      </init-params>
    </component>
 
    <!-- VirtualFileSystem -->
@@ -74,85 +47,27 @@
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
-      <init-params>
-         <values-param>
-            <name>workspaces</name>
-            <value>dev-monit</value>
-            <value>production</value>
-         </values-param>
-      </init-params>
-   </component>
-
-  <!-- component>
+  <component>
      <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
      <init-params>
         <values-param>
-           <name>id</name>
-           <value>production</value>
+           <name>ids</name>
            <value>dev-monit</value>
         </values-param>
      </init-params>
   </component>
    
   <component>
-     <type>org.exoplatform.ide.vfs.impl.fs.SimpleLocalFSMountStrategy</type>
-  </component-->
+     <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
+  </component>
 
   <component>
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
    
-    <component>
-      <type>org.exoplatform.ide.davmount.WebDavFolderBinder</type>
-      <description>Bind WebDavFolder</description>
-      <init-params>
-         <value-param>
-            <name>priority</name>
-            <value>60</value>
-         </value-param>
-         <value-param>
-            <name>workspace-name</name>
-            <value>dev-monit</value>
-         </value-param>
-         <value-param>
-            <name>webdav-user</name>
-            <value>exo</value>
-         </value-param>
-         <value-param>
-            <name>webdav-password</name>
-            <value>exo</value>
-         </value-param>
+ 
 
-         <value-param>
-            <name>webdav-service-url</name>
-            <value>/rest/private/jcr</value>
-         </value-param>
-         <value-param>
-            <name>base-url</name>
-            <value>http://127.0.0.1:8080</value>
-         </value-param>
-      </init-params>
-   </component>
-   
-   <component>
-      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcher</type>
-   </component>
-   <component>
-      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcherApplication</type>
-   </component>
    <!-- End VirtualFileSystem -->
-
-  <!-- Chat -->
-   <component>
-      <type>com.codenvy.ide.collaboration.watcher.server.ProjectUsers</type>
-   </component>
-
-   <component>
-      <type>com.codenvy.ide.collaboration.chat.server.ChatApplication</type>
-   </component>
-   <!-- End Chat -->
 
    <!-- LogReader -->
    <component>
@@ -165,32 +80,6 @@
    </component>
    <!-- End LogReader -->
 
-   <!-- SSH Keys -->
-
-   <component>
-      <type>org.exoplatform.ide.extension.ssh.server.KeyApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-   </component>
-
-   <component>
-      <key>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</key>
-      <type>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>key-store</name>
-            <value>/ssh-keys</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End SSH Keys -->
 
 
    <!--
@@ -198,66 +87,6 @@
    ********************** Language & Technology Supporting *******************************
    ***************************************************************************************
    -->
-
-   <!-- Groovy Support -->
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
-   </component>
-   
-    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
-   </component>
-
-   <!-- End Groovy Support -->
-
-   <!-- Chromattic Support -->
-   <component>
-      <type>org.chromattic.dataobject.DataObjectService</type>
-   </component>
-
-   <component>
-      <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
-      <init-params>
-         <value-param>
-            <name>rootNodePath</name>
-            <value>/data/</value>
-         </value-param>
-         <value-param>
-            <name>workspaceName</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>rootNodeType</name>
-            <value>nt:unstructured</value>
-         </value-param>
-      </init-params>
-   </component>
-   
-   <component>
-      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
-   </component>
-
-   <!-- End Chromattic Support -->
 
    <!--  Java  Support-->
    <component>
@@ -302,46 +131,6 @@
 
    <!-- End Python Support -->
 
-   <!-- Google Gadgets support-->
-
-   <component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
-   </component>
-
-   <!-- End Google Gadgets support-->
-
-   <!--
-   ***************************************************************************************
-   ********************** Version Control System Supporting ******************************
-   ***************************************************************************************
-   -->
-
-   <!-- GitHub support -->
-   <component>
-      <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.git.server.github.GitHub</type>
-      <init-params>
-         <value-param>
-            <name>github-user</name>
-            <value>eXoIDE</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.git.server.github.GitHubAuthenticator</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End GitHub Support-->
 
 
    <!--
@@ -393,31 +182,18 @@
          </value-param>
          <value-param>
             <name>jenkins-user</name>
-            <value>support@cloud-ide.com</value>
+            <value>vparfonov@codenvy.com</value>
          </value-param>
          <value-param>
             <name>jenkins-password</name>
-            <value>9zpkuZ3X</value>
+            <value>1z4hWHxoIr</value>
          </value-param>
       </init-params>
    </component>
 
    <!-- End Cloudbees -->
 
-   <!-- CloudFoundry -->
-
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
-   </component>
-   
+     
    <component>
 
 <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
@@ -469,58 +245,15 @@
 
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.LocalPathResolverImpl</type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.GitUrlResolverFsImpl</type>
    </component>
 
-   <!-- Heroku -->
-
-   <component>
-      <type>org.exoplatform.ide.extension.heroku.server.Heroku</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End Heroku -->
-
-   <!-- OpenShift -->
-
-   <component>
-      <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.openshift.server.Express</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>express-config</name>
-            <value>/express-config</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End OpenShift -->
-
+ 
    <!-- Google AppEngine  -->
    <component>
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
@@ -636,8 +369,6 @@
       <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
    </component>
 
-   <!-- End OAuth Support -->
-
    <!--
    ***************************************************************************************
    ********************************** Collaboration Editor *************************************
@@ -653,6 +384,42 @@
 
    <component>
       <type>com.google.collide.server.documents.EditSessions</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.OrganizationServiceRequestTemplate</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.UserManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.AccountManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.WorkspaceManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.InvitationManager</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.AccountServiceConnector</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.InvitationServiceConnector</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.UserServiceConnector</type>
+   </component>
+
+   <component>
+      <type>com.codenvy.organization.client.http.WorkspaceServiceConnector</type>
    </component>
 
 </configuration>

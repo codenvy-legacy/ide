@@ -29,6 +29,8 @@ import org.exoplatform.ide.extension.appfog.shared.InfraType;
 import org.exoplatform.ide.extension.appfog.shared.Instance;
 import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
 import org.exoplatform.ide.extension.appfog.shared.SystemResources;
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.DummyCredentialStore;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -60,16 +62,17 @@ public class AppfogTest
 {
    private static Auth authenticator;
    private static File javaWebApp;
+   private static DummyCredentialStore credentialStore;
+   private final String userId = "andrew";
 
    @BeforeClass
    public static void init() throws Exception
    {
       authenticator = new Auth();
-      authenticator.setCredentials(new AppfogCredentials());
       authenticator.setUsername(LoginInfo.email);
       authenticator.setPassword(LoginInfo.password);
-      authenticator.writeTarget(LoginInfo.target);
-
+      authenticator.setTarget(LoginInfo.target);
+      credentialStore = new DummyCredentialStore();
       javaWebApp = createJavaWebApplication();
    }
 
@@ -79,7 +82,7 @@ public class AppfogTest
    @Before
    public void setUp() throws Exception
    {
-      appfog = new Appfog(authenticator);
+      appfog = new Appfog(authenticator, credentialStore);
       appfog.login();
       limits = appfog.systemInfo(LoginInfo.target).getLimits();
    }
@@ -105,11 +108,14 @@ public class AppfogTest
    {
       // --- Emulate invalid security token.
       Auth _authenticator = new Auth();
-      _authenticator.writeTarget(LoginInfo.target);
-      AppfogCredentials invalid = new AppfogCredentials();
-      invalid.addToken(LoginInfo.target, authenticator.readCredentials().getToken(LoginInfo.target) + "0x");
-      _authenticator.setCredentials(new AppfogCredentials());
-      appfog = new Appfog(_authenticator);
+      _authenticator.setTarget(LoginInfo.target);
+      Credential ok = new Credential();
+      credentialStore.load(userId, "appfog", ok);
+
+      Credential invalid = new Credential();
+      invalid.setAttribute(LoginInfo.target, ok.getAttribute(LoginInfo.target) + "_wrong");
+      credentialStore.save(userId, "appfog", invalid);
+      appfog = new Appfog(_authenticator, credentialStore);
       // ---
       try
       {

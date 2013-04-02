@@ -187,20 +187,35 @@ public interface GitClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/git/images/controls/status_Disabled.png")
    ImageResource statusDisabled();
 
-   @Source("org/exoplatform/ide/git/images/items/item_in_repository.png")
-   ImageResource itemInRepository();
+   @Source("org/exoplatform/ide/git/images/statuses/added.png")
+   ImageResource itemAdded();
 
-   @Source("org/exoplatform/ide/git/images/items/item_in_repository_question.png")
-   ImageResource itemNew();
-
-   @Source("org/exoplatform/ide/git/images/items/item_in_repository_star.png")
+   @Source("org/exoplatform/ide/git/images/statuses/changed.png")
    ImageResource itemChanged();
 
-   @Source("org/exoplatform/ide/git/images/items/item_not_commited.png")
-   ImageResource itemNotCommited();
+   @Source("org/exoplatform/ide/git/images/statuses/conflicting.png")
+   ImageResource itemConflicting();
 
-   @Source("org/exoplatform/ide/git/images/items/repository_root.png")
-   ImageResource repositoryRoot();
+   @Source("org/exoplatform/ide/git/images/statuses/ignored_not_in_index.png")
+   ImageResource itemIgnoredNotInIndex();
+
+   @Source("org/exoplatform/ide/git/images/statuses/in_repo.png")
+   ImageResource itemInRepo();
+
+   @Source("org/exoplatform/ide/git/images/statuses/missing.png")
+   ImageResource itemMissing();
+
+   @Source("org/exoplatform/ide/git/images/statuses/modified.png")
+   ImageResource itemModified();
+
+   @Source("org/exoplatform/ide/git/images/statuses/removed.png")
+   ImageResource itemRemoved();
+
+   @Source("org/exoplatform/ide/git/images/statuses/root.png")
+   ImageResource itemRoot();
+
+   @Source("org/exoplatform/ide/git/images/statuses/untracked.png")
+   ImageResource itemUntracked();
 
    @Source("org/exoplatform/ide/git/images/branch/current.png")
    ImageResource currentBranch();

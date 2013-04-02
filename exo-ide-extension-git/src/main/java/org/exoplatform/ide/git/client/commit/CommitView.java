@@ -57,6 +57,8 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
 
    private static final String ALL_FIELD_ID = "ideCommitViewAllField";
 
+   private static final String AMEND_FIELD_ID = "ideCommitViewAmendField";
+
    /* Elements titles */
 
    @UiField
@@ -71,6 +73,9 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    @UiField
    CheckBox allField;
 
+   @UiField
+   CheckBox amendField;
+
    interface CommitViewUiBinder extends UiBinder<Widget, CommitView>
    {
    }
@@ -84,9 +89,9 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
       add(uiBinder.createAndBindUi(this));
 
       allField.setName(ALL_FIELD_ID);
+      amendField.setName(AMEND_FIELD_ID);
 
       messageField.setName(MESSAGE_FIELD_ID);
-      // ,GitExtension.MESSAGES.commitMessageFieldTitle());
       commitButton.setButtonId(COMMIT_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -143,5 +148,14 @@ public class CommitView extends ViewImpl implements CommitPresenter.Display
    public HasValue<Boolean> getAllField()
    {
       return allField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.commit.CommitPresenter.Display#getAmendField()
+    */
+   @Override
+   public HasValue<Boolean> getAmendField()
+   {
+      return amendField;
    }
 }

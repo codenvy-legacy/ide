@@ -15,22 +15,9 @@
    color: rgb(128, 128, 128);
 }
 
- .chatNotification{
+.chatNotification{
    color: rgb(128, 128, 128);
    margin-left: -5px;
-}
-
-.chatNotificationName{
-   font-weight: bold;
-   font-size: 15;
-   float: left;
-}
-.chatNotificationMessage{
-   text-overflow: ellipsis;
-   width: 200px;
-   overflow: hidden;
-   white-space: nowrap;
-   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
 }
 
 @sprite .messageNotDelivered{

@@ -104,6 +104,10 @@ public class Buffer extends UiComponent<Buffer.View>
     String columnMarkerLine();
     
     String currentLine();
+
+    String expandMarker();
+
+    String expandMarkerOver();
   }
 
   /**
@@ -938,6 +942,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * @return last visible line number
    */
   public int getLastVisibleLineNumberFromTop(int topLineNumber) {
+    topLineNumber = getNextClosestModelLineThatIsVisible(topLineNumber);
     final int topLineY = convertLineNumberToY(topLineNumber);
     final int bottomLineY = topLineY + getHeight();
     return convertYToLineNumber(bottomLineY, false);
@@ -1038,8 +1043,8 @@ public class Buffer extends UiComponent<Buffer.View>
   }
 
   @Override
-  public void onLineCountChanged(Document document, int lineCount) {
-    updateBufferHeight();
+  public void onLineCountChanged(Document document, int lineCountDelta) {
+    updateBufferHeight(lineCountDelta);
   }
 
   @Override
@@ -1052,7 +1057,7 @@ public class Buffer extends UiComponent<Buffer.View>
         * clamp them
         */
        int safeLineNumber =
-           Math.min(document.getLastLineNumber(), lineNumber);
+           Math.min(document.getLastLineNumber(), lineNumber + linesToCollapse.size());
        updateBufferHeightAndMaybeScrollTop(convertLineNumberToY(safeLineNumber),
            -linesToCollapse.size() * getEditorLineHeight());
      }
@@ -1105,11 +1110,16 @@ public class Buffer extends UiComponent<Buffer.View>
   /**
    * Updates the buffer height to the calculated height. Most callers should use
    * {@link #updateBufferHeightAndMaybeScrollTop(int, int)}.
+   * 
+   * @param lineCountDelta when document was changed in the editor with enabled
+   *                        code folding capability, slave (projection) document
+   *                        does not updated yet and need to pass
+   *                        <code>lineCountDelta</code> manually
    */
-  private void updateBufferHeight() {
+  private void updateBufferHeight(int lineCountDelta) {
     int lineCount = 0;
-    if (isFoldingModeEnabled()) {
-      lineCount = foldingManager.getSlaveDocument().getNumberOfLines();
+    if (foldingManager.isFoldingModeEnabled()) {
+      lineCount = foldingManager.getSlaveDocument().getNumberOfLines() + lineCountDelta;
     }
     else {
       lineCount = document.getLineCount();
@@ -1125,6 +1135,10 @@ public class Buffer extends UiComponent<Buffer.View>
         listener.onHeightChanged(totalBufferHeight);
       }
     });
+  }
+
+  private void updateBufferHeight() {
+     updateBufferHeight(0);
   }
 
   public void setScrollLeft(int scrollLeft) {
@@ -1206,7 +1220,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * @return count of folded lines above the <code>lineNumber</code>
    */
   public int getFoldedLinesCountAboveLineNumber(int lineNumber) {
-    if (!isFoldingModeEnabled()) {
+    if (!foldingManager.isFoldingModeEnabled()) {
       return 0;
     }
     final int visibleLinesCount = foldingManager.getSlaveDocument().getNumberOfLines();
@@ -1222,8 +1236,11 @@ public class Buffer extends UiComponent<Buffer.View>
    * @return the corresponding projection document's line or <code>-1</code>
    */
   public int modelLine2VisibleLine(int masterLineNumber) {
-    if (!isFoldingModeEnabled()) {
+    if (!foldingManager.isFoldingModeEnabled()) {
       return masterLineNumber;
+    }
+    if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
+      return 0;
     }
     try {
       return foldingManager.getInformationMapping().toImageLine(masterLineNumber);
@@ -1242,7 +1259,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * @return the corresponding model line or <code>-1</code>
    */
   public int visibleLine2ModelLine(int visibleLine) {
-    if (!isFoldingModeEnabled()) {
+    if (!foldingManager.isFoldingModeEnabled()) {
       return visibleLine;
     }
     try {
@@ -1254,25 +1271,32 @@ public class Buffer extends UiComponent<Buffer.View>
   }
 
   /**
-   * Returns the line of the projection document whose corresponding line in the master document
-   * is closest to the given line in the master document or <code>-1</code>.
+   * Returns the next (from the specified <code>masterLineNumber</code>)
+   * closest line of the master document that is visible or <code>-1</code>
+   * if no visible line.
    *
    * @param masterLineNumber the line in the master document
-   * @return the line in the projection document that corresponds best to the given line in the master document or <code>-1</code>
+   * @return the next closest line number of the master document
+   *          that is visible or <code>-1</code> if no visible line
    */
-  protected int getClosestWidgetLineForModelLine(int masterLineNumber) {
-     if (!isFoldingModeEnabled())
+  public int getNextClosestModelLineThatIsVisible(int masterLineNumber) {
+     if (!foldingManager.isFoldingModeEnabled()) {
        return masterLineNumber;
+     }
+     if (masterLineNumber == 0 && foldingManager.getMasterDocument().getLength() == 0) {
+       return 0;
+     }
      try {
-       return foldingManager.getInformationMapping().toClosestImageLine(masterLineNumber);
+       for (int imageLine = -1; masterLineNumber < document.getLineCount(); masterLineNumber++) {
+         imageLine = foldingManager.getInformationMapping().toImageLine(masterLineNumber);
+         if (imageLine > -1) {
+            return masterLineNumber;
+         }
+       }
      } catch (BadLocationException e) {
        Log.error(getClass(), e);
      }
      return -1;
-  }
-
-  private boolean isFoldingModeEnabled() {
-    return foldingManager.getInformationMapping() != null;
   }
 
 }

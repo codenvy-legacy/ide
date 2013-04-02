@@ -31,6 +31,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.extension.aws.shared.s3.UpdateAccessControlRequest;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -76,14 +77,14 @@ public class S3Service
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws AWSException
+   public void login(Map<String, String> credentials) throws AWSException, CredentialStoreException
    {
       s3.login(credentials.get("access_key"), credentials.get("secret_key"));
    }
 
    @Path("logout")
    @POST
-   public void logout() throws AWSException
+   public void logout() throws CredentialStoreException
    {
       s3.logout();
    }
@@ -94,7 +95,7 @@ public class S3Service
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    public S3Bucket createBucket(@QueryParam("name") String name,
-                                @QueryParam("region") String region) throws AWSException
+                                @QueryParam("region") String region) throws AWSException, CredentialStoreException
    {
       S3Region s3Region = S3Region.fromValue(region);
       return s3.createBucket(name, s3Region);
@@ -103,14 +104,14 @@ public class S3Service
    @Path("buckets")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<S3Bucket> listBuckets() throws AWSException
+   public List<S3Bucket> listBuckets() throws AWSException, CredentialStoreException
    {
       return s3.listBuckets();
    }
 
    @Path("buckets/delete/{name}")
    @POST
-   public void deleteBucket(@PathParam("name") String name) throws AWSException
+   public void deleteBucket(@PathParam("name") String name) throws AWSException, CredentialStoreException
    {
       s3.deleteBucket(name);
    }
@@ -118,7 +119,7 @@ public class S3Service
    @Path("buckets/versioning/{s3bucket}")
    @POST
    public void setVersioningStatus(@PathParam("s3bucket") String s3Bucket, @QueryParam("status") String status)
-      throws AWSException
+      throws AWSException, CredentialStoreException
    {
       S3VersioningStatus versioningStatus = S3VersioningStatus.fromValue(status);
       s3.setVersioningStatus(s3Bucket, versioningStatus);
@@ -127,7 +128,8 @@ public class S3Service
    @Path("buckets/acl/{s3bucket}")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<S3AccessControl> getBucketAcl(@PathParam("s3bucket") String s3Bucket) throws AWSException
+   public List<S3AccessControl> getBucketAcl(@PathParam("s3bucket") String s3Bucket)
+      throws AWSException, CredentialStoreException
    {
       return s3.getBucketAcl(s3Bucket);
    }
@@ -136,7 +138,8 @@ public class S3Service
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    public void updateBucketAcl(@PathParam("s3bucket") String s3Bucket,
-                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls)
+      throws AWSException, CredentialStoreException
    {
       s3.updateBucketAcl(s3Bucket, s3UpdateAccessControls);
    }
@@ -148,7 +151,7 @@ public class S3Service
    public NewS3Object putObject(@PathParam("s3bucket") String s3Bucket,
                                 @QueryParam("s3key") String s3Key,
                                 @QueryParam("data") URL data)
-      throws AWSException, IOException
+      throws AWSException, CredentialStoreException, IOException
    {
       return s3.putObject(s3Bucket, s3Key, data);
    }
@@ -160,7 +163,7 @@ public class S3Service
                                     @QueryParam("s3key") String s3Key,
                                     @QueryParam("vfsid") String vfsid,
                                     @QueryParam("projectid") String projectId)
-      throws VirtualFileSystemException, AWSException, IOException
+      throws VirtualFileSystemException, AWSException, IOException, CredentialStoreException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, null);
       return s3.uploadProject(s3Bucket, s3Key, vfs, projectId);
@@ -169,7 +172,8 @@ public class S3Service
    @Path("objects/upload/{s3bucket}")
    @POST
    public Response uploadFile(@PathParam("s3bucket") String s3Bucket,
-                              Iterator<FileItem> formData) throws IOException, InvalidArgumentException, AWSException
+                              Iterator<FileItem> formData)
+      throws IOException, InvalidArgumentException, AWSException, CredentialStoreException
    {
       FileItem contentItem = null;
       String mediaType = null;
@@ -228,7 +232,7 @@ public class S3Service
    @Path("objects/{s3bucket}")
    @GET
    public Response downloadFile(@PathParam("s3bucket") String s3Bucket,
-                                @QueryParam("s3key") String s3Key) throws AWSException
+                                @QueryParam("s3key") String s3Key) throws AWSException, CredentialStoreException
    {
       S3Content content = s3.getObjectContent(s3Bucket, s3Key);
 
@@ -243,7 +247,7 @@ public class S3Service
    @Path("objects/delete/{s3bucket}")
    @POST
    public void deleteObject(@PathParam("s3bucket") String s3Bucket,
-                            @QueryParam("s3key") String s3key) throws AWSException
+                            @QueryParam("s3key") String s3key) throws AWSException, CredentialStoreException
    {
       s3.deleteObject(s3Bucket, s3key);
    }
@@ -251,7 +255,8 @@ public class S3Service
    @Path("objects/delete/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void deleteObjects(@PathParam("s3bucket") String s3Bucket, List<S3KeyVersions> s3Keys) throws AWSException
+   public void deleteObjects(@PathParam("s3bucket") String s3Bucket, List<S3KeyVersions> s3Keys)
+      throws AWSException, CredentialStoreException
    {
       s3.deleteObjects(s3Bucket, s3Keys);
    }
@@ -260,7 +265,7 @@ public class S3Service
    @POST
    public void deleteVersion(@PathParam("s3bucket") String s3Bucket,
                              @QueryParam("s3key") String s3Key,
-                             @QueryParam("versionid") String versionId) throws AWSException
+                             @QueryParam("versionid") String versionId) throws AWSException, CredentialStoreException
    {
       s3.deleteVersion(s3Bucket, s3Key, versionId);
    }
@@ -273,7 +278,8 @@ public class S3Service
                                              @QueryParam("keymarker") String keyMarker,
                                              @QueryParam("versionidmarker") String versionIdMarker,
                                              @QueryParam("delimiter") String delimiter,
-                                             @QueryParam("maxresults") Integer maxResults) throws AWSException
+                                             @QueryParam("maxresults") Integer maxResults)
+      throws AWSException, CredentialStoreException
    {
       return s3.listVersions(s3Bucket, prefix, keyMarker, versionIdMarker, delimiter, maxResults);
    }
@@ -284,7 +290,7 @@ public class S3Service
    public S3ObjectsList listObjects(@PathParam("s3bucket") String s3Bucket,
                                     @QueryParam("prefix") String prefix,
                                     @QueryParam("nextmarker") String nextMarker,
-                                    @QueryParam("maxkeys") int maxKeys) throws AWSException
+                                    @QueryParam("maxkeys") int maxKeys) throws AWSException, CredentialStoreException
    {
       return s3.listObjects(s3Bucket, prefix, nextMarker, maxKeys);
    }
@@ -294,7 +300,8 @@ public class S3Service
    @Produces(MediaType.APPLICATION_JSON)
    public List<S3AccessControl> getObjectAcl(@PathParam("s3bucket") String s3Bucket,
                                              @QueryParam("s3key") String s3Key,
-                                             @QueryParam("versionid") String versionId) throws AWSException
+                                             @QueryParam("versionid") String versionId)
+      throws AWSException, CredentialStoreException
    {
       return s3.getObjectAcl(s3Bucket, s3Key, versionId);
    }
@@ -305,7 +312,8 @@ public class S3Service
    public void updateObjectAcl(@PathParam("s3bucket") String s3Bucket,
                                @QueryParam("s3key") String s3Key,
                                @QueryParam("versionid") String versionId,
-                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls)
+      throws AWSException, CredentialStoreException
    {
       s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3UpdateAccessControls);
    }

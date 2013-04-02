@@ -299,16 +299,19 @@ public interface IdeLocalizationConstant extends Constants
    String showHiddenFilesControlTitle();
 
    @Key("control.folding.collapse.title")
-   String foldingCollapseControlTitle();
+   String collapseFoldControlTitle();
 
    @Key("control.folding.expand.title")
-   String foldingExpandControlTitle();
+   String expandFoldControlTitle();
 
    @Key("control.folding.collapseAll.title")
-   String foldingCollapseAllControlTitle();
+   String collapseAllFoldsControlTitle();
 
    @Key("control.folding.expandAll.title")
-   String foldingExpandAllControlTitle();
+   String expandAllFoldsControlTitle();
+
+   @Key("control.folding.foldSelection.title")
+   String foldSelectionControlTitle();
 
    /*
     * DOWNLOAD CONTROL

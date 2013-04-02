@@ -132,9 +132,12 @@ public class Renderer {
 
     int viewportTopmostContentChangedLine =
         Math.max(viewport.getTopLineNumber(), changeTracker.getTopmostContentChangedLineNumber());
+      int viewportTopmostContentChangedPreviousLine =
+         viewportTopmostContentChangedLine > 0 ? viewportTopmostContentChangedLine - 1
+            : viewportTopmostContentChangedLine;
 
     if (changes.contains(ChangeType.VIEWPORT_FOLD_MARK)) {
-      foldMarkRenderer.renderLineAndFollowing(0);
+      foldMarkRenderer.render();
     }
 
     if (changes.contains(ChangeType.VIEWPORT_LINE_NUMBER)) {
@@ -144,8 +147,8 @@ public class Renderer {
 
 //      lineNumberRenderer.render();
       // TODO workaround for situation when new line inserted before the collapsed text block
-      lineNumberRenderer.renderLineAndFollowing(0);
-      foldMarkRenderer.render();
+      lineNumberRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
+      foldMarkRenderer.renderLineAndFollowing(viewportTopmostContentChangedPreviousLine);
 
       if (ENABLE_PROFILING) {
         Log.markTimeline(getClass(), " - renderViewportLineNumbersChanged...");
@@ -160,7 +163,7 @@ public class Renderer {
         Log.markTimeline(getClass(), " - renderViewportContentChange...");
       }
 
-      viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedLine,
+      viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedPreviousLine,
           changeTracker.getViewportRemovedLines(), changeTracker.isByReasonOfFolding());
 
       if (changeTracker.hadContentChangeThatUpdatesFollowingLines()) {
@@ -169,7 +172,7 @@ public class Renderer {
         }
 
         lineNumberRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
-        foldMarkRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
+        foldMarkRenderer.renderLineAndFollowing(viewportTopmostContentChangedPreviousLine);
       }
     }
 

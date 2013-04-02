@@ -50,7 +50,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(2, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals(" public int getI(){\nreturn 0;\n}\n", document.get(foldRange1.getOffset(), foldRange1.getLength()));
@@ -69,7 +69,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(1, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("public int getI(){\nif(true){\nreturn 0 sdagsaf glfdskg ;lkdfsnlgk ndsfg \n}\n}",
@@ -88,7 +88,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(2, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("public int getI(){\nreturn 0;\n}\n", document.get(foldRange1.getOffset(), foldRange1.getLength()));
@@ -112,7 +112,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(3, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("public int getI(){\n" +
@@ -148,7 +148,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(1, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("/*\n" +
@@ -180,7 +180,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("}\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(1, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("public class II{\n"
@@ -198,7 +198,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(1, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("import java.util.List;\n"
@@ -215,7 +215,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(0, foldRanges.size());
    }
 
@@ -230,7 +230,7 @@ public class JavaFoldOccurrencesFinderTest extends GwtTest
       b.append("public class MyClass{\n");
       b.append("}");
       IDocument document = new Document(b.toString());
-      List<AbstractFoldRange> foldRanges = finder.computePositions(document);
+      List<AbstractFoldRange> foldRanges = finder.findPositions(document);
       assertEquals(1, foldRanges.size());
       AbstractFoldRange foldRange1 = foldRanges.get(0);
       assertEquals("import static org.junit.Assert.assertEquals;\n"+

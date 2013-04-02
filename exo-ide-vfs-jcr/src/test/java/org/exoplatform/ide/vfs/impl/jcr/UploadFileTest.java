@@ -177,10 +177,7 @@ public class UploadFileTest extends JcrFileSystemTest
    private ContainerResponse doUploadFile(String fileName, String fileMediaType, String fileContent,
       String formMediaType, String formFileName, boolean formOverwrite) throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("uploadfile/") //
-         .append(uploadTestNodeID).toString(); //
+      String path = SERVICE_URI + "uploadfile/" + uploadTestNodeID; //
 
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       List<String> contentType = new ArrayList<String>();

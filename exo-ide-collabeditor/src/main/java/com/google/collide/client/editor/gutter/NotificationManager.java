@@ -24,9 +24,7 @@ import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.DocumentListener;
-import com.google.collide.client.editor.folding.AbstractFoldRange;
 import com.google.collide.client.editor.folding.FoldMarker;
-import com.google.collide.client.editor.folding.FoldingManager;
 import com.google.collide.client.editor.folding.FoldingManager.FoldingListener;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.collide.client.ui.menu.PositionController.HorizontalAlign;
@@ -597,25 +595,13 @@ public class NotificationManager implements DocumentListener, FoldingListener
 
    private int getVisibleLineNumber(int lineNumber)
    {
-      try
+      if (editor.isFoldingMode())
       {
-         if (editor.isFoldingMode())
+         FoldMarker foldMarker = editor.getFoldingManager().getFoldMarkerOfLine(lineNumber, false);
+         if (foldMarker != null && foldMarker.isCollapsed())
          {
-            FoldingManager foldingManager = editor.getFoldingManager();
-            FoldMarker foldMarker = foldingManager.findFoldMarker(lineNumber, false);
-            if (foldMarker != null && foldMarker.isCollapsed())
-            {
-               AbstractFoldRange coveredRange = foldingManager.getFoldRangeOfMarker(foldMarker);
-               if (coveredRange != null)
-               {
-                  final int firstContentOffset = coveredRange.getOffset() + coveredRange.computeCaptionOffset(document);
-                  return document.getLineOfOffset(firstContentOffset);
-               }
-            }
+            return editor.getFoldingManager().getCaptionLine(foldMarker);
          }
-      }
-      catch (BadLocationException e) {
-         // TODO: handle exception
       }
       return lineNumber;
    }

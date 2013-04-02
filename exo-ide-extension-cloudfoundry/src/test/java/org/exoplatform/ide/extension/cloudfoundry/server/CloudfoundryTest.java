@@ -26,6 +26,10 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.DummyCredentialStore;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -57,16 +61,17 @@ public class CloudfoundryTest
 {
    private static Auth authenticator;
    private static File javaWebApp;
+   private static DummyCredentialStore credentialStore;
+   private final String userId = "andrew";
 
    @BeforeClass
    public static void init() throws Exception
    {
       authenticator = new Auth();
-      authenticator.setCredentials(new CloudfoundryCredentials());
       authenticator.setUsername(LoginInfo.email);
       authenticator.setPassword(LoginInfo.password);
-      authenticator.writeTarget(LoginInfo.target);
-
+      authenticator.setTarget(LoginInfo.target);
+      credentialStore = new DummyCredentialStore();
       javaWebApp = createJavaWebApplication();
    }
 
@@ -76,7 +81,8 @@ public class CloudfoundryTest
    @Before
    public void setUp() throws Exception
    {
-      cloudfoundry = new Cloudfoundry(authenticator);
+      cloudfoundry = new Cloudfoundry(authenticator, credentialStore);
+      ConversationState.setCurrent(new ConversationState(new Identity("andrew")));
       cloudfoundry.login();
       limits = cloudfoundry.systemInfo(LoginInfo.target).getLimits();
    }
@@ -99,11 +105,14 @@ public class CloudfoundryTest
    {
       // --- Emulate invalid security token.
       Auth _authenticator = new Auth();
-      _authenticator.writeTarget(LoginInfo.target);
-      CloudfoundryCredentials invalid = new CloudfoundryCredentials();
-      invalid.addToken(LoginInfo.target, authenticator.readCredentials().getToken(LoginInfo.target) + "0x");
-      _authenticator.setCredentials(new CloudfoundryCredentials());
-      cloudfoundry = new Cloudfoundry(_authenticator);
+      _authenticator.setTarget(LoginInfo.target);
+      Credential ok = new Credential();
+      credentialStore.load(userId, "cloudfoundry", ok);
+
+      Credential invalid = new Credential();
+      invalid.setAttribute(LoginInfo.target, ok.getAttribute(LoginInfo.target) + "_wrong");
+      credentialStore.save(userId, "cloudfoundry", invalid);
+      cloudfoundry = new Cloudfoundry(_authenticator, credentialStore);
       // ---
       try
       {

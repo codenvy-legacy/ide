@@ -36,12 +36,18 @@ public class CommitRequest extends GitRequest
    private boolean all;
 
    /**
+    * Parameter responsible for amending of previous commit.
+    */
+   private boolean amend;
+
+   /**
     * @param message commit message
     */
-   public CommitRequest(String message, boolean all)
+   public CommitRequest(String message, boolean all, boolean amend)
    {
       this.message = message;
       this.all = all;
+      this.amend = amend;
    }
 
    /**
@@ -92,5 +98,21 @@ public class CommitRequest extends GitRequest
    public void setAll(boolean all)
    {
       this.all = all;
+   }
+
+   /**
+    * @return <code>true</code> in case when commit is amending a previous commit.
+    */
+   public boolean isAmend()
+   {
+      return amend;
+   }
+
+   /**
+    * @param amend if <code>true</code> it means that previous commit must be amended.
+    */
+   public void setAmend(boolean amend)
+   {
+      this.amend = amend;
    }
 }

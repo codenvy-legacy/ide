@@ -179,8 +179,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
          @Override
          public void onClick(ClickEvent event)
          {
-            final String demoLogin = HerokuExtension.CREDENTIALS_CONSTANT.loginDemoAccountEmail();
-            final String demoPassword = HerokuExtension.CREDENTIALS_CONSTANT.loginDemoAccountPassword();
             if (loggedIn)
             {
                try
@@ -191,7 +189,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
                      protected void onSuccess(String result)
                      {
                         loggedIn = false;
-                        doLogin(demoLogin, demoPassword);
+                        doLogin("demo", "demo");
                      }
 
                      @Override
@@ -207,7 +205,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
             }
             else
             {
-               doLogin(demoLogin, demoPassword);
+               doLogin("demo", "demo");
             }
          }
       });

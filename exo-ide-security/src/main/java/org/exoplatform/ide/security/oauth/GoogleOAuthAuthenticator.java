@@ -38,7 +38,7 @@ import java.util.HashSet;
 public class GoogleOAuthAuthenticator extends OAuthAuthenticator
 {
 
-   protected GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
+   public GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {
       super(new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
          Collections.<String>emptyList()).setCredentialStore(credentialStore).setApprovalPrompt("auto").setAccessType

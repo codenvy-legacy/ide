@@ -113,7 +113,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                         throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
                            .confMissingVariable("registryURL"));
                      }
-                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(),
+                     new SettingsServiceImpl(IDE.eventBus(), result.getUserInfo().getName(),
                         IDELoader.get(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
 

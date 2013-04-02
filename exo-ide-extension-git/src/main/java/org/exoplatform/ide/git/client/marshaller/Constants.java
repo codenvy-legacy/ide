@@ -33,6 +33,8 @@ public interface Constants
 
    public static final String ID = "id";
 
+   public static final String FAKE = "fake";
+
    public static final String CACHED = "cached";
 
    public static final String COMMIT = "commit";
