@@ -26,6 +26,16 @@
    
     <component>
       <type>org.exoplatform.ide.extension.heroku.server.Heroku</type>
+       <init-params>
+          <value-param>
+             <name>demoLogin</name>
+             <value>codenvy.demo@gmail.com</value>
+          </value-param>
+          <value-param>
+             <name>demoPass</name>
+             <value>Yr85jeyw5T</value>
+          </value-param>
+       </init-params>
    </component>
 
    <component>

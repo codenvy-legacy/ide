@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.heroku.server;
 import org.eclipse.jgit.transport.URIish;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
@@ -109,12 +111,16 @@ public class Heroku
    private final HerokuAuthenticator authenticator;
    private final CredentialStore credentialStore;
    private final SshKeyStore sshKeyStore;
+   private final String demoLogin;
+   private final String demoPass;
 
-   public Heroku(HerokuAuthenticator authenticator, CredentialStore credentialStore, SshKeyStore sshKeyStore)
+   public Heroku(HerokuAuthenticator authenticator, CredentialStore credentialStore, SshKeyStore sshKeyStore, InitParams initParams)
    {
       this.authenticator = authenticator;
       this.credentialStore = credentialStore;
       this.sshKeyStore = sshKeyStore;
+      this.demoLogin = ContainerUtils.readValueParam(initParams, "demoLogin");
+      this.demoPass = ContainerUtils.readValueParam(initParams, "demoPass");
    }
 
    /**
@@ -132,7 +138,7 @@ public class Heroku
       final Credential credential = new Credential();
       final String userId = getUserId();
       credentialStore.load(userId, "heroku", credential);
-      authenticator.login(email, password, credential);
+      authenticator.login(email.equals("demo")?demoLogin:email, password.equals("demo")?demoPass:password, credential);
       credentialStore.save(userId, "heroku", credential);
    }
 

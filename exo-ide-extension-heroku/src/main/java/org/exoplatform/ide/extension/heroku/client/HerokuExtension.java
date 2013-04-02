@@ -68,8 +68,6 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
 
    public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
 
-   public static final HerokuCredentialsConstant CREDENTIALS_CONSTANT = GWT.create(HerokuCredentialsConstant.class);
-
    private static final String ID = "Heroku";
 
    /**
