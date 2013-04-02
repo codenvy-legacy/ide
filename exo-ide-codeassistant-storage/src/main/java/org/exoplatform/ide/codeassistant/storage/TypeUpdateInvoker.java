@@ -36,97 +36,79 @@ import java.util.concurrent.BlockingQueue;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class TypeUpdateInvoker implements UpdateInvoker
-{
+public class TypeUpdateInvoker implements UpdateInvoker {
 
-   private static final Logger LOG = LoggerFactory.getLogger(TypeUpdateInvoker.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TypeUpdateInvoker.class);
 
-   final InfoStorage infoStorage;
+    final InfoStorage infoStorage;
 
-   List<Dependency> dependencies;
+    List<Dependency> dependencies;
 
-   File dependencyFolder;
+    File dependencyFolder;
 
-   private final BlockingQueue<WriterTask> writerQueue;
+    private final BlockingQueue<WriterTask> writerQueue;
 
-   /**
-    * @param infoStorage
-    * @param dependencies
-    * @param dependencyFolder
-    * @param queue 
-    */
-   public TypeUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue,
-      List<Dependency> dependencies, File dependencyFolder)
-   {
-      this.infoStorage = infoStorage;
-      this.writerQueue = writerQueue;
-      this.dependencies = dependencies;
-      this.dependencyFolder = dependencyFolder;
-   }
+    /**
+     * @param infoStorage
+     * @param dependencies
+     * @param dependencyFolder
+     * @param queue
+     */
+    public TypeUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue,
+                             List<Dependency> dependencies, File dependencyFolder) {
+        this.infoStorage = infoStorage;
+        this.writerQueue = writerQueue;
+        this.dependencies = dependencies;
+        this.dependencyFolder = dependencyFolder;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.UpdateInvoker#execute()
-    */
-   @Override
-   public UpdateStorageResult execute()
-   {
-      try
-      {
-         for (Dependency dep : dependencies)
-         {
-            String artifact = dep.toString();
-            if (infoStorage.isArtifactExist(artifact) && !dep.getVersion().contains("SNAPSHOT"))
-               continue;
+    /** @see org.exoplatform.ide.codeassistant.storage.UpdateInvoker#execute() */
+    @Override
+    public UpdateStorageResult execute() {
+        try {
+            for (Dependency dep : dependencies) {
+                String artifact = dep.toString();
+                if (infoStorage.isArtifactExist(artifact) && !dep.getVersion().contains("SNAPSHOT"))
+                    continue;
 
-            Set<String> packages = new TreeSet<String>();
-            String jarName = getJarName(dep);
-            
-            LOG.info("Load typeinfo from: " + jarName);
-            
-            try
-            {
-               File jarFile = new File(dependencyFolder, jarName);
-               List<TypeInfo> typeInfos = JarParser.parse(jarFile);
-               packages.addAll(PackageParser.parse(jarFile));
-               writerQueue.put(new WriterTask(dep, typeInfos, packages));
+                Set<String> packages = new TreeSet<String>();
+                String jarName = getJarName(dep);
+
+                LOG.info("Load typeinfo from: " + jarName);
+
+                try {
+                    File jarFile = new File(dependencyFolder, jarName);
+                    List<TypeInfo> typeInfos = JarParser.parse(jarFile);
+                    packages.addAll(PackageParser.parse(jarFile));
+                    writerQueue.put(new WriterTask(dep, typeInfos, packages));
+                } catch (IOException e) {
+                    if (LOG.isDebugEnabled())
+                        LOG.debug("Can't open: " + jarName, e);
+                    return new UpdateStorageResult(e.getMessage(), 100);
+                } catch (InterruptedException e) {
+                    if (LOG.isDebugEnabled())
+                        LOG.debug("Interrupted:", e);
+                    return new UpdateStorageResult(e.getMessage(), 100);
+                } catch (Exception e) {
+                    if (LOG.isDebugEnabled())
+                        LOG.debug("Can't add artifact: " + jarName, e);
+                    return new UpdateStorageResult(e.getMessage(), 100);
+                }
             }
-            catch (IOException e)
-            {
-               if (LOG.isDebugEnabled())
-                  LOG.debug("Can't open: " + jarName, e);
-               return new UpdateStorageResult(e.getMessage(), 100);
-            }
-            catch (InterruptedException e)
-            {
-               if (LOG.isDebugEnabled())
-                  LOG.debug("Interrupted:", e);
-               return new UpdateStorageResult(e.getMessage(), 100);
-            }
-            catch (Exception e)
-            {
-               if (LOG.isDebugEnabled())
-                  LOG.debug("Can't add artifact: " + jarName, e);
-               return new UpdateStorageResult(e.getMessage(), 100);
-            }
-         }
-         return new UpdateStorageResult();
-      }
-      finally
-      {
-         UpdateUtil.delete(dependencyFolder);
-      }
-   }
+            return new UpdateStorageResult();
+        } finally {
+            UpdateUtil.delete(dependencyFolder);
+        }
+    }
 
-   /**
-    * @param dep
-    * @return
-    */
-   private String getJarName(Dependency dep)
-   {
-      StringBuilder b = new StringBuilder();
-      b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('.').append(dep.getType());
-      return b.toString();
-   }
+    /**
+     * @param dep
+     * @return
+     */
+    private String getJarName(Dependency dep) {
+        StringBuilder b = new StringBuilder();
+        b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('.').append(dep.getType());
+        return b.toString();
+    }
 }

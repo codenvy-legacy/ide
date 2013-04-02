@@ -23,17 +23,15 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface InfoStorage
-{
-   DataWriter getWriter() throws IOException;
-   
-   boolean isArtifactExist(String artifact);
+public interface InfoStorage {
+    DataWriter getWriter() throws IOException;
 
-   /**
-    * @param artifact
-    * @return
-    */
-   boolean isJavaDockForArtifactExist(String artifact);
+    boolean isArtifactExist(String artifact);
+
+    /**
+     * @param artifact
+     * @return
+     */
+    boolean isJavaDockForArtifactExist(String artifact);
 }

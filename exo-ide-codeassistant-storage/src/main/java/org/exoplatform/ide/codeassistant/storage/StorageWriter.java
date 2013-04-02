@@ -30,92 +30,69 @@ import java.util.concurrent.BlockingQueue;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class StorageWriter implements Runnable
-{
+public class StorageWriter implements Runnable {
 
-   private static final Logger LOG = LoggerFactory.getLogger(StorageWriter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StorageWriter.class);
 
-   private BlockingQueue<WriterTask> queue;
+    private BlockingQueue<WriterTask> queue;
 
-   private final InfoStorage infoStorage;
+    private final InfoStorage infoStorage;
 
-   /**
-    * @param queue
-    * @param dataWriter
-    */
-   public StorageWriter(BlockingQueue<WriterTask> queue, InfoStorage infoStorage)
-   {
-      super();
-      this.queue = queue;
-      this.infoStorage = infoStorage;
-   }
+    /**
+     * @param queue
+     * @param dataWriter
+     */
+    public StorageWriter(BlockingQueue<WriterTask> queue, InfoStorage infoStorage) {
+        super();
+        this.queue = queue;
+        this.infoStorage = infoStorage;
+    }
 
-   /**
-    * @see java.lang.Runnable#run()
-    */
-   @Override
-   public void run()
-   {
-      WriterTask task;
-      try
-      {
-         while ((task = queue.take()).getArtifact() != null)
-         {
-            DataWriter dataWriter;
-            try
-            {
-               dataWriter = infoStorage.getWriter();
+    /** @see java.lang.Runnable#run() */
+    @Override
+    public void run() {
+        WriterTask task;
+        try {
+            while ((task = queue.take()).getArtifact() != null) {
+                DataWriter dataWriter;
+                try {
+                    dataWriter = infoStorage.getWriter();
+                } catch (IOException e) {
+                    LOG.error("Can't get Data Writer", e);
+                    continue;
+                }
+                String artifact = task.getArtifact().toString();
+                String version = task.getArtifact().getVersion();
+                try {
+                    if (task.getTypesInfo() != null) {
+                        if (!infoStorage.isArtifactExist(artifact)) {
+                            dataWriter.addTypeInfo(task.getTypesInfo(), artifact);
+                            dataWriter.addPackages(task.getPackages(), artifact);
+                        } else if (version.contains("SNAPSHOT")) // CHeck if it SNAPSHOT version in this case need rewrite index
+                        {
+                            dataWriter.removeTypeInfo(artifact);
+                            dataWriter.removePackages(artifact);
+                            dataWriter.addTypeInfo(task.getTypesInfo(), artifact);
+                            dataWriter.addPackages(task.getPackages(), artifact);
+                        }
+                    }
+                    if (task.getJavaDock() != null) {
+                        if (!infoStorage.isJavaDockForArtifactExist(artifact)) {
+                            dataWriter.addJavaDocs(task.getJavaDock(), artifact);
+                        } else if (version.contains("SNAPSHOT")) {
+                            dataWriter.removeJavaDocs(artifact);
+                            dataWriter.addJavaDocs(task.getJavaDock(), artifact);
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.error("Can't write artifact: " + artifact, e);
+                }
+
             }
-            catch (IOException e)
-            {
-               LOG.error("Can't get Data Writer", e);
-               continue;
-            }
-            String artifact = task.getArtifact().toString();
-            String version = task.getArtifact().getVersion();
-            try
-            {
-               if (task.getTypesInfo() != null)
-               {
-                  if (!infoStorage.isArtifactExist(artifact))
-                  {
-                     dataWriter.addTypeInfo(task.getTypesInfo(), artifact);
-                     dataWriter.addPackages(task.getPackages(), artifact);
-                  }
-                  else if (version.contains("SNAPSHOT")) // CHeck if it SNAPSHOT version in this case need rewrite index
-                  {
-                     dataWriter.removeTypeInfo(artifact);
-                     dataWriter.removePackages(artifact);
-                     dataWriter.addTypeInfo(task.getTypesInfo(), artifact);
-                     dataWriter.addPackages(task.getPackages(), artifact);
-                  }
-               }
-               if (task.getJavaDock() != null)
-               {
-                  if (!infoStorage.isJavaDockForArtifactExist(artifact))
-                  {
-                     dataWriter.addJavaDocs(task.getJavaDock(), artifact);
-                  }
-                  else if (version.contains("SNAPSHOT"))
-                  {
-                     dataWriter.removeJavaDocs(artifact);
-                     dataWriter.addJavaDocs(task.getJavaDock(), artifact);
-                  }
-               }
-            }
-            catch (Exception e)
-            {
-               LOG.error("Can't write artifact: " + artifact, e);
-            }
-
-         }
-      }
-      catch (InterruptedException e)
-      {
-         LOG.error("Writer thread interripted", e);
-      }
-   }
+        } catch (InterruptedException e) {
+            LOG.error("Writer thread interripted", e);
+        }
+    }
 
 }

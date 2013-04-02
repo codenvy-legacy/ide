@@ -35,95 +35,78 @@ import java.util.concurrent.BlockingQueue;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class DockUpdateInvoker implements UpdateInvoker
-{
-   private static final Logger LOG = LoggerFactory.getLogger(DockUpdateInvoker.class);
+public class DockUpdateInvoker implements UpdateInvoker {
+    private static final Logger LOG = LoggerFactory.getLogger(DockUpdateInvoker.class);
 
-   private final InfoStorage infoStorage;
+    private final InfoStorage infoStorage;
 
-   private final List<Dependency> dependencies;
+    private final List<Dependency> dependencies;
 
-   private final File dependencyFolder;
+    private final File dependencyFolder;
 
-   private final BlockingQueue<WriterTask> writerQueue;
+    private final BlockingQueue<WriterTask> writerQueue;
 
-   /**
-    * @param infoStorage
-    * @param dependencies
-    * @param createDependencys
-    */
-   public DockUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue, List<Dependency> dependencies, File dependencyFolder)
-   {
-      this.infoStorage = infoStorage;
-      this.writerQueue = writerQueue;
-      this.dependencies = dependencies;
-      this.dependencyFolder = dependencyFolder;
-   }
+    /**
+     * @param infoStorage
+     * @param dependencies
+     * @param createDependencys
+     */
+    public DockUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue, List<Dependency> dependencies,
+                             File dependencyFolder) {
+        this.infoStorage = infoStorage;
+        this.writerQueue = writerQueue;
+        this.dependencies = dependencies;
+        this.dependencyFolder = dependencyFolder;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.UpdateInvoker#execute()
-    */
-   @Override
-   public UpdateStorageResult execute()
-   {
-      QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
-      try
-      {
-         for (Dependency dep : dependencies)
-         {
+    /** @see org.exoplatform.ide.codeassistant.storage.UpdateInvoker#execute() */
+    @Override
+    public UpdateStorageResult execute() {
+        QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
+        try {
+            for (Dependency dep : dependencies) {
 
-            String artifact = dep.toString();
-            if (infoStorage.isJavaDockForArtifactExist(artifact) && !dep.getVersion().contains("SNAPSHOT"))
-               continue;
+                String artifact = dep.toString();
+                if (infoStorage.isJavaDockForArtifactExist(artifact) && !dep.getVersion().contains("SNAPSHOT"))
+                    continue;
 
-            String jarName = getJarName(dep);
-            File jarFile = new File(dependencyFolder, jarName);
+                String jarName = getJarName(dep);
+                File jarFile = new File(dependencyFolder, jarName);
 
-            LOG.info("Load javadoc from: " + jarName);
+                LOG.info("Load javadoc from: " + jarName);
 
-            if (!jarFile.exists())
-               continue;
+                if (!jarFile.exists())
+                    continue;
 
-            InputStream zipStream = new FileInputStream(jarFile);
-            try
-            {
-               Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
-               writerQueue.put(new WriterTask(dep, javaDocs));
+                InputStream zipStream = new FileInputStream(jarFile);
+                try {
+                    Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
+                    writerQueue.put(new WriterTask(dep, javaDocs));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    zipStream.close();
+                }
             }
-            catch (InterruptedException e)
-            {
-               e.printStackTrace();
-            }
-            finally
-            {
-               zipStream.close();
-            }
-         }
-         return new UpdateStorageResult();
-      }
-      catch (IOException e)
-      {
-         LOG.error("Can't index javadoc", e);
-         return new UpdateStorageResult(e.getMessage(), 100);
-      }
-      finally
-      {
-         UpdateUtil.delete(dependencyFolder);
-      }
-   }
+            return new UpdateStorageResult();
+        } catch (IOException e) {
+            LOG.error("Can't index javadoc", e);
+            return new UpdateStorageResult(e.getMessage(), 100);
+        } finally {
+            UpdateUtil.delete(dependencyFolder);
+        }
+    }
 
-   /**
-    * @param dep
-    * @return
-    */
-   private String getJarName(Dependency dep)
-   {
-      StringBuilder b = new StringBuilder();
-      b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('-').append("sources").append('.')
+    /**
+     * @param dep
+     * @return
+     */
+    private String getJarName(Dependency dep) {
+        StringBuilder b = new StringBuilder();
+        b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('-').append("sources").append('.')
          .append(dep.getType());
-      return b.toString();
-   }
+        return b.toString();
+    }
 
 }
