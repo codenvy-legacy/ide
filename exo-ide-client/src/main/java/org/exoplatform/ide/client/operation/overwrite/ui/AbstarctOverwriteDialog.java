@@ -40,124 +40,110 @@ import org.exoplatform.ide.client.messages.IdeOverwriteLocalizationConstant;
  * Dialog with one text field and three buttons: Rename, Overwrite, Cancel.
  * <p/>
  * Can be used when need to ask user: do you want to overwrite item?
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: OverwriteDialog.java Nov 11, 2011 9:38:33 AM vereshchaka $
  */
-public abstract class AbstarctOverwriteDialog extends ViewImpl
-{
-   public static final IdeOverwriteLocalizationConstant LOCALIZATION_CONSTANT = GWT
-      .create(IdeOverwriteLocalizationConstant.class);
+public abstract class AbstarctOverwriteDialog extends ViewImpl {
+    public static final IdeOverwriteLocalizationConstant LOCALIZATION_CONSTANT = GWT
+            .create(IdeOverwriteLocalizationConstant.class);
 
-   public static final String ID = "ideOverwriteForm";
+    public static final String ID = "ideOverwriteForm";
 
-   public static final int WIDTH = 400;
+    public static final int WIDTH = 400;
 
-   public static final int HEIGHT = 180;
+    public static final int HEIGHT = 180;
 
-   public static final String TITLE = LOCALIZATION_CONSTANT.dialogTitle();
+    public static final String TITLE = LOCALIZATION_CONSTANT.dialogTitle();
 
-   interface AbstarctOverwriteDialogUiBinder extends UiBinder<Widget, AbstarctOverwriteDialog>
-   {
-   }
+    interface AbstarctOverwriteDialogUiBinder extends UiBinder<Widget, AbstarctOverwriteDialog> {
+    }
 
-   private static AbstarctOverwriteDialogUiBinder uiBinder = GWT.create(AbstarctOverwriteDialogUiBinder.class);
+    private static AbstarctOverwriteDialogUiBinder uiBinder = GWT.create(AbstarctOverwriteDialogUiBinder.class);
 
-   @UiField
-   TextInput renameField;
+    @UiField
+    TextInput renameField;
 
-   @UiField
-   ImageButton renameButton;
+    @UiField
+    ImageButton renameButton;
 
-   @UiField
-   ImageButton overwriteButton;
+    @UiField
+    ImageButton overwriteButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   Label errMsgLabel;
+    @UiField
+    Label errMsgLabel;
 
-   private String defaultItemName;
+    private String defaultItemName;
 
-   /**
-    * @param defaultName item name, that will be displayed in name field
-    * @param errMsg message with error, that occurs
-    */
-   public AbstarctOverwriteDialog(String defaultName, String errMsg)
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    /**
+     * @param defaultName
+     *         item name, that will be displayed in name field
+     * @param errMsg
+     *         message with error, that occurs
+     */
+    public AbstarctOverwriteDialog(String defaultName, String errMsg) {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      renameButton.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            onRename(renameField.getValue());
-            closeDialog();
-         }
-      });
-
-      overwriteButton.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            onOverwrite();
-            closeDialog();
-         }
-      });
-
-      cancelButton.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            onCancel();
-            closeDialog();
-         }
-      });
-
-      renameField.addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            String newName = event.getValue();
-            if (newName == null || newName.isEmpty() || newName.equals(defaultItemName))
-            {
-               renameButton.setEnabled(false);
-               overwriteButton.setEnabled(true);
+        renameButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                onRename(renameField.getValue());
+                closeDialog();
             }
-            else
-            {
-               renameButton.setEnabled(true);
-               overwriteButton.setEnabled(false);
+        });
+
+        overwriteButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                onOverwrite();
+                closeDialog();
             }
-         }
-      });
+        });
 
-      defaultItemName = defaultName;
-      renameField.setValue(defaultName);
-      renameButton.setEnabled(false);
-      errMsgLabel.setText(errMsg);
-   }
+        cancelButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                onCancel();
+                closeDialog();
+            }
+        });
 
-   private void closeDialog()
-   {
-      IDE.getInstance().closeView(getId());
-   }
+        renameField.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String newName = event.getValue();
+                if (newName == null || newName.isEmpty() || newName.equals(defaultItemName)) {
+                    renameButton.setEnabled(false);
+                    overwriteButton.setEnabled(true);
+                } else {
+                    renameButton.setEnabled(true);
+                    overwriteButton.setEnabled(false);
+                }
+            }
+        });
 
-   public void setDealutItemName(String value)
-   {
-      defaultItemName = value;
-      renameField.setValue(value);
-   }
+        defaultItemName = defaultName;
+        renameField.setValue(defaultName);
+        renameButton.setEnabled(false);
+        errMsgLabel.setText(errMsg);
+    }
 
-   public abstract void onOverwrite();
+    private void closeDialog() {
+        IDE.getInstance().closeView(getId());
+    }
 
-   public abstract void onRename(String value);
+    public void setDealutItemName(String value) {
+        defaultItemName = value;
+        renameField.setValue(value);
+    }
 
-   public abstract void onCancel();
+    public abstract void onOverwrite();
+
+    public abstract void onRename(String value);
+
+    public abstract void onCancel();
 }

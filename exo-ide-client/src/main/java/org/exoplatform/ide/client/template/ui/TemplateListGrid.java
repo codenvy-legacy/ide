@@ -37,136 +37,111 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class TemplateListGrid<T extends Template> extends ListGrid<T>
-{
+public class TemplateListGrid<T extends Template> extends ListGrid<T> {
 
-   private static final String ID = "ideCreateFileFromTemplateFormTemplateListGrid";
+    private static final String ID = "ideCreateFileFromTemplateFormTemplateListGrid";
 
-   private static final String NAME = IDE.TEMPLATE_CONSTANT.listGridName();
+    private static final String NAME = IDE.TEMPLATE_CONSTANT.listGridName();
 
-   protected static final String DESCRIPTION = IDE.TEMPLATE_CONSTANT.listGridDescription();
+    protected static final String DESCRIPTION = IDE.TEMPLATE_CONSTANT.listGridDescription();
 
-   public TemplateListGrid()
-   {
-      super();
-      setID(ID);
-      initColumns();
-   }
+    public TemplateListGrid() {
+        super();
+        setID(ID);
+        initColumns();
+    }
 
-   // ------- Implementation ------------------
+    // ------- Implementation ------------------
 
-   /**
-    * Return URL to icon of template according to type of template: FileTemplate or ProjectTemplate and according to mime type if
-    * FileTemplate.
-    * 
-    * @param template
-    * @return String
-    */
-   protected ImageResource getItemIcon(Template template)
-   {
-      if (template instanceof FileTemplate)
-      {
-         return ImageUtil.getIcon(((FileTemplate)template).getMimeType());
-      }
-      else if (template instanceof ProjectTemplateImpl)
-      {
-         return ProjectResolver.getImageForProject(((ProjectTemplate)template).getType());
-      }
+    /**
+     * Return URL to icon of template according to type of template: FileTemplate or ProjectTemplate and according to mime type if
+     * FileTemplate.
+     *
+     * @param template
+     * @return String
+     */
+    protected ImageResource getItemIcon(Template template) {
+        if (template instanceof FileTemplate) {
+            return ImageUtil.getIcon(((FileTemplate)template).getMimeType());
+        } else if (template instanceof ProjectTemplateImpl) {
+            return ProjectResolver.getImageForProject(((ProjectTemplate)template).getType());
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   /**
-    * Create columns.
-    */
-   protected void initColumns()
-   {
-      // --- icon column -----
-      ImageResourceCell iconCell = new ImageResourceCell();
-      Column<T, ImageResource> iconColumn = new Column<T, ImageResource>(iconCell)
-      {
-         @Override
-         public ImageResource getValue(T item)
-         {
-            return getItemIcon(item);
-         }
-      };
+    /** Create columns. */
+    protected void initColumns() {
+        // --- icon column -----
+        ImageResourceCell iconCell = new ImageResourceCell();
+        Column<T, ImageResource> iconColumn = new Column<T, ImageResource>(iconCell) {
+            @Override
+            public ImageResource getValue(T item) {
+                return getItemIcon(item);
+            }
+        };
 
-      getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
-      getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
+        getCellTable().addColumn(iconColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+        getCellTable().setColumnWidth(iconColumn, 28, Unit.PX);
 
-      // --- name column -----
-      SafeHtmlCell htmlCell = new SafeHtmlCell();
-      Column<T, SafeHtml> nameColumn = new Column<T, SafeHtml>(htmlCell)
-      {
+        // --- name column -----
+        SafeHtmlCell htmlCell = new SafeHtmlCell();
+        Column<T, SafeHtml> nameColumn = new Column<T, SafeHtml>(htmlCell) {
 
-         @Override
-         public SafeHtml getValue(final T item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final T item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (item.isDefault())
-                  {
-                     return "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>";
-                  }
-                  else
-                  {
-                     return "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>";
-                  }
-               }
-            };
-            return html;
-         }
+                    @Override
+                    public String asString() {
+                        if (item.isDefault()) {
+                            return "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>";
+                        } else {
+                            return "<span title=\"" + item.getName() + "\">" + item.getName() + "</span>";
+                        }
+                    }
+                };
+                return html;
+            }
 
-      };
+        };
 
-      nameColumn.setCellStyleNames("default-cursor");
-      getCellTable().addColumn(nameColumn, NAME);
-      getCellTable().setColumnWidth(nameColumn, 40, Unit.PCT);
+        nameColumn.setCellStyleNames("default-cursor");
+        getCellTable().addColumn(nameColumn, NAME);
+        getCellTable().setColumnWidth(nameColumn, 40, Unit.PCT);
 
-      // --- description column -----
-      SafeHtmlCell descCell = new SafeHtmlCell();
-      Column<T, SafeHtml> entryNameColumn = new Column<T, SafeHtml>(descCell)
-      {
+        // --- description column -----
+        SafeHtmlCell descCell = new SafeHtmlCell();
+        Column<T, SafeHtml> entryNameColumn = new Column<T, SafeHtml>(descCell) {
 
-         @Override
-         public SafeHtml getValue(final T item)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final T item) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (item.getNodeName() == null)
-                  {
-                     return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
-                  }
-                  else
-                  {
-                     return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
-                  }
-               }
-            };
-            return html;
-         }
+                    @Override
+                    public String asString() {
+                        if (item.getNodeName() == null) {
+                            return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
+                        } else {
+                            return "<span title=\"" + item.getDescription() + "\">" + item.getDescription() + "</span>";
+                        }
+                    }
+                };
+                return html;
+            }
 
-      };
+        };
 
-      entryNameColumn.setCellStyleNames("default-cursor");
-      getCellTable().addColumn(entryNameColumn, DESCRIPTION);
-      getCellTable().setColumnWidth(entryNameColumn, 60, Unit.PCT);
-   }
+        entryNameColumn.setCellStyleNames("default-cursor");
+        getCellTable().addColumn(entryNameColumn, DESCRIPTION);
+        getCellTable().setColumnWidth(entryNameColumn, 60, Unit.PCT);
+    }
 
 }

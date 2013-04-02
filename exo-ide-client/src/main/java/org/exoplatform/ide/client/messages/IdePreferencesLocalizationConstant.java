@@ -24,283 +24,281 @@ import com.google.gwt.i18n.client.Constants;
  * Interface to represent the constants contained in resource bundle: 'IdePreferencesLocalizationConstant.properties'.
  * <p/>
  * Localization message for form from preferences group, such as SelectWorkspace, CustomizeToolbar, About and others.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
- * 
  */
-public interface IdePreferencesLocalizationConstant extends Constants
-{
-   /*
-    * EntryPointListGrid
-    */
-   @Key("entryPoint.listGrid.name")
-   String entryPointListGridName();
-
-   /*
-    * SelectWorkspaceView
-    */
-   @Key("workspace.title")
-   String workspaceTitle();
-
-   @Key("select.workspace")
-   String selectWorkspace();
-
-   /*
-    * SelectWorkspacePresenter
-    */
-   @Key("selectWorkspaces.dialog.askSaveFileBeforeClosing.title")
-   String selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
-
-   /*
-    * SelectWorkspacePresenter
-    */
-   @Key("workspace.closeAllFilesDialog.title")
-   String workspaceCloseAllFilesDialogTitle();
-
-   @Key("workspace.closeAllFilesDialog.text")
-   String workspaceCloseAllFilesDialogText();
-
-   /*
-    * CustomizeToolbarForm
-    */
-   @Key("customizeToolbar.title")
-   String customizeToolbarTitle();
-
-   @Key("customizeToolbar.button.default")
-   String customizeToolbarDefaultButton();
-
-   @Key("customizeToolbar.button.delimiter")
-   String customizeToolbarDelimiterButton();
-
-   @Key("customizeToolbar.button.moveUp")
-   String customizeToolbarMoveUpButton();
-
-   @Key("customizeToolbar.button.moveDown")
-   String customizeToolbarMoveDownButton();
-
-   /*
-    * ToolbarItemListGrid
-    */
-   @Key("toolbarListGrid.column.toolbar")
-   String toolbarListGridToolbarColumn();
-
-   /*
-    * CommandItemExListGrid
-    */
-   @Key("commandItemListGrid.column.command")
-   String commandListGridCommandColumn();
-
-   /*
-    * RestServicesDiscoveryView
-    */
-   @Key("restServicesDiscovery.title")
-   String restServicesDiscoveryTitle();
-
-   @Key("restServicesDiscovery.path")
-   String restServicesDiscoveryPath();
-
-   @Key("restServicesDiscovery.requestMediaType")
-   String restServicesDiscoveryRequestMediaType();
-
-   @Key("restServicesDiscovery.responseMediaType")
-   String restServicesDiscoveryResponseMediaType();
-
-   /*
-    * RestServicesDiscoveryPresenter
-    */
-   @Key("restServicesDiscovery.param.header")
-   String restServicesDiscoveryParamHeader();
-
-   @Key("restServicesDiscovery.param.query")
-   String restServicesDiscoveryParamQuery();
-
-   @Key("restServicesDiscovery.param.plain")
-   String restServicesDiscoveryParamPlain();
-
-   @Key("restServicesDiscovery.param.path")
-   String restServicesDiscoveryParamPath();
-
-   @Key("restServicesDiscovery.param.matrix")
-   String restServicesDiscoveryParamMatrix();
-
-   @Key("restServicesDiscovery.param.param")
-   String restServicesDiscoveryParam();
-
-   /*
-    * RestServiceParameterListGrid
-    */
-   @Key("restServiceListGrid.column.name")
-   String restServiceListGridNameColumn();
+public interface IdePreferencesLocalizationConstant extends Constants {
+    /*
+     * EntryPointListGrid
+     */
+    @Key("entryPoint.listGrid.name")
+    String entryPointListGridName();
+
+    /*
+     * SelectWorkspaceView
+     */
+    @Key("workspace.title")
+    String workspaceTitle();
+
+    @Key("select.workspace")
+    String selectWorkspace();
+
+    /*
+     * SelectWorkspacePresenter
+     */
+    @Key("selectWorkspaces.dialog.askSaveFileBeforeClosing.title")
+    String selectWorkspaceAskSaveFileBeforeClosingDialogTitle();
+
+    /*
+     * SelectWorkspacePresenter
+     */
+    @Key("workspace.closeAllFilesDialog.title")
+    String workspaceCloseAllFilesDialogTitle();
+
+    @Key("workspace.closeAllFilesDialog.text")
+    String workspaceCloseAllFilesDialogText();
+
+    /*
+     * CustomizeToolbarForm
+     */
+    @Key("customizeToolbar.title")
+    String customizeToolbarTitle();
 
-   @Key("restServiceListGrid.column.type")
-   String restServiceListGridTypeColumn();
+    @Key("customizeToolbar.button.default")
+    String customizeToolbarDefaultButton();
+
+    @Key("customizeToolbar.button.delimiter")
+    String customizeToolbarDelimiterButton();
+
+    @Key("customizeToolbar.button.moveUp")
+    String customizeToolbarMoveUpButton();
+
+    @Key("customizeToolbar.button.moveDown")
+    String customizeToolbarMoveDownButton();
 
-   @Key("restServiceListGrid.column.default")
-   String restServiceListGridDefaultColumn();
+    /*
+     * ToolbarItemListGrid
+     */
+    @Key("toolbarListGrid.column.toolbar")
+    String toolbarListGridToolbarColumn();
+
+    /*
+     * CommandItemExListGrid
+     */
+    @Key("commandItemListGrid.column.command")
+    String commandListGridCommandColumn();
 
-   /*
-    * AboutIDEView
-    */
-   @Key("about.copyright")
-   String aboutCopyright();
+    /*
+     * RestServicesDiscoveryView
+     */
+    @Key("restServicesDiscovery.title")
+    String restServicesDiscoveryTitle();
+
+    @Key("restServicesDiscovery.path")
+    String restServicesDiscoveryPath();
+
+    @Key("restServicesDiscovery.requestMediaType")
+    String restServicesDiscoveryRequestMediaType();
+
+    @Key("restServicesDiscovery.responseMediaType")
+    String restServicesDiscoveryResponseMediaType();
+
+    /*
+     * RestServicesDiscoveryPresenter
+     */
+    @Key("restServicesDiscovery.param.header")
+    String restServicesDiscoveryParamHeader();
+
+    @Key("restServicesDiscovery.param.query")
+    String restServicesDiscoveryParamQuery();
+
+    @Key("restServicesDiscovery.param.plain")
+    String restServicesDiscoveryParamPlain();
+
+    @Key("restServicesDiscovery.param.path")
+    String restServicesDiscoveryParamPath();
+
+    @Key("restServicesDiscovery.param.matrix")
+    String restServicesDiscoveryParamMatrix();
+
+    @Key("restServicesDiscovery.param.param")
+    String restServicesDiscoveryParam();
 
-   @Key("about.companyName")
-   String aboutCompanyName();
+    /*
+     * RestServiceParameterListGrid
+     */
+    @Key("restServiceListGrid.column.name")
+    String restServiceListGridNameColumn();
 
-   @Key("about.ideName")
-   String aboutIdeName();
+    @Key("restServiceListGrid.column.type")
+    String restServiceListGridTypeColumn();
 
-   @Key("about.year")
-   String aboutYear();
+    @Key("restServiceListGrid.column.default")
+    String restServiceListGridDefaultColumn();
 
-   @Key("about.title")
-   String aboutTitle();
+    /*
+     * AboutIDEView
+     */
+    @Key("about.copyright")
+    String aboutCopyright();
 
-   @Key("about.revision")
-   String aboutRevision();
+    @Key("about.companyName")
+    String aboutCompanyName();
 
-   @Key("about.version")
-   String aboutVersion();
+    @Key("about.ideName")
+    String aboutIdeName();
 
-   @Key("about.buildTime")
-   String aboutBuildTime();
+    @Key("about.year")
+    String aboutYear();
 
-   /*
-    * CustomizeHotKeysView
-    */
-   @Key("customizeHotkeys.title")
-   String customizeHotkeysTitle();
+    @Key("about.title")
+    String aboutTitle();
 
-   @Key("customizeHotkeys.button.bind")
-   String customizeHotkeysBindButton();
+    @Key("about.revision")
+    String aboutRevision();
 
-   @Key("customizeHotkeys.button.unbind")
-   String customizeHotkeysUnbindButton();
+    @Key("about.version")
+    String aboutVersion();
 
-   @Key("customizeHotkeys.button.defaults")
-   String customizeHotkeysDefaultsButton();
+    @Key("about.buildTime")
+    String aboutBuildTime();
 
-   /*
-    * HotKeyItemListGrid
-    */
-   @Key("customizeHotkeys.listGrid.command")
-   String customizeHotkeysListGridCommand();
+    /*
+     * CustomizeHotKeysView
+     */
+    @Key("customizeHotkeys.title")
+    String customizeHotkeysTitle();
 
-   @Key("customizeHotkeys.listGrid.binding")
-   String customizeHotkeysListGridBinding();
+    @Key("customizeHotkeys.button.bind")
+    String customizeHotkeysBindButton();
 
-   @Key("customizeHotkeys.listGrid.popup")
-   String customizeHotkeysListGridPopup();
+    @Key("customizeHotkeys.button.unbind")
+    String customizeHotkeysUnbindButton();
 
-   /*
-    * ShowHotKeysView
-    */
-   @Key("showHotKeys.title")
-   String showHotKeysTitle();
+    @Key("customizeHotkeys.button.defaults")
+    String customizeHotkeysDefaultsButton();
 
-   /*
-    * ShowHotKeyItemListGrid
-    */
-   @Key("showHotKeys.listGrid.command")
-   String showHotKeysListGridCommand();
+    /*
+     * HotKeyItemListGrid
+     */
+    @Key("customizeHotkeys.listGrid.command")
+    String customizeHotkeysListGridCommand();
 
-   @Key("showHotKeys.listGrid.shortcut")
-   String showHotKeysListGridShortcut();
+    @Key("customizeHotkeys.listGrid.binding")
+    String customizeHotkeysListGridBinding();
 
-   @Key("showHotKeys.listGrid.popup")
-   String showHotKeysListGridPopup();
+    @Key("customizeHotkeys.listGrid.popup")
+    String customizeHotkeysListGridPopup();
 
-   /*
-    * ReservedHotKeys
-    */
-   @Key("reservedHotkeys.autocomplete")
-   String reservedHotkyesAutocomplete();
+    /*
+     * ShowHotKeysView
+     */
+    @Key("showHotKeys.title")
+    String showHotKeysTitle();
 
-   @Key("reservedHotkeys.bold")
-   String reservedHotkeysBold();
+    /*
+     * ShowHotKeyItemListGrid
+     */
+    @Key("showHotKeys.listGrid.command")
+    String showHotKeysListGridCommand();
 
-   @Key("reservedHotkeys.italic")
-   String reservedHotkeysItalic();
+    @Key("showHotKeys.listGrid.shortcut")
+    String showHotKeysListGridShortcut();
 
-   @Key("reservedHotkeys.undeline")
-   String reservedHotkeysUndeline();
+    @Key("showHotKeys.listGrid.popup")
+    String showHotKeysListGridPopup();
 
-   @Key("reservedHotkeys.copy")
-   String reservedHotkeysCopy();
+    /*
+     * ReservedHotKeys
+     */
+    @Key("reservedHotkeys.autocomplete")
+    String reservedHotkyesAutocomplete();
 
-   @Key("reservedHotkeys.paste")
-   String reservedHotkeysPaste();
+    @Key("reservedHotkeys.bold")
+    String reservedHotkeysBold();
 
-   @Key("reservedHotkeys.cut")
-   String reservedHotkeysCut();
+    @Key("reservedHotkeys.italic")
+    String reservedHotkeysItalic();
 
-   @Key("reservedHotkeys.undo")
-   String reservedHotkeysUndo();
+    @Key("reservedHotkeys.undeline")
+    String reservedHotkeysUndeline();
 
-   @Key("reservedHotkeys.redo")
-   String reservedHotkeysRedo();
+    @Key("reservedHotkeys.copy")
+    String reservedHotkeysCopy();
 
-   @Key("reservedHotkeys.selectAll")
-   String reservedHotkeysSelectAll();
+    @Key("reservedHotkeys.paste")
+    String reservedHotkeysPaste();
 
-   @Key("reservedHotkeys.goToStart")
-   String reservedHotkeysGoToStart();
+    @Key("reservedHotkeys.cut")
+    String reservedHotkeysCut();
 
-   @Key("reservedHotkeys.goToEnd")
-   String reservedHotkeysGoToEnd();
+    @Key("reservedHotkeys.undo")
+    String reservedHotkeysUndo();
 
-   /*
-    * Validation messages
-    */
-   @Key("hotkeys.firstKeyCtrlOrAlt")
-   String msgFirstKeyCtrlOrAlt();
+    @Key("reservedHotkeys.redo")
+    String reservedHotkeysRedo();
 
-   @Key("hotkeys.usedInOtherEditor")
-   String msgHotkeyUsedInOtherEditor();
+    @Key("reservedHotkeys.selectAll")
+    String reservedHotkeysSelectAll();
 
-   @Key("hotkeys.pressControlKeyThenKey")
-   String msgPressControlKeyTheKey();
+    @Key("reservedHotkeys.goToStart")
+    String reservedHotkeysGoToStart();
 
-   @Key("hotkeys.boundToAnotherCommand")
-   String msgBoundToAnotherCommand();
+    @Key("reservedHotkeys.goToEnd")
+    String reservedHotkeysGoToEnd();
 
-   @Key("hotkeys.boundToTheSameCommand")
-   String msgBoundToTheSameCommand();
+    /*
+     * Validation messages
+     */
+    @Key("hotkeys.firstKeyCtrlOrAlt")
+    String msgFirstKeyCtrlOrAlt();
 
-   @Key("hotkeys.tryAnotherHotkey")
-   String msgTryAnotherHotkey();
+    @Key("hotkeys.usedInOtherEditor")
+    String msgHotkeyUsedInOtherEditor();
 
-   /*
-    * CustomizeHotKeysPresenter
-    */
-   @Key("hotkeys.group.editor")
-   String hotkeysEditorGroup();
+    @Key("hotkeys.pressControlKeyThenKey")
+    String msgPressControlKeyTheKey();
 
-   @Key("hotkeys.group.other")
-   String hotkeysOtherGroup();
+    @Key("hotkeys.boundToAnotherCommand")
+    String msgBoundToAnotherCommand();
 
-   /*
-    * CloseAllFilesEventHandler
-    */
-   @Key("closeAllFiles.unsavedFilesMayBeLost")
-   String unsavedFilesMayBeLost();
+    @Key("hotkeys.boundToTheSameCommand")
+    String msgBoundToTheSameCommand();
 
-   @Key("show.preferences.control.id")
-   String showPreferencesControlId();
+    @Key("hotkeys.tryAnotherHotkey")
+    String msgTryAnotherHotkey();
 
-   @Key("show.preferences.control.title")
-   String showPreferencesControlTitle();
+    /*
+     * CustomizeHotKeysPresenter
+     */
+    @Key("hotkeys.group.editor")
+    String hotkeysEditorGroup();
 
-   @Key("show.preferences.control.prompt")
-   String showPreferencesControlPrompt();
+    @Key("hotkeys.group.other")
+    String hotkeysOtherGroup();
 
-   @Key("show.preferences.view.title")
-   String showPreferencesViewTitle();
+    /*
+     * CloseAllFilesEventHandler
+     */
+    @Key("closeAllFiles.unsavedFilesMayBeLost")
+    String unsavedFilesMayBeLost();
 
-   /*
-    * InviteGoogleContactsView
-    */
-   @Key("inviteGoogleContactsTitle.title")
-   String inviteGoogleContactsTitle();
+    @Key("show.preferences.control.id")
+    String showPreferencesControlId();
+
+    @Key("show.preferences.control.title")
+    String showPreferencesControlTitle();
+
+    @Key("show.preferences.control.prompt")
+    String showPreferencesControlPrompt();
+
+    @Key("show.preferences.view.title")
+    String showPreferencesViewTitle();
+
+    /*
+     * InviteGoogleContactsView
+     */
+    @Key("inviteGoogleContactsTitle.title")
+    String inviteGoogleContactsTitle();
 }

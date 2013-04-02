@@ -22,25 +22,22 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class PasteItemsCompleteEvent extends GwtEvent<PasteItemsCompleteHandler>
-{
+public class PasteItemsCompleteEvent extends GwtEvent<PasteItemsCompleteHandler> {
 
-   public static final GwtEvent.Type<PasteItemsCompleteHandler> TYPE = new GwtEvent.Type<PasteItemsCompleteHandler>();
+    public static final GwtEvent.Type<PasteItemsCompleteHandler> TYPE = new GwtEvent.Type<PasteItemsCompleteHandler>();
 
-   @Override
-   protected void dispatch(PasteItemsCompleteHandler handler)
-   {
-      handler.onPasteItemsComlete(this);
-   }
+    @Override
+    protected void dispatch(PasteItemsCompleteHandler handler) {
+        handler.onPasteItemsComlete(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<PasteItemsCompleteHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<PasteItemsCompleteHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

@@ -23,19 +23,15 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class IDEDebug
-{
+public class IDEDebug {
 
-   public IDEDebug()
-   {
-      if (GWT.isScript())
-      {
-         return;
-      }
+    public IDEDebug() {
+        if (GWT.isScript()) {
+            return;
+        }
 
-      //new ShowImagesPresenter();
-   }
-   
+        //new ShowImagesPresenter();
+    }
+
 }

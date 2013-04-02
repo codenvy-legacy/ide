@@ -32,43 +32,36 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 10:56:42 AM anya $
- * 
  */
 @RolesAllowed({"developer"})
-public class AddBlockCommentControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class AddBlockCommentControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Edit/Add Block Comment";
+    public static final String ID = "Edit/Add Block Comment";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.addBlockCommentControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.addBlockCommentControl();
 
-   public AddBlockCommentControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setEvent(new EditorAddBlockCommentEvent());
-      setHotKey("Ctrl+Shift+/");
-      setImages(IDEImageBundle.INSTANCE.addBlockComment(), IDEImageBundle.INSTANCE.addBlockCommentDisabled());
-      setGroupName(GroupNames.COMMENT);
-   }
+    public AddBlockCommentControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setEvent(new EditorAddBlockCommentEvent());
+        setHotKey("Ctrl+Shift+/");
+        setImages(IDEImageBundle.INSTANCE.addBlockComment(), IDEImageBundle.INSTANCE.addBlockCommentDisabled());
+        setGroupName(GroupNames.COMMENT);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
-    */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      boolean isEnabled = event.getFile() != null && event.getEditor() != null && event.getEditor().isCapable(EditorCapability.COMMENT_SOURCE);
-      setVisible(isEnabled);
-      setEnabled(isEnabled);
-   }
+    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     * .editor.event.EditorActiveFileChangedEvent) */
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        boolean isEnabled =
+                event.getFile() != null && event.getEditor() != null && event.getEditor().isCapable(EditorCapability.COMMENT_SOURCE);
+        setVisible(isEnabled);
+        setEnabled(isEnabled);
+    }
 }

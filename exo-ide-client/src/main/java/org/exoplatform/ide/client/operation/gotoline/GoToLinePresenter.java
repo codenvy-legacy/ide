@@ -19,11 +19,7 @@
 package org.exoplatform.ide.client.operation.gotoline;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
@@ -44,177 +40,148 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLineHandler, ViewClosedHandler
-{
+public class GoToLinePresenter implements EditorActiveFileChangedHandler, GoToLineHandler, ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      TextFieldItem getLineNumber();
+        TextFieldItem getLineNumber();
 
-      HasClickHandlers getGoButton();
+        HasClickHandlers getGoButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void setCaptionLabel(String caption);
+        void setCaptionLabel(String caption);
 
-      void removeFocusFromLineNumber();
+        void removeFocusFromLineNumber();
 
-      void setFocusInLineNumberField();
+        void setFocusInLineNumberField();
 
-   }
+    }
 
-   /* Error messages */
-   private static final String LINE_OUT_OF_RANGE = IDE.ERRORS_CONSTANT.goToLineLineNumberOutOfRange();
+    /* Error messages */
+    private static final String LINE_OUT_OF_RANGE = IDE.ERRORS_CONSTANT.goToLineLineNumberOutOfRange();
 
-   private static final String CANT_PARSE_LINE_NUMBER = IDE.ERRORS_CONSTANT.goToLineCantParseLineNumber();
+    private static final String CANT_PARSE_LINE_NUMBER = IDE.ERRORS_CONSTANT.goToLineCantParseLineNumber();
 
-   private Display display;
+    private Display display;
 
-   private int maxLineNumber;
+    private int maxLineNumber;
 
-   private HandlerRegistration keyUpHandler;
+    private HandlerRegistration keyUpHandler;
 
-   private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
+    private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   public GoToLinePresenter()
-   {
-      IDE.getInstance().addControl(new GoToLineControl());
-      IDE.getInstance().addControl(new CursorPositionControl(), Docking.STATUSBAR_RIGHT);
+    public GoToLinePresenter() {
+        IDE.getInstance().addControl(new GoToLineControl());
+        IDE.getInstance().addControl(new CursorPositionControl(), Docking.STATUSBAR_RIGHT);
 
-      IDE.addHandler(GoToLineEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(GoToLineEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.edit.event.GoToLineHandler#onGoToLine(org.exoplatform.ide.client.edit.event.GoToLineEvent)
-    */
-   @Override
-   public void onGoToLine(GoToLineEvent event)
-   {
-      if (display != null)
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.client.edit.event.GoToLineHandler#onGoToLine(org.exoplatform.ide.client.edit.event.GoToLineEvent) */
+    @Override
+    public void onGoToLine(GoToLineEvent event) {
+        if (display != null) {
+            return;
+        }
 
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-      display.setFocusInLineNumberField();
-   }
+        display = GWT.create(Display.class);
+        IDE.getInstance().openView(display.asView());
+        bindDisplay();
+        display.setFocusInLineNumberField();
+    }
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent arg0)
-         {
-            closeView();
-         }
-      });
-
-      display.getGoButton().addClickHandler(new ClickHandler()
-      {
-
-         public void onClick(ClickEvent event)
-         {
-            if (display.getLineNumber().getValue() != null && !"".equals(display.getLineNumber().getValue()))
-            {
-               goToLine();
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent arg0) {
+                closeView();
             }
-         }
-      });
+        });
 
-      display.getLineNumber().addKeyUpHandler(new KeyUpHandler()
-      {
+        display.getGoButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13)
-               goToLine();
-         }
-      });
+            public void onClick(ClickEvent event) {
+                if (display.getLineNumber().getValue() != null && !"".equals(display.getLineNumber().getValue())) {
+                    goToLine();
+                }
+            }
+        });
 
-      maxLineNumber = getLineNumber(activeFile.getContent());
-      String labelCaption = IDE.EDITOR_CONSTANT.goToLineLabelEnterLineNumber(maxLineNumber);
-      display.setCaptionLabel(labelCaption);
-   }
+        display.getLineNumber().addKeyUpHandler(new KeyUpHandler() {
 
-   /**
-    * 
-    */
-   private void goToLine()
-   {
-      String lineString = display.getLineNumber().getValue();
-      try
-      {
-         int line = Integer.parseInt(lineString);
-         if (line > 0 && line <= maxLineNumber)
-         {
-            closeView();
-            IDE.fireEvent(new EditorGoToLineEvent(line));
-         }
-         else
-         {
+            @Override
+            public void onKeyUp(KeyUpEvent event) {
+                if (event.getNativeKeyCode() == 13)
+                    goToLine();
+            }
+        });
+
+        maxLineNumber = getLineNumber(activeFile.getContent());
+        String labelCaption = IDE.EDITOR_CONSTANT.goToLineLabelEnterLineNumber(maxLineNumber);
+        display.setCaptionLabel(labelCaption);
+    }
+
+    /**
+     *
+     */
+    private void goToLine() {
+        String lineString = display.getLineNumber().getValue();
+        try {
+            int line = Integer.parseInt(lineString);
+            if (line > 0 && line <= maxLineNumber) {
+                closeView();
+                IDE.fireEvent(new EditorGoToLineEvent(line));
+            } else {
+                display.removeFocusFromLineNumber();
+                Dialogs.getInstance().showError(LINE_OUT_OF_RANGE);
+            }
+        } catch (NumberFormatException e) {
             display.removeFocusFromLineNumber();
-            Dialogs.getInstance().showError(LINE_OUT_OF_RANGE);
-         }
-      }
-      catch (NumberFormatException e)
-      {
-         display.removeFocusFromLineNumber();
-         Dialogs.getInstance().showError(CANT_PARSE_LINE_NUMBER);
-      }
-   }
+            Dialogs.getInstance().showError(CANT_PARSE_LINE_NUMBER);
+        }
+    }
 
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-      IDE.fireEvent(new EditorSetFocusEvent());
-   }
+    private void closeView() {
+        IDE.getInstance().closeView(display.asView().getId());
+        IDE.fireEvent(new EditorSetFocusEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      this.activeFile = event.getFile();
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        this.activeFile = event.getFile();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   private native int getLineNumber(String content) /*-{
-                                                    if (! content) return 1;
+    private native int getLineNumber(String content) /*-{
+        if (!content) return 1;
 
-                                                    // test if content is not ended with line break
-                                                    if (content.charAt(content.length - 1) !== "\n") {
-                                                    return content.split("\n").length;
-                                                    }
+        // test if content is not ended with line break
+        if (content.charAt(content.length - 1) !== "\n") {
+            return content.split("\n").length;
+        }
 
-                                                    // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines 
-                                                    if (this.@org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) 
-                                                    {          
-                                                    return content.split("\n").length;
-                                                    }
+        // in the Internet Explorer editor.setCode("\n") is displayed as 2 lines
+        if (this.@org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter::currentBrowser == @org.exoplatform.gwtframework
+            .commons.util.BrowserResolver.Browser::IE) {
+            return content.split("\n").length;
+        }
 
-                                                    return content.split("\n").length - 1;
-                                                    }-*/;
+        return content.split("\n").length - 1;
+    }-*/;
 
 }

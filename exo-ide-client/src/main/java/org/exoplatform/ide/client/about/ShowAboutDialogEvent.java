@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ShowAboutDialogEvent extends GwtEvent<ShowAboutDialogHandler>
-{
+public class ShowAboutDialogEvent extends GwtEvent<ShowAboutDialogHandler> {
 
-   public static final GwtEvent.Type<ShowAboutDialogHandler> TYPE = new GwtEvent.Type<ShowAboutDialogHandler>();
+    public static final GwtEvent.Type<ShowAboutDialogHandler> TYPE = new GwtEvent.Type<ShowAboutDialogHandler>();
 
-   @Override
-   protected void dispatch(ShowAboutDialogHandler handler)
-   {
-      handler.onShowAboutDialog(this);
-   }
+    @Override
+    protected void dispatch(ShowAboutDialogHandler handler) {
+        handler.onShowAboutDialog(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowAboutDialogHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowAboutDialogHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

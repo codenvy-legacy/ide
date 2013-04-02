@@ -37,105 +37,86 @@ import java.util.List;
 
 /**
  * Presenter for managing application preferences.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 18, 2012 3:18:53 PM anya $
- * 
  */
-public class PreferencesPresenter implements ShowPreferencesHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      HasClickHandlers getCloseButton();
+public class PreferencesPresenter implements ShowPreferencesHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        HasClickHandlers getCloseButton();
 
-      void openView(View view);
+        void openView(View view);
 
-      void setValue(List<PreferenceItem> values);
+        void setValue(List<PreferenceItem> values);
 
-      void selectToken(PreferenceItem token);
+        void selectToken(PreferenceItem token);
 
-      SingleSelectionModel<PreferenceItem> getSingleSelectionModel();
-   }
+        SingleSelectionModel<PreferenceItem> getSingleSelectionModel();
+    }
 
-   private Display display;
+    private Display display;
 
-   private View openedView;
+    private View openedView;
 
-   public PreferencesPresenter()
-   {
-      IDE.getInstance().addControl(new ShowPreferencesControl());
+    public PreferencesPresenter() {
+        IDE.getInstance().addControl(new ShowPreferencesControl());
 
-      IDE.addHandler(ShowPreferencesEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+        IDE.addHandler(ShowPreferencesEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCloseButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler()
-      {
-
-         @Override
-         public void onSelectionChange(SelectionChangeEvent event)
-         {
-            if (display.getSingleSelectionModel().getSelectedObject() instanceof PreferenceItem)
-            {
-               // TODO check has performer
-               if (openedView != null)
-               {
-                  IDE.fireEvent(new ViewClosedEvent(openedView));
-               }
-               openedView =
-                  ((PreferenceItem)display.getSingleSelectionModel().getSelectedObject()).getPreferencePerformer()
-                     .getPreference();
-               display.openView(openedView);
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
-         }
-      });
-   }
+        });
 
-   /**
-    * @see org.exoplatform.ide.client.preferences.ShowPreferencesHandler#onShowPreferences(org.exoplatform.ide.client.preferences.ShowPreferencesEvent)
-    */
-   @Override
-   public void onShowPreferences(ShowPreferencesEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      
-      display.setValue(Preferences.get().getPreferences());
-      if (Preferences.get().getPreferences().size() > 0)
-      {
-         display.selectToken(Preferences.get().getPreferences().get(0));
-      }
-   }
+        display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-         if (openedView != null)
-         {
-            IDE.fireEvent(new ViewClosedEvent(openedView));
-         }
-      }
-   }
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                if (display.getSingleSelectionModel().getSelectedObject() instanceof PreferenceItem) {
+                    // TODO check has performer
+                    if (openedView != null) {
+                        IDE.fireEvent(new ViewClosedEvent(openedView));
+                    }
+                    openedView =
+                            ((PreferenceItem)display.getSingleSelectionModel().getSelectedObject()).getPreferencePerformer()
+                                                                                                   .getPreference();
+                    display.openView(openedView);
+                }
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.client.preferences.ShowPreferencesHandler#onShowPreferences(org.exoplatform.ide.client.preferences
+     * .ShowPreferencesEvent) */
+    @Override
+    public void onShowPreferences(ShowPreferencesEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+
+        display.setValue(Preferences.get().getPreferences());
+        if (Preferences.get().getPreferences().size() > 0) {
+            display.selectToken(Preferences.get().getPreferences().get(0));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+            if (openedView != null) {
+                IDE.fireEvent(new ViewClosedEvent(openedView));
+            }
+        }
+    }
 }

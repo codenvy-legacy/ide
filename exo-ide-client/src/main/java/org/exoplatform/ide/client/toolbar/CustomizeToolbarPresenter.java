@@ -49,591 +49,474 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.toolbar.ToolbarItem.Type;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
 public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, ApplicationSettingsReceivedHandler,
-   CustomizeToolbarHandler, ViewClosedHandler, PreferencePerformer
-{
+                                                  CustomizeToolbarHandler, ViewClosedHandler, PreferencePerformer {
 
-   /**
-    *
-    */
-   public interface Display extends IsView
-   {
+    /**
+     *
+     */
+    public interface Display extends IsView {
 
-      ListGridItem<CommandItemEx> getCommandsListGrid();
+        ListGridItem<CommandItemEx> getCommandsListGrid();
 
-      ListGridItem<ToolbarItem> getToolbarItemsListGrid();
+        ListGridItem<ToolbarItem> getToolbarItemsListGrid();
 
-      void selectToolbarItem(ToolbarItem item);
+        void selectToolbarItem(ToolbarItem item);
 
-      HasClickHandlers getAddCommandButton();
+        HasClickHandlers getAddCommandButton();
 
-      HasClickHandlers getAddDelimiterButton();
+        HasClickHandlers getAddDelimiterButton();
 
-      HasClickHandlers getDeleteButton();
+        HasClickHandlers getDeleteButton();
 
-      HasClickHandlers getMoveUpButton();
+        HasClickHandlers getMoveUpButton();
 
-      HasClickHandlers getMoveDownButton();
+        HasClickHandlers getMoveDownButton();
 
-      HasClickHandlers getOkButton();
+        HasClickHandlers getOkButton();
 
-      HasClickHandlers getDefaultsButton();
+        HasClickHandlers getDefaultsButton();
 
-      void setAddCommandButtonEnabled(boolean enabled);
+        void setAddCommandButtonEnabled(boolean enabled);
 
-      void setAddDelimiterButtonEnabled(boolean enabled);
+        void setAddDelimiterButtonEnabled(boolean enabled);
 
-      void setDeleteButtonEnabled(boolean enabled);
+        void setDeleteButtonEnabled(boolean enabled);
 
-      void setMoveUpButtonEnabled(boolean enabled);
+        void setMoveUpButtonEnabled(boolean enabled);
 
-      void setMoveDownButtonEnabled(boolean enabled);
+        void setMoveDownButtonEnabled(boolean enabled);
 
-   }
+    }
 
-   /**
-    * Save settings failed message.
-    */
-   private static final String SAVE_SETTINGS_FAILURE = IDE.ERRORS_CONSTANT.customizeToolbarSaveFailure();
+    /** Save settings failed message. */
+    private static final String SAVE_SETTINGS_FAILURE = IDE.ERRORS_CONSTANT.customizeToolbarSaveFailure();
 
-   /**
-    * Instance of binded display.
-    */
-   private Display display;
+    /** Instance of binded display. */
+    private Display display;
 
-   /**
-    * Currently selected command.
-    */
-   private CommandItemEx selectedCommandItem;
+    /** Currently selected command. */
+    private CommandItemEx selectedCommandItem;
 
-   /**
-    * Currently selected toolbar item.
-    */
-   private ToolbarItem selectedToolbarItem;
+    /** Currently selected toolbar item. */
+    private ToolbarItem selectedToolbarItem;
 
-   /**
-    * List of toolbar items.
-    */
-   private ArrayList<ToolbarItem> toolbarItems = new ArrayList<ToolbarItem>();
+    /** List of toolbar items. */
+    private ArrayList<ToolbarItem> toolbarItems = new ArrayList<ToolbarItem>();
 
-   /**
-    * Application settings.
-    */
-   private ApplicationSettings applicationSettings;
+    /** Application settings. */
+    private ApplicationSettings applicationSettings;
 
-   /**
-    * List of available controls.
-    */
-   private List<Control> controls = new ArrayList<Control>();
+    /** List of available controls. */
+    private List<Control> controls = new ArrayList<Control>();
 
-   /**
-    * Creates a new instance of CustomizeToolbarPresenter.
-    * 
-    * @param eventBus Event Bus
-    */
-   public CustomizeToolbarPresenter()
-   {
-      IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(CustomizeToolbarEvent.TYPE, this);
+    /**
+     * Creates a new instance of CustomizeToolbarPresenter.
+     *
+     * @param eventBus
+     *         Event Bus
+     */
+    public CustomizeToolbarPresenter() {
+        IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(CustomizeToolbarEvent.TYPE, this);
 
-      //TODO IDE.getInstance().addControl(new CustomizeToolbarCommand());
-   }
+        //TODO IDE.getInstance().addControl(new CustomizeToolbarCommand());
+    }
 
-   @Override
-   public void onControlsUpdated(ControlsUpdatedEvent event)
-   {
-      controls = event.getControls();
-   }
+    @Override
+    public void onControlsUpdated(ControlsUpdatedEvent event) {
+        controls = event.getControls();
+    }
 
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
-   }
+    @Override
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        applicationSettings = event.getApplicationSettings();
+    }
 
-   @Override
-   public void onCustomizeToolBar(CustomizeToolbarEvent event)
-   {
-      if (display != null)
-      {
-         return;
-      }
+    @Override
+    public void onCustomizeToolBar(CustomizeToolbarEvent event) {
+        if (display != null) {
+            return;
+        }
 
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-   }
+        display = GWT.create(Display.class);
+        IDE.getInstance().openView(display.asView());
+        bindDisplay();
+    }
 
-   public void bindDisplay()
-   {
-      display.getAddCommandButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            addCommand();
-         }
-      });
-
-      display.getAddDelimiterButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            addDelimiter();
-         }
-      });
-
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            deleteCommand();
-         }
-      });
-
-      display.getMoveUpButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            moveUp();
-         }
-      });
-
-      display.getMoveDownButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            moveDown();
-         }
-      });
-
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            updateToolbar();
-         }
-      });
-
-      display.getDefaultsButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            restoreDefaults();
-         }
-      });
-
-      display.getCommandsListGrid().addSelectionHandler(new SelectionHandler<CommandItemEx>()
-      {
-         public void onSelection(SelectionEvent<CommandItemEx> event)
-         {
-            commandItemSelected(event.getSelectedItem());
-         }
-      });
-
-      display.getToolbarItemsListGrid().addSelectionHandler(new SelectionHandler<ToolbarItem>()
-      {
-         public void onSelection(SelectionEvent<ToolbarItem> event)
-         {
-            toolbarItemSelected(event.getSelectedItem());
-         }
-      });
-
-      display.setAddCommandButtonEnabled(false);
-      display.setAddDelimiterButtonEnabled(false);
-      display.setDeleteButtonEnabled(false);
-      display.setMoveUpButtonEnabled(false);
-      display.setMoveDownButtonEnabled(false);
-
-      fillCommandListGrid();
-
-      List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
-      if (toolbarItems == null)
-      {
-         toolbarItems = new ArrayList<String>();
-         toolbarItems.add("");
-         applicationSettings.setValue("toolbar-items", toolbarItems, Store.SERVER);
-      }
-
-      fillToolbarListGrid(toolbarItems);
-   }
-
-   private void fillCommandListGrid()
-   {
-      HashMap<String, List<Control>> groups = new LinkedHashMap<String, List<Control>>();
-
-      for (Control command : controls)
-      {
-         if (command.getIcon() == null && command.getNormalImage() == null)
-         {
-            continue;
-         }
-
-         if (command instanceof SimpleControl)
-         {
-            if (((SimpleControl)command).getEvent() != null)
-            {
-               addCommand(groups, command);
+    public void bindDisplay() {
+        display.getAddCommandButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                addCommand();
             }
-         }
-         else if (command instanceof PopupMenuControl)
-         {
-            addCommand(groups, command);
-         }
-         else if (command instanceof TextInputControl)
-         {
-            addCommand(groups, command);
-         }
-      }
+        });
 
-      List<CommandItemEx> commandList = new ArrayList<CommandItemEx>();
-      Set<String> keys = groups.keySet();
-      for (String groupName : keys)
-      {
-         commandList.add(new CommandItemEx(groupName));
-         List<Control> commands = groups.get(groupName);
-         for (Control command : commands)
-         {
-            commandList.add(new CommandItemEx(command));
-         }
-      }
+        display.getAddDelimiterButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                addDelimiter();
+            }
+        });
 
-      display.getCommandsListGrid().setValue(commandList);
-   }
+        display.getDeleteButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                deleteCommand();
+            }
+        });
 
-   private void addCommand(HashMap<String, List<Control>> groups, Control command)
-   {
+        display.getMoveUpButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                moveUp();
+            }
+        });
 
-      String groupName = command.getId();
-      if (groupName.indexOf("/") >= 0)
-      {
-         groupName = groupName.substring(0, groupName.lastIndexOf("/"));
-      }
-      else
-      {
-         groupName = "Other";
-      }
+        display.getMoveDownButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                moveDown();
+            }
+        });
 
-      List<Control> commands = groups.get(groupName);
-      if (commands == null)
-      {
-         commands = new ArrayList<Control>();
-         groups.put(groupName, commands);
-      }
+        display.getOkButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                updateToolbar();
+            }
+        });
 
-      commands.add(command);
-   }
+        display.getDefaultsButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                restoreDefaults();
+            }
+        });
 
-   private Control getCommandById(String id)
-   {
-      for (Control command : controls)
-      {
-         if (id.equals(command.getId()))
-         {
-            return command;
-         }
-      }
+        display.getCommandsListGrid().addSelectionHandler(new SelectionHandler<CommandItemEx>() {
+            public void onSelection(SelectionEvent<CommandItemEx> event) {
+                commandItemSelected(event.getSelectedItem());
+            }
+        });
 
-      return null;
-   }
+        display.getToolbarItemsListGrid().addSelectionHandler(new SelectionHandler<ToolbarItem>() {
+            public void onSelection(SelectionEvent<ToolbarItem> event) {
+                toolbarItemSelected(event.getSelectedItem());
+            }
+        });
 
-   private void fillToolbarListGrid(List<String> items)
-   {
-      toolbarItems.clear();
+        display.setAddCommandButtonEnabled(false);
+        display.setAddDelimiterButtonEnabled(false);
+        display.setDeleteButtonEnabled(false);
+        display.setMoveUpButtonEnabled(false);
+        display.setMoveDownButtonEnabled(false);
 
-      for (String toolbarItem : items)
-      {
-         if ("".equals(toolbarItem))
-         {
-            ToolbarItem spacer = new ToolbarItem(Type.SPACER);
-            toolbarItems.add(spacer);
-         }
-         else if (toolbarItem.startsWith("---"))
-         {
-            ToolbarItem delimiter = new ToolbarItem(Type.DELIMITER);
-            toolbarItems.add(delimiter);
-         }
-         else
-         {
-            Control command = getCommandById(toolbarItem);
-            ToolbarItem item = new ToolbarItem(Type.COMMAND, toolbarItem, command);
-            toolbarItems.add(item);
-         }
+        fillCommandListGrid();
 
-      }
+        List<String> toolbarItems = applicationSettings.getValueAsList("toolbar-items");
+        if (toolbarItems == null) {
+            toolbarItems = new ArrayList<String>();
+            toolbarItems.add("");
+            applicationSettings.setValue("toolbar-items", toolbarItems, Store.SERVER);
+        }
 
-      display.getToolbarItemsListGrid().setValue(toolbarItems);
-   }
+        fillToolbarListGrid(toolbarItems);
+    }
 
-   private void commandItemSelected(CommandItemEx commandItem)
-   {
-      if (commandItem == selectedCommandItem)
-      {
-         return;
-      }
-      selectedCommandItem = commandItem;
+    private void fillCommandListGrid() {
+        HashMap<String, List<Control>> groups = new LinkedHashMap<String, List<Control>>();
 
-      checkAddCommandButton();
-   }
+        for (Control command : controls) {
+            if (command.getIcon() == null && command.getNormalImage() == null) {
+                continue;
+            }
 
-   private void toolbarItemSelected(ToolbarItem toolbarItem)
-   {
-      if (toolbarItem == selectedToolbarItem)
-      {
-         return;
-      }
-      selectedToolbarItem = toolbarItem;
+            if (command instanceof SimpleControl) {
+                if (((SimpleControl)command).getEvent() != null) {
+                    addCommand(groups, command);
+                }
+            } else if (command instanceof PopupMenuControl) {
+                addCommand(groups, command);
+            } else if (command instanceof TextInputControl) {
+                addCommand(groups, command);
+            }
+        }
 
-      checkAddCommandButton();
+        List<CommandItemEx> commandList = new ArrayList<CommandItemEx>();
+        Set<String> keys = groups.keySet();
+        for (String groupName : keys) {
+            commandList.add(new CommandItemEx(groupName));
+            List<Control> commands = groups.get(groupName);
+            for (Control command : commands) {
+                commandList.add(new CommandItemEx(command));
+            }
+        }
 
-      checkDeleteToolbarItemButton();
+        display.getCommandsListGrid().setValue(commandList);
+    }
 
-      display.setAddDelimiterButtonEnabled(true);
+    private void addCommand(HashMap<String, List<Control>> groups, Control command) {
 
-      checkMoveCommands();
-   }
+        String groupName = command.getId();
+        if (groupName.indexOf("/") >= 0) {
+            groupName = groupName.substring(0, groupName.lastIndexOf("/"));
+        } else {
+            groupName = "Other";
+        }
 
-   private void checkAddCommandButton()
-   {
-      if (selectedToolbarItem == null)
-      {
-         display.setAddCommandButtonEnabled(false);
-         return;
-      }
+        List<Control> commands = groups.get(groupName);
+        if (commands == null) {
+            commands = new ArrayList<Control>();
+            groups.put(groupName, commands);
+        }
 
-      if (selectedCommandItem == null)
-      {
-         return;
-      }
+        commands.add(command);
+    }
 
-      if (selectedCommandItem.isGroup())
-      {
-         display.setAddCommandButtonEnabled(false);
-      }
-      else
-      {
-         display.setAddCommandButtonEnabled(true);
-      }
-   }
+    private Control getCommandById(String id) {
+        for (Control command : controls) {
+            if (id.equals(command.getId())) {
+                return command;
+            }
+        }
 
-   private void checkDeleteToolbarItemButton()
-   {
-      if (selectedToolbarItem == null)
-      {
-         display.setDeleteButtonEnabled(false);
-         return;
-      }
+        return null;
+    }
 
-      if (selectedToolbarItem.getType() == Type.SPACER)
-      {
-         display.setDeleteButtonEnabled(false);
-      }
-      else
-      {
-         display.setDeleteButtonEnabled(true);
-      }
-   }
+    private void fillToolbarListGrid(List<String> items) {
+        toolbarItems.clear();
 
-   private void checkMoveCommands()
-   {
-      int index = toolbarItems.indexOf(selectedToolbarItem);
-      if (index == 0)
-      {
-         display.setMoveUpButtonEnabled(false);
-      }
-      else
-      {
-         display.setMoveUpButtonEnabled(true);
-      }
+        for (String toolbarItem : items) {
+            if ("".equals(toolbarItem)) {
+                ToolbarItem spacer = new ToolbarItem(Type.SPACER);
+                toolbarItems.add(spacer);
+            } else if (toolbarItem.startsWith("---")) {
+                ToolbarItem delimiter = new ToolbarItem(Type.DELIMITER);
+                toolbarItems.add(delimiter);
+            } else {
+                Control command = getCommandById(toolbarItem);
+                ToolbarItem item = new ToolbarItem(Type.COMMAND, toolbarItem, command);
+                toolbarItems.add(item);
+            }
 
-      if (index < toolbarItems.size() - 1)
-      {
-         display.setMoveDownButtonEnabled(true);
-      }
-      else
-      {
-         display.setMoveDownButtonEnabled(false);
-      }
-   }
+        }
 
-   private void addCommand()
-   {
-      int index = toolbarItems.indexOf(selectedToolbarItem);
+        display.getToolbarItemsListGrid().setValue(toolbarItems);
+    }
 
-      ToolbarItem item =
-         new ToolbarItem(Type.COMMAND, selectedCommandItem.getCommand().getId(), selectedCommandItem.getCommand());
-      toolbarItems.add(index + 1, item);
+    private void commandItemSelected(CommandItemEx commandItem) {
+        if (commandItem == selectedCommandItem) {
+            return;
+        }
+        selectedCommandItem = commandItem;
 
-      display.getToolbarItemsListGrid().setValue(toolbarItems);
+        checkAddCommandButton();
+    }
 
-      selectedToolbarItem = item;
-      display.selectToolbarItem(item);
+    private void toolbarItemSelected(ToolbarItem toolbarItem) {
+        if (toolbarItem == selectedToolbarItem) {
+            return;
+        }
+        selectedToolbarItem = toolbarItem;
 
-      checkMoveCommands();
-   }
+        checkAddCommandButton();
 
-   private void addDelimiter()
-   {
-      int index = toolbarItems.indexOf(selectedToolbarItem);
+        checkDeleteToolbarItemButton();
 
-      ToolbarItem delimiter = new ToolbarItem(Type.DELIMITER);
-      toolbarItems.add(index + 1, delimiter);
+        display.setAddDelimiterButtonEnabled(true);
 
-      display.getToolbarItemsListGrid().setValue(toolbarItems);
-      selectedToolbarItem = delimiter;
-      display.selectToolbarItem(delimiter);
+        checkMoveCommands();
+    }
 
-      checkMoveCommands();
-   }
+    private void checkAddCommandButton() {
+        if (selectedToolbarItem == null) {
+            display.setAddCommandButtonEnabled(false);
+            return;
+        }
 
-   private void deleteCommand()
-   {
-      int index = toolbarItems.indexOf(selectedToolbarItem);
-      toolbarItems.remove(selectedToolbarItem);
-      display.getToolbarItemsListGrid().setValue(toolbarItems);
+        if (selectedCommandItem == null) {
+            return;
+        }
 
-      if (index > toolbarItems.size() - 1)
-      {
-         index = toolbarItems.size() - 1;
-      }
+        if (selectedCommandItem.isGroup()) {
+            display.setAddCommandButtonEnabled(false);
+        } else {
+            display.setAddCommandButtonEnabled(true);
+        }
+    }
 
-      selectedToolbarItem = toolbarItems.get(index);
-      display.selectToolbarItem(selectedToolbarItem);
+    private void checkDeleteToolbarItemButton() {
+        if (selectedToolbarItem == null) {
+            display.setDeleteButtonEnabled(false);
+            return;
+        }
 
-      checkAddCommandButton();
-      checkDeleteToolbarItemButton();
-      checkMoveCommands();
-   }
+        if (selectedToolbarItem.getType() == Type.SPACER) {
+            display.setDeleteButtonEnabled(false);
+        } else {
+            display.setDeleteButtonEnabled(true);
+        }
+    }
 
-   private void moveUp()
-   {
-      int index = toolbarItems.indexOf(selectedToolbarItem);
-      toolbarItems.remove(selectedToolbarItem);
-      toolbarItems.add(index - 1, selectedToolbarItem);
+    private void checkMoveCommands() {
+        int index = toolbarItems.indexOf(selectedToolbarItem);
+        if (index == 0) {
+            display.setMoveUpButtonEnabled(false);
+        } else {
+            display.setMoveUpButtonEnabled(true);
+        }
 
-      display.getToolbarItemsListGrid().setValue(toolbarItems);
+        if (index < toolbarItems.size() - 1) {
+            display.setMoveDownButtonEnabled(true);
+        } else {
+            display.setMoveDownButtonEnabled(false);
+        }
+    }
 
-      checkMoveCommands();
+    private void addCommand() {
+        int index = toolbarItems.indexOf(selectedToolbarItem);
 
-      display.selectToolbarItem(selectedToolbarItem);
-   }
+        ToolbarItem item =
+                new ToolbarItem(Type.COMMAND, selectedCommandItem.getCommand().getId(), selectedCommandItem.getCommand());
+        toolbarItems.add(index + 1, item);
 
-   private void moveDown()
-   {
-      int index = toolbarItems.indexOf(selectedToolbarItem);
-      toolbarItems.remove(selectedToolbarItem);
-      toolbarItems.add(index + 1, selectedToolbarItem);
+        display.getToolbarItemsListGrid().setValue(toolbarItems);
 
-      display.getToolbarItemsListGrid().setValue(toolbarItems);
+        selectedToolbarItem = item;
+        display.selectToolbarItem(item);
 
-      checkMoveCommands();
+        checkMoveCommands();
+    }
 
-      display.selectToolbarItem(selectedToolbarItem);
-   }
+    private void addDelimiter() {
+        int index = toolbarItems.indexOf(selectedToolbarItem);
 
-   private List<String> itemsToUpdate;
+        ToolbarItem delimiter = new ToolbarItem(Type.DELIMITER);
+        toolbarItems.add(index + 1, delimiter);
 
-   private void updateToolbar()
-   {
-      itemsToUpdate = applicationSettings.getValueAsList("toolbar-items");
-      itemsToUpdate.clear();
+        display.getToolbarItemsListGrid().setValue(toolbarItems);
+        selectedToolbarItem = delimiter;
+        display.selectToolbarItem(delimiter);
 
-      for (ToolbarItem toolbarItem : toolbarItems)
-      {
-         if (toolbarItem.getType() == Type.COMMAND)
-         {
-            itemsToUpdate.add(toolbarItem.getCommand().getId());
-         }
-         else if (toolbarItem.getType() == Type.SPACER)
-         {
-            itemsToUpdate.add("");
-         }
-         else
-         {
-            itemsToUpdate.add("---");
-         }
-      }
+        checkMoveCommands();
+    }
 
-      try
-      {
-         SettingsService.getInstance().saveSettingsToServer(applicationSettings,
-            new AsyncRequestCallback<ApplicationSettings>()
-            {
-               @Override
-               protected void onSuccess(ApplicationSettings result)
-               {
-                  IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate, controls));
-                  IDE.getInstance().closeView(display.asView().getId());
-               }
+    private void deleteCommand() {
+        int index = toolbarItems.indexOf(selectedToolbarItem);
+        toolbarItems.remove(selectedToolbarItem);
+        display.getToolbarItemsListGrid().setValue(toolbarItems);
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
-      }
-   }
+        if (index > toolbarItems.size() - 1) {
+            index = toolbarItems.size() - 1;
+        }
 
-   private void restoreDefaults()
-   {
-      List<String> toolbarDefaultItems = applicationSettings.getValueAsList("toolbar-default-items");
-      if (toolbarDefaultItems == null)
-      {
-         toolbarDefaultItems = new ArrayList<String>();
-         toolbarDefaultItems.add("");
-      }
+        selectedToolbarItem = toolbarItems.get(index);
+        display.selectToolbarItem(selectedToolbarItem);
 
-      fillToolbarListGrid(toolbarDefaultItems);
-      selectedToolbarItem = null;
+        checkAddCommandButton();
+        checkDeleteToolbarItemButton();
+        checkMoveCommands();
+    }
 
-      display.setAddCommandButtonEnabled(false);
-      display.setAddDelimiterButtonEnabled(false);
-      display.setDeleteButtonEnabled(false);
-      display.setMoveUpButtonEnabled(false);
-      display.setMoveDownButtonEnabled(false);
-   }
+    private void moveUp() {
+        int index = toolbarItems.indexOf(selectedToolbarItem);
+        toolbarItems.remove(selectedToolbarItem);
+        toolbarItems.add(index - 1, selectedToolbarItem);
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        display.getToolbarItemsListGrid().setValue(toolbarItems);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
-    */
-   @Override
-   public View getPreference()
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-      }
-      return display.asView();
-   }
+        checkMoveCommands();
+
+        display.selectToolbarItem(selectedToolbarItem);
+    }
+
+    private void moveDown() {
+        int index = toolbarItems.indexOf(selectedToolbarItem);
+        toolbarItems.remove(selectedToolbarItem);
+        toolbarItems.add(index + 1, selectedToolbarItem);
+
+        display.getToolbarItemsListGrid().setValue(toolbarItems);
+
+        checkMoveCommands();
+
+        display.selectToolbarItem(selectedToolbarItem);
+    }
+
+    private List<String> itemsToUpdate;
+
+    private void updateToolbar() {
+        itemsToUpdate = applicationSettings.getValueAsList("toolbar-items");
+        itemsToUpdate.clear();
+
+        for (ToolbarItem toolbarItem : toolbarItems) {
+            if (toolbarItem.getType() == Type.COMMAND) {
+                itemsToUpdate.add(toolbarItem.getCommand().getId());
+            } else if (toolbarItem.getType() == Type.SPACER) {
+                itemsToUpdate.add("");
+            } else {
+                itemsToUpdate.add("---");
+            }
+        }
+
+        try {
+            SettingsService.getInstance().saveSettingsToServer(applicationSettings,
+                                                               new AsyncRequestCallback<ApplicationSettings>() {
+                                                                   @Override
+                                                                   protected void onSuccess(ApplicationSettings result) {
+                                                                       IDE.fireEvent(
+                                                                               new SetToolbarItemsEvent("exoIDEToolbar", itemsToUpdate,
+                                                                                                        controls));
+                                                                       IDE.getInstance().closeView(display.asView().getId());
+                                                                   }
+
+                                                                   @Override
+                                                                   protected void onFailure(Throwable exception) {
+                                                                       IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
+                                                                   }
+                                                               });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(SAVE_SETTINGS_FAILURE));
+        }
+    }
+
+    private void restoreDefaults() {
+        List<String> toolbarDefaultItems = applicationSettings.getValueAsList("toolbar-default-items");
+        if (toolbarDefaultItems == null) {
+            toolbarDefaultItems = new ArrayList<String>();
+            toolbarDefaultItems.add("");
+        }
+
+        fillToolbarListGrid(toolbarDefaultItems);
+        selectedToolbarItem = null;
+
+        display.setAddCommandButtonEnabled(false);
+        display.setAddDelimiterButtonEnabled(false);
+        display.setDeleteButtonEnabled(false);
+        display.setMoveUpButtonEnabled(false);
+        display.setMoveDownButtonEnabled(false);
+    }
+
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference() */
+    @Override
+    public View getPreference() {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+        }
+        return display.asView();
+    }
 
 }

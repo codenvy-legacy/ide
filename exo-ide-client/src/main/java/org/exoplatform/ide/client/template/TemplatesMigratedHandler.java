@@ -22,14 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link TemplatesMigratedEvent}.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TemplatesMigratedHandler.java Aug 1, 2011 12:22:56 PM vereshchaka $
- * 
  */
-public interface TemplatesMigratedHandler extends EventHandler
-{
+public interface TemplatesMigratedHandler extends EventHandler {
 
-   void onTemplatesMigrated(TemplatesMigratedEvent event);
+    void onTemplatesMigrated(TemplatesMigratedEvent event);
 
 }

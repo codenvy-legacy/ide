@@ -24,92 +24,90 @@ import com.google.gwt.i18n.client.Messages;
  * Interface to represent the constants contained in resource bundle: 'IdeEditorLocalizationConstant.properties'.
  * <p/>
  * Localization message for forms, that associated with editor.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
- * 
  */
-public interface IdeEditorLocalizationConstant extends Messages
-{
-   /*
-    * EditorsListGrid
-    */
-   @Key("editorsListGrid.column.editors")
-   String editorsListGridEditorsColumn();
+public interface IdeEditorLocalizationConstant extends Messages {
+    /*
+     * EditorsListGrid
+     */
+    @Key("editorsListGrid.column.editors")
+    String editorsListGridEditorsColumn();
 
-   @Key("editorListGrid.default")
-   String editorsListGridDefault();
+    @Key("editorListGrid.default")
+    String editorsListGridDefault();
 
-   /*
-    * EditorFactory
-    */
-   @Key("codeMirror.textEditor")
-   String codeMirrorTextEditor();
+    /*
+     * EditorFactory
+     */
+    @Key("codeMirror.textEditor")
+    String codeMirrorTextEditor();
 
-   /*
-    * GoToLineForm
-    */
-   @Key("goToLine.title")
-   String goToLineTitle();
+    /*
+     * GoToLineForm
+     */
+    @Key("goToLine.title")
+    String goToLineTitle();
 
-   @Key("goToLine.goButton")
-   String goToLineGoButton();
+    @Key("goToLine.goButton")
+    String goToLineGoButton();
 
-   /*
-    * GoToLinePresenter
-    */
-   @Key("goToLine.label.enterLineNumber")
-   String goToLineLabelEnterLineNumber(int lineNumber);
+    /*
+     * GoToLinePresenter
+     */
+    @Key("goToLine.label.enterLineNumber")
+    String goToLineLabelEnterLineNumber(int lineNumber);
 
-   /*
-    * FindTextView
-    */
-   @Key("findText.title")
-   String findTextTitle();
+    /*
+     * FindTextView
+     */
+    @Key("findText.title")
+    String findTextTitle();
 
-   @Key("findText.textField.find")
-   String findTextFind();
+    @Key("findText.textField.find")
+    String findTextFind();
 
-   @Key("findText.textField.replaceWith")
-   String findTextReplaceWith();
+    @Key("findText.textField.replaceWith")
+    String findTextReplaceWith();
 
-   @Key("findText.checkbox.caseSensitive")
-   String findTextCaseSensitive();
+    @Key("findText.checkbox.caseSensitive")
+    String findTextCaseSensitive();
 
-   @Key("findText.button.find")
-   String findTextFindButton();
+    @Key("findText.button.find")
+    String findTextFindButton();
 
-   @Key("findText.button.replace")
-   String findTextReplaceButton();
+    @Key("findText.button.replace")
+    String findTextReplaceButton();
 
-   @Key("findText.button.replaceFind")
-   String findTextReplaceFindButton();
+    @Key("findText.button.replaceFind")
+    String findTextReplaceFindButton();
 
-   @Key("findText.button.replaceAll")
-   String findTextReplaceAllButton();
+    @Key("findText.button.replaceAll")
+    String findTextReplaceAllButton();
 
-   @Key("findText.searchStatusLabel")
-   String findTextSearchStatusLabel();
+    @Key("findText.searchStatusLabel")
+    String findTextSearchStatusLabel();
 
-   @Key("findText.fieldValue.someText")
-   String findTextFieldValueSomeText();
+    @Key("findText.fieldValue.someText")
+    String findTextFieldValueSomeText();
 
-   @Key("findText.fieldValue.replateText")
-   String findTextFieldValueReplaceText();
+    @Key("findText.fieldValue.replateText")
+    String findTextFieldValueReplaceText();
 
-   /*
-    * EditorController
-    */
-   @Key("editorController.dialogTitle.closeFile")
-   String editorControllerAskCloseFile();
+    /*
+     * EditorController
+     */
+    @Key("editorController.dialogTitle.closeFile")
+    String editorControllerAskCloseFile();
 
-   @Key("editorController.fileIsReadOnly")
-   String editorControllerFileIsReadOnly();
+    @Key("editorController.fileIsReadOnly")
+    String editorControllerFileIsReadOnly();
 
-   @Key("editorController.fileTab.sourceView")
-   String editorControllerFileTabSourceView();
+    @Key("editorController.fileTab.sourceView")
+    String editorControllerFileTabSourceView();
 
-   @Key("editorController.fileTab.designView")
-   String editorControllerFileTabDesignView();
+    @Key("editorController.fileTab.designView")
+    String editorControllerFileTabDesignView();
 
 }

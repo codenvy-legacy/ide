@@ -23,23 +23,19 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class CloseEditorEvent extends GwtEvent<CloseEditorHandler>
-{
+public class CloseEditorEvent extends GwtEvent<CloseEditorHandler> {
 
-   public static final GwtEvent.Type<CloseEditorHandler> TYPE = new GwtEvent.Type<CloseEditorHandler>();
+    public static final GwtEvent.Type<CloseEditorHandler> TYPE = new GwtEvent.Type<CloseEditorHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CloseEditorHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CloseEditorHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(CloseEditorHandler handler)
-   {
-      handler.onCloseEditor(this);
-   }
+    @Override
+    protected void dispatch(CloseEditorHandler handler) {
+        handler.onCloseEditor(this);
+    }
 
 }

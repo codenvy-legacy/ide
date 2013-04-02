@@ -27,27 +27,26 @@ import org.exoplatform.ide.client.operation.createfile.NewFileControl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class CreateFileFromTemplateControl extends NewFileControl
-{
+public class CreateFileFromTemplateControl extends NewFileControl {
 
-   public final static String ID = "File/New/Create File From Template...";
+    public final static String ID = "File/New/Create File From Template...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplateTitleControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplateTitleControl();
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplatePromptControl();
+    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createFileFromTemplatePromptControl();
 
-   public CreateFileFromTemplateControl()
-   {
-      super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(), IDEImageBundle.INSTANCE
-         .createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
-      setDelimiterBefore(true);
-      setHotKey("Ctrl+N");
-      setGroupName(GroupNames.IMPORT);
-   }
+    public CreateFileFromTemplateControl() {
+        super(ID, TITLE, PROMPT, IDEImageBundle.INSTANCE.createFromTemplate(), IDEImageBundle.INSTANCE
+                                                                                             .createFromTemplateDisabled(),
+              new CreateFileFromTemplateEvent());
+        setDelimiterBefore(true);
+        setHotKey("Ctrl+N");
+        setGroupName(GroupNames.IMPORT);
+    }
 
 }

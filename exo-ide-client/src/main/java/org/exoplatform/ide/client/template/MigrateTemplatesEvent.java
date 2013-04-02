@@ -23,46 +23,35 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * When user try to go to templates at first time, then this event will be called, to move old templates from registry to plain
  * text file.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MigrateTemplateEvent.java Aug 1, 2011 12:16:39 PM vereshchaka $
  */
-public class MigrateTemplatesEvent extends GwtEvent<MigrateTemplatesHandler>
-{
+public class MigrateTemplatesEvent extends GwtEvent<MigrateTemplatesHandler> {
 
-   public static final GwtEvent.Type<MigrateTemplatesHandler> TYPE = new GwtEvent.Type<MigrateTemplatesHandler>();
+    public static final GwtEvent.Type<MigrateTemplatesHandler> TYPE = new GwtEvent.Type<MigrateTemplatesHandler>();
 
-   private TemplatesMigratedCallback callback;
+    private TemplatesMigratedCallback callback;
 
-   public MigrateTemplatesEvent(TemplatesMigratedCallback callback)
-   {
-      this.callback = callback;
-   }
+    public MigrateTemplatesEvent(TemplatesMigratedCallback callback) {
+        this.callback = callback;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<MigrateTemplatesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<MigrateTemplatesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(MigrateTemplatesHandler handler)
-   {
-      handler.onMigrateTemplates(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(MigrateTemplatesHandler handler) {
+        handler.onMigrateTemplates(this);
+    }
 
-   /**
-    * @return the callback
-    */
-   public TemplatesMigratedCallback getTemplatesMigratedCallback()
-   {
-      return callback;
-   }
+    /** @return the callback */
+    public TemplatesMigratedCallback getTemplatesMigratedCallback() {
+        return callback;
+    }
 
 }

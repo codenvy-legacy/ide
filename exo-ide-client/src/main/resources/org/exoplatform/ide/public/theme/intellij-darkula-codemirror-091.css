@@ -18,24 +18,24 @@
  */
 
 .CodeMirror-mainFrame {
-	background-color: #2b2b2b!important;
+    background-color: #2b2b2b !important;
 }
 
 .CodeMirror-line-numbers {
-	background-color: #313335!important;
-	color: #888888!important;
+    background-color: #313335 !important;
+    color: #888888 !important;
 }
 
 .CodeMirror-line-highlighter {
-	background-color: #434343!important;
+    background-color: #434343 !important;
 }
 
 .editbox {
-	color: #A9B7C6 !important;
+    color: #A9B7C6 !important;
 }
 
 .whitespace {
-	color: #A9B7C6 !important;
+    color: #A9B7C6 !important;
 }
 
 /*
@@ -43,31 +43,31 @@
  */
 
 .xml-comment {
-	color: #A9B7C6 !important;
+    color: #A9B7C6 !important;
 }
 
 .xml-processing {
-	color: #A9B7C6 !important;
+    color: #A9B7C6 !important;
 }
 
 .xml-punctuation {
-	color: #CC7832 !important;
+    color: #CC7832 !important;
 }
 
 .xml-tagname {
-	color: #CC7832 !important;
+    color: #CC7832 !important;
 }
 
 .xml-attname {
-	color: #EEE852 !important;
+    color: #EEE852 !important;
 }
 
 .xml-attribute {
-	color: #72A56E !important;
+    color: #72A56E !important;
 }
 
 .xml-text {
-	color: #EEE852 !important;
+    color: #EEE852 !important;
 }
 
 /*
@@ -75,7 +75,7 @@
  */
 
 .html-comment {
-	color: #A9B7C6 !important;
+    color: #A9B7C6 !important;
 }
 
 /*
@@ -83,37 +83,37 @@
  */
 
 .groovyComment {
-	color: #A9B7C6 !important;
+    color: #A9B7C6 !important;
 }
 
 .javaKeyword {
-	color: #CC7832 !important;
+    color: #CC7832 !important;
 }
 
 .groovyVariable {
-	color: #A9B7C6 !important;
+    color: #A9B7C6 !important;
 }
 
 .groovyPunctuation {
-	color: #B079CC !important;
+    color: #B079CC !important;
 }
 
 .javaAnnotation {
-	color: #EEE852 !important;
+    color: #EEE852 !important;
 }
 
 .groovyString {
-	color: #A5C25C !important;
+    color: #A5C25C !important;
 }
 
 .javaModifier {
-	color: #72A56E !important;
+    color: #72A56E !important;
 }
 
 .javaType {
-	color: #DA4939 !important;
+    color: #DA4939 !important;
 }
 
 .groovyOperator {
-	color: #B079CC !important;
+    color: #B079CC !important;
 }

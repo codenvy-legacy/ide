@@ -33,94 +33,78 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: ${date} ${time}
- * 
  */
 @RolesAllowed({"developer"})
 public class FindTextControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ViewOpenedHandler, ViewClosedHandler
-{
-   // public static final String ID = "Edit/Find&#47Replace...";
-   public static final String ID = "Edit/Find-Replace...";
+                                                              ViewOpenedHandler, ViewClosedHandler {
+    // public static final String ID = "Edit/Find&#47Replace...";
+    public static final String ID = "Edit/Find-Replace...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.findReplaceControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.findReplaceControl();
 
-   private boolean findTextViewOpened = false;
+    private boolean findTextViewOpened = false;
 
-   /**
-    * 
-    */
-   public FindTextControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setDelimiterBefore(true);
-      setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
-      setEvent(new FindTextEvent());
-      setHotKey("Ctrl+F");
-   }
+    /**
+     *
+     */
+    public FindTextControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setDelimiterBefore(true);
+        setImages(IDEImageBundle.INSTANCE.findText(), IDEImageBundle.INSTANCE.findTextDisabled());
+        setEvent(new FindTextEvent());
+        setHotKey("Ctrl+F");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(ViewOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
-    */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null || event.getEditor() == null
-         || !event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE))
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-      else
-      {
-         setVisible(true);
-      }
+    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     * .editor.event.EditorActiveFileChangedEvent) */
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() == null || event.getEditor() == null
+            || !event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE)) {
+            setVisible(false);
+            setEnabled(false);
+            return;
+        } else {
+            setVisible(true);
+        }
 
-      if (event.getEditor().isReadOnly())
-      {
-         setEnabled(false);
-         return;
-      }
+        if (event.getEditor().isReadOnly()) {
+            setEnabled(false);
+            return;
+        }
 
-      boolean canFindReplace = event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE);
-      // boolean isOpened = openedForms.contains(FindTextForm.ID);
-      boolean enableSearch = canFindReplace && !findTextViewOpened;
-      setEnabled(enableSearch);
-   }
+        boolean canFindReplace = event.getEditor().isCapable(EditorCapability.FIND_AND_REPLACE);
+        // boolean isOpened = openedForms.contains(FindTextForm.ID);
+        boolean enableSearch = canFindReplace && !findTextViewOpened;
+        setEnabled(enableSearch);
+    }
 
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof FindTextPresenter.Display)
-      {
-         findTextViewOpened = true;
-         setEnabled(false);
-      }
-   }
+    @Override
+    public void onViewOpened(ViewOpenedEvent event) {
+        if (event.getView() instanceof FindTextPresenter.Display) {
+            findTextViewOpened = true;
+            setEnabled(false);
+        }
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof FindTextPresenter.Display)
-      {
-         findTextViewOpened = false;
-         setEnabled(true);
-      }
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof FindTextPresenter.Display) {
+            findTextViewOpened = false;
+            setEnabled(true);
+        }
+    }
 
 }

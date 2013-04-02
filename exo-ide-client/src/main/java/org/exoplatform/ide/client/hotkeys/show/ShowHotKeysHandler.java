@@ -22,12 +22,10 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowHotKeysEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowHotKeysHandler.java May 10, 2012 10:30:59 AM azatsarynnyy $
- *
  */
-public interface ShowHotKeysHandler extends EventHandler
-{
-   void onShowHotKeys(ShowHotKeysEvent event);
+public interface ShowHotKeysHandler extends EventHandler {
+    void onShowHotKeys(ShowHotKeysEvent event);
 }

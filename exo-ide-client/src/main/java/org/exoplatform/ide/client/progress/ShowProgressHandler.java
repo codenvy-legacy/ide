@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 19, 2011 evgen $
- * 
  */
-public interface ShowProgressHandler extends EventHandler
-{
+public interface ShowProgressHandler extends EventHandler {
 
-   void onShowProgress(ShowProgressEvent event);
+    void onShowProgress(ShowProgressEvent event);
 
 }

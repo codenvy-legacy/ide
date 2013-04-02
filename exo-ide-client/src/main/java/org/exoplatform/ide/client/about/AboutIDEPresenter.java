@@ -18,86 +18,74 @@
  */
 package org.exoplatform.ide.client.about;
 
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHandler
-{
+public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasClickHandlers getOkButton();
+        HasClickHandlers getOkButton();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private HandlerRegistration okButtonClickHandlerRegistration;
+    private HandlerRegistration okButtonClickHandlerRegistration;
 
-   public AboutIDEPresenter()
-   {
-      IDE.addHandler(ShowAboutDialogEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
+    public AboutIDEPresenter() {
+        IDE.addHandler(ShowAboutDialogEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new ShowAboutControl());
-   }
+        IDE.getInstance().addControl(new ShowAboutControl());
+    }
 
-   @Override
-   public void onShowAboutDialog(ShowAboutDialogEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-   }
+    @Override
+    public void onShowAboutDialog(ShowAboutDialogEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
+        }
+    }
 
-   public void bindDisplay()
-   {
-      okButtonClickHandlerRegistration = display.getOkButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
+    public void bindDisplay() {
+        okButtonClickHandlerRegistration = display.getOkButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+    }
 
-   public void unbindDisplay()
-   {
-      if (display != null)
-      {
-         okButtonClickHandlerRegistration.removeHandler();
-         okButtonClickHandlerRegistration = null;
-         display = null;
-      }
-   }
+    public void unbindDisplay() {
+        if (display != null) {
+            okButtonClickHandlerRegistration.removeHandler();
+            okButtonClickHandlerRegistration = null;
+            display = null;
+        }
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         unbindDisplay();
-      }
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            unbindDisplay();
+        }
+    }
 
 }

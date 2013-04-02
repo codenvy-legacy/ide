@@ -30,57 +30,45 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 @RolesAllowed({"developer"})
-public class GoToLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class GoToLineControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Edit/Go to Line...";
+    public static final String ID = "Edit/Go to Line...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.goToLineControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.goToLineControl();
 
-   public GoToLineControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());
-      setEvent(new GoToLineEvent());
-      setHotKey("Ctrl+L");
-   }
+    public GoToLineControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.goToLine(), IDEImageBundle.INSTANCE.goToLineDisabled());
+        setEvent(new GoToLineEvent());
+        setHotKey("Ctrl+L");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
-    */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null || event.getEditor() == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
+    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     * .editor.event.EditorActiveFileChangedEvent) */
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() == null || event.getEditor() == null) {
+            setVisible(false);
+            setEnabled(false);
+            return;
+        }
 
-      if (event.getEditor().isCapable(EditorCapability.SET_CURSOR_POSITION))
-      {
-         setVisible(true);
-         setEnabled(true);
-      }
-      else
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
+        if (event.getEditor().isCapable(EditorCapability.SET_CURSOR_POSITION)) {
+            setVisible(true);
+            setEnabled(true);
+        } else {
+            setVisible(false);
+            setEnabled(false);
+        }
 
-   }
+    }
 }

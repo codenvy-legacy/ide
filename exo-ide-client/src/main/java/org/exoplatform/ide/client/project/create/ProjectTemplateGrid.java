@@ -32,38 +32,31 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 25, 2011 evgen $
- * 
  */
-public class ProjectTemplateGrid extends ListGrid<ProjectTemplate>
-{
-   private Column<ProjectTemplate, String> descriptionColumn;
+public class ProjectTemplateGrid extends ListGrid<ProjectTemplate> {
+    private Column<ProjectTemplate, String> descriptionColumn;
 
-   private Column<ProjectTemplate, ImageResource> imageColumn;
+    private Column<ProjectTemplate, ImageResource> imageColumn;
 
-   public ProjectTemplateGrid()
-   {
-      descriptionColumn = new Column<ProjectTemplate, String>(new TextCell())
-      {
+    public ProjectTemplateGrid() {
+        descriptionColumn = new Column<ProjectTemplate, String>(new TextCell()) {
 
-         @Override
-         public String getValue(ProjectTemplate projectTemplate)
-         {
-            return projectTemplate.getDescription();
-         }
-      };
+            @Override
+            public String getValue(ProjectTemplate projectTemplate) {
+                return projectTemplate.getDescription();
+            }
+        };
 
-      imageColumn = new Column<ProjectTemplate, ImageResource>(new ImageResourceCell())
-      {
+        imageColumn = new Column<ProjectTemplate, ImageResource>(new ImageResourceCell()) {
 
-         @Override
-         public ImageResource getValue(ProjectTemplate projectTemplate)
-         {
-            return ProjectResolver.getImageForProject(ProjectType.fromValue(projectTemplate.getType()));
-         }
-      };
+            @Override
+            public ImageResource getValue(ProjectTemplate projectTemplate) {
+                return ProjectResolver.getImageForProject(ProjectType.fromValue(projectTemplate.getType()));
+            }
+        };
 
-      getCellTable().addColumn(imageColumn);
-      getCellTable().setColumnWidth(imageColumn, 16, Unit.PX);
-      getCellTable().addColumn(descriptionColumn);
-   }
+        getCellTable().addColumn(imageColumn);
+        getCellTable().setColumnWidth(imageColumn, 16, Unit.PX);
+        getCellTable().addColumn(descriptionColumn);
+    }
 }

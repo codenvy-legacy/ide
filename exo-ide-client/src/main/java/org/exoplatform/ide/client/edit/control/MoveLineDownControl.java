@@ -30,40 +30,34 @@ import org.exoplatform.ide.editor.ckeditor.CKEditor;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class MoveLineDownControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
-   
-   public static final String ID = "Edit/Move Line Down";
-   
-   private String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.moveLineDownControl();
+public class MoveLineDownControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public MoveLineDownControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setEvent(new EditorMoveLineDownEvent());
-      setHotKey("Alt+Down");
-      setImages(IDEImageBundle.INSTANCE.lineDown(), IDEImageBundle.INSTANCE.lineDownDisabled());
-   }
+    public static final String ID = "Edit/Move Line Down";
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    private String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.moveLineDownControl();
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      boolean isEnabled = event.getFile() != null && event.getEditor() != null && !(event.getEditor() instanceof CKEditor);
-      setVisible(isEnabled);
-      setEnabled(isEnabled);
-   }   
+    public MoveLineDownControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setEvent(new EditorMoveLineDownEvent());
+        setHotKey("Alt+Down");
+        setImages(IDEImageBundle.INSTANCE.lineDown(), IDEImageBundle.INSTANCE.lineDownDisabled());
+    }
+
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
+
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        boolean isEnabled = event.getFile() != null && event.getEditor() != null && !(event.getEditor() instanceof CKEditor);
+        setVisible(isEnabled);
+        setEnabled(isEnabled);
+    }
 
 }

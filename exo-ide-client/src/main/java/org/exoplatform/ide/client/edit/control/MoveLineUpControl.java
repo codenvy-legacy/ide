@@ -30,39 +30,33 @@ import org.exoplatform.ide.editor.ckeditor.CKEditor;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class MoveLineUpControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class MoveLineUpControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Edit/Move Line Up";
+    public static final String ID = "Edit/Move Line Up";
 
-   private String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.moveLineUpControl();
+    private String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.moveLineUpControl();
 
-   public MoveLineUpControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setEvent(new EditorMoveLineUpEvent());
-      setHotKey("Alt+Up");
-      setImages(IDEImageBundle.INSTANCE.lineUp(), IDEImageBundle.INSTANCE.lineUpDisabled());
-   }
+    public MoveLineUpControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setEvent(new EditorMoveLineUpEvent());
+        setHotKey("Alt+Up");
+        setImages(IDEImageBundle.INSTANCE.lineUp(), IDEImageBundle.INSTANCE.lineUpDisabled());
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      boolean isEnabled = event.getFile() != null && event.getEditor() != null && !(event.getEditor() instanceof CKEditor);
-      setVisible(isEnabled);
-      setEnabled(isEnabled);
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        boolean isEnabled = event.getFile() != null && event.getEditor() != null && !(event.getEditor() instanceof CKEditor);
+        setVisible(isEnabled);
+        setEnabled(isEnabled);
+    }
 }

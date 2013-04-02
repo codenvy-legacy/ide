@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.createfile;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -37,8 +37,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHa
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.List;
 
 /* 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -46,122 +46,106 @@ import com.google.gwt.resources.client.ImageResource;
  */
 @RolesAllowed({"developer"})
 public class NewFileControl extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
-   VfsChangedHandler, ItemsSelectedHandler
-{
+                                                             VfsChangedHandler, ItemsSelectedHandler {
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   private boolean browserPanelSelected = true;
+    private boolean browserPanelSelected = true;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   /**
-    * @param id
-    * @param title
-    * @param prompt
-    * @param icon
-    * @param event
-    */
-   public NewFileControl(String id, String title, String prompt, String icon, GwtEvent<?> event)
-   {
-      super(id);
-      setTitle(title);
-      setPrompt(prompt);
-      setIcon(icon);
-      setEvent(event);
-      setEnabled(true);
-      
-      setShowInContextMenu(true);
-   }
+    /**
+     * @param id
+     * @param title
+     * @param prompt
+     * @param icon
+     * @param event
+     */
+    public NewFileControl(String id, String title, String prompt, String icon, GwtEvent<?> event) {
+        super(id);
+        setTitle(title);
+        setPrompt(prompt);
+        setIcon(icon);
+        setEvent(event);
+        setEnabled(true);
 
-   /**
-    * @param id
-    * @param title
-    * @param prompt
-    * @param normalIcon
-    * @param disabledIcon
-    * @param event
-    */
-   public NewFileControl(String id, String title, String prompt, ImageResource normalIcon, ImageResource disabledIcon,
-      GwtEvent<?> event)
-   {
-      super(id);
-      setTitle(title);
-      setPrompt(prompt);
-      setImages(normalIcon, disabledIcon);
-      setEvent(event);
-      setEnabled(true);
+        setShowInContextMenu(true);
+    }
 
-      setShowInContextMenu(true);
-   }
+    /**
+     * @param id
+     * @param title
+     * @param prompt
+     * @param normalIcon
+     * @param disabledIcon
+     * @param event
+     */
+    public NewFileControl(String id, String title, String prompt, ImageResource normalIcon, ImageResource disabledIcon,
+                          GwtEvent<?> event) {
+        super(id);
+        setTitle(title);
+        setPrompt(prompt);
+        setImages(normalIcon, disabledIcon);
+        setEvent(event);
+        setEnabled(true);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        setShowInContextMenu(true);
+    }
 
-      setVisible(true);
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
-   /**
-    * 
-    */
-   protected void updateEnabling()
-   {
-      if (vfsInfo == null)
-      {
-         setEnabled(false);
-         return;
-      }
+        setVisible(true);
+        updateEnabling();
+    }
 
-      if (!browserPanelSelected || selectedItems.size() == 0)
-      {
-         setEnabled(false);
-         return;
-      }
+    /**
+     *
+     */
+    protected void updateEnabling() {
+        if (vfsInfo == null) {
+            setEnabled(false);
+            return;
+        }
 
-      setEnabled(true);
-   }
+        if (!browserPanelSelected || selectedItems.size() == 0) {
+            setEnabled(false);
+            return;
+        }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateEnabling();
-   }
+        setEnabled(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay || 
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerDisplay)
-      {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateEnabling();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateEnabling();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay ||
+            event.getView() instanceof ProjectExplorerDisplay ||
+            event.getView() instanceof PackageExplorerDisplay) {
+            browserPanelSelected = event.getView().isViewVisible();
+            updateEnabling();
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        updateEnabling();
+    }
 
 }

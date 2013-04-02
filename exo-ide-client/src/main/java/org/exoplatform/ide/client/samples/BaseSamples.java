@@ -22,28 +22,24 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
-/**
- * @author vetal
- * 
- */
-public interface BaseSamples extends ClientBundle
-{
+/** @author vetal */
+public interface BaseSamples extends ClientBundle {
 
-   BaseSamples INSTANCE = GWT.create(BaseSamples.class);
+    BaseSamples INSTANCE = GWT.create(BaseSamples.class);
 
-   @Source("base/chromattic-do.groovy")
-   TextResource getChromatticDO();
+    @Source("base/chromattic-do.groovy")
+    TextResource getChromatticDO();
 
-   @Source("base/gadget.xml")
-   TextResource getGadget();
+    @Source("base/gadget.xml")
+    TextResource getGadget();
 
-   @Source("base/GTMPL.gtmpl")
-   TextResource getGTMPL();
+    @Source("base/GTMPL.gtmpl")
+    TextResource getGTMPL();
 
-   @Source("base/html.html")
-   TextResource getHtml();
+    @Source("base/html.html")
+    TextResource getHtml();
 
-   @Source("base/rest-service.grs")
-   TextResource getRestService();
+    @Source("base/rest-service.grs")
+    TextResource getRestService();
 
 }

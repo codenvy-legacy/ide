@@ -28,46 +28,38 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
-public class NavigationMenuGroup extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class NavigationMenuGroup extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Window/Navigation";
+    public static final String ID = "Window/Navigation";
 
-   public static final String TITLE = "Navigation";
+    public static final String TITLE = "Navigation";
 
-   public NavigationMenuGroup()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setGroupName(GroupNames.NAVIGATION);
-   }
+    public NavigationMenuGroup() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setGroupName(GroupNames.NAVIGATION);
+    }
 
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    @Override
+    public void initialize() {
+        setVisible(true);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() != null)
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() != null) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 
 }

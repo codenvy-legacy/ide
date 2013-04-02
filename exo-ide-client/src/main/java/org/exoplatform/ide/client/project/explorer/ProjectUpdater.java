@@ -35,69 +35,57 @@ import java.util.ArrayList;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class ProjectUpdater
-{
+public class ProjectUpdater {
 
-   /**
-    * TODO Temporary method.
-    *
-    * Detected whether project type is deprecated or not.
-    *
-    * @param project
-    * @return <code>true</code> if deprecated
-    */
-   public static boolean isNeedUpdateProject(ProjectModel project)
-   {
-      return ProjectResolver.deprecatedTypes.contains(project.getProjectType())
-         && project.getPropertyValues(ProjectProperties.TARGET.value()) == null;
-   }
+    /**
+     * TODO Temporary method.
+     * <p/>
+     * Detected whether project type is deprecated or not.
+     *
+     * @param project
+     * @return <code>true</code> if deprecated
+     */
+    public static boolean isNeedUpdateProject(ProjectModel project) {
+        return ProjectResolver.deprecatedTypes.contains(project.getProjectType())
+               && project.getPropertyValues(ProjectProperties.TARGET.value()) == null;
+    }
 
-   public interface ProjectUpdatedHandler
-   {
-      void onProjectUpdated();
-   }
-   
-   /**
-    * TODO Temporary method.
-    *
-    * Is used to detect and set targets to deprecated project types (to support them).
-    *
-    * @param project
-    */
-   public static void updateProject(ProjectModel project, final ProjectUpdatedHandler itemUpdatedHandler)
-   {
-      ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
-      project.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), targets));
+    public interface ProjectUpdatedHandler {
+        void onProjectUpdated();
+    }
 
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-         {
+    /**
+     * TODO Temporary method.
+     * <p/>
+     * Is used to detect and set targets to deprecated project types (to support them).
+     *
+     * @param project
+     */
+    public static void updateProject(ProjectModel project, final ProjectUpdatedHandler itemUpdatedHandler) {
+        ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
+        project.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), targets));
 
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               //loadProject();
-               //openProject();
-               if (itemUpdatedHandler != null)
-               {
-                  itemUpdatedHandler.onProjectUpdated();
-               }
-            }
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>() {
 
-            @Override
-            protected void onFailure(Throwable e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }   
-   
+                @Override
+                protected void onSuccess(ItemWrapper result) {
+                    //loadProject();
+                    //openProject();
+                    if (itemUpdatedHandler != null) {
+                        itemUpdatedHandler.onProjectUpdated();
+                    }
+                }
+
+                @Override
+                protected void onFailure(Throwable e) {
+                    IDE.fireEvent(new ExceptionThrownEvent(e));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
 }

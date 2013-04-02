@@ -24,37 +24,29 @@ import java.util.Comparator;
 
 /**
  * Comparator for ordering projects by name.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ProjectComparator.java Apr 25, 2012 11:45:04 AM azatsarynnyy $
- *
  */
-final class ProjectComparator implements Comparator<ProjectModel>
-{
-   /**
-    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-    */
-   @Override
-   public int compare(ProjectModel p1, ProjectModel p2)
-   {
-      String projectName1 = p1.getName();
-      String projectName2 = p2.getName();
+final class ProjectComparator implements Comparator<ProjectModel> {
+    /** @see java.util.Comparator#compare(java.lang.Object, java.lang.Object) */
+    @Override
+    public int compare(ProjectModel p1, ProjectModel p2) {
+        String projectName1 = p1.getName();
+        String projectName2 = p2.getName();
 
-      if (projectName1 == null && projectName2 == null)
-      {
-         return 0;
-      }
+        if (projectName1 == null && projectName2 == null) {
+            return 0;
+        }
 
-      if (projectName1 == null)
-      {
-         return 1;
-      }
+        if (projectName1 == null) {
+            return 1;
+        }
 
-      if (projectName2 == null)
-      {
-         return -1;
-      }
+        if (projectName2 == null) {
+            return -1;
+        }
 
-      return projectName1.compareTo(projectName2);
-   }
+        return projectName1.compareTo(projectName2);
+    }
 }

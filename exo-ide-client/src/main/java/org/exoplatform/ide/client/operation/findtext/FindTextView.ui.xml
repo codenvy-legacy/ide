@@ -19,114 +19,120 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   >
-   <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
-   <ui:with field="editorConst" type="org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant"></ui:with>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+        >
+    <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
+    <ui:with field="editorConst" type="org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant"></ui:with>
 
-   <ui:style>
-      .selectAndInputWrapperBox {
-      position: absolute;
-      right: 1px;
-      left: 100px;
-      }
+    <ui:style>
+        .selectAndInputWrapperBox {
+            position: absolute;
+            right: 1px;
+            left: 100px;
+        }
 
-      .formLine {
-      margin-top: 8px;
-      }
+        .formLine {
+            margin-top: 8px;
+        }
 
-      .cancelBbutton {
-      position: absolute;
-      right: 200px;
-      }
+        .cancelBbutton {
+            position: absolute;
+            right: 200px;
+        }
 
-      .spacing {
-      margin: 8px;
-      }
+        .spacing {
+            margin: 8px;
+        }
 
-      .buttonSpacing {
-      margin-left: 5px;
-      }
+        .buttonSpacing {
+            margin-left: 5px;
+        }
 
-      .floatLeft {
-      float: left;
-      margin-left: 15px;
-      }
+        .floatLeft {
+            float: left;
+            margin-left: 15px;
+        }
 
-      .labelText {
-      vertical-align:
-      bottom;
-      }
+        .labelText {
+            vertical-align: bottom;
+        }
 
-      .checkboxItem {
-      margin-left: -4px;
-      }
-   </ui:style>
+        .checkboxItem {
+            margin-left: -4px;
+        }
+    </ui:style>
 
-   <g:LayoutPanel stylePrimaryName="{style.spacing}">
-      <g:layer top="0" height="30px">
-         <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-            <g:west size="90">
-               <g:Label text="{editorConst.findTextFind}" height="18px"></g:Label>
-            </g:west>
-            <g:center>
-               <f:TextInput ui:field="findTextField" name="ideFindReplaceTextFormFindField" width="100%" height="22px"></f:TextInput>
-            </g:center>
-            <g:east size="220">
-               <g:FlowPanel width="100%" height="auto">
-                  <f:ImageButton ui:field="findTextButton" width="90px" height="22px" text="{editorConst.findTextFindButton}" buttonId="ideFindReplaceTextFormFindButton"
-                     stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-                  <f:ImageButton ui:field="replaceFindButton" width="90px" height="22px" text="{editorConst.findTextReplaceFindButton}"
-                     buttonId="ideFindReplaceTextFormReplaceFindButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-               </g:FlowPanel>
-            </g:east>
-         </g:DockLayoutPanel>
-      </g:layer>
+    <g:LayoutPanel stylePrimaryName="{style.spacing}">
+        <g:layer top="0" height="30px">
+            <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
+                <g:west size="90">
+                    <g:Label text="{editorConst.findTextFind}" height="18px"></g:Label>
+                </g:west>
+                <g:center>
+                    <f:TextInput ui:field="findTextField" name="ideFindReplaceTextFormFindField" width="100%" height="22px"></f:TextInput>
+                </g:center>
+                <g:east size="220">
+                    <g:FlowPanel width="100%" height="auto">
+                        <f:ImageButton ui:field="findTextButton" width="90px" height="22px" text="{editorConst.findTextFindButton}"
+                                       buttonId="ideFindReplaceTextFormFindButton"
+                                       stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+                        <f:ImageButton ui:field="replaceFindButton" width="90px" height="22px"
+                                       text="{editorConst.findTextReplaceFindButton}"
+                                       buttonId="ideFindReplaceTextFormReplaceFindButton"
+                                       stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+                    </g:FlowPanel>
+                </g:east>
+            </g:DockLayoutPanel>
+        </g:layer>
 
-      <g:layer top="35px" height="30px">
-         <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-            <g:west size="90">
-               <g:Label text="{editorConst.findTextReplaceWith}" height="18px"></g:Label>
-            </g:west>
-            <g:center>
-               <f:TextInput ui:field="replaceTextField" name="ideFindReplaceTextFormReplaceField" width="100%" height="22px"></f:TextInput>
-            </g:center>
-            <g:east size="220">
-               <g:FlowPanel width="100%" height="auto">
-                  <f:ImageButton ui:field="replaceButton" width="90px" height="22px" text="{editorConst.findTextReplaceButton}"
-                     buttonId="ideFindReplaceTextFormReplaceButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-                  <f:ImageButton ui:field="replaceAllButton" width="90px" height="22px" text="{editorConst.findTextReplaceAllButton}"
-                     buttonId="ideFindReplaceTextFormReplaceAllButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
-               </g:FlowPanel>
-            </g:east>
-         </g:DockLayoutPanel>
-      </g:layer>
+        <g:layer top="35px" height="30px">
+            <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
+                <g:west size="90">
+                    <g:Label text="{editorConst.findTextReplaceWith}" height="18px"></g:Label>
+                </g:west>
+                <g:center>
+                    <f:TextInput ui:field="replaceTextField" name="ideFindReplaceTextFormReplaceField" width="100%"
+                                 height="22px"></f:TextInput>
+                </g:center>
+                <g:east size="220">
+                    <g:FlowPanel width="100%" height="auto">
+                        <f:ImageButton ui:field="replaceButton" width="90px" height="22px" text="{editorConst.findTextReplaceButton}"
+                                       buttonId="ideFindReplaceTextFormReplaceButton" stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+                        <f:ImageButton ui:field="replaceAllButton" width="90px" height="22px" text="{editorConst.findTextReplaceAllButton}"
+                                       buttonId="ideFindReplaceTextFormReplaceAllButton"
+                                       stylePrimaryName="{style.floatLeft}"></f:ImageButton>
+                    </g:FlowPanel>
+                </g:east>
+            </g:DockLayoutPanel>
+        </g:layer>
 
-      <!-- Case sensitive -->
-      <g:layer top="70px" bottom="30px">
-         <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-            <g:west size="90">
-               <g:FlowPanel width="100%">
-               </g:FlowPanel>
-            </g:west>
-            <g:center>
-               <g:CheckBox ui:field="caseSensitiveField" name="ideFindReplaceTextFormCaseSensitiveField" text="{editorConst.findTextCaseSensitive}"
-                  height="22px" stylePrimaryName="{style.checkboxItem}"></g:CheckBox>
-            </g:center>
-         </g:DockLayoutPanel>
-      </g:layer>
+        <!-- Case sensitive -->
+        <g:layer top="70px" bottom="30px">
+            <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
+                <g:west size="90">
+                    <g:FlowPanel width="100%">
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <g:CheckBox ui:field="caseSensitiveField" name="ideFindReplaceTextFormCaseSensitiveField"
+                                text="{editorConst.findTextCaseSensitive}"
+                                height="22px" stylePrimaryName="{style.checkboxItem}"></g:CheckBox>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:layer>
 
-      <g:layer top="105px" bottom="30px">
-         <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-            <g:west size="90">
-               <g:FlowPanel width="100%">
-               </g:FlowPanel>
-            </g:west>
-            <g:center>
-               <f:Label ui:field="findResultLabel" iD="ideFindReplaceTextFormFindResult" height="18px"></f:Label>
-            </g:center>
-         </g:DockLayoutPanel>
-      </g:layer>
+        <g:layer top="105px" bottom="30px">
+            <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
+                <g:west size="90">
+                    <g:FlowPanel width="100%">
+                    </g:FlowPanel>
+                </g:west>
+                <g:center>
+                    <f:Label ui:field="findResultLabel" iD="ideFindReplaceTextFormFindResult" height="18px"></f:Label>
+                </g:center>
+            </g:DockLayoutPanel>
+        </g:layer>
 
-   </g:LayoutPanel>
+    </g:LayoutPanel>
 </ui:UiBinder>

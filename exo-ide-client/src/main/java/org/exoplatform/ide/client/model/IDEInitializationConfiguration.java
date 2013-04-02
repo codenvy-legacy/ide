@@ -24,107 +24,91 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 
 /**
  * Been used to transport initialization configuration
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: May 25, 2011 evgen $
- * 
  */
-public class IDEInitializationConfiguration
-{
+public class IDEInitializationConfiguration {
 
-   private IDEConfiguration ideConfiguration;
+    private IDEConfiguration ideConfiguration;
 
-   private boolean isDiscoverable;
+    private boolean isDiscoverable;
 
-   private ApplicationSettings settings;
+    private ApplicationSettings settings;
 
-   private UserInfo userInfo;
+    private UserInfo userInfo;
 
-   /**
-    * 
-    */
-   public IDEInitializationConfiguration()
-   {
-   }
+    /**
+     *
+     */
+    public IDEInitializationConfiguration() {
+    }
 
-   /**
-    * @param ideConfiguration
-    * @param isDiscoverable
-    * @param settings
-    * @param userInfo
-    */
-   public IDEInitializationConfiguration(IDEConfiguration ideConfiguration, boolean isDiscoverable,
-      ApplicationSettings settings, UserInfo userInfo)
-   {
-      super();
-      this.ideConfiguration = ideConfiguration;
-      this.isDiscoverable = isDiscoverable;
-      this.settings = settings;
-      this.userInfo = userInfo;
-   }
+    /**
+     * @param ideConfiguration
+     * @param isDiscoverable
+     * @param settings
+     * @param userInfo
+     */
+    public IDEInitializationConfiguration(IDEConfiguration ideConfiguration, boolean isDiscoverable,
+                                          ApplicationSettings settings, UserInfo userInfo) {
+        super();
+        this.ideConfiguration = ideConfiguration;
+        this.isDiscoverable = isDiscoverable;
+        this.settings = settings;
+        this.userInfo = userInfo;
+    }
 
-   /**
-    * @return the ideConfiguration
-    */
-   public IDEConfiguration getIdeConfiguration()
-   {
-      return ideConfiguration;
-   }
+    /** @return the ideConfiguration */
+    public IDEConfiguration getIdeConfiguration() {
+        return ideConfiguration;
+    }
 
-   /**
-    * @param ideConfiguration the ideConfiguration to set
-    */
-   public void setIdeConfiguration(IDEConfiguration ideConfiguration)
-   {
-      this.ideConfiguration = ideConfiguration;
-   }
+    /**
+     * @param ideConfiguration
+     *         the ideConfiguration to set
+     */
+    public void setIdeConfiguration(IDEConfiguration ideConfiguration) {
+        this.ideConfiguration = ideConfiguration;
+    }
 
-   /**
-    * @return the isDiscoverable
-    */
-   public boolean isDiscoverable()
-   {
-      return isDiscoverable;
-   }
+    /** @return the isDiscoverable */
+    public boolean isDiscoverable() {
+        return isDiscoverable;
+    }
 
-   /**
-    * @param isDiscoverable the isDiscoverable to set
-    */
-   public void setDiscoverable(boolean isDiscoverable)
-   {
-      this.isDiscoverable = isDiscoverable;
-   }
+    /**
+     * @param isDiscoverable
+     *         the isDiscoverable to set
+     */
+    public void setDiscoverable(boolean isDiscoverable) {
+        this.isDiscoverable = isDiscoverable;
+    }
 
-   /**
-    * @return the settings
-    */
-   public ApplicationSettings getSettings()
-   {
-      return settings;
-   }
+    /** @return the settings */
+    public ApplicationSettings getSettings() {
+        return settings;
+    }
 
-   /**
-    * @param settings the settings to set
-    */
-   public void setSettings(ApplicationSettings settings)
-   {
-      this.settings = settings;
-   }
+    /**
+     * @param settings
+     *         the settings to set
+     */
+    public void setSettings(ApplicationSettings settings) {
+        this.settings = settings;
+    }
 
-   /**
-    * @return the userInfo
-    */
-   public UserInfo getUserInfo()
-   {
-      return userInfo;
-   }
+    /** @return the userInfo */
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
 
-   /**
-    * @param userInfo the userInfo to set
-    */
-   public void setUserInfo(UserInfo userInfo)
-   {
-      this.userInfo = userInfo;
-   }
+    /**
+     * @param userInfo
+     *         the userInfo to set
+     */
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
 
 }

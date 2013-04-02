@@ -18,45 +18,39 @@
  */
 package org.exoplatform.ide.client.ui.panel;
 
-import org.exoplatform.ide.client.framework.ui.api.Panel;
-
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.client.framework.ui.api.Panel;
+
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class MaximizePanelEvent extends GwtEvent<MaximizePanelHandler>
-{
+public class MaximizePanelEvent extends GwtEvent<MaximizePanelHandler> {
 
-   public static final GwtEvent.Type<MaximizePanelHandler> TYPE = new GwtEvent.Type<MaximizePanelHandler>();
+    public static final GwtEvent.Type<MaximizePanelHandler> TYPE = new GwtEvent.Type<MaximizePanelHandler>();
 
-   private Panel panel;
+    private Panel panel;
 
-   public MaximizePanelEvent(Panel panel)
-   {
-      this.panel = panel;
-   }
+    public MaximizePanelEvent(Panel panel) {
+        this.panel = panel;
+    }
 
-   public Panel getPanel()
-   {
-      return panel;
-   }
+    public Panel getPanel() {
+        return panel;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<MaximizePanelHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<MaximizePanelHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(MaximizePanelHandler handler)
-   {
-      handler.onMaximizePanel(this);
-   }
+    @Override
+    protected void dispatch(MaximizePanelHandler handler) {
+        handler.onMaximizePanel(this);
+    }
 
 }

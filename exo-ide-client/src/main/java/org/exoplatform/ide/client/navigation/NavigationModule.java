@@ -30,12 +30,7 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.navigation.control.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
-import org.exoplatform.ide.client.navigation.handler.FileClosedHandler;
-import org.exoplatform.ide.client.navigation.handler.OpenFileCommandHandler;
-import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
-import org.exoplatform.ide.client.navigation.handler.SaveFileAsCommandHandler;
-import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
-import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesCommandHandler;
+import org.exoplatform.ide.client.navigation.handler.*;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfile.CreateFilePresenter;
@@ -63,91 +58,88 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class NavigationModule implements InitializeServicesHandler
-{
+public class NavigationModule implements InitializeServicesHandler {
 
-   public NavigationModule()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+    public NavigationModule() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new NewItemPopupToolbarControl(), Docking.TOOLBAR);
-      IDE.getInstance().addControl(new NewItemMenuGroup());
+        IDE.getInstance().addControl(new NewItemPopupToolbarControl(), Docking.TOOLBAR);
+        IDE.getInstance().addControl(new NewItemMenuGroup());
 
-      IDE.getInstance().addControl(new CreateFileFromTemplateControl());
+        IDE.getInstance().addControl(new CreateFileFromTemplateControl());
 
-      new CreateFolderPresenter();
+        new CreateFolderPresenter();
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
-            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN, true).setGroupName(GroupNames.NEW_FILE));
+        IDE.getInstance().addControl(
+                new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
+                                   IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN, true)
+                        .setGroupName(GroupNames.NEW_FILE));
 
-      // TODO: need rework according with VFS
-      // IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
-      // IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
-      // IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
-      // IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
-      // IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);
-      // new VersionHistoryCommandHandler();
-      // new RestoreToVersionCommandHandler();
-      // new VersionsListPresenter();
+        // TODO: need rework according with VFS
+        // IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
+        // IDE.getInstance().addControl(new ViewVersionListControl(), Docking.TOOLBAR_RIGHT);
+        // IDE.getInstance().addControl(new ViewPreviousVersionControl(), Docking.TOOLBAR_RIGHT);
+        // IDE.getInstance().addControl(new ViewNextVersionControl(), Docking.TOOLBAR_RIGHT);
+        // IDE.getInstance().addControl(new RestoreToVersionControl(), Docking.TOOLBAR_RIGHT);
+        // new VersionHistoryCommandHandler();
+        // new RestoreToVersionCommandHandler();
+        // new VersionsListPresenter();
 
-      new UploadFilePresenter();
-      new UploadZipPresenter();
-      new OpenLocalFilePresenter();
-      new OpenFileByPathPresenter();
-      new OpenFileByURLPresenter();
+        new UploadFilePresenter();
+        new UploadZipPresenter();
+        new OpenLocalFilePresenter();
+        new OpenFileByPathPresenter();
+        new OpenFileByURLPresenter();
 
-      new DownloadHandler();
+        new DownloadHandler();
 
-      new SaveFileCommandHandler();
-      new SaveFileAsCommandHandler();
-      new SaveAllFilesCommandHandler();
-      new SaveAsTemplatePresenter();
+        new SaveFileCommandHandler();
+        new SaveFileAsCommandHandler();
+        new SaveAllFilesCommandHandler();
+        new SaveAsTemplatePresenter();
 
-      new CutCopyPasteItemsCommandHandler();
+        new CutCopyPasteItemsCommandHandler();
 
-      new DeleteItemsPresenter();
+        new DeleteItemsPresenter();
 
-      IDE.getInstance().addControl(new RenameItemControl());
-      new RenameFilePresenter();
-      new RenameFolderPresenter();
+        IDE.getInstance().addControl(new RenameItemControl());
+        new RenameFilePresenter();
+        new RenameFolderPresenter();
 
-      new SearchFilesPresenter();
+        new SearchFilesPresenter();
 
-      new SearchResultsPresenter();
+        new SearchResultsPresenter();
 
-      IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR);
+        IDE.getInstance().addControl(new RefreshBrowserControl(), Docking.TOOLBAR);
 
-      new ShowHideHiddenFilesCommandHandler();
+        new ShowHideHiddenFilesCommandHandler();
 
-      new GoToFolderCommandHandler();
+        new GoToFolderCommandHandler();
 
 //      new GetItemURLPresenter();
 
-      IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR);
+        IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR);
 
 //      new CreateFileCommandHandler();
-      new CreateFilePresenter();
-      new CreateFileFromTemplatePresenter();
-      new OpenFileCommandHandler();
-      new FileClosedHandler();
+        new CreateFilePresenter();
+        new CreateFileFromTemplatePresenter();
+        new OpenFileCommandHandler();
+        new FileClosedHandler();
 
-      IDE.getInstance().addControl(new ShowViewMenuGroup());
-      IDE.getInstance().addControl(new NavigationMenuGroup());
-      
-      new NavigatorPresenter();
-      new ProgressPresenter();
-      new ShellLinkUpdater();
-   }
+        IDE.getInstance().addControl(new ShowViewMenuGroup());
+        IDE.getInstance().addControl(new NavigationMenuGroup());
 
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      String workspace = event.getApplicationConfiguration().getVfsBaseUrl();
+        new NavigatorPresenter();
+        new ProgressPresenter();
+        new ShellLinkUpdater();
+    }
+
+    public void onInitializeServices(InitializeServicesEvent event) {
+        String workspace = event.getApplicationConfiguration().getVfsBaseUrl();
 //         (event.getApplicationConfiguration().getVfsBaseUrl().endsWith("/")) ? event.getApplicationConfiguration()
 //            .getVfsBaseUrl() + event.getApplicationConfiguration().getVfsId() : event.getApplicationConfiguration()
 //            .getVfsBaseUrl() + "/" + event.getApplicationConfiguration().getVfsId();
-      new VirtualFileSystem(workspace, new GWTLoader());
-   }
+        new VirtualFileSystem(workspace, new GWTLoader());
+    }
 }

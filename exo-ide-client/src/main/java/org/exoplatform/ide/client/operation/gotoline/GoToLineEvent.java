@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class GoToLineEvent extends GwtEvent<GoToLineHandler>
-{
+public class GoToLineEvent extends GwtEvent<GoToLineHandler> {
 
-   public static final GwtEvent.Type<GoToLineHandler> TYPE = new GwtEvent.Type<GoToLineHandler>();
+    public static final GwtEvent.Type<GoToLineHandler> TYPE = new GwtEvent.Type<GoToLineHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(GoToLineHandler handler)
-   {
-      handler.onGoToLine(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(GoToLineHandler handler) {
+        handler.onGoToLine(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GoToLineHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<GoToLineHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

@@ -25,7 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
+
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -36,66 +36,55 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
  * @version $Id: $
  */
 public class ProjectPrepareView extends ViewImpl implements
-   ProjectPreparePresenter.Display
-{
-   private static ProjectPrepareViewUiBinder uiBinder = GWT.create(ProjectPrepareViewUiBinder.class);
+                                                 ProjectPreparePresenter.Display {
+    private static ProjectPrepareViewUiBinder uiBinder = GWT.create(ProjectPrepareViewUiBinder.class);
 
-   interface ProjectPrepareViewUiBinder extends UiBinder<Widget, ProjectPrepareView>
-   {
-   }
+    interface ProjectPrepareViewUiBinder extends UiBinder<Widget, ProjectPrepareView> {
+    }
 
-   public static final String ID = "ideProjectPrepareView";
+    public static final String ID = "ideProjectPrepareView";
 
-   public static final String TITLE = "Select project type";
+    public static final String TITLE = "Select project type";
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 350;
+    /** Initial width of this view */
+    private static final int WIDTH = 350;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 100;
+    /** Initial height of this view */
+    private static final int HEIGHT = 100;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   SelectItem projectTypeField;
+    @UiField
+    SelectItem projectTypeField;
 
-   public ProjectPrepareView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT, false);
-      setCloseOnEscape(false);
-      setCanBeClosed(false);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public ProjectPrepareView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT, false);
+        setCloseOnEscape(false);
+        setCanBeClosed(false);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public HasValue<String> getProjectTypeField()
-   {
-      return projectTypeField;
-   }
+    @Override
+    public HasValue<String> getProjectTypeField() {
+        return projectTypeField;
+    }
 
-   @Override
-   public void setProjectTypeValues(String[] types)
-   {
-      projectTypeField.setValueMap(types);
-   }
+    @Override
+    public void setProjectTypeValues(String[] types) {
+        projectTypeField.setValueMap(types);
+    }
 }

@@ -28,37 +28,31 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class CloseEditorController implements CloseEditorHandler, EditorActiveFileChangedHandler
-{
+public class CloseEditorController implements CloseEditorHandler, EditorActiveFileChangedHandler {
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   public CloseEditorController()
-   {
-      IDE.getInstance().addControl(new CloseEditorControl());
+    public CloseEditorController() {
+        IDE.getInstance().addControl(new CloseEditorControl());
 
-      IDE.addHandler(CloseEditorEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+        IDE.addHandler(CloseEditorEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      activeFile = event.getFile();
-   }
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        activeFile = event.getFile();
+    }
 
-   @Override
-   public void onCloseEditor(CloseEditorEvent event)
-   {
-      if (activeFile == null)
-      {
-         return;
-      }
+    @Override
+    public void onCloseEditor(CloseEditorEvent event) {
+        if (activeFile == null) {
+            return;
+        }
 
-      IDE.fireEvent(new EditorCloseFileEvent(activeFile));
-      ClearFocusForm.getInstance().clearFocus();
-   }
+        IDE.fireEvent(new EditorCloseFileEvent(activeFile));
+        ClearFocusForm.getInstance().clearFocus();
+    }
 
 }

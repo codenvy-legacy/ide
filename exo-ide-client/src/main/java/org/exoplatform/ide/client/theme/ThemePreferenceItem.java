@@ -26,17 +26,14 @@ import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 
 /**
  * Hotkeys preference item.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 20, 2012 3:15:23 PM anya $
- * 
  */
-public class ThemePreferenceItem extends AbstractPreferenceItem
-{
-   private static final String NAME = "Theme";
+public class ThemePreferenceItem extends AbstractPreferenceItem {
+    private static final String NAME = "Theme";
 
-   public ThemePreferenceItem(PreferencePerformer performer)
-   {
-      super(NAME, new Image(IDEImageBundle.INSTANCE.welcome()), performer);
-   }
+    public ThemePreferenceItem(PreferencePerformer performer) {
+        super(NAME, new Image(IDEImageBundle.INSTANCE.welcome()), performer);
+    }
 }

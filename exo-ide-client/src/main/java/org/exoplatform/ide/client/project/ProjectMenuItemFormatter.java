@@ -30,42 +30,35 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectMenuItemFormatter.java Nov 21, 2011 1:01:01 PM vereshchaka $
  */
-public class ProjectMenuItemFormatter implements ControlsFormatter
-{
-   private List<String> controlIdsOrder;
+public class ProjectMenuItemFormatter implements ControlsFormatter {
+    private List<String> controlIdsOrder;
 
-   private void initControlsOrder()
-   {
-      controlIdsOrder = new ArrayList<String>();
+    private void initControlsOrder() {
+        controlIdsOrder = new ArrayList<String>();
 
-      controlIdsOrder.add("Project/New...");
-      controlIdsOrder.add("Project/Open...");
-      controlIdsOrder.add("Project/Close");
-      controlIdsOrder.add("Project/PaaS");
-   }
+        controlIdsOrder.add("Project/New...");
+        controlIdsOrder.add("Project/Open...");
+        controlIdsOrder.add("Project/Close");
+        controlIdsOrder.add("Project/PaaS");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.ControlsFormatter#format(java.util.List)
-    */
-   @Override
-   public void format(List<Control> controls)
-   {
-      initControlsOrder();
-      Collections.sort(controls, controlComparator);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.ControlsFormatter#format(java.util.List) */
+    @Override
+    public void format(List<Control> controls) {
+        initControlsOrder();
+        Collections.sort(controls, controlComparator);
+    }
 
-   private Comparator<Control> controlComparator = new Comparator<Control>()
-   {
-      public int compare(Control control1, Control control2)
-      {
-         Integer index1 = controlIdsOrder.indexOf(control1.getId());
-         Integer index2 = controlIdsOrder.indexOf(control2.getId());
+    private Comparator<Control> controlComparator = new Comparator<Control>() {
+        public int compare(Control control1, Control control2) {
+            Integer index1 = controlIdsOrder.indexOf(control1.getId());
+            Integer index2 = controlIdsOrder.indexOf(control2.getId());
 
-         if (index1 == -1 || index2 == -1)
-            return 0;
+            if (index1 == -1 || index2 == -1)
+                return 0;
 
-         return index1.compareTo(index2);
-      }
-   };
+            return index1.compareTo(index2);
+        }
+    };
 
 }

@@ -37,117 +37,101 @@ import org.exoplatform.ide.client.template.ui.TemplateListGrid;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFromTemplatePresenter.Display
-{
+public class CreateFileFromTemplateView extends ViewImpl implements CreateFileFromTemplatePresenter.Display {
 
-   private static final String ID = "ideCreateFileFromTemplateForm";
+    private static final String ID = "ideCreateFileFromTemplateForm";
 
-   private static final int WIDTH = 550;
+    private static final int WIDTH = 550;
 
-   private static final int HEIGHT = 300;
+    private static final int HEIGHT = 300;
 
-   private static final String TITLE = IDE.TEMPLATE_CONSTANT.createFileFromTemplateFormTitle();
+    private static final String TITLE = IDE.TEMPLATE_CONSTANT.createFileFromTemplateFormTitle();
 
-   private static CreateFileFromTemplateViewUiBinder uiBinder = GWT.create(CreateFileFromTemplateViewUiBinder.class);
+    private static CreateFileFromTemplateViewUiBinder uiBinder = GWT.create(CreateFileFromTemplateViewUiBinder.class);
 
-   interface CreateFileFromTemplateViewUiBinder extends UiBinder<Widget, CreateFileFromTemplateView>
-   {
-   }
+    interface CreateFileFromTemplateViewUiBinder extends UiBinder<Widget, CreateFileFromTemplateView> {
+    }
 
-   @UiField
-   TemplateListGrid<FileTemplate> fileTemplateListGrid;
+    @UiField
+    TemplateListGrid<FileTemplate> fileTemplateListGrid;
 
-   @UiField
-   TextInput fileNameField;
+    @UiField
+    TextInput fileNameField;
 
-   @UiField
-   ImageButton createButton;
+    @UiField
+    ImageButton createButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   ImageButton deleteButton;
+    @UiField
+    ImageButton deleteButton;
 
-   public CreateFileFromTemplateView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public CreateFileFromTemplateView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.createFromTemplate()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public ListGridItem<FileTemplate> getTemplateListGrid()
-   {
-      return fileTemplateListGrid;
-   }
+    @Override
+    public ListGridItem<FileTemplate> getTemplateListGrid() {
+        return fileTemplateListGrid;
+    }
 
-   @Override
-   public FileTemplate getSelectedTemplate()
-   {
-      return fileTemplateListGrid.getSelectedItems().size() == 0 ? null : fileTemplateListGrid.getSelectedItems()
-         .get(0);
-   }
+    @Override
+    public FileTemplate getSelectedTemplate() {
+        return fileTemplateListGrid.getSelectedItems().size() == 0 ? null : fileTemplateListGrid.getSelectedItems()
+                                                                                                .get(0);
+    }
 
-   public void selectTemplate(FileTemplate template)
-   {
-      fileTemplateListGrid.selectItem(template);
-   }
+    public void selectTemplate(FileTemplate template) {
+        fileTemplateListGrid.selectItem(template);
+    }
 
-   @Override
-   public HasValue<String> getFileNameField()
-   {
-      return fileNameField;
-   }
+    @Override
+    public HasValue<String> getFileNameField() {
+        return fileNameField;
+    }
 
-   @Override
-   public HasClickHandlers getCreateButton()
-   {
-      return createButton;
-   }
+    @Override
+    public HasClickHandlers getCreateButton() {
+        return createButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
+    @Override
+    public HasClickHandlers getDeleteButton() {
+        return deleteButton;
+    }
 
-   @Override
-   public void setCreateButtonEnabled(boolean enabled)
-   {
-      createButton.setEnabled(enabled);
-   }
+    @Override
+    public void setCreateButtonEnabled(boolean enabled) {
+        createButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void setDeleteButtonEnabled(boolean enabled)
-   {
-      deleteButton.setEnabled(enabled);
-   }
+    @Override
+    public void setDeleteButtonEnabled(boolean enabled) {
+        deleteButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void setFileNameFieldEnabled(boolean enabled)
-   {
-      fileNameField.setEnabled(enabled);
-   }
+    @Override
+    public void setFileNameFieldEnabled(boolean enabled) {
+        fileNameField.setEnabled(enabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display#setSubmitButtonTitle(java.lang.String)
-    */
-   @Override
-   public void setSubmitButtonTitle(String title)
-   {
-      createButton.setTitle(title);
-   }
+    /** @see org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display#setSubmitButtonTitle(java.lang.String) */
+    @Override
+    public void setSubmitButtonTitle(String title) {
+        createButton.setTitle(title);
+    }
 
 }

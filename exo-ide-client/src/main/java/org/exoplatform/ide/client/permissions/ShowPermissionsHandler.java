@@ -23,14 +23,12 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * This interface defines handler for {@link ShowPermissionsEvent} event.<br>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 19, 2010 $
- * 
  */
-public interface ShowPermissionsHandler extends EventHandler
-{
+public interface ShowPermissionsHandler extends EventHandler {
 
-   void onShowPermissions(ShowPermissionsEvent event);
+    void onShowPermissions(ShowPermissionsEvent event);
 
 }

@@ -36,81 +36,73 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
 public class GetItemURLView extends ViewImpl implements
-   org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display
-{
+                                             org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display {
 
-   private static final String ID = "ideGetItemURLForm";
+    private static final String ID = "ideGetItemURLForm";
 
-   private static final int DEFAULT_WIDTH = 500;
+    private static final int DEFAULT_WIDTH = 500;
 
-   private static final int DEFAULT_HEIGHT = 220;
+    private static final int DEFAULT_HEIGHT = 220;
 
-   public static final String PRIVATE_URL_FIELD = "ideGetItemURLFormPrivateURLField";
+    public static final String PRIVATE_URL_FIELD = "ideGetItemURLFormPrivateURLField";
 
-   public static final String PUBLIC_URL_FIELD = "ideGetItemURLFormPublicURLField";
+    public static final String PUBLIC_URL_FIELD = "ideGetItemURLFormPublicURLField";
 
-   public static final String ID_OK_BUTTON = "ideGetItemURLFormOkButton";
+    public static final String ID_OK_BUTTON = "ideGetItemURLFormOkButton";
 
-   @UiField
-   TextBox privateUrlField;
+    @UiField
+    TextBox privateUrlField;
 
-   @UiField
-   TextBox publicUrlField;
+    @UiField
+    TextBox publicUrlField;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   private static final String TITLE = IDE.NAVIGATION_CONSTANT.getItemUrlTitle();
+    private static final String TITLE = IDE.NAVIGATION_CONSTANT.getItemUrlTitle();
 
-   interface GetItemURLViewUiBinder extends UiBinder<Widget, GetItemURLView>
-   {
-   }
+    interface GetItemURLViewUiBinder extends UiBinder<Widget, GetItemURLView> {
+    }
 
-   private static GetItemURLViewUiBinder uiBinder = GWT.create(GetItemURLViewUiBinder.class);
+    private static GetItemURLViewUiBinder uiBinder = GWT.create(GetItemURLViewUiBinder.class);
 
-   public GetItemURLView()
-   {
-      super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
-      setCloseOnEscape(true);
+    public GetItemURLView() {
+        super(ID, ViewType.POPUP, TITLE, new Image(IDEImageBundle.INSTANCE.url()), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setCloseOnEscape(true);
 
-      add(uiBinder.createAndBindUi(this));
-      okButton.setButtonId(ID_OK_BUTTON);
-      privateUrlField.setName(PRIVATE_URL_FIELD);
-      publicUrlField.setName(PUBLIC_URL_FIELD);
+        add(uiBinder.createAndBindUi(this));
+        okButton.setButtonId(ID_OK_BUTTON);
+        privateUrlField.setName(PRIVATE_URL_FIELD);
+        publicUrlField.setName(PUBLIC_URL_FIELD);
 
-      new Timer()
-      {
-         @Override
-         public void run()
-         {
-            privateUrlField.selectAll();
-            publicUrlField.selectAll();
-            publicUrlField.setFocus(true);
-         }
-      }.schedule(500);
-   }
+        new Timer() {
+            @Override
+            public void run() {
+                privateUrlField.selectAll();
+                publicUrlField.selectAll();
+                publicUrlField.setFocus(true);
+            }
+        }.schedule(500);
+    }
 
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   @Override
-   public HasValue<String> getPrivateURLField()
-   {
-      return privateUrlField;
-   }
+    @Override
+    public HasValue<String> getPrivateURLField() {
+        return privateUrlField;
+    }
 
-   @Override
-   public HasValue<String> getPublicURLField()
-   {
-      return publicUrlField;
-   }
+    @Override
+    public HasValue<String> getPublicURLField() {
+        return publicUrlField;
+    }
 }

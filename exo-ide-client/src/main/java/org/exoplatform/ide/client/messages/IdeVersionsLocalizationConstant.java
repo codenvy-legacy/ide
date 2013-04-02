@@ -24,59 +24,57 @@ import com.google.gwt.i18n.client.Constants;
  * Interface to represent the constants contained in resource bundle: 'IdeVersionsLocalizationConstant.properties'.
  * <p/>
  * Localization message for form from versions group.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
- * 
  */
-public interface IdeVersionsLocalizationConstant extends Constants
-{
-   /*
-    * VersionsGrid
-    */
-   @Key("versions.grid.name")
-   String versionsGridName();
+public interface IdeVersionsLocalizationConstant extends Constants {
+    /*
+     * VersionsGrid
+     */
+    @Key("versions.grid.name")
+    String versionsGridName();
 
-   @Key("versions.grid.date")
-   String versionsGridDate();
+    @Key("versions.grid.date")
+    String versionsGridDate();
 
-   @Key("versions.grid.length")
-   String versionsGridLength();
+    @Key("versions.grid.length")
+    String versionsGridLength();
 
-   /*
-    * ViewVersionsForm
-    */
-   @Key("viewVersions.title")
-   String viewVersionsTitle();
+    /*
+     * ViewVersionsForm
+     */
+    @Key("viewVersions.title")
+    String viewVersionsTitle();
 
-   @Key("viewVersions.for")
-   String viewVersionsFor();
+    @Key("viewVersions.for")
+    String viewVersionsFor();
 
-   /*
-    * VersionContentPresenter
-    */
-   @Key("versions.displayPrefix")
-   String versionsDisplayPrefix();
+    /*
+     * VersionContentPresenter
+     */
+    @Key("versions.displayPrefix")
+    String versionsDisplayPrefix();
 
-   /*
-    * RestoreToVersionCommandHandler
-    */
-   @Key("restoreToVersion.dialog.title")
-   String restoreToVersionDialogTitle();
+    /*
+     * RestoreToVersionCommandHandler
+     */
+    @Key("restoreToVersion.dialog.title")
+    String restoreToVersionDialogTitle();
 
-   /*
-    * ShowVersionListCommandHandler VersionHistoryCommandHandler
-    */
-   @Key("versions.openFile")
-   String versionsOpenFile();
+    /*
+     * ShowVersionListCommandHandler VersionHistoryCommandHandler
+     */
+    @Key("versions.openFile")
+    String versionsOpenFile();
 
-   @Key("versions.version.title")
-   String versionTitle();
+    @Key("versions.version.title")
+    String versionTitle();
 
-   /*
-    * ViewVersionsPresenter
-    */
-   @Key("versions.error.openFile")
-   String versionErrorOpenFile();
+    /*
+     * ViewVersionsPresenter
+     */
+    @Key("versions.error.openFile")
+    String versionErrorOpenFile();
 
 }

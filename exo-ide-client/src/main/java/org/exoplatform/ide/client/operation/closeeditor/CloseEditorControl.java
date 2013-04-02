@@ -31,46 +31,40 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
 @RolesAllowed({"developer"})
 public class CloseEditorControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   VfsChangedHandler
-{
+                                                                 VfsChangedHandler {
 
-   public final static String ID = "File/Close";
+    public final static String ID = "File/Close";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.closeEditorControlTitle();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.closeEditorControlTitle();
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.closeEditorControlPrompt();
+    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.closeEditorControlPrompt();
 
-   public CloseEditorControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new CloseEditorEvent());
-      setGroupName(GroupNames.COMMANDS);
-      setHotKey("Ctrl+W");
-   }
+    public CloseEditorControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setEvent(new CloseEditorEvent());
+        setGroupName(GroupNames.COMMANDS);
+        setHotKey("Ctrl+W");
+    }
 
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      setEnabled(event.getFile() != null);
-   }
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        setEnabled(event.getFile() != null);
+    }
 
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      setVisible(event.getVfsInfo() != null);
-   }
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        setVisible(event.getVfsInfo() != null);
+    }
 
 }

@@ -24,117 +24,115 @@ import com.google.gwt.i18n.client.Messages;
  * Interface to represent the constants contained in resource bundle: 'IdeNavigationLocalizationConstant.properties'.
  * <p/>
  * Localization message for form from navigation group.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdePreferencesLocalizationConstant.java Jun 3, 2011 12:58:29 PM vereshchaka $
- * 
  */
-public interface IdeNavigationLocalizationConstant extends Messages
-{
+public interface IdeNavigationLocalizationConstant extends Messages {
 
-   @Key("folder.has.opened.file")
-   String cutFolderHasOpenFile(String folderName, String fileName);
+    @Key("folder.has.opened.file")
+    String cutFolderHasOpenFile(String folderName, String fileName);
 
-   @Key("cut.opened.file")
-   String cutOpenFile(String fileName);
+    @Key("cut.opened.file")
+    String cutOpenFile(String fileName);
 
-   /*
-    * WorkspaceViewExtended
-    */
-   @Key("workspace.title")
-   String workspaceTitle();
+    /*
+     * WorkspaceViewExtended
+     */
+    @Key("workspace.title")
+    String workspaceTitle();
 
-   /*
-    * SearchResultsViewExtended
-    */
-   @Key("searchResult.title")
-   String searchResultTitle();
+    /*
+     * SearchResultsViewExtended
+     */
+    @Key("searchResult.title")
+    String searchResultTitle();
 
-   /*
-    * SearchFilesView
-    */
-   @Key("searchFiles.title")
-   String searchFilesTitle();
+    /*
+     * SearchFilesView
+     */
+    @Key("searchFiles.title")
+    String searchFilesTitle();
 
-   @Key("searchFiles.path")
-   String searchFilesPath();
+    @Key("searchFiles.path")
+    String searchFilesPath();
 
-   @Key("searchFiles.containingText")
-   String searchFilesContainingText();
+    @Key("searchFiles.containingText")
+    String searchFilesContainingText();
 
-   @Key("searchFiles.mimeType")
-   String searchFilesMimeType();
+    @Key("searchFiles.mimeType")
+    String searchFilesMimeType();
 
-   /*
-    * RenameItemForm
-    */
-   @Key("renameItem.title")
-   String renameItemTitle();
+    /*
+     * RenameItemForm
+     */
+    @Key("renameItem.title")
+    String renameItemTitle();
 
-   @Key("renameItem.renameItemTo")
-   String renameItemTo();
+    @Key("renameItem.renameItemTo")
+    String renameItemTo();
 
-   @Key("renameItem.selectMimeType")
-   String renameItemSelectMimeType();
+    @Key("renameItem.selectMimeType")
+    String renameItemSelectMimeType();
 
-   @Key("renameItem.renameButton")
-   String renameItemRenameBtn();
+    @Key("renameItem.renameButton")
+    String renameItemRenameBtn();
 
-   /*
-    * GetItemURLView
-    */
-   @Key("getItemUrl.webdavItemsPrivateUrl")
-   String getItemUrlWebdavItemsPrivateUrl();
+    /*
+     * GetItemURLView
+     */
+    @Key("getItemUrl.webdavItemsPrivateUrl")
+    String getItemUrlWebdavItemsPrivateUrl();
 
-   @Key("getItemUrl.webdavItemsPublicUrl")
-   String getItemUrlWebdavItemsPublicUrl();
+    @Key("getItemUrl.webdavItemsPublicUrl")
+    String getItemUrlWebdavItemsPublicUrl();
 
-   @Key("getItemUrl.title")
-   String getItemUrlTitle();
+    @Key("getItemUrl.title")
+    String getItemUrlTitle();
 
-   /*
-    * DeleteItemView
-    */
-   @Key("deleteItem.title")
-   String deleteItemTitle();
+    /*
+     * DeleteItemView
+     */
+    @Key("deleteItem.title")
+    String deleteItemTitle();
 
-   /*
-    * DeleteItemsPresenter
-    */
-   @Key("deleteFile.dialog.title")
-   String deleteFileDialogTitle();
+    /*
+     * DeleteItemsPresenter
+     */
+    @Key("deleteFile.dialog.title")
+    String deleteFileDialogTitle();
 
-   /*
-    * AbstractCreateFolderForm
-    */
-   @Key("createFolder.nameOfNewFolder")
-   String createFolderNameOfNewFolder();
+    /*
+     * AbstractCreateFolderForm
+     */
+    @Key("createFolder.nameOfNewFolder")
+    String createFolderNameOfNewFolder();
 
-   /*
-    * CreateFileCommandHandler
-    */
-   @Key("createFile.untitledFile.name")
-   String createFileUntitledFileName();
+    /*
+     * CreateFileCommandHandler
+     */
+    @Key("createFile.untitledFile.name")
+    String createFileUntitledFileName();
 
-   /*
-    * SaveFileAsCommandHandler
-    */
-   @Key("saveFileAs.newFileName.prefix")
-   String saveFileAsNewFileNamePrefix();
+    /*
+     * SaveFileAsCommandHandler
+     */
+    @Key("saveFileAs.newFileName.prefix")
+    String saveFileAsNewFileNamePrefix();
 
-   @Key("saveFileAs.dialog.title")
-   String saveFileAsDialogTitle();
+    @Key("saveFileAs.dialog.title")
+    String saveFileAsDialogTitle();
 
-   @Key("saveFileAs.dialog.enterNewName")
-   String saveFileAsDialogEnterNewName();
+    @Key("saveFileAs.dialog.enterNewName")
+    String saveFileAsDialogEnterNewName();
 
-   @Key("saveFileAs.dialog.doYouWantToSave")
-   String saveFileAsDialogDoYouWantToSave();
+    @Key("saveFileAs.dialog.doYouWantToSave")
+    String saveFileAsDialogDoYouWantToSave();
 
-   /*
-    * 
-    */
-   @Key("paste.saveFileBeforeCutAskDialog.title")
-   String pasteSaveFileBeforeCutAskDialogTitle();
+    /*
+     *
+     */
+    @Key("paste.saveFileBeforeCutAskDialog.title")
+    String pasteSaveFileBeforeCutAskDialogTitle();
 
 }

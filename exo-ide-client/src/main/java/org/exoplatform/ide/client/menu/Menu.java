@@ -18,20 +18,19 @@
  */
 package org.exoplatform.ide.client.menu;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.Control;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Menu
-{
+public interface Menu {
 
-   void refresh(List<Control> commands);
+    void refresh(List<Control> commands);
 
 }

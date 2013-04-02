@@ -37,111 +37,90 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class SelectThemePresenter implements PreferencePerformer, ViewClosedHandler
-{
-   
-   public interface Display extends IsView
-   {
-      
-      ListGridItem<Theme> getThemesListGrid();
-      
-      Theme getSelectedTheme();
-      
-      HasClickHandlers getApplyButton();
-      
-      void setApplyButtonEnabled(boolean enabled);
-      
-   }
-   
-   private Display display;
-   
-   public SelectThemePresenter()
-   {
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
-   
-   private void bindDisplay()
-   {
-      display.getApplyButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            applyTheme();
-         }
-      });
-      
-      display.getThemesListGrid().addSelectionHandler(new SelectionHandler<Theme>()
-      {
-         @Override
-         public void onSelection(SelectionEvent<Theme> event)
-         {
-            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-            {
-               @Override
-               public void execute()
-               {
-                  themeSelected();
-               }
-            });
-         }
-      });
-      
-   }
+public class SelectThemePresenter implements PreferencePerformer, ViewClosedHandler {
 
-   @Override
-   public View getPreference()
-   {
-      if (display == null)
-      {
-         display = new SelectThemeView();
-         bindDisplay();
-         display.getThemesListGrid().setValue(ThemeManager.getInstance().getThemes());
-         display.setApplyButtonEnabled(false);
-      }
-      
-      return display.asView();
-   }
-   
-   private Theme selectedTheme;
-   
-   private void applyTheme()
-   {
-      ThemeManager.getInstance().changeTheme(selectedTheme.getName());
-      display.setApplyButtonEnabled(false);
-      
-      display.getThemesListGrid().setValue(ThemeManager.getInstance().getThemes());
-      display.getThemesListGrid().selectItem(selectedTheme);
-   }
-   
-   private void themeSelected()
-   {
-      selectedTheme = display.getSelectedTheme();
-      if (selectedTheme == null)
-      {
-         display.setApplyButtonEnabled(false);
-         return;
-      }
-      
-      if (ThemeManager.getInstance().getActiveThemeName().equals(selectedTheme.getName()))
-      {
-         display.setApplyButtonEnabled(false);
-      }
-      else
-      {
-         display.setApplyButtonEnabled(true);
-      }
-   }
+    public interface Display extends IsView {
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        ListGridItem<Theme> getThemesListGrid();
+
+        Theme getSelectedTheme();
+
+        HasClickHandlers getApplyButton();
+
+        void setApplyButtonEnabled(boolean enabled);
+
+    }
+
+    private Display display;
+
+    public SelectThemePresenter() {
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
+
+    private void bindDisplay() {
+        display.getApplyButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                applyTheme();
+            }
+        });
+
+        display.getThemesListGrid().addSelectionHandler(new SelectionHandler<Theme>() {
+            @Override
+            public void onSelection(SelectionEvent<Theme> event) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        themeSelected();
+                    }
+                });
+            }
+        });
+
+    }
+
+    @Override
+    public View getPreference() {
+        if (display == null) {
+            display = new SelectThemeView();
+            bindDisplay();
+            display.getThemesListGrid().setValue(ThemeManager.getInstance().getThemes());
+            display.setApplyButtonEnabled(false);
+        }
+
+        return display.asView();
+    }
+
+    private Theme selectedTheme;
+
+    private void applyTheme() {
+        ThemeManager.getInstance().changeTheme(selectedTheme.getName());
+        display.setApplyButtonEnabled(false);
+
+        display.getThemesListGrid().setValue(ThemeManager.getInstance().getThemes());
+        display.getThemesListGrid().selectItem(selectedTheme);
+    }
+
+    private void themeSelected() {
+        selectedTheme = display.getSelectedTheme();
+        if (selectedTheme == null) {
+            display.setApplyButtonEnabled(false);
+            return;
+        }
+
+        if (ThemeManager.getInstance().getActiveThemeName().equals(selectedTheme.getName())) {
+            display.setApplyButtonEnabled(false);
+        } else {
+            display.setApplyButtonEnabled(true);
+        }
+    }
+
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

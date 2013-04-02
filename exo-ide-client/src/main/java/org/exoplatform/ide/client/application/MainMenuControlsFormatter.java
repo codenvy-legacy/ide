@@ -29,59 +29,51 @@ import java.util.List;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jan 20, 2011 2:51:47 PM anya $
- * 
  */
-public class MainMenuControlsFormatter implements ControlsFormatter
-{
-   private List<String> controlIdsOrder;
+public class MainMenuControlsFormatter implements ControlsFormatter {
+    private List<String> controlIdsOrder;
 
-   private void initControlsOrder()
-   {
-      controlIdsOrder = new ArrayList<String>();
+    private void initControlsOrder() {
+        controlIdsOrder = new ArrayList<String>();
 
-      controlIdsOrder.add("File");
-      controlIdsOrder.add("Project");
-      controlIdsOrder.add("Edit");
-      controlIdsOrder.add("View");
-      controlIdsOrder.add("Run");
-      controlIdsOrder.add("Git");
-      controlIdsOrder.add("PaaS");
-      controlIdsOrder.add("Ssh");
-      controlIdsOrder.add("Window");
-      controlIdsOrder.add("Help");
-   }
+        controlIdsOrder.add("File");
+        controlIdsOrder.add("Project");
+        controlIdsOrder.add("Edit");
+        controlIdsOrder.add("View");
+        controlIdsOrder.add("Run");
+        controlIdsOrder.add("Git");
+        controlIdsOrder.add("PaaS");
+        controlIdsOrder.add("Ssh");
+        controlIdsOrder.add("Window");
+        controlIdsOrder.add("Help");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.ControlsFormatter#format(java.util.List)
-    */
-   public void format(List<Control> controls)
-   {
-      initControlsOrder();
-      Collections.sort(controls, controlComparator);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.ControlsFormatter#format(java.util.List) */
+    public void format(List<Control> controls) {
+        initControlsOrder();
+        Collections.sort(controls, controlComparator);
+    }
 
-   private Comparator<Control> controlComparator = new Comparator<Control>()
-   {
-      public int compare(Control control1, Control control2)
-      {
-         String main1 =
-            (control1.getId().indexOf("/") > 0) ? control1.getId().substring(0, control1.getId().indexOf("/")) : null;
-         String main2 =
-            (control2.getId().indexOf("/") > 0) ? control2.getId().substring(0, control2.getId().indexOf("/")) : null;
+    private Comparator<Control> controlComparator = new Comparator<Control>() {
+        public int compare(Control control1, Control control2) {
+            String main1 =
+                    (control1.getId().indexOf("/") > 0) ? control1.getId().substring(0, control1.getId().indexOf("/")) : null;
+            String main2 =
+                    (control2.getId().indexOf("/") > 0) ? control2.getId().substring(0, control2.getId().indexOf("/")) : null;
 
          /*
           * if (main1 == null || main2 == null) return 0;
           */
 
-         Integer index1 = controlIdsOrder.indexOf(main1);
-         Integer index2 = controlIdsOrder.indexOf(main2);
+            Integer index1 = controlIdsOrder.indexOf(main1);
+            Integer index2 = controlIdsOrder.indexOf(main2);
 
          /*
           * if (index1 == -1 || index2 == -1) return 0;
           */
 
-         return index1.compareTo(index2);
-      }
-   };
+            return index1.compareTo(index2);
+        }
+    };
 
 }

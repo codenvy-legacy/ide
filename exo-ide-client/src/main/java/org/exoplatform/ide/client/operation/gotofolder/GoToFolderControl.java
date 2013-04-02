@@ -31,71 +31,58 @@ import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class GoToFolderControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   VfsChangedHandler
-{
+                                                                VfsChangedHandler {
 
-   private static final String ID = "View/Go to Folder";
+    private static final String ID = "View/Go to Folder";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.goToFolderControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.goToFolderControl();
 
-   /**
-    * 
-    */
-   public GoToFolderControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.goToFolder(), IDEImageBundle.INSTANCE.goToFolderDisabled());
-      setEvent(new GoToItemEvent());
-      setDelimiterBefore(true);
-   }
+    /**
+     *
+     */
+    public GoToFolderControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.goToFolder(), IDEImageBundle.INSTANCE.goToFolderDisabled());
+        setEvent(new GoToItemEvent());
+        setDelimiterBefore(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null || !event.getFile().isPersisted())
-      {
-         setEnabled(false);
-         return;
-      }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() == null || !event.getFile().isPersisted()) {
+            setEnabled(false);
+            return;
+        }
 
-      setEnabled(true);
-   }
+        setEnabled(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        if (event.getVfsInfo() != null) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
 
 }

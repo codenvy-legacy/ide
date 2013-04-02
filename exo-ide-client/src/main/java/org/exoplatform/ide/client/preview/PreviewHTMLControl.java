@@ -32,95 +32,77 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class PreviewHTMLControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   FileSavedHandler
-{
+                                                                 FileSavedHandler {
 
-   public static final String ID = "Run/Show Preview";
+    public static final String ID = "Run/Show Preview";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.htmlPreview();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.htmlPreview();
 
-   private FileModel currentlyActiveFile;
+    private FileModel currentlyActiveFile;
 
-   /**
-    * 
-    */
-   public PreviewHTMLControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.preview(), IDEImageBundle.INSTANCE.previewDisabled());
-      setEvent(new PreviewHTMLEvent());
-   }
+    /**
+     *
+     */
+    public PreviewHTMLControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.preview(), IDEImageBundle.INSTANCE.previewDisabled());
+        setEvent(new PreviewHTMLEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(FileSavedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(FileSavedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      currentlyActiveFile = event.getFile();
-      updateVisibility(currentlyActiveFile, currentlyActiveFile == null ? false : !currentlyActiveFile.isPersisted());
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        currentlyActiveFile = event.getFile();
+        updateVisibility(currentlyActiveFile, currentlyActiveFile == null ? false : !currentlyActiveFile.isPersisted());
+    }
 
-   /**
-    * @param file
-    * @param isNew
-    */
-   private void updateVisibility(FileModel file, boolean isNew)
-   {
-      if (file == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
-
-      if (MimeType.TEXT_HTML.equals(file.getMimeType()))
-      {
-         setVisible(true);
-         if (isNew)
-         {
+    /**
+     * @param file
+     * @param isNew
+     */
+    private void updateVisibility(FileModel file, boolean isNew) {
+        if (file == null) {
+            setVisible(false);
             setEnabled(false);
-         }
-         else
-         {
-            setEnabled(true);
-         }
-      }
-      else
-      {
-         setVisible(false);
-         setEnabled(false);
-      }
-   }
+            return;
+        }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
-    */
-   @Override
-   public void onFileSaved(FileSavedEvent event)
-   {
-      if (currentlyActiveFile != null && event.getFile().getId().equals(currentlyActiveFile.getId()))
-      {
-         updateVisibility(currentlyActiveFile, false);
-      }
-   }
+        if (MimeType.TEXT_HTML.equals(file.getMimeType())) {
+            setVisible(true);
+            if (isNew) {
+                setEnabled(false);
+            } else {
+                setEnabled(true);
+            }
+        } else {
+            setVisible(false);
+            setEnabled(false);
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
+     * .FileSavedEvent) */
+    @Override
+    public void onFileSaved(FileSavedEvent event) {
+        if (currentlyActiveFile != null && event.getFile().getId().equals(currentlyActiveFile.getId())) {
+            updateVisibility(currentlyActiveFile, false);
+        }
+    }
 
 }

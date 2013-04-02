@@ -33,114 +33,98 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class ProjectPropertiesView extends ViewImpl implements
-   org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display
-{
+                                                    org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display {
 
-   private static ProjectPropertiesViewUiBinder uiBinder = GWT.create(ProjectPropertiesViewUiBinder.class);
+    private static ProjectPropertiesViewUiBinder uiBinder = GWT.create(ProjectPropertiesViewUiBinder.class);
 
-   interface ProjectPropertiesViewUiBinder extends UiBinder<Widget, ProjectPropertiesView>
-   {
-   }
+    interface ProjectPropertiesViewUiBinder extends UiBinder<Widget, ProjectPropertiesView> {
+    }
 
-   public static final String ID = "ideProjectPropertiesView";
+    public static final String ID = "ideProjectPropertiesView";
 
-   public static final String TITLE = "Project Properties";
+    public static final String TITLE = "Project Properties";
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 550;
+    /** Initial width of this view */
+    private static final int WIDTH = 550;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 280;
+    /** Initial height of this view */
+    private static final int HEIGHT = 280;
 
-   @UiField
-   PropertiesListGrid propertiesListGrid;
+    @UiField
+    PropertiesListGrid propertiesListGrid;
 
-   // @UiField
-   // ImageButton addButton;
+    // @UiField
+    // ImageButton addButton;
 
-   @UiField
-   ImageButton editButton;
+    @UiField
+    ImageButton editButton;
 
-   @UiField
-   ImageButton deleteButton;
+    @UiField
+    ImageButton deleteButton;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   public ProjectPropertiesView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public ProjectPropertiesView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   @Override
-   public void setOkButtonEnabled(boolean enabled)
-   {
-      okButton.setEnabled(enabled);
-   }
+    @Override
+    public void setOkButtonEnabled(boolean enabled) {
+        okButton.setEnabled(enabled);
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public ListGridItem<Property> getPropertiesListGrid()
-   {
-      return propertiesListGrid;
-   }
+    @Override
+    public ListGridItem<Property> getPropertiesListGrid() {
+        return propertiesListGrid;
+    }
 
-   // @Override
-   // public HasClickHandlers getAddButton()
-   // {
-   // return addButton;
-   // }
+    // @Override
+    // public HasClickHandlers getAddButton()
+    // {
+    // return addButton;
+    // }
 
-   @Override
-   public HasClickHandlers getEditButton()
-   {
-      return editButton;
-   }
+    @Override
+    public HasClickHandlers getEditButton() {
+        return editButton;
+    }
 
-   @Override
-   public void setEditButtonEnabled(boolean enabled)
-   {
-      editButton.setEnabled(enabled);
-   }
+    @Override
+    public void setEditButtonEnabled(boolean enabled) {
+        editButton.setEnabled(enabled);
+    }
 
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
+    @Override
+    public HasClickHandlers getDeleteButton() {
+        return deleteButton;
+    }
 
-   @Override
-   public void setDeleteButtonEnabled(boolean enabled)
-   {
-      deleteButton.setEnabled(enabled);
-   }
+    @Override
+    public void setDeleteButtonEnabled(boolean enabled) {
+        deleteButton.setEnabled(enabled);
+    }
 
 }

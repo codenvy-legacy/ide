@@ -35,128 +35,100 @@ import org.exoplatform.ide.client.ui.StandartPerspective;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class IDEForm extends DockLayoutPanel implements IDEPresenter.Display
-{
+public class IDEForm extends DockLayoutPanel implements IDEPresenter.Display {
 
-   private StandartPerspective perspective;
+    private StandartPerspective perspective;
 
-   private MenuImpl menu;
+    private MenuImpl menu;
 
-   private Toolbar toolbar;
+    private Toolbar toolbar;
 
-   private Toolbar statusbar;
+    private Toolbar statusbar;
 
-   public IDEForm()
-   {
-      super(Unit.PX);
-      DOM.setStyleAttribute(getElement(), "background", "#FFFFFF");
-      RootLayoutPanel.get().add(this);
+    public IDEForm() {
+        super(Unit.PX);
+        DOM.setStyleAttribute(getElement(), "background", "#FFFFFF");
+        RootLayoutPanel.get().add(this);
 
-      createMenu();
-      createToolbar();
-      createStatusbar();
-      createPerspective();
-   }
+        createMenu();
+        createToolbar();
+        createStatusbar();
+        createPerspective();
+    }
 
-   /**
-    * Creates Top Menu.
-    */
-   private void createMenu()
-   {
-      menu = new MenuImpl();
-      addNorth(menu, 20);
-   }
+    /** Creates Top Menu. */
+    private void createMenu() {
+        menu = new MenuImpl();
+        addNorth(menu, 20);
+    }
 
-   /**
-    * Creates Toolbar.
-    */
-   private void createToolbar()
-   {
-      toolbar = new Toolbar("exoIDEToolbar");
-      addNorth(toolbar, 32);
-   }
+    /** Creates Toolbar. */
+    private void createToolbar() {
+        toolbar = new Toolbar("exoIDEToolbar");
+        addNorth(toolbar, 32);
+    }
 
-   /**
-    * Creates Statusbar.
-    */
-   private void createStatusbar()
-   {
-      statusbar = new Toolbar("exoIDEStatusbar");
-      statusbar.setHeight("30px");
-      String background =
-         UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
-      statusbar.setBackgroundImage(background);
-      statusbar.setItemsTopPadding(3);
-      addSouth(statusbar, 30);
-   }
+    /** Creates Statusbar. */
+    private void createStatusbar() {
+        statusbar = new Toolbar("exoIDEStatusbar");
+        statusbar.setHeight("30px");
+        String background =
+                UIHelper.getGadgetImagesURL() + "../eXoStyle/skin/default/images/component/toolbar/statusbar_Background.png";
+        statusbar.setBackgroundImage(background);
+        statusbar.setItemsTopPadding(3);
+        addSouth(statusbar, 30);
+    }
 
-   /**
-    * Create Perspective.
-    */
-   private void createPerspective()
-   {
-      perspective = new StandartPerspective();
-      add(perspective);
-      Panel navigationPanel = perspective.addPanel("navigation", Direction.WEST, 300);
-      navigationPanel.acceptType("navigation");
+    /** Create Perspective. */
+    private void createPerspective() {
+        perspective = new StandartPerspective();
+        add(perspective);
+        Panel navigationPanel = perspective.addPanel("navigation", Direction.WEST, 300);
+        navigationPanel.acceptType("navigation");
 
-      Panel informationPanel = perspective.addPanel("information", Direction.EAST, 200);
-      informationPanel.acceptType("information");
+        Panel informationPanel = perspective.addPanel("information", Direction.EAST, 200);
+        informationPanel.acceptType("information");
 
-      Panel operationPanel = perspective.addPanel("operation", Direction.SOUTH, 150);
-      operationPanel.acceptType("operation");
+        Panel operationPanel = perspective.addPanel("operation", Direction.SOUTH, 150);
+        operationPanel.acceptType("operation");
 
-      Panel editorPanel = perspective.addPanel("editor", Direction.CENTER, 0);
-      editorPanel.acceptType("editor");
-   }
+        Panel editorPanel = perspective.addPanel("editor", Direction.CENTER, 0);
+        editorPanel.acceptType("editor");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getMenu()
-    */
-   @Override
-   public Menu getMenu()
-   {
-      return menu;
-   }
+    /** @see org.exoplatform.ide.client.application.IDEPresenter.Display#getMenu() */
+    @Override
+    public Menu getMenu() {
+        return menu;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getPerspective()
-    */
-   @Override
-   public Perspective getPerspective()
-   {
-      return perspective;
-   }
+    /** @see org.exoplatform.ide.client.application.IDEPresenter.Display#getPerspective() */
+    @Override
+    public Perspective getPerspective() {
+        return perspective;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getToolbar()
-    */
-   @Override
-   public Toolbar getToolbar()
-   {
-      return toolbar;
-   }
+    /** @see org.exoplatform.ide.client.application.IDEPresenter.Display#getToolbar() */
+    @Override
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#getStatusbar()
-    */
-   @Override
-   public Toolbar getStatusbar()
-   {
-      return statusbar;
-   }
+    /** @see org.exoplatform.ide.client.application.IDEPresenter.Display#getStatusbar() */
+    @Override
+    public Toolbar getStatusbar() {
+        return statusbar;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.application.IDEPresenter.Display#setContextMenuHandler(com.google.gwt.event.dom.client.ContextMenuHandler)
-    */
-   @Override
-   public void setContextMenuHandler(ContextMenuHandler handler)
-   {
-      RootLayoutPanel.get().addDomHandler(handler, ContextMenuEvent.getType());
-   }
+    /** @see org.exoplatform.ide.client.application.IDEPresenter.Display#setContextMenuHandler(com.google.gwt.event.dom.client
+     * .ContextMenuHandler) */
+    @Override
+    public void setContextMenuHandler(ContextMenuHandler handler) {
+        RootLayoutPanel.get().addDomHandler(handler, ContextMenuEvent.getType());
+    }
 }

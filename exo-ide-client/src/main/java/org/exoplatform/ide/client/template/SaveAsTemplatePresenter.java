@@ -46,198 +46,162 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Presenter for Save as Template view.
- * 
+ * <p/>
  * Save file as template.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: $
- * 
  */
 public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewClosedHandler,
-   EditorActiveFileChangedHandler
-{
+                                                EditorActiveFileChangedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasValue<String> getTypeField();
+        HasValue<String> getTypeField();
 
-      HasValue<String> getNameField();
+        HasValue<String> getNameField();
 
-      HasValue<String> getDescriptionField();
+        HasValue<String> getDescriptionField();
 
-      HasClickHandlers getSaveButton();
+        HasClickHandlers getSaveButton();
 
-      HasClickHandlers getCancelButton();
+        HasClickHandlers getCancelButton();
 
-      void disableSaveButton();
+        void disableSaveButton();
 
-      void enableSaveButton();
+        void enableSaveButton();
 
-      void focusInNameField();
+        void focusInNameField();
 
-   }
+    }
 
-   private static final String ENTER_TEMPLATE_NAME = IDE.TEMPLATE_CONSTANT.saveAsTemplateEnterNameFirst();
+    private static final String ENTER_TEMPLATE_NAME = IDE.TEMPLATE_CONSTANT.saveAsTemplateEnterNameFirst();
 
-   private static final String TEMPLATE_CREATED = IDE.TEMPLATE_CONSTANT.saveAsTemplateCreated();
+    private static final String TEMPLATE_CREATED = IDE.TEMPLATE_CONSTANT.saveAsTemplateCreated();
 
-   private static final String OPEN_FILE_FOR_TEMPLATE = IDE.TEMPLATE_CONSTANT.saveAsTemplateOpenFileForTemplate();
+    private static final String OPEN_FILE_FOR_TEMPLATE = IDE.TEMPLATE_CONSTANT.saveAsTemplateOpenFileForTemplate();
 
-   private Display display;
+    private Display display;
 
-   private FileModel activeFile;
+    private FileModel activeFile;
 
-   public SaveAsTemplatePresenter()
-   {
-      IDE.getInstance().addControl(new SaveFileAsTemplateControl());
+    public SaveAsTemplatePresenter() {
+        IDE.getInstance().addControl(new SaveFileAsTemplateControl());
 
-      IDE.addHandler(SaveFileAsTemplateEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+        IDE.addHandler(SaveFileAsTemplateEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   public void bindDisplay(Display d)
-   {
-      display = d;
+    public void bindDisplay(Display d) {
+        display = d;
 
-      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            String value = event.getValue();
+        display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            public void onValueChange(ValueChangeEvent<String> event) {
+                String value = event.getValue();
 
-            if (value == null || value.length() == 0)
-            {
-               display.disableSaveButton();
+                if (value == null || value.length() == 0) {
+                    display.disableSaveButton();
+                } else {
+                    display.enableSaveButton();
+                }
             }
-            else
-            {
-               display.enableSaveButton();
+        });
+
+        display.getSaveButton().addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                createTemplate();
             }
-         }
-      });
+        });
 
-      display.getSaveButton().addClickHandler(new ClickHandler()
-      {
-
-         public void onClick(ClickEvent event)
-         {
-            createTemplate();
-         }
-      });
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            closeView();
-         }
-      });
-
-      display.getTypeField().setValue(activeFile.getMimeType());
-      display.disableSaveButton();
-
-   }
-
-   void createTemplate()
-   {
-      String name = display.getNameField().getValue().trim();
-      if ("".equals(name))
-      {
-         Dialogs.getInstance().showError(ENTER_TEMPLATE_NAME);
-         return;
-      }
-
-      String description = "";
-      if (display.getDescriptionField().getValue() != null)
-      {
-         description = display.getDescriptionField().getValue();
-      }
-
-      FileTemplate fileTemplate = TemplateAutoBeanFactory.AUTO_BEAN_FACTORY.fileTemplate().as();
-      fileTemplate.setMimeType(activeFile.getMimeType());
-      fileTemplate.setName(name);
-      fileTemplate.setDescription(description);
-      fileTemplate.setContent(activeFile.getContent());
-      fileTemplate.setDefault(false);
-      try
-      {
-         TemplateServiceImpl.getInstance().addFileTemplate(fileTemplate, new AsyncRequestCallback<FileTemplate>()
-         {
-            @Override
-            protected void onSuccess(FileTemplate result)
-            {
-               closeView();
-               Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                closeView();
             }
+        });
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        display.getTypeField().setValue(activeFile.getMimeType());
+        display.disableSaveButton();
 
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler#onSaveFileAsTemplate(org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent)
-    */
-   @Override
-   public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event)
-   {
-      openView();
-   }
+    void createTemplate() {
+        String name = display.getNameField().getValue().trim();
+        if ("".equals(name)) {
+            Dialogs.getInstance().showError(ENTER_TEMPLATE_NAME);
+            return;
+        }
 
-   private void openView()
-   {
-      if (activeFile == null)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(OPEN_FILE_FOR_TEMPLATE));
-         return;
-      }
-      if (display == null)
-      {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-         display.focusInNameField();
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent("Display SaveAsTemplate must be null"));
-      }
-   }
+        String description = "";
+        if (display.getDescriptionField().getValue() != null) {
+            description = display.getDescriptionField().getValue();
+        }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+        FileTemplate fileTemplate = TemplateAutoBeanFactory.AUTO_BEAN_FACTORY.fileTemplate().as();
+        fileTemplate.setMimeType(activeFile.getMimeType());
+        fileTemplate.setName(name);
+        fileTemplate.setDescription(description);
+        fileTemplate.setContent(activeFile.getContent());
+        fileTemplate.setDefault(false);
+        try {
+            TemplateServiceImpl.getInstance().addFileTemplate(fileTemplate, new AsyncRequestCallback<FileTemplate>() {
+                @Override
+                protected void onSuccess(FileTemplate result) {
+                    closeView();
+                    Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
+                }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      this.activeFile = event.getFile();
-   }
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    private void closeView() {
+        IDE.getInstance().closeView(display.asView().getId());
+    }
+
+    /** @see org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler#onSaveFileAsTemplate(org.exoplatform.ide.client
+     * .navigation.event.SaveFileAsTemplateEvent) */
+    @Override
+    public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event) {
+        openView();
+    }
+
+    private void openView() {
+        if (activeFile == null) {
+            IDE.fireEvent(new ExceptionThrownEvent(OPEN_FILE_FOR_TEMPLATE));
+            return;
+        }
+        if (display == null) {
+            Display d = GWT.create(Display.class);
+            IDE.getInstance().openView(d.asView());
+            bindDisplay(d);
+            display.focusInNameField();
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent("Display SaveAsTemplate must be null"));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        this.activeFile = event.getFile();
+    }
 
 }

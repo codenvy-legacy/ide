@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.operation.openlocalfile;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OpenLocalFileEvent extends GwtEvent<OpenLocalFileHandler>
-{
+public class OpenLocalFileEvent extends GwtEvent<OpenLocalFileHandler> {
 
-   public static final GwtEvent.Type<OpenLocalFileHandler> TYPE = new GwtEvent.Type<OpenLocalFileHandler>();
+    public static final GwtEvent.Type<OpenLocalFileHandler> TYPE = new GwtEvent.Type<OpenLocalFileHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenLocalFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OpenLocalFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(OpenLocalFileHandler handler)
-   {
-      handler.onOpenLocalFile(this);
-   }
+    @Override
+    protected void dispatch(OpenLocalFileHandler handler) {
+        handler.onOpenLocalFile(this);
+    }
 
 }

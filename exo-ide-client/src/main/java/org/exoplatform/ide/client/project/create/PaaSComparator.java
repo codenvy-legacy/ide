@@ -24,22 +24,17 @@ import java.util.Comparator;
 
 /**
  * Comparator for ordering PaaSes alphabetically.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: PaaSComparator.java Oct 31, 2012 12:47:56 PM azatsarynnyy $
- *
  */
-final class PaaSComparator implements Comparator<PaaS>
-{
-   /**
-    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-    */
-   @Override
-   public int compare(PaaS p1, PaaS p2)
-   {
-      String title1 = p1.getTitle();
-      String title2 = p2.getTitle();
+final class PaaSComparator implements Comparator<PaaS> {
+    /** @see java.util.Comparator#compare(java.lang.Object, java.lang.Object) */
+    @Override
+    public int compare(PaaS p1, PaaS p2) {
+        String title1 = p1.getTitle();
+        String title2 = p2.getTitle();
 
-      return title1.compareTo(title2);
-   }
+        return title1.compareTo(title2);
+    }
 }

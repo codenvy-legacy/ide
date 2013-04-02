@@ -36,94 +36,77 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 @RolesAllowed({"developer"})
 public class GetItemURLControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewVisibilityChangedHandler, VfsChangedHandler
-{
+                                                                ViewVisibilityChangedHandler, VfsChangedHandler {
 
-   private static final String ID = "View/Get URL...";
+    private static final String ID = "View/Get URL...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.getItemUrlControl();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.getItemUrlControl();
 
-   private Item selectedItem;
+    private Item selectedItem;
 
-   /**
-    * 
-    */
-   public GetItemURLControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
-      setEvent(new GetItemURLEvent());
-   }
+    /**
+     *
+     */
+    public GetItemURLControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
+        setEvent(new GetItemURLEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-      selectedItem = event.getSelectedItems().get(0);
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            setEnabled(false);
+            return;
+        }
+        selectedItem = event.getSelectedItems().get(0);
+        updateEnabling();
+    }
 
-   /**
-    * 
-    */
-   private void updateEnabling()
-   {
-      boolean isEnabled = (selectedItem != null && selectedItem instanceof FileModel);
-      setEnabled(isEnabled);
-   }
+    /**
+     *
+     */
+    private void updateEnabling() {
+        boolean isEnabled = (selectedItem != null && selectedItem instanceof FileModel);
+        setEnabled(isEnabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        if (event.getVfsInfo() != null) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay)
-      {
-         updateEnabling();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay) {
+            updateEnabling();
+        }
+    }
 
 }

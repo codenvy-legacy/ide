@@ -25,94 +25,74 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 @RolesAllowed({"developer"})
 public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
-{
+                                                                            ProjectOpenedHandler, ProjectClosedHandler,
+                                                                            ViewVisibilityChangedHandler {
 
-   public static final String ID = "File/New *";
+    public static final String ID = "File/New *";
 
-   /**
-    * 
-    */
-   public NewItemPopupToolbarControl()
-   {
-      super(ID);
-      setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.newMenu());
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
-      setDelimiterBefore(true);
-      setEnabled(true);
-   }
+    /**
+     *
+     */
+    public NewItemPopupToolbarControl() {
+        super(ID);
+        setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.newMenu());
+        setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+        setDelimiterBefore(true);
+        setEnabled(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        if (event.getVfsInfo() != null) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      if (event.getProject() != null)
-         setEnabled(true);
-   }
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        if (event.getProject() != null)
+            setEnabled(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay ||
-               event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerDisplay)
-      {
-         setEnabled(event.getView().isViewVisible());
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay ||
+            event.getView() instanceof ProjectExplorerDisplay ||
+            event.getView() instanceof PackageExplorerDisplay) {
+            setEnabled(event.getView().isViewVisible());
+        }
+    }
 
 }

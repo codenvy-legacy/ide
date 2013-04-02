@@ -35,92 +35,79 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
  * View for renaming folders.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.Display
-{
+public class RenameFolderView extends ViewImpl implements RenameFolderPresenter.Display {
 
-   /*
-    * Form constants.
-    */
-   private static final int WIDTH = 410;
+    /*
+     * Form constants.
+     */
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 175;
+    private static final int HEIGHT = 175;
 
-   private static final String ID = "ideRenameItemForm";
+    private static final String ID = "ideRenameItemForm";
 
-   private static final String RENAME_BUTTON_ID = "ideRenameItemFormRenameButton";
+    private static final String RENAME_BUTTON_ID = "ideRenameItemFormRenameButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRenameItemFormCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideRenameItemFormCancelButton";
 
-   private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
+    private static final String RENAME_FIELD = "ideRenameItemFormRenameField";
 
-   @UiField
-   TextInput nameField;
+    @UiField
+    TextInput nameField;
 
-   @UiField
-   ImageButton renameButton;
+    @UiField
+    ImageButton renameButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   private static final String TITLE = IDE.NAVIGATION_CONSTANT.renameItemTitle();
+    private static final String TITLE = IDE.NAVIGATION_CONSTANT.renameItemTitle();
 
-   interface RenameFolderViewUiBinder extends UiBinder<Widget, RenameFolderView>
-   {
-   }
+    interface RenameFolderViewUiBinder extends UiBinder<Widget, RenameFolderView> {
+    }
 
-   private static RenameFolderViewUiBinder uiBinder = GWT.create(RenameFolderViewUiBinder.class);
+    private static RenameFolderViewUiBinder uiBinder = GWT.create(RenameFolderViewUiBinder.class);
 
-   public RenameFolderView()
-   {
-      super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, true);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public RenameFolderView() {
+        super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.ok()), WIDTH, HEIGHT, true);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      nameField.setName(RENAME_FIELD);
-      renameButton.setButtonId(RENAME_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        nameField.setName(RENAME_FIELD);
+        renameButton.setButtonId(RENAME_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   public HasValue<String> getNameField()
-   {
-      return nameField;
-   }
+    public HasValue<String> getNameField() {
+        return nameField;
+    }
 
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   public HasClickHandlers getRenameButton()
-   {
-      return renameButton;
-   }
+    public HasClickHandlers getRenameButton() {
+        return renameButton;
+    }
 
-   public HasKeyPressHandlers getNameFieldKeyPressHandler()
-   {
-      return (HasKeyPressHandlers)nameField;
-   }
+    public HasKeyPressHandlers getNameFieldKeyPressHandler() {
+        return (HasKeyPressHandlers)nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.RenameFolderPresenter.Display#enableRenameButton(boolean)
-    */
-   public void enableRenameButton(boolean enable)
-   {
-      renameButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.client.navigation.RenameFolderPresenter.Display#enableRenameButton(boolean) */
+    public void enableRenameButton(boolean enable) {
+        renameButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.RenameFolderPresenter.Display#focusInNameField()
-    */
-   @Override
-   public void focusInNameField()
-   {
-      nameField.focus();
-   }
+    /** @see org.exoplatform.ide.client.navigation.RenameFolderPresenter.Display#focusInNameField() */
+    @Override
+    public void focusInNameField() {
+        nameField.focus();
+    }
 
 }

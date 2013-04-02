@@ -21,40 +21,34 @@ package org.exoplatform.ide.client.ui.panel;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ShowPanelEvent extends GwtEvent<ShowPanelHandler>
-{
+public class ShowPanelEvent extends GwtEvent<ShowPanelHandler> {
 
-   public static final GwtEvent.Type<ShowPanelHandler> TYPE = new GwtEvent.Type<ShowPanelHandler>();
+    public static final GwtEvent.Type<ShowPanelHandler> TYPE = new GwtEvent.Type<ShowPanelHandler>();
 
-   private String panelId;
+    private String panelId;
 
-   public ShowPanelEvent(String panelId)
-   {
-      this.panelId = panelId;
-   }
+    public ShowPanelEvent(String panelId) {
+        this.panelId = panelId;
+    }
 
-   public String getPanelId()
-   {
-      return panelId;
-   }
+    public String getPanelId() {
+        return panelId;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowPanelHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowPanelHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ShowPanelHandler handler)
-   {
-      handler.onShowPanel(this);
-   }
+    @Override
+    protected void dispatch(ShowPanelHandler handler) {
+        handler.onShowPanel(this);
+    }
 
 }

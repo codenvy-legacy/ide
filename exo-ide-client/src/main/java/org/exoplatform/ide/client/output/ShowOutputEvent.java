@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Dec 22, 2011 12:29:34 PM evgen $
- * 
  */
-public class ShowOutputEvent extends GwtEvent<ShowOutputHandler>
-{
+public class ShowOutputEvent extends GwtEvent<ShowOutputHandler> {
 
-   public static final GwtEvent.Type<ShowOutputHandler> TYPE = new Type<ShowOutputHandler>();
+    public static final GwtEvent.Type<ShowOutputHandler> TYPE = new Type<ShowOutputHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowOutputHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowOutputHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowOutputHandler handler)
-   {
-      handler.onShowOutput(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowOutputHandler handler) {
+        handler.onShowOutput(this);
+    }
 
 }

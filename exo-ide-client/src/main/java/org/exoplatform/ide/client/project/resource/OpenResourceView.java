@@ -28,6 +28,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -40,147 +41,112 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import java.util.List;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class OpenResourceView extends ViewImpl implements
-   org.exoplatform.ide.client.project.resource.OpenResourcePresenter.Display
-{
+                                               org.exoplatform.ide.client.project.resource.OpenResourcePresenter.Display {
 
-   private static OpenResourceViewUiBinder uiBinder = GWT.create(OpenResourceViewUiBinder.class);
+    private static OpenResourceViewUiBinder uiBinder = GWT.create(OpenResourceViewUiBinder.class);
 
-   interface OpenResourceViewUiBinder extends UiBinder<Widget, OpenResourceView>
-   {
-   }
+    interface OpenResourceViewUiBinder extends UiBinder<Widget, OpenResourceView> {
+    }
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 550;
+    /** Initial width of this view */
+    private static final int WIDTH = 550;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 350;
+    /** Initial height of this view */
+    private static final int HEIGHT = 350;
 
-   /**
-    * View ID
-    */
-   public static final String ID = "ideOpenResourceView";
+    /** View ID */
+    public static final String ID = "ideOpenResourceView";
 
-   /**
-    * View Title
-    */
-   public static final String TITLE = "Open Resource";
+    /** View Title */
+    public static final String TITLE = "Open Resource";
 
-   /**
-    * Files list grid
-    */
-   @UiField
-   FilesListGrid filesListGrid;
+    /** Files list grid */
+    @UiField
+    FilesListGrid filesListGrid;
 
-   /**
-    * Open button
-    */
-   @UiField
-   ImageButton openButton;
+    /** Open button */
+    @UiField
+    ImageButton openButton;
 
-   /**
-    * Cancel button
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button */
+    @UiField
+    ImageButton cancelButton;
 
-   /**
-    * File name field
-    */
-   @UiField
-   TextInput fileNameField;
+    /** File name field */
+    @UiField
+    TextInput fileNameField;
 
-   /**
-    * Parent panel for  icon "folder"
-    */
-   @UiField
-   DivElement folderIconElement;
+    /** Parent panel for  icon "folder" */
+    @UiField
+    DivElement folderIconElement;
 
-   /**
-    * Parent panel for folder path
-    */
-   @UiField
-   DivElement folderNameElement;
+    /** Parent panel for folder path */
+    @UiField
+    DivElement folderNameElement;
 
-   public OpenResourceView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.openResource()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
-      fileNameField.focus();
-      String imageHTML = ImageHelper.getImageHTML(IDEImageBundle.INSTANCE.folder());
-      folderIconElement.setInnerHTML(imageHTML);
-   }
+    public OpenResourceView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.openResource()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
+        fileNameField.focus();
+        String imageHTML = ImageHelper.getImageHTML(IDEImageBundle.INSTANCE.folder());
+        folderIconElement.setInnerHTML(imageHTML);
+    }
 
-   @Override
-   public HasClickHandlers getOpenButton()
-   {
-      return openButton;
-   }
+    @Override
+    public HasClickHandlers getOpenButton() {
+        return openButton;
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public TextFieldItem getFileNameField()
-   {
-      return fileNameField;
-   }
+    @Override
+    public TextFieldItem getFileNameField() {
+        return fileNameField;
+    }
 
-   @Override
-   public ListGridItem<FileModel> getFilesListGrid()
-   {
-      return filesListGrid;
-   }
+    @Override
+    public ListGridItem<FileModel> getFilesListGrid() {
+        return filesListGrid;
+    }
 
-   @Override
-   public void focusListGrid()
-   {
-      filesListGrid.getCellTable().setFocus(true);
-   }
+    @Override
+    public void focusListGrid() {
+        filesListGrid.getCellTable().setFocus(true);
+    }
 
-   @Override
-   public List<FileModel> getSelectedItems()
-   {
-      return filesListGrid.getSelectedItems();
-   }
+    @Override
+    public List<FileModel> getSelectedItems() {
+        return filesListGrid.getSelectedItems();
+    }
 
-   @Override
-   public HasAllKeyHandlers listGrid()
-   {
-      return filesListGrid;
-   }
+    @Override
+    public HasAllKeyHandlers listGrid() {
+        return filesListGrid;
+    }
 
-   @Override
-   public void setItemFolderName(String folderName)
-   {
-      if (folderName == null)
-      {
-         folderNameElement.getStyle().setDisplay(Display.NONE);
-         folderIconElement.getStyle().setDisplay(Display.NONE);
-         folderNameElement.removeAttribute("title");
-      }
-      else
-      {
-         folderNameElement.setInnerHTML(folderName);
-         folderNameElement.setAttribute("title", folderName);
-         folderNameElement.getStyle().setDisplay(Display.BLOCK);
-         folderIconElement.getStyle().setDisplay(Display.BLOCK);
-      }
-   }
+    @Override
+    public void setItemFolderName(String folderName) {
+        if (folderName == null) {
+            folderNameElement.getStyle().setDisplay(Display.NONE);
+            folderIconElement.getStyle().setDisplay(Display.NONE);
+            folderNameElement.removeAttribute("title");
+        } else {
+            folderNameElement.setInnerHTML(folderName);
+            folderNameElement.setAttribute("title", folderName);
+            folderNameElement.getStyle().setDisplay(Display.BLOCK);
+            folderIconElement.getStyle().setDisplay(Display.BLOCK);
+        }
+    }
 
 }

@@ -23,68 +23,53 @@ import com.google.gwt.user.client.Window;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
-import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 
 /**
  * Handler that opens WebSocket connection when IDE loaded and close WebSocket on close IDE.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocketHandler.java Jun 19, 2012 12:33:42 PM azatsarynnyy $
- *
  */
-public class WebSocketHandler implements ApplicationClosedHandler
-{
+public class WebSocketHandler implements ApplicationClosedHandler {
 
 
-   public WebSocketHandler()
-   {
-      IDE.addHandler(ApplicationClosedEvent.TYPE, this);
-      IDE.setMessageBus(new RESTMessageBus(getWebSocketServerURL()));
-      initialize();
-   }
+    public WebSocketHandler() {
+        IDE.addHandler(ApplicationClosedEvent.TYPE, this);
+        IDE.setMessageBus(new RESTMessageBus(getWebSocketServerURL()));
+        initialize();
+    }
 
-   private void initialize()
-   {
-      IDE.messageBus().setOnErrorHandler(new ConnectionErrorHandler()
-      {
-         @Override
-         public void onError()
-         {
+    private void initialize() {
+        IDE.messageBus().setOnErrorHandler(new ConnectionErrorHandler() {
+            @Override
+            public void onError() {
+                IDE.messageBus().close();
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler#onApplicationClosed(org.exoplatform.ide
+     * .client.framework.application.event.ApplicationClosedEvent) */
+    @Override
+    public void onApplicationClosed(ApplicationClosedEvent event) {
+        if (IDE.messageBus() != null)
             IDE.messageBus().close();
-         }
-      });
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler#onApplicationClosed(org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent)
-    */
-   @Override
-   public void onApplicationClosed(ApplicationClosedEvent event)
-   {
-      if (IDE.messageBus() != null)
-         IDE.messageBus().close();
-   }
-
-   /**
-    * Returns WebSocket server URL.
-    * 
-    * @return WebSocket server URL
-    */
-   private String getWebSocketServerURL()
-   {
-      boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-      if (isSecureConnection)
-         return "wss://" + Window.Location.getHost() + "/IDE/websocket";
-      else
-         return "ws://" + Window.Location.getHost() + "/IDE/websocket";
-   }
-
+    /**
+     * Returns WebSocket server URL.
+     *
+     * @return WebSocket server URL
+     */
+    private String getWebSocketServerURL() {
+        boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
+        if (isSecureConnection)
+            return "wss://" + Window.Location.getHost() + "/IDE/websocket";
+        else
+            return "ws://" + Window.Location.getHost() + "/IDE/websocket";
+    }
 
 
 }

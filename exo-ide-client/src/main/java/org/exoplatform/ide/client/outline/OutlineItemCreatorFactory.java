@@ -18,38 +18,32 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: EditorFactory Feb 22, 2011 11:06:05 AM evgen $
- * 
  */
-public class OutlineItemCreatorFactory
-{
-   private static Map<String, OutlineItemCreator> outlineItemCreators = new HashMap<String, OutlineItemCreator>();
+public class OutlineItemCreatorFactory {
+    private static Map<String, OutlineItemCreator> outlineItemCreators = new HashMap<String, OutlineItemCreator>();
 
-   static
-   {
-      // addOutlineItemCreator(MimeType.UWA_WIDGET, new HtmlOutlineItemCreator());
-   }
+    static {
+        // addOutlineItemCreator(MimeType.UWA_WIDGET, new HtmlOutlineItemCreator());
+    }
 
-   public static void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator)
-   {
-      outlineItemCreators.put(mimeType, outlineItemCreator);
-   }
+    public static void addOutlineItemCreator(String mimeType, OutlineItemCreator outlineItemCreator) {
+        outlineItemCreators.put(mimeType, outlineItemCreator);
+    }
 
-   public static OutlineItemCreator getOutlineItemCreator(String mimeType)
-   {
-      if (outlineItemCreators.containsKey(mimeType))
-      {
-         return outlineItemCreators.get(mimeType);
-      }
+    public static OutlineItemCreator getOutlineItemCreator(String mimeType) {
+        if (outlineItemCreators.containsKey(mimeType)) {
+            return outlineItemCreators.get(mimeType);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
 }

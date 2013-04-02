@@ -49,209 +49,167 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
 public class SearchResultsPresenter implements ViewVisibilityChangedHandler, ViewClosedHandler,
-   SearchResultReceivedHandler
-{
+                                               SearchResultReceivedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      TreeGridItem<Item> getSearchResultTree();
+        TreeGridItem<Item> getSearchResultTree();
 
-      List<Item> getSelectedItems();
+        List<Item> getSelectedItems();
 
-      void selectItem(String href);
+        void selectItem(String href);
 
-      void deselectAllItems();
+        void deselectAllItems();
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private List<Item> selectedItems;
+    private List<Item> selectedItems;
 
-   private FolderModel searchResult;
+    private FolderModel searchResult;
 
-   public SearchResultsPresenter()
-   {
-      IDE.addHandler(SearchResultReceivedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public SearchResultsPresenter() {
+        IDE.addHandler(SearchResultReceivedEvent.TYPE, this);
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onSearchResultReceived(SearchResultReceivedEvent event)
-   {
-      searchResult = event.getFolder();
-      if (display == null)
-      {
-         Display display = GWT.create(Display.class);
-         IDE.getInstance().openView((View)display);
-         bindDsplay(display);
-      }
-      else
-      {
-         ((View)display).setViewVisible();
-         ((View)display).activate();
-      }
+    @Override
+    public void onSearchResultReceived(SearchResultReceivedEvent event) {
+        searchResult = event.getFolder();
+        if (display == null) {
+            Display display = GWT.create(Display.class);
+            IDE.getInstance().openView((View)display);
+            bindDsplay(display);
+        } else {
+            ((View)display).setViewVisible();
+            ((View)display).activate();
+        }
 
-      refreshSearchResult();
-   }
+        refreshSearchResult();
+    }
 
-   private void refreshSearchResult()
-   {
-      // searchResult.setIcon(Images.FileTypes.WORKSPACE);
-      if (searchResult.getChildren() != null)
-      {
-         // sort items in search result list
-         Collections.sort(searchResult.getChildren().getItems(), new Comparator<Item>()
-         {
-            public int compare(Item item1, Item item2)
-            {
-               return item1.getName().compareTo(item2.getName());
+    private void refreshSearchResult() {
+        // searchResult.setIcon(Images.FileTypes.WORKSPACE);
+        if (searchResult.getChildren() != null) {
+            // sort items in search result list
+            Collections.sort(searchResult.getChildren().getItems(), new Comparator<Item>() {
+                public int compare(Item item1, Item item2) {
+                    return item1.getName().compareTo(item2.getName());
+                }
+            });
+
+            display.getSearchResultTree().setValue(searchResult);
+            display.selectItem(searchResult.getId());
+        } else {
+            display.getSearchResultTree().setValue(searchResult);
+            display.deselectAllItems();
+        }
+
+        selectedItems = display.getSelectedItems();
+        onItemSelected();
+    }
+
+    public void bindDsplay(Display d) {
+        this.display = d;
+
+        display.getSearchResultTree().addDoubleClickHandler(new DoubleClickHandler() {
+            public void onDoubleClick(DoubleClickEvent arg0) {
+                openSelectedFile();
             }
-         });
+        });
 
-         display.getSearchResultTree().setValue(searchResult);
-         display.selectItem(searchResult.getId());
-      }
-      else
-      {
-         display.getSearchResultTree().setValue(searchResult);
-         display.deselectAllItems();
-      }
+        display.getSearchResultTree().addSelectionHandler(new SelectionHandler<Item>() {
+            public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event) {
+                onItemSelected();
+            }
+        });
 
-      selectedItems = display.getSelectedItems();
-      onItemSelected();
-   }
+        display.getSearchResultTree().addOpenHandler(new OpenHandler<Item>() {
 
-   public void bindDsplay(Display d)
-   {
-      this.display = d;
+            @Override
+            public void onOpen(OpenEvent<Item> event) {
+                refreshSearchResult();
+            }
+        });
+    }
 
-      display.getSearchResultTree().addDoubleClickHandler(new DoubleClickHandler()
-      {
-         public void onDoubleClick(DoubleClickEvent arg0)
-         {
-            openSelectedFile();
-         }
-      });
-
-      display.getSearchResultTree().addSelectionHandler(new SelectionHandler<Item>()
-      {
-         public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<Item> event)
-         {
-            onItemSelected();
-         }
-      });
-
-      display.getSearchResultTree().addOpenHandler(new OpenHandler<Item>()
-      {
-
-         @Override
-         public void onOpen(OpenEvent<Item> event)
-         {
-            refreshSearchResult();
-         }
-      });
-   }
-
-   public void destroy()
-   {
-      if (updateSelectionTimer != null)
-      {
-         updateSelectionTimer.cancel();
-      }
-
-      updateSelectionTimer = null;
-   }
-
-   /**
-    * Handling of mouse double clicking
-    */
-   protected void openSelectedFile()
-   {
-      if (selectedItems == null || selectedItems.size() != 1)
-      {
-         return;
-      }
-
-      Item item = selectedItems.get(0);
-      if (item instanceof File)
-      {
-         IDE.fireEvent(new OpenFileEvent((FileModel)item));
-      }
-   }
-
-   /**
-    * 
-    * Handling item selected event from panel
-    * 
-    * @param item
-    */
-   protected void onItemSelected()
-   {
-      if (updateSelectionTimer == null)
-      {
-         return;
-      }
-
-      updateSelectionTimer.cancel();
-      updateSelectionTimer.schedule(10);
-   }
-
-   private Timer updateSelectionTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         if (display == null)
-         {
-            return;
-         }
-
-         selectedItems = display.getSelectedItems();
-         IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
-      }
-   };
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
-
-      if (event.getView() instanceof Display)
-      {
-         if (event.getView().isViewVisible())
-         {
-            onItemSelected();
-         }
-         else
-         {
+    public void destroy() {
+        if (updateSelectionTimer != null) {
             updateSelectionTimer.cancel();
-         }
-      }
-   }
+        }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (display != null && event.getView() instanceof Display)
-      {
-         display = null;
-         updateSelectionTimer.cancel();
-      }
+        updateSelectionTimer = null;
+    }
 
-   }
+    /** Handling of mouse double clicking */
+    protected void openSelectedFile() {
+        if (selectedItems == null || selectedItems.size() != 1) {
+            return;
+        }
+
+        Item item = selectedItems.get(0);
+        if (item instanceof File) {
+            IDE.fireEvent(new OpenFileEvent((FileModel)item));
+        }
+    }
+
+    /**
+     * Handling item selected event from panel
+     *
+     * @param item
+     */
+    protected void onItemSelected() {
+        if (updateSelectionTimer == null) {
+            return;
+        }
+
+        updateSelectionTimer.cancel();
+        updateSelectionTimer.schedule(10);
+    }
+
+    private Timer updateSelectionTimer = new Timer() {
+        @Override
+        public void run() {
+            if (display == null) {
+                return;
+            }
+
+            selectedItems = display.getSelectedItems();
+            IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
+        }
+    };
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (display == null) {
+            return;
+        }
+
+        if (event.getView() instanceof Display) {
+            if (event.getView().isViewVisible()) {
+                onItemSelected();
+            } else {
+                updateSelectionTimer.cancel();
+            }
+        }
+    }
+
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (display != null && event.getView() instanceof Display) {
+            display = null;
+            updateSelectionTimer.cancel();
+        }
+
+    }
 
 }

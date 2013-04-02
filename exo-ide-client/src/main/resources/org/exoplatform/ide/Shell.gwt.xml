@@ -19,13 +19,13 @@
 
 -->
 <module rename-to="IDE">
-   <inherits name='com.google.gwt.user.User' />
-   <inherits name='com.google.web.bindery.autobean.AutoBean'/>
-   
-	<inherits name='org.exoplatform.ide.IDECore' />
-   <inherits name="org.exoplatform.ide.IDEExtensions" />
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='com.google.web.bindery.autobean.AutoBean'/>
 
-   <!-- Specify the app entry point class. -->
-   <entry-point class='org.exoplatform.ide.client.IDEShell' />
-   <source path="client" excludes="IDEGadget.java" />  
+    <inherits name='org.exoplatform.ide.IDECore'/>
+    <inherits name="org.exoplatform.ide.IDEExtensions"/>
+
+    <!-- Specify the app entry point class. -->
+    <entry-point class='org.exoplatform.ide.client.IDEShell'/>
+    <source path="client" excludes="IDEGadget.java"/>
 </module>

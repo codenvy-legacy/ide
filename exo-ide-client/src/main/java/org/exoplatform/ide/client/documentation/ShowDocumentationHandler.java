@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ShowDocumentationHandler Jan 21, 2011 11:14:45 AM evgen $
- * 
  */
-public interface ShowDocumentationHandler extends EventHandler
-{
+public interface ShowDocumentationHandler extends EventHandler {
 
-   void onShowDocumentation(ShowDocumentationEvent event);
+    void onShowDocumentation(ShowDocumentationEvent event);
 
 }

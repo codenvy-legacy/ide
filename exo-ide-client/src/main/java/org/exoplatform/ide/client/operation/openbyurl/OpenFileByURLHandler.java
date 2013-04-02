@@ -22,21 +22,20 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link OpenFileByURLEvent}
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface OpenFileByURLHandler extends EventHandler
-{
+public interface OpenFileByURLHandler extends EventHandler {
 
-   /**
-    * Perform actions, when user tries to open file by URL.
-    * 
-    * @param event
-    */
-   void onOpenFileByURL(OpenFileByURLEvent event);
+    /**
+     * Perform actions, when user tries to open file by URL.
+     *
+     * @param event
+     */
+    void onOpenFileByURL(OpenFileByURLEvent event);
 
 }

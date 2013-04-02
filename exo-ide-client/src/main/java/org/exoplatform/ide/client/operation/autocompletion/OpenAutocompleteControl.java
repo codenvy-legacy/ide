@@ -25,39 +25,32 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OpenAutocompleteControl extends SimpleControl implements IDEControl
-{
+public class OpenAutocompleteControl extends SimpleControl implements IDEControl {
 
-   public static final String ID = "Edit/Do Autocomplete...";
+    public static final String ID = "Edit/Do Autocomplete...";
 
-   public OpenAutocompleteControl()
-   {
-      super(ID);
+    public OpenAutocompleteControl() {
+        super(ID);
 
-      if (BrowserResolver.isMacOs())
-      {
-         setHotKey("Alt+Space");
-      }
-      else
-      {
-         setHotKey("Ctrl+Space");
-      }
+        if (BrowserResolver.isMacOs()) {
+            setHotKey("Alt+Space");
+        } else {
+            setHotKey("Ctrl+Space");
+        }
 
-      setIgnoreDisable(true);
-      setEvent(new AutocompleteCalledEvent());
-      setImages(IDEImageBundle.INSTANCE.autocomplete(), IDEImageBundle.INSTANCE.autocompleteDisabled());
-   }
+        setIgnoreDisable(true);
+        setEvent(new AutocompleteCalledEvent());
+        setImages(IDEImageBundle.INSTANCE.autocomplete(), IDEImageBundle.INSTANCE.autocompleteDisabled());
+    }
 
-   @Override
-   public void initialize()
-   {
-   }
+    @Override
+    public void initialize() {
+    }
 
 }

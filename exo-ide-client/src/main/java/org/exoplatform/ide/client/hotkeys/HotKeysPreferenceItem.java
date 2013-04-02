@@ -27,17 +27,14 @@ import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 
 /**
  * Hotkeys preference item.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 20, 2012 3:15:23 PM anya $
- * 
  */
-public class HotKeysPreferenceItem extends AbstractPreferenceItem
-{
-   private static final String NAME = IDE.PREFERENCES_CONSTANT.customizeHotkeysTitle();
+public class HotKeysPreferenceItem extends AbstractPreferenceItem {
+    private static final String NAME = IDE.PREFERENCES_CONSTANT.customizeHotkeysTitle();
 
-   public HotKeysPreferenceItem(PreferencePerformer performer)
-   {
-      super(NAME, new Image(IDEImageBundle.INSTANCE.customizeHotKeys()), performer);
-   }
+    public HotKeysPreferenceItem(PreferencePerformer performer) {
+        super(NAME, new Image(IDEImageBundle.INSTANCE.customizeHotKeys()), performer);
+    }
 }

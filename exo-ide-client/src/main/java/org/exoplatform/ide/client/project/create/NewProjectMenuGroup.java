@@ -29,57 +29,46 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 @RolesAllowed({"developer"})
-public class NewProjectMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
-{
+public class NewProjectMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler {
 
-   public static final String ID = "Project/New";
+    public static final String ID = "Project/New";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
+    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
 
-   /**
-    * 
-    */
-   public NewProjectMenuGroup()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
-      setEnabled(true);
-      setGroupName(GroupNames.NEW_PROJECT);
-   }
+    /**
+     *
+     */
+    public NewProjectMenuGroup() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
+        setEnabled(true);
+        setGroupName(GroupNames.NEW_PROJECT);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        if (event.getVfsInfo() != null) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
 
 }

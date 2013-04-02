@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface HasMaximizePanelHandler
-{
+public interface HasMaximizePanelHandler {
 
-   HandlerRegistration addMaximizePanelHandler(MaximizePanelHandler maximizePanelHandler);
+    HandlerRegistration addMaximizePanelHandler(MaximizePanelHandler maximizePanelHandler);
 
 }

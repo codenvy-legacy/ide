@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.edit.switching;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class GoNextEditorEvent extends GwtEvent<GoNextEditorHandler>
-{
+public class GoNextEditorEvent extends GwtEvent<GoNextEditorHandler> {
 
-   public static final GwtEvent.Type<GoNextEditorHandler> TYPE = new GwtEvent.Type<GoNextEditorHandler>();
+    public static final GwtEvent.Type<GoNextEditorHandler> TYPE = new GwtEvent.Type<GoNextEditorHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GoNextEditorHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<GoNextEditorHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(GoNextEditorHandler handler)
-   {
-      handler.onGoNextEditor(this);
-   }
+    @Override
+    protected void dispatch(GoNextEditorHandler handler) {
+        handler.onGoNextEditor(this);
+    }
 
 }

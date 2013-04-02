@@ -43,105 +43,82 @@ import java.util.List;
  *
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 10, 2010 $
- *
  */
 @RolesAllowed({"developer"})
 public class UploadZipControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewVisibilityChangedHandler, VfsChangedHandler
-{
+                                                               ViewVisibilityChangedHandler, VfsChangedHandler {
 
-   private final static String ID = "File/Upload Zipped Folder...";
+    private final static String ID = "File/Upload Zipped Folder...";
 
-   private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.uploadFolderControl();
+    private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.uploadFolderControl();
 
-   private boolean browserPanelSelected = true;
+    private boolean browserPanelSelected = true;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
+    private List<Item> selectedItems = new ArrayList<Item>();
 
-   /**
-    *
-    */
-   public UploadZipControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
-      setEvent(new UploadZipEvent());
-      setGroupName(GroupNames.UPLOAD);
-   }
+    /**
+     *
+     */
+    public UploadZipControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
+        setEvent(new UploadZipEvent());
+        setGroupName(GroupNames.UPLOAD);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   /**
-    *
-    */
-   private void updateEnabling()
-   {
-      if (browserPanelSelected)
-      {
-         if (selectedItems.size() == 1)
-         {
-            setEnabled(true);
-         }
-         else
-         {
+    /**
+     *
+     */
+    private void updateEnabling() {
+        if (browserPanelSelected) {
+            if (selectedItems.size() == 1) {
+                setEnabled(true);
+            } else {
+                setEnabled(false);
+            }
+        } else {
             setEnabled(false);
-         }
-      }
-      else
-      {
-         setEnabled(false);
-      }
-   }
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        selectedItems = event.getSelectedItems();
+        updateEnabling();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      if (event.getVfsInfo() != null)
-      {
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        if (event.getVfsInfo() != null) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay
-         || event.getView() instanceof PackageExplorerDisplay)
-      {
-         browserPanelSelected = event.getView().isViewVisible();
-         updateEnabling();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide
+     * .client.framework.ui.api.event.ViewVisibilityChangedEvent) */
+    @Override
+    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event) {
+        if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay
+            || event.getView() instanceof PackageExplorerDisplay) {
+            browserPanelSelected = event.getView().isViewVisible();
+            updateEnabling();
+        }
+    }
 
 }

@@ -20,106 +20,102 @@
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder
-	xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-	xmlns:r="urn:import:org.exoplatform.ide.client.project.resource"
-	>
-	
-	<ui:style>
+        xmlns:ui="urn:ui:com.google.gwt.uibinder"
+        xmlns:g="urn:import:com.google.gwt.user.client.ui"
+        xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+        xmlns:r="urn:import:org.exoplatform.ide.client.project.resource"
+        >
 
-		.butPanel
-		{
-			margin: 5px auto;
-			height:40px;
-			text-align: center;
-			width:100%;
-			min-width:190px;
-			display: inline;
-		}
-		
-		.butLeft
-		{
-			display: inline-block;
-		}
-		
-		.butRight
-		{
-			display: inline-block;
-			margin-left: 10px;
-		}
-		
-		.colored
-		{
-			height: 16px;
-			padding:0px;
-			margin:0px;
-			line-height:16px;
-		}
-		
-		.folderImage
-		{
-			position:absolute;
-			left:0px;
-			top:0px;
-			width:16px;
-			height:16px;
-			overflow:hidden;
-		}
-		
-		.folderName
-		{
-			position:absolute;
-			left:20px;
-			top:0px;
-			right:0px;
-			bottom:0px;
-			height:16px;
-			overflow:hidden;
-			
-			font-family: Verdana, Bitstream Vera Sans, sans-serif;
-			font-size: 11px;
-			font-weight: normal;
-			font-style: normal;			
-		}
+    <ui:style>
 
-	</ui:style>
-	
-	<c:Border margin="15" borderColor="transparent">
-		<c:layer top="0" height="20px">
-			<g:Label text="Select an item to open:"></g:Label>
-		</c:layer>
-		
-		<c:layer top="20px" height="25px">
-			<c:TextInput ui:field="fileNameField" width="100%"></c:TextInput>
-		</c:layer>		
+        .butPanel {
+            margin: 5px auto;
+            height: 40px;
+            text-align: center;
+            width: 100%;
+            min-width: 190px;
+            display: inline;
+        }
 
-		<c:layer top="50" height="20px">
-			<g:Label text="Matching items:"></g:Label>
-		</c:layer>
-		
-		<c:layer top="70px" bottom="65px" >		
-			<c:Border>
-				<c:layer>
-					<r:FilesListGrid width="100%" ui:field="filesListGrid"></r:FilesListGrid>
-				</c:layer>
-			</c:Border>
-		</c:layer>
-		
-		<c:layer bottom="40px" height="16px">
-			<g:HTMLPanel addStyleNames="{style.colored}">
-				<div class="{style.folderImage}" ui:field="folderIconElement"></div>
-				<div class="{style.folderName}" ui:field="folderNameElement"></div>
-			</g:HTMLPanel>
-		</c:layer>
+        .butLeft {
+            display: inline-block;
+        }
 
-		<c:layer height="35px" bottom="0px">
-			<g:FlowPanel styleName="{style.butPanel}">
-				<c:ImageButton text="Open" imageName="ok" ui:field="openButton" buttonId="ideProjectResourcesOpenButton" addStyleNames="{style.butLeft}"></c:ImageButton>
-				<c:ImageButton text="Cancel" imageName="cancel" ui:field="cancelButton" buttonId="ideProjectResourcesCancelButton" addStyleNames="{style.butRight}"></c:ImageButton>
-			</g:FlowPanel>
-		</c:layer>		
-		
-	</c:Border>
-	
+        .butRight {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .colored {
+            height: 16px;
+            padding: 0px;
+            margin: 0px;
+            line-height: 16px;
+        }
+
+        .folderImage {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 16px;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .folderName {
+            position: absolute;
+            left: 20px;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            height: 16px;
+            overflow: hidden;
+
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-size: 11px;
+            font-weight: normal;
+            font-style: normal;
+        }
+
+    </ui:style>
+
+    <c:Border margin="15" borderColor="transparent">
+        <c:layer top="0" height="20px">
+            <g:Label text="Select an item to open:"></g:Label>
+        </c:layer>
+
+        <c:layer top="20px" height="25px">
+            <c:TextInput ui:field="fileNameField" width="100%"></c:TextInput>
+        </c:layer>
+
+        <c:layer top="50" height="20px">
+            <g:Label text="Matching items:"></g:Label>
+        </c:layer>
+
+        <c:layer top="70px" bottom="65px">
+            <c:Border>
+                <c:layer>
+                    <r:FilesListGrid width="100%" ui:field="filesListGrid"></r:FilesListGrid>
+                </c:layer>
+            </c:Border>
+        </c:layer>
+
+        <c:layer bottom="40px" height="16px">
+            <g:HTMLPanel addStyleNames="{style.colored}">
+                <div class="{style.folderImage}" ui:field="folderIconElement"></div>
+                <div class="{style.folderName}" ui:field="folderNameElement"></div>
+            </g:HTMLPanel>
+        </c:layer>
+
+        <c:layer height="35px" bottom="0px">
+            <g:FlowPanel styleName="{style.butPanel}">
+                <c:ImageButton text="Open" imageName="ok" ui:field="openButton" buttonId="ideProjectResourcesOpenButton"
+                               addStyleNames="{style.butLeft}"></c:ImageButton>
+                <c:ImageButton text="Cancel" imageName="cancel" ui:field="cancelButton" buttonId="ideProjectResourcesCancelButton"
+                               addStyleNames="{style.butRight}"></c:ImageButton>
+            </g:FlowPanel>
+        </c:layer>
+
+    </c:Border>
+
 </ui:UiBinder>

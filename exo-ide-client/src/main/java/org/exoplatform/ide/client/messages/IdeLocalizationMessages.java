@@ -22,147 +22,145 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Interface to represent the messages contained in resource bundle: 'IdeLocalizationMessages.properties'.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdeLocalizationMessages.java Jun 8, 2011 2:41:55 PM vereshchaka $
- * 
  */
-public interface IdeLocalizationMessages extends Messages
-{
+public interface IdeLocalizationMessages extends Messages {
 
-   /*
-    * LockUnlockFileHandler
-    */
-   @Key("lockUnlockFile.cantLockFile")
-   String lockUnlockFileCantLockFile(String fileName);
+    /*
+     * LockUnlockFileHandler
+     */
+    @Key("lockUnlockFile.cantLockFile")
+    String lockUnlockFileCantLockFile(String fileName);
 
-   /*
-    * EditorController
-    */
-   @Key("editor.doYouWantToSaveFileBeforeClosing")
-   String editorDoYouWantToSaveFileBeforeClosing(String fileName);
+    /*
+     * EditorController
+     */
+    @Key("editor.doYouWantToSaveFileBeforeClosing")
+    String editorDoYouWantToSaveFileBeforeClosing(String fileName);
 
-   /*
-    * OpenFileWithPresenter
-    */
-   @Key("openFileWith.cantFindEditor")
-   String openFileWithCantFindEditor(String mimeType);
+    /*
+     * OpenFileWithPresenter
+     */
+    @Key("openFileWith.cantFindEditor")
+    String openFileWithCantFindEditor(String mimeType);
 
-   @Key("openFileWith.doYouWantToReopen")
-   String openFileWithDoYouWantToReopen(String fileName);
+    @Key("openFileWith.doYouWantToReopen")
+    String openFileWithDoYouWantToReopen(String fileName);
 
-   /*
-    * HotKeyHelper
-    */
-   @Key("hotkeys.cantFindCodeCombination")
-   String hotkeysCantFindCodeCombination(String hotkeys);
+    /*
+     * HotKeyHelper
+     */
+    @Key("hotkeys.cantFindCodeCombination")
+    String hotkeysCantFindCodeCombination(String hotkeys);
 
-   /*
-    * IDEConfigurationLoader IDEConfigurationUnmarshaller
-    */
-   @Key("configuration.invalidConfiguration")
-   String configurationInvalidConfiguration(String message);
+    /*
+     * IDEConfigurationLoader IDEConfigurationUnmarshaller
+     */
+    @Key("configuration.invalidConfiguration")
+    String configurationInvalidConfiguration(String message);
 
-   /*
-    * LoginPresenter IDEConfigurationInitializer IDEConfigurationInitializer
-    */
-   @Key("conf.missingVariable")
-   String confMissingVariable(String variableName);
+    /*
+     * LoginPresenter IDEConfigurationInitializer IDEConfigurationInitializer
+     */
+    @Key("conf.missingVariable")
+    String confMissingVariable(String variableName);
 
-   /*
-    * DeleteItemsPresenter
-    */
-   @Key("deleteItems.askDeleteOneItem")
-   String deleteItemsAskDeleteOneItem(String name);
+    /*
+     * DeleteItemsPresenter
+     */
+    @Key("deleteItems.askDeleteOneItem")
+    String deleteItemsAskDeleteOneItem(String name);
 
-   @Key("deleteItems.askDeleteSeveralItems")
-   String deleteItemsAskDeleteSeveralItems(int number);
+    @Key("deleteItems.askDeleteSeveralItems")
+    String deleteItemsAskDeleteSeveralItems(int number);
 
-   @Key("deleteItems.askDeleteModifiedFile")
-   String deleteItemsAskDeleteModifiedFile(String fileName);
+    @Key("deleteItems.askDeleteModifiedFile")
+    String deleteItemsAskDeleteModifiedFile(String fileName);
 
-   @Key("deleteItems.askDeleteFolderWithModifiedFiles")
-   String deleteItemsAskDeleteFolderWithModifiedFiles(String folderName, int numberOfFiles);
-   
-   @Key("deleteItems.askDeleteProjectWithModifiedFiles")
-   String deleteItemsAskDeleteProjectWithModifiedFiles(String folderName, int numberOfFiles);
+    @Key("deleteItems.askDeleteFolderWithModifiedFiles")
+    String deleteItemsAskDeleteFolderWithModifiedFiles(String folderName, int numberOfFiles);
 
-   @Key("deleteItems.askDeleteProject")
-   String deleteItemsAskDeleteProject(String projectName);
+    @Key("deleteItems.askDeleteProjectWithModifiedFiles")
+    String deleteItemsAskDeleteProjectWithModifiedFiles(String folderName, int numberOfFiles);
 
-   /*
-    * CreateFileCommandHandler
-    */
-   @Key("createFile.cantFindEditorForType")
-   String createFileCantFindEditorForType(String mimeType);
+    @Key("deleteItems.askDeleteProject")
+    String deleteItemsAskDeleteProject(String projectName);
 
-   /*
-    * OpenFileCommandHandler
-    */
-   @Key("openFile.cantFindEditorForType")
-   String openFileCantFindEditorForType(String mimeType);
+    /*
+     * CreateFileCommandHandler
+     */
+    @Key("createFile.cantFindEditorForType")
+    String createFileCantFindEditorForType(String mimeType);
 
-   /*
-    * PasteItemsCommandHandler
-    */
-   @Key("paste.saveFileBeforeCutAskDialog.text")
-   String pasteSaveFileBeforeCutAskDialogText(String fileName);
+    /*
+     * OpenFileCommandHandler
+     */
+    @Key("openFile.cantFindEditorForType")
+    String openFileCantFindEditorForType(String mimeType);
 
-   /*
-    * CreateFileFromTemplatePresenter
-    */
-   @Key("template.askDeleteTemplate")
-   String templateAskDeleteTemplate(String templateName);
+    /*
+     * PasteItemsCommandHandler
+     */
+    @Key("paste.saveFileBeforeCutAskDialog.text")
+    String pasteSaveFileBeforeCutAskDialogText(String fileName);
 
-   @Key("template.dialog.templateIsUsed.text")
-   String askDeleteTemplateUsedInOtherProjects(String templateName, String projectsNames);
+    /*
+     * CreateFileFromTemplatePresenter
+     */
+    @Key("template.askDeleteTemplate")
+    String templateAskDeleteTemplate(String templateName);
 
-   /*
-    * CreateProjectFromTemplatePresenter AbstractCreateFromTemplatePresenter
-    */
-   @Key("createProjectFromTemplate.askDeleteOneTemplate")
-   String createFromTemplateAskDeleteOneTemplate(String templateName);
+    @Key("template.dialog.templateIsUsed.text")
+    String askDeleteTemplateUsedInOtherProjects(String templateName, String projectsNames);
 
-   /*
-    * OpenLocalFilePresenter
-    */
-   @Key("openLocalFile.openingFailure")
-   String openLocalFileOpeningFailure(String fileName);
+    /*
+     * CreateProjectFromTemplatePresenter AbstractCreateFromTemplatePresenter
+     */
+    @Key("createProjectFromTemplate.askDeleteOneTemplate")
+    String createFromTemplateAskDeleteOneTemplate(String templateName);
 
-   /*
-    * RestoreToVersionCommandHandler
-    */
-   @Key("restoreToVersion.askDialog.restoreToVersion")
-   String restoreToVersionAskDialog(String version);
+    /*
+     * OpenLocalFilePresenter
+     */
+    @Key("openLocalFile.openingFailure")
+    String openLocalFileOpeningFailure(String fileName);
 
-   /*
-    * ShowVersionListCommandHandler
-    */
-   @Key("showVersionList.itemHasNoVersions")
-   String showVersionListItemHasNoVersions(String itemName);
+    /*
+     * RestoreToVersionCommandHandler
+     */
+    @Key("restoreToVersion.askDialog.restoreToVersion")
+    String restoreToVersionAskDialog(String version);
 
-   /*
-    * VersionHistoryCommandHandler
-    */
-   @Key("versionHistory.itemHasNoVersions")
-   String versionHistoryItemHasNoVersions(String itemName);
+    /*
+     * ShowVersionListCommandHandler
+     */
+    @Key("showVersionList.itemHasNoVersions")
+    String showVersionListItemHasNoVersions(String itemName);
 
-   /*
-    * SelectWorkspacePresenter
-    */
-   @Key("selectWorkspace.askSaveFileBeforeClosing")
-   String selectWorkspaceAskSaveFileBeforeClosing(String fileName);
+    /*
+     * VersionHistoryCommandHandler
+     */
+    @Key("versionHistory.itemHasNoVersions")
+    String versionHistoryItemHasNoVersions(String itemName);
 
-   /*
-    * Open File by URL
-    */
-   @Key("openFileByURL.errorMessage")
-   String openFileByURLErrorMessage(String message);
+    /*
+     * SelectWorkspacePresenter
+     */
+    @Key("selectWorkspace.askSaveFileBeforeClosing")
+    String selectWorkspaceAskSaveFileBeforeClosing(String fileName);
 
-   /*
-    * Open File by path
-    */
-   @Key("openFileByPath.errorMessage")
-   String openFileByPathErrorMessage(String message);
+    /*
+     * Open File by URL
+     */
+    @Key("openFileByURL.errorMessage")
+    String openFileByURLErrorMessage(String message);
+
+    /*
+     * Open File by path
+     */
+    @Key("openFileByPath.errorMessage")
+    String openFileByPathErrorMessage(String message);
 
 }

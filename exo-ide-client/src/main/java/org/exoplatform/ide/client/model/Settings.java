@@ -20,30 +20,28 @@
 package org.exoplatform.ide.client.model;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Settings
-{
+public interface Settings {
 
-   public static final String LOCK_TOKENS = "lock-tokens";
+    public static final String LOCK_TOKENS = "lock-tokens";
 
-   public static final String OPENED_FILES = "opened-files";
+    public static final String OPENED_FILES = "opened-files";
 
-   public static final String ACTIVE_FILE = "active-file";
+    public static final String ACTIVE_FILE = "active-file";
 
-   public static final String ENTRY_POINT = "entry-point";
+    public static final String ENTRY_POINT = "entry-point";
 
-   public static final String OPENED_PROJECT = "opened-project";
+    public static final String OPENED_PROJECT = "opened-project";
 
-   public static final String TOOLBAR_ITEMS = "toolbar-items";
+    public static final String TOOLBAR_ITEMS = "toolbar-items";
 
-   public static final String TOOLBAR_DEFAULT_ITEMS = "toolbar-default-items";
+    public static final String TOOLBAR_DEFAULT_ITEMS = "toolbar-default-items";
 
-   public static final String SHOW_HIDDEN_FILES = "project-explorer-show-hidden-files";
-   
+    public static final String SHOW_HIDDEN_FILES = "project-explorer-show-hidden-files";
+
 }

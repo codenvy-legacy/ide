@@ -22,38 +22,30 @@ import java.util.ArrayList;
 
 /**
  * Formatter to sort controls from "View" menu.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 22, 2011 3:47:02 PM anya $
- * 
  */
-public class ViewControlsFormatter extends ControlFormatterBase
-{
-   /**
-    * Initialize the order of the controls in menu "View".
-    */
-   @Override
-   protected void initControlsOrder()
-   {
-      controlIdsOrder = new ArrayList<String>();
-      controlIdsOrder.add("View/Properties");
-      controlIdsOrder.add("View/Permissions");
-      controlIdsOrder.add("View/Show \\ Hide Outline");
-      controlIdsOrder.add("View/Show \\ Hide Documentation");
-      controlIdsOrder.add("View/Go to Folder");
-      controlIdsOrder.add("View/Get URL...");
-      controlIdsOrder.add("View/Progress");
-      controlIdsOrder.add("View/Output");
-      controlIdsOrder.add("View/Log");
-      controlIdsOrder.add("View/Show \\ Hide Hidden Files");
-   }
+public class ViewControlsFormatter extends ControlFormatterBase {
+    /** Initialize the order of the controls in menu "View". */
+    @Override
+    protected void initControlsOrder() {
+        controlIdsOrder = new ArrayList<String>();
+        controlIdsOrder.add("View/Properties");
+        controlIdsOrder.add("View/Permissions");
+        controlIdsOrder.add("View/Show \\ Hide Outline");
+        controlIdsOrder.add("View/Show \\ Hide Documentation");
+        controlIdsOrder.add("View/Go to Folder");
+        controlIdsOrder.add("View/Get URL...");
+        controlIdsOrder.add("View/Progress");
+        controlIdsOrder.add("View/Output");
+        controlIdsOrder.add("View/Log");
+        controlIdsOrder.add("View/Show \\ Hide Hidden Files");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.application.ControlFormatterBase#getMainMenuPrefix()
-    */
-   @Override
-   protected String getMainMenuPrefix()
-   {
-      return "View/";
-   }
+    /** @see org.exoplatform.ide.client.application.ControlFormatterBase#getMainMenuPrefix() */
+    @Override
+    protected String getMainMenuPrefix() {
+        return "View/";
+    }
 }

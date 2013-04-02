@@ -29,56 +29,46 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * Control to collapse a fold.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: CollapseFoldControl.java Feb 28, 2013 5:00:20 PM azatsarynnyy $
- *
  */
-public class CollapseFoldControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
-{
+public class CollapseFoldControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-   public static final String ID = "Edit/Folding/Collapse";
+    public static final String ID = "Edit/Folding/Collapse";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.collapseFoldControlTitle();
+    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.collapseFoldControlTitle();
 
-   public CollapseFoldControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
-      setEvent(new EditorCollapseFoldEvent());
-      setHotKey("Ctrl+Numpad -");
-   }
+    public CollapseFoldControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(TITLE);
+        setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
+        setEvent(new EditorCollapseFoldEvent());
+        setHotKey("Ctrl+Numpad -");
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.editor.event.EditorActiveFileChangedEvent)
-    */
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() == null || event.getEditor() == null)
-      {
-         setVisible(false);
-         setEnabled(false);
-         return;
-      }
+    /** @see org.exoplatform.ide.client.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client
+     * .editor.event.EditorActiveFileChangedEvent) */
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        if (event.getFile() == null || event.getEditor() == null) {
+            setVisible(false);
+            setEnabled(false);
+            return;
+        }
 
-      if (event.getEditor().isReadOnly())
-      {
-         setEnabled(false);
-      }
+        if (event.getEditor().isReadOnly()) {
+            setEnabled(false);
+        }
 
-      boolean isFoldingSupported = event.getEditor().isCapable(EditorCapability.CODE_FOLDING);
-      setVisible(isFoldingSupported);
-      setEnabled(isFoldingSupported);
-   }
+        boolean isFoldingSupported = event.getEditor().isCapable(EditorCapability.CODE_FOLDING);
+        setVisible(isFoldingSupported);
+        setEnabled(isFoldingSupported);
+    }
 }

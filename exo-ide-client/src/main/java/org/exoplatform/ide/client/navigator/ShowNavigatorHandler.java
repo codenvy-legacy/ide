@@ -22,16 +22,14 @@ package org.exoplatform.ide.client.navigator;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ShowNavigatorHandler extends EventHandler
-{
+public interface ShowNavigatorHandler extends EventHandler {
 
-   void onShowNavigator(ShowNavigatorEvent event);
+    void onShowNavigator(ShowNavigatorEvent event);
 
 }

@@ -27,107 +27,85 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 @RolesAllowed({"developer"})
 public class CloseProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, ViewActivatedHandler, ItemsSelectedHandler
-{
+                                                                  ProjectClosedHandler, ViewActivatedHandler, ItemsSelectedHandler {
 
-   public static final String ID = "Project/Close";
+    public static final String ID = "Project/Close";
 
-   private static final String TITLE = "Close";
+    private static final String TITLE = "Close";
 
-   private static final String PROMPT = "Close Project";
-   
-   private boolean projectExplorerSelected = false;
+    private static final String PROMPT = "Close Project";
 
-   /**
-    * 
-    */
-   public CloseProjectControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(IDEImageBundle.INSTANCE.projectClosed(), IDEImageBundle.INSTANCE.projectClosedDisabled());
-      setEvent(new CloseProjectEvent());
-      setGroupName(GroupNames.ACTIONS);
-   }
+    private boolean projectExplorerSelected = false;
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(false);
+    /**
+     *
+     */
+    public CloseProjectControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(IDEImageBundle.INSTANCE.projectClosed(), IDEImageBundle.INSTANCE.projectClosedDisabled());
+        setEvent(new CloseProjectEvent());
+        setGroupName(GroupNames.ACTIONS);
+    }
 
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(false);
 
-   /**
-    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ViewActivatedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project
+     * .ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      
-      if(projectExplorerSelected && !event.getSelectedItems().isEmpty())
-      {
-         setShowInContextMenu(event.getSelectedItems().get(0) instanceof ProjectModel);
-      }
-      else
-      {
-         setShowInContextMenu(false);
-      }
-   }
+    /** @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project
+     * .ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      projectExplorerSelected = event.getView() instanceof ProjectExplorerDisplay;
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+
+        if (projectExplorerSelected && !event.getSelectedItems().isEmpty()) {
+            setShowInContextMenu(event.getSelectedItems().get(0) instanceof ProjectModel);
+        } else {
+            setShowInContextMenu(false);
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework
+     * .ui.api.event.ViewActivatedEvent) */
+    @Override
+    public void onViewActivated(ViewActivatedEvent event) {
+        projectExplorerSelected = event.getView() instanceof ProjectExplorerDisplay;
+    }
 
 }

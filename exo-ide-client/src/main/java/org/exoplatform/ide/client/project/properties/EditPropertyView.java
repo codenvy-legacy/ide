@@ -33,86 +33,73 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class EditPropertyView extends ViewImpl implements
-   org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display
-{
+                                               org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display {
 
-   public static final String ID = "ideEditProjectPropertyView";
+    public static final String ID = "ideEditProjectPropertyView";
 
-   public static final String TITLE = "Edit Property";
+    public static final String TITLE = "Edit Property";
 
-   /**
-    * Initial width of this view
-    */
-   private static final int WIDTH = 420;
+    /** Initial width of this view */
+    private static final int WIDTH = 420;
 
-   /**
-    * Initial height of this view
-    */
-   private static final int HEIGHT = 200;
+    /** Initial height of this view */
+    private static final int HEIGHT = 200;
 
-   private static EditPropertyViewUiBinder uiBinder = GWT.create(EditPropertyViewUiBinder.class);
+    private static EditPropertyViewUiBinder uiBinder = GWT.create(EditPropertyViewUiBinder.class);
 
-   interface EditPropertyViewUiBinder extends UiBinder<Widget, EditPropertyView>
-   {
-   }
+    interface EditPropertyViewUiBinder extends UiBinder<Widget, EditPropertyView> {
+    }
 
-   @UiField
-   TextBox nameField;
+    @UiField
+    TextBox nameField;
 
-   @UiField
-   TextBox valueField;
+    @UiField
+    TextBox valueField;
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   public EditPropertyView()
-   {
-      super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public EditPropertyView() {
+        super(ID, "modal", TITLE, new Image(IDEImageBundle.INSTANCE.projectProperties()), WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      nameField.setReadOnly(true);
-   }
+        nameField.setReadOnly(true);
+    }
 
-   @Override
-   public HasValue<String> getNameField()
-   {
-      return nameField;
-   }
+    @Override
+    public HasValue<String> getNameField() {
+        return nameField;
+    }
 
-   @Override
-   public HasValue<String> getValueField()
-   {
-      return valueField;
-   }
+    @Override
+    public HasValue<String> getValueField() {
+        return valueField;
+    }
 
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
 
-   @Override
-   public void setOkButtonText(String text)
-   {
-      okButton.setText(text);
-   }
+    @Override
+    public void setOkButtonText(String text) {
+        okButton.setText(text);
+    }
 
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
 }

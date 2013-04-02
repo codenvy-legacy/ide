@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.project.resource;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OpenResourceEvent extends GwtEvent<OpenResourceHandler>
-{
+public class OpenResourceEvent extends GwtEvent<OpenResourceHandler> {
 
-   public static final GwtEvent.Type<OpenResourceHandler> TYPE = new GwtEvent.Type<OpenResourceHandler>();
+    public static final GwtEvent.Type<OpenResourceHandler> TYPE = new GwtEvent.Type<OpenResourceHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OpenResourceHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OpenResourceHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(OpenResourceHandler handler)
-   {
-      handler.onOpenResource(this);
-   }
+    @Override
+    protected void dispatch(OpenResourceHandler handler) {
+        handler.onOpenResource(this);
+    }
 
 }

@@ -26,46 +26,36 @@ import com.google.gwt.user.cellview.client.Column;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ThemesListGrid extends ListGrid<Theme>
-{
+public class ThemesListGrid extends ListGrid<Theme> {
 
-   public ThemesListGrid()
-   {
-      Column<Theme, SafeHtml> themeNameColumn = new Column<Theme, SafeHtml>(new SafeHtmlCell())
-      {
-         @Override
-         public SafeHtml getValue(final Theme theme)
-         {
-            @SuppressWarnings("serial")
-            SafeHtml html = new SafeHtml()
-            {
-               @Override
-               public String asString()
-               {
-                  if (theme.isActive())
-                  {
-                     return "<span style=\"color:#3764A3;\">" + theme.getName() + "&nbsp;&nbsp;[Active]</span>";
-                  }
-                  else
-                  {
-                     return theme.getName();
-                  }
-               }
-            };
-            return html;
-         }
+    public ThemesListGrid() {
+        Column<Theme, SafeHtml> themeNameColumn = new Column<Theme, SafeHtml>(new SafeHtmlCell()) {
+            @Override
+            public SafeHtml getValue(final Theme theme) {
+                @SuppressWarnings("serial")
+                SafeHtml html = new SafeHtml() {
+                    @Override
+                    public String asString() {
+                        if (theme.isActive()) {
+                            return "<span style=\"color:#3764A3;\">" + theme.getName() + "&nbsp;&nbsp;[Active]</span>";
+                        } else {
+                            return theme.getName();
+                        }
+                    }
+                };
+                return html;
+            }
 
-      };
+        };
 
-      themeNameColumn.setCellStyleNames("default-cursor ide-table-row-text");
-      getCellTable().addColumn(themeNameColumn, "Theme");
-   }
+        themeNameColumn.setCellStyleNames("default-cursor ide-table-row-text");
+        getCellTable().addColumn(themeNameColumn, "Theme");
+    }
 
 }

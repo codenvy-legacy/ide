@@ -22,28 +22,24 @@ package org.exoplatform.ide.client.operation.uploadfile;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class UploadFileEvent extends GwtEvent<UploadFileHandler>
-{
+public class UploadFileEvent extends GwtEvent<UploadFileHandler> {
 
-   public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
+    public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UploadFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UploadFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(UploadFileHandler handler)
-   {
-      handler.onUploadFile(this);
-   }
+    @Override
+    protected void dispatch(UploadFileHandler handler) {
+        handler.onUploadFile(this);
+    }
 
 }

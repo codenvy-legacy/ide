@@ -18,80 +18,62 @@
  */
 package org.exoplatform.ide.client.navigation.event;
 
-import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateCallback;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateCallback;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplateHandler>
-{
-   private CreateFileFromTemplateCallback callback;
+public class CreateFileFromTemplateEvent extends GwtEvent<CreateFileFromTemplateHandler> {
+    private CreateFileFromTemplateCallback callback;
 
-   /**
-    * Used to rewrite CreateFileFromTemplate title.
-    */
-   private String formTitle;
+    /** Used to rewrite CreateFileFromTemplate title. */
+    private String formTitle;
 
-   /**
-    * Used to rewrite CreateFileFromTemplate submit button title.
-    */
-   private String submitButtonTitle;
+    /** Used to rewrite CreateFileFromTemplate submit button title. */
+    private String submitButtonTitle;
 
-   public CreateFileFromTemplateEvent()
-   {
-   }
+    public CreateFileFromTemplateEvent() {
+    }
 
-   public CreateFileFromTemplateEvent(CreateFileFromTemplateCallback callback, String formTitle,
-      String submitButtonTitle)
-   {
-      this.callback = callback;
-      this.formTitle = formTitle;
-      this.submitButtonTitle = submitButtonTitle;
-   }
+    public CreateFileFromTemplateEvent(CreateFileFromTemplateCallback callback, String formTitle,
+                                       String submitButtonTitle) {
+        this.callback = callback;
+        this.formTitle = formTitle;
+        this.submitButtonTitle = submitButtonTitle;
+    }
 
-   public static final GwtEvent.Type<CreateFileFromTemplateHandler> TYPE =
-      new GwtEvent.Type<CreateFileFromTemplateHandler>();
+    public static final GwtEvent.Type<CreateFileFromTemplateHandler> TYPE =
+            new GwtEvent.Type<CreateFileFromTemplateHandler>();
 
-   @Override
-   protected void dispatch(CreateFileFromTemplateHandler handler)
-   {
-      handler.onCreateFileFromTemplate(this);
-   }
+    @Override
+    protected void dispatch(CreateFileFromTemplateHandler handler) {
+        handler.onCreateFileFromTemplate(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateFileFromTemplateHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateFileFromTemplateHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @return the callback
-    */
-   public CreateFileFromTemplateCallback getCallback()
-   {
-      return callback;
-   }
+    /** @return the callback */
+    public CreateFileFromTemplateCallback getCallback() {
+        return callback;
+    }
 
-   /**
-    * @return the formTitle
-    */
-   public String getFormTitle()
-   {
-      return formTitle;
-   }
+    /** @return the formTitle */
+    public String getFormTitle() {
+        return formTitle;
+    }
 
-   /**
-    * @return the submitButtonTitle
-    */
-   public String getSubmitButtonTitle()
-   {
-      return submitButtonTitle;
-   }
+    /** @return the submitButtonTitle */
+    public String getSubmitButtonTitle() {
+        return submitButtonTitle;
+    }
 
 }

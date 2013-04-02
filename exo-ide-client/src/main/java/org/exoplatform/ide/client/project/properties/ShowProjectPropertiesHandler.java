@@ -22,16 +22,14 @@ package org.exoplatform.ide.client.project.properties;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ShowProjectPropertiesHandler extends EventHandler
-{
+public interface ShowProjectPropertiesHandler extends EventHandler {
 
-   void onShowProjectProperties(ShowProjectPropertiesEvent event);
+    void onShowProjectProperties(ShowProjectPropertiesEvent event);
 
 }
