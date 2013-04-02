@@ -51,8 +51,7 @@ public class DummyConfigurationService
       Map<String, Object> result = new HashMap<String, Object>();
       result.put("userSettings", "{}");
       ShellUser user =
-         new ShellUser(request.getUserPrincipal().getName(), Collections.<String> emptyList(),
-            Collections.<String> emptyList());
+         new ShellUser(request.getUserPrincipal().getName(), Collections.<String> emptyList());
       result.put("user", user);
       result.put("userSettings", "{}");
       return result;

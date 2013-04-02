@@ -58,13 +58,18 @@ public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants
       {
          return;
       }
-      
+
       JSONValue json = JSONParser.parseStrict(response.getText());
       if (json == null)
          return;
       JSONObject revisionObject = json.isObject();
       if (revisionObject == null)
          return;
+
+      Boolean fake =
+         (revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null) ? revisionObject.get(FAKE)
+            .isBoolean().booleanValue() : false;
+      revision.setFake(fake);
 
       String id =
          (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)

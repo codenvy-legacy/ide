@@ -38,14 +38,6 @@
       <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
    </filter>
 
-   <filter>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
-   </filter>
-
-   <listener>
-      <listener-class>org.crsh.plugin.WebPluginLifeCycle</listener-class>
-   </listener>
 
    <context-param>
       <param-name>everrest.exoplatform.standalone.config</param-name>
@@ -75,10 +67,6 @@
       <url-pattern>Shell/rest/private/*</url-pattern>
    </filter-mapping>
 
-   <filter-mapping>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-      <url-pattern>Shell/rest/*</url-pattern>
-   </filter-mapping>
    
    <servlet-mapping>
       <servlet-name>RestServer</servlet-name>

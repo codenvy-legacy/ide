@@ -116,11 +116,7 @@ public class ExportTest extends JcrFileSystemTest
    {
       String exportFolderId = ((ExtendedNode)exportFolder).getIdentifier();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("export/") //
-         .append(exportFolderId) //
-         .toString();
+      String path = SERVICE_URI + "export/" + exportFolderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
@@ -134,11 +130,7 @@ public class ExportTest extends JcrFileSystemTest
       // Expect the same as 'export in zip' plus header "Content-Disposition". 
       String exportFolderId = ((ExtendedNode)exportFolder).getIdentifier();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("downloadzip/") //
-         .append(exportFolderId) //
-         .toString();
+      String path = SERVICE_URI + "downloadzip/" + exportFolderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));

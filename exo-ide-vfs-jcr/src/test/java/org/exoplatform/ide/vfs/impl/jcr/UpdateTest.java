@@ -154,11 +154,7 @@ public class UpdateTest extends JcrFileSystemTest
 
    public void doUpdate(String id, String rawData) throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(id) //
-         .toString();
+      String path = SERVICE_URI + "item/" + id;
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, rawData.getBytes(), null);

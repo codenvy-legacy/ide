@@ -23,7 +23,6 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
 public interface GitLocalizationConstant extends Messages
 {
@@ -158,6 +157,9 @@ public interface GitLocalizationConstant extends Messages
    @Key("messages.remote_list_failed")
    String remoteListFailed();
 
+   @Key("messages.remove_files_success")
+   String removeFilesSuccessfull();
+
    @Key("messages.remove_files_failed")
    String removeFilesFailed();
 
@@ -202,10 +204,9 @@ public interface GitLocalizationConstant extends Messages
 
    @Key("messages.delete_success")
    String deleteGitRepositorySuccess();
-   
+
    @Key("messages.use.ssh.protocol")
    String useSshProtocol();
-   
 
    // Unmarshaller Errors
    @Key("merge.unmarshal.failed")
@@ -257,6 +258,14 @@ public interface GitLocalizationConstant extends Messages
    @Key("add.finished")
    String addFinished(String projectName);
 
+   // ----RemoveRequestHandler
+
+   @Key("remove.started")
+   String removeStarted(String projectName);
+
+   @Key("remove.finished")
+   String removeFinished(String projectName);
+
    // ----CommitRequestHandler
 
    @Key("commit.started")
@@ -307,18 +316,21 @@ public interface GitLocalizationConstant extends Messages
    @Key("view.clone.title")
    String cloneTitle();
 
-   @Key("view.clone.workdir_field_title")
-   String cloneWorkdirFieldTitle();
+   @Key("view.clone.project_name_field_title")
+   String projectNameFieldTitle();
 
    @Key("view.clone.remote_uri_field_title")
    String cloneRemoteUriFieldTitle();
 
+   @Key("view.clone.remote_uri_field_example")
+   String cloneRemoteUriFieldExample();
 
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();
 
    @Key("view.clone.select_project_type_title")
    String cloneProjectType();
+
    // Commit
 
    @Key("view.commit.commit_message")
@@ -335,6 +347,9 @@ public interface GitLocalizationConstant extends Messages
 
    @Key("view.commit.all_field_title")
    String commitAllFieldTitle();
+
+   @Key("view.commit.amend_field_title")
+   String commitAmendFieldTitle();
 
    @Key("view.commit.grid.date")
    String commitGridDate();
@@ -383,11 +398,17 @@ public interface GitLocalizationConstant extends Messages
    String resetHardTypeDescription();
 
    // Remove
-   @Key("view.remove.files.grid.title")
-   String removeFilesGridTitle();
+   @Key("view.remove_from_index.all")
+   String removeFromIndexAll();
 
-   @Key("view.remove.files.title")
-   String removeFilesViewTitle();
+   @Key("view.remove_from_index.folder")
+   String removeFromIndexFolder(String folder);
+
+   @Key("view.remove_from_index.file")
+   String removeFromIndexFile(String file);
+
+   @Key("view.remove_from_index.title")
+   String removeFromIndexTitle();
 
    // Create
 

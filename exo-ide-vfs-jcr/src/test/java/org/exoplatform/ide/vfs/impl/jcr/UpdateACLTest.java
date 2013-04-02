@@ -69,10 +69,7 @@ public class UpdateACLTest extends JcrFileSystemTest
 
    public void testUpdateAclFile() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("acl/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "acl/" + fileID;
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
@@ -104,14 +101,7 @@ public class UpdateACLTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("acl/") //
-         .append(fileID) //
-         .append("?") //
-         .append("override=") //
-         .append(true) //
-         .toString();
+      String path = SERVICE_URI + "acl/" + fileID + '?' + "override=" + true;
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
@@ -148,11 +138,7 @@ public class UpdateACLTest extends JcrFileSystemTest
       node.setPermission("exo", PermissionType.ALL);
       session.save();
 
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("acl/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "acl/" + fileID;
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
@@ -186,14 +172,7 @@ public class UpdateACLTest extends JcrFileSystemTest
    {
       Lock lock = ((ExtendedSession)session).getNodeByIdentifier(fileID).lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("acl/") //
-         .append(fileID) //
-         .append("?") //
-         .append("lockToken=") //
-         .append(lock.getLockToken()) //
-         .toString();
+      String path = SERVICE_URI + "acl/" + fileID + '?' + "lockToken=" + lock.getLockToken();
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
@@ -220,10 +199,7 @@ public class UpdateACLTest extends JcrFileSystemTest
    {
       ((ExtendedSession)session).getNodeByIdentifier(fileID).lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("acl/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "acl/" + fileID;
       String acl = "[{\"principal\":\"root\",\"permissions\":[\"all\"]}," + //
          "{\"principal\":\"john\",\"permissions\":[\"read\"]}]";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);

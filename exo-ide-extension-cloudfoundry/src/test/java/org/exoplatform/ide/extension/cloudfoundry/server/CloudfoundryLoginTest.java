@@ -18,10 +18,15 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.DummyCredentialStore;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -31,13 +36,16 @@ public class CloudfoundryLoginTest
 {
    private Auth authenticator;
    private Cloudfoundry cloudfoundry;
+   private DummyCredentialStore credentialStore;
+   private final String userId = "andrew";
 
    @Before
    public void setUp() throws Exception
    {
       authenticator = new Auth();
-      authenticator.setCredentials(new CloudfoundryCredentials());
-      cloudfoundry = new Cloudfoundry(authenticator);
+      credentialStore = new DummyCredentialStore();
+      cloudfoundry = new Cloudfoundry(authenticator, credentialStore);
+      ConversationState.setCurrent(new ConversationState(new Identity(userId)));
    }
 
    @Test
@@ -45,17 +53,21 @@ public class CloudfoundryLoginTest
    {
       authenticator.setUsername(LoginInfo.email);
       authenticator.setPassword(LoginInfo.password);
-      authenticator.writeTarget(LoginInfo.target);
+      authenticator.setTarget(LoginInfo.target);
       // Login with username and password provided by authenticator.
       cloudfoundry.login();
-      assertNotNull(authenticator.readCredentials().getToken(authenticator.getTarget()));
+      Credential credential = new Credential();
+      assertTrue(credentialStore.load(userId, "cloudfoundry", credential));
+      assertNotNull(credential.getAttribute(LoginInfo.target));
    }
 
    @Test
    public void testLogin() throws Exception
    {
       cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password);
-      assertNotNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      Credential credential = new Credential();
+      assertTrue(credentialStore.load(userId, "cloudfoundry", credential));
+      assertNotNull(credential.getAttribute(LoginInfo.target));
    }
 
    @Test
@@ -73,15 +85,22 @@ public class CloudfoundryLoginTest
          assertEquals("Operation not permitted", e.getMessage());
          assertEquals("text/plain", e.getContentType());
       }
-      assertNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      Credential credential = new Credential();
+      credentialStore.load(userId, "cloudfoundry", credential);
+      assertNull(credential.getAttribute(LoginInfo.target));
    }
 
    @Test
    public void testLogout() throws Exception
    {
       cloudfoundry.login(LoginInfo.target, LoginInfo.email, LoginInfo.password);
-      assertNotNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      Credential credential = new Credential();
+      assertTrue(credentialStore.load(userId, "cloudfoundry", credential));
+      assertNotNull(credential.getAttribute(LoginInfo.target));
+
       cloudfoundry.logout(LoginInfo.target);
-      assertNull(authenticator.readCredentials().getToken(LoginInfo.target));
+      credential = new Credential();
+      credentialStore.load(userId, "cloudfoundry", credential);
+      assertNull(credential.getAttribute(LoginInfo.target));
    }
 }

@@ -87,7 +87,8 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
       }
       else if (message.getType() == OutputMessage.Type.GIT)
       {
-         setContents("<font color=\"" + GIT_COLOR + "\">" + message.getMessage() + "</font>");
+         setContents("<font color=\"" + GIT_COLOR + "\">"
+            + message.getMessage().replace("\n", "<br>").replace(" ", "&nbsp;") + "</font>");
       }
 
       if (odd)

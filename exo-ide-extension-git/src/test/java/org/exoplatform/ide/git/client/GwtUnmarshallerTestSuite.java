@@ -35,7 +35,6 @@ public class GwtUnmarshallerTestSuite extends TestCase
       suite.addTestSuite(BranchesUnmarshallerGwtTest.class);
       suite.addTestSuite(LogUnmarshallerGwtTest.class);
       suite.addTestSuite(RemoteListUnmarshallerGwtTest.class);
-      suite.addTestSuite(StatusResponseUnmarshallerGwtTest.class);
       return suite;
    }
 }

@@ -43,7 +43,7 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "6b4de95df96270ba0aebd41b859cfdcffeca7134";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "7646fd5a2b173b74234103890b4b0db46740f9ed";
 
   public static class ChatCodePointMessageImpl extends ChatMessageImpl implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage, JsonSerializable {
 
@@ -59,38 +59,89 @@ public class DtoServerImpls {
       return new ChatCodePointMessageImpl();
     }
 
-    protected int col;
-    private boolean _hasCol;
-    protected int row;
-    private boolean _hasRow;
+    protected int endChar;
+    private boolean _hasEndChar;
+    protected int startChar;
+    private boolean _hasStartChar;
+    protected java.lang.String path;
+    private boolean _hasPath;
+    protected int startLine;
+    private boolean _hasStartLine;
+    protected int endLine;
+    private boolean _hasEndLine;
 
-    public boolean hasCol() {
-      return _hasCol;
+    public boolean hasEndChar() {
+      return _hasEndChar;
     }
 
     @Override
-    public int getCol() {
-      return col;
+    public int getEndChar() {
+      return endChar;
     }
 
-    public ChatCodePointMessageImpl setCol(int v) {
-      _hasCol = true;
-      col = v;
+    public ChatCodePointMessageImpl setEndChar(int v) {
+      _hasEndChar = true;
+      endChar = v;
       return this;
     }
 
-    public boolean hasRow() {
-      return _hasRow;
+    public boolean hasStartChar() {
+      return _hasStartChar;
     }
 
     @Override
-    public int getRow() {
-      return row;
+    public int getStartChar() {
+      return startChar;
     }
 
-    public ChatCodePointMessageImpl setRow(int v) {
-      _hasRow = true;
-      row = v;
+    public ChatCodePointMessageImpl setStartChar(int v) {
+      _hasStartChar = true;
+      startChar = v;
+      return this;
+    }
+
+    public boolean hasPath() {
+      return _hasPath;
+    }
+
+    @Override
+    public java.lang.String getPath() {
+      return path;
+    }
+
+    public ChatCodePointMessageImpl setPath(java.lang.String v) {
+      _hasPath = true;
+      path = v;
+      return this;
+    }
+
+    public boolean hasStartLine() {
+      return _hasStartLine;
+    }
+
+    @Override
+    public int getStartLine() {
+      return startLine;
+    }
+
+    public ChatCodePointMessageImpl setStartLine(int v) {
+      _hasStartLine = true;
+      startLine = v;
+      return this;
+    }
+
+    public boolean hasEndLine() {
+      return _hasEndLine;
+    }
+
+    @Override
+    public int getEndLine() {
+      return endLine;
+    }
+
+    public ChatCodePointMessageImpl setEndLine(int v) {
+      _hasEndLine = true;
+      endLine = v;
       return this;
     }
 
@@ -103,19 +154,43 @@ public class DtoServerImpls {
         return false;
       }
       ChatCodePointMessageImpl other = (ChatCodePointMessageImpl) o;
-      if (this._hasCol != other._hasCol) {
+      if (this._hasEndChar != other._hasEndChar) {
         return false;
       }
-      if (this._hasCol) {
-        if (this.col != other.col) {
+      if (this._hasEndChar) {
+        if (this.endChar != other.endChar) {
           return false;
         }
       }
-      if (this._hasRow != other._hasRow) {
+      if (this._hasStartChar != other._hasStartChar) {
         return false;
       }
-      if (this._hasRow) {
-        if (this.row != other.row) {
+      if (this._hasStartChar) {
+        if (this.startChar != other.startChar) {
+          return false;
+        }
+      }
+      if (this._hasPath != other._hasPath) {
+        return false;
+      }
+      if (this._hasPath) {
+        if (!this.path.equals(other.path)) {
+          return false;
+        }
+      }
+      if (this._hasStartLine != other._hasStartLine) {
+        return false;
+      }
+      if (this._hasStartLine) {
+        if (this.startLine != other.startLine) {
+          return false;
+        }
+      }
+      if (this._hasEndLine != other._hasEndLine) {
+        return false;
+      }
+      if (this._hasEndLine) {
+        if (this.endLine != other.endLine) {
           return false;
         }
       }
@@ -125,8 +200,11 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasCol ? java.lang.Integer.valueOf(col).hashCode() : 0);
-      hash = hash * 31 + (_hasRow ? java.lang.Integer.valueOf(row).hashCode() : 0);
+      hash = hash * 31 + (_hasEndChar ? java.lang.Integer.valueOf(endChar).hashCode() : 0);
+      hash = hash * 31 + (_hasStartChar ? java.lang.Integer.valueOf(startChar).hashCode() : 0);
+      hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
+      hash = hash * 31 + (_hasStartLine ? java.lang.Integer.valueOf(startLine).hashCode() : 0);
+      hash = hash * 31 + (_hasEndLine ? java.lang.Integer.valueOf(endLine).hashCode() : 0);
       return hash;
     }
 
@@ -134,11 +212,20 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonPrimitive colOut = new JsonPrimitive(col);
-      result.add("col", colOut);
+      JsonPrimitive endCharOut = new JsonPrimitive(endChar);
+      result.add("endChar", endCharOut);
 
-      JsonPrimitive rowOut = new JsonPrimitive(row);
-      result.add("row", rowOut);
+      JsonPrimitive startCharOut = new JsonPrimitive(startChar);
+      result.add("startChar", startCharOut);
+
+      JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
+      result.add("path", pathOut);
+
+      JsonPrimitive startLineOut = new JsonPrimitive(startLine);
+      result.add("startLine", startLineOut);
+
+      JsonPrimitive endLineOut = new JsonPrimitive(endLine);
+      result.add("endLine", endLineOut);
 
       JsonElement dateTimeOut = (dateTime == null) ? JsonNull.INSTANCE : new JsonPrimitive(dateTime);
       result.add("dateTime", dateTimeOut);
@@ -176,16 +263,34 @@ public class DtoServerImpls {
       ChatCodePointMessageImpl dto = new ChatCodePointMessageImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("col")) {
-        JsonElement colIn = json.get("col");
-        int colOut = colIn.getAsInt();
-        dto.setCol(colOut);
+      if (json.has("endChar")) {
+        JsonElement endCharIn = json.get("endChar");
+        int endCharOut = endCharIn.getAsInt();
+        dto.setEndChar(endCharOut);
       }
 
-      if (json.has("row")) {
-        JsonElement rowIn = json.get("row");
-        int rowOut = rowIn.getAsInt();
-        dto.setRow(rowOut);
+      if (json.has("startChar")) {
+        JsonElement startCharIn = json.get("startChar");
+        int startCharOut = startCharIn.getAsInt();
+        dto.setStartChar(startCharOut);
+      }
+
+      if (json.has("path")) {
+        JsonElement pathIn = json.get("path");
+        java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
+        dto.setPath(pathOut);
+      }
+
+      if (json.has("startLine")) {
+        JsonElement startLineIn = json.get("startLine");
+        int startLineOut = startLineIn.getAsInt();
+        dto.setStartLine(startLineOut);
+      }
+
+      if (json.has("endLine")) {
+        JsonElement endLineIn = json.get("endLine");
+        int endLineOut = endLineIn.getAsInt();
+        dto.setEndLine(endLineOut);
       }
 
       if (json.has("dateTime")) {
@@ -2886,18 +2991,33 @@ public class DtoServerImpls {
       return new UserDetailsImpl();
     }
 
+    protected java.lang.String givenName;
+    private boolean _hasGivenName;
     protected java.lang.String displayEmail;
     private boolean _hasDisplayEmail;
     protected java.lang.String portraitUrl;
     private boolean _hasPortraitUrl;
     protected boolean isCurrentUser;
     private boolean _hasIsCurrentUser;
-    protected java.lang.String givenName;
-    private boolean _hasGivenName;
     protected java.lang.String displayName;
     private boolean _hasDisplayName;
     protected java.lang.String userId;
     private boolean _hasUserId;
+
+    public boolean hasGivenName() {
+      return _hasGivenName;
+    }
+
+    @Override
+    public java.lang.String getGivenName() {
+      return givenName;
+    }
+
+    public UserDetailsImpl setGivenName(java.lang.String v) {
+      _hasGivenName = true;
+      givenName = v;
+      return this;
+    }
 
     public boolean hasDisplayEmail() {
       return _hasDisplayEmail;
@@ -2944,21 +3064,6 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasGivenName() {
-      return _hasGivenName;
-    }
-
-    @Override
-    public java.lang.String getGivenName() {
-      return givenName;
-    }
-
-    public UserDetailsImpl setGivenName(java.lang.String v) {
-      _hasGivenName = true;
-      givenName = v;
-      return this;
-    }
-
     public boolean hasDisplayName() {
       return _hasDisplayName;
     }
@@ -2995,6 +3100,14 @@ public class DtoServerImpls {
         return false;
       }
       UserDetailsImpl other = (UserDetailsImpl) o;
+      if (this._hasGivenName != other._hasGivenName) {
+        return false;
+      }
+      if (this._hasGivenName) {
+        if (!this.givenName.equals(other.givenName)) {
+          return false;
+        }
+      }
       if (this._hasDisplayEmail != other._hasDisplayEmail) {
         return false;
       }
@@ -3016,14 +3129,6 @@ public class DtoServerImpls {
       }
       if (this._hasIsCurrentUser) {
         if (this.isCurrentUser != other.isCurrentUser) {
-          return false;
-        }
-      }
-      if (this._hasGivenName != other._hasGivenName) {
-        return false;
-      }
-      if (this._hasGivenName) {
-        if (!this.givenName.equals(other.givenName)) {
           return false;
         }
       }
@@ -3049,10 +3154,10 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = 1;
+      hash = hash * 31 + (_hasGivenName ? givenName.hashCode() : 0);
       hash = hash * 31 + (_hasDisplayEmail ? displayEmail.hashCode() : 0);
       hash = hash * 31 + (_hasPortraitUrl ? portraitUrl.hashCode() : 0);
       hash = hash * 31 + (_hasIsCurrentUser ? java.lang.Boolean.valueOf(isCurrentUser).hashCode() : 0);
-      hash = hash * 31 + (_hasGivenName ? givenName.hashCode() : 0);
       hash = hash * 31 + (_hasDisplayName ? displayName.hashCode() : 0);
       hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
@@ -3062,6 +3167,9 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
+      JsonElement givenNameOut = (givenName == null) ? JsonNull.INSTANCE : new JsonPrimitive(givenName);
+      result.add("givenName", givenNameOut);
+
       JsonElement displayEmailOut = (displayEmail == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayEmail);
       result.add("displayEmail", displayEmailOut);
 
@@ -3070,9 +3178,6 @@ public class DtoServerImpls {
 
       JsonPrimitive isCurrentUserOut = new JsonPrimitive(isCurrentUser);
       result.add("isCurrentUser", isCurrentUserOut);
-
-      JsonElement givenNameOut = (givenName == null) ? JsonNull.INSTANCE : new JsonPrimitive(givenName);
-      result.add("givenName", givenNameOut);
 
       JsonElement displayNameOut = (displayName == null) ? JsonNull.INSTANCE : new JsonPrimitive(displayName);
       result.add("displayName", displayNameOut);
@@ -3100,6 +3205,12 @@ public class DtoServerImpls {
       UserDetailsImpl dto = new UserDetailsImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
+      if (json.has("givenName")) {
+        JsonElement givenNameIn = json.get("givenName");
+        java.lang.String givenNameOut = gson.fromJson(givenNameIn, java.lang.String.class);
+        dto.setGivenName(givenNameOut);
+      }
+
       if (json.has("displayEmail")) {
         JsonElement displayEmailIn = json.get("displayEmail");
         java.lang.String displayEmailOut = gson.fromJson(displayEmailIn, java.lang.String.class);
@@ -3116,12 +3227,6 @@ public class DtoServerImpls {
         JsonElement isCurrentUserIn = json.get("isCurrentUser");
         boolean isCurrentUserOut = isCurrentUserIn.getAsBoolean();
         dto.setIsCurrentUser(isCurrentUserOut);
-      }
-
-      if (json.has("givenName")) {
-        JsonElement givenNameIn = json.get("givenName");
-        java.lang.String givenNameOut = gson.fromJson(givenNameIn, java.lang.String.class);
-        dto.setGivenName(givenNameOut);
       }
 
       if (json.has("displayName")) {

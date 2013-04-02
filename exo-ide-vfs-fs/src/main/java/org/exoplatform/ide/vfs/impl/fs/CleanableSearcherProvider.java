@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import org.exoplatform.container.xml.InitParams;
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
@@ -43,28 +44,13 @@ import java.util.concurrent.Executors;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CleanableSearcherProvider extends SearcherProvider
+public class CleanableSearcherProvider implements SearcherProvider
 {
    private final ConcurrentMap<java.io.File, CleanableSearcher> instances;
    private final ExecutorService executor;
 
-   public CleanableSearcherProvider(InitParams initParams)
+   public CleanableSearcherProvider()
    {
-      super(initParams);
-      executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors());
-      instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
-   }
-
-   public CleanableSearcherProvider(String indexRoot)
-   {
-      super(indexRoot);
-      executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors());
-      instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
-   }
-
-   public CleanableSearcherProvider(java.io.File indexRoot)
-   {
-      super(indexRoot);
       executor = Executors.newFixedThreadPool(1 + Runtime.getRuntime().availableProcessors());
       instances = new ConcurrentHashMap<java.io.File, CleanableSearcher>();
    }
@@ -76,13 +62,27 @@ public class CleanableSearcherProvider extends SearcherProvider
       CleanableSearcher searcher = instances.get(vfsIoRoot);
       if (searcher == null)
       {
+         final EnvironmentContext context = EnvironmentContext.getCurrent();
+         final String workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
+         if (workspaceId == null || workspaceId.isEmpty())
+         {
+            throw new VirtualFileSystemException("Unable create searcher. Workspace id is not set.");
+         }
 
-         final java.io.File indexDir;
+         final java.io.File indexRootDir = (java.io.File)context.getVariable(EnvironmentContext.VFS_INDEX_DIR);
+         if (indexRootDir == null)
+         {
+            throw new VirtualFileSystemException(
+               String.format("Unable create searcher for virtual file system '%s'. Index directory is not set. ", workspaceId));
+         }
+
+
+         final java.io.File myIndexDir;
          CleanableSearcher newSearcher;
          try
          {
-            indexDir = FileUtils.createTempDirectory(indexRoot, "vfs_index");
-            newSearcher = new CleanableSearcher(this, indexDir, getIndexedMediaTypes());
+            myIndexDir = FileUtils.createTempDirectory(indexRootDir, workspaceId);
+            newSearcher = new CleanableSearcher(this, myIndexDir, getIndexedMediaTypes());
          }
          catch (IOException e)
          {

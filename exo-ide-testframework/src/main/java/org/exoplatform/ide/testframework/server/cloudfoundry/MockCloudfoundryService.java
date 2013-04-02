@@ -39,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.testframework.server.FSLocation;
 import org.exoplatform.ide.testframework.server.cloudfoundry.bean.CloudfoundryApplication;
 import org.exoplatform.ide.testframework.server.cloudfoundry.bean.CloudfoundryApplicationResources;

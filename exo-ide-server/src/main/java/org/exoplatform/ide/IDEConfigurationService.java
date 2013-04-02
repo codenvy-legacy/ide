@@ -18,37 +18,24 @@
  */
 package org.exoplatform.ide;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.everrest.core.impl.provider.json.ArrayValue;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
-import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -76,93 +63,39 @@ public class IDEConfigurationService
 {
    private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
-   private VirtualFileSystemRegistry vfsRegistry;
-
-   private String entryPoint;
-
-   private boolean discoverable;
-
-   private String workspace;
 
    private String config = "/ide-home/users/";
 
-   /**
-    * @param vfsRegistry
-    * @param entryPoint
-    * @param discoverable
-    * @param workspace
-    * @param config
-    */
-   public IDEConfigurationService(VirtualFileSystemRegistry vfsRegistry, String entryPoint, boolean discoverable,
-      String workspace, String config)
-   {
-      super();
-      this.vfsRegistry = vfsRegistry;
-      this.entryPoint = entryPoint;
-      this.discoverable = discoverable;
-      this.workspace = workspace;
-      try
-      {
-         Collection<VirtualFileSystemProvider> registeredProviders = vfsRegistry.getRegisteredProviders();
-         for (Iterator iterator = registeredProviders.iterator(); iterator.hasNext();)
-         {
-            VirtualFileSystemProvider virtualFileSystemProvider = (VirtualFileSystemProvider)iterator.next();
-         }
-      }
-      catch (VirtualFileSystemException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      if (config != null)
-      {
-         if (!(config.startsWith("/")))
-            throw new IllegalArgumentException("Invalid path " + config + ". Absolute path to configuration required. ");
-         this.config = config;
-         if (!this.config.endsWith("/"))
-            this.config += "/";
-      }
-   }
 
    @GET
    @Path("/init")
    @Produces(MediaType.APPLICATION_JSON)
-   @RolesAllowed("developer")
+   @RolesAllowed({"developer"})
    public Map<String, Object> inializationParameters(@Context UriInfo uriInfo, @Context HttpServletRequest request)
    {
+      
       try
       {
+         String vfsId = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
          Map<String, Object> result = new HashMap<String, Object>();
          ConversationState curentState = ConversationState.getCurrent();
          if (curentState != null)
          {
             Identity identity = curentState.getIdentity();
-            IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles(), request.getSession().getId());
-
-            if (LOG.isDebugEnabled())
+            IdeUser user = new IdeUser(identity.getUserId(), identity.getRoles(), request.getSession().getId());
                LOG.info("Getting user identity: " + identity.getUserId());
             result.put("user", user);
             final Map<String, Object> userSettings = getUserSettings();
             result.put("userSettings", userSettings);
          }
-         String href =
-            uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(entryPoint).build().toString();
-         result.put("defaultEntrypoint", href);
-         result.put("discoverable", discoverable);
-         result.put("vfsId", entryPoint);
-         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).build().toString());
+         result.put("vfsId", vfsId);
+         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build().toString());
          return result;
       }
       catch (Exception e)
       {
          throw new WebApplicationException(e);
       }
-   }
-
-   @GET
-   @Path("ping")
-   public void ping()
-   {
    }
 
    @GET
@@ -189,10 +122,7 @@ public class IDEConfigurationService
       writeSettings(body);
    }
    
-   public String getWorkspace()
-   {
-      return workspace;
-   }
+  
 
    // ------Implementation---------
 
@@ -267,51 +197,6 @@ public class IDEConfigurationService
     */
    protected void writeSettings(String data) throws IOException
    {
-      try
-      {
-         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
-         String user = ConversationState.getCurrent().getIdentity().getUserId();
-         String userSettingsPath = config + user + "/settings";
-         checkUserConfigNode(vfs, userSettingsPath);
-
-         try
-         {
-            Item item = vfs.getItemByPath(userSettingsPath + "/userSettings", null, PropertyFilter.NONE_FILTER);
-            String id = item.getId();
-            vfs.updateContent(id, MediaType.TEXT_PLAIN_TYPE, new ByteArrayInputStream(data.getBytes("UTF-8")), null);
-         }
-         catch (ItemNotFoundException e)
-         {
-            String parentId = vfs.getItemByPath(userSettingsPath, null, PropertyFilter.NONE_FILTER).getId();
-
-            vfs.createFile(parentId, "userSettings", MediaType.TEXT_PLAIN_TYPE,
-               new ByteArrayInputStream(data.getBytes("UTF-8")));
-         }
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new WebApplicationException(e);
-      }
-   }
-
-   /**
-    * Check is user configuration folder exists.
-    * If doesn't exist, than create it.
-    * 
-    * @param vfs
-    * @param userSettingsPath
-    * @throws VirtualFileSystemException
-    */
-   private void checkUserConfigNode(VirtualFileSystem vfs, String userSettingsPath) throws VirtualFileSystemException
-   {
-      try
-      {
-         vfs.createFolder(vfs.getInfo().getRoot().getId(), userSettingsPath.substring(1));
-      }
-      catch (ItemAlreadyExistException e)
-      {
-         //skip exception handling
-      }
    }
 
    /**
@@ -322,49 +207,6 @@ public class IDEConfigurationService
     */
    protected String readSettings() throws IOException
    {
-      try
-      {
-         String user = ConversationState.getCurrent().getIdentity().getUserId();
-         String tokenPath = config + user + "/settings/userSettings";
-         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
-
-         ContentStream contentStream = null;
-         try
-         {
-            contentStream = vfs.getContent(tokenPath, null);
-         }
-         catch (ItemNotFoundException e)
-         {
-            return "{}"; //TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
-         }
-
-         InputStream input = contentStream.getStream();
-         if (input == null)
-         {
-            return "{}"; //TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
-         }
-
-         Writer writer = new StringWriter();
-         char[] buffer = new char[1024];
-         try
-         {
-            Reader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-            int n;
-            while ((n = reader.read(buffer)) != -1)
-            {
-               writer.write(buffer, 0, n);
-            }
-         }
-         finally
-         {
-            input.close();
-         }
-         String data = writer.toString();
-         return data;
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new WebApplicationException(e);
-      }
+      return "{}"; //TODO: small hack add for supporting previous version of IDE. In 1.2 changed structure of user settings
    }
 }

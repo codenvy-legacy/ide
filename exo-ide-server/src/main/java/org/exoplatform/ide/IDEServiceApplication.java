@@ -18,15 +18,12 @@
  */
 package org.exoplatform.ide;
 
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
 import org.exoplatform.ide.project.ProjectPrepareExceptionMapper;
 import org.exoplatform.ide.project.ProjectPrepareService;
 import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
-import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
@@ -50,23 +47,15 @@ public class IDEServiceApplication extends Application
 
    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList,
-                                InitParams initParams)
+   public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList)
    {
-      String entryPoint = ExoConfigurationHelper.readValueParam(initParams, "defaultEntryPoint");
-      boolean discoverable = Boolean.parseBoolean(ExoConfigurationHelper.readValueParam(initParams, "discoverable"));
-      String workspace = ExoConfigurationHelper.readValueParam(initParams, "workspace");
-      String config = ExoConfigurationHelper.readValueParam(initParams, "config");
-      String templateConfig = ExoConfigurationHelper.readValueParam(initParams, "template-config");
-
       objects.add(new UploadServiceExceptionMapper());
-      objects.add(new IDEConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));
-      objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry, eventListenerList));
       objects.add(new ProjectPrepareExceptionMapper());
 
+      classes.add(TemplatesRestService.class);
       classes.add(LoopbackContentService.class);
+      classes.add(IDEConfigurationService.class);
       classes.add(RequestContextResolver.class);
-      classes.add(RestConversationState.class);
       classes.add(GoogleContactsRestService.class);
       classes.add(ProjectPrepareService.class);
    }

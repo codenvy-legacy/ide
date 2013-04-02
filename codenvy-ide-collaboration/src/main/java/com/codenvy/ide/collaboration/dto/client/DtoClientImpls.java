@@ -28,38 +28,80 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "6b4de95df96270ba0aebd41b859cfdcffeca7134";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "7646fd5a2b173b74234103890b4b0db46740f9ed";
 
 
   public static class ChatCodePointMessageImpl extends ChatMessageImpl implements com.codenvy.ide.collaboration.dto.ChatCodePointMessage {
     protected ChatCodePointMessageImpl() {}
 
     @Override
-    public final native int getCol() /*-{
-      return this["col"];
+    public final native int getEndChar() /*-{
+      return this["endChar"];
     }-*/;
 
-    public final native ChatCodePointMessageImpl setCol(int col) /*-{
-      this["col"] = col;
+    public final native ChatCodePointMessageImpl setEndChar(int endChar) /*-{
+      this["endChar"] = endChar;
       return this;
     }-*/;
 
-    public final native boolean hasCol() /*-{
-      return this.hasOwnProperty("col");
+    public final native boolean hasEndChar() /*-{
+      return this.hasOwnProperty("endChar");
     }-*/;
 
     @Override
-    public final native int getRow() /*-{
-      return this["row"];
+    public final native int getStartChar() /*-{
+      return this["startChar"];
     }-*/;
 
-    public final native ChatCodePointMessageImpl setRow(int row) /*-{
-      this["row"] = row;
+    public final native ChatCodePointMessageImpl setStartChar(int startChar) /*-{
+      this["startChar"] = startChar;
       return this;
     }-*/;
 
-    public final native boolean hasRow() /*-{
-      return this.hasOwnProperty("row");
+    public final native boolean hasStartChar() /*-{
+      return this.hasOwnProperty("startChar");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getPath() /*-{
+      return this["path"];
+    }-*/;
+
+    public final native ChatCodePointMessageImpl setPath(java.lang.String path) /*-{
+      this["path"] = path;
+      return this;
+    }-*/;
+
+    public final native boolean hasPath() /*-{
+      return this.hasOwnProperty("path");
+    }-*/;
+
+    @Override
+    public final native int getStartLine() /*-{
+      return this["startLine"];
+    }-*/;
+
+    public final native ChatCodePointMessageImpl setStartLine(int startLine) /*-{
+      this["startLine"] = startLine;
+      return this;
+    }-*/;
+
+    public final native boolean hasStartLine() /*-{
+      return this.hasOwnProperty("startLine");
+    }-*/;
+
+    @Override
+    public final native int getEndLine() /*-{
+      return this["endLine"];
+    }-*/;
+
+    public final native ChatCodePointMessageImpl setEndLine(int endLine) /*-{
+      this["endLine"] = endLine;
+      return this;
+    }-*/;
+
+    public final native boolean hasEndLine() /*-{
+      return this.hasOwnProperty("endLine");
     }-*/;
 
     public static native ChatCodePointMessageImpl make() /*-{
@@ -837,6 +879,20 @@ public class DtoClientImpls {
     protected UserDetailsImpl() {}
 
     @Override
+    public final native java.lang.String getGivenName() /*-{
+      return this["givenName"];
+    }-*/;
+
+    public final native UserDetailsImpl setGivenName(java.lang.String givenName) /*-{
+      this["givenName"] = givenName;
+      return this;
+    }-*/;
+
+    public final native boolean hasGivenName() /*-{
+      return this.hasOwnProperty("givenName");
+    }-*/;
+
+    @Override
     public final native java.lang.String getDisplayEmail() /*-{
       return this["displayEmail"];
     }-*/;
@@ -876,20 +932,6 @@ public class DtoClientImpls {
 
     public final native boolean hasIsCurrentUser() /*-{
       return this.hasOwnProperty("isCurrentUser");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getGivenName() /*-{
-      return this["givenName"];
-    }-*/;
-
-    public final native UserDetailsImpl setGivenName(java.lang.String givenName) /*-{
-      this["givenName"] = givenName;
-      return this;
-    }-*/;
-
-    public final native boolean hasGivenName() /*-{
-      return this.hasOwnProperty("givenName");
     }-*/;
 
     @Override

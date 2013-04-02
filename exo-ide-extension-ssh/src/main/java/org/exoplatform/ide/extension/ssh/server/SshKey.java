@@ -26,27 +26,23 @@ package org.exoplatform.ide.extension.ssh.server;
  */
 public class SshKey
 {
-   private String path;
-   private byte[] bytes;
+   private final String identifier;
+   private final byte[] bytes;
 
-   public SshKey(String path, byte[] bytes)
+   public SshKey(String identifier, byte[] bytes)
    {
-      this.path = path;
+      this.identifier = identifier;
       this.bytes = bytes;
    }
 
-   protected SshKey()
-   {
-   }
-
    /**
-    * Identifier of key file, e.g. path to file where key stored.
+    * Identifier of SSH key, e.g. path to file where key stored, etc.
     * 
     * @return identifier of key file
     */
    public String getIdentifier()
    {
-      return path;
+      return identifier;
    }
 
    /**
@@ -56,6 +52,8 @@ public class SshKey
     */
    public byte[] getBytes()
    {
-      return bytes;
+      byte[] copy = new byte[bytes.length];
+      System.arraycopy(bytes, 0, copy, 0, copy.length);
+      return copy;
    }
 }

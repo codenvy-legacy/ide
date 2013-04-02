@@ -48,9 +48,6 @@ public class ExpressExceptionMapper implements ExceptionMapper<ExpressException>
       ResponseBuilder rb =
          Response.status(responseStatus).header("JAXRS-Body-Provided", "Error-Message").entity(e.getMessage())
             .type(e.getContentType());
-      int exitCode = e.getExitCode();
-      if (exitCode != -1)
-         rb.header("Express-Exit-Code", exitCode);
       return rb.build();
    }
 }

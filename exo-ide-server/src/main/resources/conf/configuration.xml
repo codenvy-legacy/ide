@@ -11,78 +11,14 @@
 	xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
 	xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-	<!-- *************************************************************************************** ******************************** 
-		Invitations Support ********************************** *************************************************************************************** -->
-
+   <component>
+        <type>org.exoplatform.ide.IDEServiceApplication</type>
+	</component>
+	
+	<!-- JRebel consumer service -->
 	<component>
-		<type>org.exoplatform.ide.invite.IdeInviteMessagePropertiesProvider</type>
+		<type>org.exoplatform.ide.jrebel.server.JRebelConsumerApplication</type>
 	</component>
 
-	<component>
-		<type>org.exoplatform.ide.invite.DummyDSASignatureChecker</type>
-	</component>
-
-	<component>
-		<type>org.exoplatform.ide.googlecontacts.GoogleContactsClient</type>
-	</component>
-
-	<component>
-		<type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
-		<init-params>
-			<properties-param>
-				<name>locations</name>
-			</properties-param>
-		</init-params>
-	</component>
-
-	<component>
-		<type>org.codenvy.mail.MailSenderClient</type>
-	</component>
-
-	<component>
-		<type>org.exoplatform.ide.invite.InviteService</type>
-	</component>
-
-	<component>
-		<key>org.exoplatform.ide.invite.HttpResponseExceptionMapper</key>
-		<type>org.exoplatform.ide.invite.HttpResponseExceptionMapper</type>
-	</component>
-
-	<!-- TemplateResolver configuration -->
-	<component>
-		<key>org.exoplatform.ide.invite.TemplateResolver</key>
-		<type>org.exoplatform.ide.invite.TemplateResolver</type>
-		<init-params>
-			<value-param>
-				<name>template-mail-invitation</name>
-				<value>/template-invitation-mail.html</value>
-			</value-param>
-			<value-param>
-            <name>template-mail-invitation-registered-user</name>
-            <value>/template-mail-invitation-registered-user.html</value>
-         </value-param>
-			<value-param>
-				<name>template-mail-password-restoring</name>
-				<value>/template-mail-password-restoring.html</value>
-			</value-param>
-			<value-param>
-				<name>template-contact-us-mail</name>
-				<value>/template-contact-us-mail.html</value>
-			</value-param>
-		</init-params>
-	</component>
-
-	<component>
-		<type>org.exoplatform.ide.invite.IdeInviteService</type>
-	</component>
-
-	<!-- JRebel profiler service -->
-	<component>
-		<type>org.exoplatform.ide.jrebel.server.JRebelProfilerApplication</type>
-	</component>
-
-	<component>
-		<type>org.exoplatform.ide.jrebel.server.JRebelProfiler</type>
-	</component>
-
+        
 </configuration>

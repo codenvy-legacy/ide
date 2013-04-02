@@ -82,10 +82,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFile() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId).toString();
+      String path = SERVICE_URI + "item/" + fileId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -99,10 +96,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFileByPath() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("itembypath") //
-         .append(filePath).toString();
+      String path = SERVICE_URI + "itembypath" + filePath;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -118,11 +112,7 @@ public class GetItemTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       // No filter - all properties
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId) //
-         .toString();
+      String path = SERVICE_URI + "item/" + fileId;
 
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
@@ -142,14 +132,7 @@ public class GetItemTest extends JcrFileSystemTest
       assertTrue(m.containsKey("MyProperty06"));
 
       // With filter
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId) //
-         .append("?") //
-         .append("propertyFilter=") //
-         .append("MyProperty02") //
-         .toString();
+      path = SERVICE_URI + "item/" + fileId + '?' + "propertyFilter=" + "MyProperty02";
 
       response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
@@ -166,10 +149,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFileNotFound() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId + "_WRONG_ID_").toString();
+      String path = SERVICE_URI + "item/" + fileId + "_WRONG_ID_";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -182,10 +162,7 @@ public class GetItemTest extends JcrFileSystemTest
       ((ExtendedNode)getObjectTestNode).setPermissions(permissions);
       session.save();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId).toString();
+      String path = SERVICE_URI + "item/" + fileId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -194,10 +171,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(folderId).toString();
+      String path = SERVICE_URI + "item/" + folderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -211,10 +185,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFolderByPath() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("itembypath") //
-         .append(folderPath).toString();
+      String path = SERVICE_URI + "itembypath" + folderPath;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -228,13 +199,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFolderByPathWithVersionID() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("itembypath") //
-         .append(folderPath) //
-         .append("?") //
-         .append("versionId=") //
-         .append("1").toString();
+      String path = SERVICE_URI + "itembypath" + folderPath + '?' + "versionId=" + 1;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(400, response.getStatus());

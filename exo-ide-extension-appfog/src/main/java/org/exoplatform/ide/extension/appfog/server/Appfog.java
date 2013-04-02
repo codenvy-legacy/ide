@@ -22,7 +22,12 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.commons.FileUtils;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.JsonParseException;
+import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.commons.ZipUtils;
 import org.exoplatform.ide.extension.appfog.server.json.ApplicationFile;
 import org.exoplatform.ide.extension.appfog.server.json.Crashes;
 import org.exoplatform.ide.extension.appfog.server.json.CreateAppfogApplication;
@@ -42,6 +47,9 @@ import org.exoplatform.ide.extension.appfog.shared.InfraType;
 import org.exoplatform.ide.extension.appfog.shared.Instance;
 import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
 import org.exoplatform.ide.extension.appfog.shared.SystemResources;
+import org.exoplatform.ide.security.paas.Credential;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -50,6 +58,7 @@ import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -60,6 +69,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -82,24 +92,18 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.JsonHelper.*;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
-import static org.exoplatform.ide.commons.ZipUtils.zipDir;
-
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class Appfog
 {
-   static final class Credential
+   static final class AppfogCredential
    {
-      String target;
-      String token;
+      final String target;
+      final String token;
 
-      Credential(String target, String token)
+      AppfogCredential(String target, String token)
       {
          this.target = target;
          this.token = token;
@@ -130,12 +134,13 @@ public class Appfog
 
    private static final Log LOG = ExoLogger.getLogger(Appfog.class);
 
-   private BaseAppfogAuthenticator authenticator;
+   private final AppfogAuthenticator authenticator;
+   private final CredentialStore credentialStore;
 
-   public Appfog(BaseAppfogAuthenticator authenticator) throws IOException, VirtualFileSystemException
+   public Appfog(AppfogAuthenticator authenticator, CredentialStore credentialStore)
    {
       this.authenticator = authenticator;
-
+      this.credentialStore = credentialStore;
       // Create a trust manager that does not validate certificate chains
       TrustManager trustAllManager = new X509TrustManager()
       {
@@ -164,51 +169,85 @@ public class Appfog
       }
    }
 
-   public void setTarget(String server) throws VirtualFileSystemException, IOException
+   public void setTarget(String server) throws CredentialStoreException
    {
-      authenticator.writeTarget(server);
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "appfog", credential);
+      credential.setAttribute("current_target", server);
+      credentialStore.save(userId, "appfog", credential);
    }
 
-   public String getTarget() throws VirtualFileSystemException, IOException
+   public String getTarget() throws CredentialStoreException
    {
-      return authenticator.getTarget();
+      final Credential credential = new Credential();
+      credentialStore.load(getUserId(), "appfog", credential);
+      return credential.getAttribute("current_target");
    }
 
-   public Collection<String> getTargets() throws AppfogException, VirtualFileSystemException, IOException
+   public Collection<String> getTargets() throws CredentialStoreException
    {
-      return authenticator.readCredentials().getTargets();
+      final Credential credential = new Credential();
+      credentialStore.load(getUserId(), "appfog", credential);
+      List<String> targets = new ArrayList<String>(2);
+      for (Map.Entry<String, String> entry : credential.getAttributes().entrySet())
+      {
+         String key = entry.getKey();
+         if (key.startsWith("http://") || key.startsWith("https://"))
+         {
+            targets.add(key);
+         }
+      }
+      return targets;
    }
 
    public void login(String server, String email, String password)
-      throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "appfog", credential);
       if (server == null)
       {
-         server = authenticator.getTarget();
+         server = credential.getAttribute("current_target");
       }
-      authenticator.login(server, email, password);
+      authenticator.login(server, email, password, credential);
+      credentialStore.save(userId, "appfog", credential);
    }
 
-   public void login() throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+   public void login() throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
-      authenticator.login();
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "appfog", credential);
+      authenticator.login(credential);
+      credentialStore.save(userId, "appfog", credential);
    }
 
-   public void logout(String server) throws AppfogException, VirtualFileSystemException, IOException
+   public void logout(String server) throws CredentialStoreException
    {
-      authenticator.logout(server);
+      final Credential credential = new Credential();
+      final String userId = getUserId();
+      credentialStore.load(userId, "appfog", credential);
+      credential.removeAttribute(server);
+      credentialStore.save(userId, "appfog", credential);
+   }
+
+   private String getUserId()
+   {
+      return ConversationState.getCurrent().getIdentity().getUserId();
    }
 
    public SystemInfo systemInfo(String server)
-      throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, IOException
    {
-      return systemInfo(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server));
+      return systemInfo(getCredential(server));
    }
 
-   public SystemInfo systemInfo(Credential credential) throws AppfogException, IOException,
-      ParsingResponseException
+   private SystemInfo systemInfo(AppfogCredential credential)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      SystemInfoImpl systemInfo = fromJson(
+      SystemInfoImpl systemInfo = parseJsonResponse(
          getJson(credential.target + "/info", credential.token, 200), SystemInfoImpl.class, null);
 
       if (systemInfo.getUser() == null)
@@ -235,17 +274,17 @@ public class Appfog
    }
 
    public AppfogApplication applicationInfo(String server, String app, VirtualFileSystem vfs, String projectId)
-      throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return applicationInfo(
          getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
    }
 
-   private AppfogApplication applicationInfo(Credential credential, String app)
-      throws AppfogException, IOException, ParsingResponseException
+   private AppfogApplication applicationInfo(AppfogCredential credential, String app)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      return fromJson(
+      return parseJsonResponse(
          getJson(credential.target + "/apps/" + app, credential.token, 200),
          AppfogApplication.class,
          null
@@ -266,7 +305,7 @@ public class Appfog
                                               String projectId,
                                               URL war,
                                               InfraType infraType)
-      throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
       {
@@ -280,7 +319,7 @@ public class Appfog
       {
          throw new IllegalArgumentException("Location of Appfog server required. ");
       }
-      Credential credential = getCredential(server);
+      AppfogCredential credential = getCredential(server);
 
       return createApplication(credential, app, framework, url, instances, memory, noStart, runtime, command,
          debugMode, vfs, projectId, war, infraType);
@@ -288,7 +327,7 @@ public class Appfog
 
    public static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
 
-   private AppfogApplication createApplication(Credential credential,
+   private AppfogApplication createApplication(AppfogCredential credential,
                                                String app,
                                                String frameworkName,
                                                String appUrl,
@@ -302,7 +341,7 @@ public class Appfog
                                                String projectId,
                                                URL url,
                                                InfraType infraType)
-      throws ParsingResponseException, AppfogException, IOException, VirtualFileSystemException
+      throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       SystemInfo systemInfo = systemInfo(credential);
       SystemResources limits = systemInfo.getLimits();
@@ -325,7 +364,7 @@ public class Appfog
             }
             else
             {
-               path = downloadFile(null, "af_" + app, ".war", url);
+               path = FileUtils.downloadFile(null, "af_" + app, ".war", url);
                cleanup = true; // remove only downloaded file.
             }
          }
@@ -388,7 +427,7 @@ public class Appfog
          }
          if (appUrl == null || appUrl.isEmpty())
          {
-            Matcher m = suggestUrlPattern.matcher(getTarget());
+            Matcher m = suggestUrlPattern.matcher(credential.target);
             m.matches();
             appUrl = app + m.group(4);
          }
@@ -404,9 +443,9 @@ public class Appfog
             infraType.getInfra()
          );
 
-         String json = postJson(credential.target + "/apps", credential.token, toJson(payload), 302);
-         CreateResponse resp = fromJson(json, CreateResponse.class, null);
-         appInfo = fromJson(doRequest(resp.getRedirect(), "GET", credential.token, null, null, 200),
+         String json = postJson(credential.target + "/apps", credential.token, JsonHelper.toJson(payload), 302);
+         CreateResponse resp = parseJsonResponse(json, CreateResponse.class, null);
+         appInfo = parseJsonResponse(doRequest(resp.getRedirect(), "GET", credential.token, null, null, 200),
             AppfogApplication.class, null);
 
          uploadApplication(credential, app, vfs, projectId, path);
@@ -427,7 +466,7 @@ public class Appfog
       {
          if (path != null && cleanup)
          {
-            deleteRecursive(path);
+            FileUtils.deleteRecursive(path);
          }
       }
       return appInfo;
@@ -438,7 +477,7 @@ public class Appfog
                                              DebugMode debugMode,
                                              VirtualFileSystem vfs,
                                              String projectId)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return startApplication(
          getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
@@ -448,11 +487,11 @@ public class Appfog
       );
    }
 
-   private AppfogApplication startApplication(Credential credential,
+   private AppfogApplication startApplication(AppfogCredential credential,
                                               String app,
                                               String debug,
                                               boolean failIfStarted)
-      throws IOException, ParsingResponseException, AppfogException
+      throws AppfogException, ParsingResponseException, IOException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
       String name = appInfo.getName();
@@ -484,7 +523,7 @@ public class Appfog
       {
          appInfo.setState("STARTED"); // Update application state.
          appInfo.setDebug(debug);
-         putJson(credential.target + "/apps/" + name, credential.token, toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + name, credential.token, JsonHelper.toJson(appInfo), 200);
          // Check is application started.
          final int attempts = 30;
          final int sleepTime = 2000;
@@ -523,20 +562,20 @@ public class Appfog
                                String app,
                                VirtualFileSystem vfs,
                                String projectId)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       stopApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
    }
 
-   private void stopApplication(Credential credential, String app, boolean failIfStopped) throws IOException,
-      ParsingResponseException, AppfogException
+   private void stopApplication(AppfogCredential credential, String app, boolean failIfStopped)
+      throws AppfogException, ParsingResponseException, IOException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
       if (!"STOPPED".equals(appInfo.getState()))
       {
          appInfo.setState("STOPPED"); // Update application state.
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
       }
       else if (failIfStopped)
       {
@@ -549,15 +588,15 @@ public class Appfog
                                                DebugMode debugMode,
                                                VirtualFileSystem vfs,
                                                String projectId)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return restartApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
          debugMode == null ? null : debugMode.getMode());
    }
 
-   private AppfogApplication restartApplication(Credential credential, String app, String debug)
-      throws IOException, ParsingResponseException, AppfogException
+   private AppfogApplication restartApplication(AppfogCredential credential, String app, String debug)
+      throws AppfogException, ParsingResponseException, IOException
    {
       stopApplication(credential, app, false);
       return startApplication(credential, app, debug, false);
@@ -568,7 +607,7 @@ public class Appfog
                                  VirtualFileSystem vfs,
                                  String projectId,
                                  URL war)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if ((vfs == null || projectId == null) && war == null)
       {
@@ -579,7 +618,7 @@ public class Appfog
          vfs, projectId, war);
    }
 
-   private void updateApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, URL url)
+   private void updateApplication(AppfogCredential credential, String app, VirtualFileSystem vfs, String projectId, URL url)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
@@ -597,7 +636,7 @@ public class Appfog
             }
             else
             {
-               path = downloadFile(null, "af_" + app, ".war", url);
+               path = FileUtils.downloadFile(null, "af_" + app, ".war", url);
                cleanup = true;
             }
             uploadApplication(credential, app, vfs, projectId, path);
@@ -611,7 +650,7 @@ public class Appfog
       {
          if (path != null && cleanup)
          {
-            deleteRecursive(path);
+            FileUtils.deleteRecursive(path);
          }
       }
 
@@ -627,9 +666,9 @@ public class Appfog
                           String instance,
                           VirtualFileSystem vfs,
                           String projectId)
-      throws AppfogException, VirtualFileSystemException, IOException
+      throws AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
+      AppfogCredential credential = getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
       if (app == null || app.isEmpty())
       {
          app = detectApplicationName(vfs, projectId, true);
@@ -638,7 +677,7 @@ public class Appfog
          instance == null || instance.isEmpty() ? "0" : instance);
    }
 
-   private String getFiles(Credential credential, String app, String path, String instance)
+   private String getFiles(AppfogCredential credential, String app, String path, String instance)
       throws AppfogException, IOException
    {
       return doRequest(
@@ -655,14 +694,14 @@ public class Appfog
                          String instance,
                          VirtualFileSystem vfs,
                          String projectId)
-      throws AppfogException, VirtualFileSystemException, IOException
+      throws AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
+      AppfogCredential credential = getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
       return getLogs(credential, app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
          instance == null || instance.isEmpty() ? "0" : instance);
    }
 
-   private String getLogs(Credential credential, String app, String instance) throws AppfogException, IOException
+   private String getLogs(AppfogCredential credential, String app, String instance) throws AppfogException, IOException
    {
       String[] lines = getFiles(credential, app, "/logs", instance).split("\n");
       StringBuilder logs = new StringBuilder();
@@ -701,7 +740,7 @@ public class Appfog
                       VirtualFileSystem vfs,
                       String projectId,
                       String url)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (url == null)
       {
@@ -711,7 +750,7 @@ public class Appfog
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, url);
    }
 
-   private void mapUrl(Credential credential, String app, String url) throws IOException, ParsingResponseException,
+   private void mapUrl(AppfogCredential credential, String app, String url) throws IOException, ParsingResponseException,
       AppfogException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
@@ -740,7 +779,7 @@ public class Appfog
       // If have something to update then do that.
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
       }
    }
 
@@ -749,7 +788,7 @@ public class Appfog
                         VirtualFileSystem vfs,
                         String projectId,
                         String url)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (url == null)
       {
@@ -759,7 +798,7 @@ public class Appfog
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, url);
    }
 
-   private void unmapUrl(Credential credential, String app, String url) throws IOException, ParsingResponseException,
+   private void unmapUrl(AppfogCredential credential, String app, String url) throws IOException, ParsingResponseException,
       AppfogException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
@@ -774,7 +813,7 @@ public class Appfog
       List<String> uris = appInfo.getUris();
       if (uris != null && uris.size() > 0 && uris.remove(url))
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
       }
    }
 
@@ -783,7 +822,7 @@ public class Appfog
                    VirtualFileSystem vfs,
                    String projectId,
                    int memory)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (memory < 0)
       {
@@ -793,8 +832,8 @@ public class Appfog
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, memory, true);
    }
 
-   private void mem(Credential credential, String app, int memory, boolean restart) throws IOException,
-      ParsingResponseException, AppfogException
+   private void mem(AppfogCredential credential, String app, int memory, boolean restart)
+      throws AppfogException, ParsingResponseException, IOException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
       int currentMem = appInfo.getResources().getMemory();
@@ -811,7 +850,7 @@ public class Appfog
                + " but " + (appInfo.getInstances() * memory) + "M required. ");
          }
          appInfo.getResources().setMemory(memory);
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -823,17 +862,17 @@ public class Appfog
                                           String app,
                                           VirtualFileSystem vfs,
                                           String projectId)
-      throws ParsingResponseException, AppfogException, IOException, VirtualFileSystemException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return applicationInstances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
    }
 
-   private Instance[] applicationInstances(Credential credential, String app)
+   private Instance[] applicationInstances(AppfogCredential credential, String app)
       throws ParsingResponseException, AppfogException, IOException
    {
       InstanceInfo[] instancesInfo =
-         fromJson(getJson(credential.target + "/apps/" + app + "/instances", credential.token, 200),
+         parseJsonResponse(getJson(credential.target + "/apps/" + app + "/instances", credential.token, 200),
             InstancesInfo.class, null).getInstances();
       if (instancesInfo != null && instancesInfo.length > 0)
       {
@@ -853,7 +892,7 @@ public class Appfog
                          VirtualFileSystem vfs,
                          String projectId,
                          String expression)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       instances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, expression, false);
@@ -862,7 +901,7 @@ public class Appfog
    /** Instance update expression pattern. */
    private static final Pattern instanceUpdateExpr = Pattern.compile("([+-])?(\\d+)");
 
-   private void instances(Credential credential, String app, String expression, boolean restart) throws IOException,
+   private void instances(AppfogCredential credential, String app, String expression, boolean restart) throws IOException,
       ParsingResponseException, AppfogException
    {
       Matcher m = instanceUpdateExpr.matcher(expression);
@@ -888,7 +927,7 @@ public class Appfog
       if (currentInst != newInst)
       {
          appInfo.setInstances(newInst);
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -901,15 +940,18 @@ public class Appfog
                                  VirtualFileSystem vfs,
                                  String projectId,
                                  boolean deleteServices)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       deleteApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, deleteServices, vfs, projectId);
    }
 
-   private void deleteApplication(Credential credential, String app, boolean deleteServices, VirtualFileSystem vfs,
+   private void deleteApplication(AppfogCredential credential,
+                                  String app,
+                                  boolean deleteServices,
+                                  VirtualFileSystem vfs,
                                   String projectId)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
       deleteJson(credential.target + "/apps/" + app, credential.token, 200);
@@ -936,18 +978,18 @@ public class Appfog
                                                                     String app,
                                                                     VirtualFileSystem vfs,
                                                                     String projectId)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return applicationStats(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
    }
 
    @SuppressWarnings({"serial", "rawtypes", "unchecked"})
-   private Map<String, AppfogApplicationStatistics> applicationStats(Credential credential, String app)
-      throws IOException, ParsingResponseException, AppfogException
+   private Map<String, AppfogApplicationStatistics> applicationStats(AppfogCredential credential, String app)
+      throws AppfogException, ParsingResponseException, IOException
    {
       Map cloudStats =
-         fromJson(getJson(credential.target + "/apps/" + app + "/stats", credential.token, 200), Map.class,
+         parseJsonResponse(getJson(credential.target + "/apps/" + app + "/stats", credential.token, 200), Map.class,
             new HashMap<String, Stats>(0)
             {
             }.getClass().getGenericSuperclass());
@@ -987,35 +1029,25 @@ public class Appfog
    }
 
    public AppfogApplication[] listApplications(String server)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? getTarget() : server);
-      return fromJson(getJson(credential.target + "/apps", credential.token, 200), AppfogApplication[].class, null);
+      AppfogCredential credential = getCredential(server);
+      return parseJsonResponse(getJson(credential.target + "/apps", credential.token, 200), AppfogApplication[].class, null);
    }
 
-   public AppfogServices services(String server) throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+   public AppfogServices services(String server)
+      throws AppfogException, CredentialStoreException, ParsingResponseException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? getTarget() : server);
+      AppfogCredential credential = getCredential(server);
       return new AppfogServicesImpl(systemServices(credential), provisionedServices(credential));
    }
 
-   private AppfogSystemService[] systemServices(Credential credential) throws IOException, ParsingResponseException,
-      AppfogException
-   {
-      return parseSystemServices(getJson(credential.target + "/info/services", credential.token, 200));
-   }
-
-   private AppfogProvisionedService[] provisionedServices(Credential credential) throws IOException,
-      ParsingResponseException, AppfogException
-   {
-      return fromJson(getJson(credential.target + "/services", credential.token, 200), AppfogProvisionedService[].class, null);
-   }
-
-   private static AppfogSystemService[] parseSystemServices(String json) throws ParsingResponseException
+   private AppfogSystemService[] systemServices(AppfogCredential credential)
+      throws AppfogException, ParsingResponseException, IOException
    {
       try
       {
-         JsonValue jsonServices = parseJson(json);
+         JsonValue jsonServices = JsonHelper.parseJson(getJson(credential.target + "/info/services", credential.token, 200));
          List<AppfogSystemService> result = new ArrayList<AppfogSystemService>();
          for (Iterator<String> types = jsonServices.getKeys(); types.hasNext(); )
          {
@@ -1038,6 +1070,16 @@ public class Appfog
       {
          throw new ParsingResponseException(e.getMessage(), e);
       }
+      catch (JsonParseException e)
+      {
+         throw new ParsingResponseException(e.getMessage(), e);
+      }
+   }
+
+   private AppfogProvisionedService[] provisionedServices(AppfogCredential credential)
+      throws AppfogException, ParsingResponseException, IOException
+   {
+      return parseJsonResponse(getJson(credential.target + "/services", credential.token, 200), AppfogProvisionedService[].class, null);
    }
 
    public AppfogProvisionedService createService(String server,
@@ -1047,7 +1089,7 @@ public class Appfog
                                                  VirtualFileSystem vfs,
                                                  String projectId,
                                                  InfraType infraType)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (service == null || service.isEmpty())
       {
@@ -1058,12 +1100,12 @@ public class Appfog
          service, name, app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, false) : app, infraType);
    }
 
-   private AppfogProvisionedService createService(Credential credential,
+   private AppfogProvisionedService createService(AppfogCredential credential,
                                                   String service,
                                                   String name,
                                                   String app,
                                                   InfraType infraType)
-      throws IOException, ParsingResponseException, AppfogException, VirtualFileSystemException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       AppfogSystemService[] available = systemServices(credential);
       AppfogSystemService target = null;
@@ -1081,11 +1123,11 @@ public class Appfog
       // Generate service name if not specified.
       if (name == null || name.isEmpty())
       {
-         name = generate(service + '-', 8);
+         name = NameGenerator.generate(service + '-', 8);
       }
 
       AppfogCreateService req = new AppfogCreateService(name, target.getType(), service, target.getVersion(), infraType.getInfra());
-      postJson(credential.target + "/services", credential.token, toJson(req), 200);
+      postJson(credential.target + "/services", credential.token, JsonHelper.toJson(req), 200);
 
       // Be sure service available.
       AppfogProvisionedService res = findService(credential, name);
@@ -1098,8 +1140,8 @@ public class Appfog
       return res;
    }
 
-   private AppfogProvisionedService findService(Credential credential, String name) throws IOException,
-      ParsingResponseException, AppfogException
+   private AppfogProvisionedService findService(AppfogCredential credential, String name)
+      throws AppfogException, ParsingResponseException, IOException
    {
       for (AppfogProvisionedService service : provisionedServices(credential))
       {
@@ -1112,20 +1154,20 @@ public class Appfog
    }
 
    public void deleteService(String server, String name)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, IOException
    {
       if (name == null || name.isEmpty())
       {
          throw new IllegalArgumentException("Service name required. ");
       }
-      deleteService(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server), name);
+      deleteService(getCredential(server), name);
    }
 
-   private void deleteService(Credential credential, String name) throws IOException, ParsingResponseException,
-      AppfogException
+   private void deleteService(AppfogCredential appfogCredential, String name)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      findService(credential, name);
-      deleteJson(credential.target + "/services/" + name, credential.token, 200);
+      findService(appfogCredential, name);
+      deleteJson(appfogCredential.target + "/services/" + name, appfogCredential.token, 200);
    }
 
    public void bindService(String server,
@@ -1133,7 +1175,7 @@ public class Appfog
                            String app,
                            VirtualFileSystem vfs,
                            String projectId)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -1143,11 +1185,11 @@ public class Appfog
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
    }
 
-   private void bindService(Credential credential, String name, String app, boolean restart) throws IOException,
-      ParsingResponseException, AppfogException
+   private void bindService(AppfogCredential appfogCredential, String name, String app, boolean restart)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      AppfogApplication appInfo = applicationInfo(credential, app);
-      findService(credential, name);
+      AppfogApplication appInfo = applicationInfo(appfogCredential, app);
+      findService(appfogCredential, name);
       boolean updated = false;
       List<String> services = appInfo.getServices();
       if (services == null)
@@ -1163,10 +1205,10 @@ public class Appfog
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(appfogCredential.target + "/apps/" + app, appfogCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(appfogCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1176,7 +1218,7 @@ public class Appfog
                              String app,
                              VirtualFileSystem vfs,
                              String projectId)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -1186,18 +1228,18 @@ public class Appfog
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
    }
 
-   private void unbindService(Credential credential, String name, String app, boolean restart) throws IOException,
-      ParsingResponseException, AppfogException
+   private void unbindService(AppfogCredential appfogCredential, String name, String app, boolean restart)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      AppfogApplication appInfo = applicationInfo(credential, app);
-      findService(credential, name);
+      AppfogApplication appInfo = applicationInfo(appfogCredential, app);
+      findService(appfogCredential, name);
       List<String> services = appInfo.getServices();
       if (services != null && services.size() > 0 && services.remove(name))
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(appfogCredential.target + "/apps/" + app, appfogCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(appfogCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1208,7 +1250,7 @@ public class Appfog
                               String projectId,
                               String key,
                               String val)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (key == null || key.isEmpty())
       {
@@ -1218,10 +1260,10 @@ public class Appfog
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, key, val, true);
    }
 
-   private void environmentAdd(Credential credential, String app, String key, String val, boolean restart)
-      throws IOException, ParsingResponseException, AppfogException
+   private void environmentAdd(AppfogCredential appfogCredential, String app, String key, String val, boolean restart)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      AppfogApplication appInfo = applicationInfo(credential, app);
+      AppfogApplication appInfo = applicationInfo(appfogCredential, app);
       boolean updated = false;
       List<String> env = appInfo.getEnv();
       String kv = key + "=" + (val == null ? "" : val);
@@ -1238,10 +1280,10 @@ public class Appfog
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(appfogCredential.target + "/apps/" + app, appfogCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(appfogCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1251,7 +1293,7 @@ public class Appfog
                                  VirtualFileSystem vfs,
                                  String projectId,
                                  String key)
-      throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
+      throws ParsingResponseException, AppfogException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if (key == null || key.isEmpty())
       {
@@ -1261,10 +1303,10 @@ public class Appfog
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, key, true);
    }
 
-   private void environmentDelete(Credential credential, String app, String key, boolean restart) throws IOException,
-      ParsingResponseException, AppfogException
+   private void environmentDelete(AppfogCredential appfogCredential, String app, String key, boolean restart)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      AppfogApplication appInfo = applicationInfo(credential, app);
+      AppfogApplication appInfo = applicationInfo(appfogCredential, app);
       boolean updated = false;
       List<String> env = appInfo.getEnv();
       if (env != null && env.size() > 0)
@@ -1282,10 +1324,10 @@ public class Appfog
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
+         putJson(appfogCredential.target + "/apps/" + app, appfogCredential.token, JsonHelper.toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
-            restartApplication(credential, app, appInfo.getMeta().getDebug());
+            restartApplication(appfogCredential, app, appInfo.getMeta().getDebug());
          }
       }
    }
@@ -1300,7 +1342,7 @@ public class Appfog
                               boolean noStart,
                               VirtualFileSystem vfs,
                               String projectId)
-      throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       if ("create".equals(action))
       {
@@ -1313,14 +1355,14 @@ public class Appfog
          {
             throw new IllegalArgumentException("Location of Appfog server required. ");
          }
-         Credential credential = getCredential(server);
+         AppfogCredential appfogCredential = getCredential(server);
 
-         SystemInfo systemInfo = systemInfo(credential);
+         SystemInfo systemInfo = systemInfo(appfogCredential);
          SystemResources limits = systemInfo.getLimits();
          SystemResources usage = systemInfo.getUsage();
 
          checkApplicationNumberLimit(limits, usage);
-         checkApplicationName(credential, app);
+         checkApplicationName(appfogCredential, app);
 
          Framework cfg = null;
          if (frameworkName != null)
@@ -1357,30 +1399,26 @@ public class Appfog
    }
 
    public InfraDetail[] getInfras(String server, VirtualFileSystem vfs, String projectId)
-      throws IOException, VirtualFileSystemException, AppfogException, ParsingResponseException
+      throws AppfogException, ParsingResponseException, CredentialStoreException, VirtualFileSystemException, IOException
    {
       return getInfras(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server));
    }
 
-   private InfraDetail[] getInfras(Credential credential)
+   private InfraDetail[] getInfras(AppfogCredential credential)
       throws AppfogException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.target + "/info/infras", credential.token, 200), InfraDetail[].class, null);
+      return parseJsonResponse(getJson(credential.target + "/info/infras", credential.token, 200), InfraDetail[].class, null);
    }
 
    //-----------------------------------------------------------------------------
 
-   private String detectServer(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException, IOException
+   private String detectServer(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException
    {
       String server = null;
       if (vfs != null && projectId != null)
       {
          Item item = vfs.getItem(projectId, PropertyFilter.valueOf("appfog-target"));
-         server = (String)item.getPropertyValue("appfog-target");
-      }
-      if (server == null)
-      {
-         server = authenticator.getTarget();
+         server = item.getPropertyValue("appfog-target");
       }
       return server;
    }
@@ -1395,13 +1433,13 @@ public class Appfog
    }
 
    private String detectApplicationName(VirtualFileSystem vfs, String projectId, boolean failIfCannotDetect)
-      throws VirtualFileSystemException, IOException
+      throws VirtualFileSystemException
    {
       String app = null;
       if (vfs != null && projectId != null)
       {
          Item item = vfs.getItem(projectId, PropertyFilter.valueOf("appfog-application"));
-         app = (String)item.getPropertyValue("appfog-application");
+         app = item.getPropertyValue("appfog-application");
       }
       if (failIfCannotDetect && (app == null || app.isEmpty()))
       {
@@ -1438,12 +1476,12 @@ public class Appfog
       }
    }
 
-   public void checkApplicationName(Credential credential, String app) throws IOException, ParsingResponseException,
-      AppfogException
+   public void checkApplicationName(AppfogCredential appfogCredential, String app)
+      throws AppfogException, ParsingResponseException, IOException
    {
       try
       {
-         applicationInfo(credential, app);
+         applicationInfo(appfogCredential, app);
          throw new IllegalArgumentException("Application '" + app + "' already exists. Use update or delete. ");
       }
       catch (AppfogException e)
@@ -1467,16 +1505,16 @@ public class Appfog
          "Unsupported framework '" + frameworkName + "'. List of supported frameworks: " + systemInfo.getFrameworks().keySet());
    }
 
-   public RuntimeInfo getRuntimeInfo(String runtime, Credential credential)
+   public RuntimeInfo getRuntimeInfo(String runtime, AppfogCredential appfogCredential)
       throws AppfogException, ParsingResponseException, IOException
    {
-      return (RuntimeInfo)getRuntimes(credential).get(runtime);
+      return (RuntimeInfo)getRuntimes(appfogCredential).get(runtime);
    }
 
-   public Map getRuntimes(Credential credential)
+   public Map getRuntimes(AppfogCredential appfogCredential)
       throws AppfogException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.target + "/info/runtimes", credential.token, 200), Map.class,
+      return parseJsonResponse(getJson(appfogCredential.target + "/info/runtimes", appfogCredential.token, 200), Map.class,
          new HashMap<String, RuntimeInfo>(0)
          {
          }.getClass().getGenericSuperclass());
@@ -1493,33 +1531,46 @@ public class Appfog
       }
    }
 
-   public Crashes applicationCrashes(Credential credential, String app) throws IOException, ParsingResponseException, AppfogException
+   public Crashes applicationCrashes(AppfogCredential appfogCredential, String app)
+      throws AppfogException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.target + "/apps/" + app + "/crashes", credential.token, 200), Crashes.class, null);
+      return parseJsonResponse(getJson(appfogCredential.target + "/apps/" + app + "/crashes", appfogCredential.token, 200), Crashes.class, null);
+   }
+
+   private <O> O parseJsonResponse(String json, Class<O> clazz, Type type) throws ParsingResponseException
+   {
+      try
+      {
+         return JsonHelper.fromJson(json, clazz, type);
+      }
+      catch (JsonParseException e)
+      {
+         throw new ParsingResponseException(e.getMessage(), e);
+      }
    }
 
    //-----------------------------------------------------------------------------
 
-   public String getJson(String url, String authToken, int success) throws AppfogException, IOException,
-      ParsingResponseException
+   public String getJson(String url, String authToken, int success)
+      throws AppfogException, IOException
    {
       return doRequest(url, "GET", authToken, null, null, success);
    }
 
-   public String postJson(String url, String authToken, String body, int success) throws AppfogException,
-      IOException, ParsingResponseException
+   public String postJson(String url, String authToken, String body, int success)
+      throws AppfogException, IOException
    {
       return doRequest(url, "POST", authToken, body, "application/json", success);
    }
 
-   public String putJson(String url, String authToken, String body, int success) throws AppfogException,
-      IOException, ParsingResponseException
+   public String putJson(String url, String authToken, String body, int success)
+      throws AppfogException, IOException
    {
       return doRequest(url, "PUT", authToken, body, "application/json", success);
    }
 
-   public String deleteJson(String url, String authToken, int success) throws AppfogException, IOException,
-      ParsingResponseException
+   public String deleteJson(String url, String authToken, int success)
+      throws AppfogException, IOException
    {
       return doRequest(url, "DELETE", authToken, null, null, success);
    }
@@ -1705,7 +1756,7 @@ public class Appfog
    private static final byte[] PUT = "put".getBytes();
    private static final byte[] CONTENT_TYPE_ZIP = "Content-type: application/octet-stream\r\n\r\n".getBytes();
 
-   public void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, java.io.File path)
+   public void uploadApplication(AppfogCredential appfogCredential, String app, VirtualFileSystem vfs, String projectId, java.io.File path)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
       LOG.debug("uploadApplication START");
@@ -1716,7 +1767,7 @@ public class Appfog
       java.io.File uploadDir = null;
       try
       {
-         uploadDir = createTempDirectory(null, "af_" + app);
+         uploadDir = FileUtils.createTempDirectory(null, "af_" + app);
 
          if (path != null)
          {
@@ -1725,12 +1776,12 @@ public class Appfog
                String name = path.getName();
                if (name.endsWith(".war") || name.endsWith(".zip") || name.endsWith(".jar"))
                {
-                  unzip(path, uploadDir);
+                  ZipUtils.unzip(path, uploadDir);
                }
             }
             else
             {
-               copy(path, uploadDir, null);
+               FileUtils.copy(path, uploadDir, null);
             }
          }
          else
@@ -1738,7 +1789,7 @@ public class Appfog
             Utils.copy(vfs, projectId, uploadDir);
          }
 
-         List<java.io.File> files = list(uploadDir, GIT_FILTER);
+         List<java.io.File> files = FileUtils.list(uploadDir, FileUtils.GIT_FILTER);
 
          long totalSize = 0;
          for (java.io.File f : files)
@@ -1770,8 +1821,8 @@ public class Appfog
             final long timeSHA1 = System.currentTimeMillis() - startSHA1;
             LOG.debug("Count SHA1 for {} files in {} ms", files.size(), timeSHA1);
 
-            resources = fromJson(postJson(credential.target + "/resources", credential.token, toJson(fingerprints), 200),
-               ApplicationFile[].class, null);
+            resources = parseJsonResponse(postJson(appfogCredential.target + "/resources", appfogCredential.token,
+               JsonHelper.toJson(fingerprints), 200), ApplicationFile[].class, null);
 
             String uploadDirPath = uploadDir.getAbsolutePath() + '/';
 
@@ -1790,7 +1841,7 @@ public class Appfog
 
          final long startZIP = System.currentTimeMillis();
          zip = new java.io.File(System.getProperty("java.io.tmpdir"), app + ".zip");
-         zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter()
+         ZipUtils.zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter()
          {
             @Override
             public boolean accept(java.io.File parent, String name)
@@ -1807,10 +1858,10 @@ public class Appfog
          LOG.debug("zip application in {} ms", timeZIP);
 
          // Upload application data.
-         http = (HttpURLConnection)new URL(credential.target + "/apps/" + app + "/application").openConnection();
+         http = (HttpURLConnection)new URL(appfogCredential.target + "/apps/" + app + "/application").openConnection();
          http.setInstanceFollowRedirects(false);
          http.setRequestMethod("POST");
-         http.setRequestProperty("Authorization", credential.token);
+         http.setRequestProperty("Authorization", appfogCredential.token);
          final String boundary = "----------" + System.currentTimeMillis();
          http.setRequestProperty("Content-type", "multipart/form-data; boundary=" + boundary);
          http.setDoOutput(true);
@@ -1825,7 +1876,7 @@ public class Appfog
 
             output.write(NEW_LINE);
             output.write(CONTENT_DISPOSITION_RESOURCES);
-            output.write(toJson(resources).getBytes());
+            output.write(JsonHelper.toJson(resources).getBytes());
 
             output.write(NEW_LINE);
             output.write(HYPHENS);
@@ -1888,7 +1939,7 @@ public class Appfog
       {
          if (uploadDir != null)
          {
-            deleteRecursive(uploadDir);
+            FileUtils.deleteRecursive(uploadDir);
          }
          if (zip != null)
          {
@@ -1904,15 +1955,19 @@ public class Appfog
       }
    }
 
-   public Credential getCredential(String server) throws AppfogException, VirtualFileSystemException,
-      IOException
+   public AppfogCredential getCredential(String server) throws AppfogException, CredentialStoreException
    {
-      AppfogCredentials credentials = authenticator.readCredentials();
-      String token = credentials.getToken(server);
+      final Credential credential = new Credential();
+      credentialStore.load(getUserId(), "appfog", credential);
+      if (server == null)
+      {
+         server = credential.getAttribute("current_target");
+      }
+      String token = credential.getAttribute(server);
       if (token == null)
       {
          throw new AppfogException(200, 200, "Authentication required.\n", "text/plain");
       }
-      return new Credential(server, token);
+      return new AppfogCredential(server, token);
    }
 }

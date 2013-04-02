@@ -24,7 +24,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
-import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
@@ -33,6 +32,7 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.git.shared.Status;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -381,10 +381,11 @@ public abstract class GitClientService
     * @param project project (root of GIT repository)
     * @param message commit log message
     * @param all automatically stage files that have been modified and deleted
+    * @param amend indicates that previous commit must be overwritten
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void commit(String vfsId, ProjectModel project, String message, boolean all,
+   public abstract void commit(String vfsId, ProjectModel project, String message, boolean all, boolean amend,
       AsyncRequestCallback<Revision> callback) throws RequestException;
 
    /**
@@ -395,10 +396,11 @@ public abstract class GitClientService
     * @param project project (root of GIT repository)
     * @param message commit log message
     * @param all automatically stage files that have been modified and deleted
+    * @param amend indicates that previous commit must be overwritten
     * @param callback callback
     * @throws WebSocketException
     */
-   public abstract void commitWS(String vfsId, ProjectModel project, String message, boolean all,
+   public abstract void commitWS(String vfsId, ProjectModel project, String message, boolean all, boolean amend,
       RequestCallback<Revision> callback) throws WebSocketException;
 
    /**
@@ -482,12 +484,10 @@ public abstract class GitClientService
     * @param vfsId virtual file system id
     * @param projectid project's id (root of GIT repository)
     * @param shortFormat to show in short format or not
-    * @param fileFilter file filter to show status. It may be either list of file names to show status or name of directory to
-    *           show all files under them.
     * @param callback callback
     */
-   public abstract void statusText(String vfsId, String projectid, boolean shortFormat, String[] fileFilter,
-      AsyncRequestCallback<StatusResponse> callback) throws RequestException;
+   public abstract void statusText(String vfsId, String projectid, boolean shortFormat,
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Gets the working tree status : list of untracked, changed not commited and changed not updated.
@@ -496,7 +496,7 @@ public abstract class GitClientService
     * @param projectid project's id (root of GIT repository)
     * @param callback callback
     */
-   public abstract void status(String vfsId, String projectid, AsyncRequestCallback<StatusResponse> callback)
+   public abstract void status(String vfsId, String projectid, AsyncRequestCallback<Status> callback)
       throws RequestException;
 
    /**

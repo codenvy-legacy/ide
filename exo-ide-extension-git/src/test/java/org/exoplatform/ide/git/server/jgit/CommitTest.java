@@ -97,7 +97,7 @@ public class CommitTest extends BaseTest
       // Remove.
       delete(new File(repository.getWorkTree(), "README.txt"));
 
-      CommitRequest request = new CommitRequest("update file2", true);
+      CommitRequest request = new CommitRequest("update file2", true, false);
       Revision revision = getDefaultConnection().commit(request);
 
       RevCommit revCommit = git.log().call().iterator().next();

@@ -50,7 +50,7 @@ public class GetAvailableFileSystemsTest extends JcrFileSystemTest
       VirtualFileSystemInfo vfsInfo = null;
       for (VirtualFileSystemInfo e : entity)
       {
-         if (e.getId().equals(WORKSPACE_NAME))
+         if (e.getId().equals(REPOSITORY_NAME))
          {
             if (vfsInfo != null)
                fail("More then one VFS with the same ID found. ");
@@ -64,7 +64,7 @@ public class GetAvailableFileSystemsTest extends JcrFileSystemTest
       assertEquals(QueryCapability.BOTHCOMBINED, vfsInfo.getQueryCapability());
       assertEquals(IdentityConstants.ANONIM, vfsInfo.getAnonymousPrincipal());
       assertEquals(IdentityConstants.ANY, vfsInfo.getAnyPrincipal());
-      assertEquals(WORKSPACE_NAME, vfsInfo.getId());
+      assertEquals(REPOSITORY_NAME, vfsInfo.getId());
       BasicPermissions[] basicPermissions = BasicPermissions.values();
       List<String> expectedPermissions = new ArrayList<String>(basicPermissions.length);
       for (BasicPermissions bp : basicPermissions)

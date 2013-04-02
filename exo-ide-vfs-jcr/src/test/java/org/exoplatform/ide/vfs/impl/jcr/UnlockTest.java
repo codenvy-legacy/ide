@@ -64,14 +64,7 @@ public class UnlockTest extends JcrFileSystemTest
 
    public void testUnlockFile() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("unlock/") //
-         .append(fileID) //
-         .append("?") //
-         .append("lockToken=") //
-         .append(fileLockToken) //
-         .toString();
+      String path = SERVICE_URI + "unlock/" + fileID + '?' + "lockToken=" + fileLockToken;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       Node node = ((ExtendedSession)session).getNodeByIdentifier(fileID);
@@ -81,11 +74,7 @@ public class UnlockTest extends JcrFileSystemTest
    public void testUnlockFileNoLockToken() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("unlock/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "unlock/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -94,14 +83,7 @@ public class UnlockTest extends JcrFileSystemTest
    public void testUnlockFileWrongLockToken() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("unlock/") //
-         .append(fileID) //
-         .append("?") //
-         .append("lockToken=") //
-         .append(fileLockToken + "_WRONG") //
-         .toString();
+      String path = SERVICE_URI + "unlock/" + fileID + '?' + "lockToken=" + fileLockToken + "_WRONG";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -117,11 +99,7 @@ public class UnlockTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       session.save();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("unlock/") //
-         .append(((ExtendedNode)fileNode).getIdentifier()) //
-         .toString();
+      String path = SERVICE_URI + "unlock/" + ((ExtendedNode)fileNode).getIdentifier();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.exoplatform.ide</groupId>
 		<artifactId>exo-ide-parent</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
+		<version>2.1.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.exoplatform.ide</groupId>
 	<artifactId>exo-ide-packaging-application-war</artifactId>
@@ -101,6 +101,7 @@
      <dependency>
         <groupId>org.exoplatform.ide</groupId>
         <artifactId>codenvy-ide-collaboration</artifactId>
+        <version>${project.version}</version>
      </dependency>
 
       <dependency>
@@ -159,11 +160,6 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>eclipse-jdt-core</artifactId>
             </exclusion>
-
-            <exclusion>
-            	<artifactId>exo.ws.rest.ext</artifactId>
-            	<groupId>org.exoplatform.ws</groupId>
-            </exclusion>
 			</exclusions>
 		</dependency>
 
@@ -185,18 +181,7 @@
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
-			<artifactId>exo-ide-extension-chromattic</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-cloudbees</artifactId>
-         <!--exclusions>
-            <exclusion>
-               <artifactId>xstream</artifactId>
-               <groupId>com.thoughtworks.xstream</groupId>
-            </exclusion>
-         </exclusions-->
 		</dependency>
 
 		<dependency>
@@ -291,22 +276,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.ext</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-		
-		
-                <dependency>
-                 <groupId>org.exoplatform.ws</groupId>
-                 <artifactId>exo.ws.rest.ext</artifactId>
-             </dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>

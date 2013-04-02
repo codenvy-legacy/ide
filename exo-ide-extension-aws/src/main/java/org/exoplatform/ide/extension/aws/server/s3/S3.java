@@ -19,9 +19,7 @@
 package org.exoplatform.ide.extension.aws.server.s3;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.BucketVersioningConfiguration;
@@ -49,7 +47,6 @@ import com.amazonaws.services.s3.model.S3VersionSummary;
 import com.amazonaws.services.s3.model.SetBucketAclRequest;
 import com.amazonaws.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.amazonaws.services.s3.model.VersionListing;
-import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
@@ -65,6 +62,8 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Permission;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.extension.aws.shared.s3.UpdateAccessControlRequest;
+import org.exoplatform.ide.security.paas.CredentialStore;
+import org.exoplatform.ide.security.paas.CredentialStoreException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -84,30 +83,30 @@ import java.util.Set;
  */
 public class S3 extends AWSClient
 {
-   public S3(AWSAuthenticator authenticator)
+
+   public S3(CredentialStore credentialStore)
    {
-      super(authenticator);
+      super(credentialStore);
    }
 
    /**
     * Creates a new Amazon S3 bucket in the specified region. US region by default.
     * To confirm creating bucket there is some constrains:
-    *    - Bucket names should not contain underscores
-    *    - Bucket names should be between 3 and 63 characters long
-    *    - Bucket names should not end with a dash
-    *    - Bucket names cannot contain uppercase characters
+    * - Bucket names should not contain underscores
+    * - Bucket names should be between 3 and 63 characters long
+    * - Bucket names should not end with a dash
+    * - Bucket names cannot contain uppercase characters
     *
     * @param name
     *    name of the bucket
     * @param region
     *    region, where bucket must be created
     *    valid values: null | us-west-1 | us-west-2 | EU | ap-southeast-1 | ap-northeast-1 | sa-east-1
-    * @return
-    *    the newly created bucket with provided information
-    * @throws AWSException
+    * @return the newly created bucket with provided information
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public S3Bucket createBucket(String name, S3Region region) throws AWSException
+   public S3Bucket createBucket(String name, S3Region region) throws AWSException, CredentialStoreException
    {
       try
       {
@@ -138,12 +137,11 @@ public class S3 extends AWSClient
    /**
     * Returns list of all Amazon S3 buckets that the authenticated user owns
     *
-    * @return
-    *    a list of all of the Amazon S3 buckets with provided information owned by the authenticated user
-    * @throws AWSException
+    * @return a list of all of the Amazon S3 buckets with provided information owned by the authenticated user
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<S3Bucket> listBuckets() throws AWSException
+   public List<S3Bucket> listBuckets() throws AWSException, CredentialStoreException
    {
       try
       {
@@ -182,10 +180,10 @@ public class S3 extends AWSClient
     *
     * @param name
     *    S3 bucket name which will deleted
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void deleteBucket(String name) throws AWSException
+   public void deleteBucket(String name) throws AWSException, CredentialStoreException
    {
       try
       {
@@ -213,12 +211,13 @@ public class S3 extends AWSClient
     * @param data
     *    data location from which we take stream
     * @return S3 object description
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     * @throws java.io.IOException
     *    if any i/o error occurs
     */
-   public NewS3Object putObject(String s3Bucket, String s3Key, URL data) throws AWSException, IOException
+   public NewS3Object putObject(String s3Bucket, String s3Key, URL data)
+      throws AWSException, IOException, CredentialStoreException
    {
       URLConnection conn = null;
       try
@@ -258,15 +257,14 @@ public class S3 extends AWSClient
     *    media type of file to upload
     * @param length
     *    size in bytes for file to upload
-    * @return
-    *    a result object containing the information returned by Amazon S3 for the newly created object.
-    * @throws AWSException
+    * @return a result object containing the information returned by Amazon S3 for the newly created object.
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
-    * @throws IOException
+    * @throws java.io.IOException
     *    if any i/o error occurs
     */
    public NewS3Object putObject(String s3Bucket, String s3Key, InputStream stream, String mediaType, long length)
-      throws AWSException, IOException
+      throws AWSException, IOException, CredentialStoreException
    {
       try
       {
@@ -291,15 +289,15 @@ public class S3 extends AWSClient
     * @param projectId
     *    id of project in Codenvy virtual file system
     * @return S3 object description
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
     *    if any VirtualFileSystem error occurs
-    * @throws IOException
+    * @throws java.io.IOException
     *    if any i/o error occurs
     */
    public NewS3Object uploadProject(String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
-      throws AWSException, VirtualFileSystemException, IOException
+      throws AWSException, VirtualFileSystemException, IOException, CredentialStoreException
    {
       ContentStream zippedProject = vfs.exportZip(projectId);
       try
@@ -358,12 +356,12 @@ public class S3 extends AWSClient
     *    the key marker indicating where listing results should begin, must be equals or greater 0
     * @param maxKeys
     *    the maximum number of results to return, if max keys -1 then no limit to show objects in result set
-    * @return
-    *    result object containing S3 bucket name and listing objects in this bucket
-    * @throws AWSException
+    * @return result object containing S3 bucket name and listing objects in this bucket
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys) throws AWSException
+   public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys)
+      throws AWSException, CredentialStoreException
    {
       try
       {
@@ -419,10 +417,10 @@ public class S3 extends AWSClient
     *    S3 bucket name
     * @param s3key
     *    key, where object is stored
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void deleteObject(String s3Bucket, String s3key) throws AWSException
+   public void deleteObject(String s3Bucket, String s3key) throws AWSException, CredentialStoreException
    {
       try
       {
@@ -446,12 +444,11 @@ public class S3 extends AWSClient
     *    S3 bucket name
     * @param s3Key
     *    the key of object to be read
-    * @return
-    *    result object containing stream, content type and last modification date for object to be read
-    * @throws AWSException
+    * @return result object containing stream, content type and last modification date for object to be read
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public S3Content getObjectContent(String s3Bucket, String s3Key) throws AWSException
+   public S3Content getObjectContent(String s3Bucket, String s3Key) throws AWSException, CredentialStoreException
    {
       try
       {
@@ -486,10 +483,11 @@ public class S3 extends AWSClient
     *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#OFF S3VersioningStatus.OFF}
     *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#SUSPENDED S3VersioningStatus.SUSPENDED}
     *    {@see org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#ENABLED S3VersioningStatus.ENABLED}
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void setVersioningStatus(String s3Bucket, S3VersioningStatus status) throws AWSException
+   public void setVersioningStatus(String s3Bucket, S3VersioningStatus status)
+      throws AWSException, CredentialStoreException
    {
       try
       {
@@ -514,10 +512,11 @@ public class S3 extends AWSClient
     *    S3 bucket name
     * @param s3Keys
     *    list of objects which should be deleted
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void deleteObjects(String s3Bucket, List<S3KeyVersions> s3Keys) throws AWSException
+   public void deleteObjects(String s3Bucket, List<S3KeyVersions> s3Keys)
+      throws AWSException, CredentialStoreException
    {
       try
       {
@@ -553,10 +552,11 @@ public class S3 extends AWSClient
     *    name of the S3 key in the bucket
     * @param versionId
     *    version ID to be deleted
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void deleteVersion(String s3Bucket, String s3Key, String versionId) throws AWSException
+   public void deleteVersion(String s3Bucket, String s3Key, String versionId)
+      throws AWSException, CredentialStoreException
    {
       try
       {
@@ -588,9 +588,8 @@ public class S3 extends AWSClient
     *    (optional) causes keys that contain the same string between the prefix and first occurrence of the delimiter
     * @param maxResults
     *    (optional) the maximum numbers of results to return
-    * @return
-    *    list of objects that describes key, containing info about version ID, owner, last modification date etc.
-    * @throws AWSException
+    * @return list of objects that describes key, containing info about version ID, owner, last modification date etc.
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public List<S3ObjectVersion> listVersions(String s3Bucket,
@@ -598,7 +597,7 @@ public class S3 extends AWSClient
                                              String keyMarker,
                                              String versionIdMarker,
                                              String delimiter,
-                                             Integer maxResults) throws AWSException
+                                             Integer maxResults) throws AWSException, CredentialStoreException
    {
       try
       {
@@ -660,11 +659,12 @@ public class S3 extends AWSClient
     *    name of the S3 bucket
     * @param s3UpdateAccessControls
     *    object contains lists with user permissions which should be added and deleted from Access Control List
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public void updateBucketAcl(String s3Bucket,
-                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls)
+      throws AWSException, CredentialStoreException
    {
       try
       {
@@ -687,13 +687,14 @@ public class S3 extends AWSClient
     *    (optional) version ID of the S3 key, if not defined it uses the latest version of key
     * @param s3UpdateAccessControls
     *    object contains lists with user permissions which should be added and deleted from Access Control List
-    * @throws AWSException
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
    public void updateObjectAcl(String s3Bucket,
                                String s3Key,
                                String versionId,
-                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls)
+      throws AWSException, CredentialStoreException
    {
       try
       {
@@ -749,12 +750,11 @@ public class S3 extends AWSClient
     *
     * @param s3Bucket
     *    name of the S3 bucket
-    * @return
-    *    list contains information about user, his identity and permission for this bucket
-    * @throws AWSException
+    * @return list contains information about user, his identity and permission for this bucket
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<S3AccessControl> getBucketAcl(String s3Bucket) throws AWSException
+   public List<S3AccessControl> getBucketAcl(String s3Bucket) throws AWSException, CredentialStoreException
    {
       try
       {
@@ -775,12 +775,12 @@ public class S3 extends AWSClient
     *    name of the S3 key
     * @param versionId
     *    (optional) version ID of the S3 key, if not defined it uses the latest version of key
-    * @return
-    *    list contains information about user, his identity and permission for this key
-    * @throws AWSException
+    * @return list contains information about user, his identity and permission for this key
+    * @throws org.exoplatform.ide.extension.aws.server.AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<S3AccessControl> getObjectAcl(String s3Bucket, String s3Key, String versionId) throws AWSException
+   public List<S3AccessControl> getObjectAcl(String s3Bucket, String s3Key, String versionId)
+      throws AWSException, CredentialStoreException
    {
       try
       {
@@ -851,15 +851,5 @@ public class S3 extends AWSClient
       }
 
       return grants;
-   }
-
-   protected AmazonS3 getS3Client() throws AWSException
-   {
-      final AWSCredentials credentials = authenticator.getCredentials();
-      if (credentials == null)
-      {
-         throw new AWSException("Authentication required.");
-      }
-      return new AmazonS3Client(credentials);
    }
 }

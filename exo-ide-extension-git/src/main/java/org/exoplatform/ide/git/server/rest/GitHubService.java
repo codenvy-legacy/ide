@@ -19,21 +19,16 @@
 package org.exoplatform.ide.git.server.rest;
 
 import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.extension.ssh.server.SshKeyStoreException;
 import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
-import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
+
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -70,27 +65,15 @@ public class GitHubService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public GitHubRepository[] listRepositoriesByUser(
-      @QueryParam("username") String userName) throws IOException, GitHubException, ParsingResponseException,
-      InvalidArgumentException
+      @QueryParam("username") String userName) throws IOException, GitHubException, ParsingResponseException
    {
       return github.listRepositories(userName);
-   }
-
-   @Path("login")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void login(
-      Map<String, String> credentials) throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
-   {
-      github.login(new GitHubCredentials(credentials.get("login"), credentials.get("password")));
    }
 
    @Path("list")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
+   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException
    {
       return github.listRepositories();
    }
@@ -100,7 +83,7 @@ public class GitHubService
    @Produces(MediaType.APPLICATION_JSON)
    public Collaborators collaborators(@PathParam("user") String user,
                                       @PathParam("repository") String repository) throws IOException,
-      GitHubException, ParsingResponseException, VirtualFileSystemException
+      GitHubException, ParsingResponseException
    {
       return github.getCollaborators(user, repository);
    }
@@ -108,46 +91,14 @@ public class GitHubService
    @GET
    @Path("token/{userid}")
    @Produces(MediaType.TEXT_PLAIN)
-   public String getToken(
-      @PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
+   public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException
    {
-      final String token = oauthTokenProvider.getToken("github", userId);
-
-      if (token == null || token.isEmpty())
-      {
-         return null;
-      }
-
-      //need to check if token which stored is valid for requests, then if valid - we send it to user
-      String tokenVerifyUrl = "https://api.github.com/?access_token=" + token;
-      HttpURLConnection http = null;
-      try
-      {
-         http = (HttpURLConnection)new URL(tokenVerifyUrl).openConnection();
-         http.setInstanceFollowRedirects(false);
-         http.setRequestMethod("GET");
-         http.setRequestProperty("Accept", "application/json");
-
-         if (http.getResponseCode() == 401)
-         {
-            return null;
-         }
-      }
-      finally
-      {
-         if (http != null)
-         {
-            http.disconnect();
-         }
-      }
-
-      return token;
+      return oauthTokenProvider.getToken("github", userId);
    }
 
    @POST
    @Path("ssh/generate")
-   public void updateSSHKey() throws VirtualFileSystemException, IOException, GitHubException, ParsingResponseException
+   public void updateSSHKey() throws SshKeyStoreException, IOException, GitHubException, ParsingResponseException
    {
       github.generateGitHubSshKey();
    }
