@@ -30,24 +30,20 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class ExpressExceptionMapper implements ExceptionMapper<ExpressException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(ExpressException e)
-   {
-      if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage()))
-         return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
-            .entity(e.getMessage()).type(e.getContentType()).build();
-      
-      //replace HTTP status 401 to other it because this status means Required Authorization on IDE app    
-      int responseStatus = e.getResponseStatus() == 401 ? 400 : e.getResponseStatus(); 
+public class ExpressExceptionMapper implements ExceptionMapper<ExpressException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(ExpressException e) {
+        if (e.getResponseStatus() == 200 && "Authentication required.\n".equals(e.getMessage()))
+            return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Authentication-required")
+                           .entity(e.getMessage()).type(e.getContentType()).build();
 
-      ResponseBuilder rb =
-         Response.status(responseStatus).header("JAXRS-Body-Provided", "Error-Message").entity(e.getMessage())
-            .type(e.getContentType());
-      return rb.build();
-   }
+        //replace HTTP status 401 to other it because this status means Required Authorization on IDE app
+        int responseStatus = e.getResponseStatus() == 401 ? 400 : e.getResponseStatus();
+
+        ResponseBuilder rb =
+                Response.status(responseStatus).header("JAXRS-Body-Provided", "Error-Message").entity(e.getMessage())
+                        .type(e.getContentType());
+        return rb.build();
+    }
 }

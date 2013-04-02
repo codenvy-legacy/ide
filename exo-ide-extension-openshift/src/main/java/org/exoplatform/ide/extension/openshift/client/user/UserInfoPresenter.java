@@ -64,300 +64,253 @@ import java.util.List;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 2:38:17 PM anya $
- * 
  */
-public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandler, ViewClosedHandler, LoggedInHandler
-{
-   interface Display extends IsView
-   {
-      /**
-       * Get Ok button click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getOkButton();
+public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandler, ViewClosedHandler, LoggedInHandler {
+    interface Display extends IsView {
+        /**
+         * Get Ok button click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getOkButton();
 
-      /**
-       * Get login field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getLoginField();
+        /**
+         * Get login field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<String> getLoginField();
 
-      /**
-       * Get domain field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getDomainField();
+        /**
+         * Get domain field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<String> getDomainField();
 
-      /**
-       * Get grid with application's information.
-       * 
-       * @return {@link ListGridItem}
-       */
-      ListGridItem<Property> getApplicationInfoGrid();
+        /**
+         * Get grid with application's information.
+         *
+         * @return {@link ListGridItem}
+         */
+        ListGridItem<Property> getApplicationInfoGrid();
 
-      /**
-       * Get grid with applications.
-       * 
-       * @return {@link ListGridItem}
-       */
-      ListGridItem<AppInfo> getApplicationGrid();
+        /**
+         * Get grid with applications.
+         *
+         * @return {@link ListGridItem}
+         */
+        ListGridItem<AppInfo> getApplicationGrid();
 
-      /**
-       * Add handler for delete application button click.
-       * 
-       * @param handler
-       */
-      void addDeleteButtonSelectionHandler(SelectionHandler<AppInfo> handler);
+        /**
+         * Add handler for delete application button click.
+         *
+         * @param handler
+         */
+        void addDeleteButtonSelectionHandler(SelectionHandler<AppInfo> handler);
 
-      /**
-       * Clear application's properties in grid.
-       */
-      void clearApplicationInfo();
-   }
+        /** Clear application's properties in grid. */
+        void clearApplicationInfo();
+    }
 
-   private Display display;
+    private Display display;
 
-   /**
-    *
-    */
-   public UserInfoPresenter()
-   {
-      IDE.addHandler(ShowUserInfoEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public UserInfoPresenter() {
+        IDE.addHandler(ShowUserInfoEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Bind presenter with display.
-    */
-   public void bindDisplay()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getApplicationGrid().addSelectionHandler(new SelectionHandler<AppInfo>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<AppInfo> event)
-         {
-            if (event.getSelectedItem() != null)
-            {
-               displayAppInfo(event.getSelectedItem());
-            }
-            else
-            {
-               display.clearApplicationInfo();
-            }
-         }
-      });
-
-      display.getApplicationGrid().addValueChangeHandler(new ValueChangeHandler<List<AppInfo>>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<List<AppInfo>> event)
-         {
-            if (event.getValue() == null || event.getValue().size() == 0)
-            {
-               display.clearApplicationInfo();
-            }
-         }
-      });
-
-      display.addDeleteButtonSelectionHandler(new SelectionHandler<AppInfo>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<AppInfo> event)
-         {
-            askDeleteApplication(event.getSelectedItem().getName());
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoHandler#onShowUserInfo(org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoEvent)
-    */
-   @Override
-   public void onShowUserInfo(ShowUserInfoEvent event)
-   {
-      getUserInfo();
-   }
-
-   /**
-    * Get user's information.
-    */
-   protected void getUserInfo()
-   {
-      try
-      {
-         AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.rhUserInfo();
-         AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
-         OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller)
-         {
+    /** Bind presenter with display. */
+    public void bindDisplay() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
 
             @Override
-            protected void onSuccess(RHUserInfo result)
-            {
-               if (display == null)
-               {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  IDE.getInstance().openView(display.asView());
-               }
-               display.getLoginField().setValue(result.getRhlogin());
-               display.getDomainField().setValue(result.getNamespace());
-               display.getApplicationGrid().setValue(result.getApps());
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
             }
+        });
 
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
-               {
-                  ServerException serverException = (ServerException)exception;
-                  if (HTTPStatus.OK == serverException.getHTTPStatus()
-                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                  {
-                     addLoggedInHandler();
-                     IDE.fireEvent(new LoginEvent());
-                     return;
-                  }
-               }
-               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                  .getUserInfoFail()));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
-      }
-   }
-
-   /**
-    * Display application's properties.
-    * 
-    * @param appInfo
-    */
-   protected void displayAppInfo(AppInfo appInfo)
-   {
-      List<Property> properties = new ArrayList<Property>();
-      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), appInfo.getName()));
-      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), appInfo.getType()));
-      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), "<a href =\""
-         + appInfo.getPublicUrl() + "\" target=\"_blank\">" + appInfo.getPublicUrl() + "</a>"));
-      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), appInfo.getGitUrl()));
-      String time =
-         DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date((long)appInfo.getCreationTime()));
-      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
-      display.getApplicationInfoGrid().setValue(properties);
-   }
-
-   /**
-    * Register {@link LoggedInHandler} handler.
-    */
-   protected void addLoggedInHandler()
-   {
-      IDE.addHandler(LoggedInEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         getUserInfo();
-      }
-   }
-
-   /**
-    * Confirm the deleting of the application on OpenShift.
-    * 
-    * @param name application's name
-    */
-   protected void askDeleteApplication(final String name)
-   {
-      Dialogs.getInstance().ask(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
-         OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplication(name), new BooleanValueReceivedHandler()
-         {
+        display.getApplicationGrid().addSelectionHandler(new SelectionHandler<AppInfo>() {
 
             @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value != null && value)
-               {
-                  doDeleteApplication(name);
-               }
+            public void onSelection(SelectionEvent<AppInfo> event) {
+                if (event.getSelectedItem() != null) {
+                    displayAppInfo(event.getSelectedItem());
+                } else {
+                    display.clearApplicationInfo();
+                }
             }
-         });
-   }
+        });
 
-   /**
-    * Perform deleting application on OpenShift.
-    * 
-    * @param name application's name
-    */
-   protected void doDeleteApplication(final String name)
-   {
-      try
-      {
-         OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), null,
-            new AsyncRequestCallback<String>()
-            {
+        display.getApplicationGrid().addValueChangeHandler(new ValueChangeHandler<List<AppInfo>>() {
 
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(
-                     OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name), Type.INFO));
-                  getUserInfo();
-               }
+            @Override
+            public void onValueChange(ValueChangeEvent<List<AppInfo>> event) {
+                if (event.getValue() == null || event.getValue().size() == 0) {
+                    display.clearApplicationInfo();
+                }
+            }
+        });
 
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                     .deleteApplicationFail(name)));
-               }
+        display.addDeleteButtonSelectionHandler(new SelectionHandler<AppInfo>() {
+
+            @Override
+            public void onSelection(SelectionEvent<AppInfo> event) {
+                askDeleteApplication(event.getSelectedItem().getName());
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.openshift.client.user.ShowUserInfoHandler#onShowUserInfo(org.exoplatform.ide.extension
+     * .openshift.client.user.ShowUserInfoEvent) */
+    @Override
+    public void onShowUserInfo(ShowUserInfoEvent event) {
+        getUserInfo();
+    }
+
+    /** Get user's information. */
+    protected void getUserInfo() {
+        try {
+            AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.rhUserInfo();
+            AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
+            OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller) {
+
+                @Override
+                protected void onSuccess(RHUserInfo result) {
+                    if (display == null) {
+                        display = GWT.create(Display.class);
+                        bindDisplay();
+                        IDE.getInstance().openView(display.asView());
+                    }
+                    display.getLoginField().setValue(result.getRhlogin());
+                    display.getDomainField().setValue(result.getNamespace());
+                    display.getApplicationGrid().setValue(result.getApps());
+                }
+
+                /**
+                 * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                 */
+                @Override
+                protected void onFailure(Throwable exception) {
+                    if (exception instanceof ServerException) {
+                        ServerException serverException = (ServerException)exception;
+                        if (HTTPStatus.OK == serverException.getHTTPStatus()
+                            && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                            addLoggedInHandler();
+                            IDE.fireEvent(new LoginEvent());
+                            return;
+                        }
+                    }
+                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                 .getUserInfoFail()));
+                }
             });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-            .deleteApplicationFail(name)));
-      }
-   }
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
+        }
+    }
+
+    /**
+     * Display application's properties.
+     *
+     * @param appInfo
+     */
+    protected void displayAppInfo(AppInfo appInfo) {
+        List<Property> properties = new ArrayList<Property>();
+        properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), appInfo.getName()));
+        properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), appInfo.getType()));
+        properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), "<a href =\""
+                                                                                                     + appInfo.getPublicUrl() +
+                                                                                                     "\" target=\"_blank\">" +
+                                                                                                     appInfo.getPublicUrl() + "</a>"));
+        properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), appInfo.getGitUrl()));
+        String time =
+                DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date((long)appInfo.getCreationTime()));
+        properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationCreationTime(), time));
+        display.getApplicationInfoGrid().setValue(properties);
+    }
+
+    /** Register {@link LoggedInHandler} handler. */
+    protected void addLoggedInHandler() {
+        IDE.addHandler(LoggedInEvent.TYPE, this);
+    }
+
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
+     * .client.login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        if (!event.isFailed()) {
+            getUserInfo();
+        }
+    }
+
+    /**
+     * Confirm the deleting of the application on OpenShift.
+     *
+     * @param name
+     *         application's name
+     */
+    protected void askDeleteApplication(final String name) {
+        Dialogs.getInstance().ask(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
+                                  OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplication(name), new BooleanValueReceivedHandler() {
+
+            @Override
+            public void booleanValueReceived(Boolean value) {
+                if (value != null && value) {
+                    doDeleteApplication(name);
+                }
+            }
+        });
+    }
+
+    /**
+     * Perform deleting application on OpenShift.
+     *
+     * @param name
+     *         application's name
+     */
+    protected void doDeleteApplication(final String name) {
+        try {
+            OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), null,
+                                                                    new AsyncRequestCallback<String>() {
+
+                                                                        @Override
+                                                                        protected void onSuccess(String result) {
+                                                                            IDE.fireEvent(new OutputEvent(
+                                                                                    OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                      .deleteApplicationSuccess(name),
+                                                                                    Type.INFO));
+                                                                            getUserInfo();
+                                                                        }
+
+                                                                        /**
+                                                                         * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                                                                         */
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception,
+                                                                                                                            OpenShiftExtension
+                                                                                                                                    .LOCALIZATION_CONSTANT
+                                                                                                                                    .deleteApplicationFail(
+                                                                                                                                            name)));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                 .deleteApplicationFail(name)));
+        }
+    }
 }

@@ -23,34 +23,24 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event occurs, when user tries to view the application's information. Implement {@link ShowApplicationInfoHandler} to handle
  * event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 9, 2011 3:47:35 PM anya $
- * 
  */
-public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ShowApplicationInfoHandler> TYPE = new GwtEvent.Type<ShowApplicationInfoHandler>();
+public class ShowApplicationInfoEvent extends GwtEvent<ShowApplicationInfoHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ShowApplicationInfoHandler> TYPE = new GwtEvent.Type<ShowApplicationInfoHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationInfoHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowApplicationInfoHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowApplicationInfoHandler handler)
-   {
-      handler.onShowApplicationInfo(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowApplicationInfoHandler handler) {
+        handler.onShowApplicationInfo(this);
+    }
 
 }

@@ -27,39 +27,30 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
  * Handler for OpenShift application request.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 12, 2011 12:45:04 PM anya $
- * 
  */
-public class CreateRequestHandler extends RequestStatusHandlerBase
-{
-   
-   public CreateRequestHandler(String applicationName)
-   {
-      super(applicationName);
-   }
+public class CreateRequestHandler extends RequestStatusHandlerBase {
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(OpenShiftExtension.LOCALIZATION_CONSTANT.creatingApplication());
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    public CreateRequestHandler(String applicationName) {
+        super(applicationName);
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(projectName));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(OpenShiftExtension.LOCALIZATION_CONSTANT.creatingApplication());
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
+
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(projectName));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

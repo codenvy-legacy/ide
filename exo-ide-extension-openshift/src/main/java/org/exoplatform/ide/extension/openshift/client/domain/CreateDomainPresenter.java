@@ -47,189 +47,154 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 7, 2011 3:49:41 PM anya $
- * 
  */
-public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHandler, LoggedInHandler
-{
-   interface Display extends IsView
-   {
-      /**
-       * Get create button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCreateButton();
+public class CreateDomainPresenter implements ViewClosedHandler, CreateDomainHandler, LoggedInHandler {
+    interface Display extends IsView {
+        /**
+         * Get create button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCreateButton();
 
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+        /**
+         * Get cancel button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Get domain name field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getDomainNameField();
+        /**
+         * Get domain name field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<String> getDomainNameField();
 
-      /**
-       * Change the enable state of the create button.
-       * 
-       * @param enable
-       */
-      void enableCreateButton(boolean enable);
+        /**
+         * Change the enable state of the create button.
+         *
+         * @param enable
+         */
+        void enableCreateButton(boolean enable);
 
-      /**
-       * Give focus to domain name field.
-       */
-      void focusInDomainNameField();
-   }
+        /** Give focus to domain name field. */
+        void focusInDomainNameField();
+    }
 
-   private Display display;
+    private Display display;
 
-   /**
-    *
-    */
-   public CreateDomainPresenter()
-   {
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(CreateDomainEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public CreateDomainPresenter() {
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(CreateDomainEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCreateButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCreateButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
+            @Override
+            public void onClick(ClickEvent event) {
+                createDomain();
+            }
+        });
+
+        display.getCancelButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
+        display.getDomainNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                boolean isNotEmpty = (event.getValue() != null && event.getValue().trim().length() > 0);
+                display.enableCreateButton(isNotEmpty);
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    /** @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainHandler#onCreateDomain(org.exoplatform.ide.extension
+     * .openshift.client.domain.CreateDomainEvent) */
+    @Override
+    public void onCreateDomain(CreateDomainEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+            display.enableCreateButton(false);
+            display.focusInDomainNameField();
+        }
+    }
+
+    protected void createDomain() {
+        final String domainName =
+                (display.getDomainNameField().getValue() != null) ? display.getDomainNameField().getValue().trim() : display
+                        .getDomainNameField().getValue();
+        if (domainName == null || domainName.length() == 0) {
+            return;
+        }
+
+        try {
+            OpenShiftClientService.getInstance().createDomain(domainName, false, new AsyncRequestCallback<String>() {
+
+                @Override
+                protected void onSuccess(String result) {
+                    IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName),
+                                                  Type.INFO));
+                    IDE.getInstance().closeView(display.asView().getId());
+                }
+
+                /**
+                 * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                 */
+                @Override
+                protected void onFailure(Throwable exception) {
+                    if (exception instanceof ServerException) {
+                        ServerException serverException = (ServerException)exception;
+                        if (HTTPStatus.OK == serverException.getHTTPStatus()
+                            && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED))) {
+                            addLoggedInHandler();
+                            IDE.fireEvent(new LoginEvent());
+                            return;
+                        }
+                    }
+                    IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                                 .createDomainFail(domainName)));
+                }
+            });
+        } catch (RequestException e) {
+            IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+                                                                                 .createDomainFail(domainName)));
+        }
+    }
+
+    /** Register {@link LoggedInHandler} handler. */
+    protected void addLoggedInHandler() {
+        IDE.addHandler(LoggedInEvent.TYPE, this);
+    }
+
+    /** @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift
+     * .client.login.LoggedInEvent) */
+    @Override
+    public void onLoggedIn(LoggedInEvent event) {
+        IDE.removeHandler(LoggedInEvent.TYPE, this);
+        if (!event.isFailed()) {
             createDomain();
-         }
-      });
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getDomainNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            boolean isNotEmpty = (event.getValue() != null && event.getValue().trim().length() > 0);
-            display.enableCreateButton(isNotEmpty);
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainHandler#onCreateDomain(org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent)
-    */
-   @Override
-   public void onCreateDomain(CreateDomainEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.enableCreateButton(false);
-         display.focusInDomainNameField();
-      }
-   }
-
-   protected void createDomain()
-   {
-      final String domainName =
-         (display.getDomainNameField().getValue() != null) ? display.getDomainNameField().getValue().trim() : display
-            .getDomainNameField().getValue();
-      if (domainName == null || domainName.length() == 0)
-      {
-         return;
-      }
-
-      try
-      {
-         OpenShiftClientService.getInstance().createDomain(domainName, false, new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
-            {
-               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName),
-                  Type.INFO));
-               IDE.getInstance().closeView(display.asView().getId());
-            }
-
-            /**
-             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-             */
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
-               {
-                  ServerException serverException = (ServerException)exception;
-                  if (HTTPStatus.OK == serverException.getHTTPStatus()
-                     && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                  {
-                     addLoggedInHandler();
-                     IDE.fireEvent(new LoginEvent());
-                     return;
-                  }
-               }
-               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                  .createDomainFail(domainName)));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-            .createDomainFail(domainName)));
-      }
-   }
-
-   /**
-    * Register {@link LoggedInHandler} handler.
-    */
-   protected void addLoggedInHandler()
-   {
-      IDE.addHandler(LoggedInEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         createDomain();
-      }
-   }
+        }
+    }
 }

@@ -24,22 +24,19 @@ import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationEv
 
 /**
  * Control is used for deleting application from OpenShift.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 9, 2011 12:17:37 PM anya $
- * 
  */
-public class DeleteApplicationControl extends AbstractOpenShiftControl
-{
+public class DeleteApplicationControl extends AbstractOpenShiftControl {
 
-   public DeleteApplicationControl()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.destroyApplicationControl(),
-         OpenShiftClientBundle.INSTANCE.destroyApplicationControlDisabled());
-      setEvent(new DeleteApplicationEvent());
-   }
+    public DeleteApplicationControl() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.destroyApplicationControl(),
+                  OpenShiftClientBundle.INSTANCE.destroyApplicationControlDisabled());
+        setEvent(new DeleteApplicationEvent());
+    }
 
 }

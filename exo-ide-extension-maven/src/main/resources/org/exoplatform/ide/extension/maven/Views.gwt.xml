@@ -19,8 +19,8 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.extension.maven.client.build.BuildProjectView">
-      <when-type-is class="org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display" />
-   </replace-with>
+    <inherits name='com.google.gwt.user.User'/>
+    <replace-with class="org.exoplatform.ide.extension.maven.client.build.BuildProjectView">
+        <when-type-is class="org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display"/>
+    </replace-with>
 </module>

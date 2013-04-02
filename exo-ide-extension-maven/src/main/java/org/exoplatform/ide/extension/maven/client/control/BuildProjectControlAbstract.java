@@ -21,85 +21,67 @@ package org.exoplatform.ide.extension.maven.client.control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 
 /**
  * Control for build project by maven builder.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
- * 
  */
 public abstract class BuildProjectControlAbstract extends SimpleControl implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler, ActiveProjectChangedHandler
-{
- 
-   public BuildProjectControlAbstract(String id)
-   {
-      super(id);
-   }
+                                                                                   ProjectOpenedHandler, ActiveProjectChangedHandler {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(false);
+    public BuildProjectControlAbstract(String id) {
+        super(id);
+    }
 
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(false);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      String projectType = event.getProject().getProjectType();
-      if (chekProjectType(projectType))
-         setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @param projectType
-    * @return
-    */
-   private boolean chekProjectType(String projectType)
-   {
-      return ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType)
-         || ProjectType.WAR.value().equals(projectType) || ProjectType.JAR.value().equals(projectType)
-         || ProjectType.MultiModule.value().equals(projectType);
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent currentProjectEvent)
-   {
-      String projectType = currentProjectEvent.getProject().getProjectType();
-      if (chekProjectType(projectType))
-         setEnabled(true);
-      else
-         setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        String projectType = event.getProject().getProjectType();
+        if (chekProjectType(projectType))
+            setEnabled(true);
+    }
+
+    /**
+     * @param projectType
+     * @return
+     */
+    private boolean chekProjectType(String projectType) {
+        return ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+               || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+               || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType)
+               || ProjectType.WAR.value().equals(projectType) || ProjectType.JAR.value().equals(projectType)
+               || ProjectType.MultiModule.value().equals(projectType);
+    }
+
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent currentProjectEvent) {
+        String projectType = currentProjectEvent.getProject().getProjectType();
+        if (chekProjectType(projectType))
+            setEnabled(true);
+        else
+            setEnabled(false);
+    }
 }

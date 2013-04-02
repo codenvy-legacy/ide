@@ -24,22 +24,19 @@ import org.exoplatform.ide.extension.openshift.client.info.ShowApplicationInfoEv
 
 /**
  * Control for showing OpenShift application's information.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 9, 2011 2:51:28 PM anya $
- * 
  */
-public class ShowApplicationInfoControl extends AbstractOpenShiftControl
-{
+public class ShowApplicationInfoControl extends AbstractOpenShiftControl {
 
-   public ShowApplicationInfoControl()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.applicationInfoControl(),
-         OpenShiftClientBundle.INSTANCE.applicationInfoControlDisabled());
-      setEvent(new ShowApplicationInfoEvent());
-   }
+    public ShowApplicationInfoControl() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.showApplicationInfoControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.applicationInfoControl(),
+                  OpenShiftClientBundle.INSTANCE.applicationInfoControlDisabled());
+        setEvent(new ShowApplicationInfoEvent());
+    }
 
 }

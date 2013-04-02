@@ -22,26 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class PreviewApplicationEvent extends GwtEvent<PreviewApplicationHandler>
-{
+public class PreviewApplicationEvent extends GwtEvent<PreviewApplicationHandler> {
 
-   public static final GwtEvent.Type<PreviewApplicationHandler> TYPE = new GwtEvent.Type<PreviewApplicationHandler>();
+    public static final GwtEvent.Type<PreviewApplicationHandler> TYPE = new GwtEvent.Type<PreviewApplicationHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<PreviewApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<PreviewApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(PreviewApplicationHandler handler)
-   {
-      handler.onPreviewApplication(this);
-   }
+    @Override
+    protected void dispatch(PreviewApplicationHandler handler) {
+        handler.onPreviewApplication(this);
+    }
 
 }

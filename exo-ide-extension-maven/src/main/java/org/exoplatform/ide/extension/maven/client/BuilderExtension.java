@@ -28,42 +28,35 @@ import org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter;
 
 /**
  * Maven builder extension entry point.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
- * 
  */
-public class BuilderExtension extends Extension implements InitializeServicesHandler
-{
-   public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
+public class BuilderExtension extends Extension implements InitializeServicesHandler {
+    public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
 
-   /** Channel for the messages containing status of the Maven build job. */
-   public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
+    /** Channel for the messages containing status of the Maven build job. */
+    public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
 
-   /**
-    * Localization constants.
-    */
-   public static final BuilderLocalizationConstant LOCALIZATION_CONSTANT = GWT
-      .create(BuilderLocalizationConstant.class);
+    /** Localization constants. */
+    public static final BuilderLocalizationConstant LOCALIZATION_CONSTANT = GWT
+            .create(BuilderLocalizationConstant.class);
 
-   /**
-    * Handler for {@link InitializeServicesEvent}.
-    * 
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new BuilderClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-   }
+    /**
+     * Handler for {@link InitializeServicesEvent}.
+     *
+     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent)
+     */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new BuilderClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      new BuildProjectPresenter();
-   }
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        new BuildProjectPresenter();
+    }
 }

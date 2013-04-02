@@ -33,103 +33,78 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
  * View for creating domain on OpenShift. View must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 2, 2011 2:26:41 PM anya $
- * 
  */
-public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.Display
-{
-   private static final String ID = "ideCreateDomainView";
+public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.Display {
+    private static final String ID = "ideCreateDomainView";
 
-   private static final int WIDTH = 410;
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 140;
+    private static final int HEIGHT = 140;
 
-   private static final String CREATE_BUTTON_ID = "ideCreateDomainViewCreateButton";
+    private static final String CREATE_BUTTON_ID = "ideCreateDomainViewCreateButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideCreateDomainViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideCreateDomainViewCancelButton";
 
-   private static final String NAME_FIELD_ID = "ideCreateDomainViewNameField";
+    private static final String NAME_FIELD_ID = "ideCreateDomainViewNameField";
 
-   /**
-    * Domain's name field.
-    */
-   @UiField
-   TextInput nameField;
+    /** Domain's name field. */
+    @UiField
+    TextInput nameField;
 
-   /**
-    * Create button.
-    */
-   @UiField
-   ImageButton createButton;
+    /** Create button. */
+    @UiField
+    ImageButton createButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   private static CreateDomainViewUiBinder uiBinder = GWT.create(CreateDomainViewUiBinder.class);
+    private static CreateDomainViewUiBinder uiBinder = GWT.create(CreateDomainViewUiBinder.class);
 
-   interface CreateDomainViewUiBinder extends UiBinder<Widget, CreateDomainView>
-   {
-   }
+    interface CreateDomainViewUiBinder extends UiBinder<Widget, CreateDomainView> {
+    }
 
-   public CreateDomainView()
-   {
-      super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public CreateDomainView() {
+        super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      nameField.setName(NAME_FIELD_ID);
-      nameField.setHeight("22px");
-      createButton.setButtonId(CREATE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        nameField.setName(NAME_FIELD_ID);
+        nameField.setHeight("22px");
+        createButton.setButtonId(CREATE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#getCreateButton()
-    */
-   @Override
-   public HasClickHandlers getCreateButton()
-   {
-      return createButton;
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#getCreateButton() */
+    @Override
+    public HasClickHandlers getCreateButton() {
+        return createButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#getDomainNameField()
-    */
-   @Override
-   public HasValue<String> getDomainNameField()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#getDomainNameField() */
+    @Override
+    public HasValue<String> getDomainNameField() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#enableCreateButton(boolean)
-    */
-   @Override
-   public void enableCreateButton(boolean enable)
-   {
-      createButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#enableCreateButton(boolean) */
+    @Override
+    public void enableCreateButton(boolean enable) {
+        createButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#focusInDomainNameField()
-    */
-   @Override
-   public void focusInDomainNameField()
-   {
-      nameField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter.Display#focusInDomainNameField() */
+    @Override
+    public void focusInDomainNameField() {
+        nameField.focus();
+    }
 
 }

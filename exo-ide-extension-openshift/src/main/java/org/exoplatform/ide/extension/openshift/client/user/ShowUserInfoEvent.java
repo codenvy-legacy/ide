@@ -22,33 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to view OpenShift user's information. Implement {@link ShowUserInfoHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 10:57:08 AM anya $
- * 
  */
-public class ShowUserInfoEvent extends GwtEvent<ShowUserInfoHandler>
-{
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ShowUserInfoHandler> TYPE = new GwtEvent.Type<ShowUserInfoHandler>();
+public class ShowUserInfoEvent extends GwtEvent<ShowUserInfoHandler> {
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ShowUserInfoHandler> TYPE = new GwtEvent.Type<ShowUserInfoHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowUserInfoHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowUserInfoHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowUserInfoHandler handler)
-   {
-      handler.onShowUserInfo(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowUserInfoHandler handler) {
+        handler.onShowUserInfo(this);
+    }
 }

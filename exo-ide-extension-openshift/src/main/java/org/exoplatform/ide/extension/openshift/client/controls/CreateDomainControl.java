@@ -26,41 +26,34 @@ import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainEvent;
 
 /**
  * Control is used for new domain creation.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 6, 2011 2:22:44 PM anya $
- * 
  */
-public class CreateDomainControl extends AbstractOpenShiftControl
-{
+public class CreateDomainControl extends AbstractOpenShiftControl {
 
-   public CreateDomainControl()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.createDomainControl(),
-         OpenShiftClientBundle.INSTANCE.createDomainControlDisabled());
-      setEvent(new CreateDomainEvent());
-   }
+    public CreateDomainControl() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.createDomainControl(),
+                  OpenShiftClientBundle.INSTANCE.createDomainControlDisabled());
+        setEvent(new CreateDomainEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * 
-    */
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /**
+     *
+     */
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 
 }

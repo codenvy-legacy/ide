@@ -21,11 +21,9 @@ package org.exoplatform.ide.extension.openshift.client.key;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface UpdatePublicKeyCallback
-{
-   
-   void onPublicKeyUpdated(boolean success);
+public interface UpdatePublicKeyCallback {
+
+    void onPublicKeyUpdated(boolean success);
 
 }

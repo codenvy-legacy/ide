@@ -26,61 +26,49 @@ import org.exoplatform.ide.client.framework.module.IDE;
  * Handler for OpenShift exceptions. Error, handled by {@link OpenShiftExceptionsHandler} is passed with
  * {@link OpenShiftExceptionThrownEvent} event. Checks whether it is {@link ServerException} and contains provided message and
  * Express exit code. Alternative error message also can be passed by {@link OpenShiftExceptionThrownEvent}.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 10, 2011 5:08:56 PM anya $
- * 
  */
-public class OpenShiftExceptionsHandler implements OpenShiftExceptionThrownHandler
-{
-   /**
-    *
-    */
-   public OpenShiftExceptionsHandler()
-   {
-      IDE.addHandler(OpenShiftExceptionThrownEvent.TYPE, this);
-   }
+public class OpenShiftExceptionsHandler implements OpenShiftExceptionThrownHandler {
+    /**
+     *
+     */
+    public OpenShiftExceptionsHandler() {
+        IDE.addHandler(OpenShiftExceptionThrownEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownHandler#onOpenShiftExceptionThrown(org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent)
-    */
-   @Override
-   public void onOpenShiftExceptionThrown(OpenShiftExceptionThrownEvent event)
-   {
-      Throwable error = event.getException();
+    /** @see org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownHandler#onOpenShiftExceptionThrown(org.exoplatform.ide
+     * .extension.openshift.client.OpenShiftExceptionThrownEvent) */
+    @Override
+    public void onOpenShiftExceptionThrown(OpenShiftExceptionThrownEvent event) {
+        Throwable error = event.getException();
 
-      if (error instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)error;
-         String exitCode = serverException.getHeader("Express-Exit-Code");
-         String expressExitCodeMessage =
-            (exitCode != null) ? "<br>" + OpenShiftExtension.LOCALIZATION_CONSTANT.expressExitCode(exitCode) : "";
+        if (error instanceof ServerException) {
+            ServerException serverException = (ServerException)error;
+            String exitCode = serverException.getHeader("Express-Exit-Code");
+            String expressExitCodeMessage =
+                    (exitCode != null) ? "<br>" + OpenShiftExtension.LOCALIZATION_CONSTANT.expressExitCode(exitCode) : "";
 
-         if (serverException.isErrorMessageProvided())
-         {
-            String html =
-               "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
-                  + serverException.getMessage() + expressExitCodeMessage;
-            Dialogs.getInstance().showError(html);
-         }
-         else
-         {
-            String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+            if (serverException.isErrorMessageProvided()) {
+                String html =
+                        "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText() + "<br><br><hr><br>"
+                        + serverException.getMessage() + expressExitCodeMessage;
+                Dialogs.getInstance().showError(html);
+            } else {
+                String html = "" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
 
-            if (event.getErrorMessage() != null)
-            {
-               html += "<br><hr><br>Possible reasons:<br>" + event.getErrorMessage() + expressExitCodeMessage;
+                if (event.getErrorMessage() != null) {
+                    html += "<br><hr><br>Possible reasons:<br>" + event.getErrorMessage() + expressExitCodeMessage;
+                }
+                Dialogs.getInstance().showError(html);
             }
-            Dialogs.getInstance().showError(html);
-         }
-      }
-      else
-      {
-         if (error != null)
-            Dialogs.getInstance().showError(error.getMessage());
-         else
-            Dialogs.getInstance().showError(event.getErrorMessage());
-      }
-   }
+        } else {
+            if (error != null)
+                Dialogs.getInstance().showError(error.getMessage());
+            else
+                Dialogs.getInstance().showError(event.getErrorMessage());
+        }
+    }
 
 }

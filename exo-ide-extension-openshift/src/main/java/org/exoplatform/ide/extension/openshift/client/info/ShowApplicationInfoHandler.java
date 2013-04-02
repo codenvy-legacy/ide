@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowApplicationInfoEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 9, 2011 3:47:47 PM anya $
- * 
  */
-public interface ShowApplicationInfoHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user wants to view application's info.
-    * 
-    * @param event
-    */
-   void onShowApplicationInfo(ShowApplicationInfoEvent event);
+public interface ShowApplicationInfoHandler extends EventHandler {
+    /**
+     * Perform actions, when user wants to view application's info.
+     *
+     * @param event
+     */
+    void onShowApplicationInfo(ShowApplicationInfoEvent event);
 }

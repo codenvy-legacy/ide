@@ -25,31 +25,25 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
  * Group control for OpenShift controls
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 9, 2011 4:58:20 PM anya $
- * 
  */
-public class OpenShiftControlsGroup extends SimpleControl implements IDEControl
-{
+public class OpenShiftControlsGroup extends SimpleControl implements IDEControl {
 
-   public OpenShiftControlsGroup()
-   {
-      super(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlId());
-      setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlTitle());
-      setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlPrompt());
-      setImages(OpenShiftClientBundle.INSTANCE.openShiftControl(),
-         OpenShiftClientBundle.INSTANCE.openShiftControlDisabled());
-   }
+    public OpenShiftControlsGroup() {
+        super(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlId());
+        setTitle(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlTitle());
+        setPrompt(OpenShiftExtension.LOCALIZATION_CONSTANT.openShiftControlPrompt());
+        setImages(OpenShiftClientBundle.INSTANCE.openShiftControl(),
+                  OpenShiftClientBundle.INSTANCE.openShiftControlDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }
