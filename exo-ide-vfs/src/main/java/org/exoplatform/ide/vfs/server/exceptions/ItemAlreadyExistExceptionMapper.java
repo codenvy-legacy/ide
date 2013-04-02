@@ -30,15 +30,11 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class ItemAlreadyExistExceptionMapper implements ExceptionMapper<ItemAlreadyExistException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(ItemAlreadyExistException exception)
-   {
-      return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_EXISTS)).build();
-   }
+public class ItemAlreadyExistExceptionMapper implements ExceptionMapper<ItemAlreadyExistException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(ItemAlreadyExistException exception) {
+        return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .header("X-Exit-Code", Integer.toString(ExitCodes.ITEM_EXISTS)).build();
+    }
 }

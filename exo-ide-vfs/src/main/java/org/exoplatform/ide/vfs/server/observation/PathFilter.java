@@ -27,20 +27,17 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class PathFilter extends ChangeEventFilter
-{
-   private final Pattern pattern;
+public final class PathFilter extends ChangeEventFilter {
+    private final Pattern pattern;
 
-   public PathFilter(String path)
-   {
-      this.pattern = Pattern.compile(path);
-   }
+    public PathFilter(String path) {
+        this.pattern = Pattern.compile(path);
+    }
 
-   @Override
-   public boolean matched(ChangeEvent event)
-   {
-      final String path = event.getItemPath();
-      final String oldPath = event.getOldItemPath();
-      return path != null && pattern.matcher(path).matches() || oldPath != null && pattern.matcher(oldPath).matches();
-   }
+    @Override
+    public boolean matched(ChangeEvent event) {
+        final String path = event.getItemPath();
+        final String oldPath = event.getOldItemPath();
+        return path != null && pattern.matcher(path).matches() || oldPath != null && pattern.matcher(oldPath).matches();
+    }
 }

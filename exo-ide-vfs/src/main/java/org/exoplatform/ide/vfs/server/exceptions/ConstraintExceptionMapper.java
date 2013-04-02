@@ -31,15 +31,11 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: ConstraintExceptionMapper.java 74306 2011-09-29 13:55:18Z andrew00x $
  */
 @Provider
-public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(ConstraintException exception)
-   {
-      return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .header("X-Exit-Code", Integer.toString(ExitCodes.CONSTRAINT)).build();
-   }
+public class ConstraintExceptionMapper implements ExceptionMapper<ConstraintException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(ConstraintException exception) {
+        return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .header("X-Exit-Code", Integer.toString(ExitCodes.CONSTRAINT)).build();
+    }
 }

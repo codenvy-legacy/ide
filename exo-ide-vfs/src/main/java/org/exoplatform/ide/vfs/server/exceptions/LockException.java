@@ -25,14 +25,12 @@ package org.exoplatform.ide.vfs.server.exceptions;
  * @version $Id: LockException.java 68071 2011-04-07 13:11:47Z vitalka $
  */
 @SuppressWarnings("serial")
-public class LockException extends VirtualFileSystemException
-{
-   /**
-    * @param message
-    *    the detail message
-    */
-   public LockException(String message)
-   {
-      super(message);
-   }
+public class LockException extends VirtualFileSystemException {
+    /**
+     * @param message
+     *         the detail message
+     */
+    public LockException(String message) {
+        super(message);
+    }
 }

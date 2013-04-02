@@ -26,11 +26,10 @@ import javax.ws.rs.core.UriInfo;
  * Need for resolving Git URL for public access. It can be need for using continues integration system that use Git for
  * getting source for build project or some other services that manipulate with source via Git. Implementation depend
  * on VirtualFileSystem implementation.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface GitUrlResolver
-{
-   String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String itemId) throws GitUrlResolveException;
+public interface GitUrlResolver {
+    String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String itemId) throws GitUrlResolveException;
 }

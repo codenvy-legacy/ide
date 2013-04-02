@@ -25,15 +25,13 @@ import org.exoplatform.services.log.Log;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class LogErrorHandler implements ErrorHandler
-{
-   private static final Log LOG = ExoLogger.getLogger(LogErrorHandler.class);
+public final class LogErrorHandler implements ErrorHandler {
+    private static final Log LOG = ExoLogger.getLogger(LogErrorHandler.class);
 
-   @Override
-   public void onError(ChangeEvent event, Throwable error)
-   {
-      LOG.error("Error processing of event: {} ", event, error);
-   }
+    @Override
+    public void onError(ChangeEvent event, Throwable error) {
+        LOG.error("Error processing of event: {} ", event, error);
+    }
 }
 
 

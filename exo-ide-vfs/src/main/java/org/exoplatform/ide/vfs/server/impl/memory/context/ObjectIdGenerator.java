@@ -24,10 +24,8 @@ import org.exoplatform.ide.commons.NameGenerator;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ObjectIdGenerator
-{
-   public static String generateId()
-   {
-      return NameGenerator.generate(null,32);
-   }
+public class ObjectIdGenerator {
+    public static String generateId() {
+        return NameGenerator.generate(null, 32);
+    }
 }

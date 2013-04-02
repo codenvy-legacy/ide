@@ -23,13 +23,12 @@ package org.exoplatform.ide.vfs.server.exceptions;
  * @version $Id: InvalidArgumentException.java 68071 2011-04-07 13:11:47Z vitalka $
  */
 @SuppressWarnings("serial")
-public class InvalidArgumentException extends VirtualFileSystemException
-{
-   /**
-    * @param message the message
-    */
-   public InvalidArgumentException(String message)
-   {
-      super(message);
-   }
+public class InvalidArgumentException extends VirtualFileSystemException {
+    /**
+     * @param message
+     *         the message
+     */
+    public InvalidArgumentException(String message) {
+        super(message);
+    }
 }

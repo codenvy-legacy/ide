@@ -26,23 +26,22 @@ import java.util.Set;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface AccessControlEntry
-{
-   /** @return principal's permissions */
-   Set<String> getPermissions();
+public interface AccessControlEntry {
+    /** @return principal's permissions */
+    Set<String> getPermissions();
 
-   /**
-    * @param permissions
-    *    new set of permissions
-    */
-   void setPermissions(Set<String> permissions);
+    /**
+     * @param permissions
+     *         new set of permissions
+     */
+    void setPermissions(Set<String> permissions);
 
-   /** @return principal name */
-   String getPrincipal();
+    /** @return principal name */
+    String getPrincipal();
 
-   /**
-    * @param principal
-    *    principal name
-    */
-   void setPrincipal(String principal);
+    /**
+     * @param principal
+     *         principal name
+     */
+    void setPrincipal(String principal);
 }

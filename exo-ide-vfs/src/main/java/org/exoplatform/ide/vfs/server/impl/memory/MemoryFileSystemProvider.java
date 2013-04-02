@@ -31,29 +31,25 @@ import java.net.URI;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class MemoryFileSystemProvider implements VirtualFileSystemProvider
-{
-   private final String id;
-   private final MemoryFileSystemContext memoryContext;
+public class MemoryFileSystemProvider implements VirtualFileSystemProvider {
+    private final String                  id;
+    private final MemoryFileSystemContext memoryContext;
 
-   public MemoryFileSystemProvider(String id,  MemoryFileSystemContext memoryContext)
-   {
-      this.id = id;
-      this.memoryContext = memoryContext;
-   }
+    public MemoryFileSystemProvider(String id, MemoryFileSystemContext memoryContext) {
+        this.id = id;
+        this.memoryContext = memoryContext;
+    }
 
-   @Override
-   public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners) throws VirtualFileSystemException
-   {
-      return new MemoryFileSystem(
-         requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
-         listeners,
-         id,
-         memoryContext);
-   }
+    @Override
+    public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners) throws VirtualFileSystemException {
+        return new MemoryFileSystem(
+                requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
+                listeners,
+                id,
+                memoryContext);
+    }
 
-   @Override
-   public void close()
-   {
-   }
+    @Override
+    public void close() {
+    }
 }

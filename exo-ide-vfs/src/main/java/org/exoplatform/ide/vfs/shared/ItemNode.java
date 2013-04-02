@@ -24,24 +24,23 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ItemNode
-{
-   Item getItem();
+public interface ItemNode {
+    Item getItem();
 
-   void setItem(Item item);
+    void setItem(Item item);
 
-   /**
-    * Get children of item.
-    *
-    * @return children of item. Always return <code>null</code> for files
-    */
-   List<ItemNode> getChildren();
+    /**
+     * Get children of item.
+     *
+     * @return children of item. Always return <code>null</code> for files
+     */
+    List<ItemNode> getChildren();
 
-   /**
-    * Set children of item.
-    *
-    * @param children
-    *    of item. Always must be <code>null</code> for files
-    */
-   void setChildren(List<ItemNode> children);
+    /**
+     * Set children of item.
+     *
+     * @param children
+     *         of item. Always must be <code>null</code> for files
+     */
+    void setChildren(List<ItemNode> children);
 }

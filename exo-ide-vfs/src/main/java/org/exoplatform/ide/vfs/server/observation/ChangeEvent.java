@@ -19,144 +19,123 @@
 package org.exoplatform.ide.vfs.server.observation;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ChangeEvent
-{
-   public static enum ChangeType
-   {
-      ACL_UPDATED("acl_updated"),
-      CONTENT_UPDATED("content_updated"),
-      CREATED("created"),
-      DELETED("deleted"),
-      MOVED("moved"),
-      PROPERTIES_UPDATED("properties_updated"),
-      RENAMED("renamed");
+public class ChangeEvent {
+    public static enum ChangeType {
+        ACL_UPDATED("acl_updated"),
+        CONTENT_UPDATED("content_updated"),
+        CREATED("created"),
+        DELETED("deleted"),
+        MOVED("moved"),
+        PROPERTIES_UPDATED("properties_updated"),
+        RENAMED("renamed");
 
-      private final String value;
+        private final String value;
 
-      private ChangeType(String value)
-      {
-         this.value = value;
-      }
+        private ChangeType(String value) {
+            this.value = value;
+        }
 
-      public String value()
-      {
-         return value;
-      }
+        public String value() {
+            return value;
+        }
 
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
 
-   private final VirtualFileSystem vfs;
-   private final String itemId;
-   private final String itemPath;
-   private final String oldItemPath;
-   private final String mimeType;
-   private final ChangeType type;
-   private final String userId;
+    private final VirtualFileSystem vfs;
+    private final String            itemId;
+    private final String            itemPath;
+    private final String            oldItemPath;
+    private final String            mimeType;
+    private final ChangeType        type;
+    private final String            userId;
 
-   public ChangeEvent(VirtualFileSystem vfs,
-                      String itemId,
-                      String itemPath,
-                      String mimeType,
-                      ChangeType type,
-                      String userId)
-   {
-      this(vfs, itemId, itemPath, null, mimeType, type, userId);
-   }
+    public ChangeEvent(VirtualFileSystem vfs,
+                       String itemId,
+                       String itemPath,
+                       String mimeType,
+                       ChangeType type,
+                       String userId) {
+        this(vfs, itemId, itemPath, null, mimeType, type, userId);
+    }
 
-   public ChangeEvent(VirtualFileSystem vfs,
-                      String itemId,
-                      String itemPath,
-                      String oldItemPath,
-                      String mimeType,
-                      ChangeType type,
-                      String userId)
-   {
-      if (vfs == null)
-      {
-         throw new IllegalArgumentException("Virtual File System may not be null. ");
-      }
-      if (itemId == null)
-      {
-         throw new IllegalArgumentException("Item ID may not be null. ");
-      }
-      if (itemPath == null)
-      {
-         throw new IllegalArgumentException("Item path may not be null. ");
-      }
-      if (type == null)
-      {
-         throw new IllegalArgumentException("Change type may not be null. ");
-      }
-      if (userId == null)
-      {
-         throw new IllegalArgumentException("User may not be null. ");
-      }
-      this.vfs = vfs;
-      this.itemId = itemId;
-      this.itemPath = itemPath;
-      this.oldItemPath = oldItemPath;
-      this.mimeType = mimeType;
-      this.type = type;
-      this.userId = userId;
-   }
+    public ChangeEvent(VirtualFileSystem vfs,
+                       String itemId,
+                       String itemPath,
+                       String oldItemPath,
+                       String mimeType,
+                       ChangeType type,
+                       String userId) {
+        if (vfs == null) {
+            throw new IllegalArgumentException("Virtual File System may not be null. ");
+        }
+        if (itemId == null) {
+            throw new IllegalArgumentException("Item ID may not be null. ");
+        }
+        if (itemPath == null) {
+            throw new IllegalArgumentException("Item path may not be null. ");
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("Change type may not be null. ");
+        }
+        if (userId == null) {
+            throw new IllegalArgumentException("User may not be null. ");
+        }
+        this.vfs = vfs;
+        this.itemId = itemId;
+        this.itemPath = itemPath;
+        this.oldItemPath = oldItemPath;
+        this.mimeType = mimeType;
+        this.type = type;
+        this.userId = userId;
+    }
 
-   public VirtualFileSystem getVirtualFileSystem()
-   {
-      return vfs;
-   }
+    public VirtualFileSystem getVirtualFileSystem() {
+        return vfs;
+    }
 
-   public String getItemId()
-   {
-      return itemId;
-   }
+    public String getItemId() {
+        return itemId;
+    }
 
-   public String getItemPath()
-   {
-      return itemPath;
-   }
+    public String getItemPath() {
+        return itemPath;
+    }
 
-   public String getOldItemPath()
-   {
-      return oldItemPath;
-   }
+    public String getOldItemPath() {
+        return oldItemPath;
+    }
 
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   public ChangeType getType()
-   {
-      return type;
-   }
+    public ChangeType getType() {
+        return type;
+    }
 
-   public String getUserId()
-   {
-      return userId;
-   }
+    public String getUserId() {
+        return userId;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "ChangeEvent{" +
-         "vfs=" + vfs +
-         ", itemId='" + itemId + '\'' +
-         ", itemPath='" + itemPath + '\'' +
-         ", oldItemPath='" + oldItemPath + '\'' +
-         ", mimeType='" + mimeType + '\'' +
-         ", type=" + type +
-         ", userId='" + userId + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "ChangeEvent{" +
+               "vfs=" + vfs +
+               ", itemId='" + itemId + '\'' +
+               ", itemPath='" + itemPath + '\'' +
+               ", oldItemPath='" + oldItemPath + '\'' +
+               ", mimeType='" + mimeType + '\'' +
+               ", type=" + type +
+               ", userId='" + userId + '\'' +
+               '}';
+    }
 }

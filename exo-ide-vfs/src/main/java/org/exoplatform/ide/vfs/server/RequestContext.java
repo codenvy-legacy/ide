@@ -26,25 +26,23 @@ import javax.ws.rs.ext.Providers;
 
 /**
  * Summarize JAX-RS request information to pass it to {@link VirtualFileSystemProvider}.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * 
  * @see UriInfo
  * @see Request
  * @see HttpHeaders
  * @see SecurityContext
  * @see Providers
  */
-public interface RequestContext
-{
-   UriInfo getUriInfo();
+public interface RequestContext {
+    UriInfo getUriInfo();
 
-   Request getRequest();
+    Request getRequest();
 
-   HttpHeaders getHeaders();
+    HttpHeaders getHeaders();
 
-   SecurityContext getSecurityContext();
+    SecurityContext getSecurityContext();
 
-   Providers getProviders();
+    Providers getProviders();
 }

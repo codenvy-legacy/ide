@@ -22,50 +22,40 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class FileContentReceivedEvent extends GwtEvent<FileContentReceivedHandler>
-{
+public class FileContentReceivedEvent extends GwtEvent<FileContentReceivedHandler> {
 
-   public static GwtEvent.Type<FileContentReceivedHandler> TYPE = new Type<FileContentReceivedHandler>();
+    public static GwtEvent.Type<FileContentReceivedHandler> TYPE = new Type<FileContentReceivedHandler>();
 
-   private String fileContent;
+    private String fileContent;
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<FileContentReceivedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<FileContentReceivedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(FileContentReceivedHandler handler)
-   {
-      handler.onFileContentReceived(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(FileContentReceivedHandler handler) {
+        handler.onFileContentReceived(this);
+    }
 
-   /**
-    * @return the fileContent
-    */
-   public String getFileContent()
-   {
-      return fileContent;
-   }
+    /** @return the fileContent */
+    public String getFileContent() {
+        return fileContent;
+    }
 
-   /**
-    * @param fileContent the fileContent to set
-    */
-   public void setFileContent(String fileContent)
-   {
-      this.fileContent = fileContent;
-   }
+    /**
+     * @param fileContent
+     *         the fileContent to set
+     */
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
+    }
 
 }

@@ -22,49 +22,48 @@ package org.exoplatform.ide.vfs.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Link
-{
-   // Folder
-   String REL_CHILDREN = "children";
-   String REL_TREE = "tree";
-   String REL_CREATE_PROJECT = "create-project";
-   String REL_CREATE_FOLDER = "create-folder";
-   String REL_CREATE_FILE = "create-file";
-   String REL_UPLOAD_FILE = "upload-file";
-   String REL_EXPORT = "export";
-   String REL_IMPORT = "import";
-   String REL_DOWNLOAD_ZIP = "download-zip";
-   String REL_UPLOAD_ZIP = "upload-zip";
-   // File
-   String REL_CURRENT_VERSION = "current-version";
-   String REL_VERSION_HISTORY = "version-history";
-   String REL_CONTENT = "content";
-   String REL_DOWNLOAD_FILE = "download-file";
-   String REL_CONTENT_BY_PATH = "content-by-path";
-   String REL_UNLOCK = "unlock";
-   String REL_LOCK = "lock";
-   // Common
-   String REL_PARENT = "parent";
-   String REL_DELETE = "delete";
-   String REL_MOVE = "move";
-   String REL_COPY = "copy";
-   String REL_SELF = "self";
-   String REL_ITEM = "item";
-   String REL_ITEM_BY_PATH = "item-by-path";
-   String REL_ACL = "acl";
-   String REL_RENAME = "rename";
-   String REL_SEARCH = "search";
-   String REL_SEARCH_FORM = "search-form";
+public interface Link {
+    // Folder
+    String REL_CHILDREN        = "children";
+    String REL_TREE            = "tree";
+    String REL_CREATE_PROJECT  = "create-project";
+    String REL_CREATE_FOLDER   = "create-folder";
+    String REL_CREATE_FILE     = "create-file";
+    String REL_UPLOAD_FILE     = "upload-file";
+    String REL_EXPORT          = "export";
+    String REL_IMPORT          = "import";
+    String REL_DOWNLOAD_ZIP    = "download-zip";
+    String REL_UPLOAD_ZIP      = "upload-zip";
+    // File
+    String REL_CURRENT_VERSION = "current-version";
+    String REL_VERSION_HISTORY = "version-history";
+    String REL_CONTENT         = "content";
+    String REL_DOWNLOAD_FILE   = "download-file";
+    String REL_CONTENT_BY_PATH = "content-by-path";
+    String REL_UNLOCK          = "unlock";
+    String REL_LOCK            = "lock";
+    // Common
+    String REL_PARENT          = "parent";
+    String REL_DELETE          = "delete";
+    String REL_MOVE            = "move";
+    String REL_COPY            = "copy";
+    String REL_SELF            = "self";
+    String REL_ITEM            = "item";
+    String REL_ITEM_BY_PATH    = "item-by-path";
+    String REL_ACL             = "acl";
+    String REL_RENAME          = "rename";
+    String REL_SEARCH          = "search";
+    String REL_SEARCH_FORM     = "search-form";
 
-   String getHref();
+    String getHref();
 
-   void setHref(String href);
+    void setHref(String href);
 
-   String getRel();
+    String getRel();
 
-   void setRel(String rel);
+    void setRel(String rel);
 
-   String getType();
+    String getType();
 
-   void setType(String type);
+    void setType(String type);
 }

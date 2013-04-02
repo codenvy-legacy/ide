@@ -25,44 +25,32 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-/**
- * @version $Id:$
- * 
- */
-public class ProjectUnmarshaller implements Unmarshallable<ProjectModel>
-{
+/** @version $Id:$ */
+public class ProjectUnmarshaller implements Unmarshallable<ProjectModel> {
 
-   private final ProjectModel item;
+    private final ProjectModel item;
 
-   public ProjectUnmarshaller(ProjectModel item)
-   {
+    public ProjectUnmarshaller(ProjectModel item) {
 
-      this.item = item;
+        this.item = item;
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         item.init(JSONParser.parseLenient(response.getText()).isObject());
-      }
-      catch (Exception exc)
-      {
-         String message = "Can't parse item " + response.getText();
-         throw new UnmarshallerException(message);
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            item.init(JSONParser.parseLenient(response.getText()).isObject());
+        } catch (Exception exc) {
+            String message = "Can't parse item " + response.getText();
+            throw new UnmarshallerException(message);
+        }
 
-   }
+    }
 
-   @Override
-   public ProjectModel getPayload()
-   {
-      return this.item;
-   }
+    @Override
+    public ProjectModel getPayload() {
+        return this.item;
+    }
 
 }

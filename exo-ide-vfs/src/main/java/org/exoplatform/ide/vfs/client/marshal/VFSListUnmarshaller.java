@@ -31,53 +31,39 @@ import java.util.List;
 
 /**
  * Unmarshaller for the list of virtual file systems.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 27, 2011 9:41:55 AM anya $
- * 
  */
-public class VFSListUnmarshaller implements Unmarshallable<List<VirtualFileSystemInfo>>
-{
-   /**
-    * The list of virtual file systems.
-    */
-   private List<VirtualFileSystemInfo> vfsList;
+public class VFSListUnmarshaller implements Unmarshallable<List<VirtualFileSystemInfo>> {
+    /** The list of virtual file systems. */
+    private List<VirtualFileSystemInfo> vfsList;
 
-   /**
-    * @param vfsList the list of virtual file systems
-    */
-   public VFSListUnmarshaller(List<VirtualFileSystemInfo> vfsList)
-   {
-      this.vfsList = vfsList;
-   }
+    /**
+     * @param vfsList
+     *         the list of virtual file systems
+     */
+    public VFSListUnmarshaller(List<VirtualFileSystemInfo> vfsList) {
+        this.vfsList = vfsList;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         JSONArray jsonArray = JSONParser.parseLenient(response.getText()).isArray();
-         for (int i = 0; i < jsonArray.size(); i++)
-         {
-            VirtualFileSystemInfo vfsInfo = JSONDeserializer.VFSINFO_DESERIALIZER.toObject(jsonArray.get(i));
-            vfsList.add(vfsInfo);
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse the list of virtual file systems.");
-      }
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            JSONArray jsonArray = JSONParser.parseLenient(response.getText()).isArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                VirtualFileSystemInfo vfsInfo = JSONDeserializer.VFSINFO_DESERIALIZER.toObject(jsonArray.get(i));
+                vfsList.add(vfsInfo);
+            }
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't parse the list of virtual file systems.");
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<VirtualFileSystemInfo> getPayload()
-   {
-      return vfsList;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<VirtualFileSystemInfo> getPayload() {
+        return vfsList;
+    }
 }

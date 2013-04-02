@@ -22,11 +22,10 @@ package org.exoplatform.ide.vfs.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Project extends Folder
-{
-   String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
+public interface Project extends Folder {
+    String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
 
-   String getProjectType();
+    String getProjectType();
 
-   void setProjectType(String projectType);
+    void setProjectType(String projectType);
 }

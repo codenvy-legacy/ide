@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FileContentReceivedHandler Feb 3, 2011 9:40:07 AM evgen $
- * 
  */
-public interface FileContentReceivedHandler extends EventHandler
-{
+public interface FileContentReceivedHandler extends EventHandler {
 
-   void onFileContentReceived(FileContentReceivedEvent event);
+    void onFileContentReceived(FileContentReceivedEvent event);
 
 }

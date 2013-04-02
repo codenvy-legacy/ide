@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 25, 2011 evgen $
- * 
  */
-public interface ItemDeletedHandler extends EventHandler
-{
+public interface ItemDeletedHandler extends EventHandler {
 
-   void onItemDeleted(ItemDeletedEvent event);
+    void onItemDeleted(ItemDeletedEvent event);
 
 }

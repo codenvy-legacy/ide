@@ -30,15 +30,11 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: NotSupportedExceptionMapper.java 78691 2012-01-13 15:24:59Z anya $
  */
 @Provider
-public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupportedException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(NotSupportedException exception)
-   {
-      return Response.status(405).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
-         .header("X-Exit-Code", Integer.toString(ExitCodes.UNSUPPORTED)).build();
-   }
+public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupportedException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(NotSupportedException exception) {
+        return Response.status(405).entity(exception.getMessage()).type(MediaType.TEXT_PLAIN)
+                       .header("X-Exit-Code", Integer.toString(ExitCodes.UNSUPPORTED)).build();
+    }
 }

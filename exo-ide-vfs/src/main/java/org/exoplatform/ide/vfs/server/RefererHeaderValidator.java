@@ -28,21 +28,17 @@ import javax.servlet.http.HttpServletRequest;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class RefererHeaderValidator implements RequestValidator
-{
-   @Override
-   public void validate(HttpServletRequest request) throws VirtualFileSystemRuntimeException
-   {
-      String requestURL = request.getScheme() + "://" + request.getServerName();
-      int port = request.getServerPort();
-      if (port != 80 && port != 443)
-      {
-         requestURL += (":" + port);
-      }
-      String referer = request.getHeader("Referer");
-      if (referer == null || !referer.startsWith(requestURL))
-      {
-         throw new VirtualFileSystemRuntimeException("Access forbidden from outside of IDE. ");
-      }
-   }
+public final class RefererHeaderValidator implements RequestValidator {
+    @Override
+    public void validate(HttpServletRequest request) throws VirtualFileSystemRuntimeException {
+        String requestURL = request.getScheme() + "://" + request.getServerName();
+        int port = request.getServerPort();
+        if (port != 80 && port != 443) {
+            requestURL += (":" + port);
+        }
+        String referer = request.getHeader("Referer");
+        if (referer == null || !referer.startsWith(requestURL)) {
+            throw new VirtualFileSystemRuntimeException("Access forbidden from outside of IDE. ");
+        }
+    }
 }

@@ -22,44 +22,35 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * Wrapper for {@link ItemWrapper} to help unmarshall item unknown type
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 29, 2011 evgen $
- * 
  */
-public class ItemWrapper
-{
-   private Item item;
+public class ItemWrapper {
+    private Item item;
 
-   /**
-    * 
-    */
-   public ItemWrapper()
-   {
-   }
+    /**
+     *
+     */
+    public ItemWrapper() {
+    }
 
-   /**
-    * @param item
-    */
-   public ItemWrapper(Item item)
-   {
-      this.item = item;
-   }
+    /** @param item */
+    public ItemWrapper(Item item) {
+        this.item = item;
+    }
 
-   /**
-    * @return the item
-    */
-   public Item getItem()
-   {
-      return item;
-   }
+    /** @return the item */
+    public Item getItem() {
+        return item;
+    }
 
-   /**
-    * @param item the item to set
-    */
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
+    /**
+     * @param item
+     *         the item to set
+     */
+    public void setItem(Item item) {
+        this.item = item;
+    }
 
 }

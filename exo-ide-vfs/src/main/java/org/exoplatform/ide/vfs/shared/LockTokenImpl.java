@@ -26,78 +26,64 @@ package org.exoplatform.ide.vfs.shared;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: LockTokenImpl.java 80595 2012-03-27 09:12:25Z azatsarynnyy $
  */
-public class LockTokenImpl implements LockToken
-{
-   private String token;
+public class LockTokenImpl implements LockToken {
+    private String token;
 
-   public LockTokenImpl()
-   {
-   }
+    public LockTokenImpl() {
+    }
 
-   /**
-    * @param token string representation of lock token
-    * @throws IllegalArgumentException if <code>token == null</code>
-    */
-   public LockTokenImpl(String token)
-   {
-      if (token == null)
-      {
-         throw new IllegalArgumentException("Lock token may not be null. ");
-      }
-      this.token = token;
-   }
+    /**
+     * @param token
+     *         string representation of lock token
+     * @throws IllegalArgumentException
+     *         if <code>token == null</code>
+     */
+    public LockTokenImpl(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Lock token may not be null. ");
+        }
+        this.token = token;
+    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.shared.LockToken#getLockToken()
-    */
-   @Override
-   public String getLockToken()
-   {
-      return token;
-   }
+    /** @see org.exoplatform.ide.vfs.shared.LockToken#getLockToken() */
+    @Override
+    public String getLockToken() {
+        return token;
+    }
 
-   /**
-    * @see org.exoplatform.ide.vfs.shared.LockToken#setLockToken(java.lang.String)
-    */
-   @Override
-   public void setLockToken(String token)
-   {
-      if (token == null)
-      {
-         throw new IllegalArgumentException("Lock token may not be null. ");
-      }
-      this.token = token;
-   }
+    /** @see org.exoplatform.ide.vfs.shared.LockToken#setLockToken(java.lang.String) */
+    @Override
+    public void setLockToken(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Lock token may not be null. ");
+        }
+        this.token = token;
+    }
 
-   /** @see java.lang.Object#equals(java.lang.Object) */
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if ((obj == null) || (obj.getClass() != this.getClass()) || (token == null))
-      {
-         return false;
-      }
-      LockTokenImpl otherLockToken = (LockTokenImpl)obj;
-      return token.equals(otherLockToken.token);
-   }
+    /** @see java.lang.Object#equals(java.lang.Object) */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if ((obj == null) || (obj.getClass() != this.getClass()) || (token == null)) {
+            return false;
+        }
+        LockTokenImpl otherLockToken = (LockTokenImpl)obj;
+        return token.equals(otherLockToken.token);
+    }
 
-   /** @see java.lang.Object#hashCode() */
-   @Override
-   public int hashCode()
-   {
-      int hash = 8;
-      hash = hash * 31 + token.hashCode();
-      return hash;
-   }
+    /** @see java.lang.Object#hashCode() */
+    @Override
+    public int hashCode() {
+        int hash = 8;
+        hash = hash * 31 + token.hashCode();
+        return hash;
+    }
 
-   /** @see java.lang.Object#toString() */
-   @Override
-   public String toString()
-   {
-      return "LockToken [token=" + token + ']';
-   }
+    /** @see java.lang.Object#toString() */
+    @Override
+    public String toString() {
+        return "LockToken [token=" + token + ']';
+    }
 }

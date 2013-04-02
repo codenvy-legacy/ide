@@ -27,25 +27,24 @@ import org.exoplatform.ide.vfs.server.observation.EventListenerList;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface VirtualFileSystemProvider
-{
-   /**
-    * Create instance of VirtualFileSystem.
-    *
-    * @param requestContext
-    *    request context
-    * @param listeners
-    *    listeners VirtualFileSystem may notify listeners about changes of its items
-    * @return instance of VirtualFileSystem
-    * @throws VirtualFileSystemException
-    */
-   VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
-      throws VirtualFileSystemException;
+public interface VirtualFileSystemProvider {
+    /**
+     * Create instance of VirtualFileSystem.
+     *
+     * @param requestContext
+     *         request context
+     * @param listeners
+     *         listeners VirtualFileSystem may notify listeners about changes of its items
+     * @return instance of VirtualFileSystem
+     * @throws VirtualFileSystemException
+     */
+    VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
+            throws VirtualFileSystemException;
 
-   /**
-    * Close this provider. Call this method after unregister provider from VirtualFileSystemRegistry. Typically this
-    * method called from {@link VirtualFileSystemRegistry#unregisterProvider(String)}. Usually should not call it
-    * directly.
-    */
-   void close();
+    /**
+     * Close this provider. Call this method after unregister provider from VirtualFileSystemRegistry. Typically this
+     * method called from {@link VirtualFileSystemRegistry#unregisterProvider(String)}. Usually should not call it
+     * directly.
+     */
+    void close();
 }

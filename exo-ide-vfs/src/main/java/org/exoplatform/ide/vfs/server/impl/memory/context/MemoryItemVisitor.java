@@ -24,7 +24,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface MemoryItemVisitor
-{
-   void visit(MemoryItem item) throws VirtualFileSystemException;
+public interface MemoryItemVisitor {
+    void visit(MemoryItem item) throws VirtualFileSystemException;
 }

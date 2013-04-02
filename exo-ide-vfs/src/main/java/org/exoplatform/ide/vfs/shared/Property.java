@@ -24,13 +24,12 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Property
-{
-   String getName();
+public interface Property {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   List<String> getValue();
+    List<String> getValue();
 
-   void setValue(List<String> value);
+    void setValue(List<String> value);
 }

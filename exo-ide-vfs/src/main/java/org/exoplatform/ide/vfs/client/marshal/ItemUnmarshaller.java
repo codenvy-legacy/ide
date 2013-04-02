@@ -30,85 +30,60 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Project;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 30, 2011 evgen $
- * 
  */
-public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
-{
+public class ItemUnmarshaller implements Unmarshallable<ItemWrapper> {
 
-   private ItemWrapper wrapper;
+    private ItemWrapper wrapper;
 
-   /**
-    * Item type
-    */
-   private static final String TYPE = "itemType";
+    /** Item type */
+    private static final String TYPE = "itemType";
 
-   /**
-    * Item mime type
-    */
-   private static final String MIME_TYPE = "mimeType";
+    /** Item mime type */
+    private static final String MIME_TYPE = "mimeType";
 
-   /**
-    * @param item
-    */
-   public ItemUnmarshaller(ItemWrapper item)
-   {
-      this.wrapper = item;
-   }
+    /** @param item */
+    public ItemUnmarshaller(ItemWrapper item) {
+        this.wrapper = item;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         JSONValue val = JSONParser.parseLenient(response.getText());
-         JSONObject object = val.isObject();
-         ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
-         String mimeType = null;
-         if (object.get(MIME_TYPE).isString() != null)
-            mimeType = object.get(MIME_TYPE).isString().stringValue();
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            JSONValue val = JSONParser.parseLenient(response.getText());
+            JSONObject object = val.isObject();
+            ItemType type = ItemType.valueOf(object.get(TYPE).isString().stringValue());
+            String mimeType = null;
+            if (object.get(MIME_TYPE).isString() != null)
+                mimeType = object.get(MIME_TYPE).isString().stringValue();
 
-         if (type == ItemType.PROJECT)
-         {
-            wrapper.setItem(new ProjectModel(object));
-         }
-         else if (type == ItemType.FOLDER)
-         {
-               wrapper.setItem(new FolderModel(object));
-         }
-         else
-         {
-            FileModel file = new FileModel(object);
-            if (wrapper.getItem() != null)
-            {
-               FolderModel parent = ((FileModel)wrapper.getItem()).getParent();
-               ProjectModel project = ((FileModel)wrapper.getItem()).getProject();
-               file.setParent(parent);
-               file.setProject(project);
+            if (type == ItemType.PROJECT) {
+                wrapper.setItem(new ProjectModel(object));
+            } else if (type == ItemType.FOLDER) {
+                wrapper.setItem(new FolderModel(object));
+            } else {
+                FileModel file = new FileModel(object);
+                if (wrapper.getItem() != null) {
+                    FolderModel parent = ((FileModel)wrapper.getItem()).getParent();
+                    ProjectModel project = ((FileModel)wrapper.getItem()).getProject();
+                    file.setParent(parent);
+                    file.setProject(project);
+                }
+                wrapper.setItem(file);
             }
-            wrapper.setItem(file);
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse item.");
-      }
-   }
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't parse item.");
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public ItemWrapper getPayload()
-   {
-      return wrapper;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public ItemWrapper getPayload() {
+        return wrapper;
+    }
 
 }

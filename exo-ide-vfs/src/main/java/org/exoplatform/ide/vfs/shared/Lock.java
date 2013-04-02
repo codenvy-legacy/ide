@@ -18,47 +18,47 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-public class Lock
-{
-   private String owner;
+public class Lock {
+    private String owner;
 
-   private String lockToken;
+    private String lockToken;
 
-   private int timeout;
+    private int timeout;
 
-   /**
-    * @param owner user who is owner of the lock
-    * @param lockToken lock token
-    * @param timeout lock timeout
-    */
-   public Lock(String owner, String lockToken, int timeout)
-   {
-      this.owner = owner;
-      this.lockToken = lockToken;
-      this.timeout = timeout;
-   }
+    /**
+     * @param owner
+     *         user who is owner of the lock
+     * @param lockToken
+     *         lock token
+     * @param timeout
+     *         lock timeout
+     */
+    public Lock(String owner, String lockToken, int timeout) {
+        this.owner = owner;
+        this.lockToken = lockToken;
+        this.timeout = timeout;
+    }
 
-   /** @return the owner */
-   public String getOwner()
-   {
-      return owner;
-   }
+    /** @return the owner */
+    public String getOwner() {
+        return owner;
+    }
 
-   /** @return the lockToken */
-   public String getLockToken()
-   {
-      return lockToken;
-   }
+    /** @return the lockToken */
+    public String getLockToken() {
+        return lockToken;
+    }
 
-   /** @return the timeout */
-   public int getTimeout()
-   {
-      return timeout;
-   }
+    /** @return the timeout */
+    public int getTimeout() {
+        return timeout;
+    }
 
-   /** @param timeout the timeout to set */
-   public void setTimeout(int timeout)
-   {
-      this.timeout = timeout;
-   }
+    /**
+     * @param timeout
+     *         the timeout to set
+     */
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 }

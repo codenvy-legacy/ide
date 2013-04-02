@@ -27,28 +27,23 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
- * 
  */
-public class FileContentUnmarshaller implements Unmarshallable<FileModel>
-{
+public class FileContentUnmarshaller implements Unmarshallable<FileModel> {
 
-   private final FileModel file;
+    private final FileModel file;
 
-   public FileContentUnmarshaller(FileModel file)
-   {
-      this.file = file;
-   }
+    public FileContentUnmarshaller(FileModel file) {
+        this.file = file;
+    }
 
-   @Override
-   public FileModel getPayload()
-   {
-      return file;
-   }
+    @Override
+    public FileModel getPayload() {
+        return file;
+    }
 
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      file.setContent(response.getText());
-   }
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        file.setContent(response.getText());
+    }
 
 }
