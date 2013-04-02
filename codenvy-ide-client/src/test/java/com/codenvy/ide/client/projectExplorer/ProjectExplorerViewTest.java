@@ -16,6 +16,7 @@
  */
 package com.codenvy.ide.client.projectExplorer;
 
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Test;
@@ -26,17 +27,10 @@ import org.junit.Test;
  *          exo@exoplatform.com
  * Aug 6, 2012  
  */
+@GwtModule("com.codenvy.ide.IDE")
 public class ProjectExplorerViewTest extends GwtTestWithMockito
 {
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public String getModuleName()
-   {
-      return "com.codenvy.ide.IDE";
-   }
 
    @Test
    public void shouldReactOnDoubleClick()

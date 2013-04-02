@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.codenvy.ide.runtime;
 
-import com.codenvy.ide.runtime.Assert;
-
 /**
  * A concrete status implementation, suitable either for instantiating or subclassing.
  * <p>

@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.java.client;
 
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 /**
@@ -25,6 +26,7 @@ import com.googlecode.gwt.test.GwtTestWithMockito;
  * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
  * 
  */
+@GwtModule("com.codenvy.ide.java.Java")
 public abstract class BaseTest extends GwtTestWithMockito
 {
 
@@ -34,15 +36,6 @@ public abstract class BaseTest extends GwtTestWithMockito
    public BaseTest()
    {
       super();
-   }
-
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "com.codenvy.ide.java.Java";
    }
 
 }

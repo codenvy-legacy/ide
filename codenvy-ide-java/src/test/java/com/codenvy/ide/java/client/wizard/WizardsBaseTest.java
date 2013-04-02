@@ -18,7 +18,7 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;

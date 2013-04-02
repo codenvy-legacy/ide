@@ -36,6 +36,7 @@ import com.codenvy.ide.runtime.IStatus;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
+import com.googlecode.gwt.test.GwtModule;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.junit.Assert;
@@ -51,20 +52,13 @@ import java.util.List;
  * @version $Id:
  *
  */
+@GwtModule("com.codenvy.ide.java.Java")
 public abstract class QuickFixTest extends GwtTestWithMockito
 {
 
    @Mock
    protected AstProvider astProvider;
-   
-   /**
-    * @see com.googlecode.gwt.test.GwtModuleRunnerAdapter#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "com.codenvy.ide.java.Java";
-   }
+
 
    public static AssistContext getCorrectionContext(Document document, int offset, int length, String name)
    {
