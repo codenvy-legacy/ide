@@ -36,62 +36,48 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAss
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: GroovyEditorExtension Mar 10, 2011 3:48:59 PM evgen $
- * 
  */
-public class JavaEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler
-{
+public class JavaEditorExtension extends Extension implements InitializeServicesHandler, JavaCodeAssistantErrorHandler {
 
-   public static final JavaConstants MESSAGES = GWT.create(JavaConstants.class);
+    public static final JavaConstants MESSAGES = GWT.create(JavaConstants.class);
 
-   public static final JavaCodeAssistantAutoBeanFactory AUTO_BEAN_FACTORY = GWT
-      .create(JavaCodeAssistantAutoBeanFactory.class);
+    public static final JavaCodeAssistantAutoBeanFactory AUTO_BEAN_FACTORY = GWT
+            .create(JavaCodeAssistantAutoBeanFactory.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      JavaClientBundle.INSTANCE.css().ensureInjected();
-   }
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        JavaClientBundle.INSTANCE.css().ensureInjected();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
 
-      if (JavaCodeAssistantService.get() == null)
-         new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
+        if (JavaCodeAssistantService.get() == null)
+            new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
 
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));      
-   }
+        IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable)
-    */
-   @Override
-   public void handleError(Throwable exc)
-   {
-      if (exc instanceof ServerException)
-      {
-         ServerException exception = (ServerException)exc;
-         String outputContent =
-            "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
-         if (!exception.getMessage().equals(""))
-         {
-            outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on
-                                                                                        // "<br />"
-         }
+    /** @see org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler#handleError(java.lang.Throwable) */
+    @Override
+    public void handleError(Throwable exc) {
+        if (exc instanceof ServerException) {
+            ServerException exception = (ServerException)exc;
+            String outputContent =
+                    "Error (<i>" + exception.getHTTPStatus() + "</i>: <i>" + exception.getStatusText() + "</i>)";
+            if (!exception.getMessage().equals("")) {
+                outputContent += "<br />" + exception.getMessage().replace("\n", "<br />"); // replace "end of line" symbols on
+                // "<br />"
+            }
 
-         IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
-      }
-      else
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
-      }
-   }
+            IDE.fireEvent(new OutputEvent(outputContent, OutputMessage.Type.ERROR));
+        } else {
+            IDE.fireEvent(new ExceptionThrownEvent(exc.getMessage()));
+        }
+    }
 
 }

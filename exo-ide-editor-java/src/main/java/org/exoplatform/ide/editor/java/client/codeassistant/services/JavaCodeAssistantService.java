@@ -23,11 +23,7 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.Marshallable;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.*;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
@@ -38,92 +34,76 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 /**
  * Implementation of {@link CodeAssistantService} <br>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 17, 2010 4:44:53 PM evgen $
- * 
  */
-public class JavaCodeAssistantService extends CodeAssistantService
-{
+public class JavaCodeAssistantService extends CodeAssistantService {
 
-   private static JavaCodeAssistantService instance;
+    private static JavaCodeAssistantService instance;
 
-   private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-in-package";
+    private static final String FIND_BY_PROJECT = "/ide/code-assistant/java/find-in-package";
 
-   private static final String TYPES_BY_FQNS = "/ide/code-assistant/java/types-by-fqns";
+    private static final String TYPES_BY_FQNS = "/ide/code-assistant/java/types-by-fqns";
 
-   public JavaCodeAssistantService(String restServiceContext, Loader loader)
-   {
-      super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", // GET_CLASS_URL
-         "/ide/code-assistant/java/find-by-prefix/", // FIND_CLASS_BY_PREFIX
-         "/ide/code-assistant/java/find-by-type/");
-      instance = this;
-   }
+    public JavaCodeAssistantService(String restServiceContext, Loader loader) {
+        super(restServiceContext, loader, "/ide/code-assistant/java/class-description?fqn=", // GET_CLASS_URL
+              "/ide/code-assistant/java/find-by-prefix/", // FIND_CLASS_BY_PREFIX
+              "/ide/code-assistant/java/find-by-type/");
+        instance = this;
+    }
 
-   public static JavaCodeAssistantService get()
-   {
-      return instance;
-   }
+    public static JavaCodeAssistantService get() {
+        return instance;
+    }
 
-   /**
-    * Find all classes from project with file.
-    * 
-    * @param fileRelPath for who autocompletion called (Need for find classpath)
-    * @param callback - the callback which client has to implement
-    */
-   public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<TypesList> callback)
-   {
-      if (fileId != null)
-      {
-         String url = restServiceContext + FIND_BY_PROJECT;
-         url +=
-            "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
-               + VirtualFileSystem.getInstance().getInfo().getId();
-         try
-         {
+    /**
+     * Find all classes from project with file.
+     *
+     * @param fileRelPath
+     *         for who autocompletion called (Need for find classpath)
+     * @param callback
+     *         - the callback which client has to implement
+     */
+    public void findClassesByProject(String fileId, String projectId, AsyncRequestCallback<TypesList> callback) {
+        if (fileId != null) {
+            String url = restServiceContext + FIND_BY_PROJECT;
+            url +=
+                    "?fileid=" + fileId + "&projectid=" + projectId + "&vfsid="
+                    + VirtualFileSystem.getInstance().getInfo().getId();
+            try {
+                AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+            } catch (RequestException e) {
+                IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+        }
+    }
+
+    public void findTypeByPrefix(String prefix, Types type, String projectId, AsyncRequestCallback<TypesList> callback) {
+        String url = restServiceContext + FIND_TYPE + type.toString();
+        url += "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+        if (prefix != null && !prefix.isEmpty()) {
+            url += "&prefix=" + prefix;
+        }
+        try {
             AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-         }
-         catch (RequestException e)
-         {
+        } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
-         }
-      }
-   }
+        }
+    }
 
-   public void findTypeByPrefix(String prefix, Types type, String projectId, AsyncRequestCallback<TypesList> callback)
-   {
-      String url = restServiceContext + FIND_TYPE + type.toString();
-      url += "?projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-      if (prefix != null && !prefix.isEmpty())
-      {
-         url += "&prefix=" + prefix;
-      }
-      try
-      {
-         AsyncRequest.build(RequestBuilder.GET, url).send(callback);
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   public void getTypesByFqns(String[] fqns, String projectId, AsyncRequestCallback<TypesInfoList> callback)
-   {
-      String url = restServiceContext + TYPES_BY_FQNS;
-      url += "?vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-      if(projectId != null)
-         url += "&projecid=" + projectId;
-      try
-      {
-         Marshallable marshallable = new String2ArrayMarshaller(fqns);
-         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-            .data(marshallable.marshal()).send(callback);
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    public void getTypesByFqns(String[] fqns, String projectId, AsyncRequestCallback<TypesInfoList> callback) {
+        String url = restServiceContext + TYPES_BY_FQNS;
+        url += "?vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+        if (projectId != null)
+            url += "&projecid=" + projectId;
+        try {
+            Marshallable marshallable = new String2ArrayMarshaller(fqns);
+            AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                        .data(marshallable.marshal()).send(callback);
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
 }

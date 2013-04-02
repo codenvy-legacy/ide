@@ -23,40 +23,30 @@ import org.exoplatform.gwtframework.commons.rest.Marshallable;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:43:16 AM 34360 2009-07-22 23:58:59Z evgen $
- * 
  */
-public class String2ArrayMarshaller implements Marshallable
-{
+public class String2ArrayMarshaller implements Marshallable {
 
-   private String[] strings;
+    private String[] strings;
 
-   /**
-    * @param strings
-    */
-   public String2ArrayMarshaller(String[] strings)
-   {
-      this.strings = strings;
-   }
+    /** @param strings */
+    public String2ArrayMarshaller(String[] strings) {
+        this.strings = strings;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
 
-      StringBuffer sb = new StringBuffer();
-      sb.append("[");
-      for (int i = 0, c = strings.length; i < c; i++)
-      {
-         if (i > 0)
-         {
-            sb.append(",");
-         }
-         sb.append(strings[i]);
-      }
-      sb.append("]");
-      return sb.toString();
-   }
+        StringBuffer sb = new StringBuffer();
+        sb.append("[");
+        for (int i = 0, c = strings.length; i < c; i++) {
+            if (i > 0) {
+                sb.append(",");
+            }
+            sb.append(strings[i]);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 
 }

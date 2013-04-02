@@ -25,49 +25,37 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 24, 2010 3:18:00 PM evgen $
- * 
  */
-public class JavaClass
-{
+public class JavaClass {
 
-   private List<Token> methods = new ArrayList<Token>();
+    private List<Token> methods = new ArrayList<Token>();
 
-   private List<Token> fields = new ArrayList<Token>();
+    private List<Token> fields = new ArrayList<Token>();
 
-   private List<Token> constructors = new ArrayList<Token>();
+    private List<Token> constructors = new ArrayList<Token>();
 
-   private List<Token> abstractMethods = new ArrayList<Token>();
+    private List<Token> abstractMethods = new ArrayList<Token>();
 
-   /**
-    * @return the {@link List} of public methods
-    */
-   public List<Token> getPublicMethods()
-   {
-      return methods;
-   }
+    /** @return the {@link List} of public methods */
+    public List<Token> getPublicMethods() {
+        return methods;
+    }
 
-   /**
-    * @return the {@link List} of public fields
-    */
-   public List<Token> getPublicFields()
-   {
-      return fields;
-   }
+    /** @return the {@link List} of public fields */
+    public List<Token> getPublicFields() {
+        return fields;
+    }
 
-   /**
-    * @return the {@link List} of public constructors
-    */
-   public List<Token> getPublicConstructors()
-   {
-      return constructors;
-   }
+    /** @return the {@link List} of public constructors */
+    public List<Token> getPublicConstructors() {
+        return constructors;
+    }
 
-   public List<Token> getAbstractMethods()
-   {
-      return abstractMethods;
-   }
+    public List<Token> getAbstractMethods() {
+        return abstractMethods;
+    }
 
 }

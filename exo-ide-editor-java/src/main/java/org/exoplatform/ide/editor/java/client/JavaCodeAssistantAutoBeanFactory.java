@@ -18,25 +18,25 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface JavaCodeAssistantAutoBeanFactory extends AutoBeanFactory
-{
-   
-   AutoBean<ShortTypeInfo> shortTypeInfo();
-   
-   AutoBean<TypeInfo> typeInfo();
-   
-   AutoBean<TypesList> types();
+ */
+public interface JavaCodeAssistantAutoBeanFactory extends AutoBeanFactory {
+
+    AutoBean<ShortTypeInfo> shortTypeInfo();
+
+    AutoBean<TypeInfo> typeInfo();
+
+    AutoBean<TypesList> types();
 
 }
