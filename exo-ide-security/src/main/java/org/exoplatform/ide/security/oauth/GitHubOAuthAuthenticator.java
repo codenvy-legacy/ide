@@ -45,7 +45,7 @@ import javax.mail.internet.InternetAddress;
  */
 public class GitHubOAuthAuthenticator extends OAuthAuthenticator
 {
-   protected GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
+   public GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {
       super(
          new AuthorizationCodeFlow.Builder(BearerToken.authorizationHeaderAccessMethod(),
