@@ -111,7 +111,7 @@ public class ResourceProviderComponent implements ResourceProvider, Component
       this.genericModelProvider = genericModelProvider;
       this.eventBus = eventBus;
       this.defaulFile = defaulFile;
-      this.workspaceURL = "rest/ide/vfs/dev-monit";
+      this.workspaceURL = "rest/ide/vfs/v2";
       this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
       this.natures = JsonCollections.<ProjectNature> createStringMap();
       this.fileTypes = JsonCollections.createIntegerMap();

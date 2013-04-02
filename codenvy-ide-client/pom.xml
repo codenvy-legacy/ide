@@ -67,7 +67,7 @@
       <!-- Serverside JCR VFS -->
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-jcr</artifactId>
+         <artifactId>exo-ide-vfs-fs</artifactId>
          <scope>runtime</scope>
       </dependency>
       <!-- Extensions -->
@@ -96,39 +96,6 @@
          <artifactId>codenvy-ext-maven</artifactId>
       </dependency>
 
-      <!-- fix dependecies in JCR. Used for VFS-JCR -->
-      <dependency>
-         <groupId>org.hsqldb</groupId>
-         <artifactId>hsqldb</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.webdav</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.framework.web</artifactId>
-         <scope>runtime</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>xstream</groupId>
-               <artifactId>xstream</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform</groupId>
-         <artifactId>exo-jcr-services</artifactId>
-         <scope>runtime</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>xstream</groupId>
-               <artifactId>xstream</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
       <dependency>
          <groupId>commons-io</groupId>
          <artifactId>commons-io</artifactId>

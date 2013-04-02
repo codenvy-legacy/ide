@@ -9,7 +9,6 @@
 <web-app>
    <display-name>IDE</display-name>
 
-
    <context-param>
       <param-name>everrest.exoplatform.standalone.config</param-name>
       <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
@@ -18,7 +17,6 @@
    <listener>
       <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
    </listener>
-
 
    <!-- Servlets -->
 
@@ -42,40 +40,35 @@
       <url-pattern>/rest/private/*</url-pattern>
    </servlet-mapping>
 
-
    <filter>
       <filter-name>SetCurrentIdentityFilter</filter-name>
       <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
    </filter>
 
-   <filter>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-      <filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
-   </filter>
-
-
-   <!--filter> <filter-name>StandaloneAuthenticationFilter</filter-name> <filter-class>org.exoplatform.ide.authentication.StandaloneAuthenticationFilter</filter-class> 
-      </filter -->
-
    <filter-mapping>
       <filter-name>SetCurrentIdentityFilter</filter-name>
       <url-pattern>/rest/*</url-pattern>
    </filter-mapping>
+      
+   <filter>
+      <filter-name>SetEnvironmentContextFilter</filter-name>
+      <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
+   </filter>
+   
+   	<filter>
+		<filter-name>StandaloneAuthenticationFilter</filter-name>
+		<filter-class>org.exoplatform.ide.authentication.StandaloneAuthenticationFilter</filter-class>
+	</filter>
 
-   <!-- filter-mapping> <filter-name>StandaloneAuthenticationFilter</filter-name> <url-pattern>/rest/private/*</url-pattern> 
-      </filter-mapping -->
-
-   <filter-mapping>
-      <filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
-      <url-pattern>/rest/*</url-pattern>
-   </filter-mapping>
-
-
-   <!--servlet> <servlet-name>remoteLoggerServiceImpl</servlet-name> <servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServiceImpl</servlet-class> 
-      </servlet> <servlet-mapping> <servlet-name>remoteLoggerServiceImpl</servlet-name> <url-pattern>/IDE/gwt-log</url-pattern> 
-      </servlet-mapping -->
-
-
+	<filter-mapping>
+		<filter-name>SetCurrentIdentityFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>SetEnvironmentContextFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
 
    <session-config>
       <session-timeout>30</session-timeout>
@@ -85,6 +78,5 @@
       <description>the user role</description>
       <role-name>users</role-name>
    </security-role>
-
 
 </web-app>
