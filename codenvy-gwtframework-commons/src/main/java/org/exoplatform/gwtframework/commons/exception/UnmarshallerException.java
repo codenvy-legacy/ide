@@ -18,16 +18,15 @@ package org.exoplatform.gwtframework.commons.exception;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
-*/
+ */
 @SuppressWarnings("serial")
-public class UnmarshallerException extends Exception
-{
+public class UnmarshallerException extends Exception {
 
-   public UnmarshallerException(String message)
-   {
-      super(message);
-   }
+    public UnmarshallerException(String message) {
+        super(message);
+    }
 
 }

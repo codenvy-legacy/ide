@@ -27,9 +27,9 @@ package org.exoplatform.gwtframework.commons.wadl;
 
 /**
  * <p>Java class for ParamStyle.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
+ * <p/>
  * <pre>
  * &lt;simpleType name="ParamStyle">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -41,34 +41,27 @@ package org.exoplatform.gwtframework.commons.wadl;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
-public enum ParamStyle 
-{
+public enum ParamStyle {
 
-   PLAIN("plain"), QUERY("query"), MATRIX("matrix"), HEADER("header"), TEMPLATE("template");
-   private final String value;
+    PLAIN("plain"), QUERY("query"), MATRIX("matrix"), HEADER("header"), TEMPLATE("template");
+    private final String value;
 
-   ParamStyle(String v)
-   {
-      value = v;
-   }
+    ParamStyle(String v) {
+        value = v;
+    }
 
-   public String value()
-   {
-      return value;
-   }
+    public String value() {
+        return value;
+    }
 
-   public static ParamStyle fromValue(String v)
-   {
-      for (ParamStyle c : ParamStyle.values())
-      {
-         if (c.value.equals(v))
-         {
-            return c;
-         }
-      }
-      throw new IllegalArgumentException(v.toString());
-   }
+    public static ParamStyle fromValue(String v) {
+        for (ParamStyle c : ParamStyle.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v.toString());
+    }
 
 }

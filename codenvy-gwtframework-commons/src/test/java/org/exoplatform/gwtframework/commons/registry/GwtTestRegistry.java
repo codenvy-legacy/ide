@@ -24,33 +24,32 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GwtTestRegistry extends GWTTestCase
-{
+public class GwtTestRegistry extends GWTTestCase {
 
-   private static String conf =
-      "<?xml version=\"1.0\" ?><BackupManager jcr:primaryType=\"exo:registryEntry\">"
-         + "<context jcr:primaryType=\"nt:unstructured\">portal/rest</context>"
-         + "<repository jcr:primaryType=\"nt:unstructured\">repository</repository>"
-         + "<workspace jcr:primaryType=\"nt:unstructured\">collaboration</workspace>" + "</BackupManager>";
+    private static String conf =
+            "<?xml version=\"1.0\" ?><BackupManager jcr:primaryType=\"exo:registryEntry\">"
+            + "<context jcr:primaryType=\"nt:unstructured\">portal/rest</context>"
+            + "<repository jcr:primaryType=\"nt:unstructured\">repository</repository>"
+            + "<workspace jcr:primaryType=\"nt:unstructured\">collaboration</workspace>" + "</BackupManager>";
 
-   private final static String PROP_NAME = "repository";
+    private final static String PROP_NAME = "repository";
 
-   private final static String PROP_VALUE = "repository";
+    private final static String PROP_VALUE = "repository";
 
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.gwt.commons.CommonsJUnit";
-   }
+    @Override
+    public String getModuleName() {
+        return "org.exoplatform.gwt.commons.CommonsJUnit";
+    }
 
-   //  public void testGetProperties(){
-   //    Document  doc = XMLParser.parse(conf);
-   //    Registry registry = new Registry(doc);
-   //    String value = registry.getProperties(PROP_NAME);
-   //    assertEquals(PROP_VALUE, value);
-   //  }
+    //  public void testGetProperties(){
+    //    Document  doc = XMLParser.parse(conf);
+    //    Registry registry = new Registry(doc);
+    //    String value = registry.getProperties(PROP_NAME);
+    //    assertEquals(PROP_VALUE, value);
+    //  }
 
 }

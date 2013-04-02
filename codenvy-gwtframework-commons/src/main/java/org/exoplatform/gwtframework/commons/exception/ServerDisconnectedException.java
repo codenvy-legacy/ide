@@ -22,24 +22,21 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 @SuppressWarnings("serial")
-public class ServerDisconnectedException extends Exception
-{
+public class ServerDisconnectedException extends Exception {
 
-   private AsyncRequest asyncRequest;
+    private AsyncRequest asyncRequest;
 
-   public ServerDisconnectedException(AsyncRequest asyncRequest)
-   {
-      this.asyncRequest = asyncRequest;
-   }
+    public ServerDisconnectedException(AsyncRequest asyncRequest) {
+        this.asyncRequest = asyncRequest;
+    }
 
-   public AsyncRequest getAsyncRequest()
-   {
-      return asyncRequest;
-   }
+    public AsyncRequest getAsyncRequest() {
+        return asyncRequest;
+    }
 }

@@ -26,18 +26,18 @@
 
 package org.exoplatform.gwtframework.commons.wadl;
 
+import org.exoplatform.gwtframework.commons.xml.QName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.xml.QName;
-
 /**
  * <p>Java class for anonymous complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -61,455 +61,373 @@ import org.exoplatform.gwtframework.commons.xml.QName;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
-public class Param
-{
+public class Param {
 
-   protected List<Doc> doc;
+    protected List<Doc> doc;
 
-   protected List<Option> option;
+    protected List<Option> option;
 
-   protected Link link;
+    protected Link link;
 
-   protected List<Object> any;
+    protected List<Object> any;
 
-   protected String _default;
+    protected String _default;
 
-   protected String fixed;
+    protected String fixed;
 
-   protected String id;
+    protected String id;
 
-   protected String name;
+    protected String name;
 
-   protected String path;
+    protected String path;
 
-   protected Boolean repeating;
+    protected Boolean repeating;
 
-   protected Boolean required;
+    protected Boolean required;
 
-   protected ParamStyle style;
+    protected ParamStyle style;
 
-   protected QName type;
+    protected QName type;
 
-   protected String href;
+    protected String href;
 
-   /**
-    * Sets the value of the href property.
-    */
-   public String getHref()
-   {
-      return href;
-   }
+    /** Sets the value of the href property. */
+    public String getHref() {
+        return href;
+    }
 
-   /**
-    * Sets the value of the href property.
-    * 
-    * @param href
-    *     allowed object is
-    *     {@link String }
-    *     
-    */
-   public void setHref(String href)
-   {
-      this.href = href;
-   }
+    /**
+     * Sets the value of the href property.
+     *
+     * @param href
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setHref(String href) {
+        this.href = href;
+    }
 
-   private Map<QName, String> otherAttributes = new HashMap<QName, String>();
+    private Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
-   /**
-    * Gets the value of the doc property.
-    * 
-    * <p>
-    * This accessor method returns a reference to the live list,
-    * not a snapshot. Therefore any modification you make to the
-    * returned list will be present inside the JAXB object.
-    * This is why there is not a <CODE>set</CODE> method for the doc property.
-    * 
-    * <p>
-    * For example, to add a new item, do as follows:
-    * <pre>
-    *    getDoc().add(newItem);
-    * </pre>
-    * 
-    * 
-    * <p>
-    * Objects of the following type(s) are allowed in the list
-    * {@link Doc }
-    * 
-    * 
-    */
-   public List<Doc> getDoc()
-   {
-      if (doc == null)
-      {
-         doc = new ArrayList<Doc>();
-      }
-      return this.doc;
-   }
+    /**
+     * Gets the value of the doc property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the doc property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getDoc().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Doc }
+     */
+    public List<Doc> getDoc() {
+        if (doc == null) {
+            doc = new ArrayList<Doc>();
+        }
+        return this.doc;
+    }
 
-   /**
-    * Gets the value of the option property.
-    * 
-    * <p>
-    * This accessor method returns a reference to the live list,
-    * not a snapshot. Therefore any modification you make to the
-    * returned list will be present inside the JAXB object.
-    * This is why there is not a <CODE>set</CODE> method for the option property.
-    * 
-    * <p>
-    * For example, to add a new item, do as follows:
-    * <pre>
-    *    getOption().add(newItem);
-    * </pre>
-    * 
-    * 
-    * <p>
-    * Objects of the following type(s) are allowed in the list
-    * {@link Option }
-    * 
-    * 
-    */
-   public List<Option> getOption()
-   {
-      if (option == null)
-      {
-         option = new ArrayList<Option>();
-      }
-      return this.option;
-   }
+    /**
+     * Gets the value of the option property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the option property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getOption().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Option }
+     */
+    public List<Option> getOption() {
+        if (option == null) {
+            option = new ArrayList<Option>();
+        }
+        return this.option;
+    }
 
-   /**
-    * Gets the value of the link property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link Link }
-    *     
-    */
-   public Link getLink()
-   {
-      return link;
-   }
+    /**
+     * Gets the value of the link property.
+     *
+     * @return possible object is
+     *         {@link Link }
+     */
+    public Link getLink() {
+        return link;
+    }
 
-   /**
-    * Sets the value of the link property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link Link }
-    *     
-    */
-   public void setLink(Link value)
-   {
-      this.link = value;
-   }
+    /**
+     * Sets the value of the link property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link Link }
+     */
+    public void setLink(Link value) {
+        this.link = value;
+    }
 
-   /**
-    * Gets the value of the any property.
-    * 
-    * <p>
-    * This accessor method returns a reference to the live list,
-    * not a snapshot. Therefore any modification you make to the
-    * returned list will be present inside the JAXB object.
-    * This is why there is not a <CODE>set</CODE> method for the any property.
-    * 
-    * <p>
-    * For example, to add a new item, do as follows:
-    * <pre>
-    *    getAny().add(newItem);
-    * </pre>
-    * 
-    * 
-    * <p>
-    * Objects of the following type(s) are allowed in the list
-    * {@link Object }
-    * {@link Element }
-    * 
-    * 
-    */
-   public List<Object> getAny()
-   {
-      if (any == null)
-      {
-         any = new ArrayList<Object>();
-      }
-      return this.any;
-   }
+    /**
+     * Gets the value of the any property.
+     * <p/>
+     * <p/>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the any property.
+     * <p/>
+     * <p/>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getAny().add(newItem);
+     * </pre>
+     * <p/>
+     * <p/>
+     * <p/>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Object }
+     * {@link Element }
+     */
+    public List<Object> getAny() {
+        if (any == null) {
+            any = new ArrayList<Object>();
+        }
+        return this.any;
+    }
 
-   /**
-    * Gets the value of the default property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link String }
-    *     
-    */
-   public String getDefault()
-   {
-      return _default;
-   }
+    /**
+     * Gets the value of the default property.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
+    public String getDefault() {
+        return _default;
+    }
 
-   /**
-    * Sets the value of the default property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link String }
-    *     
-    */
-   public void setDefault(String value)
-   {
-      this._default = value;
-   }
+    /**
+     * Sets the value of the default property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setDefault(String value) {
+        this._default = value;
+    }
 
-   /**
-    * Gets the value of the fixed property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link String }
-    *     
-    */
-   public String getFixed()
-   {
-      return fixed;
-   }
+    /**
+     * Gets the value of the fixed property.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
+    public String getFixed() {
+        return fixed;
+    }
 
-   /**
-    * Sets the value of the fixed property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link String }
-    *     
-    */
-   public void setFixed(String value)
-   {
-      this.fixed = value;
-   }
+    /**
+     * Sets the value of the fixed property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setFixed(String value) {
+        this.fixed = value;
+    }
 
-   /**
-    * Gets the value of the id property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link String }
-    *     
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /**
+     * Gets the value of the id property.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * Sets the value of the id property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link String }
-    *     
-    */
-   public void setId(String value)
-   {
-      this.id = value;
-   }
+    /**
+     * Sets the value of the id property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setId(String value) {
+        this.id = value;
+    }
 
-   /**
-    * Gets the value of the name property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link String }
-    *     
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /**
+     * Gets the value of the name property.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * Sets the value of the name property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link String }
-    *     
-    */
-   public void setName(String value)
-   {
-      this.name = value;
-   }
+    /**
+     * Sets the value of the name property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setName(String value) {
+        this.name = value;
+    }
 
-   /**
-    * Gets the value of the path property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link String }
-    *     
-    */
-   public String getPath()
-   {
-      return path;
-   }
+    /**
+     * Gets the value of the path property.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
+    public String getPath() {
+        return path;
+    }
 
-   /**
-    * Sets the value of the path property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link String }
-    *     
-    */
-   public void setPath(String value)
-   {
-      this.path = value;
-   }
+    /**
+     * Sets the value of the path property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link String }
+     */
+    public void setPath(String value) {
+        this.path = value;
+    }
 
-   /**
-    * Gets the value of the repeating property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link Boolean }
-    *     
-    */
-   public boolean isRepeating()
-   {
-      if (repeating == null)
-      {
-         return false;
-      }
-      else
-      {
-         return repeating;
-      }
-   }
+    /**
+     * Gets the value of the repeating property.
+     *
+     * @return possible object is
+     *         {@link Boolean }
+     */
+    public boolean isRepeating() {
+        if (repeating == null) {
+            return false;
+        } else {
+            return repeating;
+        }
+    }
 
-   /**
-    * Sets the value of the repeating property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link Boolean }
-    *     
-    */
-   public void setRepeating(Boolean value)
-   {
-      this.repeating = value;
-   }
+    /**
+     * Sets the value of the repeating property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link Boolean }
+     */
+    public void setRepeating(Boolean value) {
+        this.repeating = value;
+    }
 
-   /**
-    * Gets the value of the required property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link Boolean }
-    *     
-    */
-   public boolean isRequired()
-   {
-      if (required == null)
-      {
-         return false;
-      }
-      else
-      {
-         return required;
-      }
-   }
+    /**
+     * Gets the value of the required property.
+     *
+     * @return possible object is
+     *         {@link Boolean }
+     */
+    public boolean isRequired() {
+        if (required == null) {
+            return false;
+        } else {
+            return required;
+        }
+    }
 
-   /**
-    * Sets the value of the required property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link Boolean }
-    *     
-    */
-   public void setRequired(Boolean value)
-   {
-      this.required = value;
-   }
+    /**
+     * Sets the value of the required property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link Boolean }
+     */
+    public void setRequired(Boolean value) {
+        this.required = value;
+    }
 
-   /**
-    * Gets the value of the style property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link ParamStyle }
-    *     
-    */
-   public ParamStyle getStyle()
-   {
-      return style;
-   }
+    /**
+     * Gets the value of the style property.
+     *
+     * @return possible object is
+     *         {@link ParamStyle }
+     */
+    public ParamStyle getStyle() {
+        return style;
+    }
 
-   /**
-    * Sets the value of the style property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link ParamStyle }
-    *     
-    */
-   public void setStyle(ParamStyle value)
-   {
-      this.style = value;
-   }
+    /**
+     * Sets the value of the style property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link ParamStyle }
+     */
+    public void setStyle(ParamStyle value) {
+        this.style = value;
+    }
 
-   /**
-    * Gets the value of the type property.
-    * 
-    * @return
-    *     possible object is
-    *     {@link QName }
-    *     
-    */
-   public QName getType()
-   {
-      if (type == null)
-      {
-         return new QName("http://www.w3.org/2001/XMLSchema", "xs");
-      }
-      else
-      {
-         return type;
-      }
-   }
+    /**
+     * Gets the value of the type property.
+     *
+     * @return possible object is
+     *         {@link QName }
+     */
+    public QName getType() {
+        if (type == null) {
+            return new QName("http://www.w3.org/2001/XMLSchema", "xs");
+        } else {
+            return type;
+        }
+    }
 
-   /**
-    * Sets the value of the type property.
-    * 
-    * @param value
-    *     allowed object is
-    *     {@link QName }
-    *     
-    */
-   public void setType(QName value)
-   {
-      this.type = value;
-   }
+    /**
+     * Sets the value of the type property.
+     *
+     * @param value
+     *         allowed object is
+     *         {@link QName }
+     */
+    public void setType(QName value) {
+        this.type = value;
+    }
 
-   /**
-    * Gets a map that contains attributes that aren't bound to any typed property on this class.
-    * 
-    * <p>
-    * the map is keyed by the name of the attribute and 
-    * the value is the string value of the attribute.
-    * 
-    * the map returned by this method is live, and you can add new attribute
-    * by updating the map directly. Because of this design, there's no setter.
-    * 
-    * 
-    * @return
-    *     always non-null
-    */
-   public Map<QName, String> getOtherAttributes()
-   {
-      return otherAttributes;
-   }
+    /**
+     * Gets a map that contains attributes that aren't bound to any typed property on this class.
+     * <p/>
+     * <p/>
+     * the map is keyed by the name of the attribute and
+     * the value is the string value of the attribute.
+     * <p/>
+     * the map returned by this method is live, and you can add new attribute
+     * by updating the map directly. Because of this design, there's no setter.
+     *
+     * @return always non-null
+     */
+    public Map<QName, String> getOtherAttributes() {
+        return otherAttributes;
+    }
 
 }

@@ -21,41 +21,32 @@ package org.exoplatform.gwtframework.commons.rest;
 import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+
 /**
  * Unmarshaller for "Location" HTTP Header.
  * Uses in {@link AsyncRequest} for run REST Service Asynchronous
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Sep 16, 2011 evgen $
- *
  */
-public class LocationUnmarshaller implements Unmarshallable<StringBuilder>
-{
+public class LocationUnmarshaller implements Unmarshallable<StringBuilder> {
 
-   private StringBuilder result;
+    private StringBuilder result;
 
-   /**
-    * @param result
-    */
-   public LocationUnmarshaller(StringBuilder result)
-   {
-      super();
-      this.result = result;
-   }
+    /** @param result */
+    public LocationUnmarshaller(StringBuilder result) {
+        super();
+        this.result = result;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      result.append(response.getHeader("Location"));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    public void unmarshal(Response response) throws UnmarshallerException {
+        result.append(response.getHeader("Location"));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   public StringBuilder getPayload()
-   {
-      return result;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    public StringBuilder getPayload() {
+        return result;
+    }
 
 }
