@@ -29,40 +29,35 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP variable.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class PhpVariableWidget extends PhpTokenWidgetBase
-{
+public class PhpVariableWidget extends PhpTokenWidgetBase {
 
-   /**
-    * @param token
-    */
-   public PhpVariableWidget(Token token)
-   {
-      super(token);
-      grid = new Grid(1, 2);
-      grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
-      Image i = new Image(PhpClientBundle.INSTANCE.variable());
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+    /** @param token */
+    public PhpVariableWidget(Token token) {
+        super(token);
+        grid = new Grid(1, 2);
+        grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
+        Image i = new Image(PhpClientBundle.INSTANCE.variable());
+        i.setHeight("16px");
+        grid.setWidget(0, 0, i);
 
-      String name = token.getName();
-      if (token.hasProperty(TokenProperties.ELEMENT_TYPE))
-         name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
+        String name = token.getName();
+        if (token.hasProperty(TokenProperties.ELEMENT_TYPE))
+            name += ":" + token.getProperty(TokenProperties.ELEMENT_TYPE).isStringProperty().stringValue();
 
-      Label nameLabel = new Label(name, false);
-      grid.setWidget(0, 1, nameLabel);
+        Label nameLabel = new Label(name, false);
+        grid.setWidget(0, 1, nameLabel);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 1, "100%");
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 1, "100%");
 
-      initWidget(grid);
-      setWidth("100%");
-   }
+        initWidget(grid);
+        setWidth("100%");
+    }
 
 }

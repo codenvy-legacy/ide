@@ -7,108 +7,106 @@ Yahoo! Inc. under the BSD (revised) open source license
 */
 
 html {
-  cursor: text;
+    cursor: text;
 }
 
 .editbox {
-  margin: .4em;
-  padding: 0;
-  font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
-  font-size: 10pt;
-  color: black;
-  line-height: 16px;
-  background-color: transparent;
+    margin: .4em;
+    padding: 0;
+    font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro', monospace;
+    font-size: 10pt;
+    color: black;
+    line-height: 16px;
+    background-color: transparent;
 }
 
 pre.code, .editbox {
-  color: #666666;
+    color: #666666;
 }
 
 .editbox p {
-  margin: 0;
+    margin: 0;
 }
 
 span.php-punctuation {
-  color: black;
+    color: black;
 }
 
 span.php-keyword {
-  color: rgb(127, 0, 85);
-  font-weight: bold;
+    color: rgb(127, 0, 85);
+    font-weight: bold;
 }
 
 span.php-operator {
-  color: black;
+    color: black;
 }
 
 /* __FILE__ etc.; http://php.net/manual/en/reserved.php */
 span.php-compile-time-constant {
-  color: BlueViolet;
-  /*color: black;*/
-  font-weight: bold;
+    color: BlueViolet;
+    /*color: black;*/
+    font-weight: bold;
 }
 
 /* output of get_defined_constants(). Differs from http://php.net/manual/en/reserved.constants.php */
 span.php-predefined-constant {
-  color: rgb(0,0,192);
-  font-weight: bold;
+    color: rgb(0, 0, 192);
+    font-weight: bold;
 }
 
 /* PHP reserved "language constructs"... echo() etc.; http://php.net/manual/en/reserved.php */
 span.php-reserved-language-construct {
-/*  color: rgb(127, 0, 85);*/
-  color: DarkMagenta;
-  font-weight: bold;
+    /*  color: rgb(127, 0, 85);*/
+    color: DarkMagenta;
+    font-weight: bold;
 }
 
 /* PHP built-in functions: glob(), chr() etc.; output of get_defined_functions()["internal"] */
 span.php-predefined-function {
-  color: black;
+    color: black;
 }
 
 /* PHP predefined classes: PDO, Exception etc.; output of get_declared_classes() and different from http://php.net/manual/en/reserved.classes.php */
 span.php-predefined-class {
-  color: black;
+    color: black;
 }
 
 span.php-atom {
-  color: black;
+    color: black;
 }
 
 /* class, interface, namespace or function names, but not $variables */
 span.php-t_string {
-  color: black;
+    color: black;
 }
 
 span.php-variable {
-  color: Purple;
+    color: Purple;
 }
 
-
 span.js-localvariable {
-  /* color: black;*/
-  color: Purple;
+    /* color: black;*/
+    color: Purple;
 }
 
 span.php-comment {
-  /*color: rgb(63, 85, 191);*/
-  color: rgb(85, 127, 95);
+    /*color: rgb(63, 85, 191);*/
+    color: rgb(85, 127, 95);
 }
 
 span.php-string-single-quoted, span.php-string-double-quoted {
-  color: rgb(0,0,192);
+    color: rgb(0, 0, 192);
 }
 
 /* double quoted strings allow interpolation */
-span.php-string-double-quoted
-{
-  color: rgb(0,0,192);
+span.php-string-double-quoted {
+    color: rgb(0, 0, 192);
 }
 
 span.syntax-error {
-/*  color: red; */
+    /*  color: red; */
 }
 
 span.deprecated {
-/*  text-decoration: line-through;*/
+    /*  text-decoration: line-through;*/
 }

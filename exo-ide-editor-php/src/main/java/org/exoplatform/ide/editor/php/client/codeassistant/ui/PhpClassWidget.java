@@ -28,63 +28,56 @@ import org.exoplatform.ide.editor.php.client.PhpClientBundle;
 
 /**
  * Ui component that represent PHP Class.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class PhpClassWidget extends PhpTokenWidgetBase
-{
+public class PhpClassWidget extends PhpTokenWidgetBase {
 
-   /**
-    * @param token
-    */
-   public PhpClassWidget(Token token)
-   {
-      super(token);
-      grid = new Grid(1, 3);
-      grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
-      grid.setWidth("100%");
+    /** @param token */
+    public PhpClassWidget(Token token) {
+        super(token);
+        grid = new Grid(1, 3);
+        grid.setStyleName(PhpClientBundle.INSTANCE.css().item());
+        grid.setWidth("100%");
 
-      Image i = getImage();
-      i.setHeight("16px");
-      grid.setWidget(0, 0, i);
+        Image i = getImage();
+        i.setHeight("16px");
+        grid.setWidget(0, 0, i);
 
-      Label nameLabel = new Label(token.getName(), false);
-      nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
+        Label nameLabel = new Label(token.getName(), false);
+        nameLabel.getElement().setInnerHTML(getModifiers() + nameLabel.getElement().getInnerHTML());
 
-      grid.setWidget(0, 1, nameLabel);
+        grid.setWidget(0, 1, nameLabel);
 
-      grid.getCellFormatter().setWidth(0, 0, "16px");
-      grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
-      grid.getCellFormatter().setWidth(0, 2, "100%");
+        grid.getCellFormatter().setWidth(0, 0, "16px");
+        grid.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
+        grid.getCellFormatter().setWidth(0, 2, "100%");
 
-      initWidget(grid);
-      setWidth("100%");
-   }
+        initWidget(grid);
+        setWidth("100%");
+    }
 
-   /**
-    * Image that represent current token type(Class, Interface or Annotation)
-    * 
-    * @return {@link Image}
-    */
-   private Image getImage()
-   {
-      switch (token.getType())
-      {
+    /**
+     * Image that represent current token type(Class, Interface or Annotation)
+     *
+     * @return {@link Image}
+     */
+    private Image getImage() {
+        switch (token.getType()) {
 
-         case INTERFACE :
+            case INTERFACE:
 
-            return new Image(PhpClientBundle.INSTANCE.interfaceItem());
+                return new Image(PhpClientBundle.INSTANCE.interfaceItem());
 
-         case CLASS :
-         default :
-            return new Image(PhpClientBundle.INSTANCE.classItem());
+            case CLASS:
+            default:
+                return new Image(PhpClientBundle.INSTANCE.classItem());
 
-      }
+        }
 
-   }
+    }
 
 }
