@@ -29,113 +29,90 @@ import org.exoplatform.ide.shell.client.JobService;
 
 /**
  * Maven build service.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 4, 2012 10:49:32 AM anya $
- * 
  */
-public class MavenService
-{
-   /**
-    * Service.
-    */
-   private static MavenService mavenService;
+public class MavenService {
+    /** Service. */
+    private static MavenService mavenService;
 
-   /**
-    * REST context.
-    */
-   private final String REST_CONTEXT = "rest/private";
+    /** REST context. */
+    private final String REST_CONTEXT = "rest/private";
 
-   private static final String BASE_URL = "/ide/maven";
+    private static final String BASE_URL = "/ide/maven";
 
-   /**
-    * Build project method's path.
-    */
-   private static final String BUILD = BASE_URL + "/build";
+    /** Build project method's path. */
+    private static final String BUILD = BASE_URL + "/build";
 
-   /**
-    * Cancel building project method's path.
-    */
-   private static final String CANCEL = BASE_URL + "/cancel";
+    /** Cancel building project method's path. */
+    private static final String CANCEL = BASE_URL + "/cancel";
 
-   /**
-    * Get status of build method's path.
-    */
-   private static final String STATUS = BASE_URL + "/status";
+    /** Get status of build method's path. */
+    private static final String STATUS = BASE_URL + "/status";
 
-   /**
-    * Get build log method's path.
-    */
-   private static final String LOG = BASE_URL + "/log";
+    /** Get build log method's path. */
+    private static final String LOG = BASE_URL + "/log";
 
-   private MavenService()
-   {
-   }
+    private MavenService() {
+    }
 
-   /**
-    * @return {@link JobService} job service
-    */
-   public static MavenService getService()
-   {
-      if (mavenService == null)
-      {
-         mavenService = new MavenService();
-      }
-      return mavenService;
-   }
+    /** @return {@link JobService} job service */
+    public static MavenService getService() {
+        if (mavenService == null) {
+            mavenService = new MavenService();
+        }
+        return mavenService;
+    }
 
-   /**
-    * Start new build.
-    * 
-    * @throws RequestException
-    */
-   public void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException
-   {
-      final String requesrUrl = REST_CONTEXT + BUILD;
+    /**
+     * Start new build.
+     *
+     * @throws RequestException
+     */
+    public void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+            throws RequestException {
+        final String requesrUrl = REST_CONTEXT + BUILD;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
-      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
+        String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+        AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * Cancel launched build.
-    * 
-    * @throws RequestException
-    */
-   public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      final String requestUrl = REST_CONTEXT + CANCEL + "/" + buildid;
+    /**
+     * Cancel launched build.
+     *
+     * @throws RequestException
+     */
+    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        final String requestUrl = REST_CONTEXT + CANCEL + "/" + buildid;
 
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 
-   /**
-    * Get status of current build.
-    * 
-    * @throws RequestException
-    */
-   public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException
-   {
-      final String requestUrl = REST_CONTEXT + STATUS + "/" + buildid;
-      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+    /**
+     * Get status of current build.
+     *
+     * @throws RequestException
+     */
+    public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException {
+        final String requestUrl = REST_CONTEXT + STATUS + "/" + buildid;
+        callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 
-   /**
-    * Get build log.
-    * 
-    * @throws RequestException
-    */
-   public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
-   {
-      final String requestUrl = REST_CONTEXT + LOG + "/" + buildid;
+    /**
+     * Get build log.
+     *
+     * @throws RequestException
+     */
+    public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
+        final String requestUrl = REST_CONTEXT + LOG + "/" + buildid;
 
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+        AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 }

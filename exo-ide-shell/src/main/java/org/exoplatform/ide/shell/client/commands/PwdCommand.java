@@ -30,39 +30,31 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 10, 2011 evgen $
- * 
  */
-public class PwdCommand extends ClientCommand
-{
+public class PwdCommand extends ClientCommand {
 
-   private static final Set<String> commads = new HashSet<String>();
+    private static final Set<String> commads = new HashSet<String>();
 
-   static
-   {
-      commads.add("pwd");
-   }
+    static {
+        commads.add("pwd");
+    }
 
-   /**
-    * 
-    */
-   public PwdCommand()
-   {
-      super(commads, new Options(), CloudShell.messages.pwdHelp());
-   }
+    /**
+     *
+     */
+    public PwdCommand() {
+        super(commads, new Options(), CloudShell.messages.pwdHelp());
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
-    */
-   @Override
-   public void execute(CommandLine commandLine)
-   {
-      if (commandLine.hasOption("h"))
-      {
-         printHelp(CloudShell.messages.pwdUsage(), CloudShell.messages.pwdHeader());
-         return;
-      }
-      String workdir = Environment.get().getCurrentFolder().getPath();
-      CloudShell.console().print(workdir + "\n");
-   }
+    /** @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine) */
+    @Override
+    public void execute(CommandLine commandLine) {
+        if (commandLine.hasOption("h")) {
+            printHelp(CloudShell.messages.pwdUsage(), CloudShell.messages.pwdHeader());
+            return;
+        }
+        String workdir = Environment.get().getCurrentFolder().getPath();
+        CloudShell.console().print(workdir + "\n");
+    }
 
 }

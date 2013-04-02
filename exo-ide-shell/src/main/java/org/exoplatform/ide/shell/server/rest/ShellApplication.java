@@ -19,35 +19,27 @@
 package org.exoplatform.ide.shell.server.rest;
 
 import javax.ws.rs.core.Application;
-
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 1, 2011 evgen $
- * 
  */
-public class ShellApplication extends Application
-{
-   private Set<Class<?>> classes = new HashSet<Class<?>>(2);
+public class ShellApplication extends Application {
+    private Set<Class<?>> classes = new HashSet<Class<?>>(2);
 
-   
 
-   public ShellApplication()
-   {
-      classes.add(CLIResourcesService.class);
-      classes.add(ShellConfigurationService.class);
-   }
+    public ShellApplication() {
+        classes.add(CLIResourcesService.class);
+        classes.add(ShellConfigurationService.class);
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
 
 }

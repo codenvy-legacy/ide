@@ -20,24 +20,23 @@ package org.exoplatform.ide.shell.shared;
 
 /**
  * Interface describe login command.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Login.java Mar 28, 2012 11:11:07 AM azatsarynnyy $
- *
  */
-public interface Login
-{
-   /**
-    * Returns the login command.
-    * 
-    * @return the login command
-    */
-   String getCmd();
-   
-   /**
-    * Sets the login command.
-    * 
-    * @param cmd the login command
-    */
-   void setCmd(String cmd);
+public interface Login {
+    /**
+     * Returns the login command.
+     *
+     * @return the login command
+     */
+    String getCmd();
+
+    /**
+     * Sets the login command.
+     *
+     * @param cmd
+     *         the login command
+     */
+    void setCmd(String cmd);
 }

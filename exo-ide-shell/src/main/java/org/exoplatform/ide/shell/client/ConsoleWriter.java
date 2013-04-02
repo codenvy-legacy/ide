@@ -21,45 +21,37 @@ package org.exoplatform.ide.shell.client;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Aug 2, 2011 12:57:09 PM anya $
- * 
  */
-public interface ConsoleWriter
-{
-   /**
-    * Print string to console.
-    * 
-    * @param str
-    */
-   void print(String str);
+public interface ConsoleWriter {
+    /**
+     * Print string to console.
+     *
+     * @param str
+     */
+    void print(String str);
 
-   /**
-    * Print string to console and move cursor on new line.
-    * 
-    * @param str
-    */
-   void println(String str);
+    /**
+     * Print string to console and move cursor on new line.
+     *
+     * @param str
+     */
+    void println(String str);
 
-   /**
-    * Print to console buffer(without add prompt on each call this method).
-    * 
-    * @param str
-    */
-   void printToBuffer(String str);
+    /**
+     * Print to console buffer(without add prompt on each call this method).
+     *
+     * @param str
+     */
+    void printToBuffer(String str);
 
-   /**
-    * Refresh console.
-    */
-   void flush();
+    /** Refresh console. */
+    void flush();
 
-   /**
-    * Print console's prompt.
-    */
-   void printPrompt();
+    /** Print console's prompt. */
+    void printPrompt();
 
-   /**
-    * Clear console.
-    */
-   void clearConsole();
+    /** Clear console. */
+    void clearConsole();
 
-   int getLength();
+    int getLength();
 }

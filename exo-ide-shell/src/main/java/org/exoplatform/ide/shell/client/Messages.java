@@ -21,128 +21,126 @@ package org.exoplatform.ide.shell.client;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 15, 2011 evgen $
- * 
  */
-public interface Messages extends com.google.gwt.i18n.client.Messages
-{
-   @Key("cat.help")
-   String catHelp();
+public interface Messages extends com.google.gwt.i18n.client.Messages {
+    @Key("cat.help")
+    String catHelp();
 
-   @Key("cat.usage")
-   String catUsage(String command);
+    @Key("cat.usage")
+    String catUsage(String command);
 
-   @Key("cat.file.content.error")
-   String catGetFileContentError();
+    @Key("cat.file.content.error")
+    String catGetFileContentError();
 
-   @Key("cat.folder.error")
-   String catFolderError(String folder);
+    @Key("cat.folder.error")
+    String catFolderError(String folder);
 
-   @Key("cat.not.found.error")
-   String catFileNotFound(String file);
+    @Key("cat.not.found.error")
+    String catFileNotFound(String file);
 
-   @Key("cd.help")
-   String cdHelp();
+    @Key("cd.help")
+    String cdHelp();
 
-   @Key("cd.usage")
-   String cdUsage();
+    @Key("cd.usage")
+    String cdUsage();
 
-   @Key("cd.error")
-   String cdError();
+    @Key("cd.error")
+    String cdError();
 
-   @Key("cd.error.not.folder")
-   String cdErrorFolder(String name);
+    @Key("cd.error.not.folder")
+    String cdErrorFolder(String name);
 
-   @Key("clear.help")
-   String clearHelp();
+    @Key("clear.help")
+    String clearHelp();
 
-   @Key("jobs.help")
-   String jobsHelp();
+    @Key("jobs.help")
+    String jobsHelp();
 
-   @Key("jobs.error")
-   String jobsError();
+    @Key("jobs.error")
+    String jobsError();
 
-   @Key("kill.help")
-   String killHelp();
-   
-   @Key("kill.usage")
-   String killUsage();
-   
-   @Key("kill.error")
-   String killError();
+    @Key("kill.help")
+    String killHelp();
 
-   @Key("help.help")
-   String helpHelp();
+    @Key("kill.usage")
+    String killUsage();
 
-   @Key("ls.help")
-   String lsHelp();
+    @Key("kill.error")
+    String killError();
 
-   @Key("ls.usage")
-   String lsUsage();
+    @Key("help.help")
+    String helpHelp();
 
-   @Key("ls.header")
-   String lsHeader();
+    @Key("ls.help")
+    String lsHelp();
 
-   @Key("ls.error")
-   String lsError(String folderName);
+    @Key("ls.usage")
+    String lsUsage();
 
-   @Key("mkdir.help")
-   String mkdirHelp();
+    @Key("ls.header")
+    String lsHeader();
 
-   @Key("mkdir.usage")
-   String mkdirUsage();
+    @Key("ls.error")
+    String lsError(String folderName);
 
-   @Key("mkdir.header")
-   String mkdirHeader();
+    @Key("mkdir.help")
+    String mkdirHelp();
 
-   @Key("mkdir.error")
-   String mkdirError();
+    @Key("mkdir.usage")
+    String mkdirUsage();
 
-   @Key("pwd.help")
-   String pwdHelp();
+    @Key("mkdir.header")
+    String mkdirHeader();
 
-   @Key("pwd.usage")
-   String pwdUsage();
+    @Key("mkdir.error")
+    String mkdirError();
 
-   @Key("pwd.header")
-   String pwdHeader();
+    @Key("pwd.help")
+    String pwdHelp();
 
-   @Key("rm.help")
-   String rmHelp();
+    @Key("pwd.usage")
+    String pwdUsage();
 
-   @Key("rm.usage")
-   String rmUsage();
+    @Key("pwd.header")
+    String pwdHeader();
 
-   @Key("rm.header")
-   String rmHeader();
-   
-   @Key("mvn.build.help")
-   String mvnBuildHelp();
-   
-   @Key("mvn.build.success")
-   String mvnBuildSuccess(String url);
+    @Key("rm.help")
+    String rmHelp();
 
-   // Errors
-   @Key("commands.unmarshaller.error")
-   String commandsUnmarshallerError();
+    @Key("rm.usage")
+    String rmUsage();
 
-   @Key("no.appropriate.command")
-   String noAppropriateCommandError(String command);
+    @Key("rm.header")
+    String rmHeader();
 
-   @Key("syntax.error")
-   String syntaxtError(String command);
+    @Key("mvn.build.help")
+    String mvnBuildHelp();
 
-   @Key("required.argument.not.found")
-   String requiredArgumentNotFound(String command);
+    @Key("mvn.build.success")
+    String mvnBuildSuccess(String url);
 
-   @Key("required.option.not.found")
-   String requiredOptionNotFound(String command);
+    // Errors
+    @Key("commands.unmarshaller.error")
+    String commandsUnmarshallerError();
 
-   @Key("required.property.not.set")
-   String requiredPropertyNotSet(String property);
+    @Key("no.appropriate.command")
+    String noAppropriateCommandError(String command);
 
-   @Key("kill.success")
-   String killJobSuccess();
-   
-   @Key("welcome.message")
-   String welcomeMessage();
+    @Key("syntax.error")
+    String syntaxtError(String command);
+
+    @Key("required.argument.not.found")
+    String requiredArgumentNotFound(String command);
+
+    @Key("required.option.not.found")
+    String requiredOptionNotFound(String command);
+
+    @Key("required.property.not.set")
+    String requiredPropertyNotSet(String property);
+
+    @Key("kill.success")
+    String killJobSuccess();
+
+    @Key("welcome.message")
+    String welcomeMessage();
 }

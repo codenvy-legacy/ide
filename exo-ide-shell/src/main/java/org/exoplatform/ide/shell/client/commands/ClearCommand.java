@@ -29,34 +29,27 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Aug 11, 2011 evgen $
- * 
  */
-public class ClearCommand extends ClientCommand
-{
+public class ClearCommand extends ClientCommand {
 
-   private static final Set<String> commads = new HashSet<String>();
+    private static final Set<String> commads = new HashSet<String>();
 
-   static
-   {
-      commads.add("clear");
-   }
+    static {
+        commads.add("clear");
+    }
 
-   /**
-    * 
-    */
-   public ClearCommand()
-   {
-      super(commads, new Options(), CloudShell.messages.clearHelp());
-   }
+    /**
+     *
+     */
+    public ClearCommand() {
+        super(commads, new Options(), CloudShell.messages.clearHelp());
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine)
-    */
-   @Override
-   public void execute(CommandLine commandLine)
-   {
-      CloudShell.console().clearConsole();
-      CloudShell.console().printPrompt();
-   }
+    /** @see org.exoplatform.ide.shell.client.model.ClientCommand#execute(org.exoplatform.ide.shell.client.cli.CommandLine) */
+    @Override
+    public void execute(CommandLine commandLine) {
+        CloudShell.console().clearConsole();
+        CloudShell.console().printPrompt();
+    }
 
 }

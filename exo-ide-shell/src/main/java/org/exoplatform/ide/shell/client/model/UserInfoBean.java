@@ -25,94 +25,72 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class UserInfoBean implements UserInfo
-{
+public class UserInfoBean implements UserInfo {
 
-   public static final String DEFAULT_USER_NAME = "DefaultUser";
+    public static final String DEFAULT_USER_NAME = "DefaultUser";
 
-   private String userId;
+    private String userId;
 
-   private List<String> groups;
+    private List<String> groups;
 
-   private List<String> roles;
+    private List<String> roles;
 
-   public UserInfoBean()
-   {
-   }
+    public UserInfoBean() {
+    }
 
-   public UserInfoBean(String id)
-   {
-      this.userId = id;
-   }
+    public UserInfoBean(String id) {
+        this.userId = id;
+    }
 
-   public UserInfoBean(String id, List<String> groups, List<String> roles)
-   {
-      this.userId = id;
-      this.groups = groups;
-      this.roles = roles;
-   }
+    public UserInfoBean(String id, List<String> groups, List<String> roles) {
+        this.userId = id;
+        this.groups = groups;
+        this.roles = roles;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#getUserId()
-    */
-   @Override
-   public String getUserId()
-   {
-      return userId;
-   }
+    /** @see org.exoplatform.ide.shell.shared.UserInfo#getUserId() */
+    @Override
+    public String getUserId() {
+        return userId;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#setUserId(java.lang.String)
-    */
-   @Override
-   public void setUserId(String id)
-   {
-      this.userId = id;
-   }
+    /** @see org.exoplatform.ide.shell.shared.UserInfo#setUserId(java.lang.String) */
+    @Override
+    public void setUserId(String id) {
+        this.userId = id;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#getGroups()
-    */
-   @Override
-   public List<String> getGroups()
-   {
-      if (groups == null)
-         groups = new ArrayList<String>();
-      return groups;
-   }
+    /** @see org.exoplatform.ide.shell.shared.UserInfo#getGroups() */
+    @Override
+    public List<String> getGroups() {
+        if (groups == null)
+            groups = new ArrayList<String>();
+        return groups;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#setGroups(java.util.List)
-    */
-   @Override
-   public void setGroups(List<String> groups)
-   {
-      this.groups = groups;
-   }
+    /** @see org.exoplatform.ide.shell.shared.UserInfo#setGroups(java.util.List) */
+    @Override
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#getRoles()
-    */
-   @Override
-   public List<String> getRoles()
-   {
-      if (roles == null)
-         roles = new ArrayList<String>();
-      return roles;
-   }
+    /** @see org.exoplatform.ide.shell.shared.UserInfo#getRoles() */
+    @Override
+    public List<String> getRoles() {
+        if (roles == null)
+            roles = new ArrayList<String>();
+        return roles;
+    }
 
-   /**
-    * @see org.exoplatform.ide.shell.shared.UserInfo#setRoles(java.util.List)
-    */
-   @Override
-   public void setRoles(List<String> roles)
-   {
-      this.roles = roles;
-   }
+    /** @see org.exoplatform.ide.shell.shared.UserInfo#setRoles(java.util.List) */
+    @Override
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 
 }
