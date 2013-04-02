@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class ShowLogReaderEvent extends GwtEvent<ShowLogReaderHandler>
-{
+public class ShowLogReaderEvent extends GwtEvent<ShowLogReaderHandler> {
 
-   public static final GwtEvent.Type<ShowLogReaderHandler> TYPE = new Type<ShowLogReaderHandler>();
+    public static final GwtEvent.Type<ShowLogReaderHandler> TYPE = new Type<ShowLogReaderHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowLogReaderHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowLogReaderHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowLogReaderHandler handler)
-   {
-      handler.onShowlogReader(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowLogReaderHandler handler) {
+        handler.onShowlogReader(this);
+    }
 
 }

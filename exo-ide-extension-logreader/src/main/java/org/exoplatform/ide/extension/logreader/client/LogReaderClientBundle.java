@@ -25,41 +25,39 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface LogReaderClientBundle extends ClientBundle
-{
+public interface LogReaderClientBundle extends ClientBundle {
 
-   LogReaderClientBundle INSTANCE = GWT.create(LogReaderClientBundle.class);
+    LogReaderClientBundle INSTANCE = GWT.create(LogReaderClientBundle.class);
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/log-reader-disabled.png")
-   ImageResource logReaderDisabled();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/log-reader-disabled.png")
+    ImageResource logReaderDisabled();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/log-reader.png")
-   ImageResource logReader();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/log-reader.png")
+    ImageResource logReader();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/clearOutput.png")
-   ImageResource clearOutput();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/clearOutput.png")
+    ImageResource clearOutput();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/log-reder-settings.png")
-   ImageResource logRederSettings();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/log-reder-settings.png")
+    ImageResource logRederSettings();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/next_Disabled.png")
-   ImageResource next_Disabled();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/next_Disabled.png")
+    ImageResource next_Disabled();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/next.png")
-   ImageResource next();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/next.png")
+    ImageResource next();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/prev_Disabled.png")
-   ImageResource prev_Disabled();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/prev_Disabled.png")
+    ImageResource prev_Disabled();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/prev.png")
-   ImageResource prev();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/prev.png")
+    ImageResource prev();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/refresh_Disabled.png")
-   ImageResource refresh_Disabled();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/refresh_Disabled.png")
+    ImageResource refresh_Disabled();
 
-   @Source("org/exoplatform/ide/extension/logreader/client/images/refresh.png")
-   ImageResource refresh();
+    @Source("org/exoplatform/ide/extension/logreader/client/images/refresh.png")
+    ImageResource refresh();
 
 }

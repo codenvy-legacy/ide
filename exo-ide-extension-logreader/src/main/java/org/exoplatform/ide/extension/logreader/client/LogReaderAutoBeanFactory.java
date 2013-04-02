@@ -25,18 +25,16 @@ import org.exoplatform.ide.extension.logreader.shared.LogEntry;
 
 /**
  * The interface for the AutoBean generator.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: LogReaderAutoBeanFactory.java Mar 15, 2012 6:45:41 PM azatsarynnyy $
- *
  */
-public interface LogReaderAutoBeanFactory extends AutoBeanFactory
-{
+public interface LogReaderAutoBeanFactory extends AutoBeanFactory {
 
-   /**
-    * A factory method for a log entry bean.
-    * 
-    * @return an {@link AutoBean} of type {@link LogEntry}
-    */
-   AutoBean<LogEntry> logEntry();
+    /**
+     * A factory method for a log entry bean.
+     *
+     * @return an {@link AutoBean} of type {@link LogEntry}
+     */
+    AutoBean<LogEntry> logEntry();
 }
