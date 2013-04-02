@@ -37,6 +37,10 @@
             </value-param>
         </init-params>
     </component>
+    
+     <component>
+        <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
+    </component>
 
 
 </configuration>
