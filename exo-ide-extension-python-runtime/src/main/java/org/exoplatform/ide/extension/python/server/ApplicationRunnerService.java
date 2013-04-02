@@ -38,41 +38,37 @@ import javax.ws.rs.core.UriInfo;
  * @version $Id: $
  */
 @Path("ide/python/runner")
-public class ApplicationRunnerService
-{
-   @Inject
-   private ApplicationRunner runner;
+public class ApplicationRunnerService {
+    @Inject
+    private ApplicationRunner runner;
 
-   @Inject
-   private VirtualFileSystemRegistry vfsRegistry;
+    @Inject
+    private VirtualFileSystemRegistry vfsRegistry;
 
-   @Path("run")
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public ApplicationInstance runApplication(@QueryParam("vfsid") String vfsId,
-                                             @QueryParam("projectid") String projectId,
-                                             @Context UriInfo uriInfo)
-      throws ApplicationRunnerException, VirtualFileSystemException
-   {
-      ApplicationInstance app = runner.runApplication(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
-      app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
-         .queryParam("name", app.getName()).build().toString());
-      return app;
-   }
+    @Path("run")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ApplicationInstance runApplication(@QueryParam("vfsid") String vfsId,
+                                              @QueryParam("projectid") String projectId,
+                                              @Context UriInfo uriInfo)
+            throws ApplicationRunnerException, VirtualFileSystemException {
+        ApplicationInstance app = runner.runApplication(
+                vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+        app.setStopURL(uriInfo.getBaseUriBuilder().path(getClass(), "stopApplication")
+                              .queryParam("name", app.getName()).build().toString());
+        return app;
+    }
 
-   @GET
-   @Path("logs")
-   @Produces(MediaType.TEXT_PLAIN)
-   public String getLogs(@QueryParam("name") String name) throws ApplicationRunnerException
-   {
-      return runner.getLogs(name);
-   }
+    @GET
+    @Path("logs")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getLogs(@QueryParam("name") String name) throws ApplicationRunnerException {
+        return runner.getLogs(name);
+    }
 
-   @GET
-   @Path("stop")
-   public void stopApplication(@QueryParam("name") String name) throws ApplicationRunnerException
-   {
-      runner.stopApplication(name);
-   }
+    @GET
+    @Path("stop")
+    public void stopApplication(@QueryParam("name") String name) throws ApplicationRunnerException {
+        runner.stopApplication(name);
+    }
 }

@@ -35,77 +35,64 @@ import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedE
 import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler;
 
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   ApplicationStartedHandler, ApplicationStoppedHandler
-{
-   private static final String ID = "Run/Python Logs";
+                                                              ApplicationStartedHandler, ApplicationStoppedHandler {
+    private static final String ID = "Run/Python Logs";
 
-   private static final String TITLE = PythonRuntimeExtension.PYTHON_LOCALIZATION.showLogsControlTitle();
+    private static final String TITLE = PythonRuntimeExtension.PYTHON_LOCALIZATION.showLogsControlTitle();
 
-   private static final String PROMPT = PythonRuntimeExtension.PYTHON_LOCALIZATION.showLogsControlPrompt();
+    private static final String PROMPT = PythonRuntimeExtension.PYTHON_LOCALIZATION.showLogsControlPrompt();
 
-   public ShowLogsControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(PythonExtensionClientBundle.INSTANCE.logs(), PythonExtensionClientBundle.INSTANCE.logsDisabled());
-      setEvent(new ShowLogsEvent());
-      setGroupName(GroupNames.RUNDEBUG);
-   }
+    public ShowLogsControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(PythonExtensionClientBundle.INSTANCE.logs(), PythonExtensionClientBundle.INSTANCE.logsDisabled());
+        setEvent(new ShowLogsEvent());
+        setGroupName(GroupNames.RUNDEBUG);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-      setVisible(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+        setVisible(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      String projectType = event.getProject().getProjectType();
-      boolean isPythonProject = ProjectResolver.APP_ENGINE_PYTHON.equals(projectType);
-      setVisible(isPythonProject);
-      setEnabled(false);
-      setShowInContextMenu(isPythonProject);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        String projectType = event.getProject().getProjectType();
+        boolean isPythonProject = ProjectResolver.APP_ENGINE_PYTHON.equals(projectType);
+        setVisible(isPythonProject);
+        setEnabled(false);
+        setShowInContextMenu(isPythonProject);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(false);
-      setEnabled(false);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(false);
+        setEnabled(false);
 
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ApplicationStartedEvent.TYPE, this);
-      IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
-   }
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ApplicationStartedEvent.TYPE, this);
+        IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent)
-    */
-   @Override
-   public void onApplicationStopped(ApplicationStoppedEvent event)
-   {
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide
+     * .extension.python.client.run.event.ApplicationStoppedEvent) */
+    @Override
+    public void onApplicationStopped(ApplicationStoppedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler#onApplicationStarted(org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent)
-    */
-   @Override
-   public void onApplicationStarted(ApplicationStartedEvent event)
-   {
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler#onApplicationStarted(org.exoplatform.ide
+     * .extension.python.client.run.event.ApplicationStartedEvent) */
+    @Override
+    public void onApplicationStarted(ApplicationStartedEvent event) {
+        setEnabled(true);
+    }
 }

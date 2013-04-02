@@ -38,79 +38,62 @@ import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 22, 2012 2:57:45 PM anya $
- * 
  */
-public class LogsHandler implements ShowLogsHandler, ApplicationStartedHandler, ApplicationStoppedHandler
-{
-   private ApplicationInstance runApplication;
+public class LogsHandler implements ShowLogsHandler, ApplicationStartedHandler, ApplicationStoppedHandler {
+    private ApplicationInstance runApplication;
 
-   public LogsHandler()
-   {
-      IDE.getInstance().addControl(new ShowLogsControl());
+    public LogsHandler() {
+        IDE.getInstance().addControl(new ShowLogsControl());
 
-      IDE.addHandler(ShowLogsEvent.TYPE, this);
-      IDE.addHandler(ApplicationStartedEvent.TYPE, this);
-      IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
-   }
+        IDE.addHandler(ShowLogsEvent.TYPE, this);
+        IDE.addHandler(ApplicationStartedEvent.TYPE, this);
+        IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.python.client.logs.ShowLogsHandler#onShowLogs(org.exoplatform.ide.extension.python.client.logs.ShowLogsEvent)
-    */
-   @Override
-   public void onShowLogs(ShowLogsEvent event)
-   {
-      if (runApplication != null)
-      {
-         getLogs();
-      }
-      else
-      {
-         Dialogs.getInstance().showInfo(PythonRuntimeExtension.PYTHON_LOCALIZATION.noRunningApplication());
-      }
-   }
+    /** @see org.exoplatform.ide.extension.python.client.logs.ShowLogsHandler#onShowLogs(org.exoplatform.ide.extension.python.client.logs
+     * .ShowLogsEvent) */
+    @Override
+    public void onShowLogs(ShowLogsEvent event) {
+        if (runApplication != null) {
+            getLogs();
+        } else {
+            Dialogs.getInstance().showInfo(PythonRuntimeExtension.PYTHON_LOCALIZATION.noRunningApplication());
+        }
+    }
 
-   private void getLogs()
-   {
-      try
-      {
-         PythonRuntimeService.getInstance().getLogs(runApplication.getName(),
-            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-            {
+    private void getLogs() {
+        try {
+            PythonRuntimeService.getInstance().getLogs(runApplication.getName(),
+                                                       new AsyncRequestCallback<StringBuilder>(
+                                                               new StringUnmarshaller(new StringBuilder())) {
 
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>", Type.OUTPUT));
-               }
+                                                           @Override
+                                                           protected void onSuccess(StringBuilder result) {
+                                                               IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>",
+                                                                                             Type.OUTPUT));
+                                                           }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                           @Override
+                                                           protected void onFailure(Throwable exception) {
+                                                               IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                           }
+                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent)
-    */
-   @Override
-   public void onApplicationStopped(ApplicationStoppedEvent event)
-   {
-      this.runApplication = null;
-   }
+    /** @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide
+     * .extension.python.client.run.event.ApplicationStoppedEvent) */
+    @Override
+    public void onApplicationStopped(ApplicationStoppedEvent event) {
+        this.runApplication = null;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler#onApplicationStarted(org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent)
-    */
-   @Override
-   public void onApplicationStarted(ApplicationStartedEvent event)
-   {
-      this.runApplication = event.getApplication();
-   }
+    /** @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler#onApplicationStarted(org.exoplatform.ide
+     * .extension.python.client.run.event.ApplicationStartedEvent) */
+    @Override
+    public void onApplicationStarted(ApplicationStartedEvent event) {
+        this.runApplication = event.getApplication();
+    }
 }

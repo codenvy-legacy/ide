@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ApplicationStoppedEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 21, 2012 10:16:54 AM anya $
- * 
  */
-public interface ApplicationStoppedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when Python application has been stopped.
-    * 
-    * @param event
-    */
-   void onApplicationStopped(ApplicationStoppedEvent event);
+public interface ApplicationStoppedHandler extends EventHandler {
+    /**
+     * Perform actions, when Python application has been stopped.
+     *
+     * @param event
+     */
+    void onApplicationStopped(ApplicationStoppedEvent event);
 }

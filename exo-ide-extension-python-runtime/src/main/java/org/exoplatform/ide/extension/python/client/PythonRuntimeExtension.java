@@ -29,36 +29,29 @@ import org.exoplatform.ide.extension.python.client.run.RunApplicationManager;
 
 /**
  * Python runtime extension.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 20, 2012 2:58:18 PM anya $
- * 
  */
-public class PythonRuntimeExtension extends Extension implements InitializeServicesHandler
-{
-   public static final PythonExtensionAutoBeanFactory AUTO_BEAN_FACTORY = GWT
-      .create(PythonExtensionAutoBeanFactory.class);
+public class PythonRuntimeExtension extends Extension implements InitializeServicesHandler {
+    public static final PythonExtensionAutoBeanFactory AUTO_BEAN_FACTORY = GWT
+            .create(PythonExtensionAutoBeanFactory.class);
 
-   public static final PythonExtensionLocalization PYTHON_LOCALIZATION = GWT.create(PythonExtensionLocalization.class);
+    public static final PythonExtensionLocalization PYTHON_LOCALIZATION = GWT.create(PythonExtensionLocalization.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new PythonRuntimeServiceImpl(event.getApplicationConfiguration().getContext());
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new PythonRuntimeServiceImpl(event.getApplicationConfiguration().getContext());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      new RunApplicationManager();
-      new LogsHandler();
-   }
+        new RunApplicationManager();
+        new LogsHandler();
+    }
 }

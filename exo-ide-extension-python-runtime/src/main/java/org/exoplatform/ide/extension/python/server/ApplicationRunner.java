@@ -28,45 +28,44 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationRunner
-{
-   /**
-    * Run Python application.
-    *
-    * @param vfs
-    *    virtual file system that contains project
-    * @param projectId
-    *    ID of project folder
-    * @return description of deployed application
-    * @throws ApplicationRunnerException
-    *    if any error occur when try to deploy application
-    * @throws VirtualFileSystemException
-    *    if any error occur when try to access application files over Virtual File System
-    * @see ApplicationRunnerService#stopApplication(String)
-    * @see org.exoplatform.ide.extension.python.shared.ApplicationInstance
-    */
-   ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
-      VirtualFileSystemException;
+public interface ApplicationRunner {
+    /**
+     * Run Python application.
+     *
+     * @param vfs
+     *         virtual file system that contains project
+     * @param projectId
+     *         ID of project folder
+     * @return description of deployed application
+     * @throws ApplicationRunnerException
+     *         if any error occur when try to deploy application
+     * @throws VirtualFileSystemException
+     *         if any error occur when try to access application files over Virtual File System
+     * @see ApplicationRunnerService#stopApplication(String)
+     * @see org.exoplatform.ide.extension.python.shared.ApplicationInstance
+     */
+    ApplicationInstance runApplication(VirtualFileSystem vfs, String projectId) throws ApplicationRunnerException,
+                                                                                       VirtualFileSystemException;
 
-   /**
-    * Get application logs.
-    *
-    * @param name
-    *    name of application
-    * @return logs
-    * @throws ApplicationRunnerException
-    *    if any error occur when try to get application logs
-    */
-   String getLogs(String name) throws ApplicationRunnerException;
+    /**
+     * Get application logs.
+     *
+     * @param name
+     *         name of application
+     * @return logs
+     * @throws ApplicationRunnerException
+     *         if any error occur when try to get application logs
+     */
+    String getLogs(String name) throws ApplicationRunnerException;
 
-   /**
-    * Stop application.
-    *
-    * @param name
-    *    name of application
-    * @throws ApplicationRunnerException
-    *    if any error occur when try to stop application
-    * @see ApplicationInstance#getName()
-    */
-   void stopApplication(String name) throws ApplicationRunnerException;
+    /**
+     * Stop application.
+     *
+     * @param name
+     *         name of application
+     * @throws ApplicationRunnerException
+     *         if any error occur when try to stop application
+     * @see ApplicationInstance#getName()
+     */
+    void stopApplication(String name) throws ApplicationRunnerException;
 }
