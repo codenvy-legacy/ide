@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link RollbackUpdateEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 11:37:19 AM anya $
- * 
  */
-public interface RollbackUpdateHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to rollback the application update.
-    * 
-    * @param event
-    */
-   void onRollbackUpdate(RollbackUpdateEvent event);
+public interface RollbackUpdateHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to rollback the application update.
+     *
+     * @param event
+     */
+    void onRollbackUpdate(RollbackUpdateEvent event);
 }

@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.backends;
 
-import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
-
 import com.google.gwt.event.logical.shared.SelectionHandler;
+
+import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 11:40:58 AM anya $
- * 
  */
-public interface HasBackendActions
-{
-   void addChangeStateHandler(SelectionHandler<Backend> handler);
+public interface HasBackendActions {
+    void addChangeStateHandler(SelectionHandler<Backend> handler);
 }

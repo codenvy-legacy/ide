@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 2:22:28 PM anya $
- * 
  */
-public interface CreateApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to create application on Google App Engine.
-    * 
-    * @param event
-    */
-   void onCreateApplication(CreateApplicationEvent event);
+public interface CreateApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to create application on Google App Engine.
+     *
+     * @param event
+     */
+    void onCreateApplication(CreateApplicationEvent event);
 }

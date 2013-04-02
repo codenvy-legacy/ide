@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link RefreshBackendListEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 3:20:23 PM anya $
- * 
  */
-public interface RefreshBackendListHandler extends EventHandler
-{
-   /**
-    * Perform refresh list of backends.
-    * 
-    * @param event
-    */
-   void onRefreshBackendList(RefreshBackendListEvent event);
+public interface RefreshBackendListHandler extends EventHandler {
+    /**
+     * Perform refresh list of backends.
+     *
+     * @param event
+     */
+    void onRefreshBackendList(RefreshBackendListEvent event);
 }

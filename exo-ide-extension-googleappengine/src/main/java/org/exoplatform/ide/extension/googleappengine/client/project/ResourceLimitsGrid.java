@@ -30,57 +30,50 @@ import java.util.HashMap;
 
 /**
  * Grid for displaying application's resource limits.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 25, 2012 3:07:57 PM anya $
- * 
  */
-public class ResourceLimitsGrid extends ListGrid<ResourceLimit>
-{
-   private final String ID = "ideResourceLimitsGrid";
+public class ResourceLimitsGrid extends ListGrid<ResourceLimit> {
+    private final String ID = "ideResourceLimitsGrid";
 
-   private final String RESOURCE = GoogleAppEngineExtension.GAE_LOCALIZATION.resourceColumnTitle();
+    private final String RESOURCE = GoogleAppEngineExtension.GAE_LOCALIZATION.resourceColumnTitle();
 
-   private final String LIMIT = GoogleAppEngineExtension.GAE_LOCALIZATION.limitColumnTitle();
+    private final String LIMIT = GoogleAppEngineExtension.GAE_LOCALIZATION.limitColumnTitle();
 
-   private HashMap<String, String> limitNames = new HashMap<String, String>();
+    private HashMap<String, String> limitNames = new HashMap<String, String>();
 
-   {
-      limitNames.put("max_blob_size", GoogleAppEngineExtension.GAE_LOCALIZATION.maxBlobSize());
-      limitNames.put("max_file_size", GoogleAppEngineExtension.GAE_LOCALIZATION.maxFileSize());
-      limitNames.put("max_file_count", GoogleAppEngineExtension.GAE_LOCALIZATION.maxFileCount());
-      limitNames.put("max_total_file_size", GoogleAppEngineExtension.GAE_LOCALIZATION.maxTotalFileSize());
-   }
+    {
+        limitNames.put("max_blob_size", GoogleAppEngineExtension.GAE_LOCALIZATION.maxBlobSize());
+        limitNames.put("max_file_size", GoogleAppEngineExtension.GAE_LOCALIZATION.maxFileSize());
+        limitNames.put("max_file_count", GoogleAppEngineExtension.GAE_LOCALIZATION.maxFileCount());
+        limitNames.put("max_total_file_size", GoogleAppEngineExtension.GAE_LOCALIZATION.maxTotalFileSize());
+    }
 
-   public ResourceLimitsGrid()
-   {
-      super();
+    public ResourceLimitsGrid() {
+        super();
 
-      setID(ID);
+        setID(ID);
 
-      Column<ResourceLimit, String> resourceColumn = new Column<ResourceLimit, String>(new TextCell())
-      {
-         @Override
-         public String getValue(ResourceLimit resourceLimit)
-         {
-            return (limitNames.containsKey(resourceLimit.getName())) ? limitNames.get(resourceLimit.getName())
-               : resourceLimit.getName();
-         }
-      };
+        Column<ResourceLimit, String> resourceColumn = new Column<ResourceLimit, String>(new TextCell()) {
+            @Override
+            public String getValue(ResourceLimit resourceLimit) {
+                return (limitNames.containsKey(resourceLimit.getName())) ? limitNames.get(resourceLimit.getName())
+                                                                         : resourceLimit.getName();
+            }
+        };
 
-      Column<ResourceLimit, Number> limitColumn = new Column<ResourceLimit, Number>(new NumberCell())
-      {
-         @Override
-         public Number getValue(ResourceLimit resourceLimit)
-         {
-            return resourceLimit.getValue();
-         }
-      };
+        Column<ResourceLimit, Number> limitColumn = new Column<ResourceLimit, Number>(new NumberCell()) {
+            @Override
+            public Number getValue(ResourceLimit resourceLimit) {
+                return resourceLimit.getValue();
+            }
+        };
 
-      getCellTable().addColumn(resourceColumn, RESOURCE);
-      getCellTable().setColumnWidth(resourceColumn, "50");
+        getCellTable().addColumn(resourceColumn, RESOURCE);
+        getCellTable().setColumnWidth(resourceColumn, "50");
 
-      getCellTable().addColumn(limitColumn, LIMIT);
-      getCellTable().setColumnWidth(limitColumn, "50%");
-   }
+        getCellTable().addColumn(limitColumn, LIMIT);
+        getCellTable().setColumnWidth(limitColumn, "50%");
+    }
 }

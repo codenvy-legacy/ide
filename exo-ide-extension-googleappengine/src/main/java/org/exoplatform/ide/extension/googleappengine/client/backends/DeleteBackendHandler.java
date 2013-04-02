@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link DeleteBackendEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 30, 2012 5:24:51 PM anya $
- * 
  */
-public interface DeleteBackendHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to delete backend.
-    * 
-    * @param event
-    */
-   void onDeleteBackend(DeleteBackendEvent event);
+public interface DeleteBackendHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to delete backend.
+     *
+     * @param event
+     */
+    void onDeleteBackend(DeleteBackendEvent event);
 }

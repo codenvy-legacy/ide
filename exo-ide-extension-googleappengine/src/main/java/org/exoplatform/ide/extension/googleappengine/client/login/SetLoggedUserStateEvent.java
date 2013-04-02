@@ -22,51 +22,38 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs to set the state of the App Engine user.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 23, 2012 10:27:32 AM anya $
- * 
  */
-public class SetLoggedUserStateEvent extends GwtEvent<SetLoggedUserStateHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<SetLoggedUserStateHandler> TYPE = new GwtEvent.Type<SetLoggedUserStateHandler>();
+public class SetLoggedUserStateEvent extends GwtEvent<SetLoggedUserStateHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<SetLoggedUserStateHandler> TYPE = new GwtEvent.Type<SetLoggedUserStateHandler>();
 
-   private boolean isLogged;
+    private boolean isLogged;
 
-   /**
-    * @param isLogged logged user state
-    */
-   public SetLoggedUserStateEvent(boolean isLogged)
-   {
-      this.isLogged = isLogged;
-   }
+    /**
+     * @param isLogged
+     *         logged user state
+     */
+    public SetLoggedUserStateEvent(boolean isLogged) {
+        this.isLogged = isLogged;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<SetLoggedUserStateHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<SetLoggedUserStateHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(SetLoggedUserStateHandler handler)
-   {
-      handler.onSetLoggedUserState(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(SetLoggedUserStateHandler handler) {
+        handler.onSetLoggedUserState(this);
+    }
 
-   /**
-    * @return the isLogged
-    */
-   public boolean isLogged()
-   {
-      return isLogged;
-   }
+    /** @return the isLogged */
+    public boolean isLogged() {
+        return isLogged;
+    }
 }

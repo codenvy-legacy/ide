@@ -27,27 +27,22 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 3:22:35 PM anya $
- * 
  */
-public class ResourceLimitsTabPane extends Composite
-{
+public class ResourceLimitsTabPane extends Composite {
 
-   private static ResourceLimitsTabPaneUiBinder uiBinder = GWT.create(ResourceLimitsTabPaneUiBinder.class);
+    private static ResourceLimitsTabPaneUiBinder uiBinder = GWT.create(ResourceLimitsTabPaneUiBinder.class);
 
-   interface ResourceLimitsTabPaneUiBinder extends UiBinder<Widget, ResourceLimitsTabPane>
-   {
-   }
+    interface ResourceLimitsTabPaneUiBinder extends UiBinder<Widget, ResourceLimitsTabPane> {
+    }
 
-   @UiField
-   ResourceLimitsGrid resourceLimitsGrid;
+    @UiField
+    ResourceLimitsGrid resourceLimitsGrid;
 
-   public ResourceLimitsTabPane()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    public ResourceLimitsTabPane() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   public ResourceLimitsGrid getResourceLimitsGrid()
-   {
-      return resourceLimitsGrid;
-   }
+    public ResourceLimitsGrid getResourceLimitsGrid() {
+        return resourceLimitsGrid;
+    }
 }

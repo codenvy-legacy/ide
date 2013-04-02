@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowLogsEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  May 24, 2012 11:20:51 AM anya $
- *
  */
-public interface ShowLogsHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to view application logs.
-    * 
-    * @param event
-    */
-   void onShowLogs(ShowLogsEvent event);
+public interface ShowLogsHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to view application logs.
+     *
+     * @param event
+     */
+    void onShowLogs(ShowLogsEvent event);
 }

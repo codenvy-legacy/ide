@@ -27,28 +27,24 @@ import static com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class IdeAppAdmin extends AppAdminImpl
-{
-   private final GenericApplication app;
+public class IdeAppAdmin extends AppAdminImpl {
+    private final GenericApplication app;
 
-   public IdeAppAdmin(ConnectOptions options,
-                      GenericApplication app,
-                      PrintWriter errorWriter,
-                      ApplicationProcessingOptions appOptions,
-                      Class<? extends AppVersionUpload> appVersionUploadClass)
-   {
-      super(options, app, errorWriter, appOptions, appVersionUploadClass);
-      this.app = app;
-   }
+    public IdeAppAdmin(ConnectOptions options,
+                       GenericApplication app,
+                       PrintWriter errorWriter,
+                       ApplicationProcessingOptions appOptions,
+                       Class<? extends AppVersionUpload> appVersionUploadClass) {
+        super(options, app, errorWriter, appOptions, appVersionUploadClass);
+        this.app = app;
+    }
 
-   @Override
-   protected ServerConnection getServerConnection(ConnectOptions options)
-   {
-      return new OAuth2ServerConnection(options);
-   }
+    @Override
+    protected ServerConnection getServerConnection(ConnectOptions options) {
+        return new OAuth2ServerConnection(options);
+    }
 
-   public GenericApplication getApplication()
-   {
-      return app;
-   }
+    public GenericApplication getApplication() {
+        return app;
+    }
 }

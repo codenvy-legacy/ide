@@ -37,60 +37,51 @@ import org.exoplatform.ide.vfs.shared.Item;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:15:05 PM anya $
- * 
  */
 public class AppEngineProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, ItemsSelectedHandler
+                                                                      ProjectClosedHandler, ItemsSelectedHandler
 //   , ActiveProjectChangedHandler
 {
-   private static final String ID = "Project/PaaS/Google App Engine";
+    private static final String ID = "Project/PaaS/Google App Engine";
 
-   private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
+    private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
 
-   private static final String PROMPT = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
+    private static final String PROMPT = GoogleAppEngineExtension.GAE_LOCALIZATION.googleAppEngineControl();
 
-   public AppEngineProjectControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setEvent(new ManageAppEngineProjectEvent());
-      setImages(GAEClientBundle.INSTANCE.googleAppEngine(), GAEClientBundle.INSTANCE.googleAppEngineDisabled());
-      setGroupName(GroupNames.PAAS);
-   }
+    public AppEngineProjectControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setEvent(new ManageAppEngineProjectEvent());
+        setImages(GAEClientBundle.INSTANCE.googleAppEngine(), GAEClientBundle.INSTANCE.googleAppEngineDisabled());
+        setGroupName(GroupNames.PAAS);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 //      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      boolean isAppEngine = isDeployed(event.getProject());
-      setVisible(isAppEngine);
-      setEnabled(isAppEngine);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        boolean isAppEngine = isDeployed(event.getProject());
+        setVisible(isAppEngine);
+        setEnabled(isAppEngine);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setVisible(false);
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setVisible(false);
+        setEnabled(false);
+    }
 
 //   @Override
 //   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
@@ -100,35 +91,29 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
 //      setEnabled(isAppEngine);
 //   }
 
-   private boolean isDeployed(ProjectModel project)
-   {
-      return project != null
-         && GoogleAppEngineExtension.isAppEngineProject(project)
-         && project.getPropertyValue("gae-application") != null;
-   }
+    private boolean isDeployed(ProjectModel project) {
+        return project != null
+               && GoogleAppEngineExtension.isAppEngineProject(project)
+               && project.getPropertyValue("gae-application") != null;
+    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-      
-      Item item = event.getSelectedItems().get(0);
-      ProjectModel project = null;
-      if (item instanceof ProjectModel)
-      {
-         project = (ProjectModel)item;
-      }
-      else
-      {
-         project = ((ItemContext)item).getProject();
-      }
-      
-      setEnabled(isDeployed(project));
-      setVisible(isDeployed(project));
-   }
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            setEnabled(false);
+            return;
+        }
+
+        Item item = event.getSelectedItems().get(0);
+        ProjectModel project = null;
+        if (item instanceof ProjectModel) {
+            project = (ProjectModel)item;
+        } else {
+            project = ((ItemContext)item).getProject();
+        }
+
+        setEnabled(isDeployed(project));
+        setVisible(isDeployed(project));
+    }
 
 }

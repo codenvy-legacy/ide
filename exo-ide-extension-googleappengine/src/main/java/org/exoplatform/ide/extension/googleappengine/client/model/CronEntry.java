@@ -21,27 +21,25 @@ package org.exoplatform.ide.extension.googleappengine.client.model;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 4:40:20 PM anya $
- * 
  */
-public interface CronEntry
-{
-   public String getDescription();
+public interface CronEntry {
+    public String getDescription();
 
-   public String getSchedule();
+    public String getSchedule();
 
-   public String getTimezone();
+    public String getTimezone();
 
-   public String getUrl();
+    public String getUrl();
 
-   public Object getNextTimesIterato();
+    public Object getNextTimesIterato();
 
-   public void setDescription(String description);
+    public void setDescription(String description);
 
-   public void setSchedule(String schedule);
+    public void setSchedule(String schedule);
 
-   public void setTimezone(String timezone);
+    public void setTimezone(String timezone);
 
-   public void setUrl(String url);
+    public void setUrl(String url);
 
-   public void setNextTimesIterator(Object iterator);
+    public void setNextTimesIterator(Object iterator);
 }

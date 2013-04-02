@@ -27,7 +27,6 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -41,134 +40,111 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
 /**
  * Presenter for log in Google App Engine operation. The view must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 18, 2012 12:19:01 PM anya $
- * 
  */
-public class LoginPresenter implements LoginHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      /**
-       * Get Go button click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getGoButton();
+public class LoginPresenter implements LoginHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        /**
+         * Get Go button click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getGoButton();
 
-      void setLoginLocation(String href);
-   }
+        void setLoginLocation(String href);
+    }
 
-   private Display display;
+    private Display display;
 
-   public LoginPresenter()
-   {
-      IDE.addHandler(LoginEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public LoginPresenter() {
+        IDE.addHandler(LoginEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   /**
-    * Bind display with presenter.
-    * 
-    * @param d
-    */
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
+    /**
+     * Bind display with presenter.
+     *
+     * @param d
+     */
+    public void bindDisplay(Display d) {
+        this.display = d;
 
-      display.getGoButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doLogin();
-         }
-      });
-   }
+        display.getGoButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                doLogin();
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent)
-    */
-   @Override
-   public void onLogin(LoginEvent event)
-   {
-      String authUrl = Utils.getAuthorizationContext()//
-         + "/ide/oauth/authenticate?oauth_provider=google"//
-         + "&scope=https://www.googleapis.com/auth/appengine.admin"//
-         + "&userId=" + IDE.userId
-         + "&redirect_after_login="//
-         + Utils.getAuthorizationPageURL();
-      JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
-      authWindow.loginWithOAuth();
-      IDE.fireEvent(new SetLoggedUserStateEvent(true));
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.googleappengine
+     * .client.login.LoginEvent) */
+    @Override
+    public void onLogin(LoginEvent event) {
+        String authUrl = Utils.getAuthorizationContext()//
+                         + "/ide/oauth/authenticate?oauth_provider=google"//
+                         + "&scope=https://www.googleapis.com/auth/appengine.admin"//
+                         + "&userId=" + IDE.userId
+                         + "&redirect_after_login="//
+                         + Utils.getAuthorizationPageURL();
+        JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
+        authWindow.loginWithOAuth();
+        IDE.fireEvent(new SetLoggedUserStateEvent(true));
+    }
 
-   private void doLogin()
-   {
-      isUserLogged();
-   }
+    private void doLogin() {
+        isUserLogged();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   private void isUserLogged()
-   {
-      AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
-      AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
-      try
-      {
-         GoogleAppEngineClientService.getInstance().getLoggedUser(
-            new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller)
-            {
+    private void isUserLogged() {
+        AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+        AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
+        try {
+            GoogleAppEngineClientService.getInstance().getLoggedUser(
+                    new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller) {
 
-               @Override
-               protected void onSuccess(GaeUser result)
-               {
-                  IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
-                  if (!result.isAuthenticated())
-                  {
-                     IDE.fireEvent(new SetLoggedUserStateEvent(true));
-                     if (display != null)
-                     {
-                        IDE.getInstance().closeView(display.asView().getId());
-                     }
-                  }
-               }
+                        @Override
+                        protected void onSuccess(GaeUser result) {
+                            IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
+                            if (!result.isAuthenticated()) {
+                                IDE.fireEvent(new SetLoggedUserStateEvent(true));
+                                if (display != null) {
+                                    IDE.getInstance().closeView(display.asView().getId());
+                                }
+                            }
+                        }
 
-               /**
-                * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  if (exception instanceof UnauthorizedException)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                     return;
-                  }
-                  IDE.fireEvent(new SetLoggedUserStateEvent(true));
-                  if (display != null)
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                  }
-                  // Window.open(url, "_blank", null);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        /**
+                         * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java
+                         * .lang.Throwable)
+                         */
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            if (exception instanceof UnauthorizedException) {
+                                IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                return;
+                            }
+                            IDE.fireEvent(new SetLoggedUserStateEvent(true));
+                            if (display != null) {
+                                IDE.getInstance().closeView(display.asView().getId());
+                            }
+                            // Window.open(url, "_blank", null);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
 }

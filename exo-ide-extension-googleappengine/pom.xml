@@ -1,210 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-parent</artifactId>
-      <version>2.1.0-SNAPSHOT</version>
-   </parent>
-   <artifactId>exo-ide-extension-googleappengine</artifactId>
-   <name>Codenvy IDE :: Extension :: GoogleAppengine</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-parent</artifactId>
+        <version>2.1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>exo-ide-extension-googleappengine</artifactId>
+    <name>Codenvy IDE :: Extension :: GoogleAppengine</name>
 
-   <dependencies>
+    <dependencies>
 
-      <dependency>
-         <groupId>com.google.api-client</groupId>
-         <artifactId>google-api-client</artifactId>
-         <version>1.9.0-beta</version>
-         <!-- Set as provided. Use jarajr plugin because conflict guava. -->
-         <scope>provided</scope>
-      </dependency>
-
-      <!-- Declare this dependency directly since it required by google-api-client. -->
-      <dependency>
-         <groupId>org.codehaus.jackson</groupId>
-         <artifactId>jackson-core-asl</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.kernel</groupId>
-         <artifactId>exo.kernel.container</artifactId>
-         <exclusions>
-            <exclusion>
-               <artifactId>xstream</artifactId>
-               <groupId>xstream</groupId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.core</groupId>
-         <artifactId>exo.core.component.security.core</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-commons</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-security</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs</artifactId>
-      </dependency>
-      
-      <dependency>
-         <groupId>com.google.appengine</groupId>
-         <artifactId>appengine-java-sdk</artifactId>
-         <type>zip</type>
-      </dependency>
-
-      <dependency>
-         <groupId>com.google.appengine</groupId>
-         <artifactId>appengine-tools-sdk</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>javax.ws.rs</groupId>
-         <artifactId>jsr311-api</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>javax.inject</groupId>
-         <artifactId>javax.inject</artifactId>
-      </dependency>
-      
         <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-test</artifactId>
-         <scope>test</scope>
-      </dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.9.0-beta</version>
+            <!-- Set as provided. Use jarajr plugin because conflict guava. -->
+            <scope>provided</scope>
+        </dependency>
 
-      <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
+        <!-- Declare this dependency directly since it required by google-api-client. -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+        </dependency>
 
-      <dependency>
-         <groupId>org.hsqldb</groupId>
-         <artifactId>hsqldb</artifactId>
-         <scope>test</scope>
-      </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.container</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xstream</artifactId>
+                    <groupId>xstream</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-log4j12</artifactId>
-         <scope>test</scope>
-      </dependency>
+        <dependency>
+            <groupId>org.exoplatform.core</groupId>
+            <artifactId>exo.core.component.security.core</artifactId>
+        </dependency>
 
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
-      </dependency>
-      
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>2.6</version>
-      </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-commons</artifactId>
+        </dependency>
 
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-integration-exo</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-core</artifactId>
-         <scope>provided</scope>
-      </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-security</artifactId>
+        </dependency>
 
-      <!-- CLIENT SIDE -->
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-user</artifactId>
-         <scope>provided</scope>
-      </dependency>
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+        </dependency>
 
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-servlet</artifactId>
-         <scope>provided</scope>
-      </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-java-sdk</artifactId>
+            <type>zip</type>
+        </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>codenvy-gwtframework-commons</artifactId>
-         <scope>provided</scope>
-      </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-tools-sdk</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>codenvy-gwtframework-ui</artifactId>
-         <scope>provided</scope>
-      </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-framework-client</artifactId>
-         <scope>provided</scope>
-      </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-maven</artifactId>
-      </dependency>
-   </dependencies>
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-   <build>
-      <plugins>
-         <plugin>
-           <groupId>org.sonatype.plugins</groupId>
-           <artifactId>jarjar-maven-plugin</artifactId>
-           <executions>
-             <execution>
-               <phase>package</phase>
-               <goals>
-                 <goal>jarjar</goal>
-               </goals>
-               <configuration>
-                 <includes>
-                   <include>com.google.api-client:google-api-client:jar:1.9.0-beta</include>
-                   <include>com.google.http-client:google-http-client:jar:1.9.0-beta</include>
-                   <include>com.google.guava:guava:jar:11.0.1</include>
-                   <include>com.google.oauth-client:google-oauth-client:jar:1.9.0-beta</include>
-                 </includes>
-                 <rules>
-                   <rule>
-                     <pattern>com.google.common.**</pattern>
-                     <result>org.exoplatform.ide.extension.googleappengine.server.oauth.com.google.common.@1</result>
-                   </rule>
-                   <rule>
-                     <pattern>com.google.api.client.**</pattern>
-                     <result>org.exoplatform.ide.extension.googleappengine.server.oauth.com.google.api.client.@1</result>
-                   </rule>
-                 </rules>
-               </configuration>
-             </execution>
-           </executions>
-         </plugin>
-      </plugins>
-      <resources>
-         <resource>
-            <directory>src/main/java</directory>
-         </resource>
-         <resource>
-            <directory>src/main/resources</directory>
-         </resource>
-      </resources>
-      <sourceDirectory>src/main/java</sourceDirectory>
-      <outputDirectory>target/classes</outputDirectory>
-   </build>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-integration-exo</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.everrest</groupId>
+            <artifactId>everrest-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- CLIENT SIDE -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.gwt</groupId>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-framework-client</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-maven</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>jarjar-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jarjar</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>com.google.api-client:google-api-client:jar:1.9.0-beta</include>
+                                <include>com.google.http-client:google-http-client:jar:1.9.0-beta</include>
+                                <include>com.google.guava:guava:jar:11.0.1</include>
+                                <include>com.google.oauth-client:google-oauth-client:jar:1.9.0-beta</include>
+                            </includes>
+                            <rules>
+                                <rule>
+                                    <pattern>com.google.common.**</pattern>
+                                    <result>org.exoplatform.ide.extension.googleappengine.server.oauth.com.google.common.@1</result>
+                                </rule>
+                                <rule>
+                                    <pattern>com.google.api.client.**</pattern>
+                                    <result>org.exoplatform.ide.extension.googleappengine.server.oauth.com.google.api.client.@1</result>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <outputDirectory>target/classes</outputDirectory>
+    </build>
 </project>

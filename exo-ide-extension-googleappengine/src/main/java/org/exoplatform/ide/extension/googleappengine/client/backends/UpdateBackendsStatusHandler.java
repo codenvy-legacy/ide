@@ -20,51 +20,40 @@ package org.exoplatform.ide.extension.googleappengine.client.backends;
 
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.job.Job;
-import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
+import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
 /**
  * Status handler for update backends request.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 31, 2012 10:28:19 AM anya $
- * 
  */
-public class UpdateBackendsStatusHandler implements RequestStatusHandler
-{
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(GoogleAppEngineExtension.GAE_LOCALIZATION.backendsUpdateStarted());
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+public class UpdateBackendsStatusHandler implements RequestStatusHandler {
+    /** @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestInProgress(java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(GoogleAppEngineExtension.GAE_LOCALIZATION.backendsUpdateStarted());
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(GoogleAppEngineExtension.GAE_LOCALIZATION.backendsUpdateFinished());
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestFinished(java.lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(GoogleAppEngineExtension.GAE_LOCALIZATION.backendsUpdateFinished());
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
-    */
-   @Override
-   public void requestError(String id, Throwable exception)
-   {
-      Job job = new Job(id, JobStatus.ERROR);
-      job.setError(exception);
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable) */
+    @Override
+    public void requestError(String id, Throwable exception) {
+        Job job = new Job(id, JobStatus.ERROR);
+        job.setError(exception);
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

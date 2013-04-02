@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.backends;
 
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.NumberCell;
-import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.cell.client.*;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -36,195 +32,148 @@ import org.exoplatform.ide.extension.googleappengine.client.model.State;
 
 /**
  * Grid for displaying list of backends.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 29, 2012 3:07:12 PM anya $
- * 
  */
-public class BackendGrid extends ListGrid<Backend> implements HasBackendActions
-{
-   private final String ID = "ideBackendGrid";
+public class BackendGrid extends ListGrid<Backend> implements HasBackendActions {
+    private final String ID = "ideBackendGrid";
 
-   /**
-    * Name column title.
-    */
-   private final String NAME = GoogleAppEngineExtension.GAE_LOCALIZATION.backendNameTitle();
+    /** Name column title. */
+    private final String NAME = GoogleAppEngineExtension.GAE_LOCALIZATION.backendNameTitle();
 
-   /**
-    * State column title.
-    */
-   private final String STATE = GoogleAppEngineExtension.GAE_LOCALIZATION.backendStateTitle();
+    /** State column title. */
+    private final String STATE = GoogleAppEngineExtension.GAE_LOCALIZATION.backendStateTitle();
 
-   /**
-    * Class column title.
-    */
-   private final String CLASS = GoogleAppEngineExtension.GAE_LOCALIZATION.backendClassTitle();
+    /** Class column title. */
+    private final String CLASS = GoogleAppEngineExtension.GAE_LOCALIZATION.backendClassTitle();
 
-   /**
-    * Number of instances column title.
-    */
-   private final String INSTANCES = GoogleAppEngineExtension.GAE_LOCALIZATION.backendInstancesTitle();
+    /** Number of instances column title. */
+    private final String INSTANCES = GoogleAppEngineExtension.GAE_LOCALIZATION.backendInstancesTitle();
 
-   /**
-    * Dynamic option column title.
-    */
-   private final String DYNAMIC = GoogleAppEngineExtension.GAE_LOCALIZATION.backendDynamicTitle();
+    /** Dynamic option column title. */
+    private final String DYNAMIC = GoogleAppEngineExtension.GAE_LOCALIZATION.backendDynamicTitle();
 
-   /**
-    * Public option column title.
-    */
-   private final String PUBLIC = GoogleAppEngineExtension.GAE_LOCALIZATION.backendPublicTitle();
+    /** Public option column title. */
+    private final String PUBLIC = GoogleAppEngineExtension.GAE_LOCALIZATION.backendPublicTitle();
 
-   /**
-    * State column.
-    */
-   private Column<Backend, String> stateColumn;
+    /** State column. */
+    private Column<Backend, String> stateColumn;
 
-   public BackendGrid()
-   {
-      super();
-      setID(ID);
+    public BackendGrid() {
+        super();
+        setID(ID);
 
-      Column<Backend, String> nameColumn = new Column<Backend, String>(new TextCell())
-      {
-         @Override
-         public String getValue(Backend backend)
-         {
-            return backend.getName();
-         }
-      };
+        Column<Backend, String> nameColumn = new Column<Backend, String>(new TextCell()) {
+            @Override
+            public String getValue(Backend backend) {
+                return backend.getName();
+            }
+        };
 
-      stateColumn = new Column<Backend, String>(new ButtonCell())
-      {
+        stateColumn = new Column<Backend, String>(new ButtonCell()) {
 
-         @Override
-         public String getValue(Backend object)
-         {
-            return State.START.equals(object.getState()) ? "Stop" : "Start";
-         }
-      };
+            @Override
+            public String getValue(Backend object) {
+                return State.START.equals(object.getState()) ? "Stop" : "Start";
+            }
+        };
 
-      Column<Backend, String> classColumn = new Column<Backend, String>(new TextCell())
-      {
-         @Override
-         public String getValue(Backend backend)
-         {
-            return backend.getInstanceClass();
-         }
-      };
+        Column<Backend, String> classColumn = new Column<Backend, String>(new TextCell()) {
+            @Override
+            public String getValue(Backend backend) {
+                return backend.getInstanceClass();
+            }
+        };
 
-      Column<Backend, Number> instancesColumn = new Column<Backend, Number>(new NumberCell())
-      {
+        Column<Backend, Number> instancesColumn = new Column<Backend, Number>(new NumberCell()) {
 
-         @Override
-         public Number getValue(Backend object)
-         {
-            return object.getInstances();
-         }
-      };
+            @Override
+            public Number getValue(Backend object) {
+                return object.getInstances();
+            }
+        };
 
-      Column<Backend, SafeHtml> dynamicColumn = new Column<Backend, SafeHtml>(new SafeHtmlCell())
-      {
+        Column<Backend, SafeHtml> dynamicColumn = new Column<Backend, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final Backend object)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final Backend object) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (object.isDynamic())
-                  {
-                     return "<input type=\"checkbox\" checked=checked readonly=\"true\"/>";
-                  }
-                  else
-                  {
-                     return "<input type=\"checkbox\" readonly=\"true\"/>";
-                  }
-               }
-            };
-            return html;
-         }
-      };
+                    @Override
+                    public String asString() {
+                        if (object.isDynamic()) {
+                            return "<input type=\"checkbox\" checked=checked readonly=\"true\"/>";
+                        } else {
+                            return "<input type=\"checkbox\" readonly=\"true\"/>";
+                        }
+                    }
+                };
+                return html;
+            }
+        };
 
-      Column<Backend, SafeHtml> publicColumn = new Column<Backend, SafeHtml>(new SafeHtmlCell())
-      {
+        Column<Backend, SafeHtml> publicColumn = new Column<Backend, SafeHtml>(new SafeHtmlCell()) {
 
-         @Override
-         public SafeHtml getValue(final Backend object)
-         {
-            SafeHtml html = new SafeHtml()
-            {
-               private static final long serialVersionUID = 1L;
+            @Override
+            public SafeHtml getValue(final Backend object) {
+                SafeHtml html = new SafeHtml() {
+                    private static final long serialVersionUID = 1L;
 
-               @Override
-               public String asString()
-               {
-                  if (object.isPublic())
-                  {
-                     return "<input type=\"checkbox\" checked=checked readonly=\"true\"/>";
-                  }
-                  else
-                  {
-                     return "<input type=\"checkbox\" readonly=\"true\"/>";
-                  }
-               }
-            };
-            return html;
-         }
-      };
+                    @Override
+                    public String asString() {
+                        if (object.isPublic()) {
+                            return "<input type=\"checkbox\" checked=checked readonly=\"true\"/>";
+                        } else {
+                            return "<input type=\"checkbox\" readonly=\"true\"/>";
+                        }
+                    }
+                };
+                return html;
+            }
+        };
 
-      getCellTable().addColumn(nameColumn, NAME);
-      getCellTable().setColumnWidth(nameColumn, "25%");
+        getCellTable().addColumn(nameColumn, NAME);
+        getCellTable().setColumnWidth(nameColumn, "25%");
 
-      getCellTable().addColumn(stateColumn, STATE);
-      getCellTable().setColumnWidth(stateColumn, "15%");
-      stateColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        getCellTable().addColumn(stateColumn, STATE);
+        getCellTable().setColumnWidth(stateColumn, "15%");
+        stateColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      getCellTable().addColumn(classColumn, CLASS);
-      getCellTable().setColumnWidth(classColumn, "15%");
-      classColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        getCellTable().addColumn(classColumn, CLASS);
+        getCellTable().setColumnWidth(classColumn, "15%");
+        classColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      getCellTable().addColumn(instancesColumn, INSTANCES);
-      getCellTable().setColumnWidth(instancesColumn, "15%");
-      instancesColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        getCellTable().addColumn(instancesColumn, INSTANCES);
+        getCellTable().setColumnWidth(instancesColumn, "15%");
+        instancesColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      getCellTable().addColumn(dynamicColumn, DYNAMIC);
-      getCellTable().setColumnWidth(dynamicColumn, "15%");
-      dynamicColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        getCellTable().addColumn(dynamicColumn, DYNAMIC);
+        getCellTable().setColumnWidth(dynamicColumn, "15%");
+        dynamicColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
-      getCellTable().addColumn(publicColumn, PUBLIC);
-      getCellTable().setColumnWidth(publicColumn, "15%");
-      publicColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-   }
+        getCellTable().addColumn(publicColumn, PUBLIC);
+        getCellTable().setColumnWidth(publicColumn, "15%");
+        publicColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+    }
 
-   private class SelectionEventImpl extends SelectionEvent<Backend>
-   {
-      /**
-       * @param selectedItem
-       */
-      protected SelectionEventImpl(Backend selectedItem)
-      {
-         super(selectedItem);
-      }
-   }
+    private class SelectionEventImpl extends SelectionEvent<Backend> {
+        /** @param selectedItem */
+        protected SelectionEventImpl(Backend selectedItem) {
+            super(selectedItem);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.backends.HasBackendActions#addChangeStateHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addChangeStateHandler(final SelectionHandler<Backend> handler)
-   {
-      stateColumn.setFieldUpdater(new FieldUpdater<Backend, String>()
-      {
-         @Override
-         public void update(int index, Backend object, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(object));
-         }
-      });
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.backends.HasBackendActions#addChangeStateHandler(com.google.gwt.event
+     * .logical.shared.SelectionHandler) */
+    @Override
+    public void addChangeStateHandler(final SelectionHandler<Backend> handler) {
+        stateColumn.setFieldUpdater(new FieldUpdater<Backend, String>() {
+            @Override
+            public void update(int index, Backend object, String value) {
+                handler.onSelection(new SelectionEventImpl(object));
+            }
+        });
+    }
 }

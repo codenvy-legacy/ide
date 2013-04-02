@@ -54,68 +54,62 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 15, 2012 5:13:13 PM anya $
- *
  */
-public class GoogleAppEngineExtension extends Extension implements InitializeServicesHandler
-{
+public class GoogleAppEngineExtension extends Extension implements InitializeServicesHandler {
 
-   public static final GoogleAppEngineAutoBeanFactory AUTO_BEAN_FACTORY = GWT
-      .create(GoogleAppEngineAutoBeanFactory.class);
+    public static final GoogleAppEngineAutoBeanFactory AUTO_BEAN_FACTORY = GWT
+            .create(GoogleAppEngineAutoBeanFactory.class);
 
-   public static final GAELocalization GAE_LOCALIZATION = GWT.create(GAELocalization.class);
+    public static final GAELocalization GAE_LOCALIZATION = GWT.create(GAELocalization.class);
 
-   public static final String ID = "GAE";
+    public static final String ID = "GAE";
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.getInstance().registerPaaS(
-         new PaaS(ID, "Google App Engine", new Image(GAEClientBundle.INSTANCE.googleAppEngine48()), new Image(
-            GAEClientBundle.INSTANCE.googleAppEngine48Disabled()), Arrays.asList(ProjectType.JAVA, ProjectType.PYTHON,
-            ProjectType.DJANGO, ProjectType.JSP, ProjectType.WAR), new DeployApplicationPresenter()));
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        IDE.getInstance().registerPaaS(
+                new PaaS(ID, "Google App Engine", new Image(GAEClientBundle.INSTANCE.googleAppEngine48()), new Image(
+                        GAEClientBundle.INSTANCE.googleAppEngine48Disabled()), Arrays.asList(ProjectType.JAVA, ProjectType.PYTHON,
+                                                                                             ProjectType.DJANGO, ProjectType.JSP,
+                                                                                             ProjectType.WAR),
+                         new DeployApplicationPresenter()));
 
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+        IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new GoogleAppEngineControl());
-      IDE.getInstance().addControl(new CreateApplicationControl());
+        IDE.getInstance().addControl(new GoogleAppEngineControl());
+        IDE.getInstance().addControl(new CreateApplicationControl());
 
-      // new DeployApplicationPresenter();
-      new AppEngineProjectPresenter();
-      new LoginPresenter();
-      new RollbackUpdatePresenter();
+        // new DeployApplicationPresenter();
+        new AppEngineProjectPresenter();
+        new LoginPresenter();
+        new RollbackUpdatePresenter();
 
-      new LogsPresenter();
-      new PageSpeedHandler();
-      new UpdateIndexesHandlerImpl();
-      new VaccumIndexesHandlerImpl();
-      new QueuesHandler();
-      new DosHandler();
-      new CronsHandler();
-      new BackendsHandler();
-      IDE.getInstance().addControl(new LoginControl());
-      IDE.getInstance().addControl(new LogoutControl());
-   }
+        new LogsPresenter();
+        new PageSpeedHandler();
+        new UpdateIndexesHandlerImpl();
+        new VaccumIndexesHandlerImpl();
+        new QueuesHandler();
+        new DosHandler();
+        new CronsHandler();
+        new BackendsHandler();
+        IDE.getInstance().addControl(new LoginControl());
+        IDE.getInstance().addControl(new LogoutControl());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      new GoogleAppEngineClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-      new CreateApplicationPresenter(event.getApplicationConfiguration().getContext());
-      new AccountsHandler();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide
+     * .client.framework.application.event.InitializeServicesEvent) */
+    @Override
+    public void onInitializeServices(InitializeServicesEvent event) {
+        new GoogleAppEngineClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+        new CreateApplicationPresenter(event.getApplicationConfiguration().getContext());
+        new AccountsHandler();
+    }
 
-   public static boolean isAppEngineProject(ProjectModel project)
-   {
-      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+    public static boolean isAppEngineProject(ProjectModel project) {
+        List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
 
-      return ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
-         || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
-         || (targets != null && targets.contains(ID));
-   }
+        return ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
+               || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
+               || (targets != null && targets.contains(ID));
+    }
 }

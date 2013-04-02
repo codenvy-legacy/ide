@@ -18,54 +18,45 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.extension.googleappengine.client.cron.CronGrid;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
-
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 23, 2012 3:22:35 PM anya $
- * 
  */
-public class CronTabPane extends Composite
-{
-   private static final String UPDATE_CRON_BUTTON_ID = "ideCronTabPaneUpdateCronButton";
+public class CronTabPane extends Composite {
+    private static final String UPDATE_CRON_BUTTON_ID = "ideCronTabPaneUpdateCronButton";
 
-   private static CronTabPaneUiBinder uiBinder = GWT.create(CronTabPaneUiBinder.class);
+    private static CronTabPaneUiBinder uiBinder = GWT.create(CronTabPaneUiBinder.class);
 
-   interface CronTabPaneUiBinder extends UiBinder<Widget, CronTabPane>
-   {
-   }
+    interface CronTabPaneUiBinder extends UiBinder<Widget, CronTabPane> {
+    }
 
-   @UiField
-   ImageButton updateCronButton;
+    @UiField
+    ImageButton updateCronButton;
 
-   @UiField
-   CronGrid cronGrid;
+    @UiField
+    CronGrid cronGrid;
 
-   public CronTabPane()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
+    public CronTabPane() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-      updateCronButton.setButtonId(UPDATE_CRON_BUTTON_ID);
-   }
+        updateCronButton.setButtonId(UPDATE_CRON_BUTTON_ID);
+    }
 
-   /**
-    * @return the updateCronButton
-    */
-   public ImageButton getUpdateCronButton()
-   {
-      return updateCronButton;
-   }
+    /** @return the updateCronButton */
+    public ImageButton getUpdateCronButton() {
+        return updateCronButton;
+    }
 
-   public CronGrid getCronGrid()
-   {
-      return cronGrid;
-   }
+    public CronGrid getCronGrid() {
+        return cronGrid;
+    }
 }

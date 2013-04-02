@@ -19,61 +19,69 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:e="urn:import:org.exoplatform.ide.extension.googleappengine.client.backends">
-   <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
-   <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle' />
-   <ui:style>
-      .right {
-      	float: right;
-      }
-      
-      .space {
-      	margin-right: 5px;
-      }
-      
-      .box {
-      	margin-right: 10px;
-      }
-   </ui:style>
-   <f:Border borderColor="transparent">
-      <f:layer top="0" bottom="65">
-         <f:Border margin="10">
-            <f:layer>
-               <e:BackendGrid width="100%" ui:field="backendsGrid"></e:BackendGrid>
-            </f:layer>
-         </f:Border>
-      </f:layer>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:e="urn:import:org.exoplatform.ide.extension.googleappengine.client.backends">
+    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization'/>
+    <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle'/>
+    <ui:style>
+        .right {
+            float: right;
+        }
 
-      <f:layer bottom="10" height="49">
-         <g:FlowPanel addStyleNames="{style.box}">
-            <g:DockLayoutPanel height="49px" width="100%" unit="PX">
-               <g:north size="22">
-                  <g:FlowPanel>
-                     <f:ImageButton ui:field="rollbackBackendButton" width="105px" height="22px" text="{locale.rollbackButton}"
-                        addStyleNames="{style.right}" imageResource="{resource.rollback}" disabledImageResource="{resource.rollbackDisabled}"></f:ImageButton>
-                     <f:ImageButton ui:field="updateBackendButton" width="105px" height="22px" text="{locale.updateButton}"
-                        addStyleNames="{style.right} {style.space}" imageResource="{resource.update}" disabledImageResource="{resource.updateDisabled}"></f:ImageButton>
-                     <f:ImageButton ui:field="deleteBackendButton" width="105px" height="22px" text="{locale.deleteButton}"
-                        addStyleNames="{style.right} {style.space}" imageResource="{resource.remove}" disabledImageResource="{resource.removeDisabled}"></f:ImageButton>
-                     <f:ImageButton ui:field="configureBackendButton" width="105px" height="22px" text="{locale.configureButton}"
-                        addStyleNames="{style.right} {style.space}" imageResource="{resource.configure}" disabledImageResource="{resource.configureDisabled}"></f:ImageButton>
-                  </g:FlowPanel>
-               </g:north>
-               <g:center>
-                  <g:FlowPanel>
-                  </g:FlowPanel>
-               </g:center>
-               <g:south size="22">
-                  <g:FlowPanel>
-                     <f:ImageButton ui:field="rollbackAllBackendsButton" width="105px" height="22px" text="{locale.rollbackAllButton}"
-                        addStyleNames="{style.right}" imageResource="{resource.rollbackAll}" disabledImageResource="{resource.rollbackAllDisabled}"></f:ImageButton>
-                     <f:ImageButton ui:field="updateAllBackendsButton" width="105px" height="22px" text="{locale.updateAllButton}"
-                        addStyleNames="{style.right} {style.space}" imageResource="{resource.update}" disabledImageResource="{resource.updateDisabled}"></f:ImageButton>
-                  </g:FlowPanel>
-               </g:south>
-            </g:DockLayoutPanel>
-         </g:FlowPanel>
-      </f:layer>
-   </f:Border>
+        .space {
+            margin-right: 5px;
+        }
+
+        .box {
+            margin-right: 10px;
+        }
+    </ui:style>
+    <f:Border borderColor="transparent">
+        <f:layer top="0" bottom="65">
+            <f:Border margin="10">
+                <f:layer>
+                    <e:BackendGrid width="100%" ui:field="backendsGrid"></e:BackendGrid>
+                </f:layer>
+            </f:Border>
+        </f:layer>
+
+        <f:layer bottom="10" height="49">
+            <g:FlowPanel addStyleNames="{style.box}">
+                <g:DockLayoutPanel height="49px" width="100%" unit="PX">
+                    <g:north size="22">
+                        <g:FlowPanel>
+                            <f:ImageButton ui:field="rollbackBackendButton" width="105px" height="22px" text="{locale.rollbackButton}"
+                                           addStyleNames="{style.right}" imageResource="{resource.rollback}"
+                                           disabledImageResource="{resource.rollbackDisabled}"></f:ImageButton>
+                            <f:ImageButton ui:field="updateBackendButton" width="105px" height="22px" text="{locale.updateButton}"
+                                           addStyleNames="{style.right} {style.space}" imageResource="{resource.update}"
+                                           disabledImageResource="{resource.updateDisabled}"></f:ImageButton>
+                            <f:ImageButton ui:field="deleteBackendButton" width="105px" height="22px" text="{locale.deleteButton}"
+                                           addStyleNames="{style.right} {style.space}" imageResource="{resource.remove}"
+                                           disabledImageResource="{resource.removeDisabled}"></f:ImageButton>
+                            <f:ImageButton ui:field="configureBackendButton" width="105px" height="22px" text="{locale.configureButton}"
+                                           addStyleNames="{style.right} {style.space}" imageResource="{resource.configure}"
+                                           disabledImageResource="{resource.configureDisabled}"></f:ImageButton>
+                        </g:FlowPanel>
+                    </g:north>
+                    <g:center>
+                        <g:FlowPanel>
+                        </g:FlowPanel>
+                    </g:center>
+                    <g:south size="22">
+                        <g:FlowPanel>
+                            <f:ImageButton ui:field="rollbackAllBackendsButton" width="105px" height="22px"
+                                           text="{locale.rollbackAllButton}"
+                                           addStyleNames="{style.right}" imageResource="{resource.rollbackAll}"
+                                           disabledImageResource="{resource.rollbackAllDisabled}"></f:ImageButton>
+                            <f:ImageButton ui:field="updateAllBackendsButton" width="105px" height="22px" text="{locale.updateAllButton}"
+                                           addStyleNames="{style.right} {style.space}" imageResource="{resource.update}"
+                                           disabledImageResource="{resource.updateDisabled}"></f:ImageButton>
+                        </g:FlowPanel>
+                    </g:south>
+                </g:DockLayoutPanel>
+            </g:FlowPanel>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder>

@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link UpdatePageSpeedEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 3:44:00 PM anya $
- * 
  */
-public interface UpdatePageSpeedHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to update page speed.
-    * 
-    * @param event
-    */
-   void onUpdatePageSpeed(UpdatePageSpeedEvent event);
+public interface UpdatePageSpeedHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to update page speed.
+     *
+     * @param event
+     */
+    void onUpdatePageSpeed(UpdatePageSpeedEvent event);
 }

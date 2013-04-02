@@ -24,53 +24,38 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Event occurs, when user tries to deploy application to Google App engine.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 4:47:12 PM anya $
- * 
  */
-public class DeployApplicationEvent extends GwtEvent<DeployApplicationHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<DeployApplicationHandler> TYPE = new GwtEvent.Type<DeployApplicationHandler>();
+public class DeployApplicationEvent extends GwtEvent<DeployApplicationHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<DeployApplicationHandler> TYPE = new GwtEvent.Type<DeployApplicationHandler>();
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   public DeployApplicationEvent()
-   {
-      this.project = null;
-   }
+    public DeployApplicationEvent() {
+        this.project = null;
+    }
 
-   public DeployApplicationEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+    public DeployApplicationEvent(ProjectModel project) {
+        this.project = project;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeployApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DeployApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DeployApplicationHandler handler)
-   {
-      handler.onDeployApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(DeployApplicationHandler handler) {
+        handler.onDeployApplication(this);
+    }
 
-   /**
-    * @return the project
-    */
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    /** @return the project */
+    public ProjectModel getProject() {
+        return project;
+    }
 }

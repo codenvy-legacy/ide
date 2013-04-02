@@ -20,17 +20,17 @@
 -->
 
 <module>
-   <inherits name="com.google.gwt.user.User" />
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.xml.XML' />
-   <inherits name='com.google.gwt.json.JSON' />
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   <inherits name='org.exoplatform.ide.security.Security' />
+    <inherits name="com.google.gwt.user.User"/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name='com.google.gwt.json.JSON'/>
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
+    <inherits name='org.exoplatform.ide.security.Security'/>
 
-   <inherits name='org.exoplatform.ide.extension.googleappengine.Views' />
+    <inherits name='org.exoplatform.ide.extension.googleappengine.Views'/>
 
-   <source path="client" />
-   <source path="shared" />
+    <source path="client"/>
+    <source path="shared"/>
 
-   <entry-point class='org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension' />
+    <entry-point class='org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension'/>
 </module>

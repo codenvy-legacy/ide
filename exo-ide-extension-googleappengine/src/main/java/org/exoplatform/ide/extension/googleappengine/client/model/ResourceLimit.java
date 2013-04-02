@@ -21,54 +21,44 @@ package org.exoplatform.ide.extension.googleappengine.client.model;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 31, 2012 4:47:42 PM anya $
- * 
  */
-public class ResourceLimit
-{
-   private String name;
+public class ResourceLimit {
+    private String name;
 
-   private Long value;
+    private Long value;
 
-   public ResourceLimit()
-   {
-   }
+    public ResourceLimit() {
+    }
 
-   public ResourceLimit(String name, Long value)
-   {
-      this.name = name;
-      this.value = value;
-   }
+    public ResourceLimit(String name, Long value) {
+        this.name = name;
+        this.value = value;
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /** @return the name */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @param name the name to set
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /**
+     * @param name
+     *         the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @return the value
-    */
-   public Long getValue()
-   {
-      return value;
-   }
+    /** @return the value */
+    public Long getValue() {
+        return value;
+    }
 
-   /**
-    * @param value the value to set
-    */
-   public void setValue(Long value)
-   {
-      this.value = value;
-   }
+    /**
+     * @param value
+     *         the value to set
+     */
+    public void setValue(Long value) {
+        this.value = value;
+    }
 
 }

@@ -33,51 +33,39 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 24, 2012 3:49:49 PM anya $
- * 
  */
-public class PageSpeedHandler extends GoogleAppEnginePresenter implements UpdatePageSpeedHandler
-{
+public class PageSpeedHandler extends GoogleAppEnginePresenter implements UpdatePageSpeedHandler {
 
-   public PageSpeedHandler()
-   {
-      IDE.addHandler(UpdatePageSpeedEvent.TYPE, this);
-   }
+    public PageSpeedHandler() {
+        IDE.addHandler(UpdatePageSpeedEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedHandler#onUpdatePageSpeed(org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent)
-    */
-   @Override
-   public void onUpdatePageSpeed(UpdatePageSpeedEvent event)
-   {
-      if (isAppEngineProject())
-      {
-         updatePageSpeed();
-      }
-      else
-      {
-         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
-      }
-   }
+    /** @see org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedHandler#onUpdatePageSpeed(org.exoplatform.ide
+     * .extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent) */
+    @Override
+    public void onUpdatePageSpeed(UpdatePageSpeedEvent event) {
+        if (isAppEngineProject()) {
+            updatePageSpeed();
+        } else {
+            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
+        }
+    }
 
-   public void updatePageSpeed()
-   {
-      try
-      {
-         GoogleAppEngineClientService.getInstance().updatePagespeed(currentVfs.getId(), currentProject.getId(),
-            new GoogleAppEngineAsyncRequestCallback<Object>()
-            {
+    public void updatePageSpeed() {
+        try {
+            GoogleAppEngineClientService.getInstance().updatePagespeed(currentVfs.getId(), currentProject.getId(),
+                                                                       new GoogleAppEngineAsyncRequestCallback<Object>() {
 
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  IDE.fireEvent(new OutputEvent(
-                     GoogleAppEngineExtension.GAE_LOCALIZATION.updatePageSpeedSuccessfully(), Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                                                                           @Override
+                                                                           protected void onSuccess(Object result) {
+                                                                               IDE.fireEvent(new OutputEvent(
+                                                                                       GoogleAppEngineExtension.GAE_LOCALIZATION
+                                                                                                               .updatePageSpeedSuccessfully(),
+                                                                                       Type.INFO));
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 }

@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.googleappengine.shared;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Jun 6, 2012 4:28:29 PM anya $
  */
-public interface ApplicationInfo
-{
-   String getWebURL();
+public interface ApplicationInfo {
+    String getWebURL();
 
-   void setWebURL(String webURL);
+    void setWebURL(String webURL);
 
-   String getApplicationId();
+    String getApplicationId();
 
-   void setApplicationId(String applicationId);
+    void setApplicationId(String applicationId);
 }
