@@ -24,29 +24,27 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface HtmlClientBundle extends ClientBundle
-{
+public interface HtmlClientBundle extends ClientBundle {
 
-   @Source("org/exoplatform/ide/editor/html/client/styles/html.css")
-   HtmlCss css();
+    @Source("org/exoplatform/ide/editor/html/client/styles/html.css")
+    HtmlCss css();
 
-   @Source("org/exoplatform/ide/editor/html/client/images/attribute.png")
-   ImageResource attribute();
+    @Source("org/exoplatform/ide/editor/html/client/images/attribute.png")
+    ImageResource attribute();
 
-   @Source("org/exoplatform/ide/editor/html/client/images/property-item.png")
-   ImageResource property();
+    @Source("org/exoplatform/ide/editor/html/client/images/property-item.png")
+    ImageResource property();
 
-   @Source("org/exoplatform/ide/editor/html/client/images/tag.png")
-   ImageResource tag();
+    @Source("org/exoplatform/ide/editor/html/client/images/tag.png")
+    ImageResource tag();
 
-   @Source("org/exoplatform/ide/editor/html/client/images/template.png")
-   ImageResource template();
+    @Source("org/exoplatform/ide/editor/html/client/images/template.png")
+    ImageResource template();
 
-   @Source("org/exoplatform/ide/editor/html/client/images/row-selected.png")
-   ImageResource itemSelected();
+    @Source("org/exoplatform/ide/editor/html/client/images/row-selected.png")
+    ImageResource itemSelected();
 
-   @Source("org/exoplatform/ide/editor/html/client/images/cdata-item.png")
-   ImageResource cdata();
+    @Source("org/exoplatform/ide/editor/html/client/images/cdata-item.png")
+    ImageResource cdata();
 }

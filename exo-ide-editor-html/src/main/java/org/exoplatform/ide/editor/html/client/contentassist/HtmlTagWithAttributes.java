@@ -19,26 +19,25 @@ import com.google.collide.client.util.collections.StringMultiset;
 
 /**
  * Object that represents contents of HTML tag entity.
- *
+ * <p/>
  * <p>Actually, only tag name and attributes bag are stored.
- *
  */
 public class HtmlTagWithAttributes extends DirtyStateTracker {
 
-  private final String tagName;
+    private final String tagName;
 
-  private final StringMultiset attributes = new SimpleStringBag();
+    private final StringMultiset attributes = new SimpleStringBag();
 
 
-  public HtmlTagWithAttributes(String tagName) {
-    this.tagName = tagName;
-  }
+    public HtmlTagWithAttributes(String tagName) {
+        this.tagName = tagName;
+    }
 
-  public String getTagName() {
-    return tagName;
-  }
+    public String getTagName() {
+        return tagName;
+    }
 
-  public StringMultiset getAttributes() {
-    return attributes;
-  }
+    public StringMultiset getAttributes() {
+        return attributes;
+    }
 }
