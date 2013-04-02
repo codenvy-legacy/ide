@@ -34,55 +34,43 @@ import java.util.List;
 
 /**
  * Umarshaller for repositories list.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Apr 2, 2012 10:39:45 AM anya $
- *
  */
-public class RepositoriesUnmarshaller implements Unmarshallable<List<GitHubRepository>>
-{
-   /**
-    * Repositories list.
-    */
-   private List<GitHubRepository> repositories;
+public class RepositoriesUnmarshaller implements Unmarshallable<List<GitHubRepository>> {
+    /** Repositories list. */
+    private List<GitHubRepository> repositories;
 
-   /**
-    * @param repositories extended repositories
-    */
-   public RepositoriesUnmarshaller(List<GitHubRepository> repositories)
-   {
-      this.repositories = repositories;
-   }
+    /**
+     * @param repositories
+     *         extended repositories
+     */
+    public RepositoriesUnmarshaller(List<GitHubRepository> repositories) {
+        this.repositories = repositories;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
-      if (jsonArray == null)
-      {
-         return;
-      }
+        if (jsonArray == null) {
+            return;
+        }
 
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         JSONValue value = jsonArray.get(i);
-         String payload = value.isObject().toString();
-         AutoBean<GitHubRepository> autoBean =
-            AutoBeanCodex.decode(SamplesExtension.AUTO_BEAN_FACTORY, GitHubRepository.class, payload);
-         repositories.add(autoBean.as());
-      }
-   }
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONValue value = jsonArray.get(i);
+            String payload = value.isObject().toString();
+            AutoBean<GitHubRepository> autoBean =
+                    AutoBeanCodex.decode(SamplesExtension.AUTO_BEAN_FACTORY, GitHubRepository.class, payload);
+            repositories.add(autoBean.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<GitHubRepository> getPayload()
-   {
-      return repositories;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<GitHubRepository> getPayload() {
+        return repositories;
+    }
 }

@@ -22,80 +22,69 @@ package org.exoplatform.ide.extension.samples.client.inviting.manage;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class InvitedDeveloper implements Invite
-{
-   private String email;
+public class InvitedDeveloper implements Invite {
+    private String email;
 
-   private String uuid;
+    private String uuid;
 
-   private Boolean activated;
+    private Boolean activated;
 
-   private Boolean valid;
+    private Boolean valid;
 
-   public InvitedDeveloper(String email, String uuid, Boolean activated, Boolean valid)
-   {
-      this.email = email;
-      this.uuid = uuid;
-      this.activated = activated;
-      this.valid = valid;
-   }
+    public InvitedDeveloper(String email, String uuid, Boolean activated, Boolean valid) {
+        this.email = email;
+        this.uuid = uuid;
+        this.activated = activated;
+        this.valid = valid;
+    }
 
-   @Override
-   public void setEmail(String email)
-   {
-      this.email = email;
-   }
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-   @Override
-   public String getEmail()
-   {
-      return email;
-   }
+    @Override
+    public String getEmail() {
+        return email;
+    }
 
-   @Override
-   public void setUuid(String uuid)
-   {
-      this.uuid = uuid;
-   }
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-   @Override
-   public String getUuid()
-   {
-      return uuid;
-   }
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
 
-   @Override
-   public void setActivated(Boolean activated)
-   {
-      this.activated = activated;
-   }
+    @Override
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
 
-   @Override
-   public Boolean isActivated()
-   {
-      return activated;
-   }
+    @Override
+    public Boolean isActivated() {
+        return activated;
+    }
 
-   @Override
-   public void setValid(Boolean valid)
-   {
-      this.valid = valid;
-   }
+    @Override
+    public void setValid(Boolean valid) {
+        this.valid = valid;
+    }
 
-   @Override
-   public Boolean isValid()
-   {
-      return valid;
-   }
+    @Override
+    public Boolean isValid() {
+        return valid;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "InvitedDeveloper{" +
-         "email='" + email + '\'' +
-         ", uuid='" + uuid + '\'' +
-         ", activated=" + activated +
-         ", valid=" + valid +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "InvitedDeveloper{" +
+               "email='" + email + '\'' +
+               ", uuid='" + uuid + '\'' +
+               ", activated=" + activated +
+               ", valid=" + valid +
+               '}';
+    }
 }

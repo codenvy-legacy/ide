@@ -24,19 +24,16 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ManageInviteEvent extends GwtEvent<ManageInviteHandler>
-{
-   public static final Type<ManageInviteHandler> TYPE = new Type<ManageInviteHandler>();
+public class ManageInviteEvent extends GwtEvent<ManageInviteHandler> {
+    public static final Type<ManageInviteHandler> TYPE = new Type<ManageInviteHandler>();
 
-   @Override
-   public Type<ManageInviteHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<ManageInviteHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ManageInviteHandler handler)
-   {
-      handler.onManageInvite(this);
-   }
+    @Override
+    protected void dispatch(ManageInviteHandler handler) {
+        handler.onManageInvite(this);
+    }
 }

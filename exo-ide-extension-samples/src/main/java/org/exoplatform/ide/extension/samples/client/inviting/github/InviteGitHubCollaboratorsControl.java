@@ -35,90 +35,73 @@ import org.exoplatform.ide.vfs.shared.Item;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- *
  */
 @RolesAllowed({"developer"})
 public class InviteGitHubCollaboratorsControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, FolderRefreshedHandler
-{
+                                                                               ProjectClosedHandler, FolderRefreshedHandler {
 
-   private static final String ID = "Share/Invite GitHub Collaborators...";
+    private static final String ID = "Share/Invite GitHub Collaborators...";
 
-   private static final String TITLE = "Invite GitHub Collaborators...";
+    private static final String TITLE = "Invite GitHub Collaborators...";
 
-   private static final String PROMPT = "Invite GitHub Collaborators...";
+    private static final String PROMPT = "Invite GitHub Collaborators...";
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   public InviteGitHubCollaboratorsControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.invite(), SamplesClientBundle.INSTANCE.inviteDisable());
-      setEvent(new InviteGitHubCollaboratorsEvent());
-   }
+    public InviteGitHubCollaboratorsControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(SamplesClientBundle.INSTANCE.invite(), SamplesClientBundle.INSTANCE.inviteDisable());
+        setEvent(new InviteGitHubCollaboratorsEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-      setVisible(true);
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+        setVisible(true);
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      project = event.getProject();
-      refresh();
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        project = event.getProject();
+        refresh();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      project = null;
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        project = null;
+        setEnabled(false);
+    }
 
-   /**
-    * Refresh controls visibility
-    */
-   private void refresh()
-   {
-      if (project == null)
-      {
-         setEnabled(false);
-         return;
-      }
-
-      for (Item child : project.getChildren().getItems())
-      {
-         if (".git".equals(child.getName()))
-         {
-            setEnabled(true);
+    /** Refresh controls visibility */
+    private void refresh() {
+        if (project == null) {
+            setEnabled(false);
             return;
-         }
-      }
+        }
 
-      setEnabled(false);
-   }
+        for (Item child : project.getChildren().getItems()) {
+            if (".git".equals(child.getName())) {
+                setEnabled(true);
+                return;
+            }
+        }
 
-   @Override
-   public void onFolderRefreshed(FolderRefreshedEvent event)
-   {
-      refresh();
-   }
+        setEnabled(false);
+    }
+
+    @Override
+    public void onFolderRefreshed(FolderRefreshedEvent event) {
+        refresh();
+    }
 
 }

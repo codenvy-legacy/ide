@@ -23,24 +23,20 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class InviteGitHubCollaboratorsEvent extends GwtEvent<InviteGitHubCollaboratorsHandler>
-{
+public class InviteGitHubCollaboratorsEvent extends GwtEvent<InviteGitHubCollaboratorsHandler> {
 
-   public static final GwtEvent.Type<InviteGitHubCollaboratorsHandler> TYPE =
-      new GwtEvent.Type<InviteGitHubCollaboratorsHandler>();
+    public static final GwtEvent.Type<InviteGitHubCollaboratorsHandler> TYPE =
+            new GwtEvent.Type<InviteGitHubCollaboratorsHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InviteGitHubCollaboratorsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<InviteGitHubCollaboratorsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(InviteGitHubCollaboratorsHandler handler)
-   {
-      handler.onInviteGitHubCollaborators(this);
-   }
+    @Override
+    protected void dispatch(InviteGitHubCollaboratorsHandler handler) {
+        handler.onInviteGitHubCollaborators(this);
+    }
 
 }

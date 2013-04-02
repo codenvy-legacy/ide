@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to login to GiHub.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 30, 2012 10:33:01 AM anya $
- * 
  */
-public class OAuthLoginEvent extends GwtEvent<OAuthLoginHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<OAuthLoginHandler> TYPE = new GwtEvent.Type<OAuthLoginHandler>();
+public class OAuthLoginEvent extends GwtEvent<OAuthLoginHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<OAuthLoginHandler> TYPE = new GwtEvent.Type<OAuthLoginHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OAuthLoginHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OAuthLoginHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(OAuthLoginHandler handler)
-   {
-      handler.onOAuthLogin(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(OAuthLoginHandler handler) {
+        handler.onOAuthLogin(this);
+    }
 
 }

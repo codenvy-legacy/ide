@@ -29,9 +29,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
+import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display;
 import org.exoplatform.ide.extension.samples.client.startpage.WelcomePageOpenedEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.WelcomePageOpenedHandler;
-import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -43,88 +43,72 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  */
 @RolesAllowed({"developer"})
 public class WelcomeControl extends SimpleControl implements IDEControl, VfsChangedHandler, ViewClosedHandler,
-   WelcomePageOpenedHandler
-{
+                                                             WelcomePageOpenedHandler {
 
-   private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlId();
+    private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlId();
 
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlTitle();
+    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlTitle();
 
-   private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlPrompt();
+    private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.welcomeControlPrompt();
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   private boolean opened;
+    private boolean opened;
 
-   /**
-    * @param id
-    */
-   public WelcomeControl()
-   {
-      super(ID);
-      setGroupName(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
-      setEvent(new OpenStartPageEvent());
-   }
+    /** @param id */
+    public WelcomeControl() {
+        super(ID);
+        setGroupName(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
+        setEvent(new OpenStartPageEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
 
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(WelcomePageOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(WelcomePageOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      updateEnabling();
-   }
+        updateEnabling();
+    }
 
-   private void updateEnabling()
-   {
-      if (vfsInfo == null)
-      {
-         setEnabled(false);
-         return;
-      }
-      setEnabled(!opened);
-   }
+    private void updateEnabling() {
+        if (vfsInfo == null) {
+            setEnabled(false);
+            return;
+        }
+        setEnabled(!opened);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateEnabling();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.startpage.WelcomePageOpenedHandler#onWelcomePageOpened(org.exoplatform.ide.extension.samples.client.startpage.WelcomePageOpenedEvent)
-    */
-   @Override
-   public void onWelcomePageOpened(WelcomePageOpenedEvent event)
-   {
-      opened = true;
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.startpage.WelcomePageOpenedHandler#onWelcomePageOpened(org.exoplatform.ide
+     * .extension.samples.client.startpage.WelcomePageOpenedEvent) */
+    @Override
+    public void onWelcomePageOpened(WelcomePageOpenedEvent event) {
+        opened = true;
+        updateEnabling();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         opened = false;
-         updateEnabling();
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            opened = false;
+            updateEnabling();
+        }
+    }
 
 }

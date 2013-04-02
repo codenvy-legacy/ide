@@ -34,82 +34,67 @@ import org.exoplatform.ide.client.framework.util.Utils;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 30, 2012 10:26:25 AM anya $
- * 
  */
-public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
-{
-   
-   interface Display extends IsView
-   {
-      HasClickHandlers getLoginButton();
+public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler {
 
-      HasClickHandlers getCancelButton();
+    interface Display extends IsView {
+        HasClickHandlers getLoginButton();
 
-      HasValue<String> getLabel();
-   }
+        HasClickHandlers getCancelButton();
 
-   private Display display;
+        HasValue<String> getLabel();
+    }
 
-   public OAuthLoginPresenter()
-   {
-      IDE.addHandler(OAuthLoginEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    private Display display;
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public OAuthLoginPresenter() {
+        IDE.addHandler(OAuthLoginEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-      display.getLoginButton().addClickHandler(new ClickHandler()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            String authUrl = Utils.getAuthorizationContext()//
-               + "/ide/oauth/authenticate?oauth_provider=github"//
-               + "&scope=user" + "&userId=" + IDE.userId +
-               "&scope=repo&redirect_after_login="//
-               + Utils.getAuthorizationPageURL();
-            JsPopUpOAuthWindow authWindow =
-               new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
-            authWindow.loginWithOAuth();
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
+        display.getLoginButton().addClickHandler(new ClickHandler() {
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginHandler#onOAuthLogin(org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent)
-    */
-   @Override
-   public void onOAuthLogin(OAuthLoginEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-      }
-   }
+            @Override
+            public void onClick(ClickEvent event) {
+                String authUrl = Utils.getAuthorizationContext()//
+                                 + "/ide/oauth/authenticate?oauth_provider=github"//
+                                 + "&scope=user" + "&userId=" + IDE.userId +
+                                 "&scope=repo&redirect_after_login="//
+                                 + Utils.getAuthorizationPageURL();
+                JsPopUpOAuthWindow authWindow =
+                        new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                authWindow.loginWithOAuth();
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginHandler#onOAuthLogin(org.exoplatform.ide.extension.samples
+     * .client.oauth.OAuthLoginEvent) */
+    @Override
+    public void onOAuthLogin(OAuthLoginEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 }

@@ -28,11 +28,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
@@ -47,230 +43,201 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- *
  */
 public class InviteGoogleDevelopersView extends ViewImpl implements
-   org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display
-{
+                                                         org.exoplatform.ide.extension.samples.client.inviting.google
+                                                                 .InviteGoogleDevelopersPresenter.Display {
 
-   private static final String ID = "ide.inviteGitHubDevelopersView";
+    private static final String ID = "ide.inviteGitHubDevelopersView";
 
-   private static final String TITLE = "Invite developers";
+    private static final String TITLE = "Invite developers";
 
-   private static final String emailsHint = "Type email addresses separated by commas";
+    private static final String emailsHint = "Type email addresses separated by commas";
 
-   private static final int WIDTH = 800;
+    private static final int WIDTH = 800;
 
-   private static final int HEIGHT = 550;
+    private static final int HEIGHT = 550;
 
-   private boolean isEmailsHintShown;
+    private boolean isEmailsHintShown;
 
-   private static InviteGoogleDevelopersViewUiBinder uiBinder = GWT.create(InviteGoogleDevelopersViewUiBinder.class);
+    private static InviteGoogleDevelopersViewUiBinder uiBinder = GWT.create(InviteGoogleDevelopersViewUiBinder.class);
 
-   interface InviteGoogleDevelopersViewUiBinder extends UiBinder<Widget, InviteGoogleDevelopersView>
-   {
-   }
+    interface InviteGoogleDevelopersViewUiBinder extends UiBinder<Widget, InviteGoogleDevelopersView> {
+    }
 
-   private class UserListWidget extends Widget
-   {
-      public UserListWidget(Element e)
-      {
-         setElement(e);
-      }
+    private class UserListWidget extends Widget {
+        public UserListWidget(Element e) {
+            setElement(e);
+        }
 
-      /**
-       * Adds a new child widget
-       *
-       * @param w the widget to be added
-       */
-      public void add(Widget w)
-      {
-         add(w, getElement());
-      }
+        /**
+         * Adds a new child widget
+         *
+         * @param w
+         *         the widget to be added
+         */
+        public void add(Widget w) {
+            add(w, getElement());
+        }
 
-      /**
-       * Adds a new child widget to the panel, attaching its Element to the
-       * specified container Element.
-       *
-       * @param child the child widget to be added
-       * @param container the element within which the child will be contained
-       */
-      protected void add(Widget child, Element container)
-      {
-         // Detach new child.
-         child.removeFromParent();
+        /**
+         * Adds a new child widget to the panel, attaching its Element to the
+         * specified container Element.
+         *
+         * @param child
+         *         the child widget to be added
+         * @param container
+         *         the element within which the child will be contained
+         */
+        protected void add(Widget child, Element container) {
+            // Detach new child.
+            child.removeFromParent();
 
-         // Logical attach.
-         getChildren().add(child);
+            // Logical attach.
+            getChildren().add(child);
 
-         // Physical attach.
-         DOM.appendChild(container, child.getElement());
+            // Physical attach.
+            DOM.appendChild(container, child.getElement());
 
-         // Adopt.
-         adopt(child);
-      }
+            // Adopt.
+            adopt(child);
+        }
 
-   }
+    }
 
-   interface Style extends CssResource
-   {
-      String inviteTopbarTextInput();
+    interface Style extends CssResource {
+        String inviteTopbarTextInput();
 
-      String inviteTopbarTextInputWithHint();
-   }
+        String inviteTopbarTextInputWithHint();
+    }
 
-   @UiField
-   Style style;
+    @UiField
+    Style style;
 
-   UserListWidget userListWidget;
+    UserListWidget userListWidget;
 
-   @UiField
-   DivElement userListElement;
+    @UiField
+    DivElement userListElement;
 
-   @UiField
-   DivElement userListErrorMessage;
+    @UiField
+    DivElement userListErrorMessage;
 
-   @UiField
-   CheckBox checkAll;
+    @UiField
+    CheckBox checkAll;
 
-   @UiField
-   ImageButton inviteButton, cancelButton;
+    @UiField
+    ImageButton inviteButton, cancelButton;
 
-   @UiField
-   TextAreaElement inviteMessage;
+    @UiField
+    TextAreaElement inviteMessage;
 
-   @UiField
-   TextInput emailsTextField;
+    @UiField
+    TextInput emailsTextField;
 
-   public InviteGoogleDevelopersView()
-   {
-      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.invite()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      setCloseOnEscape(true);
-   }
+    public InviteGoogleDevelopersView() {
+        super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.invite()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        setCloseOnEscape(true);
+    }
 
-   private Map<GoogleContact, GoogleContactTile> cards = new HashMap<GoogleContact, GoogleContactTile>();
+    private Map<GoogleContact, GoogleContactTile> cards = new HashMap<GoogleContact, GoogleContactTile>();
 
-   @Override
-   public void setDevelopers(List<GoogleContact> contacts, GoogleContactSelectionChangedHandler selectionChangedHandler)
-   {
-      if (userListWidget != null)
-      {
-         userListWidget.removeFromParent();
-      }
+    @Override
+    public void setDevelopers(List<GoogleContact> contacts, GoogleContactSelectionChangedHandler selectionChangedHandler) {
+        if (userListWidget != null) {
+            userListWidget.removeFromParent();
+        }
 
-      userListWidget = new UserListWidget((Element)userListElement.cast());
+        userListWidget = new UserListWidget((Element)userListElement.cast());
 
-      cards.clear();
-      for (GoogleContact contact : contacts)
-      {
-         GoogleContactTile card = new GoogleContactTile(contact);
-         card.setSelectionChangedHandler(selectionChangedHandler);
-         userListWidget.add(card);
-         cards.put(contact, card);
-      }
-   }
+        cards.clear();
+        for (GoogleContact contact : contacts) {
+            GoogleContactTile card = new GoogleContactTile(contact);
+            card.setSelectionChangedHandler(selectionChangedHandler);
+            userListWidget.add(card);
+            cards.put(contact, card);
+        }
+    }
 
-   @Override
-   public boolean isSelected(GoogleContact user)
-   {
-      return cards.get(user).isSelected();
-   }
+    @Override
+    public boolean isSelected(GoogleContact user) {
+        return cards.get(user).isSelected();
+    }
 
-   @Override
-   public void setSelected(GoogleContact contact, boolean selected)
-   {
-      cards.get(contact).setSelected(selected);
-   }
+    @Override
+    public void setSelected(GoogleContact contact, boolean selected) {
+        cards.get(contact).setSelected(selected);
+    }
 
-   @Override
-   public HasValue<Boolean> getSelectAllCheckBox()
-   {
-      return checkAll;
-   }
+    @Override
+    public HasValue<Boolean> getSelectAllCheckBox() {
+        return checkAll;
+    }
 
-   @Override
-   public HasClickHandlers getInviteButton()
-   {
-      return inviteButton;
-   }
+    @Override
+    public HasClickHandlers getInviteButton() {
+        return inviteButton;
+    }
 
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return cancelButton;
-   }
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return cancelButton;
+    }
 
-   @Override
-   public String getInviteMessge()
-   {
-      return inviteMessage.getValue();
-   }
+    @Override
+    public String getInviteMessge() {
+        return inviteMessage.getValue();
+    }
 
-   @Override
-   public void setInviteButtonEnabled(boolean enabled)
-   {
-      inviteButton.setEnabled(enabled);
-   }
+    @Override
+    public void setInviteButtonEnabled(boolean enabled) {
+        inviteButton.setEnabled(enabled);
+    }
 
-   @Override
-   public void setInviteButtonTitle(String title)
-   {
-      inviteButton.setText(title);
-   }
+    @Override
+    public void setInviteButtonTitle(String title) {
+        inviteButton.setText(title);
+    }
 
-   @Override
-   public HasValue<String> getEmailsTextField()
-   {
-      return emailsTextField;
-   }
+    @Override
+    public HasValue<String> getEmailsTextField() {
+        return emailsTextField;
+    }
 
-   @Override
-   public FocusWidget getEmailsFocusWidget()
-   {
-      return emailsTextField;
-   }
+    @Override
+    public FocusWidget getEmailsFocusWidget() {
+        return emailsTextField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display#showEmailsHint()
-    */
-   @Override
-   public void showEmailsHint()
-   {
-      emailsTextField.setStyleName(style.inviteTopbarTextInputWithHint());
-      emailsTextField.setText(emailsHint);
-      isEmailsHintShown = true;
-   }
+    /** @see org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display#showEmailsHint() */
+    @Override
+    public void showEmailsHint() {
+        emailsTextField.setStyleName(style.inviteTopbarTextInputWithHint());
+        emailsTextField.setText(emailsHint);
+        isEmailsHintShown = true;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display#hideEmailsHint()
-    */
-   @Override
-   public void hideEmailsHint()
-   {
-      if (!isEmailsHintShown)
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display#hideEmailsHint() */
+    @Override
+    public void hideEmailsHint() {
+        if (!isEmailsHintShown) {
+            return;
+        }
 
-      emailsTextField.setStyleName(style.inviteTopbarTextInput());
-      emailsTextField.setText("");
-      isEmailsHintShown = false;
-   }
+        emailsTextField.setStyleName(style.inviteTopbarTextInput());
+        emailsTextField.setText("");
+        isEmailsHintShown = false;
+    }
 
-   @Override
-   public void setDevelopersListVisible(boolean visible)
-   {
-      if (visible)
-      {
-         userListElement.getStyle().setDisplay(Display.BLOCK);
-         userListErrorMessage.getStyle().setDisplay(Display.NONE);
-      }
-      else
-      {
-         userListElement.getStyle().setDisplay(Display.NONE);
-         userListErrorMessage.getStyle().setDisplay(Display.BLOCK);
-      }
-   }
+    @Override
+    public void setDevelopersListVisible(boolean visible) {
+        if (visible) {
+            userListElement.getStyle().setDisplay(Display.BLOCK);
+            userListErrorMessage.getStyle().setDisplay(Display.NONE);
+        } else {
+            userListElement.getStyle().setDisplay(Display.NONE);
+            userListErrorMessage.getStyle().setDisplay(Display.BLOCK);
+        }
+    }
 
 }

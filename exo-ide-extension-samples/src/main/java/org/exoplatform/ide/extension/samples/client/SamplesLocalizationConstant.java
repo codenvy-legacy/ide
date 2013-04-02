@@ -24,247 +24,245 @@ import com.google.gwt.i18n.client.Messages;
  * Interface to represent the constants contained in resource bundle: 'IdeSamplesLocalizationConstant.properties'.
  * <p/>
  * Localization message for forms from start page view.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdeSamplesLocalizationConstant.java Aug 25, 2011 5:57:11 PM vereshchaka $
- * 
  */
-public interface SamplesLocalizationConstant extends Messages
-{
-   /*
-    * Buttons
-    */
-   @Key("button.ok")
-   String okButton();
+public interface SamplesLocalizationConstant extends Messages {
+    /*
+     * Buttons
+     */
+    @Key("button.ok")
+    String okButton();
 
-   @Key("button.cancel")
-   String cancelButton();
+    @Key("button.cancel")
+    String cancelButton();
 
-   @Key("button.next")
-   String nextButton();
+    @Key("button.next")
+    String nextButton();
 
-   @Key("button.back")
-   String backButton();
+    @Key("button.back")
+    String backButton();
 
-   @Key("button.finish")
-   String finishButton();
+    @Key("button.finish")
+    String finishButton();
 
-   @Key("button.login")
-   String loginButton();
+    @Key("button.login")
+    String loginButton();
 
-   @Key("button.convert")
-   String convertButton();
+    @Key("button.convert")
+    String convertButton();
 
-   @Key("button.authenticate")
-   String authenticateButton();
+    @Key("button.authenticate")
+    String authenticateButton();
 
-   /*
-    * WelcomeView
-    */
-   @Key("welcome.aboutIde")
-   String aboutIde();
+    /*
+     * WelcomeView
+     */
+    @Key("welcome.aboutIde")
+    String aboutIde();
 
-   @Key("welcome.tutorial.title")
-   String tutorialTitle();
+    @Key("welcome.tutorial.title")
+    String tutorialTitle();
 
-   @Key("welcome.tutorial.text")
-   String tutorialText();
+    @Key("welcome.tutorial.text")
+    String tutorialText();
 
-   @Key("welcome.clone.title")
-   String cloneTitle();
+    @Key("welcome.clone.title")
+    String cloneTitle();
 
-   @Key("welcome.clone.text")
-   String cloneText();
+    @Key("welcome.clone.text")
+    String cloneText();
 
-   @Key("welcome.title")
-   String welcomeTitle();
+    @Key("welcome.title")
+    String welcomeTitle();
 
-   @Key("welcome.project.title")
-   String projectTitle();
+    @Key("welcome.project.title")
+    String projectTitle();
 
-   @Key("welcome.project.text")
-   String projectText();
+    @Key("welcome.project.text")
+    String projectText();
 
-   @Key("welcome.convert.title")
-   String convertTitle();
+    @Key("welcome.convert.title")
+    String convertTitle();
 
-   @Key("welcome.convert.text")
-   String convertText();
+    @Key("welcome.convert.text")
+    String convertText();
 
-   @Key("welcome.import.title")
-   String importTitle();
+    @Key("welcome.import.title")
+    String importTitle();
 
-   @Key("welcome.import.text")
-   String importText();
+    @Key("welcome.import.text")
+    String importText();
 
-   @Key("welcome.documentation.title")
-   String documentationTitle();
+    @Key("welcome.documentation.title")
+    String documentationTitle();
 
-   @Key("welcome.documentation.text")
-   String documentationText();
+    @Key("welcome.documentation.text")
+    String documentationText();
 
-   @Key("welcome.support.title")
-   String supportTitle();
+    @Key("welcome.support.title")
+    String supportTitle();
 
-   @Key("welcome.support.text")
-   String supportText();
+    @Key("welcome.support.text")
+    String supportText();
 
-   @Key("welcome.survey.title")
-   String surveyTitle();
+    @Key("welcome.survey.title")
+    String surveyTitle();
 
-   @Key("welcome.survey.text")
-   String surverText();
+    @Key("welcome.survey.text")
+    String surverText();
 
-   @Key("welcome.invitation.title")
-   String invitationTitle();
+    @Key("welcome.invitation.title")
+    String invitationTitle();
 
-   @Key("welcome.invitation.text")
-   String invitationText();
+    @Key("welcome.invitation.text")
+    String invitationText();
 
-   /*
-    * SamplesListGrid
-    */
-   @Key("samplesListGrid.column.name")
-   String samplesListRepositoryColumn();
+    /*
+     * SamplesListGrid
+     */
+    @Key("samplesListGrid.column.name")
+    String samplesListRepositoryColumn();
 
-   @Key("samplesListGrid.column.description")
-   String samplesListDescriptionColumn();
+    @Key("samplesListGrid.column.description")
+    String samplesListDescriptionColumn();
 
-   @Key("samplesListGrid.column.type")
-   String samplesListTypeColumn();
+    @Key("samplesListGrid.column.type")
+    String samplesListTypeColumn();
 
-   /*
-    * ShowSamplesPresenter
-    */
-   @Key("showSamples.error.selectRepo")
-   String showSamplesErrorSelectRepository();
+    /*
+     * ShowSamplesPresenter
+     */
+    @Key("showSamples.error.selectRepo")
+    String showSamplesErrorSelectRepository();
 
-   /*
-    * WizardDeploymentStepView
-    */
-   @Key("wizard.deployment.title")
-   String wizardDeploymentTitle();
+    /*
+     * WizardDeploymentStepView
+     */
+    @Key("wizard.deployment.title")
+    String wizardDeploymentTitle();
 
-   @Key("wizard.deployment.text")
-   String wizardDeploymentText();
+    @Key("wizard.deployment.text")
+    String wizardDeploymentText();
 
-   @Key("wizard.deployment.paas")
-   String wizardDeploymentPaas();
+    @Key("wizard.deployment.paas")
+    String wizardDeploymentPaas();
 
-   /*
-    * Convert to project view
-    */
-   @Key("convert.location.title")
-   String convertLocationTitle();
+    /*
+     * Convert to project view
+     */
+    @Key("convert.location.title")
+    String convertLocationTitle();
 
-   @Key("convert.location.text")
-   String convertLocationText();
+    @Key("convert.location.text")
+    String convertLocationText();
 
-   @Key("convert.project.name")
-   String convertProjectName();
+    @Key("convert.project.name")
+    String convertProjectName();
 
-   @Key("convert.project.type")
-   String convertProjectType();
+    @Key("convert.project.type")
+    String convertProjectType();
 
-   @Key("convert.properties.title")
-   String convertPropertiesTitle();
+    @Key("convert.properties.title")
+    String convertPropertiesTitle();
 
-   @Key("convert.properties.text")
-   String convertPropertiesText();
+    @Key("convert.properties.text")
+    String convertPropertiesText();
 
-   @Key("convert.name.exists")
-   String convertNameExists(String name);
+    @Key("convert.name.exists")
+    String convertNameExists(String name);
 
-   /*
-    * Login
-    */
-   @Key("login.title")
-   String loginViewTitle();
+    /*
+     * Login
+     */
+    @Key("login.title")
+    String loginViewTitle();
 
-   @Key("login.label")
-   String loginViewLabel(String paas);
+    @Key("login.label")
+    String loginViewLabel(String paas);
 
-   @Key("login.field.email")
-   String loginViewEmailField();
+    @Key("login.field.email")
+    String loginViewEmailField();
 
-   @Key("login.field.password")
-   String loginViewPasswordField();
+    @Key("login.field.password")
+    String loginViewPasswordField();
 
-   @Key("login.success")
-   String loginSuccess(String paas);
+    @Key("login.success")
+    String loginSuccess(String paas);
 
-   @Key("login.fail")
-   String loginFail(String paas);
+    @Key("login.fail")
+    String loginFail(String paas);
 
-   /*
-    * Controls
-    */
-   @Key("control.importFromGithub.id")
-   String importFromGithubControlId();
+    /*
+     * Controls
+     */
+    @Key("control.importFromGithub.id")
+    String importFromGithubControlId();
 
-   @Key("control.importFromGithub.title")
-   String importFromGithubControlTitle();
+    @Key("control.importFromGithub.title")
+    String importFromGithubControlTitle();
 
-   @Key("control.importFromGithub.prompt")
-   String importFromGithubControlPrompt();
+    @Key("control.importFromGithub.prompt")
+    String importFromGithubControlPrompt();
 
-   @Key("control.loadSamples.id")
-   String loadSamplesControlId();
+    @Key("control.loadSamples.id")
+    String loadSamplesControlId();
 
-   @Key("control.loadSamples.title")
-   String loadSamplesControlTitle();
+    @Key("control.loadSamples.title")
+    String loadSamplesControlTitle();
 
-   @Key("control.loadSamples.prompt")
-   String loadSamplesControlPrompt();
+    @Key("control.loadSamples.prompt")
+    String loadSamplesControlPrompt();
 
-   @Key("control.welcome.id")
-   String welcomeControlId();
+    @Key("control.welcome.id")
+    String welcomeControlId();
 
-   @Key("control.welcome.title")
-   String welcomeControlTitle();
+    @Key("control.welcome.title")
+    String welcomeControlTitle();
 
-   @Key("control.welcome.prompt")
-   String welcomeControlPrompt();
+    @Key("control.welcome.prompt")
+    String welcomeControlPrompt();
 
-   /*
-    * LoadSamplesView
-    */
-   @Key("import.load.dialog.title")
-   String importLoadDialogTitle();
+    /*
+     * LoadSamplesView
+     */
+    @Key("import.load.dialog.title")
+    String importLoadDialogTitle();
 
-   @Key("import.load.title")
-   String importLoadTitle();
+    @Key("import.load.title")
+    String importLoadTitle();
 
-   @Key("import.load.text")
-   String importLoadText();
+    @Key("import.load.text")
+    String importLoadText();
 
-   /*
-    * ImportFromGitHub
-    */
-   @Key("import.github.title")
-   String importFromGithubTitle();
+    /*
+     * ImportFromGitHub
+     */
+    @Key("import.github.title")
+    String importFromGithubTitle();
 
-   @Key("import.github.text")
-   String importFromGithubText();
+    @Key("import.github.text")
+    String importFromGithubText();
 
-   @Key("import.github.selectProjectType")
-   String importFromGithubSelectProjectType();
+    @Key("import.github.selectProjectType")
+    String importFromGithubSelectProjectType();
 
-   @Key("import.github.login")
-   String importFromGithubLogin();
+    @Key("import.github.login")
+    String importFromGithubLogin();
 
-   @Key("import.github.login.failed")
-   String importFromGithubLoginFailed();
+    @Key("import.github.login.failed")
+    String importFromGithubLoginFailed();
 
-   @Key("git.read.only")
-   String gitReadOnly();
+    @Key("git.read.only")
+    String gitReadOnly();
 
-   @Key("user.not.found")
-   String userNotFound();
+    @Key("user.not.found")
+    String userNotFound();
 
-   @Key("login.oauth.title")
-   String loginOAuthTitle();
+    @Key("login.oauth.title")
+    String loginOAuthTitle();
 
-   @Key("login.oauth.label")
-   String loginOAuthLabel();
+    @Key("login.oauth.label")
+    String loginOAuthLabel();
 }

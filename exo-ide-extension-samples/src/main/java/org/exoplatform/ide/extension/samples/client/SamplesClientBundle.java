@@ -28,199 +28,194 @@ import com.google.gwt.resources.client.ImageResource;
  *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesClientBundle.java Sep 2, 2011 12:33:49 PM vereshchaka $
- *
  */
-public interface SamplesClientBundle extends ClientBundle
-{
-   SamplesClientBundle INSTANCE = GWT.<SamplesClientBundle> create(SamplesClientBundle.class);
+public interface SamplesClientBundle extends ClientBundle {
+    SamplesClientBundle INSTANCE = GWT.<SamplesClientBundle>create(SamplesClientBundle.class);
 
-   /**
-    * Css resources for project wizard.
-    */
-   @Source("org/exoplatform/ide/extension/samples/client/wizard.css")
-   Style css();
+    /** Css resources for project wizard. */
+    @Source("org/exoplatform/ide/extension/samples/client/wizard.css")
+    Style css();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/help.png")
-   ImageResource help();
+    @Source("org/exoplatform/ide/extension/samples/client/images/help.png")
+    ImageResource help();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/help_disabled.png")
-   ImageResource helpDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/help_disabled.png")
+    ImageResource helpDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/contact.png")
-   ImageResource contact();
+    @Source("org/exoplatform/ide/extension/samples/client/images/contact.png")
+    ImageResource contact();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/contact_disabled.png")
-   ImageResource contactDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/contact_disabled.png")
+    ImageResource contactDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background.png")
-   ImageResource invitePageHeaderBackground();
+    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background.png")
+    ImageResource invitePageHeaderBackground();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background-48.png")
-   ImageResource invitePageHeaderBackground48();
+    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background-48.png")
+    ImageResource invitePageHeaderBackground48();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/invite/user-default-photo.png")
-   ImageResource userDefaultPhoto();
+    @Source("org/exoplatform/ide/extension/samples/client/images/invite/user-default-photo.png")
+    ImageResource userDefaultPhoto();
 
-   /*
-    * Buttons
-    */
-   @Source("org/exoplatform/ide/extension/samples/client/images/github_logo.png")
-   ImageResource gitHubLogo();
+    /*
+     * Buttons
+     */
+    @Source("org/exoplatform/ide/extension/samples/client/images/github_logo.png")
+    ImageResource gitHubLogo();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome.png")
-   ImageResource welcome();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome.png")
+    ImageResource welcome();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/invite/manage.png")
-   ImageResource manageInvite();
+    @Source("org/exoplatform/ide/extension/samples/client/images/invite/manage.png")
+    ImageResource manageInvite();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/invite/manage_disable.png")
-   ImageResource manageInviteDisable();
+    @Source("org/exoplatform/ide/extension/samples/client/images/invite/manage_disable.png")
+    ImageResource manageInviteDisable();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite.png")
-   ImageResource invite();
+    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite.png")
+    ImageResource invite();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite_disable.png")
-   ImageResource inviteDisable();
+    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite_disable.png")
+    ImageResource inviteDisable();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome-disabled.png")
-   ImageResource welcomeDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome-disabled.png")
+    ImageResource welcomeDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github.png")
-   ImageResource gitHub();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github.png")
+    ImageResource gitHub();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github_Disabled.png")
-   ImageResource gitHubDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github_Disabled.png")
+    ImageResource gitHubDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/ok.png")
-   ImageResource ok();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/ok.png")
+    ImageResource ok();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/ok_Disabled.png")
-   ImageResource okDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/ok_Disabled.png")
+    ImageResource okDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/add.png")
-   ImageResource add();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/add.png")
+    ImageResource add();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/add_Disabled.png")
-   ImageResource addDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/add_Disabled.png")
+    ImageResource addDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/cancel.png")
-   ImageResource cancel();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/cancel.png")
+    ImageResource cancel();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/cancel_Disabled.png")
-   ImageResource cancelDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/cancel_Disabled.png")
+    ImageResource cancelDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/next.png")
-   ImageResource next();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/next.png")
+    ImageResource next();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/next_Disabled.png")
-   ImageResource nextDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/next_Disabled.png")
+    ImageResource nextDisabled();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/back.png")
-   ImageResource back();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/back.png")
+    ImageResource back();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/back_Disabled.png")
-   ImageResource backDisabled();
+    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/back_Disabled.png")
+    ImageResource backDisabled();
 
-   /*
-    * Welcome page images
-    */
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/logo.png")
-   ImageResource ideLogo();
+    /*
+     * Welcome page images
+     */
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/logo.png")
+    ImageResource ideLogo();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/background.png")
-   ImageResource welcomePageBgHeader();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/background.png")
+    ImageResource welcomePageBgHeader();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-top-container.png")
-   ImageResource welcomePageBgTopContainer();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-top-container.png")
+    ImageResource welcomePageBgTopContainer();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/spliter.png")
-   ImageResource welcomePageSpliter();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/spliter.png")
+    ImageResource welcomePageSpliter();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/tutorials.png")
-   ImageResource welcomeTutorial();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/tutorials.png")
+    ImageResource welcomeTutorial();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/clone-git-repository.png")
-   ImageResource welcomeClone();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/clone-git-repository.png")
+    ImageResource welcomeClone();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/new-project.png")
-   ImageResource welcomeProject();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/new-project.png")
+    ImageResource welcomeProject();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/convert.png")
-   ImageResource convertToProject();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/convert.png")
+    ImageResource convertToProject();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/documentation.png")
-   ImageResource documentation();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/documentation.png")
+    ImageResource documentation();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/import-from-github.png")
-   ImageResource importFromGithub();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/import-from-github.png")
+    ImageResource importFromGithub();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/support.png")
-   ImageResource support();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/support.png")
+    ImageResource support();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/survey.png")
-   ImageResource survey();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/survey.png")
+    ImageResource survey();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/invitation.png")
-   ImageResource invitation();
+    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/invitation.png")
+    ImageResource invitation();
 
-   /*
-    * Controls
-    */
-   @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github.png")
-   ImageResource importFromGithubControl();
+    /*
+     * Controls
+     */
+    @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github.png")
+    ImageResource importFromGithubControl();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github_Disabled.png")
-   ImageResource importFromGithubDisabledControl();
+    @Source("org/exoplatform/ide/extension/samples/client/images/import-from-github_Disabled.png")
+    ImageResource importFromGithubDisabledControl();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/import-samples.png")
-   ImageResource importSamplesControl();
+    @Source("org/exoplatform/ide/extension/samples/client/images/import-samples.png")
+    ImageResource importSamplesControl();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/import-samples_Disabled.png")
-   ImageResource importSamplesDisabledControl();
+    @Source("org/exoplatform/ide/extension/samples/client/images/import-samples_Disabled.png")
+    ImageResource importSamplesDisabledControl();
 
-   public interface Style extends CssResource
-   {
-      String inviteHeader();
+    public interface Style extends CssResource {
+        String inviteHeader();
 
-      String inviteHeader48();
+        String inviteHeader48();
 
-      String table();
+        String table();
 
-      String itemsTree();
+        String itemsTree();
 
-      String labelTitle();
+        String labelTitle();
 
-      String labelDescription();
+        String labelDescription();
 
-      String wizard();
+        String wizard();
 
-      String topBox();
+        String topBox();
 
-      String footer();
+        String footer();
 
-      String labelValue();
+        String labelValue();
 
-      String labelSubtitle();
+        String labelSubtitle();
 
-      String loginLable();
+        String loginLable();
 
-      String leftFloat();
+        String leftFloat();
 
-      String innerBox();
+        String innerBox();
 
-      String right();
+        String right();
 
-      String middle();
+        String middle();
 
-      String newFolderDivInput();
+        String newFolderDivInput();
 
-      String welcomeHeader();
+        String welcomeHeader();
 
-      String welcomeHeaderLogo();
+        String welcomeHeaderLogo();
 
-      String welcomeHeaderText();
+        String welcomeHeaderText();
 
-      String welcomeTopContainer();
-   }
+        String welcomeTopContainer();
+    }
 
 }

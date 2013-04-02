@@ -24,112 +24,91 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.ide.git.shared.GitHubUser;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class GitHubUserTile extends Composite
-{
+public class GitHubUserTile extends Composite {
 
-   private static GitHubUserTileUiBinder uiBinder = GWT.create(GitHubUserTileUiBinder.class);
+    private static GitHubUserTileUiBinder uiBinder = GWT.create(GitHubUserTileUiBinder.class);
 
-   interface GitHubUserTileUiBinder extends UiBinder<Widget, GitHubUserTile>
-   {
-   }
+    interface GitHubUserTileUiBinder extends UiBinder<Widget, GitHubUserTile> {
+    }
 
-   interface Style extends CssResource
-   {
-      String userFieldBody();
+    interface Style extends CssResource {
+        String userFieldBody();
 
-      String userFieldBodySelected();
-   }
-   
-   @UiField Style style;
+        String userFieldBodySelected();
+    }
 
-   @UiField
-   FlowPanel userFieldBody;
-   
-   @UiField
-   CheckBox checkBox;
+    @UiField
+    Style style;
 
-   @UiField
-   Image avatarImage;
+    @UiField
+    FlowPanel userFieldBody;
 
-   @UiField
-   Label name, company, email;
-   
-   private GitHubUser gitUser;
-   
-   private GitHubUserSelectionChangedHandler selectionChangedHandler;
+    @UiField
+    CheckBox checkBox;
 
-   public GitHubUserTile(GitHubUser user)
-   {
-      gitUser = user;
-      
-      initWidget(uiBinder.createAndBindUi(this));
+    @UiField
+    Image avatarImage;
 
-      avatarImage.setUrl(user.getAvatarUrl());
-      name.setText(user.getName());
-      company.setText(user.getCompany());
-      email.setText(user.getEmail());
+    @UiField
+    Label name, company, email;
 
-      checkBox.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            setSelected(checkBox.getValue());
-            if (selectionChangedHandler != null)
-            {
-               selectionChangedHandler.onGitHubUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+    private GitHubUser gitUser;
+
+    private GitHubUserSelectionChangedHandler selectionChangedHandler;
+
+    public GitHubUserTile(GitHubUser user) {
+        gitUser = user;
+
+        initWidget(uiBinder.createAndBindUi(this));
+
+        avatarImage.setUrl(user.getAvatarUrl());
+        name.setText(user.getName());
+        company.setText(user.getCompany());
+        email.setText(user.getEmail());
+
+        checkBox.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                setSelected(checkBox.getValue());
+                if (selectionChangedHandler != null) {
+                    selectionChangedHandler.onGitHubUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+                }
             }
-         }
-      });
+        });
 
-      avatarImage.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            setSelected(!checkBox.getValue());
-            if (selectionChangedHandler != null)
-            {
-               selectionChangedHandler.onGitHubUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+        avatarImage.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                setSelected(!checkBox.getValue());
+                if (selectionChangedHandler != null) {
+                    selectionChangedHandler.onGitHubUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+                }
             }
-         }
-      });
-   }
+        });
+    }
 
-   public void setSelectionChangedHandler(GitHubUserSelectionChangedHandler selectionChangedHandler)
-   {
-      this.selectionChangedHandler = selectionChangedHandler;
-   }
+    public void setSelectionChangedHandler(GitHubUserSelectionChangedHandler selectionChangedHandler) {
+        this.selectionChangedHandler = selectionChangedHandler;
+    }
 
-   public boolean isSelected()
-   {
-      return checkBox.getValue();
-   }
+    public boolean isSelected() {
+        return checkBox.getValue();
+    }
 
-   public void setSelected(boolean selected)
-   {
-      checkBox.setValue(selected);
-      if (selected)
-      {
-         userFieldBody.setStyleName(style.userFieldBodySelected());
-      }
-      else
-      {
-         userFieldBody.setStyleName(style.userFieldBody());
-      }
-   }
+    public void setSelected(boolean selected) {
+        checkBox.setValue(selected);
+        if (selected) {
+            userFieldBody.setStyleName(style.userFieldBodySelected());
+        } else {
+            userFieldBody.setStyleName(style.userFieldBody());
+        }
+    }
 }

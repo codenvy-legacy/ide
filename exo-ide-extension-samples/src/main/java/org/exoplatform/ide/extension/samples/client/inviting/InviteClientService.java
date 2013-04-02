@@ -27,51 +27,43 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.Invite;
 
-import java.util.List;
-
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- *
  */
-public class InviteClientService
-{
+public class InviteClientService {
 
-   private static InviteClientService instance;
+    private static InviteClientService instance;
 
-   public static InviteClientService getInstance()
-   {
-      return instance;
-   }
+    public static InviteClientService getInstance() {
+        return instance;
+    }
 
-   private String restServiceContext;
+    private String restServiceContext;
 
-   public InviteClientService(String restServiceContext)
-   {
-      this.restServiceContext = restServiceContext;
-      instance = this;
-   }
+    public InviteClientService(String restServiceContext) {
+        this.restServiceContext = restServiceContext;
+        instance = this;
+    }
 
-   public void inviteUser(String email, String message, AsyncRequestCallback<String> callback) throws RequestException
-   {
-      String url = restServiceContext + "/invite/" + email;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
-         .header(HTTPHeader.CONTENTTYPE, "text/html; charset=utf-8").data(message).send(callback);
-   }
+    public void inviteUser(String email, String message, AsyncRequestCallback<String> callback) throws RequestException {
+        String url = restServiceContext + "/invite/" + email;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
+                    .header(HTTPHeader.CONTENTTYPE, "text/html; charset=utf-8").data(message).send(callback);
+    }
 
-   public void getInvitesList(AsyncRequestCallback<List<Invite>> callback) throws RequestException
-   {
-      String url = restServiceContext + "/invite/users";
-      AsyncRequest.build(RequestBuilder.GET, url).loader(new EmptyLoader())
-         .header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON).send(callback);
-   }
+    public void getInvitesList(AsyncRequestCallback<List<Invite>> callback) throws RequestException {
+        String url = restServiceContext + "/invite/users";
+        AsyncRequest.build(RequestBuilder.GET, url).loader(new EmptyLoader())
+                    .header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON).send(callback);
+    }
 
-   public void invalidateInvite(String email, AsyncRequestCallback<Void> callback) throws RequestException
-   {
-      String url = restServiceContext + "/invite/invalidate/" + email;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
-         .header(HTTPHeader.CONTENT_TYPE, "text/html; charset=utf-8").send(callback);
-   }
+    public void invalidateInvite(String email, AsyncRequestCallback<Void> callback) throws RequestException {
+        String url = restServiceContext + "/invite/invalidate/" + email;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
+                    .header(HTTPHeader.CONTENT_TYPE, "text/html; charset=utf-8").send(callback);
+    }
 }

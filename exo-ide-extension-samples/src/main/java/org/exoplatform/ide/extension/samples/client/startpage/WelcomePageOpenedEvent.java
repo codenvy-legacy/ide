@@ -22,31 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event called, when welcome page opened.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomePageOpenedEvent.java Dec 19, 2011 11:44:05 AM vereshchaka $
  */
-public class WelcomePageOpenedEvent extends GwtEvent<WelcomePageOpenedHandler>
-{
+public class WelcomePageOpenedEvent extends GwtEvent<WelcomePageOpenedHandler> {
 
-   public static final GwtEvent.Type<WelcomePageOpenedHandler> TYPE = new GwtEvent.Type<WelcomePageOpenedHandler>();
+    public static final GwtEvent.Type<WelcomePageOpenedHandler> TYPE = new GwtEvent.Type<WelcomePageOpenedHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<WelcomePageOpenedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<WelcomePageOpenedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(WelcomePageOpenedHandler handler)
-   {
-      handler.onWelcomePageOpened(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(WelcomePageOpenedHandler handler) {
+        handler.onWelcomePageOpened(this);
+    }
 
 }

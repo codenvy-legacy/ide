@@ -22,131 +22,107 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ProjectData.java Nov 18, 2011 3:27:38 PM vereshchaka $
  */
-public class ProjectData
-{
+public class ProjectData {
 
-   private String name;
+    private String name;
 
-   private String description;
+    private String description;
 
-   private String type;
+    private String type;
 
-   /**
-    * Url to clone from GitHub.
-    */
-   private String repositoryUrl;
-   
-   /**
-    * Url to clone from GitHub (readOnly).
-    */
-   private String readOnlyUrl;
+    /** Url to clone from GitHub. */
+    private String repositoryUrl;
 
-   private List<String> targets;
+    /** Url to clone from GitHub (readOnly). */
+    private String readOnlyUrl;
 
-   public ProjectData(String name, String description, String type, List<String> targets, String repositoryUrl,String readOnlyUrl)
-   {
-      this.name = name;
-      this.description = description;
-      this.type = type;
-      this.repositoryUrl = repositoryUrl;
-      this.targets = targets;
-      this.readOnlyUrl = readOnlyUrl;
-   }
+    private List<String> targets;
 
-   /**
-    * Get the url to clone from GitHub.
-    * 
-    * @return the repositoryUrl
-    */
-   public String getRepositoryUrl()
-   {
-      return repositoryUrl;
-   }
+    public ProjectData(String name, String description, String type, List<String> targets, String repositoryUrl, String readOnlyUrl) {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.repositoryUrl = repositoryUrl;
+        this.targets = targets;
+        this.readOnlyUrl = readOnlyUrl;
+    }
 
-   /**
-    * @param repositoryUrl the repositoryUrl to set
-    */
-   public void setRepositoryUrl(String repositoryUrl)
-   {
-      this.repositoryUrl = repositoryUrl;
-   }
+    /**
+     * Get the url to clone from GitHub.
+     *
+     * @return the repositoryUrl
+     */
+    public String getRepositoryUrl() {
+        return repositoryUrl;
+    }
 
-   /**
-    * @return the name
-    */
-   public String getName()
-   {
-      return name;
-   }
+    /**
+     * @param repositoryUrl
+     *         the repositoryUrl to set
+     */
+    public void setRepositoryUrl(String repositoryUrl) {
+        this.repositoryUrl = repositoryUrl;
+    }
 
-   /**
-    * @return the description
-    */
-   public String getDescription()
-   {
-      return description;
-   }
+    /** @return the name */
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @return the type
-    */
-   public String getType()
-   {
-      return type;
-   }
+    /** @return the description */
+    public String getDescription() {
+        return description;
+    }
 
-   /**
-    * @param name the name to set
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /** @return the type */
+    public String getType() {
+        return type;
+    }
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    /**
+     * @param name
+     *         the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @return the targets
-    */
-   public List<String> getTargets()
-   {
-      if (targets == null)
-      {
-         targets = new ArrayList<String>();
-      }
-      return targets;
-   }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   /**
-    * @param targets the targets to set
-    */
-   public void setTargets(List<String> targets)
-   {
-      this.targets = targets;
-   }
+    /** @return the targets */
+    public List<String> getTargets() {
+        if (targets == null) {
+            targets = new ArrayList<String>();
+        }
+        return targets;
+    }
 
-   /**
-    * @param description the description to set
-    */
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
-   
-   public String getReadOnlyUrl()
-   {
-      return readOnlyUrl;
-   }
-   
-   public void setReadOnlyUrl(String readOnlyUrl)
-   {
-      this.readOnlyUrl = readOnlyUrl;
-   }
+    /**
+     * @param targets
+     *         the targets to set
+     */
+    public void setTargets(List<String> targets) {
+        this.targets = targets;
+    }
+
+    /**
+     * @param description
+     *         the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getReadOnlyUrl() {
+        return readOnlyUrl;
+    }
+
+    public void setReadOnlyUrl(String readOnlyUrl) {
+        this.readOnlyUrl = readOnlyUrl;
+    }
 }

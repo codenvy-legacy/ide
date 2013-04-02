@@ -22,21 +22,20 @@ package org.exoplatform.ide.extension.samples.client.inviting.manage;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface Invite
-{
-   public void setEmail(String email);
+public interface Invite {
+    public void setEmail(String email);
 
-   public String getEmail();
+    public String getEmail();
 
-   public void setUuid(String uuid);
+    public void setUuid(String uuid);
 
-   public String getUuid();
+    public String getUuid();
 
-   public void setActivated(Boolean activated);
+    public void setActivated(Boolean activated);
 
-   public Boolean isActivated();
+    public Boolean isActivated();
 
-   public void setValid(Boolean valid);
+    public void setValid(Boolean valid);
 
-   public Boolean isValid();
+    public Boolean isValid();
 }

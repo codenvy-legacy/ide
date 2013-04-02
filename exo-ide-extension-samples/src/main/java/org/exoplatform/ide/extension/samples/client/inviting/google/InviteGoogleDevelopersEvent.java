@@ -23,23 +23,19 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class InviteGoogleDevelopersEvent extends GwtEvent<InviteGoogleDevelopersHandler>
-{
+public class InviteGoogleDevelopersEvent extends GwtEvent<InviteGoogleDevelopersHandler> {
 
-   public static final GwtEvent.Type<InviteGoogleDevelopersHandler> TYPE = new GwtEvent.Type<InviteGoogleDevelopersHandler>();
+    public static final GwtEvent.Type<InviteGoogleDevelopersHandler> TYPE = new GwtEvent.Type<InviteGoogleDevelopersHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InviteGoogleDevelopersHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<InviteGoogleDevelopersHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(InviteGoogleDevelopersHandler handler)
-   {
-      handler.onInviteGoogleDevelopers(this);
-   }
+    @Override
+    protected void dispatch(InviteGoogleDevelopersHandler handler) {
+        handler.onInviteGoogleDevelopers(this);
+    }
 
 }

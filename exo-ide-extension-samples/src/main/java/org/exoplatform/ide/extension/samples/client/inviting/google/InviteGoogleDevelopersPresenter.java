@@ -19,13 +19,7 @@
 package org.exoplatform.ide.extension.samples.client.inviting.google;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -59,90 +53,82 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
 public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHandler, ViewClosedHandler,
-   GoogleContactSelectionChangedHandler
-{
+                                                        GoogleContactSelectionChangedHandler {
 
-   //public static final String CONTACTS_FAILED = "Error loading the list of Google contacts.";
+    //public static final String CONTACTS_FAILED = "Error loading the list of Google contacts.";
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      void setDevelopersListVisible(boolean visible);
-      
-      void setDevelopers(List<GoogleContact> developers, GoogleContactSelectionChangedHandler selectionChangedHandler);
+        void setDevelopersListVisible(boolean visible);
 
-      boolean isSelected(GoogleContact contact);
+        void setDevelopers(List<GoogleContact> developers, GoogleContactSelectionChangedHandler selectionChangedHandler);
 
-      void setSelected(GoogleContact contact, boolean selected);
+        boolean isSelected(GoogleContact contact);
 
-      HasValue<Boolean> getSelectAllCheckBox();
+        void setSelected(GoogleContact contact, boolean selected);
 
-      String getInviteMessge();
+        HasValue<Boolean> getSelectAllCheckBox();
 
-      HasClickHandlers getInviteButton();
+        String getInviteMessge();
 
-      HasClickHandlers getCloseButton();
+        HasClickHandlers getInviteButton();
 
-      void setInviteButtonEnabled(boolean enabled);
+        HasClickHandlers getCloseButton();
 
-      void setInviteButtonTitle(String title);
+        void setInviteButtonEnabled(boolean enabled);
 
-      HasValue<String> getEmailsTextField();
+        void setInviteButtonTitle(String title);
 
-      FocusWidget getEmailsFocusWidget();
+        HasValue<String> getEmailsTextField();
 
-      void showEmailsHint();
+        FocusWidget getEmailsFocusWidget();
 
-      void hideEmailsHint();
+        void showEmailsHint();
 
-   }
+        void hideEmailsHint();
 
-   private Display display;
+    }
 
-   private List<GoogleContact> contacts;
+    private Display display;
 
-   private List<String> customEmailsList = new ArrayList<String>();
+    private List<GoogleContact> contacts;
 
-   private List<String> selectedEmailsList = new ArrayList<String>();
+    private List<String> customEmailsList = new ArrayList<String>();
 
-   private List<String> emailsToInvite = new ArrayList<String>();
+    private List<String> selectedEmailsList = new ArrayList<String>();
 
-   private int invitations = 0;
+    private List<String> emailsToInvite = new ArrayList<String>();
 
-   /**
-    * Comparator for ordering Google contacts list alphabetically, by first e-mail.
-    */
-   private static Comparator<GoogleContact> googleContactsComparator = new GoogleContactsComparator();
+    private int invitations = 0;
 
-   public InviteGoogleDevelopersPresenter()
-   {
-      IDE.getInstance().addControl(new InviteGoogleDevelopersControl());
+    /** Comparator for ordering Google contacts list alphabetically, by first e-mail. */
+    private static Comparator<GoogleContact> googleContactsComparator = new GoogleContactsComparator();
 
-      IDE.addHandler(InviteGoogleDevelopersEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public InviteGoogleDevelopersPresenter() {
+        IDE.getInstance().addControl(new InviteGoogleDevelopersControl());
 
-   @Override
-   public void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event)
-   {
-      if (display != null)
-      {
-         return;
-      }
-      customEmailsList.clear();
-      selectedEmailsList.clear();
-      emailsToInvite.clear();    
-      display = GWT.create(Display.class);
-      bindDisplay();
-      display.showEmailsHint();
-      contacts = new ArrayList<GoogleContact>();
-      display.setDevelopersListVisible(true);
-      //lazyLoadGoogleContacts();
-      isAuthenticate();
-   }
+        IDE.addHandler(InviteGoogleDevelopersEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
+
+    @Override
+    public void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event) {
+        if (display != null) {
+            return;
+        }
+        customEmailsList.clear();
+        selectedEmailsList.clear();
+        emailsToInvite.clear();
+        display = GWT.create(Display.class);
+        bindDisplay();
+        display.showEmailsHint();
+        contacts = new ArrayList<GoogleContact>();
+        display.setDevelopersListVisible(true);
+        //lazyLoadGoogleContacts();
+        isAuthenticate();
+    }
 
 //   /**
 //    * Load list of Google contacts from prepared JSON file.
@@ -192,323 +178,258 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 //      }.schedule(500);
 //   }
 
-   private void isAuthenticate()
-   {
-      try
-      {
-         StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller(new StringBuilder());
-         GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller)
-         {
-            @Override
-            protected void onSuccess(StringBuilder s)
-            {
-               JSONObject object = JSONParser.parseStrict(s.toString()).isObject();
-               String state = object.get("state").isString().stringValue();
-               if ("valid".equals(state))
-               {
-                  loadGoogleContacts();
-               }
-               else
-               {
-                  showLoginWindow();
-               }
-            }
+    private void isAuthenticate() {
+        try {
+            StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller(new StringBuilder());
+            GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                @Override
+                protected void onSuccess(StringBuilder s) {
+                    JSONObject object = JSONParser.parseStrict(s.toString()).isObject();
+                    String state = object.get("state").isString().stringValue();
+                    if ("valid".equals(state)) {
+                        loadGoogleContacts();
+                    } else {
+                        showLoginWindow();
+                    }
+                }
 
-            @Override
-            protected void onFailure(Throwable throwable)
-            {
-               showLoginWindow();
-            }
-         });
-      }
-      catch (RequestException exception)
-      {
-         loadContactsFailed();
-      }
-   }
-
-   protected void showLoginWindow()
-   {
-      String message =
-         "If you want to invite someone from your Google contact list, <br> "
-            + "press Yes button and you will be redirected to Google authorization page.";
-
-      Dialog askDialog = new Dialog("You have to be logged in Google account!", message, Dialog.Type.ASK);
-
-      BooleanValueReceivedHandler handler = new BooleanValueReceivedHandler()
-      {
-         @Override
-         public void booleanValueReceived(Boolean aBoolean)
-         {
-            if (aBoolean != null && aBoolean)
-            {
-               String authUrl = Utils.getAuthorizationContext()//
-                  + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
-                  + "&scope=https://www.googleapis.com/auth/userinfo.profile"//
-                  + "&scope=https://www.googleapis.com/auth/userinfo.email"//
-                  + "&scope=https://www.googleapis.com/auth/appengine.admin" //
-                  + "&scope=https://www.google.com/m8/feeds"//
-                  + "&userId=" + IDE.userId//
-                  + "&redirect_after_login="//
-                  + Utils.getAuthorizationPageURL();
-
-               JsPopUpOAuthWindow authWindow =
-                  new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
-               authWindow.loginWithOAuth();
-               if (display != null)
-               {
-                  display = null;
-               }
-            }
-            else
-            {
-               loadContactsFailed();
-            }
-         }
-      };
-
-      askDialog.setBooleanValueReceivedHandler(handler);
-
-      Dialogs.getInstance().showDialog(askDialog);
-   }
-
-   /**
-    * 
-    */
-   private void loadGoogleContacts()
-   {
-      try
-      {
-         GoogleContactsService.getInstance().getContacts(
-            new AsyncRequestCallback<List<GoogleContact>>(new InviteGoogleContactsUnmarshaller(
-               new ArrayList<GoogleContact>()))
-            {
-               @Override
-               protected void onSuccess(List<GoogleContact> result)
-               {
-                  IDE.getInstance().openView(display.asView());
-                  googleContactsReceived(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  loadContactsFailed();
-               }
+                @Override
+                protected void onFailure(Throwable throwable) {
+                    showLoginWindow();
+                }
             });
-         IDELoader.show("Loading Google contacts...");
-      }
-      catch (RequestException exception)
-      {
-         loadContactsFailed();
-      }
-   }
-   
-   private void loadContactsFailed()
-   {
-      IDE.getInstance().openView(display.asView());
-      display.setDevelopersListVisible(false);
-   }
+        } catch (RequestException exception) {
+            loadContactsFailed();
+        }
+    }
 
-   private void googleContactsReceived(List<GoogleContact> contacts)
-   {
-      for (GoogleContact contact : contacts)
-      {
-         if (contact.getEmailAddresses() != null && !contact.getEmailAddresses().isEmpty())
-         {
-            this.contacts.add(contact);
-         }
-      }
-      Collections.sort(contacts, googleContactsComparator);
+    protected void showLoginWindow() {
+        String message =
+                "If you want to invite someone from your Google contact list, <br> "
+                + "press Yes button and you will be redirected to Google authorization page.";
 
-      display.setDevelopers(contacts, this);
-   }
+        Dialog askDialog = new Dialog("You have to be logged in Google account!", message, Dialog.Type.ASK);
 
-   @Override
-   public void onGoogleContactSelectionChanged(GoogleContact contact, boolean selected)
-   {
-      updateSelectedEmailsList();
-      updateInviteButton();
-   }
+        BooleanValueReceivedHandler handler = new BooleanValueReceivedHandler() {
+            @Override
+            public void booleanValueReceived(Boolean aBoolean) {
+                if (aBoolean != null && aBoolean) {
+                    String authUrl = Utils.getAuthorizationContext()//
+                                     + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
+                                     + "&scope=https://www.googleapis.com/auth/userinfo.profile"//
+                                     + "&scope=https://www.googleapis.com/auth/userinfo.email"//
+                                     + "&scope=https://www.googleapis.com/auth/appengine.admin" //
+                                     + "&scope=https://www.google.com/m8/feeds"//
+                                     + "&userId=" + IDE.userId//
+                                     + "&redirect_after_login="//
+                                     + Utils.getAuthorizationPageURL();
 
-   private void updateSelectedEmailsList()
-   {
-      selectedEmailsList.clear();
-
-      for (GoogleContact contact : contacts)
-      {
-         if (display.isSelected(contact))
-         {
-            selectedEmailsList.add(contact.getEmailAddresses().get(0));
-         }
-      }
-   }
-
-   private void bindDisplay()
-   {
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getInviteButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            emailsToInvite.clear();
-            emailsToInvite.addAll(customEmailsList);
-            emailsToInvite.addAll(selectedEmailsList);
-            invitations = 0;
-            sendNextEmail();
-         }
-      });
-
-      display.getSelectAllCheckBox().addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
-            boolean selectAll = event.getValue() == null ? false : event.getValue();
-            for (GoogleContact contact : contacts)
-            {
-               display.setSelected(contact, selectAll);
+                    JsPopUpOAuthWindow authWindow =
+                            new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+                    authWindow.loginWithOAuth();
+                    if (display != null) {
+                        display = null;
+                    }
+                } else {
+                    loadContactsFailed();
+                }
             }
+        };
 
-            updateSelectedEmailsList();
+        askDialog.setBooleanValueReceivedHandler(handler);
+
+        Dialogs.getInstance().showDialog(askDialog);
+    }
+
+    /**
+     *
+     */
+    private void loadGoogleContacts() {
+        try {
+            GoogleContactsService.getInstance().getContacts(
+                    new AsyncRequestCallback<List<GoogleContact>>(new InviteGoogleContactsUnmarshaller(
+                            new ArrayList<GoogleContact>())) {
+                        @Override
+                        protected void onSuccess(List<GoogleContact> result) {
+                            IDE.getInstance().openView(display.asView());
+                            googleContactsReceived(result);
+                        }
+
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            loadContactsFailed();
+                        }
+                    });
+            IDELoader.show("Loading Google contacts...");
+        } catch (RequestException exception) {
+            loadContactsFailed();
+        }
+    }
+
+    private void loadContactsFailed() {
+        IDE.getInstance().openView(display.asView());
+        display.setDevelopersListVisible(false);
+    }
+
+    private void googleContactsReceived(List<GoogleContact> contacts) {
+        for (GoogleContact contact : contacts) {
+            if (contact.getEmailAddresses() != null && !contact.getEmailAddresses().isEmpty()) {
+                this.contacts.add(contact);
+            }
+        }
+        Collections.sort(contacts, googleContactsComparator);
+
+        display.setDevelopers(contacts, this);
+    }
+
+    @Override
+    public void onGoogleContactSelectionChanged(GoogleContact contact, boolean selected) {
+        updateSelectedEmailsList();
+        updateInviteButton();
+    }
+
+    private void updateSelectedEmailsList() {
+        selectedEmailsList.clear();
+
+        for (GoogleContact contact : contacts) {
+            if (display.isSelected(contact)) {
+                selectedEmailsList.add(contact.getEmailAddresses().get(0));
+            }
+        }
+    }
+
+    private void bindDisplay() {
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
+        display.getInviteButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                emailsToInvite.clear();
+                emailsToInvite.addAll(customEmailsList);
+                emailsToInvite.addAll(selectedEmailsList);
+                invitations = 0;
+                sendNextEmail();
+            }
+        });
+
+        display.getSelectAllCheckBox().addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                boolean selectAll = event.getValue() == null ? false : event.getValue();
+                for (GoogleContact contact : contacts) {
+                    display.setSelected(contact, selectAll);
+                }
+
+                updateSelectedEmailsList();
+                updateInviteButton();
+            }
+        });
+
+        display.getEmailsTextField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                parseCustomEmails(event.getValue());
+            }
+        });
+
+        display.getEmailsFocusWidget().addFocusHandler(new FocusHandler() {
+            @Override
+            public void onFocus(FocusEvent event) {
+                display.hideEmailsHint();
+            }
+        });
+
+        display.getEmailsFocusWidget().addBlurHandler(new BlurHandler() {
+            @Override
+            public void onBlur(BlurEvent event) {
+                String emails = display.getEmailsTextField().getValue();
+                if (emails == null || emails.trim().isEmpty()) {
+                    display.showEmailsHint();
+                }
+            }
+        });
+    }
+
+    private void parseCustomEmails(String customEmails) {
+        customEmailsList.clear();
+
+        if (customEmails == null || customEmails.trim().isEmpty()) {
             updateInviteButton();
-         }
-      });
+            return;
+        }
 
-      display.getEmailsTextField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            parseCustomEmails(event.getValue());
-         }
-      });
-
-      display.getEmailsFocusWidget().addFocusHandler(new FocusHandler()
-      {
-         @Override
-         public void onFocus(FocusEvent event)
-         {
-            display.hideEmailsHint();
-         }
-      });
-
-      display.getEmailsFocusWidget().addBlurHandler(new BlurHandler()
-      {
-         @Override
-         public void onBlur(BlurEvent event)
-         {
-            String emails = display.getEmailsTextField().getValue();
-            if (emails == null || emails.trim().isEmpty())
-            {
-               display.showEmailsHint();
-            }
-         }
-      });
-   }
-
-   private void parseCustomEmails(String customEmails)
-   {
-      customEmailsList.clear();
-
-      if (customEmails == null || customEmails.trim().isEmpty())
-      {
-         updateInviteButton();
-         return;
-      }
-
-      String[] mails = customEmails.split(",");
-      for (String email : mails)
-      {
-         email = email.trim();
-         String[] mailParts = email.split("@");
-         if (mailParts.length != 2)
-         {
-            continue;
-         }
-
-         customEmailsList.add(email);
-      }
-
-      updateInviteButton();
-   }
-
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   private void updateInviteButton()
-   {
-      int emails = selectedEmailsList.size() + customEmailsList.size();
-      display.setInviteButtonEnabled(emails > 0);
-      if (emails == 1)
-         display.setInviteButtonTitle("Invite 1 developer");
-      else
-         display.setInviteButtonTitle("Invite" + (emails > 0 ? " " + emails + " " : " ") + "developers");
-
-   }
-
-   public void sendNextEmail()
-   {
-      if (emailsToInvite.size() == 0)
-      {
-         IDELoader.hide();
-         IDE.getInstance().closeView(display.asView().getId());
-         if (invitations == 1)
-         {
-            Dialogs.getInstance().showInfo("IDE", "One invitation was sent successfully.");
-         }
-         else
-         {
-            Dialogs.getInstance().showInfo("IDE", "" + invitations + " invitations were sent successfully.");
-         }
-         return;
-      }
-
-      final String emailToInvite = emailsToInvite.remove(0);
-      String inviteMessage = display.getInviteMessge();
-
-      IDELoader.show("Inviting " + emailToInvite);
-      try
-      {
-         InviteClientService.getInstance().inviteUser(emailToInvite, inviteMessage, new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               invitations++;
-               sendNextEmail();
+        String[] mails = customEmails.split(",");
+        for (String email : mails) {
+            email = email.trim();
+            String[] mailParts = email.split("@");
+            if (mailParts.length != 2) {
+                continue;
             }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDELoader.hide();
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-               return;
+            customEmailsList.add(email);
+        }
+
+        updateInviteButton();
+    }
+
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
+
+    private void updateInviteButton() {
+        int emails = selectedEmailsList.size() + customEmailsList.size();
+        display.setInviteButtonEnabled(emails > 0);
+        if (emails == 1)
+            display.setInviteButtonTitle("Invite 1 developer");
+        else
+            display.setInviteButtonTitle("Invite" + (emails > 0 ? " " + emails + " " : " ") + "developers");
+
+    }
+
+    public void sendNextEmail() {
+        if (emailsToInvite.size() == 0) {
+            IDELoader.hide();
+            IDE.getInstance().closeView(display.asView().getId());
+            if (invitations == 1) {
+                Dialogs.getInstance().showInfo("IDE", "One invitation was sent successfully.");
+            } else {
+                Dialogs.getInstance().showInfo("IDE", "" + invitations + " invitations were sent successfully.");
             }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDELoader.hide();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-         e.printStackTrace();
-      }
-   }
+            return;
+        }
+
+        final String emailToInvite = emailsToInvite.remove(0);
+        String inviteMessage = display.getInviteMessge();
+
+        IDELoader.show("Inviting " + emailToInvite);
+        try {
+            InviteClientService.getInstance().inviteUser(emailToInvite, inviteMessage, new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(String result) {
+                    invitations++;
+                    sendNextEmail();
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    IDELoader.hide();
+                    IDE.fireEvent(new ExceptionThrownEvent(exception));
+                    return;
+                }
+            });
+        } catch (RequestException e) {
+            IDELoader.hide();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+            e.printStackTrace();
+        }
+    }
 
 }

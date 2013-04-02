@@ -26,67 +26,56 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Control to call Try Out Samples form.
  * <p/>
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubControl.java Nov 18, 2011 5:06:02 PM vereshchaka $
  */
 @RolesAllowed({"developer"})
-public class ShowSamplesControl extends SimpleControl implements IDEControl, VfsChangedHandler
-{
+public class ShowSamplesControl extends SimpleControl implements IDEControl, VfsChangedHandler {
 
-   private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlId();
+    private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlId();
 
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlTitle();
+    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlTitle();
 
-   private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlPrompt();
+    private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.loadSamplesControlPrompt();
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   /**
-    * @param id
-    */
-   public ShowSamplesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.importSamplesControl(),
-         SamplesClientBundle.INSTANCE.importSamplesDisabledControl());
-      setEvent(new ShowSamplesEvent());
-   }
+    /** @param id */
+    public ShowSamplesControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(SamplesClientBundle.INSTANCE.importSamplesControl(),
+                  SamplesClientBundle.INSTANCE.importSamplesDisabledControl());
+        setEvent(new ShowSamplesEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
 
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      updateEnabling();
-   }
+        updateEnabling();
+    }
 
-   private void updateEnabling()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    private void updateEnabling() {
+        setEnabled(vfsInfo != null);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateEnabling();
+    }
 
 }

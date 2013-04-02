@@ -26,67 +26,56 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Control to call Import from GitHub form.
  * <p/>
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubControl.java Nov 18, 2011 5:06:02 PM vereshchaka $
  */
 @RolesAllowed({"developer"})
-public class ImportFromGithubControl extends SimpleControl implements IDEControl, VfsChangedHandler
-{
+public class ImportFromGithubControl extends SimpleControl implements IDEControl, VfsChangedHandler {
 
-   private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlId();
+    private static final String ID = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlId();
 
-   private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlTitle();
+    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlTitle();
 
-   private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlPrompt();
+    private static final String PROMPT = SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubControlPrompt();
 
-   private VirtualFileSystemInfo vfsInfo;
+    private VirtualFileSystemInfo vfsInfo;
 
-   /**
-    * @param id
-    */
-   public ImportFromGithubControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.importFromGithubControl(),
-         SamplesClientBundle.INSTANCE.importFromGithubDisabledControl());
-      setEvent(new ImportFromGithubEvent());
-   }
+    /** @param id */
+    public ImportFromGithubControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(SamplesClientBundle.INSTANCE.importFromGithubControl(),
+                  SamplesClientBundle.INSTANCE.importFromGithubDisabledControl());
+        setEvent(new ImportFromGithubEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
 
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      updateEnabling();
-   }
+        updateEnabling();
+    }
 
-   private void updateEnabling()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    private void updateEnabling() {
+        setEnabled(vfsInfo != null);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsInfo = event.getVfsInfo();
-      updateEnabling();
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsInfo = event.getVfsInfo();
+        updateEnabling();
+    }
 
 }
