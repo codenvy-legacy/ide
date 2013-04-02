@@ -23,48 +23,46 @@ import com.google.gwt.i18n.client.Constants;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface SshLocalizationConstant extends Constants
-{
+public interface SshLocalizationConstant extends Constants {
 
-   @DefaultStringValue("Cancel")
-   @Key("cancelButton")
-   String cancelButton();
+    @DefaultStringValue("Cancel")
+    @Key("cancelButton")
+    String cancelButton();
 
-   @DefaultStringValue("Close")
-   @Key("closeButton")
-   String closeButton();
+    @DefaultStringValue("Close")
+    @Key("closeButton")
+    String closeButton();
 
-   @DefaultStringValue("Upload")
-   @Key("uploadButton")
-   String uploadButton();
+    @DefaultStringValue("Upload")
+    @Key("uploadButton")
+    String uploadButton();
 
-   @DefaultStringValue("Browse...")
-   @Key("browseButton")
-   String browseButton();
+    @DefaultStringValue("Browse...")
+    @Key("browseButton")
+    String browseButton();
 
-   @DefaultStringValue("Host")
-   @Key("hostFieldTitle")
-   String hostFieldTitle();
+    @DefaultStringValue("Host")
+    @Key("hostFieldTitle")
+    String hostFieldTitle();
 
-   @DefaultStringValue("File name")
-   @Key("fileNameFieldTitle")
-   String fileNameFieldTitle();
+    @DefaultStringValue("File name")
+    @Key("fileNameFieldTitle")
+    String fileNameFieldTitle();
 
-   @Key("host.validation.error")
-   String hostValidationError();
+    @Key("host.validation.error")
+    String hostValidationError();
 
-   //
-   @DefaultStringValue("Upload")
-   @Key("key.manager.uploadButton")
-   String managerUploadButton();
+    //
+    @DefaultStringValue("Upload")
+    @Key("key.manager.uploadButton")
+    String managerUploadButton();
 
-   @DefaultStringValue("Generate")
-   @Key("key.manager.generateButton")
-   String managerGenerateButton();
-   
-   
-   @Key("key.manager.title")
-   String sshManagerTitle();
+    @DefaultStringValue("Generate")
+    @Key("key.manager.generateButton")
+    String managerGenerateButton();
+
+
+    @Key("key.manager.title")
+    String sshManagerTitle();
 }

@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: ShowPublicSshKeyHandler May 19, 2011 12:24:16 PM evgen $
- * 
  */
-public interface ShowPublicSshKeyHandler extends EventHandler
-{
+public interface ShowPublicSshKeyHandler extends EventHandler {
 
-   void onShowPublicSshKey(ShowPublicSshKeyEvent event);
+    void onShowPublicSshKey(ShowPublicSshKeyEvent event);
 
 }

@@ -22,42 +22,42 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
              xmlns:ssh="urn:import:org.exoplatform.ide.extension.ssh.client.keymanager.ui">
-   <ui:with type="org.exoplatform.ide.extension.ssh.client.SshLocalizationConstant" field="con"></ui:with>
-   <ui:style>
-      .center {
-         display: block;
-         margin-left: auto;
-         margin-right: auto;
-      }
+    <ui:with type="org.exoplatform.ide.extension.ssh.client.SshLocalizationConstant" field="con"></ui:with>
+    <ui:style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-      .left-float {
-         float: left;
-      }
-   </ui:style>
-   <g:LayoutPanel>
-      <g:layer top="0" bottom="25">
-         <c:Border margin="5">
-            <c:layer top="0px" bottom="0px">
-               <ssh:SshKeysGrid ID="ideSshKeysGrid" ui:field="keysGrid" width="100%"></ssh:SshKeysGrid>
-            </c:layer>
-         </c:Border>
-      </g:layer>
-      <g:layer left="0px" right="0px" bottom="0px" height="22px">
-         <g:HTMLPanel>
-            <div style="margin-left: 6px">
-               <c:ImageButton text='{con.managerGenerateButton}' ui:field="generateButton"
-                              styleName="{style.left-float}" buttonId="ideSshKeyManagerGenerateButton"></c:ImageButton>
-               <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-               <c:ImageButton text='{con.managerUploadButton}' styleName="{style.left-float}" ui:field="uploadButton"
-                              buttonId="ideSshKeyManagerUploadButton"></c:ImageButton>
-            </div>
-            <div style="float:right; margin-right:8px">
-               <c:ImageButton width="20px" ui:field="generateGithubKeyButton"
-                              title="Generate key and upload it to GitHub"
-                              buttonId="ideSshKeyManagerGenerateGithubKeyButton"></c:ImageButton>
-            </div>
-         </g:HTMLPanel>
-      </g:layer>
-   </g:LayoutPanel>
+        .left-float {
+            float: left;
+        }
+    </ui:style>
+    <g:LayoutPanel>
+        <g:layer top="0" bottom="25">
+            <c:Border margin="5">
+                <c:layer top="0px" bottom="0px">
+                    <ssh:SshKeysGrid ID="ideSshKeysGrid" ui:field="keysGrid" width="100%"></ssh:SshKeysGrid>
+                </c:layer>
+            </c:Border>
+        </g:layer>
+        <g:layer left="0px" right="0px" bottom="0px" height="22px">
+            <g:HTMLPanel>
+                <div style="margin-left: 6px">
+                    <c:ImageButton text='{con.managerGenerateButton}' ui:field="generateButton"
+                                   styleName="{style.left-float}" buttonId="ideSshKeyManagerGenerateButton"></c:ImageButton>
+                    <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+                    <c:ImageButton text='{con.managerUploadButton}' styleName="{style.left-float}" ui:field="uploadButton"
+                                   buttonId="ideSshKeyManagerUploadButton"></c:ImageButton>
+                </div>
+                <div style="float:right; margin-right:8px">
+                    <c:ImageButton width="20px" ui:field="generateGithubKeyButton"
+                                   title="Generate key and upload it to GitHub"
+                                   buttonId="ideSshKeyManagerGenerateGithubKeyButton"></c:ImageButton>
+                </div>
+            </g:HTMLPanel>
+        </g:layer>
+    </g:LayoutPanel>
 
 </ui:UiBinder>

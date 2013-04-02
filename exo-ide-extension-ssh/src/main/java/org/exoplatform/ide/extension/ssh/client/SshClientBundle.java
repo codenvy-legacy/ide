@@ -19,28 +19,24 @@
 package org.exoplatform.ide.extension.ssh.client;
 
 import com.google.gwt.core.client.GWT;
-
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshClientBundle May 18, 2011 9:23:17 AM evgen $
- *
  */
-public interface SshClientBundle extends ClientBundle
-{
+public interface SshClientBundle extends ClientBundle {
 
-   SshClientBundle INSTANCE = GWT.create(SshClientBundle.class);
+    SshClientBundle INSTANCE = GWT.create(SshClientBundle.class);
 
-   @Source("org/exoplatform/ide/extension/ssh/client/images/ssh-key-manager_Disabled.png")
-   ImageResource sshKeyManagerDisabled();
+    @Source("org/exoplatform/ide/extension/ssh/client/images/ssh-key-manager_Disabled.png")
+    ImageResource sshKeyManagerDisabled();
 
-   @Source("org/exoplatform/ide/extension/ssh/client/images/ssh-key-manager.png")
-   ImageResource sshKeyManager();
+    @Source("org/exoplatform/ide/extension/ssh/client/images/ssh-key-manager.png")
+    ImageResource sshKeyManager();
 
-   @Source("org/exoplatform/ide/extension/ssh/client/images/github-generate.png")
-   ImageResource sshKeyGithubGenerate();
+    @Source("org/exoplatform/ide/extension/ssh/client/images/github-generate.png")
+    ImageResource sshKeyGithubGenerate();
 
 }

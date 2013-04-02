@@ -27,17 +27,14 @@ import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
 
 /**
  * SSH keys preference item.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 23, 2012 10:26:52 AM anya $
- * 
  */
-public class SshPreferenceItem extends AbstractPreferenceItem
-{
-   private static final String NAME = SshKeyExtension.CONSTANTS.sshManagerTitle();
+public class SshPreferenceItem extends AbstractPreferenceItem {
+    private static final String NAME = SshKeyExtension.CONSTANTS.sshManagerTitle();
 
-   public SshPreferenceItem(PreferencePerformer performer)
-   {
-      super(NAME, new Image(SshClientBundle.INSTANCE.sshKeyManager()), performer);
-   }
+    public SshPreferenceItem(PreferencePerformer performer) {
+        super(NAME, new Image(SshClientBundle.INSTANCE.sshKeyManager()), performer);
+    }
 }

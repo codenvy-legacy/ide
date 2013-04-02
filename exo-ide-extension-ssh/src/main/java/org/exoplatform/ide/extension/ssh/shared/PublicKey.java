@@ -20,44 +20,38 @@ package org.exoplatform.ide.extension.ssh.shared;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class PublicKey
-{
-   /** Host name. */
-   private String host;
+ */
+public class PublicKey {
+    /** Host name. */
+    private String host;
 
-   /** SSH key as text.   */
-   private String key;
-   
-   public PublicKey()
-   {
-   }
-   
-   public PublicKey(String host, String key)
-   {
-      this.host = host;
-      this.key = key;
-   }
+    /** SSH key as text. */
+    private String key;
 
-   public String getHost()
-   {
-      return host;
-   }
+    public PublicKey() {
+    }
 
-   public String getKey()
-   {
-      return key;
-   }
+    public PublicKey(String host, String key) {
+        this.host = host;
+        this.key = key;
+    }
 
-   public void setHost(String host)
-   {
-      this.host = host;
-   }
+    public String getHost() {
+        return host;
+    }
 
-   public void setKey(String key)
-   {
-      this.key = key;
-   }
+    public String getKey() {
+        return key;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

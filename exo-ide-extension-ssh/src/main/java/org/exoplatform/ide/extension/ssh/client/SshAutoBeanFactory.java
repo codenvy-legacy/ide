@@ -25,17 +25,15 @@ import org.exoplatform.ide.extension.ssh.shared.GenKeyRequest;
 
 /**
  * The interface for the AutoBean generator.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: SshAutoBeanFactory.java Mar 13, 2012 2:38:22 PM azatsarynnyy $
- *
  */
-public interface SshAutoBeanFactory extends AutoBeanFactory
-{
-   /**
-    * A factory method for a request SSH-key bean.
-    * 
-    * @return an {@link AutoBean} of type {@link GenKeyRequest}
-    */
-   AutoBean<GenKeyRequest> genKeyRequest();
+public interface SshAutoBeanFactory extends AutoBeanFactory {
+    /**
+     * A factory method for a request SSH-key bean.
+     *
+     * @return an {@link AutoBean} of type {@link GenKeyRequest}
+     */
+    AutoBean<GenKeyRequest> genKeyRequest();
 }

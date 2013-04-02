@@ -24,27 +24,20 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class GenerateGitHubKeyEvent extends GwtEvent<GenerateGitHubKeyHandler>
-{
+public class GenerateGitHubKeyEvent extends GwtEvent<GenerateGitHubKeyHandler> {
 
-   public static final GwtEvent.Type<GenerateGitHubKeyHandler> TYPE = new Type<GenerateGitHubKeyHandler>();
+    public static final GwtEvent.Type<GenerateGitHubKeyHandler> TYPE = new Type<GenerateGitHubKeyHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GenerateGitHubKeyHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<GenerateGitHubKeyHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(GenerateGitHubKeyHandler handler)
-   {
-      handler.onGenerateGitHubSshKey(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(GenerateGitHubKeyHandler handler) {
+        handler.onGenerateGitHubSshKey(this);
+    }
 
 }

@@ -36,103 +36,98 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshService May 18, 2011 4:49:49 PM evgen $
- * 
  */
-public class SshKeyService
-{
+public class SshKeyService {
 
-   private static SshKeyService instance;
+    private static SshKeyService instance;
 
-   private final String restContext;
+    private final String restContext;
 
-   private final Loader loader;
+    private final Loader loader;
 
-   // private final int httpsPort;
+    // private final int httpsPort;
 
-   /**
-    * 
-    */
-   public SshKeyService(String restContext, int httpsPort, Loader loader)
-   {
-      this.restContext = restContext;
-      this.loader = loader;
-      // this.httpsPort = httpsPort;
-      instance = this;
-   }
+    /**
+     *
+     */
+    public SshKeyService(String restContext, int httpsPort, Loader loader) {
+        this.restContext = restContext;
+        this.loader = loader;
+        // this.httpsPort = httpsPort;
+        instance = this;
+    }
 
-   public static SshKeyService get()
-   {
-      return instance;
-   }
+    public static SshKeyService get() {
+        return instance;
+    }
 
-   /**
-    * Receive all ssh key, stored on server
-    * 
-    * @param callback
-    */
-   public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback)
-   {
-      // UrlBuilder builder = new UrlBuilder();
-      // String url =
-      // builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
-      // .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
+    /**
+     * Receive all ssh key, stored on server
+     *
+     * @param callback
+     */
+    public void getAllKeys(JsonpAsyncCallback<JavaScriptObject> callback) {
+        // UrlBuilder builder = new UrlBuilder();
+        // String url =
+        // builder.setProtocol("https").setHost(Location.getHost()).setPort(httpsPort)
+        // .setPath(GWT.getModuleName()+ "/" + sslContext + "/ide/ssh-keys/all").buildString();
 
-      JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-      loader.setMessage("Getting SSH keys....");
-      loader.show();
-      callback.setLoader(loader);
-      jsonp.requestObject(restContext + "/ide/ssh-keys/all", callback);
-   }
+        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+        loader.setMessage("Getting SSH keys....");
+        loader.show();
+        callback.setLoader(loader);
+        jsonp.requestObject(restContext + "/ide/ssh-keys/all", callback);
+    }
 
-   /**
-    * Generate new ssh key pare
-    * 
-    * @param host for ssh key
-    * @param callback
-    * @throws RequestException 
-    */
-   public void generateKey(String host, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException
-   {
-      String url = restContext + "/ide/ssh-keys/gen";
+    /**
+     * Generate new ssh key pare
+     *
+     * @param host
+     *         for ssh key
+     * @param callback
+     * @throws RequestException
+     */
+    public void generateKey(String host, AsyncRequestCallback<GenKeyRequest> callback) throws RequestException {
+        String url = restContext + "/ide/ssh-keys/gen";
 
-      GenKeyRequest genKeyRequestBean = SshKeyExtension.AUTO_BEAN_FACTORY.genKeyRequest().as();
-      genKeyRequestBean.setHost(host);
+        GenKeyRequest genKeyRequestBean = SshKeyExtension.AUTO_BEAN_FACTORY.genKeyRequest().as();
+        genKeyRequestBean.setHost(host);
 
-      String genKeyRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(genKeyRequestBean)).getPayload();
+        String genKeyRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(genKeyRequestBean)).getPayload();
 
-      loader.setMessage("Generate keys for " + genKeyRequestBean.getHost());
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(genKeyRequest)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
-   }
+        loader.setMessage("Generate keys for " + genKeyRequestBean.getHost());
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(genKeyRequest)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+    }
 
-   /**
-    * Get public ssh key
-    * 
-    * @param keyItem to get public key
-    * @param callback
-    */
-   public void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback)
-   {
-      JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-      loader.setMessage("Getting public SSH key for " + keyItem.getHost());
-      loader.show();
-      callback.setLoader(loader);
-      jsonp.requestObject(keyItem.getPublicKeyURL(), callback);
-   }
+    /**
+     * Get public ssh key
+     *
+     * @param keyItem
+     *         to get public key
+     * @param callback
+     */
+    public void getPublicKey(KeyItem keyItem, JsonpAsyncCallback<JavaScriptObject> callback) {
+        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+        loader.setMessage("Getting public SSH key for " + keyItem.getHost());
+        loader.show();
+        callback.setLoader(loader);
+        jsonp.requestObject(keyItem.getPublicKeyURL(), callback);
+    }
 
-   /**
-    * Delete ssh key
-    * 
-    * @param keyItem to delete
-    * @param callback
-    */
-   public void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback)
-   {
-      JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
-      loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
-      loader.show();
-      callback.setLoader(loader);
-      jsonp.send(keyItem.getRemoveKeyURL(), callback);
-   }
+    /**
+     * Delete ssh key
+     *
+     * @param keyItem
+     *         to delete
+     * @param callback
+     */
+    public void deleteKey(KeyItem keyItem, JsonpAsyncCallback<Void> callback) {
+        JsonpRequestBuilder jsonp = new JsonpRequestBuilder();
+        loader.setMessage("Deleting SSH keys for " + keyItem.getHost());
+        loader.show();
+        callback.setLoader(loader);
+        jsonp.send(keyItem.getRemoveKeyURL(), callback);
+    }
 
 }

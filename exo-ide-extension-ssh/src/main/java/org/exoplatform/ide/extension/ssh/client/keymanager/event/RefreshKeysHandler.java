@@ -24,9 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface RefreshKeysHandler extends EventHandler
-{
+public interface RefreshKeysHandler extends EventHandler {
 
-   void onRefreshKeys(RefreshKeysEvent event);
+    void onRefreshKeys(RefreshKeysEvent event);
 
 }
