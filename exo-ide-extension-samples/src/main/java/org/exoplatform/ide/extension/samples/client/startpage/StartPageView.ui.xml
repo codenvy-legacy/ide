@@ -187,12 +187,12 @@
          <div class="{style.hPanel}">
             <div class="{style.item}">
                <div class="{style.floatLeft} {style.img}">
-                  <g:Image resource="{resource.welcomeSamples}"></g:Image>
+                  <g:Image resource="{resource.welcomeClone}"></g:Image>
                </div>
                <div class="{style.floatLeft} {style.linkWithText}">
-                  <g:Button ui:field="samplesLink" text="{locale.sampleTitle}"
+                  <g:Button ui:field="cloneLink" text="{locale.cloneTitle}"
                             styleName="{style.button-link}"></g:Button>
-                  <g:Label text="{locale.sampleText}"
+                  <g:Label text="{locale.cloneText}"
                            styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
                </div>
             </div>

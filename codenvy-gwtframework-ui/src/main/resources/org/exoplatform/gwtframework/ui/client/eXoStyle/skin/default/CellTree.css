@@ -11,7 +11,6 @@
 .cellTreeItem {
 	padding-top: 3px;
 	padding-bottom: 3px;
-	cursor: hand;
 	cursor: pointer;
 	height: 20px;
 }
@@ -61,7 +60,7 @@ div:focus { outline: none; }
 	background-color: #FFFFFF;
 	height: 20px;
 	outline : 0;
-	overflow: hidden;
+	overflow: visible;
 }
 
 .cellTreeShowMoreButton {
