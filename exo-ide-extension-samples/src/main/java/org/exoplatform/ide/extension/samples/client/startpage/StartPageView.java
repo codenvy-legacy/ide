@@ -53,7 +53,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    Button invitationsLink;
    
    @UiField
-   Button samplesLink;
+   Button cloneLink;
 
    @UiField
    Button projectLink;
@@ -77,12 +77,12 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    }
 
    /**
-    * @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getSamplesLink()
+    * @see org.exoplatform.ide.client.StartPagePresenter.WelcomePresenter.Display#getCloneLink()
     */
    @Override
-   public HasClickHandlers getSamplesLink()
+   public HasClickHandlers getCloneLink()
    {
-      return samplesLink;
+      return cloneLink;
    }
 
    /**

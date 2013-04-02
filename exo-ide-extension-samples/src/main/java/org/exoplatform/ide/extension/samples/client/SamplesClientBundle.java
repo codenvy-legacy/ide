@@ -32,7 +32,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface SamplesClientBundle extends ClientBundle
 {
-   SamplesClientBundle INSTANCE = GWT.<SamplesClientBundle>create(SamplesClientBundle.class);
+   SamplesClientBundle INSTANCE = GWT.<SamplesClientBundle> create(SamplesClientBundle.class);
 
    /**
     * Css resources for project wizard.
@@ -139,8 +139,8 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/tutorials.png")
    ImageResource welcomeTutorial();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/import-sample-project.png")
-   ImageResource welcomeSamples();
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/clone-git-repository.png")
+   ImageResource welcomeClone();
 
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/new-project.png")
    ImageResource welcomeProject();
