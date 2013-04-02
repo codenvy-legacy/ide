@@ -34,56 +34,44 @@ import java.util.List;
 
 /**
  * Unmarshaller for response with the list of Heroku stacks.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 28, 2011 5:38:08 PM anya $
- * 
  */
-public class StackListUnmarshaller implements Unmarshallable<List<Stack>>
-{
+public class StackListUnmarshaller implements Unmarshallable<List<Stack>> {
 
-   /**
-    * List of stacks.
-    */
-   private List<Stack> stackList;
+    /** List of stacks. */
+    private List<Stack> stackList;
 
-   /**
-    * @param stackList list of stacks
-    */
-   public StackListUnmarshaller(List<Stack> stackList)
-   {
-      this.stackList = stackList;
-   }
+    /**
+     * @param stackList
+     *         list of stacks
+     */
+    public StackListUnmarshaller(List<Stack> stackList) {
+        this.stackList = stackList;
+    }
 
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
-         if (jsonArray == null || jsonArray.size() <= 0)
-            return;
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+            if (jsonArray == null || jsonArray.size() <= 0)
+                return;
 
-         for (int i = 0; i < jsonArray.size(); i++)
-         {
-            JSONObject jsonObject = jsonArray.get(i).isObject();
-            AutoBean<Stack> stack =
-               AutoBeanCodex.decode(HerokuExtension.AUTO_BEAN_FACTORY, Stack.class, jsonObject.toString());
-            stackList.add(stack.as());
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException(HerokuExtension.LOCALIZATION_CONSTANT.stackListUnmarshalFailed());
-      }
-   }
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject jsonObject = jsonArray.get(i).isObject();
+                AutoBean<Stack> stack =
+                        AutoBeanCodex.decode(HerokuExtension.AUTO_BEAN_FACTORY, Stack.class, jsonObject.toString());
+                stackList.add(stack.as());
+            }
+        } catch (Exception e) {
+            throw new UnmarshallerException(HerokuExtension.LOCALIZATION_CONSTANT.stackListUnmarshalFailed());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<Stack> getPayload()
-   {
-      return stackList;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<Stack> getPayload() {
+        return stackList;
+    }
 }

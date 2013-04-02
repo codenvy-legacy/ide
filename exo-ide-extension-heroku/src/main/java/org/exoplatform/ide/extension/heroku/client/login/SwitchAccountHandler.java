@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link SwitchAccountEvent} event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SwitchAccountHandler.java Jun 17, 2011 5:04:32 PM vereshchaka $
- * 
  */
-public interface SwitchAccountHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to switch in Heroku.
-    * 
-    * @param event
-    */
-   void onSwitchAccount(SwitchAccountEvent event);
+public interface SwitchAccountHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to switch in Heroku.
+     *
+     * @param event
+     */
+    void onSwitchAccount(SwitchAccountEvent event);
 }

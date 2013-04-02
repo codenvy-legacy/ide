@@ -35,102 +35,75 @@ import java.util.List;
 
 /**
  * Change Heroku application's view. Must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 29, 2011 11:16:03 AM anya $
- * 
  */
-public class ChangeStackView extends ViewImpl implements ChangeStackPresenter.Display
-{
-   private static final String ID = "ideChangeStackView";
+public class ChangeStackView extends ViewImpl implements ChangeStackPresenter.Display {
+    private static final String ID = "ideChangeStackView";
 
-   private static final int WIDTH = 380;
+    private static final int WIDTH = 380;
 
-   private static final int HEIGHT = 250;
+    private static final int HEIGHT = 250;
 
-   private static final String CHANGE_BUTTON_ID = "ideChangeStackViewChangeButton";
+    private static final String CHANGE_BUTTON_ID = "ideChangeStackViewChangeButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideChangeStackViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideChangeStackViewCancelButton";
 
-   /**
-    * UI binder of this view.
-    */
-   private static ChangeStackViewUiBinder uiBinder = GWT.create(ChangeStackViewUiBinder.class);
+    /** UI binder of this view. */
+    private static ChangeStackViewUiBinder uiBinder = GWT.create(ChangeStackViewUiBinder.class);
 
-   interface ChangeStackViewUiBinder extends UiBinder<Widget, ChangeStackView>
-   {
-   }
+    interface ChangeStackViewUiBinder extends UiBinder<Widget, ChangeStackView> {
+    }
 
-   /**
-    * Change stack button.
-    */
-   @UiField
-   ImageButton changeButton;
+    /** Change stack button. */
+    @UiField
+    ImageButton changeButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   /**
-    * Grid with application's stacks.
-    */
-   @UiField
-   StackGrid stackGrid;
+    /** Grid with application's stacks. */
+    @UiField
+    StackGrid stackGrid;
 
-   public ChangeStackView()
-   {
-      super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.changeStackViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public ChangeStackView() {
+        super(ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.changeStackViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      changeButton.setButtonId(CHANGE_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        changeButton.setButtonId(CHANGE_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getStackGrid()
-    */
-   @Override
-   public ListGridItem<Stack> getStackGrid()
-   {
-      return stackGrid;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getStackGrid() */
+    @Override
+    public ListGridItem<Stack> getStackGrid() {
+        return stackGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getChangeButton()
-    */
-   @Override
-   public HasClickHandlers getChangeButton()
-   {
-      return changeButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getChangeButton() */
+    @Override
+    public HasClickHandlers getChangeButton() {
+        return changeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#enableChangeButton(boolean)
-    */
-   @Override
-   public void enableChangeButton(boolean enable)
-   {
-      changeButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#enableChangeButton(boolean) */
+    @Override
+    public void enableChangeButton(boolean enable) {
+        changeButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getSelectedStack()
-    */
-   @Override
-   public Stack getSelectedStack()
-   {
-      List<Stack> selected = stackGrid.getSelectedItems();
-      return (selected != null && selected.size() > 0) ? selected.get(0) : null;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter.Display#getSelectedStack() */
+    @Override
+    public Stack getSelectedStack() {
+        List<Stack> selected = stackGrid.getSelectedItems();
+        return (selected != null && selected.size() > 0) ? selected.get(0) : null;
+    }
 }

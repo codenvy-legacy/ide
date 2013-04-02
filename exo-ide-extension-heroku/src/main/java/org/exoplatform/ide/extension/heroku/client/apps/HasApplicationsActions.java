@@ -22,20 +22,18 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
  * Application actions handlers.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 15, 2012 10:43:13 AM anya $
- * 
  */
-public interface HasApplicationsActions
-{
-   void addDeleteApplicationHandler(SelectionHandler<String> handler);
+public interface HasApplicationsActions {
+    void addDeleteApplicationHandler(SelectionHandler<String> handler);
 
-   void addRenameApplicationHandler(SelectionHandler<String> handler);
+    void addRenameApplicationHandler(SelectionHandler<String> handler);
 
-   void addChangeEnvironmentHandler(SelectionHandler<String> handler);
+    void addChangeEnvironmentHandler(SelectionHandler<String> handler);
 
-   void addApplicationInfoHandler(SelectionHandler<String> handler);
-   
-   void addImportApplicationHandler(SelectionHandler<String> handler);
+    void addApplicationInfoHandler(SelectionHandler<String> handler);
+
+    void addImportApplicationHandler(SelectionHandler<String> handler);
 }

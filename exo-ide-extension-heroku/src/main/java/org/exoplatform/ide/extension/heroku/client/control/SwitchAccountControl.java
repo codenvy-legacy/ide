@@ -26,40 +26,33 @@ import org.exoplatform.ide.extension.heroku.client.login.SwitchAccountEvent;
 
 /**
  * Control to switch heroku account.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SwitchAccountControl.java Jun 20, 2011 9:45:44 AM vereshchaka $
- * 
  */
-public class SwitchAccountControl extends AbstractHerokuControl
-{
+public class SwitchAccountControl extends AbstractHerokuControl {
 
-   public SwitchAccountControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt());
-      setEvent(new SwitchAccountEvent());
-      setImages(HerokuClientBundle.INSTANCE.switchAccount(), HerokuClientBundle.INSTANCE.switchAccountDisabled());
-   }
+    public SwitchAccountControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.switchAccountControlSwitchPrompt());
+        setEvent(new SwitchAccountEvent());
+        setImages(HerokuClientBundle.INSTANCE.switchAccount(), HerokuClientBundle.INSTANCE.switchAccountDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * 
-    */
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /**
+     *
+     */
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 
 }

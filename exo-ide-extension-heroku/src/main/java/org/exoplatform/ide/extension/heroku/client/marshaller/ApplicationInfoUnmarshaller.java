@@ -30,58 +30,47 @@ import java.util.List;
 
 /**
  * Unmarshaller for application information from JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 30, 2011 11:00:13 AM anya $
- * 
  */
-public class ApplicationInfoUnmarshaller implements Unmarshallable<List<Property>>
-{
-   private List<Property> properties;
+public class ApplicationInfoUnmarshaller implements Unmarshallable<List<Property>> {
+    private List<Property> properties;
 
-   /**
-    * @param applicationInfo application's information
-    */
-   public ApplicationInfoUnmarshaller(List<Property> properties)
-   {
-      this.properties = properties;
-   }
+    /**
+     * @param applicationInfo
+     *         application's information
+     */
+    public ApplicationInfoUnmarshaller(List<Property> properties) {
+        this.properties = properties;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONValue json = JSONParser.parseStrict(response.getText());
-      if (json == null)
-         return;
-      JSONObject jsonObject = json.isObject();
-      if (jsonObject == null)
-         return;
+        JSONValue json = JSONParser.parseStrict(response.getText());
+        if (json == null)
+            return;
+        JSONObject jsonObject = json.isObject();
+        if (jsonObject == null)
+            return;
 
-      for (String key : jsonObject.keySet())
-      {
-         if (jsonObject.get(key).isString() != null)
-         {
-            String value = jsonObject.get(key).isString().stringValue();
-            properties.add(new Property(key, value));
-         }
-      }
-   }
+        for (String key : jsonObject.keySet()) {
+            if (jsonObject.get(key).isString() != null) {
+                String value = jsonObject.get(key).isString().stringValue();
+                properties.add(new Property(key, value));
+            }
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<Property> getPayload()
-   {
-      return properties;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public List<Property> getPayload() {
+        return properties;
+    }
 
 }

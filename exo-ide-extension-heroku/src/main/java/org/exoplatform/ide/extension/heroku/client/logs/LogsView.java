@@ -38,104 +38,81 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for displaying application's logs.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 21, 2011 10:09:19 AM anya $
- * 
  */
-public class LogsView extends ViewImpl implements LogsPresenter.Display
-{
+public class LogsView extends ViewImpl implements LogsPresenter.Display {
 
-   private static LogsViewUiBinder uiBinder = GWT.create(LogsViewUiBinder.class);
+    private static LogsViewUiBinder uiBinder = GWT.create(LogsViewUiBinder.class);
 
-   interface LogsViewUiBinder extends UiBinder<Widget, LogsView>
-   {
-   }
+    interface LogsViewUiBinder extends UiBinder<Widget, LogsView> {
+    }
 
-   private static final String ID = "ideLogsView";
+    private static final String ID = "ideLogsView";
 
-   private static final String GET_LOGS_BUTTON_ID = "ideLogsViewGetLogsButton";
+    private static final String GET_LOGS_BUTTON_ID = "ideLogsViewGetLogsButton";
 
-   private static final String LOG_LINES_FIELD_ID = "ideLogsViewLogLinesField";
+    private static final String LOG_LINES_FIELD_ID = "ideLogsViewLogLinesField";
 
-   @UiField
-   ScrollPanel scrollPanel;
+    @UiField
+    ScrollPanel scrollPanel;
 
-   @UiField
-   Element content;
+    @UiField
+    Element content;
 
-   @UiField
-   Toolbar toolbar;
+    @UiField
+    Toolbar toolbar;
 
-   /**
-    * Field for max number of logs to be shown.
-    */
-   @UiField
-   TextInput logLinesField;
+    /** Field for max number of logs to be shown. */
+    @UiField
+    TextInput logLinesField;
 
-   /**
-    * Get logs button.
-    */
-   private IconButton getLogButton;
+    /** Get logs button. */
+    private IconButton getLogButton;
 
-   public LogsView()
-   {
-      super(ID, ViewType.OPERATION, HerokuExtension.LOCALIZATION_CONSTANT.logsViewTitle(), new Image(
-         HerokuClientBundle.INSTANCE.logs()));
-      add(uiBinder.createAndBindUi(this));
+    public LogsView() {
+        super(ID, ViewType.OPERATION, HerokuExtension.LOCALIZATION_CONSTANT.logsViewTitle(), new Image(
+                HerokuClientBundle.INSTANCE.logs()));
+        add(uiBinder.createAndBindUi(this));
 
-      logLinesField.setName(LOG_LINES_FIELD_ID);
-      getLogButton =
-         new IconButton(new Image(HerokuClientBundle.INSTANCE.getLogs()), new Image(
-            HerokuClientBundle.INSTANCE.getLogsDisabled()));
-      getLogButton.setTitle(HerokuExtension.LOCALIZATION_CONSTANT.logsViewGetLogsButton());
-      toolbar.addItem(getLogButton);
-   }
+        logLinesField.setName(LOG_LINES_FIELD_ID);
+        getLogButton =
+                new IconButton(new Image(HerokuClientBundle.INSTANCE.getLogs()), new Image(
+                        HerokuClientBundle.INSTANCE.getLogsDisabled()));
+        getLogButton.setTitle(HerokuExtension.LOCALIZATION_CONSTANT.logsViewGetLogsButton());
+        toolbar.addItem(getLogButton);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addLog(java.lang.String)
-    */
-   @Override
-   public void addLog(String logContent)
-   {
-      content.setInnerText(logContent);
-      scrollPanel.scrollToTop();
-   }
+    /** @see org.exoplatform.ide.extension.logreader.client.LogReaderPresenter.Display#addLog(java.lang.String) */
+    @Override
+    public void addLog(String logContent) {
+        content.setInnerText(logContent);
+        scrollPanel.scrollToTop();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#getShowLogButton()
-    */
-   @Override
-   public HasClickHandlers getShowLogButton()
-   {
-      return getLogButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#getShowLogButton() */
+    @Override
+    public HasClickHandlers getShowLogButton() {
+        return getLogButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#getLogLinesCount()
-    */
-   @Override
-   public TextFieldItem getLogLinesCount()
-   {
-      return logLinesField;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#getLogLinesCount() */
+    @Override
+    public TextFieldItem getLogLinesCount() {
+        return logLinesField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#enableShowLogButton(boolean)
-    */
-   @Override
-   public void enableShowLogButton(boolean enable)
-   {
-      getLogButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#enableShowLogButton(boolean) */
+    @Override
+    public void enableShowLogButton(boolean enable) {
+        getLogButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#focusInLogLinesField()
-    */
-   @Override
-   public void focusInLogLinesField()
-   {
-      logLinesField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.logs.LogsPresenter.Display#focusInLogLinesField() */
+    @Override
+    public void focusInLogLinesField() {
+        logLinesField.focus();
+    }
 
 }

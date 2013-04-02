@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event is used for showing the logs of the Heroku application. Implement {@link ShowLogsHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 19, 2011 12:42:56 PM anya $
- * 
  */
-public class ShowLogsEvent extends GwtEvent<ShowLogsHandler>
-{
+public class ShowLogsEvent extends GwtEvent<ShowLogsHandler> {
 
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<ShowLogsHandler> TYPE = new GwtEvent.Type<ShowLogsHandler>();
+    /** Type used to register event. */
+    public static final GwtEvent.Type<ShowLogsHandler> TYPE = new GwtEvent.Type<ShowLogsHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowLogsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowLogsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowLogsHandler handler)
-   {
-      handler.onShowLogs(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowLogsHandler handler) {
+        handler.onShowLogs(this);
+    }
 
 }

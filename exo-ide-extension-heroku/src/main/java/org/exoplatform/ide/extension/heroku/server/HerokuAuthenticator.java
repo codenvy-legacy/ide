@@ -36,94 +36,76 @@ import java.net.URL;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class HerokuAuthenticator
-{
-   /**
-    * Obtain heroku API key and store it somewhere (it is dependent to implementation) for next usage. Key should be
-    * used by {@link Heroku#authenticate(HerokuCredential, HttpURLConnection)} instead of password for any request to
-    * heroku service.
-    *
-    * @param email
-    *    email address that used when create account at heroku.com
-    * @param password
-    *    password
-    * @throws HerokuException
-    *    if heroku server return unexpected or error status for request
-    * @throws ParsingResponseException
-    *    if any error occurs when parse response body
-    * @throws IOException
-    *    if any i/o errors occurs
-    */
-   public void login(String email, String password, Credential credential)
-      throws HerokuException, ParsingResponseException, IOException
-   {
-      HttpURLConnection http = null;
-      try
-      {
-         URL url = new URL(Heroku.HEROKU_API + "/login");
-         http = (HttpURLConnection)url.openConnection();
-         http.setRequestMethod("POST");
-         http.setRequestProperty("Accept", "application/json, */*");
-         http.setDoOutput(true);
-         OutputStream output = http.getOutputStream();
-         try
-         {
-            output.write(("username=" + email + "&password=" + password).getBytes());
-            output.flush();
-         }
-         finally
-         {
-            output.close();
-         }
+public class HerokuAuthenticator {
+    /**
+     * Obtain heroku API key and store it somewhere (it is dependent to implementation) for next usage. Key should be
+     * used by {@link Heroku#authenticate(HerokuCredential, HttpURLConnection)} instead of password for any request to
+     * heroku service.
+     *
+     * @param email
+     *         email address that used when create account at heroku.com
+     * @param password
+     *         password
+     * @throws HerokuException
+     *         if heroku server return unexpected or error status for request
+     * @throws ParsingResponseException
+     *         if any error occurs when parse response body
+     * @throws IOException
+     *         if any i/o errors occurs
+     */
+    public void login(String email, String password, Credential credential)
+            throws HerokuException, ParsingResponseException, IOException {
+        HttpURLConnection http = null;
+        try {
+            URL url = new URL(Heroku.HEROKU_API + "/login");
+            http = (HttpURLConnection)url.openConnection();
+            http.setRequestMethod("POST");
+            http.setRequestProperty("Accept", "application/json, */*");
+            http.setDoOutput(true);
+            OutputStream output = http.getOutputStream();
+            try {
+                output.write(("username=" + email + "&password=" + password).getBytes());
+                output.flush();
+            } finally {
+                output.close();
+            }
 
-         if (http.getResponseCode() != 200)
-         {
-            throw Heroku.fault(http);
-         }
+            if (http.getResponseCode() != 200) {
+                throw Heroku.fault(http);
+            }
 
-         final HerokuCredential herokuCredential;
-         InputStream input = http.getInputStream();
-         try
-         {
-            herokuCredential =
-               JsonHelper.fromJson(input, HerokuCredential.class, null, JsonNameConventions.CAMEL_UNDERSCORE);
-         }
-         finally
-         {
-            input.close();
-         }
+            final HerokuCredential herokuCredential;
+            InputStream input = http.getInputStream();
+            try {
+                herokuCredential =
+                        JsonHelper.fromJson(input, HerokuCredential.class, null, JsonNameConventions.CAMEL_UNDERSCORE);
+            } finally {
+                input.close();
+            }
 
-         credential.setAttribute("email", herokuCredential.getEmail());
-         credential.setAttribute("api_key", herokuCredential.getApiKey());
-      }
-      catch (JsonParseException e)
-      {
-         // Parsing error.
-         throw new ParsingResponseException(e.getMessage(), e);
-      }
-      finally
-      {
-         if (http != null)
-         {
-            http.disconnect();
-         }
-      }
-   }
+            credential.setAttribute("email", herokuCredential.getEmail());
+            credential.setAttribute("api_key", herokuCredential.getApiKey());
+        } catch (JsonParseException e) {
+            // Parsing error.
+            throw new ParsingResponseException(e.getMessage(), e);
+        } finally {
+            if (http != null) {
+                http.disconnect();
+            }
+        }
+    }
 
-   public void login(Credential credential) throws HerokuException, ParsingResponseException, IOException
-   {
-      login(getEmail(), getPassword(), credential);
-   }
+    public void login(Credential credential) throws HerokuException, ParsingResponseException, IOException {
+        login(getEmail(), getPassword(), credential);
+    }
 
-   // For test.
+    // For test.
 
-   public String getEmail()
-   {
-      return null;
-   }
+    public String getEmail() {
+        return null;
+    }
 
-   public String getPassword()
-   {
-      return null;
-   }
+    public String getPassword() {
+        return null;
+    }
 }

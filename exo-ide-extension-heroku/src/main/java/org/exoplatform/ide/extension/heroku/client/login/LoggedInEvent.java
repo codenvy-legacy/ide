@@ -22,54 +22,39 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs after user's logged in action. If it ends with fail, then {{@link #isFailed()} returns <code>true</code>.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 11:15:36 AM anya $
- * 
  */
-public class LoggedInEvent extends GwtEvent<LoggedInHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<LoggedInHandler> TYPE = new GwtEvent.Type<LoggedInHandler>();
+public class LoggedInEvent extends GwtEvent<LoggedInHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<LoggedInHandler> TYPE = new GwtEvent.Type<LoggedInHandler>();
 
-   /**
-    * If <code>true</code> log in failed.
-    */
-   private boolean isFailed;
+    /** If <code>true</code> log in failed. */
+    private boolean isFailed;
 
-   /**
-    * @param isFailed if <code>true</code> log in failed
-    */
-   public LoggedInEvent(boolean isFailed)
-   {
-      this.isFailed = isFailed;
-   }
+    /**
+     * @param isFailed
+     *         if <code>true</code> log in failed
+     */
+    public LoggedInEvent(boolean isFailed) {
+        this.isFailed = isFailed;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<LoggedInHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<LoggedInHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(LoggedInHandler handler)
-   {
-      handler.onLoggedIn(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(LoggedInHandler handler) {
+        handler.onLoggedIn(this);
+    }
 
-   /**
-    * @return if <code>true</code> log in failed
-    */
-   public boolean isFailed()
-   {
-      return isFailed;
-   }
+    /** @return if <code>true</code> log in failed */
+    public boolean isFailed() {
+        return isFailed;
+    }
 }

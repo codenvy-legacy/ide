@@ -33,45 +33,37 @@ import java.util.List;
 
 /**
  * Asynchronous request callback to handle the list of Heroku applications response.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 16, 2012 10:56:16 AM anya $
- * 
  */
-public abstract class ApplicationListAsyncRequestCallback extends AsyncRequestCallback<List<String>>
-{
-   /**
-    * Handler of the {@link LoggedInEvent}.
-    */
-   private LoggedInHandler loggedInHandler;
+public abstract class ApplicationListAsyncRequestCallback extends AsyncRequestCallback<List<String>> {
+    /** Handler of the {@link LoggedInEvent}. */
+    private LoggedInHandler loggedInHandler;
 
-   /**
-    * @param eventBus event handlers manager
-    * @param handler handler of the {@link LoggedInEvent}
-    */
-   public ApplicationListAsyncRequestCallback(LoggedInHandler loggedInHandler)
-   {
-      super(new ApplicationListUnmarshaller(new ArrayList<String>()));
-      this.loggedInHandler = loggedInHandler;
-   }
+    /**
+     * @param eventBus
+     *         event handlers manager
+     * @param handler
+     *         handler of the {@link LoggedInEvent}
+     */
+    public ApplicationListAsyncRequestCallback(LoggedInHandler loggedInHandler) {
+        super(new ApplicationListUnmarshaller(new ArrayList<String>()));
+        this.loggedInHandler = loggedInHandler;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
-            && serverException.getMessage().contains("Authentication required"))
-         {
-            IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
-            IDE.fireEvent(new LoginEvent());
-            return;
-         }
-      }
-      IDE.fireEvent(new ExceptionThrownEvent(exception));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable) */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+                && serverException.getMessage().contains("Authentication required")) {
+                IDE.addHandler(LoggedInEvent.TYPE, loggedInHandler);
+                IDE.fireEvent(new LoginEvent());
+                return;
+            }
+        }
+        IDE.fireEvent(new ExceptionThrownEvent(exception));
+    }
 }

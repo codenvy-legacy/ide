@@ -25,42 +25,32 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
  * Unmarshaller for Heroku application's logs.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Sep 19, 2011 2:40:47 PM anya $
- * 
  */
-public class LogsUnmarshaller implements Unmarshallable<LogsResponse>
-{
-   /**
-    * Application's logs.
-    */
-   private LogsResponse logsResponse;
+public class LogsUnmarshaller implements Unmarshallable<LogsResponse> {
+    /** Application's logs. */
+    private LogsResponse logsResponse;
 
-   /**
-    * @param logsResponse response with application's logs
-    */
-   public LogsUnmarshaller(LogsResponse logsResponse)
-   {
-      this.logsResponse = logsResponse;
-   }
+    /**
+     * @param logsResponse
+     *         response with application's logs
+     */
+    public LogsUnmarshaller(LogsResponse logsResponse) {
+        this.logsResponse = logsResponse;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      logsResponse.setLogs(response.getText());
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        logsResponse.setLogs(response.getText());
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public LogsResponse getPayload()
-   {
-      return logsResponse;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public LogsResponse getPayload() {
+        return logsResponse;
+    }
 
 }

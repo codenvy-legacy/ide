@@ -30,57 +30,42 @@ import org.exoplatform.gwtframework.ui.client.component.TextInput;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationView.java Dec 5, 2011 1:58:14 PM vereshchaka $
- * 
  */
-public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display
-{
-   interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView>
-   {
-   }
+public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display {
+    interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView> {
+    }
 
-   private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
+    private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
 
-   @UiField
-   TextInput nameField;
+    @UiField
+    TextInput nameField;
 
-   /**
-    * Application URL field.
-    */
-   @UiField
-   TextInput remoteNameField;
+    /** Application URL field. */
+    @UiField
+    TextInput remoteNameField;
 
-   public DeployApplicationView()
-   {
-      super();
-      initWidget(uiBinder.createAndBindUi(this));
-      setHeight("150px");
-   }
+    public DeployApplicationView() {
+        super();
+        initWidget(uiBinder.createAndBindUi(this));
+        setHeight("150px");
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getApplicationNameField()
-    */
-   @Override
-   public HasValue<String> getApplicationNameField()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getApplicationNameField() */
+    @Override
+    public HasValue<String> getApplicationNameField() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getRemoteNameField()
-    */
-   @Override
-   public HasValue<String> getRemoteNameField()
-   {
-      return remoteNameField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getRemoteNameField() */
+    @Override
+    public HasValue<String> getRemoteNameField() {
+        return remoteNameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getView()
-    */
-   @Override
-   public Composite getView()
-   {
-      return this;
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getView() */
+    @Override
+    public Composite getView() {
+        return this;
+    }
 
 }

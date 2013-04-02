@@ -22,60 +22,44 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to change the stack of Heroku application.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jul 28, 2011 6:00:14 PM anya $
- * 
  */
-public class ChangeApplicationStackEvent extends GwtEvent<ChangeApplicationStackHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<ChangeApplicationStackHandler> TYPE =
-      new GwtEvent.Type<ChangeApplicationStackHandler>();
+public class ChangeApplicationStackEvent extends GwtEvent<ChangeApplicationStackHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<ChangeApplicationStackHandler> TYPE =
+            new GwtEvent.Type<ChangeApplicationStackHandler>();
 
-   /**
-    * Application, for which to change stack.
-    */
-   private String application;
+    /** Application, for which to change stack. */
+    private String application;
 
-   /**
-    * @param application application, for which to change stack, may be <code>null</code>
-    */
-   public ChangeApplicationStackEvent(String application)
-   {
-      this.application = application;
-   }
+    /**
+     * @param application
+     *         application, for which to change stack, may be <code>null</code>
+     */
+    public ChangeApplicationStackEvent(String application) {
+        this.application = application;
+    }
 
-   public ChangeApplicationStackEvent()
-   {
-      this.application = null;
-   }
+    public ChangeApplicationStackEvent() {
+        this.application = null;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ChangeApplicationStackHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ChangeApplicationStackHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ChangeApplicationStackHandler handler)
-   {
-      handler.onChangeApplicationStack(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ChangeApplicationStackHandler handler) {
+        handler.onChangeApplicationStack(this);
+    }
 
-   /**
-    * @return the application
-    */
-   public String getApplication()
-   {
-      return application;
-   }
+    /** @return the application */
+    public String getApplication() {
+        return application;
+    }
 }

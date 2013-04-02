@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to view the list of Heroku applications.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 14, 2012 5:03:07 PM anya $
- * 
  */
-public class ManageApplicationsEvent extends GwtEvent<ManageApplicationsHandler>
-{
+public class ManageApplicationsEvent extends GwtEvent<ManageApplicationsHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ManageApplicationsHandler> TYPE = new GwtEvent.Type<ManageApplicationsHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ManageApplicationsHandler> TYPE = new GwtEvent.Type<ManageApplicationsHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageApplicationsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageApplicationsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageApplicationsHandler handler)
-   {
-      handler.onManageApplications(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageApplicationsHandler handler) {
+        handler.onManageApplications(this);
+    }
 
 }

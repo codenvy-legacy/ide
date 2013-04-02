@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ClearKeysEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 10:40:34 AM anya $
- * 
  */
-public interface ClearKeysHandler extends EventHandler
-{
-   /**
-    * Perform actions when user tries to clear (remove) keys from Heroku.
-    * 
-    * @param event
-    */
-   void onClearKeys(ClearKeysEvent event);
+public interface ClearKeysHandler extends EventHandler {
+    /**
+     * Perform actions when user tries to clear (remove) keys from Heroku.
+     *
+     * @param event
+     */
+    void onClearKeys(ClearKeysEvent event);
 }

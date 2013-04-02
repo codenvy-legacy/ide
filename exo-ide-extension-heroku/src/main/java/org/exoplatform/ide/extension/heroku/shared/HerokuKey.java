@@ -22,44 +22,36 @@ package org.exoplatform.ide.extension.heroku.shared;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class HerokuKey
-{
-   private String email;
-   private String contents;
+public class HerokuKey {
+    private String email;
+    private String contents;
 
-   public HerokuKey(String email, String content)
-   {
-      this.email = email;
-      this.contents = content;
-   }
+    public HerokuKey(String email, String content) {
+        this.email = email;
+        this.contents = content;
+    }
 
-   public HerokuKey()
-   {
-   }
+    public HerokuKey() {
+    }
 
-   public String getEmail()
-   {
-      return email;
-   }
+    public String getEmail() {
+        return email;
+    }
 
-   public void setEmail(String email)
-   {
-      this.email = email;
-   }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-   public String getContents()
-   {
-      return contents;
-   }
+    public String getContents() {
+        return contents;
+    }
 
-   public void setContents(String contents)
-   {
-      this.contents = contents;
-   }
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "HerokuKey [email=" + email + ", contents=" + contents + "]";
-   }
+    @Override
+    public String toString() {
+        return "HerokuKey [email=" + email + ", contents=" + contents + "]";
+    }
 }

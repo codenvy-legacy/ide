@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to create application on Heroku. Implement {@link CreateApplicationHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 2:32:15 PM anya $
- * 
  */
-public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
+public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CreateApplicationHandler handler)
-   {
-      handler.onCreateApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CreateApplicationHandler handler) {
+        handler.onCreateApplication(this);
+    }
 
 }

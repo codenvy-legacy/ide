@@ -30,58 +30,48 @@ import java.util.List;
 
 /**
  * Unmarshaller for application information from JSON format from {@link ResponseMessage}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInfoUnmarshallerWS.java Nov 29, 2012 12:43:13 PM azatsarynnyy $
- *
  */
-public class ApplicationInfoUnmarshallerWS implements Unmarshallable<List<Property>>
-{
-   private List<Property> properties;
+public class ApplicationInfoUnmarshallerWS implements Unmarshallable<List<Property>> {
+    private List<Property> properties;
 
-   /**
-    * @param applicationInfo application's information
-    */
-   public ApplicationInfoUnmarshallerWS(List<Property> properties)
-   {
-      this.properties = properties;
-   }
+    /**
+     * @param applicationInfo
+     *         application's information
+     */
+    public ApplicationInfoUnmarshallerWS(List<Property> properties) {
+        this.properties = properties;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage)
-    */
-   @Override
-   public void unmarshal(ResponseMessage response) throws UnmarshallerException
-   {
-      if (response.getBody() == null || response.getBody().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket
+     * .rest.ResponseMessage) */
+    @Override
+    public void unmarshal(ResponseMessage response) throws UnmarshallerException {
+        if (response.getBody() == null || response.getBody().isEmpty()) {
+            return;
+        }
 
-      JSONValue json = JSONParser.parseStrict(response.getBody());
-      if (json == null)
-         return;
-      JSONObject jsonObject = json.isObject();
-      if (jsonObject == null)
-         return;
+        JSONValue json = JSONParser.parseStrict(response.getBody());
+        if (json == null)
+            return;
+        JSONObject jsonObject = json.isObject();
+        if (jsonObject == null)
+            return;
 
-      for (String key : jsonObject.keySet())
-      {
-         if (jsonObject.get(key).isString() != null)
-         {
-            String value = jsonObject.get(key).isString().stringValue();
-            properties.add(new Property(key, value));
-         }
-      }
-   }
+        for (String key : jsonObject.keySet()) {
+            if (jsonObject.get(key).isString() != null) {
+                String value = jsonObject.get(key).isString().stringValue();
+                properties.add(new Property(key, value));
+            }
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<Property> getPayload()
-   {
-      return properties;
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#getPayload() */
+    @Override
+    public List<Property> getPayload() {
+        return properties;
+    }
 
 }

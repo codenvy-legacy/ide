@@ -33,120 +33,90 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for executing rake command. Must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 17, 2011 10:55:51 AM anya $
- * 
  */
-public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Display
-{
-   private static final String ID = "ideRakeCommandView";
+public class RakeCommandView extends ViewImpl implements RakeCommandPresenter.Display {
+    private static final String ID = "ideRakeCommandView";
 
-   private static final int WIDTH = 480;
+    private static final int WIDTH = 480;
 
-   private static final int HEIGHT = 120;
+    private static final int HEIGHT = 120;
 
-   private static final String RUN_BUTTON_ID = "ideRakeCommandViewRunButton";
+    private static final String RUN_BUTTON_ID = "ideRakeCommandViewRunButton";
 
-   private static final String HELP_BUTTON_ID = "ideRakeCommandViewHelpButton";
+    private static final String HELP_BUTTON_ID = "ideRakeCommandViewHelpButton";
 
-   private static final String CLOSE_BUTTON_ID = "ideRakeCommandViewCloseButton";
+    private static final String CLOSE_BUTTON_ID = "ideRakeCommandViewCloseButton";
 
-   private static final String COMMAND_FIELD_ID = "ideRakeCommandViewCommandField";
+    private static final String COMMAND_FIELD_ID = "ideRakeCommandViewCommandField";
 
-   private static RakeCommandViewUiBinder uiBinder = GWT.create(RakeCommandViewUiBinder.class);
+    private static RakeCommandViewUiBinder uiBinder = GWT.create(RakeCommandViewUiBinder.class);
 
-   interface RakeCommandViewUiBinder extends UiBinder<Widget, RakeCommandView>
-   {
-   }
+    interface RakeCommandViewUiBinder extends UiBinder<Widget, RakeCommandView> {
+    }
 
-   /**
-    * Rake command field.
-    */
-   @UiField
-   TextInput commandField;
+    /** Rake command field. */
+    @UiField
+    TextInput commandField;
 
-   /**
-    * Run rake command button.
-    */
-   @UiField
-   ImageButton runButton;
+    /** Run rake command button. */
+    @UiField
+    ImageButton runButton;
 
-   /**
-    * Get rake help button.
-    */
-   @UiField
-   ImageButton helpButton;
+    /** Get rake help button. */
+    @UiField
+    ImageButton helpButton;
 
-   /**
-    * Close view button.
-    */
-   @UiField
-   ImageButton closeButton;
+    /** Close view button. */
+    @UiField
+    ImageButton closeButton;
 
-   public RakeCommandView()
-   {
-      super(ID, ViewType.POPUP, HerokuExtension.LOCALIZATION_CONSTANT.rakeViewTitle(), null, WIDTH, HEIGHT, false);
-      add(uiBinder.createAndBindUi(this));
+    public RakeCommandView() {
+        super(ID, ViewType.POPUP, HerokuExtension.LOCALIZATION_CONSTANT.rakeViewTitle(), null, WIDTH, HEIGHT, false);
+        add(uiBinder.createAndBindUi(this));
 
-      commandField.setName(COMMAND_FIELD_ID);
-      runButton.setButtonId(RUN_BUTTON_ID);
-      helpButton.setButtonId(HELP_BUTTON_ID);
-      closeButton.setButtonId(CLOSE_BUTTON_ID);
-   }
+        commandField.setName(COMMAND_FIELD_ID);
+        runButton.setButtonId(RUN_BUTTON_ID);
+        helpButton.setButtonId(HELP_BUTTON_ID);
+        closeButton.setButtonId(CLOSE_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getCommandField()
-    */
-   @Override
-   public TextFieldItem getCommandField()
-   {
-      return commandField;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getCommandField() */
+    @Override
+    public TextFieldItem getCommandField() {
+        return commandField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getRunButton()
-    */
-   @Override
-   public HasClickHandlers getRunButton()
-   {
-      return runButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getRunButton() */
+    @Override
+    public HasClickHandlers getRunButton() {
+        return runButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getHelpButton()
-    */
-   @Override
-   public HasClickHandlers getHelpButton()
-   {
-      return helpButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#getHelpButton() */
+    @Override
+    public HasClickHandlers getHelpButton() {
+        return helpButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#enableRunButton(boolean)
-    */
-   @Override
-   public void enableRunButton(boolean isEnabled)
-   {
-      runButton.setEnabled(isEnabled);
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#enableRunButton(boolean) */
+    @Override
+    public void enableRunButton(boolean isEnabled) {
+        runButton.setEnabled(isEnabled);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#focusInCommandField()
-    */
-   @Override
-   public void focusInCommandField()
-   {
-      commandField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter.Display#focusInCommandField() */
+    @Override
+    public void focusInCommandField() {
+        commandField.focus();
+    }
 
 }

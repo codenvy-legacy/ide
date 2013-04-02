@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler from {@link RenameApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 2, 2011 11:50:40 AM anya $
- * 
  */
-public interface RenameApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions when user tries to rename application.
-    * 
-    * @param event
-    */
-   void onRenameApplication(RenameApplicationEvent event);
+public interface RenameApplicationHandler extends EventHandler {
+    /**
+     * Perform actions when user tries to rename application.
+     *
+     * @param event
+     */
+    void onRenameApplication(RenameApplicationEvent event);
 }

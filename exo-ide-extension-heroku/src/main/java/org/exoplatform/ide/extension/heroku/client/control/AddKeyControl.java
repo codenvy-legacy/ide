@@ -26,40 +26,33 @@ import org.exoplatform.ide.extension.heroku.client.key.AddKeyEvent;
 
 /**
  * Control for adding keys on Heroku.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 31, 2011 9:32:28 AM anya $
- * 
  */
-public class AddKeyControl extends AbstractHerokuControl
-{
+public class AddKeyControl extends AbstractHerokuControl {
 
-   public AddKeyControl()
-   {
-      super(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlId());
-      setTitle(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlTitle());
-      setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlPrompt());
-      setEvent(new AddKeyEvent());
-      setImages(HerokuClientBundle.INSTANCE.addKeys(), HerokuClientBundle.INSTANCE.addKeysDisabled());
-   }
+    public AddKeyControl() {
+        super(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlId());
+        setTitle(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlTitle());
+        setPrompt(HerokuExtension.LOCALIZATION_CONSTANT.addKeyControlPrompt());
+        setEvent(new AddKeyEvent());
+        setImages(HerokuClientBundle.INSTANCE.addKeys(), HerokuClientBundle.INSTANCE.addKeysDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * 
-    */
-   protected void refresh()
-   {
-      setEnabled(vfsInfo != null);
-   }
+    /**
+     *
+     */
+    protected void refresh() {
+        setEnabled(vfsInfo != null);
+    }
 
 }

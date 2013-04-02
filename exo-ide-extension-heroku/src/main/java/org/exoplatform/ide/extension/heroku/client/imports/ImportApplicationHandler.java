@@ -22,17 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ImportApplicationEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Mar 19, 2012 10:59:08 AM anya $
- *
  */
-public interface ImportApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to import application from Heroku.
-    * 
-    * @param event event
-    */
-   void onImportApplication(ImportApplicationEvent event); 
+public interface ImportApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to import application from Heroku.
+     *
+     * @param event
+     *         event
+     */
+    void onImportApplication(ImportApplicationEvent event);
 }

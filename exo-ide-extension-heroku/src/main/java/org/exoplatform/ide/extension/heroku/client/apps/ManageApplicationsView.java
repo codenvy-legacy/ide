@@ -34,74 +34,57 @@ import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 
 /**
  * View for managing the list of Heroku applications.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 15, 2012 10:04:09 AM anya $
- * 
  */
-public class ManageApplicationsView extends ViewImpl implements ManageApplicationsPresenter.Display
-{
+public class ManageApplicationsView extends ViewImpl implements ManageApplicationsPresenter.Display {
 
-   private static final String VIEW_ID = "ideManageApplicationsView";
+    private static final String VIEW_ID = "ideManageApplicationsView";
 
-   private static final String CLOSE_BUTTON_ID = "ideManageApplicationsViewCloseButton";
+    private static final String CLOSE_BUTTON_ID = "ideManageApplicationsViewCloseButton";
 
-   private static final int WIDTH = 620;
+    private static final int WIDTH = 620;
 
-   private static final int HEIGHT = 300;
+    private static final int HEIGHT = 300;
 
-   private static ManageApplicationsViewUiBinder uiBinder = GWT.create(ManageApplicationsViewUiBinder.class);
+    private static ManageApplicationsViewUiBinder uiBinder = GWT.create(ManageApplicationsViewUiBinder.class);
 
-   interface ManageApplicationsViewUiBinder extends UiBinder<Widget, ManageApplicationsView>
-   {
-   }
+    interface ManageApplicationsViewUiBinder extends UiBinder<Widget, ManageApplicationsView> {
+    }
 
-   /**
-    * Grid for displaying list of applications.
-    */
-   @UiField
-   ApplicationsListGrid applicationsGrid;
+    /** Grid for displaying list of applications. */
+    @UiField
+    ApplicationsListGrid applicationsGrid;
 
-   /**
-    * Close view button.
-    */
-   @UiField
-   ImageButton closeButton;
+    /** Close view button. */
+    @UiField
+    ImageButton closeButton;
 
-   public ManageApplicationsView()
-   {
-      super(VIEW_ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.manageApplicationsViewTitle(), new Image(
-         HerokuClientBundle.INSTANCE.applicationsList()), WIDTH, HEIGHT, true);
-      add(uiBinder.createAndBindUi(this));
+    public ManageApplicationsView() {
+        super(VIEW_ID, ViewType.MODAL, HerokuExtension.LOCALIZATION_CONSTANT.manageApplicationsViewTitle(), new Image(
+                HerokuClientBundle.INSTANCE.applicationsList()), WIDTH, HEIGHT, true);
+        add(uiBinder.createAndBindUi(this));
 
-      closeButton.setButtonId(CLOSE_BUTTON_ID);
-   }
+        closeButton.setButtonId(CLOSE_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter.Display#getActions()
-    */
-   @Override
-   public HasApplicationsActions getActions()
-   {
-      return applicationsGrid;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter.Display#getActions() */
+    @Override
+    public HasApplicationsActions getActions() {
+        return applicationsGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter.Display#getAppsGrid()
-    */
-   @Override
-   public ListGridItem<String> getAppsGrid()
-   {
-      return applicationsGrid;
-   }
+    /** @see org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter.Display#getAppsGrid() */
+    @Override
+    public ListGridItem<String> getAppsGrid() {
+        return applicationsGrid;
+    }
 
 }
