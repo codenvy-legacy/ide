@@ -141,12 +141,10 @@ public class CKEditor extends AbsolutePanel implements Editor {
 
        if (basePath !== undefined) {
            $wnd.CKEDITOR.basePath = basePath;
-           $wnd.CKEDITOR.config.contentsCss = basePath + "contents.css"; // reflects the CSS used in the final pages where the contents
-           are to be used.
+           $wnd.CKEDITOR.config.contentsCss = basePath + "contents.css"; // reflects the CSS used in the final pages where the contents are to be used.
            $wnd.CKEDITOR.plugins.basePath = basePath + "plugins/"; // set base path to the plugins folder
            $wnd.CKEDITOR.config.templates_files[0] = basePath + "plugins/templates/templates/default.js"; // set default template path
-           $wnd.CKEDITOR.config.smiley_path = basePath + "plugins/smiley/images/"; // The base path used to build the URL for the smiley
-           images.
+           $wnd.CKEDITOR.config.smiley_path = basePath + "plugins/smiley/images/"; // The base path used to build the URL for the smiley images.
        }
 
        if (skin !== undefined) {
@@ -344,8 +342,7 @@ public class CKEditor extends AbsolutePanel implements Editor {
        var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
        if (editor != null) {
            editor.setData(data, function () {
-               editor.checkDirty(); // reset ckeditor content changed indicator (http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR
-               .editor.html#setData)
+               editor.checkDirty(); // reset ckeditor content changed indicator (http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setData)
            });
 
            editor.exoSavedContent = data;
@@ -461,8 +458,7 @@ public class CKEditor extends AbsolutePanel implements Editor {
            $wnd.alert = function (message) {
                // test if this is a in context of ckeditor
                if (typeof $wnd.CKEDITOR !== "undefined") {
-                   @org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor
-                   Error", message);
+                   @org.exoplatform.ide.editor.ckeditor.CKEditor::showErrorDialog(Ljava/lang/String;Ljava/lang/String;)("WYSIWYG Editor Error", message);
                }
                else {
                    return proxied(message);

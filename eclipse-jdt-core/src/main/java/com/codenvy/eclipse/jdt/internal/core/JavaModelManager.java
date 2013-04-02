@@ -2098,7 +2098,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
         //               {
         //                  Util.log(null,
         //                     "An annotation processor manager is already registered: ignoring " + extensions[i].getUniqueIdentifier());
-        / /$NON - NLS - 1 $
+        //$NON - NLS - 1 $
         //                  break;
         //               }
         //               IConfigurationElement[] configElements = extensions[i].getConfigurationElements();

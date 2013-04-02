@@ -911,7 +911,7 @@ public class DeltaProcessor {
         //                           // touch to force a build of this project
         //                           if (JavaBuilder.DEBUG)
         //                              System.out.println("Touching project " + project.getName() + " due to external jar file change");
-         / /$NON-NLS-1$ //$NON-NLS-2$
+        //$NON-NLS-1$ //$NON-NLS-2$
         //                           project.touch(progressMonitor);
         //                        }
         //                     }

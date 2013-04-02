@@ -615,8 +615,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
            var currentNode = editor.nextLine(cursor.line).previousSibling;
        }
 
-       this.@org.exoplatform.ide.editor.codemirror.CodeMirror::callAutocompleteHandler(Ljava/lang/String;
-Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
+       this.@org.exoplatform.ide.editor.codemirror.CodeMirror::callAutocompleteHandler(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
    }-*/;
 
     private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode) {
@@ -892,13 +891,11 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
 
     private native void setText(JavaScriptObject editor, String text)
    /*-{
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return;
        }
 
-       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util
-           .BrowserResolver.Browser::CHROME) {
+       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::CHROME) {
            if (text === "") {
                text = "\n"; // fix error with initial cursor position and size (WBT-324)
            }
@@ -979,8 +976,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
 
     private native void setFocus(JavaScriptObject editor)
    /*-{
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return;
        }
 
@@ -1001,8 +997,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
 
     private native void goToPosition(JavaScriptObject editor, int row, int column)
    /*-{
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
            || typeof editor.win.select == 'undefined') {
            return;
        }
@@ -1011,8 +1006,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
            if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::canGoToLine(I)(row)) {
                editor.selectLines(editor.nthLine(row), column - 1);
                this.@org.exoplatform.ide.editor.codemirror.CodeMirror::highlightLine(I)(row);
-               this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(this.@org
-                   .exoplatform.ide.editor.codemirror.CodeMirror::getId()(), row, column);
+               this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getId()(), row, column);
            }
        }
    }-*/;
@@ -1039,8 +1033,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
        var currentLineNumber = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cursorPositionRow;
        var currentLine = editor.nthLine(currentLineNumber);
 
-       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util
-           .BrowserResolver.Browser::IE
+       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
            && this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getNumberOfLines()() == currentLineNumber) {
            // clear current line
            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::clearLastLine()();
@@ -1079,8 +1072,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
 
     private native boolean hasUndoChanges(JavaScriptObject editor)
    /*-{
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return false;
        }
 
@@ -1106,8 +1098,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
 
     private native boolean hasRedoChanges(JavaScriptObject editor)
    /*-{
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
            return false;
        }
 
@@ -1136,8 +1127,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
     public native int getNativeCursorRow()
    /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
            || typeof editor.win.select == 'undefined')
            return 1;
 
@@ -1161,8 +1151,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
     public native int getCursorColumn()
    /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
            || typeof editor.win.select == 'undefined')
            return 1;
 
@@ -1188,8 +1177,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
     private native int getCursorActivityRow(JavaScriptObject cursor, int cursorCol)
    /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject
-           (Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
+       if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
            || typeof editor.win.select == 'undefined' || !cursor) {
            return 1;
        }
@@ -1614,8 +1602,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
    /*-{
        var lineHandler = editor.nthLine(line);
 
-       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util
-           .BrowserResolver.Browser::IE
+       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
            && this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getNumberOfLines()() == line) {
            // clear current line
            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::clearLastLine()();
@@ -1775,8 +1762,7 @@ Lcom/google/gwt/core/client/JavaScriptObject;)(lineContent, currentNode);
    /*-{
        var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
        var frame = editor.frame;
-       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util
-           .BrowserResolver.Browser::IE) {
+       if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) {
            frame.contentWindow.document.execCommand(command, false, null);
        }
        else {

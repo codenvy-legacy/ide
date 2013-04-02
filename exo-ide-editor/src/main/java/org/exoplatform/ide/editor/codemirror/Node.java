@@ -149,10 +149,8 @@ public class Node {
      */
     public native static int getNodePositionInLine(JavaScriptObject node)
    /*-{
-       return parseInt((node.offsetLeft - @org.exoplatform.ide.editor.codemirror.CodeMirror::LINE_OFFSET_LEFT) / @org.exoplatform.ide
-           .editor.codemirror.CodeMirror::CHARACTER_WIDTH) + 1;
-//      return parseInt((node.offsetLeft - @org.exoplatform.ide.editor.codemirror.CodeMirror::firstCharacterOffsetLeft) / @org
-   .exoplatform.ide.editor.codemirror.CodeMirror::characterWidth) + 1;
+       return parseInt((node.offsetLeft - @org.exoplatform.ide.editor.codemirror.CodeMirror::LINE_OFFSET_LEFT) / @org.exoplatform.ide.editor.codemirror.CodeMirror::CHARACTER_WIDTH) + 1;
+       // return parseInt((node.offsetLeft - @org.exoplatform.ide.editor.codemirror.CodeMirror::firstCharacterOffsetLeft) / @org.exoplatform.ide.editor.codemirror.CodeMirror::characterWidth) + 1;
    }-*/;
 
     /**

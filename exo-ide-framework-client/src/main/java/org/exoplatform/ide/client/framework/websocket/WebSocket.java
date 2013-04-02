@@ -138,10 +138,8 @@ public class WebSocket extends JavaScriptObject {
     public final native void setOnCloseHandler(ConnectionClosedHandler handler)
    /*-{
        this.onclose = $entry(function () {
-           var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent::new
-               (ILjava/lang/String;Z)(event.code, event.reason, event.wasClean);
-           handler.@org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler::onClose
-               (Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
+           var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code, event.reason, event.wasClean);
+           handler.@org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler::onClose(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
        });
    }-*/;
 
@@ -168,8 +166,7 @@ public class WebSocket extends JavaScriptObject {
     public final native void setOnMessageHandler(MessageReceivedHandler handler)
    /*-{
        this.onmessage = $entry(function (event) {
-           var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent::new
-               (Ljava/lang/String;)(event.data);
+           var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent::new(Ljava/lang/String;)(event.data);
            handler.@org.exoplatform.ide.client.framework.websocket.events.MessageReceivedHandler::onMessageReceived(Lorg/exoplatform/ide/client/framework/websocket/events/MessageReceivedEvent;)(webSocketMessageEventInstance);
        });
    }-*/;
