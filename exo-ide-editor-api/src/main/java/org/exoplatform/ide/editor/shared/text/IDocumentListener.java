@@ -25,23 +25,24 @@ package org.exoplatform.ide.editor.shared.text;
  * <p>
  * Clients may implement this interface.
  * </p>
- * 
+ *
  * @see org.eclipse.jface.text.IDocument
  */
-public interface IDocumentListener
-{
+public interface IDocumentListener {
 
-   /**
-    * The manipulation described by the document event will be performed.
-    * 
-    * @param event the document event describing the document change
-    */
-   void documentAboutToBeChanged(DocumentEvent event);
+    /**
+     * The manipulation described by the document event will be performed.
+     *
+     * @param event
+     *         the document event describing the document change
+     */
+    void documentAboutToBeChanged(DocumentEvent event);
 
-   /**
-    * The manipulation described by the document event has been performed.
-    * 
-    * @param event the document event describing the document change
-    */
-   void documentChanged(DocumentEvent event);
+    /**
+     * The manipulation described by the document event has been performed.
+     *
+     * @param event
+     *         the document event describing the document change
+     */
+    void documentChanged(DocumentEvent event);
 }

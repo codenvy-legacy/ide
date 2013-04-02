@@ -22,11 +22,9 @@ package org.exoplatform.ide.editor.client.api.event;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface SearchCompleteCallback
-{
-   
-   void onSearchComplete(boolean success);
+public interface SearchCompleteCallback {
+
+    void onSearchComplete(boolean success);
 
 }

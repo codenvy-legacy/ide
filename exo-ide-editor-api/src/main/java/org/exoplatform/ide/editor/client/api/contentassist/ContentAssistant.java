@@ -29,68 +29,71 @@ import org.exoplatform.ide.editor.client.api.Editor;
  * of completing documents or presenting context information.
  * </p>
  */
-public interface ContentAssistant
-{
+public interface ContentAssistant {
 
-   //------ proposal popup orientation styles ------------
-   /** The context info list will overlay the list of completion proposals. */
-   public final static int PROPOSAL_OVERLAY = 10;
+    //------ proposal popup orientation styles ------------
+    /** The context info list will overlay the list of completion proposals. */
+    public final static int PROPOSAL_OVERLAY = 10;
 
-   /** The completion proposal list will be removed before the context info list will be shown. */
-   public final static int PROPOSAL_REMOVE = 11;
+    /** The completion proposal list will be removed before the context info list will be shown. */
+    public final static int PROPOSAL_REMOVE = 11;
 
-   /** The context info list will be presented without hiding or overlapping the completion proposal list. */
-   public final static int PROPOSAL_STACKED = 12;
+    /** The context info list will be presented without hiding or overlapping the completion proposal list. */
+    public final static int PROPOSAL_STACKED = 12;
 
-   //------ context info box orientation styles ----------
-   /** Context info will be shown above the location it has been requested for without hiding the location. */
-   public final static int CONTEXT_INFO_ABOVE = 20;
+    //------ context info box orientation styles ----------
+    /** Context info will be shown above the location it has been requested for without hiding the location. */
+    public final static int CONTEXT_INFO_ABOVE = 20;
 
-   /** Context info will be shown below the location it has been requested for without hiding the location. */
-   public final static int CONTEXT_INFO_BELOW = 21;
+    /** Context info will be shown below the location it has been requested for without hiding the location. */
+    public final static int CONTEXT_INFO_BELOW = 21;
 
-   /**
-    * Installs content assist support on the given text viewer.
-    *
-    * @param textViewer the text viewer on which content assist will work
-    */
-   void install(Editor textViewer);
+    /**
+     * Installs content assist support on the given text viewer.
+     *
+     * @param textViewer
+     *         the text viewer on which content assist will work
+     */
+    void install(Editor textViewer);
 
-   /**
-    * Uninstalls content assist support from the text viewer it has
-    * previously be installed on.
-    */
-   void uninstall();
+    /**
+     * Uninstalls content assist support from the text viewer it has
+     * previously be installed on.
+     */
+    void uninstall();
 
-   /**
-    * Shows all possible completions of the content at the viewer's cursor position.
-    *
-    * @return an optional error message if no proposals can be computed
-    */
-   String showPossibleCompletions();
+    /**
+     * Shows all possible completions of the content at the viewer's cursor position.
+     *
+     * @return an optional error message if no proposals can be computed
+     */
+    String showPossibleCompletions();
 
-   /**
-    * Shows context information for the content at the viewer's cursor position.
-    *
-    * @return an optional error message if no context information can be computed
-    */
-   String showContextInformation();
+    /**
+     * Shows context information for the content at the viewer's cursor position.
+     *
+     * @return an optional error message if no context information can be computed
+     */
+    String showContextInformation();
 
-   /**
-    * Returns the content assist processor to be used for the given content type.
-    *
-    * @param contentType the type of the content for which this
-    *        content assistant is to be requested
-    * @return an instance content assist processor or
-    *         <code>null</code> if none exists for the specified content type
-    */
-   ContentAssistProcessor getContentAssistProcessor(String contentType);
+    /**
+     * Returns the content assist processor to be used for the given content type.
+     *
+     * @param contentType
+     *         the type of the content for which this
+     *         content assistant is to be requested
+     * @return an instance content assist processor or
+     *         <code>null</code> if none exists for the specified content type
+     */
+    ContentAssistProcessor getContentAssistProcessor(String contentType);
 
-   /**
-    * Add the content assist processor for the given content type.
-    * 
-    * @param contentType the type of the content
-    * @param processor the content assist processor
-    */
-   void addContentAssitProcessor(String contentType, ContentAssistProcessor processor);
+    /**
+     * Add the content assist processor for the given content type.
+     *
+     * @param contentType
+     *         the type of the content
+     * @param processor
+     *         the content assist processor
+     */
+    void addContentAssitProcessor(String contentType, ContentAssistProcessor processor);
 }

@@ -22,15 +22,11 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorContextMenuEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 26, 2012 5:57:37 PM anya $
- * 
  */
-public interface EditorContextMenuHandler extends EventHandler
-{
-   /**
-    * @param event
-    */
-   void onEditorContextMenu(EditorContextMenuEvent event);
+public interface EditorContextMenuHandler extends EventHandler {
+    /** @param event */
+    void onEditorContextMenu(EditorContextMenuEvent event);
 }

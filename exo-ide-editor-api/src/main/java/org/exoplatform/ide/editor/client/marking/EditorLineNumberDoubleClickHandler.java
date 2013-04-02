@@ -23,16 +23,14 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  11:32:21 AM Mar 26, 2012 evgen $
- *
  */
-public interface EditorLineNumberDoubleClickHandler extends EventHandler
-{
+public interface EditorLineNumberDoubleClickHandler extends EventHandler {
 
-   /**
-    * Perform actions on line number double click.
-    * 
-    * @param event
-    */
-   void onEditorLineNumberDoubleClick(EditorLineNumberDoubleClickEvent event);
-   
+    /**
+     * Perform actions on line number double click.
+     *
+     * @param event
+     */
+    void onEditorLineNumberDoubleClick(EditorLineNumberDoubleClickEvent event);
+
 }

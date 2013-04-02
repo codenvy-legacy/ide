@@ -19,92 +19,79 @@
 
 package org.exoplatform.ide.editor.client.api.event;
 
-import org.exoplatform.ide.editor.client.api.Editor;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
  * Fires just after some key or mouse event have been happened in editor. Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorCursorActivityEvent extends GwtEvent<EditorCursorActivityHandler>
-{
+public class EditorCursorActivityEvent extends GwtEvent<EditorCursorActivityHandler> {
 
-   public static final GwtEvent.Type<EditorCursorActivityHandler> TYPE =
-      new GwtEvent.Type<EditorCursorActivityHandler>();
+    public static final GwtEvent.Type<EditorCursorActivityHandler> TYPE =
+            new GwtEvent.Type<EditorCursorActivityHandler>();
 
-   /**
-    * {@link Editor} instance.
-    */
-   private Editor editor;
+    /** {@link Editor} instance. */
+    private Editor editor;
 
-   /**
-    * Cursor row.
-    */
-   private int row;
+    /** Cursor row. */
+    private int row;
 
-   /**
-    * Cursor column.
-    */
-   private int column;
+    /** Cursor column. */
+    private int column;
 
-   /**
-    * Creates new instance of {@link EditorCursorActivityEvent}.
-    * 
-    * @param editor
-    * @param row
-    * @param column
-    */
-   public EditorCursorActivityEvent(Editor editor, int row, int column)
-   {
-      this.editor = editor;
-      this.row = row;
-      this.column = column;
-   }
+    /**
+     * Creates new instance of {@link EditorCursorActivityEvent}.
+     *
+     * @param editor
+     * @param row
+     * @param column
+     */
+    public EditorCursorActivityEvent(Editor editor, int row, int column) {
+        this.editor = editor;
+        this.row = row;
+        this.column = column;
+    }
 
-   /**
-    * Returns {@link Editor} instance.
-    * 
-    * @return
-    */
-   public Editor getEditor()
-   {
-      return editor;
-   }
+    /**
+     * Returns {@link Editor} instance.
+     *
+     * @return
+     */
+    public Editor getEditor() {
+        return editor;
+    }
 
-   /**
-    * Returns cursor column.
-    * 
-    * @return
-    */
-   public int getColumn()
-   {
-      return column;
-   }
+    /**
+     * Returns cursor column.
+     *
+     * @return
+     */
+    public int getColumn() {
+        return column;
+    }
 
-   /**
-    * Returns cursor row.
-    * 
-    * @return
-    */
-   public int getRow()
-   {
-      return row;
-   }
+    /**
+     * Returns cursor row.
+     *
+     * @return
+     */
+    public int getRow() {
+        return row;
+    }
 
-   @Override
-   protected void dispatch(EditorCursorActivityHandler handler)
-   {
-      handler.onEditorCursorActivity(this);
-   }
+    @Override
+    protected void dispatch(EditorCursorActivityHandler handler) {
+        handler.onEditorCursorActivity(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorCursorActivityHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorCursorActivityHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

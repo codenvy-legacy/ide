@@ -12,7 +12,7 @@ package org.exoplatform.ide.editor.shared.text;
 
 /**
  * Extension interface for {@link org.eclipse.jface.text.ISlaveDocumentManager}.
- * <p>
+ * <p/>
  * Adds access to the list of all slave documents for a given master document.
  *
  * @see org.eclipse.jface.text.ISlaveDocumentManager
@@ -20,12 +20,13 @@ package org.exoplatform.ide.editor.shared.text;
  */
 public interface ISlaveDocumentManagerExtension {
 
-	/**
-	 * Returns the list of slave documents for the given master document or
-	 * <code>null</code> if there are no such slave document.
-	 *
-	 * @param master the master document
-	 * @return the list of slave documents or <code>null</code>
-	 */
-	IDocument[] getSlaveDocuments(IDocument master);
+    /**
+     * Returns the list of slave documents for the given master document or
+     * <code>null</code> if there are no such slave document.
+     *
+     * @param master
+     *         the master document
+     * @return the list of slave documents or <code>null</code>
+     */
+    IDocument[] getSlaveDocuments(IDocument master);
 }

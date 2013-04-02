@@ -24,29 +24,29 @@ package org.exoplatform.ide.editor.shared.text;
  *
  * @since 3.0
  */
-public interface ISynchronizable
-{
+public interface ISynchronizable {
 
-   /**
-    * Sets the lock object for this object. If the lock object is not
-    * <code>null</code> subsequent calls to specified methods of this object
-    * are synchronized on this lock object. Which methods are synchronized is
-    * specified by the implementer.
-    * <p>
-    * <em>You should not override an existing lock object unless you own
-    * that lock object yourself. Use the existing lock object instead.</em>
-    * </p>
-    *
-    * @param lockObject the lock object. May be <code>null</code>.
-    */
-   void setLockObject(Object lockObject);
+    /**
+     * Sets the lock object for this object. If the lock object is not
+     * <code>null</code> subsequent calls to specified methods of this object
+     * are synchronized on this lock object. Which methods are synchronized is
+     * specified by the implementer.
+     * <p>
+     * <em>You should not override an existing lock object unless you own
+     * that lock object yourself. Use the existing lock object instead.</em>
+     * </p>
+     *
+     * @param lockObject
+     *         the lock object. May be <code>null</code>.
+     */
+    void setLockObject(Object lockObject);
 
-   /**
-    * Returns the lock object or <code>null</code> if there is none. Clients
-    * should use the lock object in order to synchronize concurrent access to
-    * the implementer.
-    *
-    * @return the lock object or <code>null</code>
-    */
-   Object getLockObject();
+    /**
+     * Returns the lock object or <code>null</code> if there is none. Clients
+     * should use the lock object in order to synchronize concurrent access to
+     * the implementer.
+     *
+     * @return the lock object or <code>null</code>
+     */
+    Object getLockObject();
 }
