@@ -20,6 +20,7 @@ package org.exoplatform.ide.editor.javascript.client;
 
 import com.codenvy.ide.client.util.Elements;
 import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
@@ -35,36 +36,30 @@ import org.exoplatform.ide.editor.javascript.client.syntaxvalidator.JavaScriptCo
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class JavaScriptEditorExtension extends Extension
-{
+public class JavaScriptEditorExtension extends Extension {
 
-   public static final JavaScriptMessages MESSAGES = GWT.create(JavaScriptMessages.class);
+    public static final JavaScriptMessages MESSAGES = GWT.create(JavaScriptMessages.class);
 
-   public static final JavaScriptClientBundle RESOURCES = GWT.create(JavaScriptClientBundle.class);
+    public static final JavaScriptClientBundle RESOURCES = GWT.create(JavaScriptClientBundle.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      RESOURCES.css().ensureInjected();
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        RESOURCES.css().ensureInjected();
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New Java Script", MESSAGES.controlNewJavascriptTitle(), MESSAGES
-            .controlNewJavascriptPrompt(), Images.JAVA_SCRIPT, MimeType.APPLICATION_JAVASCRIPT).setGroupName(GroupNames.NEW_FILE));
+        IDE.getInstance().addControl(
+                new NewItemControl("File/New/New Java Script", MESSAGES.controlNewJavascriptTitle(), MESSAGES
+                        .controlNewJavascriptPrompt(), Images.JAVA_SCRIPT, MimeType.APPLICATION_JAVASCRIPT)
+                        .setGroupName(GroupNames.NEW_FILE));
 
 //      final JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
 
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.APPLICATION_JAVASCRIPT, "js", RESOURCES.javaScript()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.APPLICATION_JAVASCRIPT, "js", RESOURCES.javaScript()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
 //               return new CodeMirror(MimeType.APPLICATION_JAVASCRIPT, new CodeMirrorConfiguration()
 //               .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
 //               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
@@ -72,9 +67,9 @@ public class JavaScriptEditorExtension extends Extension
 //               .setCanBeOutlined(true)
 //               .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
 //               .setCodeAssistant(javaScriptCodeAssistant));
-               return new JavaScriptEditor(MimeType.APPLICATION_JAVASCRIPT);
-            }
-         });
+                        return new JavaScriptEditor(MimeType.APPLICATION_JAVASCRIPT);
+                    }
+                });
 
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
 //         new CodeMirrorConfiguration()
@@ -85,13 +80,11 @@ public class JavaScriptEditorExtension extends Extension
 //            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
 //            .setCodeAssistant(javaScriptCodeAssistant)));
 
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.TEXT_JAVASCRIPT, "js", RESOURCES.javaScript()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.TEXT_JAVASCRIPT, "js", RESOURCES.javaScript()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
 //               return new CodeMirror(MimeType.TEXT_JAVASCRIPT, new CodeMirrorConfiguration()
 //               .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
 //               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
@@ -99,9 +92,9 @@ public class JavaScriptEditorExtension extends Extension
 //               .setCanBeOutlined(true)
 //               .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
 //               .setCodeAssistant(javaScriptCodeAssistant));
-               return new JavaScriptEditor(MimeType.TEXT_JAVASCRIPT);
-            }
-         });
+                        return new JavaScriptEditor(MimeType.TEXT_JAVASCRIPT);
+                    }
+                });
 
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
 //         new CodeMirrorConfiguration()
@@ -112,13 +105,11 @@ public class JavaScriptEditorExtension extends Extension
 //            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
 //            .setCodeAssistant(javaScriptCodeAssistant)));
 
-      IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.APPLICATION_X_JAVASCRIPT, "js", RESOURCES.javaScript()),
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
+        IDE.getInstance().getFileTypeRegistry().addFileType(
+                new FileType(MimeType.APPLICATION_X_JAVASCRIPT, "js", RESOURCES.javaScript()),
+                new EditorCreator() {
+                    @Override
+                    public Editor createEditor() {
 //               return new CodeMirror(MimeType.APPLICATION_X_JAVASCRIPT, new CodeMirrorConfiguration()
 //               .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
 //               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
@@ -126,9 +117,9 @@ public class JavaScriptEditorExtension extends Extension
 //               .setCanBeOutlined(true)
 //               .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
 //               .setCodeAssistant(javaScriptCodeAssistant));
-               return new JavaScriptEditor(MimeType.APPLICATION_X_JAVASCRIPT);
-            }
-         });
+                        return new JavaScriptEditor(MimeType.APPLICATION_X_JAVASCRIPT);
+                    }
+                });
 
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
 //         new CodeMirrorConfiguration()
@@ -139,17 +130,17 @@ public class JavaScriptEditorExtension extends Extension
 //            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
 //            .setCodeAssistant(javaScriptCodeAssistant)));
 
-      JavaScriptOutlineItemCreator javaScriptOutlineItemCreator = new JavaScriptOutlineItemCreator();
-      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVASCRIPT, javaScriptOutlineItemCreator);
-      IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_JAVASCRIPT, javaScriptOutlineItemCreator);
-      IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_JAVASCRIPT, javaScriptOutlineItemCreator);
+        JavaScriptOutlineItemCreator javaScriptOutlineItemCreator = new JavaScriptOutlineItemCreator();
+        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVASCRIPT, javaScriptOutlineItemCreator);
+        IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_JAVASCRIPT, javaScriptOutlineItemCreator);
+        IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_X_JAVASCRIPT, javaScriptOutlineItemCreator);
 
-      JavaScriptCommentsModifier commentsModifier = new JavaScriptCommentsModifier();
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVASCRIPT, commentsModifier));
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_JAVASCRIPT, commentsModifier));
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_JAVASCRIPT, commentsModifier));
+        JavaScriptCommentsModifier commentsModifier = new JavaScriptCommentsModifier();
+        IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVASCRIPT, commentsModifier));
+        IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_JAVASCRIPT, commentsModifier));
+        IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_JAVASCRIPT, commentsModifier));
 
-      Elements.injectJs(RESOURCES.esprima().getText() + RESOURCES.esprimaJsContentAssist().getText());
-      new JavaScriptCodeController();
-   }
+        Elements.injectJs(RESOURCES.esprima().getText() + RESOURCES.esprimaJsContentAssist().getText());
+        new JavaScriptCodeController();
+    }
 }

@@ -21,49 +21,40 @@ package org.exoplatform.ide.editor.javascript.client.codeassistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.javascript.client.codeassistant.ui.JsFunctionWidget;
-import org.exoplatform.ide.editor.javascript.client.codeassistant.ui.JsKeyWordWidget;
-import org.exoplatform.ide.editor.javascript.client.codeassistant.ui.JsObjectWidget;
-import org.exoplatform.ide.editor.javascript.client.codeassistant.ui.JsTemplateWidget;
-import org.exoplatform.ide.editor.javascript.client.codeassistant.ui.JsWidget;
+import org.exoplatform.ide.editor.javascript.client.codeassistant.ui.*;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaScriptTokenWidgetFactory Feb 24, 2011 11:54:32 AM evgen $
- * 
  */
-public class JavaScriptTokenWidgetFactory implements TokenWidgetFactory
-{
+public class JavaScriptTokenWidgetFactory implements TokenWidgetFactory {
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api.codeassitant.Token)
-    */
-   @Override
-   public TokenWidget buildTokenWidget(Token token)
-   {
-      switch (token.getType())
-      {
-         case KEYWORD :
-            return new JsKeyWordWidget(token);
+    /** @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory#buildTokenWidget(org.exoplatform.ide.editor.api
+     * .codeassitant.Token) */
+    @Override
+    public TokenWidget buildTokenWidget(Token token) {
+        switch (token.getType()) {
+            case KEYWORD:
+                return new JsKeyWordWidget(token);
 
-         case TEMPLATE :
-            return new JsTemplateWidget(token);
+            case TEMPLATE:
+                return new JsTemplateWidget(token);
 
-         case CLASS :
-            return new JsObjectWidget(token);
+            case CLASS:
+                return new JsObjectWidget(token);
 
-         case METHOD :
-         case VARIABLE :
-         case PROPERTY :
-            return new JsWidget(token);
+            case METHOD:
+            case VARIABLE:
+            case PROPERTY:
+                return new JsWidget(token);
 
-         case FUNCTION :
-            return new JsFunctionWidget(token);
+            case FUNCTION:
+                return new JsFunctionWidget(token);
 
-         default :
-            return new JsKeyWordWidget(token);
-      }
+            default:
+                return new JsKeyWordWidget(token);
+        }
 
-   }
+    }
 
 }

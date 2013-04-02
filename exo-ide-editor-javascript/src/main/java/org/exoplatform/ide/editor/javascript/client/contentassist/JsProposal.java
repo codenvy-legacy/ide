@@ -23,32 +23,29 @@ import com.google.gwt.core.client.JavaScriptObject;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-final class JsProposal extends JavaScriptObject
-{
+final class JsProposal extends JavaScriptObject {
 
-   /**
-    * 
-    */
-   protected JsProposal()
-   {
-   }
+    /**
+     *
+     */
+    protected JsProposal() {
+    }
 
-   public native String getProposal()/*-{
-		return this.proposal;
-   }-*/;
+    public native String getProposal()/*-{
+        return this.proposal;
+    }-*/;
 
-   public native String getDescription()/*-{
-		return this.description;
-   }-*/;
+    public native String getDescription()/*-{
+        return this.description;
+    }-*/;
 
-   public native int getEscapePosition()/*-{
-		return this.escapePosition ? this.escapePosition : -1;
-   }-*/;
+    public native int getEscapePosition()/*-{
+        return this.escapePosition ? this.escapePosition : -1;
+    }-*/;
 
-   public native Position[] getPositions()/*-{
-		return this.positions ? this.positions : [];
-   }-*/;
+    public native Position[] getPositions()/*-{
+        return this.positions ? this.positions : [];
+    }-*/;
 
 }

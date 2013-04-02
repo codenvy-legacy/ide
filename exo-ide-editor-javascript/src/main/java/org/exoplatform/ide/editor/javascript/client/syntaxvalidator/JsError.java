@@ -22,35 +22,30 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * JavaScript error that contains information about line number where error occurred and detailed text message.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: JsError.java Sep 18, 2012 12:36:09 PM azatsarynnyy $
- *
  */
-final class JsError extends JavaScriptObject
-{
-   /**
-    * Default constructor.
-    */
-   protected JsError()
-   {
-   }
+final class JsError extends JavaScriptObject {
+    /** Default constructor. */
+    protected JsError() {
+    }
 
-   /**
-    * Returns the line number in source where the problem begins.
-    * 
-    * @return the line number in source where the problem begins
-    */
-   public native int getLineNumber()/*-{
-      return this.lineNumber;
-   }-*/;
+    /**
+     * Returns the line number in source where the problem begins.
+     *
+     * @return the line number in source where the problem begins
+     */
+    public native int getLineNumber()/*-{
+        return this.lineNumber;
+    }-*/;
 
-   /**
-    * Returns a localized, human-readable message string which describes the problem.
-    * 
-    * @return a localized, human-readable message string which describes the problem
-    */
-   public native String getMessage()/*-{
-      return this.message;
-   }-*/;
+    /**
+     * Returns a localized, human-readable message string which describes the problem.
+     *
+     * @return a localized, human-readable message string which describes the problem
+     */
+    public native String getMessage()/*-{
+        return this.message;
+    }-*/;
 }
