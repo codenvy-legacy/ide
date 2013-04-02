@@ -35,7 +35,7 @@ import org.exoplatform.ide.editor.client.api.EditorCapability;
  */
 public class FoldSelectionControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler {
 
-    public static final String ID = "Edit/FoldSelection";
+    public static final String ID = "Edit/Folding/FoldSelection";
 
     private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.foldSelectionControlTitle();
 

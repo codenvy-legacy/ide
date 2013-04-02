@@ -506,6 +506,11 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
     /** @see org.exoplatform.ide.editor.client.api.Editor#foldSelection() */
     @Override
     public void foldSelection() {
+        // for now available only folding of entire lines
+        if (!editor.getSelection().hasMultilineSelection()) {
+            return;
+        }
+
         final int selectionBeginLineNumber = editor.getSelection().getSelectionBeginLineNumber();
         final int selectionEndLineNumber = editor.getSelection().getSelectionEndLineNumber();
         try {

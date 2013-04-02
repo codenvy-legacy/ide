@@ -48,9 +48,10 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
         IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR);
         IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
 
-     /* IDE.getInstance().addControl(new CutTextControl());
-      IDE.getInstance().addControl(new CopyTextControl());
-      IDE.getInstance().addControl(new PasteTextControl());*/
+        /*
+         * IDE.getInstance().addControl(new CutTextControl()); IDE.getInstance().addControl(new CopyTextControl());
+         * IDE.getInstance().addControl(new PasteTextControl());
+         */
         IDE.getInstance().addControl(new DeleteTextControl());
         IDE.getInstance().addControl(new SelectAllTextControl());
         IDE.getInstance().addControl(new ToggleCommentControl());
@@ -63,16 +64,16 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
 
         IDE.getInstance().addControl(new ShowLineNumbersControl());
         IDE.getInstance().addControl(new DeleteCurrentLineControl());
-//      IDE.getInstance().addControl(new CollapseFoldControl());
-//      IDE.getInstance().addControl(new ExpandFoldControl());
-//      IDE.getInstance().addControl(new CollapseAllFoldsControl());
-//      IDE.getInstance().addControl(new ExpandAllFoldsControl());
+        IDE.getInstance().addControl(new CollapseFoldControl());
+        IDE.getInstance().addControl(new ExpandFoldControl());
+        // IDE.getInstance().addControl(new CollapseAllFoldsControl());
+        // IDE.getInstance().addControl(new ExpandAllFoldsControl());
         IDE.getInstance().addControl(new FoldSelectionControl());
 
         new GoToLinePresenter();
 
-//      IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
-//      new LockUnlockFileHandler();
+        // IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
+        // new LockUnlockFileHandler();
 
         IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
         IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -90,9 +91,9 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
     public void onShowLineNumbers(ShowLineNumbersEvent event) {
         applicationSettings.setValue("line-numbers", Boolean.valueOf(event.isShowLineNumber()), Store.COOKIES);
         SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      /*
-       * fire event for show-hide line numbers command be able to update state.
-       */
+        /*
+         * fire event for show-hide line numbers command be able to update state.
+         */
         IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
     }
 

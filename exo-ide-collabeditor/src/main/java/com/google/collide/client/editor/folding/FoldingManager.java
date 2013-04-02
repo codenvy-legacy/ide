@@ -75,7 +75,7 @@ public class FoldingManager implements Document.TextListener {
     /** A listener that is called when a folds state was changed. */
     public interface FoldsStateListener {
         /** Called when any fold mark added/removed or it state changed (collapsed/expanded). */
-        void onFoldsStateChaged();
+        void onFoldsStateChage();
     }
 
     private final ListenerManager<FoldingListener> foldingListenerManager;
@@ -310,7 +310,7 @@ public class FoldingManager implements Document.TextListener {
             foldMarker.markCollapsed();
         }
         modifyFoldMarker(foldMarker);
-        dispatchFoldsStateChaged();
+        dispatchFoldsStateChage();
     }
 
     /**
@@ -408,11 +408,11 @@ public class FoldingManager implements Document.TextListener {
         });
     }
 
-    private void dispatchFoldsStateChaged() {
+    private void dispatchFoldsStateChage() {
         foldMarksStateListenerManager.dispatch(new Dispatcher<FoldsStateListener>() {
             @Override
             public void dispatch(FoldsStateListener listener) {
-                listener.onFoldsStateChaged();
+                listener.onFoldsStateChage();
             }
         });
     }
@@ -549,7 +549,7 @@ public class FoldingManager implements Document.TextListener {
             markerToPositionMap.put(new FoldMarker(isCollapsed, resources), range);
         }
         restoreCustomFolds();
-        dispatchFoldsStateChaged();
+        dispatchFoldsStateChage();
     }
 
     private void restoreCustomFolds() {
