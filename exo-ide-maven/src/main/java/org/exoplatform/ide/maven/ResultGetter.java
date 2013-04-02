@@ -29,7 +29,6 @@ import java.io.IOException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ResultGetter
-{
-   Result getResult(File projectDirectory) throws IOException;
+public interface ResultGetter {
+    Result getResult(File projectDirectory) throws IOException;
 }
