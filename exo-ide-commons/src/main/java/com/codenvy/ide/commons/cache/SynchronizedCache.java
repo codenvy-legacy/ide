@@ -25,48 +25,40 @@ package com.codenvy.ide.commons.cache;
  * @version $Id: $
  * @see Cache
  */
-public final class SynchronizedCache<K, V> implements Cache<K, V>
-{
-   private final Cache<K, V> delegate;
+public final class SynchronizedCache<K, V> implements Cache<K, V> {
+    private final Cache<K, V> delegate;
 
-   public SynchronizedCache(Cache<K,V> cache)
-   {
-      delegate = cache;
-   }
+    public SynchronizedCache(Cache<K, V> cache) {
+        delegate = cache;
+    }
 
-   @Override
-   public synchronized V get(K key)
-   {
-      return delegate.get(key);
-   }
+    @Override
+    public synchronized V get(K key) {
+        return delegate.get(key);
+    }
 
-   @Override
-   public synchronized V put(K key, V value)
-   {
-      return delegate.put(key, value);
-   }
+    @Override
+    public synchronized V put(K key, V value) {
+        return delegate.put(key, value);
+    }
 
-   @Override
-   public synchronized V remove(K key)
-   {
-      return delegate.remove(key);
-   }
+    @Override
+    public synchronized V remove(K key) {
+        return delegate.remove(key);
+    }
 
-   @Override
-   public synchronized boolean contains(K key)
-   {
-      return delegate.contains(key);
-   }
+    @Override
+    public synchronized boolean contains(K key) {
+        return delegate.contains(key);
+    }
 
-   @Override
-   public synchronized void clear()
-   {
-      delegate.clear();
-   }
+    @Override
+    public synchronized void clear() {
+        delegate.clear();
+    }
 
-   @Override
-   public int size()
-   {
-      return delegate.size();
-   }
+    @Override
+    public int size() {
+        return delegate.size();
+    }
 }

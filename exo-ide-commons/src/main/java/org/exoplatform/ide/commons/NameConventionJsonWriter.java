@@ -27,19 +27,16 @@ import java.io.Writer;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class NameConventionJsonWriter extends JsonWriter
-{
-   private final JsonNameConvention nameConvention;
+public class NameConventionJsonWriter extends JsonWriter {
+    private final JsonNameConvention nameConvention;
 
-   public NameConventionJsonWriter(Writer writer, JsonNameConvention nameConvention)
-   {
-      super(writer);
-      this.nameConvention = nameConvention;
-   }
+    public NameConventionJsonWriter(Writer writer, JsonNameConvention nameConvention) {
+        super(writer);
+        this.nameConvention = nameConvention;
+    }
 
-   @Override
-   public void writeKey(String key) throws JsonException
-   {
-      super.writeKey(nameConvention.toJsonName(key));
-   }
+    @Override
+    public void writeKey(String key) throws JsonException {
+        super.writeKey(nameConvention.toJsonName(key));
+    }
 }

@@ -30,23 +30,22 @@ package org.exoplatform.ide.commons;
  * @see NameConventionJsonParser
  * @see NameConventionJsonWriter
  */
-public interface JsonNameConvention
-{
-   /**
-    * Translate Java field name to JSON name, e.g. 'userName' -> 'user_name'
-    *
-    * @param javaName
-    *    Java field name
-    * @return JSON name
-    */
-   String toJsonName(String javaName);
+public interface JsonNameConvention {
+    /**
+     * Translate Java field name to JSON name, e.g. 'userName' -> 'user_name'
+     *
+     * @param javaName
+     *         Java field name
+     * @return JSON name
+     */
+    String toJsonName(String javaName);
 
-   /**
-    * Translate JSON name to Java field name, e.g. 'user_name' -> 'userName'
-    *
-    * @param jsonName
-    *    JSON name
-    * @return Java field name
-    */
-   String toJavaName(String jsonName);
+    /**
+     * Translate JSON name to Java field name, e.g. 'user_name' -> 'userName'
+     *
+     * @param jsonName
+     *         JSON name
+     * @return Java field name
+     */
+    String toJavaName(String jsonName);
 }

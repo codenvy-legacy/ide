@@ -24,17 +24,16 @@ package com.codenvy.ide.commons.cache;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Cache<K, V>
-{
-   V get(K key);
+public interface Cache<K, V> {
+    V get(K key);
 
-   V put(K key, V value);
+    V put(K key, V value);
 
-   V remove(K key);
+    V remove(K key);
 
-   boolean contains(K key);
+    boolean contains(K key);
 
-   void clear();
+    void clear();
 
-   int size();
+    int size();
 }

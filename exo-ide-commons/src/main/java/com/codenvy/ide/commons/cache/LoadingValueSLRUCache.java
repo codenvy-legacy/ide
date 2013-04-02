@@ -25,40 +25,36 @@ package com.codenvy.ide.commons.cache;
  * @version $Id: $
  * @see SLRUCache
  */
-public abstract class LoadingValueSLRUCache<K, V> extends SLRUCache<K, V>
-{
-   /**
-    * @param protectedSize
-    *    size of protected area.
-    * @param probationarySize
-    *    size of probationary area.
-    */
-   public LoadingValueSLRUCache(int protectedSize, int probationarySize)
-   {
-      super(protectedSize, probationarySize);
-   }
+public abstract class LoadingValueSLRUCache<K, V> extends SLRUCache<K, V> {
+    /**
+     * @param protectedSize
+     *         size of protected area.
+     * @param probationarySize
+     *         size of probationary area.
+     */
+    public LoadingValueSLRUCache(int protectedSize, int probationarySize) {
+        super(protectedSize, probationarySize);
+    }
 
-   @Override
-   public V get(K key)
-   {
-      V value = super.get(key);
-      if (value != null)
-      {
-         return value;
-      }
-      value = loadValue(key);
-      put(key, value);
-      return value;
-   }
+    @Override
+    public V get(K key) {
+        V value = super.get(key);
+        if (value != null) {
+            return value;
+        }
+        value = loadValue(key);
+        put(key, value);
+        return value;
+    }
 
-   /**
-    * Load value in implementation specific way.
-    *
-    * @param key
-    *    key
-    * @return value
-    * @throws RuntimeException
-    *    if failed to load value
-    */
-   protected abstract V loadValue(K key) throws RuntimeException;
+    /**
+     * Load value in implementation specific way.
+     *
+     * @param key
+     *         key
+     * @return value
+     * @throws RuntimeException
+     *         if failed to load value
+     */
+    protected abstract V loadValue(K key) throws RuntimeException;
 }

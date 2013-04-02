@@ -24,38 +24,31 @@ package com.codenvy.ide.commons;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class Pair
-{
-   private String name;
-   private String value;
+public final class Pair {
+    private String name;
+    private String value;
 
-   public Pair(String name, String value)
-   {
-      this.name = name;
-      this.value = value;
-   }
+    public Pair(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 
-   public Pair()
-   {
-   }
+    public Pair() {
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   public String getValue()
-   {
-      return value;
-   }
+    public String getValue() {
+        return value;
+    }
 
-   public void setValue(String value)
-   {
-      this.value = value;
-   }
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

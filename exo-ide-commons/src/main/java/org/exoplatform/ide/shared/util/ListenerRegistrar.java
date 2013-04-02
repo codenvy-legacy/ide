@@ -17,63 +17,53 @@ package org.exoplatform.ide.shared.util;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 
-/**
- * A manager to register or unregister listeners.
- */
+/** A manager to register or unregister listeners. */
 public interface ListenerRegistrar<T> {
 
-  /**
-   * A handle to allow removing the added listener.
-   */
-  public interface Remover {
-    void remove();
-  }
-
-  /**
-   * An object which helps to simplify management of multiple handlers that need
-   * to be removed. This is the recommended approach to managing removers as it
-   * guards against null checks and prevents forgetting to remove listeners.
-   */
-  public static class RemoverManager implements Remover {
-    private JsonArray<Remover> handlers;
-
-    /**
-     * Tracks a new handler so that it can be removed in bulk.
-     */
-    public RemoverManager track(Remover remover) {
-      if (handlers == null) {
-        handlers = JsonCollections.createArray();
-      }
-
-      handlers.add(remover);
-      return this;
+    /** A handle to allow removing the added listener. */
+    public interface Remover {
+        void remove();
     }
 
     /**
-     * Removes all tracked handlers and clears the stored list of handlers.
+     * An object which helps to simplify management of multiple handlers that need
+     * to be removed. This is the recommended approach to managing removers as it
+     * guards against null checks and prevents forgetting to remove listeners.
      */
-    @Override
-    public void remove() {
-      if (handlers == null) {
-        return;
-      }
+    public static class RemoverManager implements Remover {
+        private JsonArray<Remover> handlers;
 
-      for (int i = 0; i < handlers.size(); i++) {
-        handlers.get(i).remove();
-      }
+        /** Tracks a new handler so that it can be removed in bulk. */
+        public RemoverManager track(Remover remover) {
+            if (handlers == null) {
+                handlers = JsonCollections.createArray();
+            }
 
-      handlers.clear();
+            handlers.add(remover);
+            return this;
+        }
+
+        /** Removes all tracked handlers and clears the stored list of handlers. */
+        @Override
+        public void remove() {
+            if (handlers == null) {
+                return;
+            }
+
+            for (int i = 0; i < handlers.size(); i++) {
+                handlers.get(i).remove();
+            }
+
+            handlers.clear();
+        }
     }
-  }
 
-  /**
-   * Registers a new listener.
-   */
-  Remover add(T listener);
+    /** Registers a new listener. */
+    Remover add(T listener);
 
-  /**
-   * Removes a listener. It is strongly preferred you use the {@link Remover}
-   * returned by {@link #add(Object)} instead of calling this method directly.
-   */
-  void remove(T listener);
+    /**
+     * Removes a listener. It is strongly preferred you use the {@link Remover}
+     * returned by {@link #add(Object)} instead of calling this method directly.
+     */
+    void remove(T listener);
 }

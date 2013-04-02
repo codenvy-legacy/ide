@@ -14,9 +14,7 @@
 
 package org.exoplatform.ide.shared.util;
 
-/**
- * Interface that is called when there is a failure executing some logic.
- */
+/** Interface that is called when there is a failure executing some logic. */
 public interface ErrorCallback {
-  void onError();
+    void onError();
 }

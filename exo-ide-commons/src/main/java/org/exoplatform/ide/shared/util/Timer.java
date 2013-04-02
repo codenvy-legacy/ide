@@ -14,16 +14,14 @@
 
 package org.exoplatform.ide.shared.util;
 
-/**
- * A timer that can be used by shared code.
- */
+/** A timer that can be used by shared code. */
 public interface Timer {
-  
-  public interface Factory {
-    Timer createTimer(Runnable runnable);
-  }
-  
-  void schedule(int delayMs);
-  
-  void cancel();
+
+    public interface Factory {
+        Timer createTimer(Runnable runnable);
+    }
+
+    void schedule(int delayMs);
+
+    void cancel();
 }
