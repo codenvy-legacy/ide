@@ -18,28 +18,24 @@
  */
 package org.exoplatform.ide.editor.jsp.client;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Images Mar 11, 2011 10:54:45 AM evgen $
- * 
  */
-public interface Images extends ClientBundle
-{
-   Images INSTANCE = GWT.create(Images.class);
+public interface Images extends ClientBundle {
+    Images INSTANCE = GWT.create(Images.class);
 
-   String IMAGE_URL = UIHelper.getGadgetImagesURL();
+    String IMAGE_URL = UIHelper.getGadgetImagesURL();
 
-   String JSP = IMAGE_URL + "JSP.png";
+    String JSP = IMAGE_URL + "JSP.png";
 
-   @Source("org/exoplatform/ide/editor/jsp/public/images/JSP.png")
-   ImageResource jsp();
+    @Source("org/exoplatform/ide/editor/jsp/public/images/JSP.png")
+    ImageResource jsp();
 
 }
