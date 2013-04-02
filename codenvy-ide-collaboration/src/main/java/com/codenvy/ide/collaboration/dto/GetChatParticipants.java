@@ -26,7 +26,6 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.CHAT_PARTISIPANTS)
-public interface GetChatParticipants extends ClientToServerDto
-{
-   String projectId();
+public interface GetChatParticipants extends ClientToServerDto {
+    String projectId();
 }

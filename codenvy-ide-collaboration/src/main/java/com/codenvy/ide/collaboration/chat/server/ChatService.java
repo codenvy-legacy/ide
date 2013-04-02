@@ -24,55 +24,48 @@ import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.GetChatParticipan
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ParticipantInfoImpl;
 import com.codenvy.ide.collaboration.watcher.server.ProjectUsers;
 
-import java.util.Set;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
 @Path("ide/collaboration/chat")
-public class ChatService
-{
-   @Inject
-   private ProjectUsers projectUsers;
+public class ChatService {
+    @Inject
+    private ProjectUsers projectUsers;
 
-   @Path("participants")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public String chatParticipants(String message)
-   {
-      GetChatParticipantsImpl get = GetChatParticipantsImpl.fromJsonString(message);
-      Set<String> users = projectUsers.getProjectUsers(get.projectId());
-      GetChatParticipantsResponseImpl response = GetChatParticipantsResponseImpl.make();
-      if (users != null)
-      {
-         for (String clientId : users)
-         {
-            ParticipantInfoImpl participant = projectUsers.getParticipant(clientId);
-            if(participant != null)
-            {
-               response.addParticipants(participant);
+    @Path("participants")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String chatParticipants(String message) {
+        GetChatParticipantsImpl get = GetChatParticipantsImpl.fromJsonString(message);
+        Set<String> users = projectUsers.getProjectUsers(get.projectId());
+        GetChatParticipantsResponseImpl response = GetChatParticipantsResponseImpl.make();
+        if (users != null) {
+            for (String clientId : users) {
+                ParticipantInfoImpl participant = projectUsers.getParticipant(clientId);
+                if (participant != null) {
+                    response.addParticipants(participant);
+                }
             }
-         }
-      }
-      return response.toJson();
-   }
+        }
+        return response.toJson();
+    }
 
-   @Path("send/message")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void sendMessage(String message)
-   {
-      ChatMessageImpl chatMessage = ChatMessageImpl.fromJsonString(message);
-      projectUsers.broadcastToClients(message, chatMessage.getProjectId());
-   }
+    @Path("send/message")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void sendMessage(String message) {
+        ChatMessageImpl chatMessage = ChatMessageImpl.fromJsonString(message);
+        projectUsers.broadcastToClients(message, chatMessage.getProjectId());
+    }
 
 }

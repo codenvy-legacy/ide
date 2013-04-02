@@ -23,8 +23,6 @@ import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ProjectOpenedDtoI
 
 import org.everrest.websockets.WSConnection;
 
-import java.security.Principal;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -32,38 +30,36 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+import java.security.Principal;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
 @Path("ide/vfs/watch")
-public class VfsWatcherService
-{
+public class VfsWatcherService {
 
-   @Inject
-   private VfsWatcher vfsWatcher;
+    @Inject
+    private VfsWatcher vfsWatcher;
 
-   @Path("/project/opened")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void projectOpened(String message, @Context WSConnection connection, @Context SecurityContext securityContext)
-   {
-      Principal principal = securityContext.getUserPrincipal();
-      ProjectOpenedDtoImpl openedDto = ProjectOpenedDtoImpl.fromJsonString(message);
-      vfsWatcher.openProject(connection.getHttpSession().getId(), principal != null ? principal.getName() : "anonymous",
-         openedDto);
-   }
+    @Path("/project/opened")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void projectOpened(String message, @Context WSConnection connection, @Context SecurityContext securityContext) {
+        Principal principal = securityContext.getUserPrincipal();
+        ProjectOpenedDtoImpl openedDto = ProjectOpenedDtoImpl.fromJsonString(message);
+        vfsWatcher.openProject(connection.getHttpSession().getId(), principal != null ? principal.getName() : "anonymous",
+                               openedDto);
+    }
 
-   @Path("/project/closed")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void projectClosed(String message, @Context WSConnection connection, @Context SecurityContext securityContext)
-   {
-      Principal principal = securityContext.getUserPrincipal();
-      ProjectClosedDtoImpl closedDto = ProjectClosedDtoImpl.fromJsonString(message);
-      vfsWatcher.closeProject(connection.getHttpSession().getId(),
-         principal != null ? principal.getName() : "anonymous", closedDto.projectId());
-   }
+    @Path("/project/closed")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void projectClosed(String message, @Context WSConnection connection, @Context SecurityContext securityContext) {
+        Principal principal = securityContext.getUserPrincipal();
+        ProjectClosedDtoImpl closedDto = ProjectClosedDtoImpl.fromJsonString(message);
+        vfsWatcher.closeProject(connection.getHttpSession().getId(),
+                                principal != null ? principal.getName() : "anonymous", closedDto.projectId());
+    }
 
 }

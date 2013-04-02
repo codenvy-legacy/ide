@@ -24,7 +24,6 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface SendCodePointHandler extends EventHandler
-{
-   void onSendCodePoint(SendCodePointEvent event);
+public interface SendCodePointHandler extends EventHandler {
+    void onSendCodePoint(SendCodePointEvent event);
 }

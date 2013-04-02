@@ -26,11 +26,10 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.CHAT_PARTISIPANT_REMOVE)
-public interface ChatParticipantRemove extends ServerToClientDto
-{
-   String projectId();
+public interface ChatParticipantRemove extends ServerToClientDto {
+    String projectId();
 
-   String userId();
+    String userId();
 
-   String clientId();
+    String clientId();
 }

@@ -18,35 +18,27 @@
  */
 package com.codenvy.ide.collaboration.watcher.server;
 
+import javax.ws.rs.core.Application;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class VfsWatcherApplication extends Application
-{
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return Collections.emptySet();
-   }
+public class VfsWatcherApplication extends Application {
+    /** {@inheritDoc} */
+    @Override
+    public Set<Object> getSingletons() {
+        return Collections.emptySet();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> classes = new HashSet<Class<?>>();
-      classes.add(VfsWatcherService.class);
-      return classes;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<Class<?>>();
+        classes.add(VfsWatcherService.class);
+        return classes;
+    }
 }

@@ -24,7 +24,6 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface ShowHideChatHandler extends EventHandler
-{
-   void onShowHideChat(ShowHideChatEvent event);
+public interface ShowHideChatHandler extends EventHandler {
+    void onShowHideChat(ShowHideChatEvent event);
 }

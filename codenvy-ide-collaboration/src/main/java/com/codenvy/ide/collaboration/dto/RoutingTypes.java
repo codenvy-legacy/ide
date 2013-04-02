@@ -25,36 +25,33 @@ package com.codenvy.ide.collaboration.dto;
  *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class RoutingTypes
-{
-   private RoutingTypes()
-   {
-   }
+public class RoutingTypes {
+    private RoutingTypes() {
+    }
 
-   public static final int PROJECT_OPENED = 1;
+    public static final int PROJECT_OPENED = 1;
 
-   public static final int PROJECT_CLOSED = 2;
+    public static final int PROJECT_CLOSED = 2;
 
-   public static final int ITEM_DELETED = 3;
+    public static final int ITEM_DELETED = 3;
 
-   public static final int ITEM_CREATED = 4;
+    public static final int ITEM_CREATED = 4;
 
-   public static final int ITEM_MOVED = 5;
+    public static final int ITEM_MOVED = 5;
 
-   public static final int ITEM_RENAMED = 6;
+    public static final int ITEM_RENAMED = 6;
 
-   public static final int CHAT_MESSAGE = 7;
+    public static final int CHAT_MESSAGE = 7;
 
-   public static final int CHAT_CODE_POINT = 8;
+    public static final int CHAT_CODE_POINT = 8;
 
-   public static final int CHAT_PARTISIPANTS = 9;
+    public static final int CHAT_PARTISIPANTS = 9;
 
-   public static final int CHAT_PARTISIPANTS_RESPONSE = 10;
+    public static final int CHAT_PARTISIPANTS_RESPONSE = 10;
 
-   public static final int CHAT_PARTISIPANT_ADD = 11;
+    public static final int CHAT_PARTISIPANT_ADD = 11;
 
-   public static final int CHAT_PARTISIPANT_REMOVE = 12;
+    public static final int CHAT_PARTISIPANT_REMOVE = 12;
 
 }

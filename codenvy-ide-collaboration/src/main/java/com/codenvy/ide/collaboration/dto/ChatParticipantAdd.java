@@ -26,9 +26,8 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.CHAT_PARTISIPANT_ADD)
-public interface ChatParticipantAdd extends ServerToClientDto
-{
-   String projectId();
+public interface ChatParticipantAdd extends ServerToClientDto {
+    String projectId();
 
-   ParticipantInfo participant();
+    ParticipantInfo participant();
 }

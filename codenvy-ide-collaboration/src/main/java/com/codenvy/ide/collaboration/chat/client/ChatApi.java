@@ -29,15 +29,14 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class ChatApi extends FrontendApi
-{
+public class ChatApi extends FrontendApi {
 
-   public SendApi<ChatMessage> SEND_MESSAGE = makeApi("ide/collaboration/chat/send/message");
+    public SendApi<ChatMessage> SEND_MESSAGE = makeApi("ide/collaboration/chat/send/message");
 
-   public RequestResponseApi<GetChatParticipants, GetChatParticipantsResponse> GET_CHAT_PARTISIPANTS = makeApi("ide/collaboration/chat/participants");
+    public RequestResponseApi<GetChatParticipants, GetChatParticipantsResponse> GET_CHAT_PARTISIPANTS =
+            makeApi("ide/collaboration/chat/participants");
 
-   public ChatApi(MessageBus messageBus)
-   {
-      super(messageBus);
-   }
+    public ChatApi(MessageBus messageBus) {
+        super(messageBus);
+    }
 }

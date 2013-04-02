@@ -34,62 +34,49 @@ import org.exoplatform.ide.json.client.Jso;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class VfsWatcherExtension extends Extension implements ConnectionOpenedHandler, UserInfoReceivedHandler
-{
+public class VfsWatcherExtension extends Extension implements ConnectionOpenedHandler, UserInfoReceivedHandler {
 
-   private UserInfo userInfo;
+    private UserInfo userInfo;
 
-   private MessageFilter messageFilter = new MessageFilter();
+    private MessageFilter messageFilter = new MessageFilter();
 
-   private CollaborationApi collaborationApi;
+    private CollaborationApi collaborationApi;
 
-   private boolean connectionOpened = false;
+    private boolean connectionOpened = false;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.eventBus().addHandler(UserInfoReceivedEvent.TYPE, this);
-      IDE.messageBus().setOnOpenHandler(this);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void initialize() {
+        IDE.eventBus().addHandler(UserInfoReceivedEvent.TYPE, this);
+        IDE.messageBus().setOnOpenHandler(this);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      userInfo = event.getUserInfo();
-      if (connectionOpened)
-      {
-         subscribe();
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onUserInfoReceived(UserInfoReceivedEvent event) {
+        userInfo = event.getUserInfo();
+        if (connectionOpened) {
+            subscribe();
+        }
+    }
 
-   private void subscribe()
-   {
-      collaborationApi = new CollaborationApi(IDE.messageBus());
-      new VfsWatcher(messageFilter, IDE.eventBus(), collaborationApi);
-      IDE.messageBus().subscribe("vfs_watcher." + userInfo.getClientId(), new MessageHandler()
-      {
-         @Override
-         public void onMessage(String message)
-         {
-            ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
-            messageFilter.dispatchMessage(dto);
-         }
-      });
-   }
+    private void subscribe() {
+        collaborationApi = new CollaborationApi(IDE.messageBus());
+        new VfsWatcher(messageFilter, IDE.eventBus(), collaborationApi);
+        IDE.messageBus().subscribe("vfs_watcher." + userInfo.getClientId(), new MessageHandler() {
+            @Override
+            public void onMessage(String message) {
+                ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
+                messageFilter.dispatchMessage(dto);
+            }
+        });
+    }
 
-   @Override
-   public void onOpen()
-   {
-      connectionOpened = true;
-      if (userInfo != null)
-      {
-         subscribe();
-      }
-   }
+    @Override
+    public void onOpen() {
+        connectionOpened = true;
+        if (userInfo != null) {
+            subscribe();
+        }
+    }
 }

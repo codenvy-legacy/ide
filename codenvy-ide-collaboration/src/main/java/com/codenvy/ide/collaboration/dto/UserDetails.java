@@ -22,42 +22,39 @@ package com.codenvy.ide.collaboration.dto;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface UserDetails
-{
-   /**
-    * Returns a unique ID for the user. This ID should be used in client-to-server
-    * requests that identify a specific user.
-    */
-   String getUserId();
+public interface UserDetails {
+    /**
+     * Returns a unique ID for the user. This ID should be used in client-to-server
+     * requests that identify a specific user.
+     */
+    String getUserId();
 
-   /**
-    * Returns the email address of a user. The email address may be obfuscated
-    * depending on the user's privacy settings, and may not be a valid email
-    * address.
-    */
-   String getDisplayEmail();
+    /**
+     * Returns the email address of a user. The email address may be obfuscated
+     * depending on the user's privacy settings, and may not be a valid email
+     * address.
+     */
+    String getDisplayEmail();
 
-   /**
-    * Returns the display name of the user. If the display name is not available,
-    * returns the email.
-    */
-   String getDisplayName();
+    /**
+     * Returns the display name of the user. If the display name is not available,
+     * returns the email.
+     */
+    String getDisplayName();
 
-   /**
-    * Returns the given (first) name of the user. If the given name is not
-    * available, returns the display name. If the display name is not available
-    * either, returns the email.
-    */
-   String getGivenName();
+    /**
+     * Returns the given (first) name of the user. If the given name is not
+     * available, returns the display name. If the display name is not available
+     * either, returns the email.
+     */
+    String getGivenName();
 
-   /**
-    * Returns the portrait URL with the default size of 24 pixels.
-    */
-   String getPortraitUrl();
+    /** Returns the portrait URL with the default size of 24 pixels. */
+    String getPortraitUrl();
 
-   /**
-    * Returns a boolean indicating that this {@link UserDetails} represents the
-    * current user.
-    */
-   boolean isCurrentUser();
+    /**
+     * Returns a boolean indicating that this {@link UserDetails} represents the
+     * current user.
+     */
+    boolean isCurrentUser();
 }
