@@ -36,192 +36,156 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class JavaProjectTreeItem extends PackageExplorerTreeItem
-{
+public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
-   public JavaProjectTreeItem(JavaProject item)
-   {
-      super(item);
-   }
+    public JavaProjectTreeItem(JavaProject item) {
+        super(item);
+    }
 
-   @Override
-   protected ImageResource getItemIcon()
-   {
-      return ProjectResolver.getImageForProject(((JavaProject)getUserObject()).getProjectType());
-   }
+    @Override
+    protected ImageResource getItemIcon() {
+        return ProjectResolver.getImageForProject(((JavaProject)getUserObject()).getProjectType());
+    }
 
-   @Override
-   protected String getItemTitle()
-   {
-      return ((Item)getUserObject()).getName();
-   }
+    @Override
+    protected String getItemTitle() {
+        return ((Item)getUserObject()).getName();
+    }
 
-   @Override
-   public void refresh(boolean expand)
-   {
-      render();
+    @Override
+    public void refresh(boolean expand) {
+        render();
 
       /*
        * Does not refresh children if tree item closed
        */
-      if (!getState() && !expand)
-      {
-         return;
-      }
+        if (!getState() && !expand) {
+            return;
+        }
 
       /*
        * Remove nonexistent
        */
-      removeNonexistendTreeItems();
+        removeNonexistendTreeItems();
 
       /*
        * Add missing
        */
 
-      JavaProject javaProject = (JavaProject)getUserObject();
-      int index = 0;
+        JavaProject javaProject = (JavaProject)getUserObject();
+        int index = 0;
       /*
        * Modules
        */
-      for (ProjectModel module : javaProject.getModules())
-      {
-         PackageExplorerTreeItem child = getChildByItemId(module.getId());
-         if (child == null)
-         {
-            child = new JavaProjectTreeItem((JavaProject)module);
-            insertItem(index, child);
-         }
-         else
-         {
-            child.setUserObject(module);
-            child.refresh(false);
-         }
+        for (ProjectModel module : javaProject.getModules()) {
+            PackageExplorerTreeItem child = getChildByItemId(module.getId());
+            if (child == null) {
+                child = new JavaProjectTreeItem((JavaProject)module);
+                insertItem(index, child);
+            } else {
+                child.setUserObject(module);
+                child.refresh(false);
+            }
 
-         index++;
-      }
+            index++;
+        }
 
       /*
        * Source Directories
        */
-      for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories())
-      {
-         PackageExplorerTreeItem child = getChildByItemId(sourceDirectory.getId());
-         if (child == null)
-         {
-            child = new SourceDirectoryTreeItem(sourceDirectory);
-            insertItem(index, child);
-         }
-         else
-         {
-            child.setUserObject(sourceDirectory);
-            child.refresh(false);
-         }
+        for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories()) {
+            PackageExplorerTreeItem child = getChildByItemId(sourceDirectory.getId());
+            if (child == null) {
+                child = new SourceDirectoryTreeItem(sourceDirectory);
+                insertItem(index, child);
+            } else {
+                child.setUserObject(sourceDirectory);
+                child.refresh(false);
+            }
 
-         index++;
-      }
+            index++;
+        }
 
       /*
        * Folders and files
        */
 
-      Collections.sort(javaProject.getChildren().getItems(), COMPARATOR);
+        Collections.sort(javaProject.getChildren().getItems(), COMPARATOR);
 
-      for (Item item : javaProject.getChildren().getItems())
-      {
-         if (DirectoryFilter.get().matchWithPattern(item.getName()))
-         {
-            continue;
-         }
-
-         if (item instanceof FolderModel && isSource(item, javaProject))
-         {
-            continue;
-         }
-
-         PackageExplorerTreeItem child = getChildByItemId(item.getId());
-         if (child == null)
-         {
-            if (item instanceof FolderModel)
-            {
-               child = new FolderTreeItem((FolderModel)item);
-            }
-            else
-            {
-               child = new FileTreeItem((FileModel)item);
+        for (Item item : javaProject.getChildren().getItems()) {
+            if (DirectoryFilter.get().matchWithPattern(item.getName())) {
+                continue;
             }
 
-            insertItem(index, child);
-         }
-         else
-         {
-            child.setUserObject(item);
-            child.refresh(false);
-         }
-
-         index++;
-      }
-
-      if (expand)
-      {
-         setState(true);
-      }
-   }
-
-   private boolean isSource(Item item, ProjectModel proj)
-   {
-      if (!(proj instanceof JavaProject))
-      {
-         return false;
-      }
-
-      JavaProject javaProject = (JavaProject)proj;
-      for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories())
-      {
-         if (item.getPath().startsWith(sourceDirectory.getPath()))
-         {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   @Override
-   public List<Item> getItems()
-   {
-      JavaProject project = (JavaProject)getUserObject();
-
-      ArrayList<Item> items = new ArrayList<Item>();
-
-      items.addAll(project.getModules());
-      items.addAll(project.getSourceDirectories());
-      items.addAll(project.getClasspathFolders());
-
-      for (Item item : project.getChildren().getItems())
-      {
-         if (DirectoryFilter.get().matchWithPattern(item.getName()))
-         {
-            continue;
-         }
-
-         if (item instanceof FileModel)
-         {
-            items.add(item);
-         }
-         else if (item instanceof FolderModel)
-         {
-            if (isSource(item, project))
-            {
-               continue;
+            if (item instanceof FolderModel && isSource(item, javaProject)) {
+                continue;
             }
 
-            items.add(item);
-         }
-      }
+            PackageExplorerTreeItem child = getChildByItemId(item.getId());
+            if (child == null) {
+                if (item instanceof FolderModel) {
+                    child = new FolderTreeItem((FolderModel)item);
+                } else {
+                    child = new FileTreeItem((FileModel)item);
+                }
 
-      return items;
-   }
+                insertItem(index, child);
+            } else {
+                child.setUserObject(item);
+                child.refresh(false);
+            }
+
+            index++;
+        }
+
+        if (expand) {
+            setState(true);
+        }
+    }
+
+    private boolean isSource(Item item, ProjectModel proj) {
+        if (!(proj instanceof JavaProject)) {
+            return false;
+        }
+
+        JavaProject javaProject = (JavaProject)proj;
+        for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories()) {
+            if (item.getPath().startsWith(sourceDirectory.getPath())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<Item> getItems() {
+        JavaProject project = (JavaProject)getUserObject();
+
+        ArrayList<Item> items = new ArrayList<Item>();
+
+        items.addAll(project.getModules());
+        items.addAll(project.getSourceDirectories());
+        items.addAll(project.getClasspathFolders());
+
+        for (Item item : project.getChildren().getItems()) {
+            if (DirectoryFilter.get().matchWithPattern(item.getName())) {
+                continue;
+            }
+
+            if (item instanceof FileModel) {
+                items.add(item);
+            } else if (item instanceof FolderModel) {
+                if (isSource(item, project)) {
+                    continue;
+                }
+
+                items.add(item);
+            }
+        }
+
+        return items;
+    }
 
 }

@@ -10,13 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.core;
 
-public interface INamingRequestor
-{
-   void acceptNameWithPrefixAndSuffix(char[] name, boolean isFirstPrefix, boolean isFirstSuffix, int reusedCharacters);
+public interface INamingRequestor {
+    void acceptNameWithPrefixAndSuffix(char[] name, boolean isFirstPrefix, boolean isFirstSuffix, int reusedCharacters);
 
-   void acceptNameWithPrefix(char[] name, boolean isFirstPrefix, int reusedCharacters);
+    void acceptNameWithPrefix(char[] name, boolean isFirstPrefix, int reusedCharacters);
 
-   void acceptNameWithSuffix(char[] name, boolean isFirstSuffix, int reusedCharacters);
+    void acceptNameWithSuffix(char[] name, boolean isFirstSuffix, int reusedCharacters);
 
-   void acceptNameWithoutPrefixAndSuffix(char[] name, int reusedCharacters);
+    void acceptNameWithoutPrefixAndSuffix(char[] name, int reusedCharacters);
 }

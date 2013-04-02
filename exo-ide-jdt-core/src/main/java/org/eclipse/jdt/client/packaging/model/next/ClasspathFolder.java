@@ -26,22 +26,18 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class ClasspathFolder extends ItemImpl
-{
+public class ClasspathFolder extends ItemImpl {
 
-   private List<Classpath> classpathList = new ArrayList<Classpath>();
-   
-   public ClasspathFolder(String name)
-   {
-      super(null);
-      setName(name);
-   }
+    private List<Classpath> classpathList = new ArrayList<Classpath>();
 
-   public List<Classpath> getClasspathList()
-   {
-      return classpathList;
-   }
+    public ClasspathFolder(String name) {
+        super(null);
+        setName(name);
+    }
+
+    public List<Classpath> getClasspathList() {
+        return classpathList;
+    }
 
 }

@@ -20,43 +20,32 @@ package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
 
-public class GetterSetterEntry
-{
-   private final IVariableBinding field;
+public class GetterSetterEntry {
+    private final IVariableBinding field;
 
-   private final boolean isGetter;
+    private final boolean isGetter;
 
-   private final boolean isFinal;
+    private final boolean isFinal;
 
-   GetterSetterEntry(IVariableBinding field, boolean isGetterEntry, boolean isFinal)
-   {
-      this.field = field;
-      this.isGetter = isGetterEntry;
-      this.isFinal = isFinal;
-   }
+    GetterSetterEntry(IVariableBinding field, boolean isGetterEntry, boolean isFinal) {
+        this.field = field;
+        this.isGetter = isGetterEntry;
+        this.isFinal = isFinal;
+    }
 
-   /**
-    * @return the field
-    */
-   public IVariableBinding getField()
-   {
-      return field;
-   }
+    /** @return the field */
+    public IVariableBinding getField() {
+        return field;
+    }
 
-   /**
-    * @return the isGetter
-    */
-   public boolean isGetter()
-   {
-      return isGetter;
-   }
+    /** @return the isGetter */
+    public boolean isGetter() {
+        return isGetter;
+    }
 
-   /**
-    * @return the isFinal
-    */
-   public boolean isFinal()
-   {
-      return isFinal;
-   }
+    /** @return the isFinal */
+    public boolean isFinal() {
+        return isFinal;
+    }
 
 }

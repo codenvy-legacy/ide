@@ -23,16 +23,12 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 12:14:05 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
  */
-public class ModelUtil
-{
-   public static boolean isImplicitImport(String string, CompilationUnit fCompilationUnit)
-   {
-      if ("java.lang".equals(string))
-      {
-         return true;
-      }
-      return false;
-   }
+public class ModelUtil {
+    public static boolean isImplicitImport(String string, CompilationUnit fCompilationUnit) {
+        if ("java.lang".equals(string)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -14,24 +14,20 @@ import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 import org.eclipse.jdt.client.internal.compiler.ast.MethodDeclaration;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 
-public class CompletionOnMethodReturnType extends MethodDeclaration
-{
-   public CompletionOnMethodReturnType(TypeReference returnType, CompilationResult compilationResult)
-   {
-      super(compilationResult);
-      this.returnType = returnType;
-      this.sourceStart = returnType.sourceStart;
-      this.sourceEnd = returnType.sourceEnd;
-   }
+public class CompletionOnMethodReturnType extends MethodDeclaration {
+    public CompletionOnMethodReturnType(TypeReference returnType, CompilationResult compilationResult) {
+        super(compilationResult);
+        this.returnType = returnType;
+        this.sourceStart = returnType.sourceStart;
+        this.sourceEnd = returnType.sourceEnd;
+    }
 
-   public void resolveStatements()
-   {
-      throw new CompletionNodeFound(this, this.scope);
-   }
+    public void resolveStatements() {
+        throw new CompletionNodeFound(this, this.scope);
+    }
 
-   public StringBuffer print(int tab, StringBuffer output)
-   {
-      return this.returnType.print(tab, output);
-   }
+    public StringBuffer print(int tab, StringBuffer output) {
+        return this.returnType.print(tab, output);
+    }
 
 }

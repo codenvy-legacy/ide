@@ -18,7 +18,6 @@
  */
 package org.eclipse.jdt.client;
 
-import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -27,11 +26,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
-import org.eclipse.jdt.client.event.CleanProjectEvent;
-import org.eclipse.jdt.client.event.CleanProjectHandler;
-import org.eclipse.jdt.client.event.PackageCreatedEvent;
-import org.eclipse.jdt.client.event.PackageCreatedHandler;
-import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
+import org.eclipse.jdt.client.event.*;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
@@ -46,13 +41,7 @@ import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
@@ -60,6 +49,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringSet;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -71,131 +61,106 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:51:51 AM Mar 5, 2012 evgen $
- *
  */
 public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpenedHandler, VfsChangedHandler,
-   ActiveProjectChangedHandler, FileSavedHandler, ProjectClosedHandler, PackageCreatedHandler
-{
+                                              ActiveProjectChangedHandler, FileSavedHandler, ProjectClosedHandler, PackageCreatedHandler {
 
-   private String vfsId;
+    private String vfsId;
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   private HandlerRegistration saveFileHandler;
+    private HandlerRegistration saveFileHandler;
 
-   private final SupportedProjectResolver projectResolver;
+    private final SupportedProjectResolver projectResolver;
 
-   private boolean stillWork;
+    private boolean stillWork;
 
-   private static JavaClasspathResolver instance;
+    private static JavaClasspathResolver instance;
 
-   private Map<String, UpdateDependencyStatusHandler> statusHandler = new HashMap<String, UpdateDependencyStatusHandler>();
+    private Map<String, UpdateDependencyStatusHandler> statusHandler = new HashMap<String, UpdateDependencyStatusHandler>();
 
-   /**
-    *
-    */
-   public JavaClasspathResolver(SupportedProjectResolver projectResolver)
-   {
-      this.projectResolver = projectResolver;
-      IDE.addHandler(CleanProjectEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      IDE.addHandler(PackageCreatedEvent.TYPE, this);
-      instance = this;
-   }
+    /**
+     *
+     */
+    public JavaClasspathResolver(SupportedProjectResolver projectResolver) {
+        this.projectResolver = projectResolver;
+        IDE.addHandler(CleanProjectEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+        IDE.addHandler(PackageCreatedEvent.TYPE, this);
+        instance = this;
+    }
 
-   public static JavaClasspathResolver getInstance()
-   {
-      return instance;
-   }
+    public static JavaClasspathResolver getInstance() {
+        return instance;
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
-    */
-   @Override
-   public void onFileSaved(FileSavedEvent event)
-   {
-      if ("pom.xml".equals(event.getFile().getName()))
-      {
-         if (event.getFile().getProject() != null)
-         {
-            if (event.getFile().getProject().getProjectType().equals(ProjectType.MultiModule.value()))
-            {
-               return;
+    /** @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event
+     * .FileSavedEvent) */
+    @Override
+    public void onFileSaved(FileSavedEvent event) {
+        if ("pom.xml".equals(event.getFile().getName())) {
+            if (event.getFile().getProject() != null) {
+                if (event.getFile().getProject().getProjectType().equals(ProjectType.MultiModule.value())) {
+                    return;
+                }
+                if (event.getFile().getProject().getProject() != null) {
+                    return; //Check multi module project
+                }
+                resolveDependencies(event.getFile().getProject());
+            } else {
+                resolveDependencies(this.project);
             }
-            if (event.getFile().getProject().getProject() != null)
-            {
-               return; //Check multi module project
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        if (saveFileHandler != null) {
+            saveFileHandler.removeHandler();
+            saveFileHandler = null;
+        }
+
+        if (project.getProjectType().equals(ProjectType.MultiModule.value())) {
+            //TODO stop resolving on multimodule project
+        } else {
+            UpdateDependencyStatusHandler handler = statusHandler.remove(event.getProject().getId());
+            if (handler != null && isStillWork()) {
+                handler.requestError(event.getProject().getId(), new Exception("Resolving dependencies were stopped."));
+                stillWork = false;
             }
-            resolveDependencies(event.getFile().getProject());
-         }
-         else
-         {
-            resolveDependencies(this.project);
-         }
-      }
-   }
+        }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      if (saveFileHandler != null)
-      {
-         saveFileHandler.removeHandler();
-         saveFileHandler = null;
-      }
+        /**
+         * TODO request from builder to stop resolving dependencies operation directly on server
+         * for this moment we mask resolving dependencies when we change current open project, but resolving is continues
+         * on server side by builder.
+         */
 
-      if (project.getProjectType().equals(ProjectType.MultiModule.value()))
-      {
-         //TODO stop resolving on multimodule project
-      }
-      else
-      {
-         UpdateDependencyStatusHandler handler = statusHandler.remove(event.getProject().getId());
-         if (handler != null && isStillWork())
-         {
-            handler.requestError(event.getProject().getId(), new Exception("Resolving dependencies were stopped."));
-            stillWork = false;
-         }
-      }
+        this.project = null;
+    }
 
-      /**
-       * TODO request from builder to stop resolving dependencies operation directly on server
-       * for this moment we mask resolving dependencies when we change current open project, but resolving is continues
-       * on server side by builder.
-       */
+    /** @see org.eclipse.jdt.client.event.CleanProjectHandler#onCleanProject(org.eclipse.jdt.client.event.CleanProjectEvent) */
+    @Override
+    public void onCleanProject(CleanProjectEvent event) {
+        resolveDependencies(this.project);
+    }
 
-      this.project = null;
-   }
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        vfsId = event.getVfsInfo().getId();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.event.CleanProjectHandler#onCleanProject(org.eclipse.jdt.client.event.CleanProjectEvent)
-    */
-   @Override
-   public void onCleanProject(CleanProjectEvent event)
-   {
-      resolveDependencies(this.project);
-   }
-
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      vfsId = event.getVfsInfo().getId();
-   }
-
-   @Override
-   public void onProjectOpened(final ProjectOpenedEvent event)
-   {
-      saveFileHandler = IDE.addHandler(FileSavedEvent.TYPE, this);
-      this.project = event.getProject();
-      final ArrayList<ProjectModel> mvnModules = new ArrayList<ProjectModel>();
-      if (project.getProjectType().equals(ProjectType.MultiModule.value()))
-      {
+    @Override
+    public void onProjectOpened(final ProjectOpenedEvent event) {
+        saveFileHandler = IDE.addHandler(FileSavedEvent.TYPE, this);
+        this.project = event.getProject();
+        final ArrayList<ProjectModel> mvnModules = new ArrayList<ProjectModel>();
+        if (project.getProjectType().equals(ProjectType.MultiModule.value())) {
 //         List<ProjectModel> children = project.getModules();
 //         for (ProjectModel item : children)
 //         {
@@ -204,262 +169,210 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
 //               mvnModules.add(item);
 //            }
 //         }
-         return;
-      }
-      else if (projectResolver.isProjectSupported(project.getProjectType()))
-      {
-         mvnModules.add(project);
-      }
+            return;
+        } else if (projectResolver.isProjectSupported(project.getProjectType())) {
+            mvnModules.add(project);
+        }
 
-      Timer t = new Timer()
-      {
-         @Override
-         public void run()
-         {
-            resolveDependencies(mvnModules.toArray(new ProjectModel[mvnModules.size()]));
-         }
-      };
-      t.schedule(4000);
-   }
-
-   /**
-    * @see org.eclipse.jdt.client.event.PackageCreatedHandler#onPackageCreated(org.eclipse.jdt.client.event.PackageCreatedEvent)
-    */
-   @Override
-   public void onPackageCreated(PackageCreatedEvent event)
-   {
-      FolderModel parentFolder = event.getParentFolder();
-      ProjectModel project = parentFolder.getProject();
-      String sourcePath =
-         project.hasProperty("sourceFolder") ? project.getPropertyValue("sourceFolder")
-            : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
-      String path = project.getPath() + "/" + sourcePath;
-      String pack = "";
-      if (!path.equals(parentFolder.getPath()))
-      {
-         pack = parentFolder.getPath().substring(path.length() + 1);
-      }
-      pack = pack.replaceAll("\\\\", ".");
-      String newPackage = event.getPack();
-      if (newPackage.contains("."))
-      {
-         String[] packageFragments = newPackage.split("\\.");
-         StringBuilder builder = new StringBuilder(pack);
-         for (String fragment : packageFragments)
-         {
-            if (builder.length() != 0)
-            {
-               builder.append('.');
+        Timer t = new Timer() {
+            @Override
+            public void run() {
+                resolveDependencies(mvnModules.toArray(new ProjectModel[mvnModules.size()]));
             }
-            builder.append(fragment);
-            TypeInfoStorage.get().getPackages(project.getId()).add(builder.toString());
-         }
-      }
-      else
-      {
-         TypeInfoStorage.get().getPackages(project.getId()).add(pack + '.' + newPackage);
-      }
+        };
+        t.schedule(4000);
+    }
 
-   }
+    /** @see org.eclipse.jdt.client.event.PackageCreatedHandler#onPackageCreated(org.eclipse.jdt.client.event.PackageCreatedEvent) */
+    @Override
+    public void onPackageCreated(PackageCreatedEvent event) {
+        FolderModel parentFolder = event.getParentFolder();
+        ProjectModel project = parentFolder.getProject();
+        String sourcePath =
+                project.hasProperty("sourceFolder") ? project.getPropertyValue("sourceFolder")
+                                                    : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
+        String path = project.getPath() + "/" + sourcePath;
+        String pack = "";
+        if (!path.equals(parentFolder.getPath())) {
+            pack = parentFolder.getPath().substring(path.length() + 1);
+        }
+        pack = pack.replaceAll("\\\\", ".");
+        String newPackage = event.getPack();
+        if (newPackage.contains(".")) {
+            String[] packageFragments = newPackage.split("\\.");
+            StringBuilder builder = new StringBuilder(pack);
+            for (String fragment : packageFragments) {
+                if (builder.length() != 0) {
+                    builder.append('.');
+                }
+                builder.append(fragment);
+                TypeInfoStorage.get().getPackages(project.getId()).add(builder.toString());
+            }
+        } else {
+            TypeInfoStorage.get().getPackages(project.getId()).add(pack + '.' + newPackage);
+        }
 
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      project = event.getProject();
-   }
+    }
 
-   private void resolveDependencies(ProjectModel... projects)
-   {
-      for (ProjectModel projectModel : projects)
-      {
-         //for each project create own update status handler and assign for each their project id
-         statusHandler.put(projectModel.getId(), new UpdateDependencyStatusHandler(projectModel.getName()));
-      }
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        project = event.getProject();
+    }
 
-      stillWork = true;
-      if (WebSocket.isSupported())
-      {
-         resolveDependenciesWS(projects);
-      }
-      else
-      {
-         resolveDependenciesRest(projects);
-      }
+    private void resolveDependencies(ProjectModel... projects) {
+        for (ProjectModel projectModel : projects) {
+            //for each project create own update status handler and assign for each their project id
+            statusHandler.put(projectModel.getId(), new UpdateDependencyStatusHandler(projectModel.getName()));
+        }
 
-   }
-
-
-   private void resolveDependenciesWS(ProjectModel... projects)
-   {
-      for (ProjectModel project : projects)
-      {
-         final String projectId = project.getId();
-         statusHandler.get(projectId).requestInProgress(projectId);
-         String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
-         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
-
-         RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
-         try
-         {
-            IDE.messageBus().send(
-               message,
-               new RequestCallback<StringBuilder>(
-                  (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller)
-               {
-
-                  @Override
-                  protected void onSuccess(StringBuilder result)
-                  {
-                     dependenciesResolvedSuccessed(projectId, result);
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     stillWork = false;
-
-                     UpdateDependencyStatusHandler handler = statusHandler.get(projectId);
-                     if (handler != null)
-                     {
-                        IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
-                        handler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
-                     }
-                  }
-               });
-         }
-         catch (WebSocketException e)
-         {
+        stillWork = true;
+        if (WebSocket.isSupported()) {
+            resolveDependenciesWS(projects);
+        } else {
             resolveDependenciesRest(projects);
-         }
-      }
-   }
+        }
 
-   private void resolveDependenciesRest(ProjectModel... projects)
-   {
-      for (ProjectModel project : projects)
-      {
-         final String projectId = project.getId();
-         statusHandler.get(projectId).requestInProgress(projectId);
-         String url =
-            Utils.getRestContext() + "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid="
-               + vfsId;
-         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+    }
 
-         try
-         {
-            AsyncRequest.build(RequestBuilder.GET, url, true).send(
-               new AsyncRequestCallback<StringBuilder>((Unmarshallable<StringBuilder>)unmarshaller)
-               {
 
-                  @Override
-                  protected void onSuccess(StringBuilder result)
-                  {
-                     dependenciesResolvedSuccessed(projectId, result);
-                  }
+    private void resolveDependenciesWS(ProjectModel... projects) {
+        for (ProjectModel project : projects) {
+            final String projectId = project.getId();
+            statusHandler.get(projectId).requestInProgress(projectId);
+            String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
+            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     stillWork = false;
+            RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
+            try {
+                IDE.messageBus().send(
+                        message,
+                        new RequestCallback<StringBuilder>(
+                                (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller) {
 
-                     UpdateDependencyStatusHandler handler = statusHandler.get(projectId);
-                     if (handler != null)
-                     {
-                        IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
-                        handler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
-                     }
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            e.printStackTrace();
-         }
-      }
-   }
+                            @Override
+                            protected void onSuccess(StringBuilder result) {
+                                dependenciesResolvedSuccessed(projectId, result);
+                            }
 
-   public boolean isStillWork()
-   {
-      return stillWork;
-   }
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                stillWork = false;
 
-   /**
-    *
-    */
-   private void doClean()
-   {
-      TypeInfoStorage.get().clear();
-      NameEnvironment.clearFQNBlackList();
-   }
+                                UpdateDependencyStatusHandler handler = statusHandler.get(projectId);
+                                if (handler != null) {
+                                    IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
+                                    handler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
+                                }
+                            }
+                        });
+            } catch (WebSocketException e) {
+                resolveDependenciesRest(projects);
+            }
+        }
+    }
 
-   /**
-    * @param updateDependencyStatusHandler
-    * @param projectId
-    * @param result
-    */
-   private void dependenciesResolvedSuccessed(final String projectId, StringBuilder result)
-   {
-      statusHandler.remove(projectId).requestFinished(projectId);
-      if (result != null && result.length() > 0)
-      {
-         JSONArray arr = JSONParser.parseLenient(result.toString()).isArray();
-         JsonStringSet stringSet = JsonCollections.createStringSet();
-         for (int i = 0; i < arr.size(); i++)
-         {
-            stringSet.add(arr.get(i).isString().stringValue());
-         }
-         doClean();
-         TypeInfoStorage.get().setPackages(projectId, stringSet);
-         IDE.fireEvent(new ReparseOpenedFilesEvent());
-      }
-      stillWork = false;
-   }
+    private void resolveDependenciesRest(ProjectModel... projects) {
+        for (ProjectModel project : projects) {
+            final String projectId = project.getId();
+            statusHandler.get(projectId).requestInProgress(projectId);
+            String url =
+                    Utils.getRestContext() + "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid="
+                    + vfsId;
+            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
-   private class UpdateDependencyStatusHandler implements RequestStatusHandler
-   {
+            try {
+                AsyncRequest.build(RequestBuilder.GET, url, true).send(
+                        new AsyncRequestCallback<StringBuilder>((Unmarshallable<StringBuilder>)unmarshaller) {
 
-      private String projectName;
+                            @Override
+                            protected void onSuccess(StringBuilder result) {
+                                dependenciesResolvedSuccessed(projectId, result);
+                            }
 
-      /**
-       * @param projectName project's name
-       */
-      public UpdateDependencyStatusHandler(String projectName)
-      {
-         super();
-         this.projectName = projectName;
-      }
+                            @Override
+                            protected void onFailure(Throwable exception) {
+                                stillWork = false;
 
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestInProgress(java.lang.String)
-       */
-      @Override
-      public void requestInProgress(String id)
-      {
-         Job job = new Job(id, JobStatus.STARTED);
-         job.setStartMessage(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyStarted(projectName));
-         IDE.fireEvent(new JobChangeEvent(job));
-      }
+                                UpdateDependencyStatusHandler handler = statusHandler.get(projectId);
+                                if (handler != null) {
+                                    IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
+                                    handler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
+                                }
+                            }
+                        });
+            } catch (RequestException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestFinished(java.lang.String)
-       */
-      @Override
-      public void requestFinished(String id)
-      {
-         Job job = new Job(id, JobStatus.FINISHED);
-         job.setFinishMessage(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyFinished(projectName));
-         IDE.fireEvent(new JobChangeEvent(job));
-      }
+    public boolean isStillWork() {
+        return stillWork;
+    }
 
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
-       */
-      @Override
-      public void requestError(String id, Throwable exception)
-      {
-         Job job = new Job(id, JobStatus.ERROR);
-         job.setError(exception);
-         IDE.fireEvent(new JobChangeEvent(job));
-      }
-   }
+    /**
+     *
+     */
+    private void doClean() {
+        TypeInfoStorage.get().clear();
+        NameEnvironment.clearFQNBlackList();
+    }
+
+    /**
+     * @param updateDependencyStatusHandler
+     * @param projectId
+     * @param result
+     */
+    private void dependenciesResolvedSuccessed(final String projectId, StringBuilder result) {
+        statusHandler.remove(projectId).requestFinished(projectId);
+        if (result != null && result.length() > 0) {
+            JSONArray arr = JSONParser.parseLenient(result.toString()).isArray();
+            JsonStringSet stringSet = JsonCollections.createStringSet();
+            for (int i = 0; i < arr.size(); i++) {
+                stringSet.add(arr.get(i).isString().stringValue());
+            }
+            doClean();
+            TypeInfoStorage.get().setPackages(projectId, stringSet);
+            IDE.fireEvent(new ReparseOpenedFilesEvent());
+        }
+        stillWork = false;
+    }
+
+    private class UpdateDependencyStatusHandler implements RequestStatusHandler {
+
+        private String projectName;
+
+        /**
+         * @param projectName
+         *         project's name
+         */
+        public UpdateDependencyStatusHandler(String projectName) {
+            super();
+            this.projectName = projectName;
+        }
+
+        /** @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestInProgress(java.lang.String) */
+        @Override
+        public void requestInProgress(String id) {
+            Job job = new Job(id, JobStatus.STARTED);
+            job.setStartMessage(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyStarted(projectName));
+            IDE.fireEvent(new JobChangeEvent(job));
+        }
+
+        /** @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestFinished(java.lang.String) */
+        @Override
+        public void requestFinished(String id) {
+            Job job = new Job(id, JobStatus.FINISHED);
+            job.setFinishMessage(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyFinished(projectName));
+            IDE.fireEvent(new JobChangeEvent(job));
+        }
+
+        /** @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable) */
+        @Override
+        public void requestError(String id, Throwable exception) {
+            Job job = new Job(id, JobStatus.ERROR);
+            job.setError(exception);
+            IDE.fireEvent(new JobChangeEvent(job));
+        }
+    }
 }

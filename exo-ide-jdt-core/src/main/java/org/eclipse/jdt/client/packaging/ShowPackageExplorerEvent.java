@@ -23,23 +23,19 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class ShowPackageExplorerEvent extends GwtEvent<ShowPackageExplorerHandler>
-{
+public class ShowPackageExplorerEvent extends GwtEvent<ShowPackageExplorerHandler> {
 
-   public static final GwtEvent.Type<ShowPackageExplorerHandler> TYPE = new GwtEvent.Type<ShowPackageExplorerHandler>();
+    public static final GwtEvent.Type<ShowPackageExplorerHandler> TYPE = new GwtEvent.Type<ShowPackageExplorerHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowPackageExplorerHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowPackageExplorerHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ShowPackageExplorerHandler handler)
-   {
-      handler.onShowPackageExplorer(this);
-   }
+    @Override
+    protected void dispatch(ShowPackageExplorerHandler handler) {
+        handler.onShowPackageExplorer(this);
+    }
 
 }

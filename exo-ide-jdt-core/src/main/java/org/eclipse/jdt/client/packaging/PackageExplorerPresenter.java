@@ -26,41 +26,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.editor.event.*;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
-import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent;
-import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
-import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
-import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
-import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
-import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.api.FolderOpenedEvent;
-import org.exoplatform.ide.client.framework.project.api.IDEProject;
-import org.exoplatform.ide.client.framework.project.api.ProjectBuilder;
+import org.exoplatform.ide.client.framework.navigation.event.*;
+import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.api.*;
 import org.exoplatform.ide.client.framework.project.api.ProjectBuilder.Builder;
-import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
-import org.exoplatform.ide.client.framework.project.api.TreeRefreshedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.*;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsSavedEvent;
-import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -78,16 +51,14 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- *
  */
 public class PackageExplorerPresenter implements ShowPackageExplorerHandler, ViewOpenedHandler, ViewClosedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, SelectItemHandler,
-   EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-   ApplicationSettingsReceivedHandler, ItemsSelectedHandler, TreeRefreshedHandler,
-   AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler
-{
+                                                 ProjectOpenedHandler, ProjectClosedHandler, SelectItemHandler,
+                                                 EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+                                                 ApplicationSettingsReceivedHandler, ItemsSelectedHandler, TreeRefreshedHandler,
+                                                 AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler {
 
-   private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
+    private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
 
 //   private static final String RECEIVE_CHILDREN_ERROR_MSG = "Service is not deployed.<br>Parent folder not found.";
 //
@@ -95,95 +66,84 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //
 //   private static final String MESSAGE_UPDATE_PROJECT = "Updating project structure...";
 
-   private PackageExplorerDisplay display;
+    private PackageExplorerDisplay display;
 
 
-   private IDEProject project;
-   
+    private IDEProject project;
+
 
 //   private Item selectedItem;
-   
-   //private Project projectItem;
+
+    //private Project projectItem;
 
 //   private Item itemToSelect;
 
-   //private ProjectTreeParser treeParser;
+    //private ProjectTreeParser treeParser;
 
-   private boolean linkWithEditor = false;
+    private boolean linkWithEditor = false;
 
-   private FileModel editorActiveFile;
+    private FileModel editorActiveFile;
 
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
-   
-   private Map<String, Editor> openedEditors = new HashMap<String, Editor>();
+    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   public PackageExplorerPresenter()
-   {
-      IDE.getInstance().addControl(new ShowPackageExplorerControl(), Docking.TOOLBAR);
+    private Map<String, Editor> openedEditors = new HashMap<String, Editor>();
 
-      IDE.addHandler(ShowPackageExplorerEvent.TYPE, this);
+    public PackageExplorerPresenter() {
+        IDE.getInstance().addControl(new ShowPackageExplorerControl(), Docking.TOOLBAR);
 
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ShowPackageExplorerEvent.TYPE, this);
 
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ViewOpenedEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      IDE.addHandler(SelectItemEvent.TYPE, this);
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
 
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(TreeRefreshedEvent.TYPE, this);
-      //IDE.addHandler(ItemLockedEvent.TYPE, this);
-      IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
-      IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
-      IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
-      
-      for (String type : JavaProjects.getList())
-      {
-         ProjectBuilder.addBuilder(type, new Builder()
-         {
-            @Override
-            public IDEProject build(ProjectModel project)
-            {
-               return new JavaProject(project);
+        IDE.addHandler(SelectItemEvent.TYPE, this);
+
+        IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+        IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+        IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+        IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+        IDE.addHandler(TreeRefreshedEvent.TYPE, this);
+        //IDE.addHandler(ItemLockedEvent.TYPE, this);
+        IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
+        IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
+        IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
+
+        for (String type : JavaProjects.getList()) {
+            ProjectBuilder.addBuilder(type, new Builder() {
+                @Override
+                public IDEProject build(ProjectModel project) {
+                    return new JavaProject(project);
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void onShowPackageExplorer(ShowPackageExplorerEvent event) {
+        if (display == null) {
+            if (project == null) {
+                return;
             }
-         });
-      }
 
-   }
+            if (!JavaProjects.contains(project)) {
+                return;
+            }
 
-   @Override
-   public void onShowPackageExplorer(ShowPackageExplorerEvent event)
-   {
-      if (display == null)
-      {
-         if (project == null)
-         {
-            return;
-         }
+            display = GWT.create(PackageExplorerDisplay.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+        } else {
+            IDE.getInstance().closeView(display.asView().getId());
+        }
+    }
 
-         if (!JavaProjects.contains(project))
-         {
-            return;
-         }
-
-         display = GWT.create(PackageExplorerDisplay.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-      }
-      else
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-   }
-
-   private void bindDisplay()
-   {
+    private void bindDisplay() {
 //      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
 //      {
 //         @Override
@@ -201,7 +161,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //            });            
 //         }
 //      });
-      
+
 //      display.getBrowserTree().addDoubleClickHandler(new DoubleClickHandler()
 //      {
 //         @Override
@@ -232,24 +192,21 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //         }
 //      });
 
-      display.getLinkWithEditorButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            linkWithEditorButtonClicked();
-         }
-      });
+        display.getLinkWithEditorButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                linkWithEditorButtonClicked();
+            }
+        });
 
-      display.setLinkWithEditorButtonSelected(linkWithEditor);
-      
-      //display.setLockTokens(applicationSettings.getValueAsMap("lock-tokens"));      
-   }
+        display.setLinkWithEditorButtonSelected(linkWithEditor);
 
-   private void treeItemSelected()
-   {
-      Item selectedItem = display.getSelectedItem();
-      
+        //display.setLockTokens(applicationSettings.getValueAsMap("lock-tokens"));
+    }
+
+    private void treeItemSelected() {
+        Item selectedItem = display.getSelectedItem();
+
 //      Object selectedObject = display.getSelectedObject();
 //      
 //      if (selectedObject instanceof Project)
@@ -283,99 +240,82 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //         selectedItems.add(selectedItem);
 //      }
 
-      if (selectedItem != null)
-      {         
-         changeActiveFile(selectedItem);
-         IDE.fireEvent(new ItemsSelectedEvent(selectedItem, display.asView()));
-      }
-   }
+        if (selectedItem != null) {
+            changeActiveFile(selectedItem);
+            IDE.fireEvent(new ItemsSelectedEvent(selectedItem, display.asView()));
+        }
+    }
 
-   /**
-    * Switch Editor to selected file.
-    *
-    * @param item
-    */
-   private void changeActiveFile(final Item item)
-   {
-      if (!linkWithEditor || item == null || !(item instanceof FileModel) || !openedFiles.containsKey(item.getId())
-         || editorActiveFile.getId().equals(item.getId()))
-      {
-         return;
-      }
+    /**
+     * Switch Editor to selected file.
+     *
+     * @param item
+     */
+    private void changeActiveFile(final Item item) {
+        if (!linkWithEditor || item == null || !(item instanceof FileModel) || !openedFiles.containsKey(item.getId())
+            || editorActiveFile.getId().equals(item.getId())) {
+            return;
+        }
 
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)item));
-         }
-      });
-   }
-
-   @Override
-   public void onSelectItem(final SelectItemEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
-      
-      if (display.asView().isViewVisible())
-      {
-         display.selectItem(event.getItem());
-
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
-            public void execute()
-            {
-               IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
+            public void execute() {
+                IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)item));
             }
-         });         
-      }
-   }
+        });
+    }
 
-   /**
-    * Handle click on "Link with Editor" button.
-    */
-   private void linkWithEditorButtonClicked()
-   {
-      linkWithEditor = !linkWithEditor;
-      display.setLinkWithEditorButtonSelected(linkWithEditor);
+    @Override
+    public void onSelectItem(final SelectItemEvent event) {
+        if (display == null) {
+            return;
+        }
 
-      applicationSettings
-         .setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, new Boolean(linkWithEditor), Store.COOKIES);
+        if (display.asView().isViewVisible()) {
+            display.selectItem(event.getItem());
 
-      //SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
-      IDE.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
+                }
+            });
+        }
+    }
+
+    /** Handle click on "Link with Editor" button. */
+    private void linkWithEditorButtonClicked() {
+        linkWithEditor = !linkWithEditor;
+        display.setLinkWithEditorButtonSelected(linkWithEditor);
+
+        applicationSettings
+                .setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, new Boolean(linkWithEditor), Store.COOKIES);
+
+        //SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
+        IDE.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
 
       /*
        * fire event for show-hide line numbers command be able to update state.
        */
-      IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
+        IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
 
-      if (linkWithEditor && editorActiveFile != null)
-      {
-         display.selectItem(editorActiveFile);
-      }
-   }
+        if (linkWithEditor && editorActiveFile != null) {
+            display.selectItem(editorActiveFile);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      editorActiveFile = event.getFile();
-      if (display == null || !linkWithEditor || editorActiveFile == null)
-      {
-         return;
-      }
+    /** @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform
+     * .ide.client.framework.editor.event.EditorActiveFileChangedEvent) */
+    @Override
+    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event) {
+        editorActiveFile = event.getFile();
+        if (display == null || !linkWithEditor || editorActiveFile == null) {
+            return;
+        }
 
-      display.selectItem(event.getFile());
+        display.selectItem(event.getFile());
 //      goToItem(event.getFile(), false);
-   }
+    }
 
 //   /**
 //    * Navigate to item in the project tree.
@@ -412,88 +352,74 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //      });
 //   }
 
-   @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-      openedEditors.remove(event.getFile());
-   }
+    @Override
+    public void onEditorFileClosed(EditorFileClosedEvent event) {
+        openedFiles = event.getOpenedFiles();
+        openedEditors.remove(event.getFile());
+    }
 
-   @Override
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-      openedEditors.put(event.getFile().getId(), event.getEditor());
-   }
+    @Override
+    public void onEditorFileOpened(EditorFileOpenedEvent event) {
+        openedFiles = event.getOpenedFiles();
+        openedEditors.put(event.getFile().getId(), event.getEditor());
+    }
 
-   private ApplicationSettings applicationSettings;
+    private ApplicationSettings applicationSettings;
 
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
+    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event) {
+        applicationSettings = event.getApplicationSettings();
 
-      if (applicationSettings.getValueAsBoolean(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG) == null)
-      {
-         applicationSettings.setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, Boolean.FALSE, Store.COOKIES);
-      }
-      else
-      {
-         linkWithEditor = applicationSettings.getValueAsBoolean(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG);
-      }
-   }
-   
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      project = (IDEProject)event.getProject();
-      
-      if (display == null)
-      {
-          if (JavaProjects.contains(project))
-          {
-             display = GWT.create(PackageExplorerDisplay.class);
-             bindDisplay();
-             IDE.getInstance().openView(display.asView());                  
-          }
-   
-          return;         
-      }
+        if (applicationSettings.getValueAsBoolean(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG) == null) {
+            applicationSettings.setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, Boolean.FALSE, Store.COOKIES);
+        } else {
+            linkWithEditor = applicationSettings.getValueAsBoolean(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG);
+        }
+    }
 
-      if (!JavaProjects.contains(project))
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-         return;
-      }
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        project = (IDEProject)event.getProject();
 
-      display.setProject(project);
-   }
+        if (display == null) {
+            if (JavaProjects.contains(project)) {
+                display = GWT.create(PackageExplorerDisplay.class);
+                bindDisplay();
+                IDE.getInstance().openView(display.asView());
+            }
 
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      project = null;
+            return;
+        }
 
-      if (display == null)
-      {
-         return;
-      }
-      
-      display.setProject(null);
+        if (!JavaProjects.contains(project)) {
+            IDE.getInstance().closeView(display.asView().getId());
+            return;
+        }
+
+        display.setProject(project);
+    }
+
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        project = null;
+
+        if (display == null) {
+            return;
+        }
+
+        display.setProject(null);
 
 //      display.getBrowserTree().setValue(null);
 //      display.setPackageExplorerTreeVisible(false);
-   }
+    }
 
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof PackageExplorerDisplay && project != null)
-      {
-         display.setProject(project);
-         
+    @Override
+    public void onViewOpened(ViewOpenedEvent event) {
+        if (event.getView() instanceof PackageExplorerDisplay && project != null) {
+            display.setProject(project);
+
 //         display.setPackageExplorerTreeVisible(true);
 //         display.getBrowserTree().setValue(openedProject);
-         
+
 //         Scheduler.get().scheduleDeferred(new ScheduledCommand()
 //         {
 //            @Override
@@ -503,57 +429,47 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //               display.getBrowserTree().setValue(openedProject);
 //            }
 //         });
-      }
-   }
+        }
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof PackageExplorerDisplay)
-      {
-         display = null;
-      }
-   }
-   
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() == 1 && linkWithEditor)
-      {
-         Item selectedItem = event.getSelectedItems().get(0);
-         if (editorActiveFile != null && !editorActiveFile.getId().equals(selectedItem.getId()) &&
-                  (selectedItem instanceof FileModel))
-         {
-            IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)selectedItem));
-         }
-      }
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof PackageExplorerDisplay) {
+            display = null;
+        }
+    }
 
-   @Override
-   public void onTreeRefreshed(final TreeRefreshedEvent event)
-   {
-      if (display != null)
-      {
-         //System.out.println("tree refreshed. item to select >> " + itemToSelect);
-         //display.getBrowserTree().setValue(event.getFolder());
-         display.refreshTree();
-         
-         if (event.getItemToSelect() != null)
-         {
-            display.selectItem(event.getItemToSelect());
-         }
-         
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-            @Override
-            public void execute()
-            {
-               List<Item> visibleItems = display.getVisibleItems();
-               IDE.fireEvent(new FolderOpenedEvent(event.getFolder(), visibleItems));
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() == 1 && linkWithEditor) {
+            Item selectedItem = event.getSelectedItems().get(0);
+            if (editorActiveFile != null && !editorActiveFile.getId().equals(selectedItem.getId()) &&
+                (selectedItem instanceof FileModel)) {
+                IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)selectedItem));
             }
-         });
-      }
-   }
+        }
+    }
+
+    @Override
+    public void onTreeRefreshed(final TreeRefreshedEvent event) {
+        if (display != null) {
+            //System.out.println("tree refreshed. item to select >> " + itemToSelect);
+            //display.getBrowserTree().setValue(event.getFolder());
+            display.refreshTree();
+
+            if (event.getItemToSelect() != null) {
+                display.selectItem(event.getItemToSelect());
+            }
+
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    List<Item> visibleItems = display.getVisibleItems();
+                    IDE.fireEvent(new FolderOpenedEvent(event.getFolder(), visibleItems));
+                }
+            });
+        }
+    }
 
 //   @Override
 //   public void onItemLocked(ItemLockedEvent event)
@@ -572,50 +488,40 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 //         display.updateItemState(file);
 //      }      
 //   }
-   
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler#onAddItemTreeIcon(org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent)
-    */
-   @Override
-   public void onAddItemTreeIcon(AddItemTreeIconEvent event)
-   {
-      //display can be null at this point. This check does not affects functionality.
-      //TODO Must be reviewed by client-side guys.
-      if (display != null)
-      {
-         display.addItemsIcons(event.getTreeItemIcons());
-      }
 
-   }   
-   
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler#onRemoveItemTreeIcon(org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent)
-    */
-   @Override
-   public void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event)
-   {
-      if (display != null)
-      {
-         display.removeItemIcons(event.getIconsToRemove());         
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler#onAddItemTreeIcon(org.exoplatform.ide.client
+     * .framework.navigation.event.AddItemTreeIconEvent) */
+    @Override
+    public void onAddItemTreeIcon(AddItemTreeIconEvent event) {
+        //display can be null at this point. This check does not affects functionality.
+        //TODO Must be reviewed by client-side guys.
+        if (display != null) {
+            display.addItemsIcons(event.getTreeItemIcons());
+        }
 
-   @Override
-   public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
-      
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            display.refreshTree();
-         }
-      });      
-   }   
-   
+    }
+
+    /** @see org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler#onRemoveItemTreeIcon(org.exoplatform.ide
+     * .client.framework.navigation.event.RemoveItemTreeIconEvent) */
+    @Override
+    public void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event) {
+        if (display != null) {
+            display.removeItemIcons(event.getIconsToRemove());
+        }
+    }
+
+    @Override
+    public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event) {
+        if (display == null) {
+            return;
+        }
+
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                display.refreshTree();
+            }
+        });
+    }
+
 }

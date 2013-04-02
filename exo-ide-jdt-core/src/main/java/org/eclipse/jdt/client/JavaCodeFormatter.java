@@ -27,19 +27,14 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 3:18:10 PM Apr 2, 2012 evgen $
- * 
  */
-public class JavaCodeFormatter implements CodeFormatter
-{
+public class JavaCodeFormatter implements CodeFormatter {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.CodeFormatter#format(org.exoplatform.ide.editor.shared.text.IDocument)
-    */
-   @Override
-   public TextEdit format(IDocument document)
-   {
-      return CodeFormatterUtil.format2(org.eclipse.jdt.client.core.formatter.CodeFormatter.K_COMPILATION_UNIT,
-         document.get(), 0, null, JavaCore.getOptions());
-   }
+    /** @see org.exoplatform.ide.client.framework.editor.CodeFormatter#format(org.exoplatform.ide.editor.shared.text.IDocument) */
+    @Override
+    public TextEdit format(IDocument document) {
+        return CodeFormatterUtil.format2(org.eclipse.jdt.client.core.formatter.CodeFormatter.K_COMPILATION_UNIT,
+                                         document.get(), 0, null, JavaCore.getOptions());
+    }
 
 }

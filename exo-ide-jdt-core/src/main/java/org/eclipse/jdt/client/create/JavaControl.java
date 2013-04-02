@@ -34,65 +34,50 @@ import org.exoplatform.ide.vfs.shared.Item;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
-{
+public class JavaControl extends SimpleControl implements IDEControl, ItemsSelectedHandler {
 
-   /**
-    * @param id
-    */
-   public JavaControl(String id)
-   {
-      super(id);
-      setShowInContextMenu(true);
-   }
+    /** @param id */
+    public JavaControl(String id) {
+        super(id);
+        setShowInContextMenu(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() != 1)
-      {
-         setEnabled(false);
-         return;
-      }
-      
-      if ( !(event.getSelectedItems().get(0) instanceof FileModel) && !(event.getSelectedItems().get(0) instanceof FolderModel) )
-      {
-         setEnabled(false);
-         return;
-      }
-      
-      Item item = event.getSelectedItems().get(0);
-      ProjectModel project = ((ItemContext)item).getProject();
-      
-      if (project == null)
-      {
-         return;
-      }
-      
-      if (!(project instanceof JavaProject))
-      {
-         return;
-      }
-      
-      JavaProject javaProject = (JavaProject)project;
-      for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories())
-      {
-         if (item.getPath().startsWith(sourceDirectory.getPath()))
-         {
-            setEnabled(true);
+    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     * .framework.navigation.event.ItemsSelectedEvent) */
+    @Override
+    public void onItemsSelected(ItemsSelectedEvent event) {
+        if (event.getSelectedItems().size() != 1) {
+            setEnabled(false);
             return;
-         }
-      }
-      
-      setEnabled(false);
-      
-      
-      
+        }
+
+        if (!(event.getSelectedItems().get(0) instanceof FileModel) && !(event.getSelectedItems().get(0) instanceof FolderModel)) {
+            setEnabled(false);
+            return;
+        }
+
+        Item item = event.getSelectedItems().get(0);
+        ProjectModel project = ((ItemContext)item).getProject();
+
+        if (project == null) {
+            return;
+        }
+
+        if (!(project instanceof JavaProject)) {
+            return;
+        }
+
+        JavaProject javaProject = (JavaProject)project;
+        for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories()) {
+            if (item.getPath().startsWith(sourceDirectory.getPath())) {
+                setEnabled(true);
+                return;
+            }
+        }
+
+        setEnabled(false);
+
 
 //      if (project != null)
 //      {
@@ -122,11 +107,8 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
 //            return;
 //         }
 //      }
-      
-      
-      
-      
-      
+
+
 //      if (event.getSelectedItems().size() == 1 && event.getSelectedItems().get(0) instanceof ItemContext)
 //      {
 //         Item item = event.getSelectedItems().get(0);
@@ -163,7 +145,7 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
 //      }
 
 //      setEnabled(false);
-   }
+    }
 
 //   private boolean isInResourceDirectory(Item item)
 //   {
@@ -193,15 +175,12 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
 ////      return false;
 //   }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+    }
 
 //   private List<String> getDefaultPaths()
 //   {
@@ -213,5 +192,5 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
 //
 //      return sourceDirs;
 //   }
-   
+
 }

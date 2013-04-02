@@ -18,19 +18,13 @@
  */
 package org.eclipse.jdt.client.codeassistant;
 
-import com.google.gwt.json.client.JSONString;
-
 import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 
 import org.eclipse.jdt.client.Preferences;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

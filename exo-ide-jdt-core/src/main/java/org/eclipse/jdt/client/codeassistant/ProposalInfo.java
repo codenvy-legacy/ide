@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
-import org.eclipse.jdt.client.core.IJavaElement;
-
 import com.google.gwt.user.client.ui.Widget;
+
+import org.eclipse.jdt.client.core.IJavaElement;
 
 public abstract class ProposalInfo
 {

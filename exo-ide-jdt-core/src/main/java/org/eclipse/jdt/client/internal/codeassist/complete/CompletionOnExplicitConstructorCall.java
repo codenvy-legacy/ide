@@ -36,62 +36,51 @@ import org.eclipse.jdt.client.internal.compiler.ast.ExplicitConstructorCall;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 
-public class CompletionOnExplicitConstructorCall extends ExplicitConstructorCall
-{
+public class CompletionOnExplicitConstructorCall extends ExplicitConstructorCall {
 
-   public CompletionOnExplicitConstructorCall(int accessMode)
-   {
-      super(accessMode);
-   }
+    public CompletionOnExplicitConstructorCall(int accessMode) {
+        super(accessMode);
+    }
 
-   public StringBuffer printStatement(int tab, StringBuffer output)
-   {
+    public StringBuffer printStatement(int tab, StringBuffer output) {
 
-      printIndent(tab, output);
-      output.append("<CompleteOnExplicitConstructorCall:"); //$NON-NLS-1$
-      if (this.qualification != null)
-         this.qualification.printExpression(0, output).append('.');
-      if (this.accessMode == This)
-      {
-         output.append("this("); //$NON-NLS-1$
-      }
-      else
-      {
-         output.append("super("); //$NON-NLS-1$
-      }
-      if (this.arguments != null)
-      {
-         for (int i = 0; i < this.arguments.length; i++)
-         {
-            if (i > 0)
-               output.append(", "); //$NON-NLS-1$
-            this.arguments[i].printExpression(0, output);
-         }
-      }
-      return output.append(")>;"); //$NON-NLS-1$
-   }
+        printIndent(tab, output);
+        output.append("<CompleteOnExplicitConstructorCall:"); //$NON-NLS-1$
+        if (this.qualification != null)
+            this.qualification.printExpression(0, output).append('.');
+        if (this.accessMode == This) {
+            output.append("this("); //$NON-NLS-1$
+        } else {
+            output.append("super("); //$NON-NLS-1$
+        }
+        if (this.arguments != null) {
+            for (int i = 0; i < this.arguments.length; i++) {
+                if (i > 0)
+                    output.append(", "); //$NON-NLS-1$
+                this.arguments[i].printExpression(0, output);
+            }
+        }
+        return output.append(")>;"); //$NON-NLS-1$
+    }
 
-   public void resolve(BlockScope scope)
-   {
+    public void resolve(BlockScope scope) {
 
-      ReferenceBinding receiverType = scope.enclosingSourceType();
+        ReferenceBinding receiverType = scope.enclosingSourceType();
 
-      if (this.arguments != null)
-      {
-         int argsLength = this.arguments.length;
-         for (int a = argsLength; --a >= 0;)
-            this.arguments[a].resolveType(scope);
-      }
+        if (this.arguments != null) {
+            int argsLength = this.arguments.length;
+            for (int a = argsLength; --a >= 0; )
+                this.arguments[a].resolveType(scope);
+        }
 
-      if (this.accessMode != This && receiverType != null)
-      {
-         if (receiverType.isHierarchyInconsistent())
+        if (this.accessMode != This && receiverType != null) {
+            if (receiverType.isHierarchyInconsistent())
+                throw new CompletionNodeFound();
+            receiverType = receiverType.superclass();
+        }
+        if (receiverType == null)
             throw new CompletionNodeFound();
-         receiverType = receiverType.superclass();
-      }
-      if (receiverType == null)
-         throw new CompletionNodeFound();
-      else
-         throw new CompletionNodeFound(this, receiverType, scope);
-   }
+        else
+            throw new CompletionNodeFound(this, receiverType, scope);
+    }
 }

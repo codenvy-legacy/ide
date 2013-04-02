@@ -26,23 +26,23 @@
 
 <module>
 
-   <!-- Inherit the core Web Toolkit stuff. -->
-   <inherits name='com.google.gwt.user.User' />
-   <inherits name="com.google.gwt.http.HTTP" />
-   <inherits name='com.google.gwt.user.Debug' />
-   <inherits name='com.google.gwt.json.JSON' />
-   
-   <inherits name='com.google.web.bindery.autobean.AutoBean'/>
+    <!-- Inherit the core Web Toolkit stuff. -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.json.JSON'/>
 
-   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
-   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
-   <inherits name='org.exoplatform.ide.editor.Editor' />
-   <inherits name='org.exoplatform.ide.editor.Editor' />
-   <inherits name='org.exoplatform.ide.codeassistant.jvm.CodeAssistantJvm'/>
-   <inherits name='com.google.collide.CollabEditor'/>
+    <inherits name='com.google.web.bindery.autobean.AutoBean'/>
 
-   <source path="" />
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
+    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework'/>
+    <inherits name='org.exoplatform.ide.editor.Editor'/>
+    <inherits name='org.exoplatform.ide.editor.Editor'/>
+    <inherits name='org.exoplatform.ide.codeassistant.jvm.CodeAssistantJvm'/>
+    <inherits name='com.google.collide.CollabEditor'/>
 
-   <entry-point class="org.exoplatform.ide.editor.java.JdtEditorExtension" />
-   
+    <source path=""/>
+
+    <entry-point class="org.exoplatform.ide.editor.java.JdtEditorExtension"/>
+
 </module>

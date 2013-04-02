@@ -24,23 +24,20 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:25:09 PM evgen $
  */
-public class ShowAstEvent extends GwtEvent<ShowAstHandler>
-{
+public class ShowAstEvent extends GwtEvent<ShowAstHandler> {
 
-   public static final GwtEvent.Type<ShowAstHandler> TYPE = new Type<ShowAstHandler>();
+    public static final GwtEvent.Type<ShowAstHandler> TYPE = new Type<ShowAstHandler>();
 
-   /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowAstHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowAstHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
-   @Override
-   protected void dispatch(ShowAstHandler handler)
-   {
-      handler.onShowAst(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowAstHandler handler) {
+        handler.onShowAst(this);
+    }
 
 }

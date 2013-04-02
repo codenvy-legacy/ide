@@ -25,93 +25,65 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface MultiFixMessages extends Messages
-{
-   MultiFixMessages INSTANCE = GWT.create(MultiFixMessages.class);
+public interface MultiFixMessages extends Messages {
+    MultiFixMessages INSTANCE = GWT.create(MultiFixMessages.class);
 
-   String CodeStyleMultiFix_ConvertSingleStatementInControlBodeyToBlock_description();
+    String CodeStyleMultiFix_ConvertSingleStatementInControlBodeyToBlock_description();
 
-   String ControlStatementsCleanUp_RemoveUnnecessaryBlocks_description();
+    String ControlStatementsCleanUp_RemoveUnnecessaryBlocks_description();
 
-   String ControlStatementsCleanUp_RemoveUnnecessaryBlocksWithReturnOrThrow_description();
+    String ControlStatementsCleanUp_RemoveUnnecessaryBlocksWithReturnOrThrow_description();
 
-   String ExpressionsCleanUp_addParanoiac_description();
+    String ExpressionsCleanUp_addParanoiac_description();
 
-   String ExpressionsCleanUp_removeUnnecessary_description();
+    String ExpressionsCleanUp_removeUnnecessary_description();
 
-   String UnimplementedCodeCleanUp_AddUnimplementedMethods_description();
+    String UnimplementedCodeCleanUp_AddUnimplementedMethods_description();
 
-   String UnimplementedCodeCleanUp_MakeAbstract_description();
+    String UnimplementedCodeCleanUp_MakeAbstract_description();
 
-   String UnusedCodeMultiFix_RemoveUnusedImport_description();
+    String UnusedCodeMultiFix_RemoveUnusedImport_description();
 
-   String UnusedCodeMultiFix_RemoveUnusedMethod_description();
+    String UnusedCodeMultiFix_RemoveUnusedMethod_description();
 
-   /**
-    * @return
-    */
-   String UnusedCodeMultiFix_RemoveUnusedConstructor_description();
+    /** @return  */
+    String UnusedCodeMultiFix_RemoveUnusedConstructor_description();
 
-   /**
-    * @return
-    */
-   String UnusedCodeMultiFix_RemoveUnusedType_description();
+    /** @return  */
+    String UnusedCodeMultiFix_RemoveUnusedType_description();
 
-   /**
-    * @return
-    */
-   String UnusedCodeMultiFix_RemoveUnusedField_description();
+    /** @return  */
+    String UnusedCodeMultiFix_RemoveUnusedField_description();
 
-   /**
-    * @return
-    */
-   String UnusedCodeMultiFix_RemoveUnusedVariable_description();
+    /** @return  */
+    String UnusedCodeMultiFix_RemoveUnusedVariable_description();
 
-   /**
-    * @return
-    */
-   String CodeStyleMultiFix_AddThisQualifier_description();
+    /** @return  */
+    String CodeStyleMultiFix_AddThisQualifier_description();
 
-   /**
-    * @return
-    */
-   String CodeStyleCleanUp_QualifyNonStaticMethod_description();
+    /** @return  */
+    String CodeStyleCleanUp_QualifyNonStaticMethod_description();
 
-   /**
-    * @return
-    */
-   String CodeStyleCleanUp_removeFieldThis_description();
+    /** @return  */
+    String CodeStyleCleanUp_removeFieldThis_description();
 
-   /**
-    * @return
-    */
-   String CodeStyleCleanUp_removeMethodThis_description();
+    /** @return  */
+    String CodeStyleCleanUp_removeMethodThis_description();
 
-   /**
-    * @return
-    */
-   String CodeStyleMultiFix_QualifyAccessToStaticField();
+    /** @return  */
+    String CodeStyleMultiFix_QualifyAccessToStaticField();
 
-   /**
-    * @return
-    */
-   String CodeStyleCleanUp_QualifyStaticMethod_description();
+    /** @return  */
+    String CodeStyleCleanUp_QualifyStaticMethod_description();
 
-   /**
-    * @return
-    */
-   String CodeStyleMultiFix_ChangeNonStaticAccess_description();
+    /** @return  */
+    String CodeStyleMultiFix_ChangeNonStaticAccess_description();
 
-   /**
-    * @return
-    */
-   String CodeStyleMultiFix_ChangeIndirectAccessToStaticToDirect();
+    /** @return  */
+    String CodeStyleMultiFix_ChangeIndirectAccessToStaticToDirect();
 
-   /**
-    * @return
-    */
-   String UnusedCodeCleanUp_RemoveUnusedCasts_description();
+    /** @return  */
+    String UnusedCodeCleanUp_RemoveUnusedCasts_description();
 
 }

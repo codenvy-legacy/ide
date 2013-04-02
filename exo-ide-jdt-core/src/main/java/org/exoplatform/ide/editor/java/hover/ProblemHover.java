@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.editor.java.hover;
 
-import com.google.gwt.user.client.Element;
-
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.exoplatform.ide.editor.client.api.Editor;
@@ -30,40 +29,33 @@ import org.exoplatform.ide.editor.shared.text.IRegion;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class ProblemHover extends AbstractJavaHover
-{
+public class ProblemHover extends AbstractJavaHover {
 
-   /**
-    * @param eventBus
-    */
-   public ProblemHover(HandlerManager eventBus)
-   {
-      super(eventBus);
-   }
+    /** @param eventBus */
+    public ProblemHover(HandlerManager eventBus) {
+        super(eventBus);
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.client.api.Editor, org.exoplatform.ide.editor.shared.text.IRegion)
-    */
-   @Override
-   public Element getHoverInfo(Editor editor, IRegion hoverRegion)
-   {
-      IProblem currentProblem = null;
-      if(cUnit == null)
-         return null;
-      for (IProblem p : cUnit.getProblems())
-      {
-         if (p.getSourceStart() <= hoverRegion.getOffset()
-            && p.getSourceEnd() >= (hoverRegion.getOffset() + hoverRegion.getLength() - 1))
-         {
-            currentProblem = p;
-         }
-      }
-      if(currentProblem == null)
-       return null;
-      Element div = DOM.createDiv();
-      div.setInnerHTML(currentProblem.getMessage());
-      return div;
-   }
+    /**
+     * @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.client.api.Editor,
+     *      org.exoplatform.ide.editor.shared.text.IRegion)
+     */
+    @Override
+    public Element getHoverInfo(Editor editor, IRegion hoverRegion) {
+        IProblem currentProblem = null;
+        if (cUnit == null)
+            return null;
+        for (IProblem p : cUnit.getProblems()) {
+            if (p.getSourceStart() <= hoverRegion.getOffset()
+                && p.getSourceEnd() >= (hoverRegion.getOffset() + hoverRegion.getLength() - 1)) {
+                currentProblem = p;
+            }
+        }
+        if (currentProblem == null)
+            return null;
+        Element div = DOM.createDiv();
+        div.setInnerHTML(currentProblem.getMessage());
+        return div;
+    }
 }

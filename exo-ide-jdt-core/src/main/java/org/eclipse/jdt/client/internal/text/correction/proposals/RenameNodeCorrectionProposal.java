@@ -23,50 +23,44 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
-public class RenameNodeCorrectionProposal extends CUCorrectionProposal
-{
+public class RenameNodeCorrectionProposal extends CUCorrectionProposal {
 
-   private String fNewName;
+    private String fNewName;
 
-   private int fOffset;
+    private int fOffset;
 
-   private int fLength;
+    private int fLength;
 
-   private final CompilationUnit unit;
+    private final CompilationUnit unit;
 
-   public RenameNodeCorrectionProposal(String name, CompilationUnit cu, int offset, int length, String newName,
-      int relevance, IDocument document)
-   {
-      super(name, relevance, document, new Image(JdtClientBundle.INSTANCE.correction_change()));
-      this.unit = cu;
-      fOffset = offset;
-      fLength = length;
-      fNewName = newName;
-   }
+    public RenameNodeCorrectionProposal(String name, CompilationUnit cu, int offset, int length, String newName,
+                                        int relevance, IDocument document) {
+        super(name, relevance, document, new Image(JdtClientBundle.INSTANCE.correction_change()));
+        this.unit = cu;
+        fOffset = offset;
+        fLength = length;
+        fNewName = newName;
+    }
 
-   /*(non-Javadoc)
-    * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
-    */
-   @Override
-   protected void addEdits(IDocument doc, TextEdit root) throws CoreException
-   {
-      super.addEdits(doc, root);
+    /*(non-Javadoc)
+     * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
+     */
+    @Override
+    protected void addEdits(IDocument doc, TextEdit root) throws CoreException {
+        super.addEdits(doc, root);
 
-      ASTNode name = NodeFinder.perform(unit, fOffset, fLength);
-      if (name instanceof SimpleName)
-      {
+        ASTNode name = NodeFinder.perform(unit, fOffset, fLength);
+        if (name instanceof SimpleName) {
 
-         SimpleName[] names = LinkedNodeFinder.findByProblems(unit, (SimpleName)name);
-         if (names != null)
-         {
-            for (int i = 0; i < names.length; i++)
-            {
-               SimpleName curr = names[i];
-               root.addChild(new ReplaceEdit(curr.getStartPosition(), curr.getLength(), fNewName));
+            SimpleName[] names = LinkedNodeFinder.findByProblems(unit, (SimpleName)name);
+            if (names != null) {
+                for (int i = 0; i < names.length; i++) {
+                    SimpleName curr = names[i];
+                    root.addChild(new ReplaceEdit(curr.getStartPosition(), curr.getLength(), fNewName));
+                }
+                return;
             }
-            return;
-         }
-      }
-      root.addChild(new ReplaceEdit(fOffset, fLength, fNewName));
-   }
+        }
+        root.addChild(new ReplaceEdit(fOffset, fLength, fNewName));
+    }
 }

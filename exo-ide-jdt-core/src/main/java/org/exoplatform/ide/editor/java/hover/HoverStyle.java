@@ -23,11 +23,9 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface HoverStyle extends CssResource
-{
+public interface HoverStyle extends CssResource {
 
-   String javaFqn();
+    String javaFqn();
 
 }

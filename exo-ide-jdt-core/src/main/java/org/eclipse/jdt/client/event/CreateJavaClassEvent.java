@@ -23,29 +23,21 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Dec 1, 2011 4:34:07 PM evgen $
- * 
  */
-public class CreateJavaClassEvent extends GwtEvent<CreateJavaClassHandler>
-{
+public class CreateJavaClassEvent extends GwtEvent<CreateJavaClassHandler> {
 
-   public static GwtEvent.Type<CreateJavaClassHandler> TYPE = new Type<CreateJavaClassHandler>();
+    public static GwtEvent.Type<CreateJavaClassHandler> TYPE = new Type<CreateJavaClassHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateJavaClassHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateJavaClassHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CreateJavaClassHandler handler)
-   {
-      handler.onCreateJavaClass(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CreateJavaClassHandler handler) {
+        handler.onCreateJavaClass(this);
+    }
 
 }

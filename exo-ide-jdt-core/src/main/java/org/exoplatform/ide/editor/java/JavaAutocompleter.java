@@ -18,73 +18,63 @@
  */
 package org.exoplatform.ide.editor.java;
 
-import com.google.collide.codemirror2.SyntaxType;
-
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.code.autocomplete.AutocompleteResult;
+import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.editor.selection.SelectionModel;
-
-import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
+import com.google.collide.codemirror2.SyntaxType;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaAutocompleter extends LanguageSpecificAutocompleter
-{
+public class JavaAutocompleter extends LanguageSpecificAutocompleter {
 
-   JavaExplicitAutocompleter autocompleter = new JavaExplicitAutocompleter();
-   
-   /**
-    * @param mode
-    */
-   protected JavaAutocompleter()
-   {
-      super(SyntaxType.JAVA);
-   }
-   
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#getExplicitAction(com.google.collide.client.editor.selection.SelectionModel, com.google.collide.client.code.autocomplete.SignalEventEssence, boolean)
-    */
-   @Override
-   protected ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
-      boolean popupIsShown)
-   {
-      
-      return autocompleter.getExplicitAction(selectionModel, signal, popupIsShown, getParser());
-   }
+    JavaExplicitAutocompleter autocompleter = new JavaExplicitAutocompleter();
 
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#computeAutocompletionResult(com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext)
-    */
-   @Override
-   public AutocompleteResult computeAutocompletionResult(ProposalWithContext proposal)
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /** @param mode */
+    protected JavaAutocompleter() {
+        super(SyntaxType.JAVA);
+    }
 
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#findAutocompletions(com.google.collide.client.editor.selection.SelectionModel, com.google.collide.client.code.autocomplete.SignalEventEssence)
-    */
-   @Override
-   public AutocompleteProposals findAutocompletions(SelectionModel selection, SignalEventEssence trigger)
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /**
+     * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#getExplicitAction(com.google.collide.client.editor
+     * .selection.SelectionModel,
+     *      com.google.collide.client.code.autocomplete.SignalEventEssence, boolean)
+     */
+    @Override
+    protected ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
+                                               boolean popupIsShown) {
 
-   /**
-    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#cleanup()
-    */
-   @Override
-   public void cleanup()
-   {
-      // TODO Auto-generated method stub
-      
-   }
+        return autocompleter.getExplicitAction(selectionModel, signal, popupIsShown, getParser());
+    }
+
+    /** @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#computeAutocompletionResult(com.google.collide
+     * .client.code.autocomplete.AutocompleteProposals.ProposalWithContext) */
+    @Override
+    public AutocompleteResult computeAutocompletionResult(ProposalWithContext proposal) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#findAutocompletions(com.google.collide.client.editor
+     * .selection.SelectionModel,
+     *      com.google.collide.client.code.autocomplete.SignalEventEssence)
+     */
+    @Override
+    public AutocompleteProposals findAutocompletions(SelectionModel selection, SignalEventEssence trigger) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /** @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#cleanup() */
+    @Override
+    public void cleanup() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

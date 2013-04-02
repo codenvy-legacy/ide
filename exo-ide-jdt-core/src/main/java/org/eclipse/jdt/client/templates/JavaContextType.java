@@ -21,53 +21,39 @@ import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
  * <li>templates for statement locations</li>
  * </dl>
  */
-public class JavaContextType extends AbstractJavaContextType
-{
+public class JavaContextType extends AbstractJavaContextType {
 
-   /**
-    * @param id
-    */
-   public JavaContextType(String id)
-   {
-      super(id);
-   }
+    /** @param id */
+    public JavaContextType(String id) {
+        super(id);
+    }
 
-   /**
-    * The context type id for templates working on all Java code locations
-    */
-   public static final String ID_ALL = "java"; //$NON-NLS-1$
+    /** The context type id for templates working on all Java code locations */
+    public static final String ID_ALL = "java"; //$NON-NLS-1$
 
-   /**
-    * The context type id for templates working on member locations
-    */
-   public static final String ID_MEMBERS = "java-members"; //$NON-NLS-1$
+    /** The context type id for templates working on member locations */
+    public static final String ID_MEMBERS = "java-members"; //$NON-NLS-1$
 
-   /**
-    * The context type id for templates working on statement locations
-    */
-   public static final String ID_STATEMENTS = "java-statements"; //$NON-NLS-1$
+    /** The context type id for templates working on statement locations */
+    public static final String ID_STATEMENTS = "java-statements"; //$NON-NLS-1$
 
-   /*
-    * (non-Javadoc)
-    * @see
-    * org.eclipse.jdt.internal.corext.template.java.AbstractJavaContextType#initializeContext(org.eclipse.jdt.internal.corext.
-    * template.java.JavaContext)
-    */
-   @Override
-   protected void initializeContext(JavaContext context)
-   {
-      if (!getId().equals(JavaContextType.ID_ALL))
-      { // a specific context must also allow the templates that work everywhere
-         context.addCompatibleContextType(JavaContextType.ID_ALL);
-      }
-   }
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.eclipse.jdt.internal.corext.template.java.AbstractJavaContextType#initializeContext(org.eclipse.jdt.internal.corext.
+     * template.java.JavaContext)
+     */
+    @Override
+    protected void initializeContext(JavaContext context) {
+        if (!getId().equals(JavaContextType.ID_ALL)) { // a specific context must also allow the templates that work everywhere
+            context.addCompatibleContextType(JavaContextType.ID_ALL);
+        }
+    }
 
-   public void initializeResolvers(JavaContextType superType)
-   {
-      for (java.util.Iterator iterator = superType.resolvers(); iterator.hasNext();)
-      {
-         addResolver((TemplateVariableResolver)iterator.next());
-      }
-   }
+    public void initializeResolvers(JavaContextType superType) {
+        for (java.util.Iterator iterator = superType.resolvers(); iterator.hasNext(); ) {
+            addResolver((TemplateVariableResolver)iterator.next());
+        }
+    }
 
 }

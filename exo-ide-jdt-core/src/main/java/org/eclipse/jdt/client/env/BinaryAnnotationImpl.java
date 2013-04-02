@@ -18,11 +18,9 @@
  */
 package org.eclipse.jdt.client.env;
 
-import com.google.gwt.json.client.JSONValue;
-
 import com.google.gwt.json.client.JSONArray;
-
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryElementValuePair;
@@ -30,47 +28,35 @@ import org.eclipse.jdt.client.internal.compiler.env.IBinaryElementValuePair;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class BinaryAnnotationImpl implements IBinaryAnnotation
-{
+public class BinaryAnnotationImpl implements IBinaryAnnotation {
 
-   private JSONObject annotation;
+    private JSONObject annotation;
 
-   /**
-    * @param annotation
-    */
-   public BinaryAnnotationImpl(JSONObject annotation)
-   {
-      super();
-      this.annotation = annotation;
-   }
+    /** @param annotation */
+    public BinaryAnnotationImpl(JSONObject annotation) {
+        super();
+        this.annotation = annotation;
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation#getTypeName()
-    */
-   @Override
-   public char[] getTypeName()
-   {
-      return annotation.get("typeName").isString().stringValue().toCharArray();
-   }
+    /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation#getTypeName() */
+    @Override
+    public char[] getTypeName() {
+        return annotation.get("typeName").isString().stringValue().toCharArray();
+    }
 
-   /**
-    * @see org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation#getElementValuePairs()
-    */
-   @Override
-   public IBinaryElementValuePair[] getElementValuePairs()
-   {
-      JSONValue value = annotation.get("annotationParameters");
-      if(value.isNull() != null)
-         return null;
-      JSONArray array = value.isArray();
-      IBinaryElementValuePair[] val = new IBinaryElementValuePair[array.size()];
-      for (int i = 0; i < array.size(); i++)
-      {
-         val[i] = new BinaryElementValuePairImpl(array.get(i).isObject());
-      }
-      return val;
-   }
+    /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation#getElementValuePairs() */
+    @Override
+    public IBinaryElementValuePair[] getElementValuePairs() {
+        JSONValue value = annotation.get("annotationParameters");
+        if (value.isNull() != null)
+            return null;
+        JSONArray array = value.isArray();
+        IBinaryElementValuePair[] val = new IBinaryElementValuePair[array.size()];
+        for (int i = 0; i < array.size(); i++) {
+            val[i] = new BinaryElementValuePairImpl(array.get(i).isObject());
+        }
+        return val;
+    }
 
 }

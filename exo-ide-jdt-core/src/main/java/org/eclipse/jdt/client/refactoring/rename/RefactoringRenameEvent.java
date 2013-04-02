@@ -23,57 +23,42 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringRenameEvent.java Jan 17, 2013 4:51:38 PM azatsarynnyy $
- *
  */
-public class RefactoringRenameEvent extends GwtEvent<RefactoringRenameHandler>
-{
+public class RefactoringRenameEvent extends GwtEvent<RefactoringRenameHandler> {
 
-   private FileModel file;
+    private FileModel file;
 
-   public static final GwtEvent.Type<RefactoringRenameHandler> TYPE = new Type<RefactoringRenameHandler>();
+    public static final GwtEvent.Type<RefactoringRenameHandler> TYPE = new Type<RefactoringRenameHandler>();
 
-   public RefactoringRenameEvent()
-   {
-   }
+    public RefactoringRenameEvent() {
+    }
 
-   /**
-    * 
-    * @param file
-    */
-   public RefactoringRenameEvent(FileModel file)
-   {
-      this.file = file;
-   }
+    /** @param file */
+    public RefactoringRenameEvent(FileModel file) {
+        this.file = file;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RefactoringRenameHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RefactoringRenameHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RefactoringRenameHandler handler)
-   {
-      handler.onRename(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RefactoringRenameHandler handler) {
+        handler.onRename(this);
+    }
 
-   /**
-    * Returns file to rename.
-    * 
-    * @return a file to rename
-    */
-   public FileModel getFile()
-   {
-      return file;
-   }
+    /**
+     * Returns file to rename.
+     *
+     * @return a file to rename
+     */
+    public FileModel getFile() {
+        return file;
+    }
 
 }

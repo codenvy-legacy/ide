@@ -18,68 +18,60 @@
  */
 package org.eclipse.jdt.client.core;
 
-import static org.junit.Assert.fail;
-
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:02:58 AM 34360 2009-07-22 23:58:59Z evgen $
- *
  */
 @Ignore
-public class CharOperationTest extends BaseTest
-{
-   @Test
-   public void testJavaIdentifierPart()
-   {
-      String s = "for";
-      for (char c : s.toCharArray())
-      {
-         if (!CharOperation.isJavaIdentifierPart(c))
-            fail("Char '" + c + "' is valid Java identifier part");
-      }
-   }
-   @Test
-   public void testJavaIdentifierPartUnicode()
-   {
-      String s = "змінна";
-      for (char c : s.toCharArray())
-      {
-         if (!CharOperation.isJavaIdentifierPart(c))
-            fail("Char '" + c + "' is valid Java identifier part");
-      }
-   }
-   @Test
-   public void testNotJavaIdentifierPart()
-   {
-      String s = "@#%*";
-      for (char c : s.toCharArray())
-      {
-         if (CharOperation.isJavaIdentifierPart(c))
-            fail("Char '" + c + "' not valid Java identifier part");
-      }
-   }
-   @Test
-   public void testJavaIdentifierStart()
-   {
-      String s = "_$Ab";
-      for (char c : s.toCharArray())
-      {
-         if (!CharOperation.isJavaIdentifierStart(c))
-            fail("Char '" + c + "' is valid Java identifier part");
-      }
-   }
-   @Test
-   public void testNotJavaIdentifierStart()
-   {
-      String s = "123@#&";
-      for (char c : s.toCharArray())
-      {
-         if (CharOperation.isJavaIdentifierStart(c))
-            fail("Char '" + c + "' not valid Java identifier part");
-      }
-   }
+public class CharOperationTest extends BaseTest {
+    @Test
+    public void testJavaIdentifierPart() {
+        String s = "for";
+        for (char c : s.toCharArray()) {
+            if (!CharOperation.isJavaIdentifierPart(c))
+                fail("Char '" + c + "' is valid Java identifier part");
+        }
+    }
+
+    @Test
+    public void testJavaIdentifierPartUnicode() {
+        String s = "змінна";
+        for (char c : s.toCharArray()) {
+            if (!CharOperation.isJavaIdentifierPart(c))
+                fail("Char '" + c + "' is valid Java identifier part");
+        }
+    }
+
+    @Test
+    public void testNotJavaIdentifierPart() {
+        String s = "@#%*";
+        for (char c : s.toCharArray()) {
+            if (CharOperation.isJavaIdentifierPart(c))
+                fail("Char '" + c + "' not valid Java identifier part");
+        }
+    }
+
+    @Test
+    public void testJavaIdentifierStart() {
+        String s = "_$Ab";
+        for (char c : s.toCharArray()) {
+            if (!CharOperation.isJavaIdentifierStart(c))
+                fail("Char '" + c + "' is valid Java identifier part");
+        }
+    }
+
+    @Test
+    public void testNotJavaIdentifierStart() {
+        String s = "123@#&";
+        for (char c : s.toCharArray()) {
+            if (CharOperation.isJavaIdentifierStart(c))
+                fail("Char '" + c + "' not valid Java identifier part");
+        }
+    }
 }

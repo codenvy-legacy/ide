@@ -90,7 +90,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //		private static final String VALUE = "value"; //$NON-NLS-1$
 //		private static final String WARNING = "WARNING"; //$NON-NLS-1$
 //		public static final int XML = 1;
-//		private static final String XML_DTD_DECLARATION = "<!DOCTYPE compiler PUBLIC \"-//Eclipse.org//DTD Eclipse JDT 3.2.004 Compiler//EN\" \"http://www.eclipse.org/jdt/core/compiler_32_004.dtd\">"; //$NON-NLS-1$
+//		private static final String XML_DTD_DECLARATION = "<!DOCTYPE compiler PUBLIC \"-//Eclipse.org//DTD Eclipse JDT 3.2.004 Compiler//EN\"
+// \"http://www.eclipse.org/jdt/core/compiler_32_004.dtd\">"; //$NON-NLS-1$
 //		static {
 //			try {
 //				Class c = IProblem.class;
@@ -1084,7 +1085,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //				logTiming(compilerStats);
 //			}
 //			if (this.main.globalProblemsCount > 0) {
-//				logProblemsSummary(this.main.globalProblemsCount, this.main.globalErrorsCount, this.main.globalWarningsCount, this.main.globalTasksCount);
+//				logProblemsSummary(this.main.globalProblemsCount, this.main.globalErrorsCount, this.main.globalWarningsCount,
+// this.main.globalTasksCount);
 //			}
 //			if (this.main.exportedClassFilesCounter != 0
 //					&& (this.main.showProgress || isTimed || this.main.verbose)) {
@@ -1112,7 +1114,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //				int index = logFileName.lastIndexOf('.');
 //				if (index != -1) {
 //					if (logFileName.substring(index).toLowerCase().equals(".xml")) { //$NON-NLS-1$
-//						this.log = new GenericXMLWriter(new OutputStreamWriter(new FileOutputStream(logFileName, false), Util.UTF_8), Util.LINE_SEPARATOR, true);
+//						this.log = new GenericXMLWriter(new OutputStreamWriter(new FileOutputStream(logFileName, false), Util.UTF_8), Util.LINE_SEPARATOR,
+// true);
 //						this.tagBits |= Logger.XML;
 //						// insert time stamp as comment
 //						this.log.println("<!-- " + dateFormat.format(date) + " -->");//$NON-NLS-1$//$NON-NLS-2$
@@ -1197,7 +1200,7 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //		}
 //	}
 
-//	/**
+    //	/**
 //	 * Resource bundle factory to share bundles for the same locale
 //	 */
 //	public static class ResourceBundleFactory {
@@ -1284,14 +1287,15 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //	// for the '-d none' option (wherever it may be found)
 //	public static final int DEFAULT_SIZE_CLASSPATH = 4;
 //
-	public static final String NONE = "none"; //$NON-NLS-1$
+    public static final String NONE = "none"; //$NON-NLS-1$
 //
 ///**
 // * @deprecated - use {@link BatchCompiler#compile(String, PrintWriter, PrintWriter, CompilationProgress)} instead
 // * 						  e.g. BatchCompiler.compile(commandLine, new PrintWriter(System.out), new PrintWriter(System.err), null);
 // */
 //public static boolean compile(String commandLine) {
-//	return new Main(new PrintWriter(System.out), new PrintWriter(System.err), false /* systemExit */, null /* options */, null /* progress */).compile(tokenize(commandLine));
+//	return new Main(new PrintWriter(System.out), new PrintWriter(System.err), false /* systemExit */, null /* options */,
+// null /* progress */).compile(tokenize(commandLine));
 //}
 //
 ///**
@@ -1399,7 +1403,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //	this(outWriter, errWriter, systemExitWhenFinished, customDefaultOptions, null /* progress */);
 //}
 //
-//public Main(PrintWriter outWriter, PrintWriter errWriter, boolean systemExitWhenFinished, Map customDefaultOptions, CompilationProgress compilationProgress) {
+//public Main(PrintWriter outWriter, PrintWriter errWriter, boolean systemExitWhenFinished, Map customDefaultOptions,
+// CompilationProgress compilationProgress) {
 //	this.initialize(outWriter, errWriter, systemExitWhenFinished, customDefaultOptions, compilationProgress);
 //	this.relocalize();
 //}
@@ -1728,7 +1733,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //			String arg = argv[i].trim();
 //			if (arg.startsWith("@")) { //$NON-NLS-1$
 //				try {
-//					LineNumberReader reader = new LineNumberReader(new StringReader(new String(Util.getFileCharContent(new File(arg.substring(1)), null))));
+//					LineNumberReader reader = new LineNumberReader(new StringReader(new String(Util.getFileCharContent(new File(arg.substring(1)),
+// null))));
 //					StringBuffer buffer = new StringBuffer();
 //					String line;
 //					while((line = reader.readLine()) != null) {
@@ -3282,7 +3288,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //			if (token.equals("indirectStatic")) { //$NON-NLS-1$
 //				setSeverity(CompilerOptions.OPTION_ReportIndirectStaticAccess, severity, isEnabling);
 //				return;
-//			} else if (token.equals("intfNonInherited") || token.equals("interfaceNonInherited")/*backward compatible*/) { //$NON-NLS-1$ //$NON-NLS-2$
+//			} else if (token.equals("intfNonInherited") || token.equals("interfaceNonInherited")/*backward compatible*/) { //$NON-NLS-1$
+//$NON-NLS-2$
 //				setSeverity(CompilerOptions.OPTION_ReportIncompatibleNonInheritedInterfaceMethod, severity, isEnabling);
 //				return;
 //			} else if (token.equals("intfAnnotation")) { //$NON-NLS-1$
@@ -3540,7 +3547,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //protected void initialize(PrintWriter outWriter, PrintWriter errWriter, boolean systemExit, Map customDefaultOptions) {
 //	this.initialize(outWriter, errWriter, systemExit, customDefaultOptions, null /* progress */);
 //}
-//protected void initialize(PrintWriter outWriter, PrintWriter errWriter, boolean systemExit, Map customDefaultOptions, CompilationProgress compilationProgress) {
+//protected void initialize(PrintWriter outWriter, PrintWriter errWriter, boolean systemExit, Map customDefaultOptions,
+// CompilationProgress compilationProgress) {
 //	this.logger = new Logger(this, outWriter, errWriter);
 //	this.proceed = true;
 //	this.out = outWriter;
@@ -4064,7 +4072,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //	try {
 //		this.bundle = ResourceBundleFactory.getBundle(locale);
 //	} catch(MissingResourceException e) {
-//		System.out.println("Missing resource : " + Main.bundleName.replace('.', '/') + ".properties for locale " + locale); //$NON-NLS-1$//$NON-NLS-2$
+//		System.out.println("Missing resource : " + Main.bundleName.replace('.', '/') + ".properties for locale " + locale);
+//$NON-NLS-1$//$NON-NLS-2$
 //		throw e;
 //	}
 //}
@@ -4214,19 +4223,23 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //	if (sourceVersion.equals(CompilerOptions.VERSION_1_7)
 //			&& CompilerOptions.versionToJdkLevel(compliance) < ClassFileConstants.JDK1_7) {
 //		// compliance must be 1.7 if source is 1.7
-//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_7)); //$NON-NLS-1$
+//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions
+// .OPTION_Compliance), CompilerOptions.VERSION_1_7)); //$NON-NLS-1$
 //	} else if (sourceVersion.equals(CompilerOptions.VERSION_1_6)
 //			&& CompilerOptions.versionToJdkLevel(compliance) < ClassFileConstants.JDK1_6) {
 //		// compliance must be 1.6 if source is 1.6
-//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_6)); //$NON-NLS-1$
+//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions
+// .OPTION_Compliance), CompilerOptions.VERSION_1_6)); //$NON-NLS-1$
 //	} else if (sourceVersion.equals(CompilerOptions.VERSION_1_5)
 //			&& CompilerOptions.versionToJdkLevel(compliance) < ClassFileConstants.JDK1_5) {
 //		// compliance must be 1.5 if source is 1.5
-//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_5)); //$NON-NLS-1$
+//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions
+// .OPTION_Compliance), CompilerOptions.VERSION_1_5)); //$NON-NLS-1$
 //	} else if (sourceVersion.equals(CompilerOptions.VERSION_1_4)
 //			&& CompilerOptions.versionToJdkLevel(compliance) < ClassFileConstants.JDK1_4) {
 //		// compliance must be 1.4 if source is 1.4
-//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions.OPTION_Compliance), CompilerOptions.VERSION_1_4)); //$NON-NLS-1$
+//		throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForSource", (String)this.options.get(CompilerOptions
+// .OPTION_Compliance), CompilerOptions.VERSION_1_4)); //$NON-NLS-1$
 //	}
 //
 //	// check and set compliance/source/target compatibilities
@@ -4236,39 +4249,47 @@ public class Main implements ProblemSeverities, SuffixConstants {
 //		if (CompilerOptions.VERSION_JSR14.equals(targetVersion)) {
 //			// expecting source >= 1.5
 //			if (CompilerOptions.versionToJdkLevel(sourceVersion) < ClassFileConstants.JDK1_5) {
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForGenericSource", (String) targetVersion, (String) sourceVersion)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForGenericSource", (String) targetVersion,
+// (String) sourceVersion)); //$NON-NLS-1$
 //			}
 //		} else if (CompilerOptions.VERSION_CLDC1_1.equals(targetVersion)) {
 //			if (this.didSpecifySource && CompilerOptions.versionToJdkLevel(sourceVersion) >= ClassFileConstants.JDK1_4) {
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleSourceForCldcTarget", (String) targetVersion, (String) sourceVersion)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleSourceForCldcTarget", (String) targetVersion,
+// (String) sourceVersion)); //$NON-NLS-1$
 //			}
 //			if (CompilerOptions.versionToJdkLevel(compliance) >= ClassFileConstants.JDK1_5) {
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForCldcTarget", (String) targetVersion, (String) sourceVersion)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForCldcTarget", (String) targetVersion,
+// (String) sourceVersion)); //$NON-NLS-1$
 //			}
 //		} else {
 //			// target must be 1.7 if source is 1.7
 //			if (CompilerOptions.versionToJdkLevel(sourceVersion) >= ClassFileConstants.JDK1_7
 //					&& CompilerOptions.versionToJdkLevel(targetVersion) < ClassFileConstants.JDK1_7){
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion, CompilerOptions.VERSION_1_7)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion,
+// CompilerOptions.VERSION_1_7)); //$NON-NLS-1$
 //			}
 //			// target must be 1.6 if source is 1.6
 //			if (CompilerOptions.versionToJdkLevel(sourceVersion) >= ClassFileConstants.JDK1_6
 //					&& CompilerOptions.versionToJdkLevel(targetVersion) < ClassFileConstants.JDK1_6){
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion, CompilerOptions.VERSION_1_6)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion,
+// CompilerOptions.VERSION_1_6)); //$NON-NLS-1$
 //			}
 //			// target must be 1.5 if source is 1.5
 //			if (CompilerOptions.versionToJdkLevel(sourceVersion) >= ClassFileConstants.JDK1_5
 //					&& CompilerOptions.versionToJdkLevel(targetVersion) < ClassFileConstants.JDK1_5){
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion, CompilerOptions.VERSION_1_5)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion,
+// CompilerOptions.VERSION_1_5)); //$NON-NLS-1$
 //			}
 //			// target must be 1.4 if source is 1.4
 //			if (CompilerOptions.versionToJdkLevel(sourceVersion) >= ClassFileConstants.JDK1_4
 //					&& CompilerOptions.versionToJdkLevel(targetVersion) < ClassFileConstants.JDK1_4){
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion, CompilerOptions.VERSION_1_4)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleTargetForSource", (String) targetVersion,
+// CompilerOptions.VERSION_1_4)); //$NON-NLS-1$
 //			}
 //			// target cannot be greater than compliance level
 //			if (CompilerOptions.versionToJdkLevel(compliance) < CompilerOptions.versionToJdkLevel(targetVersion)){
-//				throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForTarget", (String)this.options.get(CompilerOptions.OPTION_Compliance), (String) targetVersion)); //$NON-NLS-1$
+//				throw new IllegalArgumentException(this.bind("configure.incompatibleComplianceForTarget", (String)this.options.get(CompilerOptions
+// .OPTION_Compliance), (String) targetVersion)); //$NON-NLS-1$
 //			}
 //		}
 //	}

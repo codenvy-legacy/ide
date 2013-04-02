@@ -10,24 +10,22 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.formatter;
 
-public class OptimizedReplaceEdit
-{
+public class OptimizedReplaceEdit {
 
-   int offset;
+    int offset;
 
-   int length;
+    int length;
 
-   String replacement;
+    String replacement;
 
-   public OptimizedReplaceEdit(int offset, int length, String replacement)
-   {
-      this.offset = offset;
-      this.length = length;
-      this.replacement = replacement;
-   }
+    public OptimizedReplaceEdit(int offset, int length, String replacement) {
+        this.offset = offset;
+        this.length = length;
+        this.replacement = replacement;
+    }
 
-   public String toString()
-   {
-      return (this.offset < 0 ? "(" : "X(") + this.offset + ", length " + this.length + " :>" + this.replacement + "<"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$
-   }
+    public String toString() {
+        return (this.offset < 0 ? "(" : "X(") + this.offset + ", length " + this.length + " :>" + this.replacement +
+               "<"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$
+    }
 }

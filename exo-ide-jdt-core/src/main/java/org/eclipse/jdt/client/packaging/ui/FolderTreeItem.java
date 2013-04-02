@@ -36,130 +36,106 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class FolderTreeItem extends PackageExplorerTreeItem
-{
+public class FolderTreeItem extends PackageExplorerTreeItem {
 
-   public FolderTreeItem(FolderModel folder)
-   {
-      super(folder);
-   }
+    public FolderTreeItem(FolderModel folder) {
+        super(folder);
+    }
 
-   @Override
-   protected ImageResource getItemIcon()
-   {
-      return ImageUtil.getIcon(((FolderModel)getUserObject()).getMimeType());
-   }
+    @Override
+    protected ImageResource getItemIcon() {
+        return ImageUtil.getIcon(((FolderModel)getUserObject()).getMimeType());
+    }
 
-   @Override
-   protected String getItemTitle()
-   {
-      return ((FolderModel)getUserObject()).getName();
-   }
+    @Override
+    protected String getItemTitle() {
+        return ((FolderModel)getUserObject()).getName();
+    }
 
-   @Override
-   public List<Item> getItems()
-   {
-      List<Item> folderItems = new ArrayList<Item>();
-      FolderModel folder = (FolderModel)getUserObject();
-      for (Item item : folder.getChildren().getItems())
-      {
-         if (DirectoryFilter.get().matchWithPattern(item.getName()))
-         {
-            continue;
-         }
+    @Override
+    public List<Item> getItems() {
+        List<Item> folderItems = new ArrayList<Item>();
+        FolderModel folder = (FolderModel)getUserObject();
+        for (Item item : folder.getChildren().getItems()) {
+            if (DirectoryFilter.get().matchWithPattern(item.getName())) {
+                continue;
+            }
 
-         if (item instanceof FolderModel && isSource(item, folder.getProject()))
-         {
-            continue;
-         }
+            if (item instanceof FolderModel && isSource(item, folder.getProject())) {
+                continue;
+            }
 
-         folderItems.add(item);
-      }
-      return folderItems;
-   }
+            folderItems.add(item);
+        }
+        return folderItems;
+    }
 
-   private boolean isSource(Item item, ProjectModel proj)
-   {
-      if (!(proj instanceof JavaProject))
-      {
-         return false;
-      }
+    private boolean isSource(Item item, ProjectModel proj) {
+        if (!(proj instanceof JavaProject)) {
+            return false;
+        }
 
-      JavaProject javaProject = (JavaProject)proj;
-      for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories())
-      {
-         if (item.getPath().startsWith(sourceDirectory.getPath()))
-         {
-            return true;
-         }
-      }
+        JavaProject javaProject = (JavaProject)proj;
+        for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories()) {
+            if (item.getPath().startsWith(sourceDirectory.getPath())) {
+                return true;
+            }
+        }
 
-      return false;
-   }
+        return false;
+    }
 
-   @Override
-   public void refresh(boolean expand)
-   {
-      render();
+    @Override
+    public void refresh(boolean expand) {
+        render();
 
       /*
        * Does not refresh children if tree item closed
        */
-      if (!getState() && !expand)
-      {
-         return;
-      }
+        if (!getState() && !expand) {
+            return;
+        }
 
       /*
        * Remove nonexistent
        */
-      removeNonexistendTreeItems();
+        removeNonexistendTreeItems();
 
       /*
        * Add missing
        */
-      FolderModel folder = (FolderModel)getUserObject();
+        FolderModel folder = (FolderModel)getUserObject();
 
-      List<Item> items = getItems();
-      Collections.sort(items, COMPARATOR);
-      int index = 0;
+        List<Item> items = getItems();
+        Collections.sort(items, COMPARATOR);
+        int index = 0;
 
-      for (Item item : items)
-      {
-         if (item instanceof FolderModel && isSource(item, folder.getProject()))
-         {
-            continue;
-         }
-
-         PackageExplorerTreeItem child = getChildByItemId(item.getId());
-         if (child == null)
-         {
-            if (item instanceof FolderModel)
-            {
-               child = new FolderTreeItem((FolderModel)item);
-            }
-            else
-            {
-               child = new FileTreeItem((FileModel)item);
+        for (Item item : items) {
+            if (item instanceof FolderModel && isSource(item, folder.getProject())) {
+                continue;
             }
 
-            insertItem(index, child);
-         }
-         else
-         {
-            child.setUserObject(item);
-            child.refresh(false);
-         }
+            PackageExplorerTreeItem child = getChildByItemId(item.getId());
+            if (child == null) {
+                if (item instanceof FolderModel) {
+                    child = new FolderTreeItem((FolderModel)item);
+                } else {
+                    child = new FileTreeItem((FileModel)item);
+                }
 
-         index++;
-      }
+                insertItem(index, child);
+            } else {
+                child.setUserObject(item);
+                child.refresh(false);
+            }
 
-      if (expand)
-      {
-         setState(true);
-      }
-   }
+            index++;
+        }
+
+        if (expand) {
+            setState(true);
+        }
+    }
 
 }

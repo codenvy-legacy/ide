@@ -21,83 +21,70 @@ import org.eclipse.jdt.client.core.dom.rewrite.TargetSourceRangeComputer;
 
 /**
  * A source range computer that uses the shortest possible source range for a given set of nodes.
- * <p>
+ * <p/>
  * For other nodes, the default extended source range from
  * {@link TargetSourceRangeComputer#computeSourceRange(ASTNode)} is used.
- * <p>
+ * <p/>
  * For nodes inside "tight" nodes, the source range is the extended source range, unless this would
  * violate the no-overlapping condition from the superclass.
- * 
+ *
  * @since 3.2
  */
-public class TightSourceRangeComputer extends TargetSourceRangeComputer
-{
-   private HashSet<ASTNode> fTightSourceRangeNodes = new HashSet<ASTNode>();
+public class TightSourceRangeComputer extends TargetSourceRangeComputer {
+    private HashSet<ASTNode> fTightSourceRangeNodes = new HashSet<ASTNode>();
 
-   /**
-    * Add the given node to the set of "tight" nodes.
-    * 
-    * @param reference a node
-    * @since 3.2
-    */
-   public void addTightSourceNode(ASTNode reference)
-   {
-      fTightSourceRangeNodes.add(reference);
+    /**
+     * Add the given node to the set of "tight" nodes.
+     *
+     * @param reference
+     *         a node
+     * @since 3.2
+     */
+    public void addTightSourceNode(ASTNode reference) {
+        fTightSourceRangeNodes.add(reference);
 
-      List<StructuralPropertyDescriptor> properties = reference.structuralPropertiesForType();
-      for (Iterator<StructuralPropertyDescriptor> iterator = properties.iterator(); iterator.hasNext();)
-      {
-         StructuralPropertyDescriptor descriptor = iterator.next();
-         if (descriptor.isChildProperty())
-         {
-            ASTNode child = (ASTNode)reference.getStructuralProperty(descriptor);
-            if (child != null && isExtending(child, reference))
-            {
-               addTightSourceNode(child);
+        List<StructuralPropertyDescriptor> properties = reference.structuralPropertiesForType();
+        for (Iterator<StructuralPropertyDescriptor> iterator = properties.iterator(); iterator.hasNext(); ) {
+            StructuralPropertyDescriptor descriptor = iterator.next();
+            if (descriptor.isChildProperty()) {
+                ASTNode child = (ASTNode)reference.getStructuralProperty(descriptor);
+                if (child != null && isExtending(child, reference)) {
+                    addTightSourceNode(child);
+                }
+            } else if (descriptor.isChildListProperty()) {
+                List<? extends ASTNode> children = (List<? extends ASTNode>)reference.getStructuralProperty(descriptor);
+                for (Iterator<? extends ASTNode> iterator2 = children.iterator(); iterator2.hasNext(); ) {
+                    ASTNode child = iterator2.next();
+                    if (isExtending(child, reference)) {
+                        addTightSourceNode(child);
+                    }
+                }
             }
-         }
-         else if (descriptor.isChildListProperty())
-         {
-            List<? extends ASTNode> children = (List<? extends ASTNode>)reference.getStructuralProperty(descriptor);
-            for (Iterator<? extends ASTNode> iterator2 = children.iterator(); iterator2.hasNext();)
-            {
-               ASTNode child = iterator2.next();
-               if (isExtending(child, reference))
-               {
-                  addTightSourceNode(child);
-               }
-            }
-         }
-      }
-   }
+        }
+    }
 
-   @Override
-   public SourceRange computeSourceRange(ASTNode node)
-   {
-      if (fTightSourceRangeNodes.contains(node))
-      {
-         return new TargetSourceRangeComputer.SourceRange(node.getStartPosition(), node.getLength());
-      }
-      else
-      {
-         return super.computeSourceRange(node); // see bug 85850
-      }
-   }
+    @Override
+    public SourceRange computeSourceRange(ASTNode node) {
+        if (fTightSourceRangeNodes.contains(node)) {
+            return new TargetSourceRangeComputer.SourceRange(node.getStartPosition(), node.getLength());
+        } else {
+            return super.computeSourceRange(node); // see bug 85850
+        }
+    }
 
-   private boolean isExtending(ASTNode child, ASTNode parent)
-   {
-      SourceRange extendedRange = super.computeSourceRange(child);
+    private boolean isExtending(ASTNode child, ASTNode parent) {
+        SourceRange extendedRange = super.computeSourceRange(child);
 
-      int parentStart = parent.getStartPosition();
-      int extendedStart = extendedRange.getStartPosition();
-      if (parentStart > extendedStart)
-         return true;
+        int parentStart = parent.getStartPosition();
+        int extendedStart = extendedRange.getStartPosition();
+        if (parentStart > extendedStart)
+            return true;
 
-      int parentEnd = parentStart + parent.getLength();
-      int extendedEnd = extendedStart + extendedRange.getLength();
-      if (parentEnd < extendedEnd)
-         return true;
+        int parentEnd = parentStart + parent.getLength();
+        int extendedEnd = extendedStart + extendedRange.getLength();
+        if (parentEnd < extendedEnd)
+            return true;
 
-      return false;
-   }
+        return false;
+    }
 }

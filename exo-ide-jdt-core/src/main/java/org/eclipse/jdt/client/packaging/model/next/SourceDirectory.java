@@ -26,46 +26,38 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class SourceDirectory extends FolderModel
-{
+public class SourceDirectory extends FolderModel {
 
-   private String sourceDirectoryName;
+    private String sourceDirectoryName;
 
-   private List<Package> packages = new ArrayList<Package>();
-   
-   public SourceDirectory(FolderModel folder, String sourceDirectoryName)
-   {
-      super(folder);
-      this.sourceDirectoryName = sourceDirectoryName;
-      
-      getChildren().getItems().addAll(folder.getChildren().getItems());
-      setParent(folder.getParent());
-      setProject(folder.getProject());
-   }
+    private List<Package> packages = new ArrayList<Package>();
 
-   public String getSourceDirectoryName()
-   {
-      return sourceDirectoryName;
-   }
+    public SourceDirectory(FolderModel folder, String sourceDirectoryName) {
+        super(folder);
+        this.sourceDirectoryName = sourceDirectoryName;
 
-   public List<Package> getPackages()
-   {
-      return packages;
-   }
-   
-   public Package getDefaultPackage()
-   {
-      for (Package p : packages)
-      {
-         if (p.getPackageName().isEmpty())
-         {
-            return p;
-         }
-      }
-      
-      return null;
-   }
+        getChildren().getItems().addAll(folder.getChildren().getItems());
+        setParent(folder.getParent());
+        setProject(folder.getProject());
+    }
+
+    public String getSourceDirectoryName() {
+        return sourceDirectoryName;
+    }
+
+    public List<Package> getPackages() {
+        return packages;
+    }
+
+    public Package getDefaultPackage() {
+        for (Package p : packages) {
+            if (p.getPackageName().isEmpty()) {
+                return p;
+            }
+        }
+
+        return null;
+    }
 
 }

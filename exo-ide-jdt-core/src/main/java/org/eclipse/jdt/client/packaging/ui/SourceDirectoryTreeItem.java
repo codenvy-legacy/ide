@@ -35,166 +35,135 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class SourceDirectoryTreeItem extends PackageExplorerTreeItem
-{
+public class SourceDirectoryTreeItem extends PackageExplorerTreeItem {
 
-   public SourceDirectoryTreeItem(SourceDirectory sourceDirectory)
-   {
-      super(sourceDirectory);
-   }
+    public SourceDirectoryTreeItem(SourceDirectory sourceDirectory) {
+        super(sourceDirectory);
+    }
 
-   @Override
-   protected ImageResource getItemIcon()
-   {
-      return JdtClientBundle.INSTANCE.resourceDirectory();
-   }
+    @Override
+    protected ImageResource getItemIcon() {
+        return JdtClientBundle.INSTANCE.resourceDirectory();
+    }
 
-   @Override
-   protected String getItemTitle()
-   {
-      return ((SourceDirectory)getUserObject()).getSourceDirectoryName();
-   }
+    @Override
+    protected String getItemTitle() {
+        return ((SourceDirectory)getUserObject()).getSourceDirectoryName();
+    }
 
-   @Override
-   public List<Item> getItems()
-   {
-      SourceDirectory sourceDirectory = (SourceDirectory)getUserObject();
-      List<Item> items = new ArrayList<Item>();
+    @Override
+    public List<Item> getItems() {
+        SourceDirectory sourceDirectory = (SourceDirectory)getUserObject();
+        List<Item> items = new ArrayList<Item>();
 
-      for (Package p : sourceDirectory.getPackages())
-      {
-         if (!p.getPackageName().isEmpty())
-         {
-            if (isNeedShowPackage(p))
-            {
-               items.add(p);
+        for (Package p : sourceDirectory.getPackages()) {
+            if (!p.getPackageName().isEmpty()) {
+                if (isNeedShowPackage(p)) {
+                    items.add(p);
+                }
             }
-         }
-      }
+        }
 
-      for (FileModel file : sourceDirectory.getDefaultPackage().getFiles())
-      {
-         if (!DirectoryFilter.get().matchWithPattern(file.getName()))
-         {
-            items.add(file);
-         }
-      }
+        for (FileModel file : sourceDirectory.getDefaultPackage().getFiles()) {
+            if (!DirectoryFilter.get().matchWithPattern(file.getName())) {
+                items.add(file);
+            }
+        }
 
-      return items;
-   }
+        return items;
+    }
 
-   @Override
-   public void refresh(boolean expand)
-   {
-      render();
+    @Override
+    public void refresh(boolean expand) {
+        render();
 
       /*
        * Does not refresh children if tree item closed
        */
-      if (!getState() && !expand)
-      {
-         return;
-      }
+        if (!getState() && !expand) {
+            return;
+        }
 
       /*
        * Remove nonexistent
        */
-      removeNonexistendTreeItems();
+        removeNonexistendTreeItems();
 
       /*
        * Add missing
        */
-      SourceDirectory sourceDirectory = (SourceDirectory)getUserObject();
-      int index = 0;
+        SourceDirectory sourceDirectory = (SourceDirectory)getUserObject();
+        int index = 0;
 
       /*
        * Packages
        */
-      Package defaultPackage = null;
-      for (Package p : sourceDirectory.getPackages())
-      {
-         if (p.getPackageName().isEmpty())
-         {
-            defaultPackage = p;
-            continue;
-         }
+        Package defaultPackage = null;
+        for (Package p : sourceDirectory.getPackages()) {
+            if (p.getPackageName().isEmpty()) {
+                defaultPackage = p;
+                continue;
+            }
 
-         if (!isNeedShowPackage(p))
-         {
-            continue;
-         }
+            if (!isNeedShowPackage(p)) {
+                continue;
+            }
 
-         PackageExplorerTreeItem child = getChildByItemId(p.getId());
-         if (child == null)
-         {
-            child = new PackageTreeItem(p);
-            insertItem(index, child);
-         }
-         else
-         {
-            child.setUserObject(p);
-            child.refresh(false);
-         }
+            PackageExplorerTreeItem child = getChildByItemId(p.getId());
+            if (child == null) {
+                child = new PackageTreeItem(p);
+                insertItem(index, child);
+            } else {
+                child.setUserObject(p);
+                child.refresh(false);
+            }
 
-         index++;
-      }
+            index++;
+        }
 
       /*
        * Files
        */
-      Collections.sort(defaultPackage.getFiles(), COMPARATOR);
-      for (FileModel file : defaultPackage.getFiles())
-      {
-         if (DirectoryFilter.get().matchWithPattern(file.getName()))
-         {
-            continue;
-         }
+        Collections.sort(defaultPackage.getFiles(), COMPARATOR);
+        for (FileModel file : defaultPackage.getFiles()) {
+            if (DirectoryFilter.get().matchWithPattern(file.getName())) {
+                continue;
+            }
 
-         PackageExplorerTreeItem child = getChildByItemId(file.getId());
-         if (child == null)
-         {
-            child = new FileTreeItem(file);
-            insertItem(index, child);
-         }
-         else
-         {
-            child.setUserObject(file);
-            child.refresh(false);
-         }
-         index++;
-      }
+            PackageExplorerTreeItem child = getChildByItemId(file.getId());
+            if (child == null) {
+                child = new FileTreeItem(file);
+                insertItem(index, child);
+            } else {
+                child.setUserObject(file);
+                child.refresh(false);
+            }
+            index++;
+        }
 
-      if (expand)
-      {
-         setState(true);
-      }
-   }
+        if (expand) {
+            setState(true);
+        }
+    }
 
-   private boolean isNeedShowPackage(Package p)
-   {
-      boolean hasFiles = false;
-      boolean hasFolders = false;
+    private boolean isNeedShowPackage(Package p) {
+        boolean hasFiles = false;
+        boolean hasFolders = false;
 
-      for (Item item : p.getChildren().getItems())
-      {
-         if (item instanceof FolderModel)
-         {
-            hasFolders = true;
-         }
-         else if (item instanceof FileModel)
-         {
-            hasFiles = true;
-         }
-      }
+        for (Item item : p.getChildren().getItems()) {
+            if (item instanceof FolderModel) {
+                hasFolders = true;
+            } else if (item instanceof FileModel) {
+                hasFiles = true;
+            }
+        }
 
-      if (hasFolders == true && hasFiles == false)
-      {
-         return false;
-      }
+        if (hasFolders == true && hasFiles == false) {
+            return false;
+        }
 
-      return true;
-   }
+        return true;
+    }
 
 }
