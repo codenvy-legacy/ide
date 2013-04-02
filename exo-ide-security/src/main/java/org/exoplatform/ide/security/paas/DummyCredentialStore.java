@@ -29,67 +29,51 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DummyCredentialStore implements CredentialStore
-{
-   private final Map<String, Pair[]> myCredentials = new HashMap<String, Pair[]>();
-   private final Lock lock = new ReentrantLock();
+public class DummyCredentialStore implements CredentialStore {
+    private final Map<String, Pair[]> myCredentials = new HashMap<String, Pair[]>();
+    private final Lock                lock          = new ReentrantLock();
 
-   @Override
-   public boolean load(String user, String target, Credential credential) throws CredentialStoreException
-   {
-      lock.lock();
-      try
-      {
-         Pair[] persistentCredential = myCredentials.get(user + target);
-         if (persistentCredential == null)
-         {
-            return false;
-         }
-         for (Pair attribute : persistentCredential)
-         {
-            credential.setAttribute(attribute.getName(), attribute.getValue());
-         }
-         return true;
-      }
-      finally
-      {
-         lock.unlock();
-      }
-   }
+    @Override
+    public boolean load(String user, String target, Credential credential) throws CredentialStoreException {
+        lock.lock();
+        try {
+            Pair[] persistentCredential = myCredentials.get(user + target);
+            if (persistentCredential == null) {
+                return false;
+            }
+            for (Pair attribute : persistentCredential) {
+                credential.setAttribute(attribute.getName(), attribute.getValue());
+            }
+            return true;
+        } finally {
+            lock.unlock();
+        }
+    }
 
-   @Override
-   public void save(String user, String target, Credential credential) throws CredentialStoreException
-   {
-      lock.lock();
-      try
-      {
-         final Map<String, String> attributes = credential.getAttributes();
-         Pair[] persistentCredential = new Pair[attributes.size()];
-         int i = 0;
-         for (Map.Entry<String, String> e : attributes.entrySet())
-         {
-            persistentCredential[i++] = new Pair(e.getKey(), e.getValue());
-         }
-         myCredentials.put(user + target, persistentCredential);
-      }
-      finally
-      {
-         lock.unlock();
-      }
+    @Override
+    public void save(String user, String target, Credential credential) throws CredentialStoreException {
+        lock.lock();
+        try {
+            final Map<String, String> attributes = credential.getAttributes();
+            Pair[] persistentCredential = new Pair[attributes.size()];
+            int i = 0;
+            for (Map.Entry<String, String> e : attributes.entrySet()) {
+                persistentCredential[i++] = new Pair(e.getKey(), e.getValue());
+            }
+            myCredentials.put(user + target, persistentCredential);
+        } finally {
+            lock.unlock();
+        }
 
-   }
+    }
 
-   @Override
-   public boolean delete(String user, String target) throws CredentialStoreException
-   {
-      lock.lock();
-      try
-      {
-         return myCredentials.remove(user + target) != null;
-      }
-      finally
-      {
-         lock.unlock();
-      }
-   }
+    @Override
+    public boolean delete(String user, String target) throws CredentialStoreException {
+        lock.lock();
+        try {
+            return myCredentials.remove(user + target) != null;
+        } finally {
+            lock.unlock();
+        }
+    }
 }

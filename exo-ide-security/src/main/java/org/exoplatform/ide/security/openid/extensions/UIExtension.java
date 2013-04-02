@@ -26,55 +26,47 @@ import org.openid4java.message.ParameterList;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class UIExtension implements MessageExtension
-{
-   public static final String TYPE_URI = "http://specs.openid.net/extensions/ui/1.0";
+public class UIExtension implements MessageExtension {
+    public static final String TYPE_URI = "http://specs.openid.net/extensions/ui/1.0";
 
-   private ParameterList params;
+    private ParameterList params;
 
-   /**
-    * @param mode
-    *    specifies the alternative user interface. At the moment 'popup' supported only. May be <code>null</code>.
-    * @param showFavicon
-    *    displays the favicon of the referring domain in the OpenID approval page
-    */
-   public UIExtension(String mode, boolean showFavicon)
-   {
-      this.params = new ParameterList();
-      if (mode != null)
-      {
-         this.params.set(new Parameter("mode", mode));
-      }
-      this.params.set(new Parameter("icon", Boolean.toString(showFavicon)));
-   }
+    /**
+     * @param mode
+     *         specifies the alternative user interface. At the moment 'popup' supported only. May be <code>null</code>.
+     * @param showFavicon
+     *         displays the favicon of the referring domain in the OpenID approval page
+     */
+    public UIExtension(String mode, boolean showFavicon) {
+        this.params = new ParameterList();
+        if (mode != null) {
+            this.params.set(new Parameter("mode", mode));
+        }
+        this.params.set(new Parameter("icon", Boolean.toString(showFavicon)));
+    }
 
-   @Override
-   public final String getTypeUri()
-   {
-      return TYPE_URI;
-   }
+    @Override
+    public final String getTypeUri() {
+        return TYPE_URI;
+    }
 
-   @Override
-   public ParameterList getParameters()
-   {
-      return this.params;
-   }
+    @Override
+    public ParameterList getParameters() {
+        return this.params;
+    }
 
-   @Override
-   public void setParameters(ParameterList params)
-   {
-      this.params = params;
-   }
+    @Override
+    public void setParameters(ParameterList params) {
+        this.params = params;
+    }
 
-   @Override
-   public final boolean providesIdentifier()
-   {
-      return false;
-   }
+    @Override
+    public final boolean providesIdentifier() {
+        return false;
+    }
 
-   @Override
-   public final boolean signRequired()
-   {
-      return true;
-   }
+    @Override
+    public final boolean signRequired() {
+        return true;
+    }
 }

@@ -25,31 +25,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Grub all implementations of OAuthAuthenticator from eXo container.
- */
-public class ExoOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider
-{
-   private final Map<String, OAuthAuthenticator> authenticators;
+/** Grub all implementations of OAuthAuthenticator from eXo container. */
+public class ExoOAuthAuthenticatorProvider implements OAuthAuthenticatorProvider {
+    private final Map<String, OAuthAuthenticator> authenticators;
 
-   public ExoOAuthAuthenticatorProvider(ExoContainerContext containerContext)
-   {
-      authenticators = new HashMap<String, OAuthAuthenticator>();
-      ExoContainer container = containerContext.getContainer();
-      List allAuth = container.getComponentInstancesOfType(OAuthAuthenticator.class);
-      if (!(allAuth == null || allAuth.isEmpty()))
-      {
-         for (Object o : allAuth)
-         {
-            OAuthAuthenticator auth = (OAuthAuthenticator)o;
-            authenticators.put(auth.getOAuthProvider(), auth);
-         }
-      }
-   }
+    public ExoOAuthAuthenticatorProvider(ExoContainerContext containerContext) {
+        authenticators = new HashMap<String, OAuthAuthenticator>();
+        ExoContainer container = containerContext.getContainer();
+        List allAuth = container.getComponentInstancesOfType(OAuthAuthenticator.class);
+        if (!(allAuth == null || allAuth.isEmpty())) {
+            for (Object o : allAuth) {
+                OAuthAuthenticator auth = (OAuthAuthenticator)o;
+                authenticators.put(auth.getOAuthProvider(), auth);
+            }
+        }
+    }
 
-   @Override
-   public OAuthAuthenticator getAuthenticator(String oauthProviderName)
-   {
-      return authenticators.get(oauthProviderName);
-   }
+    @Override
+    public OAuthAuthenticator getAuthenticator(String oauthProviderName) {
+        return authenticators.get(oauthProviderName);
+    }
 }

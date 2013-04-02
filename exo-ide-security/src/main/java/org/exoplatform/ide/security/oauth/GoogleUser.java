@@ -26,54 +26,46 @@ import org.exoplatform.ide.security.shared.User;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GoogleUser implements User
-{
-   private String email;
-   private String name;
+public class GoogleUser implements User {
+    private String email;
+    private String name;
 
-   @Override
-   public final String getId()
-   {
-      return email;
-   }
+    @Override
+    public final String getId() {
+        return email;
+    }
 
-   @Override
-   public final void setId(String id)
-   {
-      // JSON response from Google API contains key 'id' but it has different purpose.
-      // Ignore calls of this method. Email address is used as user identifier.
-   }
+    @Override
+    public final void setId(String id) {
+        // JSON response from Google API contains key 'id' but it has different purpose.
+        // Ignore calls of this method. Email address is used as user identifier.
+    }
 
-   @Override
-   public String getEmail()
-   {
-      return email;
-   }
+    @Override
+    public String getEmail() {
+        return email;
+    }
 
-   @Override
-   public void setEmail(String email)
-   {
-      setId(email);
-      this.email = email;
-   }
+    @Override
+    public void setEmail(String email) {
+        setId(email);
+        this.email = email;
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "GoogleUser{" +
-         "id='" + getId() + '\'' +
-         ", email='" + email + '\'' +
-         ", name='" + name + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "GoogleUser{" +
+               "id='" + getId() + '\'' +
+               ", email='" + email + '\'' +
+               ", name='" + name + '\'' +
+               '}';
+    }
 }

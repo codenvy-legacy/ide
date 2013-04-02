@@ -25,13 +25,12 @@ package org.exoplatform.ide.security.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface User
-{
-   String getId();
+public interface User {
+    String getId();
 
-   void setId(String id);
+    void setId(String id);
 
-   String getEmail();
+    String getEmail();
 
-   void setEmail(String email);
+    void setEmail(String email);
 }

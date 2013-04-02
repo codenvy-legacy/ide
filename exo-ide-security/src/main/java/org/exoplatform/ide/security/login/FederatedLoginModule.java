@@ -34,94 +34,80 @@ import javax.security.auth.login.LoginException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class FederatedLoginModule extends AbstractLoginModule
-{
-   private static final Log LOG = ExoLogger.getLogger(FederatedLoginModule.class);
+public class FederatedLoginModule extends AbstractLoginModule {
+    private static final Log LOG = ExoLogger.getLogger(FederatedLoginModule.class);
 
-   @Override
-   protected Log getLogger()
-   {
-      return LOG;
-   }
+    @Override
+    protected Log getLogger() {
+        return LOG;
+    }
 
-   @Override
-   public boolean login() throws LoginException
-   {
-      try
-      {
-         FederatedLoginList loginList = (FederatedLoginList)getContainer().getComponentInstanceOfType(FederatedLoginList.class);
-         if (loginList == null)
-         {
-            // Do nothing if federated login (OpenID or OAuth) not configured.
-            return false;
-         }
-
-         Callback[] callbacks = new Callback[2];
-         callbacks[0] = new NameCallback("UserID");
-         callbacks[1] = new PasswordCallback("Password", false);
-
-         callbackHandler.handle(callbacks);
-
-         final String userId = ((NameCallback)callbacks[0]).getName();
-         final char[] password = ((PasswordCallback)callbacks[1]).getPassword();
-         if (userId == null || password == null)
-         {
-            return false;
-         }
-
-         ((PasswordCallback)callbacks[1]).clearPassword();
-
-         final String passwordStr = new String(password);
-         if (loginList.contains(userId, passwordStr))
-         {
-            loginList.remove(userId, passwordStr);
-
-            Authenticator authenticator = (Authenticator)getContainer().getComponentInstanceOfType(Authenticator.class);
-            if (authenticator == null)
-            {
-               throw new LoginException("No Authenticator component found, check your configuration");
+    @Override
+    public boolean login() throws LoginException {
+        try {
+            FederatedLoginList loginList = (FederatedLoginList)getContainer().getComponentInstanceOfType(FederatedLoginList.class);
+            if (loginList == null) {
+                // Do nothing if federated login (OpenID or OAuth) not configured.
+                return false;
             }
 
-            Identity identity = authenticator.createIdentity(userId);
-            // NOTE : Since OrganizationAuthenticatorImpl authenticator do not check is user exists in user database
-            // and in other hand we do not have user password we cannot trust user without roles.
-            // Check user roles here and if user's roles is empty do not trust such user.
-            // Any way if we create identity for the user it may not login without roles.
-            if (identity.getRoles().isEmpty())
-            {
-               return false;
+            Callback[] callbacks = new Callback[2];
+            callbacks[0] = new NameCallback("UserID");
+            callbacks[1] = new PasswordCallback("Password", false);
+
+            callbackHandler.handle(callbacks);
+
+            final String userId = ((NameCallback)callbacks[0]).getName();
+            final char[] password = ((PasswordCallback)callbacks[1]).getPassword();
+            if (userId == null || password == null) {
+                return false;
             }
 
-            // Otherwise save Identity in shared state. Next LoginModule will use it.
-            sharedState.put("javax.security.auth.login.name", userId);
-            sharedState.put("exo.security.identity", identity);
-            subject.getPublicCredentials().add(new UsernameCredential(userId));
-            return true;
-         }
+            ((PasswordCallback)callbacks[1]).clearPassword();
 
-         return false;
-      }
-      catch (Exception e)
-      {
-         throw new LoginException(e.getMessage());
-      }
-   }
+            final String passwordStr = new String(password);
+            if (loginList.contains(userId, passwordStr)) {
+                loginList.remove(userId, passwordStr);
 
-   @Override
-   public boolean commit() throws LoginException
-   {
-      return true;
-   }
+                Authenticator authenticator = (Authenticator)getContainer().getComponentInstanceOfType(Authenticator.class);
+                if (authenticator == null) {
+                    throw new LoginException("No Authenticator component found, check your configuration");
+                }
 
-   @Override
-   public boolean abort() throws LoginException
-   {
-      return true;
-   }
+                Identity identity = authenticator.createIdentity(userId);
+                // NOTE : Since OrganizationAuthenticatorImpl authenticator do not check is user exists in user database
+                // and in other hand we do not have user password we cannot trust user without roles.
+                // Check user roles here and if user's roles is empty do not trust such user.
+                // Any way if we create identity for the user it may not login without roles.
+                if (identity.getRoles().isEmpty()) {
+                    return false;
+                }
 
-   @Override
-   public boolean logout() throws LoginException
-   {
-      return true;
-   }
+                // Otherwise save Identity in shared state. Next LoginModule will use it.
+                sharedState.put("javax.security.auth.login.name", userId);
+                sharedState.put("exo.security.identity", identity);
+                subject.getPublicCredentials().add(new UsernameCredential(userId));
+                return true;
+            }
+
+            return false;
+        } catch (Exception e) {
+            throw new LoginException(e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean commit() throws LoginException {
+        return true;
+    }
+
+    @Override
+    public boolean abort() throws LoginException {
+        return true;
+    }
+
+    @Override
+    public boolean logout() throws LoginException {
+        return true;
+    }
 }

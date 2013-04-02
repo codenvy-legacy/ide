@@ -21,10 +21,9 @@ package org.exoplatform.ide.security.login;
 import org.exoplatform.ide.security.oauth.OAuthAuthenticationService;
 import org.exoplatform.ide.security.openid.OpenIDAuthenticationService;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * Deploys service required for OpenID and OAuth authentication.
@@ -32,20 +31,17 @@ import javax.ws.rs.core.Application;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class FederatedLoginApplication extends Application
-{
-   private final Set<Class<?>> classes;
+public class FederatedLoginApplication extends Application {
+    private final Set<Class<?>> classes;
 
-   public FederatedLoginApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(OpenIDAuthenticationService.class);
-      classes.add(OAuthAuthenticationService.class);
-   }
+    public FederatedLoginApplication() {
+        classes = new HashSet<Class<?>>(2);
+        classes.add(OpenIDAuthenticationService.class);
+        classes.add(OAuthAuthenticationService.class);
+    }
 
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 }

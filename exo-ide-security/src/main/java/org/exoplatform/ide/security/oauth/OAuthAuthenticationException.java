@@ -23,15 +23,12 @@ package org.exoplatform.ide.security.oauth;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public final class OAuthAuthenticationException extends Exception
-{
-   public OAuthAuthenticationException(String message)
-   {
-      super(message);
-   }
+public final class OAuthAuthenticationException extends Exception {
+    public OAuthAuthenticationException(String message) {
+        super(message);
+    }
 
-   public OAuthAuthenticationException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public OAuthAuthenticationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
