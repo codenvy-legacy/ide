@@ -18,31 +18,27 @@
  */
 package org.exoplatform.ide.editor.groovy.client;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Images Mar 11, 2011 10:54:45 AM evgen $
- * 
  */
-public interface Images extends ClientBundle
-{
-   Images INSTANCE = GWT.create(Images.class);
+public interface Images extends ClientBundle {
+    Images INSTANCE = GWT.create(Images.class);
 
-   public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
+    public static final String IMAGE_URL = UIHelper.getGadgetImagesURL();
 
-   static final String GROOVY = IMAGE_URL + "groovy.png";
+    static final String GROOVY = IMAGE_URL + "groovy.png";
 
-   static final String REST_SERVICE = IMAGE_URL + "rest.png";
+    static final String REST_SERVICE = IMAGE_URL + "rest.png";
 
-   static final String GROOVY_TAG = IMAGE_URL + "groovy-tag.png";
+    static final String GROOVY_TAG = IMAGE_URL + "groovy-tag.png";
 
-   @Source("org/exoplatform/ide/editor/groovy/public/images/groovy.png")
-   ImageResource groovy();
+    @Source("org/exoplatform/ide/editor/groovy/public/images/groovy.png")
+    ImageResource groovy();
 }

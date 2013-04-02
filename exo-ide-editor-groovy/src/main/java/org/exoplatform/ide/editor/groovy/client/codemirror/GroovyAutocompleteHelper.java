@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.editor.groovy.client.codemirror;
 
-import java.util.Arrays;
-import java.util.List;
+import com.google.gwt.core.client.JavaScriptObject;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
@@ -28,98 +27,85 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaAutocompleteHelper;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- * 
  */
-public class GroovyAutocompleteHelper extends JavaAutocompleteHelper
-{
+public class GroovyAutocompleteHelper extends JavaAutocompleteHelper {
 
-   GroovyCodeValidator groovyCodeValidator = new GroovyCodeValidator();
+    GroovyCodeValidator groovyCodeValidator = new GroovyCodeValidator();
 
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
-      List<? extends Token> tokenList, String currentLineMimeType)
-   {
-      return getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList);
-   }
+    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+                                      List<? extends Token> tokenList, String currentLineMimeType) {
+        return getTokenBeforeCursor(node, lineNumber, cursorPosition, tokenList);
+    }
 
-   /**
-    * 
-    * @param node
-    * @param lineNumber
-    * @param cursorPosition
-    * @param tokenList
-    * @return
-    */
-   public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
-      List<? extends Token> tokenList)
-   {
-      // interrupt at the end of the line or content
-      if ((node == null) || (node).equals("BR"))
-      {
-         return null;
-      }
+    /**
+     * @param node
+     * @param lineNumber
+     * @param cursorPosition
+     * @param tokenList
+     * @return
+     */
+    public Token getTokenBeforeCursor(JavaScriptObject node, int lineNumber, int cursorPosition,
+                                      List<? extends Token> tokenList) {
+        // interrupt at the end of the line or content
+        if ((node == null) || (node).equals("BR")) {
+            return null;
+        }
 
-      String nodeContent = getStatementBeforePoint(node, cursorPosition);
+        String nodeContent = getStatementBeforePoint(node, cursorPosition);
 
-      TokenBeenImpl tokenBeforeCursor;
+        TokenBeenImpl tokenBeforeCursor;
 
-      if (nodeContent != null && !nodeContent.isEmpty())
-      {
-         int numberOfChainsBetweenPoint = nodeContent.split("[.]").length; // nodeContent.split("[.]") returns 1 for "name", and 3
-                                                                           // for "java.lang.Integer"
+        if (nodeContent != null && !nodeContent.isEmpty()) {
+            int numberOfChainsBetweenPoint = nodeContent.split("[.]").length; // nodeContent.split("[.]") returns 1 for "name", and 3
+            // for "java.lang.Integer"
 
-         // search token for variables like "name._" or "name.ch_"
-         if (numberOfChainsBetweenPoint == 1)
-         {
-            tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>)tokenList);
-            if (tokenBeforeCursor != null && tokenBeforeCursor.getFqn() != null)
-            {
-               return new TokenBeenImpl(tokenBeforeCursor.getName(), tokenBeforeCursor.getType(), lineNumber,
-                  tokenBeforeCursor.getMimeType(), tokenBeforeCursor.getElementType(),
-                  tokenBeforeCursor.getModifiers(), tokenBeforeCursor.getFqn());
+            // search token for variables like "name._" or "name.ch_"
+            if (numberOfChainsBetweenPoint == 1) {
+                tokenBeforeCursor = getGenericToken(nodeContent, lineNumber, (List<TokenBeenImpl>)tokenList);
+                if (tokenBeforeCursor != null && tokenBeforeCursor.getFqn() != null) {
+                    return new TokenBeenImpl(tokenBeforeCursor.getName(), tokenBeforeCursor.getType(), lineNumber,
+                                             tokenBeforeCursor.getMimeType(), tokenBeforeCursor.getElementType(),
+                                             tokenBeforeCursor.getModifiers(), tokenBeforeCursor.getFqn());
+                }
             }
-         }
 
-         // search fqn among default packages
-         String fqn = groovyCodeValidator.getFqnFromDefaultPackages(nodeContent);
-         if (fqn != null)
-            return new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY, nodeContent,
-               Arrays.asList(Modifier.STATIC), fqn);
+            // search fqn among default packages
+            String fqn = groovyCodeValidator.getFqnFromDefaultPackages(nodeContent);
+            if (fqn != null)
+                return new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY, nodeContent,
+                                         Arrays.asList(Modifier.STATIC), fqn);
 
-         // search fqn among the import statements from the import block
-         List<TokenBeenImpl> importStatementBlock =
-            GroovyCodeValidator.getImportStatementBlock((List<TokenBeenImpl>)tokenList);
-         for (TokenBeenImpl importStatement : importStatementBlock)
-         {
-            if (importStatement.getElementType().endsWith(nodeContent))
-            {
-               return (Token)new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY,
-                  nodeContent, Arrays.asList(Modifier.STATIC), importStatement.getElementType());
+            // search fqn among the import statements from the import block
+            List<TokenBeenImpl> importStatementBlock =
+                    GroovyCodeValidator.getImportStatementBlock((List<TokenBeenImpl>)tokenList);
+            for (TokenBeenImpl importStatement : importStatementBlock) {
+                if (importStatement.getElementType().endsWith(nodeContent)) {
+                    return (Token)new TokenBeenImpl(null, TokenType.TYPE, lineNumber, MimeType.APPLICATION_GROOVY,
+                                                    nodeContent, Arrays.asList(Modifier.STATIC), importStatement.getElementType());
+                }
             }
-         }
 
-      }
+        }
 
-      // if this is "name_" or " _" cases, return Token of container element like method, class or module, from token list
-      else
-      {
-         return (Token)getContainerToken(lineNumber, (List<TokenBeenImpl>)tokenList);
-      }
+        // if this is "name_" or " _" cases, return Token of container element like method, class or module, from token list
+        else {
+            return (Token)getContainerToken(lineNumber, (List<TokenBeenImpl>)tokenList);
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   public boolean isVariable(String nodeType)
-   {
-      return GroovyParser.isGroovyVariable(nodeType);
-   }
+    public boolean isVariable(String nodeType) {
+        return GroovyParser.isGroovyVariable(nodeType);
+    }
 
-   public boolean isPoint(String nodeType, String nodeContent)
-   {
-      return GroovyParser.isPoint(nodeType, nodeContent);
-   }
+    public boolean isPoint(String nodeType, String nodeContent) {
+        return GroovyParser.isPoint(nodeType, nodeContent);
+    }
 }
