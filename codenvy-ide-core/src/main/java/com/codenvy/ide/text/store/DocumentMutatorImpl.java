@@ -168,8 +168,8 @@ class DocumentMutatorImpl implements TextStoreMutator
       {
          if (curLine == null)
          {
-            throw new IndexOutOfBoundsException("Reached end of document so could not delete the requested remaining "
-               + remainingDeleteCount + " characters");
+            throw new IndexOutOfBoundsException(
+               "Reached end of document so could not delete the requested remaining " + remainingDeleteCount + " characters");
          }
       }
    }
@@ -206,9 +206,8 @@ class DocumentMutatorImpl implements TextStoreMutator
 
       if (column >= line.getText().length())
       {
-         throw new IndexOutOfBoundsException("Attempt to delete text at column " + column
-            + " which is greater than line length " + line.getText().length() + "(line text is: " + line.getText()
-            + ")");
+         throw new IndexOutOfBoundsException(
+            "Attempt to delete text at column " + column + " which is greater than line length " + line.getText().length() + "(line text is: " + line.getText() + ")");
       }
 
       String deletedText = document.getText(line, column, deleteCount);
@@ -234,15 +233,14 @@ class DocumentMutatorImpl implements TextStoreMutator
 
       if (column > LineUtils.getLastCursorColumn(line))
       {
-         throw new IndexOutOfBoundsException("Attempt to insert text at column " + column
-            + " which is greater than line length " + line.getText().length() + "(line text is: " + line.getText()
-            + ")");
+         throw new IndexOutOfBoundsException(
+            "Attempt to insert text at column " + column + " which is greater than line length " + line.getText().length() + "(line text is: " + line.getText() + ")");
       }
 
       beginHighLevelModification(TextChange.Type.INSERT, line, lineNumber, column, text);
       LineInfo lastLineModified = insertTextImpl(line, lineNumber, column, text);
-      TextChange textChange =
-         TextChange.createInsertion(line, lineNumber, column, lastLineModified.line(), lastLineModified.number(), text);
+      TextChange textChange = TextChange.createInsertion(line, lineNumber, column, lastLineModified.line(),
+         lastLineModified.number(), text);
       textChanges.add(textChange);
       endHighLevelModification();
 

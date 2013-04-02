@@ -28,9 +28,9 @@ public interface TextStoreMutator
     * text spans multiple lines, the {@link Line Lines} where the deletion
     * started and ended may be joined and the deleted lines will be detached from
     * the document.
-    * 
-    * @param line the line containing the begin position for the delete
-    * @param column the column (inclusive) where the delete will begin
+    *
+    * @param line        the line containing the begin position for the delete
+    * @param column      the column (inclusive) where the delete will begin
     * @param deleteCount the number of characters (including newlines) to delete
     * @return the change that led to the deletion of the text, or {@code null}
     *         if no changes applied
@@ -67,9 +67,9 @@ public interface TextStoreMutator
     * the text spans multiple lines, multiple {@link Line Lines} will be created.
     *
     * @param canReplaceSelection whether the mutator is allowed to replace the
-    *        selection (if it exists) with the given text. Passing true does not
-    *        guarantee the mutator will choose to replace the selection; passing
-    *        false guarantees the mutator will never replace the selection
+    *                            selection (if it exists) with the given text. Passing true does not
+    *                            guarantee the mutator will choose to replace the selection; passing
+    *                            false guarantees the mutator will never replace the selection
     * @return the change that led to the insertion of text; if the selection was
     *         replaced, this will only be the insertion text change, not the
     *         deletion text change; if selection was deleted, but nothing was
@@ -79,7 +79,7 @@ public interface TextStoreMutator
    TextChange insertText(Line line, int lineNumber, int column, String text, boolean canReplaceSelection);
 
    /**
-   * @return
-   */
+    * @return
+    */
    UndoManager getUndoManager();
 }

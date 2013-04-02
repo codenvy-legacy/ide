@@ -29,7 +29,7 @@ import com.codenvy.ide.util.StringUtils;
 /**
  * Document model for the code editor.
  *
- *  The document is modeled using a linked list of lines. (This allows for very fast line insertions
+ * The document is modeled using a linked list of lines. (This allows for very fast line insertions
  * and still good performance for other common editor operations.)
  *
  * During a text change, listeners will be called in this order:
@@ -46,8 +46,8 @@ public class DocumentModel implements TextStoreMutator
 
    /**
     * A listener that is called when the number of lines in the document changes.
-    * 
-    * See the callback ordering documented in {@link DocumentModel}. 
+    *
+    * See the callback ordering documented in {@link DocumentModel}.
     */
    public interface LineCountListener
    {
@@ -60,8 +60,8 @@ public class DocumentModel implements TextStoreMutator
     *
     * Note: In the case of a multiline insertion/deletion, this will be called
     * once.
-    * 
-    * See the callback ordering documented in {@link DocumentModel}. 
+    *
+    * See the callback ordering documented in {@link DocumentModel}.
     */
    public interface LineListener
    {
@@ -72,18 +72,18 @@ public class DocumentModel implements TextStoreMutator
       void onLineAdded(DocumentModel document, int lineNumber, JsonArray<Line> addedLines);
 
       /**
-       * @param lineNumber the previous line number of the first item in
-       *        {@code removedLines}
+       * @param lineNumber   the previous line number of the first item in
+       *                     {@code removedLines}
        * @param removedLines a contiguous list of (now detached) lines that were
-       *        removed
+       *                     removed
        */
       void onLineRemoved(DocumentModel document, int lineNumber, JsonArray<Line> removedLines);
    }
 
    /**
     * A listener that is called when a text change occurs within a document.
-    * 
-    * See the callback ordering documented in {@link DocumentModel}. 
+    *
+    * See the callback ordering documented in {@link DocumentModel}.
     */
    public interface TextListener
    {
@@ -116,11 +116,11 @@ public class DocumentModel implements TextStoreMutator
        * This callback is called synchronously with document mutations, the less
        * work you can do the better.
        *
-       * @param line The line the text change will take place on.
+       * @param line       The line the text change will take place on.
        * @param lineNumber The line number of the line.
-       * @param column The column the text change will start at.
-       * @param text The text which is either being inserted or deleted.
-       * @param type The type of {@link TextChange} that will be occurring.
+       * @param column     The column the text change will start at.
+       * @param text       The text which is either being inserted or deleted.
+       * @param type       The type of {@link TextChange} that will be occurring.
        */
       void onPreTextChange(DocumentModel document, TextChange.Type type, Line line, int lineNumber, int column,
          String text);
@@ -261,7 +261,9 @@ public class DocumentModel implements TextStoreMutator
    public String getText(Line line, int column, int count)
    {
       if (column > line.getText().length())
+      {
          throw new IndexOutOfBoundsException();
+      }
 
       StringBuilder s = new StringBuilder(StringUtils.substringGuarded(line.getText(), column, count));
       int remainingCount = count - s.length();

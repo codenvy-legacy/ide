@@ -23,58 +23,68 @@ package com.codenvy.ide.text.store;
  * reduce code complexity and object allocations.
  *
  * This class is immutable.
- *
  */
-public class Position {
-  private final LineInfo lineInfo;
-  private final int column;
+public class Position
+{
+   private final LineInfo lineInfo;
 
-  public Position(LineInfo lineInfo, int column) {
-    // Defensively copy to ensure immutabilty
-    this.lineInfo = lineInfo.copy();
-    this.column = column;
-  }
+   private final int column;
 
-  public int getColumn() {
-    return column;
-  }
+   public Position(LineInfo lineInfo, int column)
+   {
+      // Defensively copy to ensure immutabilty
+      this.lineInfo = lineInfo.copy();
+      this.column = column;
+   }
 
-  public Line getLine() {
-    return lineInfo.line();
-  }
+   public int getColumn()
+   {
+      return column;
+   }
 
-  /**
-   * Returns the line info object, if set by the creator.
-   */
-  public LineInfo getLineInfo() {
-    // Defensively copy to ensure immutabilty
-    return lineInfo.copy();
-  }
+   public Line getLine()
+   {
+      return lineInfo.line();
+   }
 
-  public int getLineNumber() {
-    return lineInfo.number();
-  }
+   /**
+    * Returns the line info object, if set by the creator.
+    */
+   public LineInfo getLineInfo()
+   {
+      // Defensively copy to ensure immutabilty
+      return lineInfo.copy();
+   }
 
-  @Override
-  public int hashCode() {
-    int result = 17;
-    result = 37 * result + lineInfo.hashCode();
-    result = 37 * result + column;
-    return result;
-  }
+   public int getLineNumber()
+   {
+      return lineInfo.number();
+   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof Position)) {
-      return false;
-    }
+   @Override
+   public int hashCode()
+   {
+      int result = 17;
+      result = 37 * result + lineInfo.hashCode();
+      result = 37 * result + column;
+      return result;
+   }
 
-    Position o = (Position) obj;
-    return lineInfo.equals(o.lineInfo) && column == o.column;
-  }
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (!(obj instanceof Position))
+      {
+         return false;
+      }
 
-  @Override
-  public String toString() {
-    return "Position(" + lineInfo + ", " + column + ")";
-  }
+      Position o = (Position)obj;
+      return lineInfo.equals(o.lineInfo) && column == o.column;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Position(" + lineInfo + ", " + column + ")";
+   }
 }

@@ -25,7 +25,6 @@ import com.codenvy.ide.text.TextStore;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 public class DocumentTextStore extends DocumentModel implements TextStore
 {
@@ -33,7 +32,7 @@ public class DocumentTextStore extends DocumentModel implements TextStore
    private LineTracker lineTracker;
 
    /**
-    * 
+    *
     */
    public DocumentTextStore(LineTracker lineTracker)
    {
@@ -61,7 +60,7 @@ public class DocumentTextStore extends DocumentModel implements TextStore
          LineInfo line = getLineFinder().findLine(lineNumber);
          int lineOffset = lineTracker.getLineOffset(lineNumber);
          return getText(line.line(), offset - lineOffset, length);
-         
+
       }
       catch (BadLocationException e)
       {
@@ -78,9 +77,10 @@ public class DocumentTextStore extends DocumentModel implements TextStore
    public int getLength()
    {
       int lenght = 0;
-      for (Line line = getFirstLine(); line != null; line = line.getNextLine()) {
+      for (Line line = getFirstLine(); line != null; line = line.getNextLine())
+      {
          lenght += line.getText().length();
-       }
+      }
       return lenght;
    }
 
@@ -96,10 +96,14 @@ public class DocumentTextStore extends DocumentModel implements TextStore
          int lineNumber = lineTracker.getLineNumberOfOffset(offset);
          LineInfo line = getLineFinder().findLine(lineNumber);
          int lineOffset = lineTracker.getLineOffset(lineNumber);
-         if(length != 0)
+         if (length != 0)
+         {
             deleteText(line.line(), lineNumber, offset - lineOffset, length);
+         }
          if (text == null)
+         {
             return;
+         }
          insertText(line.line(), lineNumber, offset - lineOffset, text);
       }
       catch (BadLocationException e)

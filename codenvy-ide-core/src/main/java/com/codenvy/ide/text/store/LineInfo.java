@@ -25,83 +25,98 @@ package com.codenvy.ide.text.store;
  * thing's use case (originally it was for returning a Line+LineNumber pair from
  * a method
  */
+
 /**
  * A POJO for a {@link Line} and its line number. This is mostly for returning
  * that pair of information, not for retaining longer-term since line numbers
  * shift constantly, and this class will not get updated.
- *
  */
-public class LineInfo implements Comparable<LineInfo> {
+public class LineInfo implements Comparable<LineInfo>
+{
 
-  private Line line;
+   private Line line;
 
-  private int number;
+   private int number;
 
-  public LineInfo(Line line, int number) {
-    this.line = line;
-    this.number = number;
-  }
+   public LineInfo(Line line, int number)
+   {
+      this.line = line;
+      this.number = number;
+   }
 
-  @Override
-  public int compareTo(LineInfo o) {
-    return number - o.number;
-  }
+   @Override
+   public int compareTo(LineInfo o)
+   {
+      return number - o.number;
+   }
 
-  public LineInfo copy() {
-    return new LineInfo(line, number);
-  }
+   public LineInfo copy()
+   {
+      return new LineInfo(line, number);
+   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof LineInfo)) {
-      return false;
-    }
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (!(obj instanceof LineInfo))
+      {
+         return false;
+      }
 
-    LineInfo other = (LineInfo) obj;
-    return line.equals(other.line) && number == other.number;
-  }
+      LineInfo other = (LineInfo)obj;
+      return line.equals(other.line) && number == other.number;
+   }
 
-  @Override
-  public int hashCode() {
-    int result = 17;
-    result = 37 * result + number;
-    result = 37 * result + line.hashCode();
-    return result;
-  }
+   @Override
+   public int hashCode()
+   {
+      int result = 17;
+      result = 37 * result + number;
+      result = 37 * result + line.hashCode();
+      return result;
+   }
 
-  public Line line() {
-    return line;
-  }
+   public Line line()
+   {
+      return line;
+   }
 
-  public boolean moveToNext() {
-    return moveToImpl(line.getNextLine(), number + 1);
-  }
+   public boolean moveToNext()
+   {
+      return moveToImpl(line.getNextLine(), number + 1);
+   }
 
-  public boolean moveToPrevious() {
-    return moveToImpl(line.getPreviousLine(), number - 1);
-  }
+   public boolean moveToPrevious()
+   {
+      return moveToImpl(line.getPreviousLine(), number - 1);
+   }
 
-  public int number() {
-    return number;
-  }
+   public int number()
+   {
+      return number;
+   }
 
-  @Override
-  public String toString() {
-    return "" + number + ": " + line.toString();
-  }
+   @Override
+   public String toString()
+   {
+      return "" + number + ": " + line.toString();
+   }
 
-  private boolean moveToImpl(Line newLine, int newNumber) {
-    if (newLine == null) {
-      return false;
-    }
+   private boolean moveToImpl(Line newLine, int newNumber)
+   {
+      if (newLine == null)
+      {
+         return false;
+      }
 
-    line = newLine;
-    number = newNumber;
+      line = newLine;
+      number = newNumber;
 
-    return true;
-  }
+      return true;
+   }
 
-  public boolean moveTo(boolean iterateForward) {
-    return iterateForward ? moveToNext() : moveToPrevious();
-  }
+   public boolean moveTo(boolean iterateForward)
+   {
+      return iterateForward ? moveToNext() : moveToPrevious();
+   }
 }

@@ -21,55 +21,67 @@ import com.codenvy.ide.util.SortedList;
  * List with anchor-specific optimizations. This class assumes all the anchors
  * in the list will be on the same line.
  */
-public class AnchorList extends SortedList<Anchor> {
+public class AnchorList extends SortedList<Anchor>
+{
 
-  private static class Comparator implements SortedList.Comparator<Anchor> {
-    @Override
-    public int compare(Anchor a, Anchor b) {
-      int comparison = a.getColumn() - b.getColumn();
-      if (comparison == 0) {
-        comparison = (a.getId() > b.getId()) ? 1 : (a.getId() < b.getId()) ? -1 : 0;
+   private static class Comparator implements SortedList.Comparator<Anchor>
+   {
+      @Override
+      public int compare(Anchor a, Anchor b)
+      {
+         int comparison = a.getColumn() - b.getColumn();
+         if (comparison == 0)
+         {
+            comparison = (a.getId() > b.getId()) ? 1 : (a.getId() < b.getId()) ? -1 : 0;
+         }
+         return comparison;
       }
-      return comparison;
-    }
-  }
+   }
 
-  private static class OneWayComparator implements SortedList.OneWayComparator<Anchor> {
-    private int column;
-    private int id;
+   private static class OneWayComparator implements SortedList.OneWayComparator<Anchor>
+   {
+      private int column;
 
-    @Override
-    public int compareTo(Anchor o) {
-      int comparison = column - o.getColumn();
-      if (comparison == 0) {
-        comparison = (id > o.getId()) ? 1 : (id < o.getId()) ? -1 : 0;
+      private int id;
+
+      @Override
+      public int compareTo(Anchor o)
+      {
+         int comparison = column - o.getColumn();
+         if (comparison == 0)
+         {
+            comparison = (id > o.getId()) ? 1 : (id < o.getId()) ? -1 : 0;
+         }
+         return comparison;
       }
-      return comparison;
-    }
-  }
+   }
 
-  private static final Comparator COMPARATOR = new Comparator();
+   private static final Comparator COMPARATOR = new Comparator();
 
-  private final OneWayComparator oneWayComparator = new OneWayComparator();
+   private final OneWayComparator oneWayComparator = new OneWayComparator();
 
-  public AnchorList() {
-    super(COMPARATOR);
-  }
+   public AnchorList()
+   {
+      super(COMPARATOR);
+   }
 
-  // TODO: second parameter is always -1. Remove?
-  public int findInsertionIndex(int columnNumber, int id) {
-    oneWayComparator.column = columnNumber;
-    oneWayComparator.id = id;
-    return findInsertionIndex(oneWayComparator);
-  }
+   // TODO: second parameter is always -1. Remove?
+   public int findInsertionIndex(int columnNumber, int id)
+   {
+      oneWayComparator.column = columnNumber;
+      oneWayComparator.id = id;
+      return findInsertionIndex(oneWayComparator);
+   }
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < size(); i++) {
-      sb.append(get(i).toString());
-      sb.append("\n");
-    }
-    return sb.toString();
-  }
+   @Override
+   public String toString()
+   {
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < size(); i++)
+      {
+         sb.append(get(i).toString());
+         sb.append("\n");
+      }
+      return sb.toString();
+   }
 }
