@@ -795,6 +795,15 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#foldSelection()
+    */
+   @Override
+   public void foldSelection()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
     * @see org.exoplatform.ide.editor.client.api.Editor#getName()
     */
    @Override
@@ -956,6 +965,6 @@ public class CKEditor extends AbsolutePanel implements Editor
    @Override
    public void replaceMatch(String replacement)
    {
-   }   
+   }
 
 }

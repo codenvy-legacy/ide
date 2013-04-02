@@ -183,7 +183,7 @@ class LineRendererController {
 
     final FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(lineNumber, true);
     if (foldMarker != null && foldMarker.isCollapsed()) {
-      Element expandElement = createExpandMarkerElement(contentElement, foldMarker, lineNumber);
+      Element expandElement = createFoldingSignElement(contentElement, foldMarker, lineNumber);
       line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);
     }
   }
@@ -205,7 +205,7 @@ class LineRendererController {
    * @param lineNumber line number to generate element ID (for Selenium tests)
    * @return created element for expanding folded text block 
    */
-  Element createExpandMarkerElement(Element parent, final FoldMarker foldMarker, int lineNumber) {
+  Element createFoldingSignElement(Element parent, final FoldMarker foldMarker, int lineNumber) {
      final SpanElement element = Elements.createSpanElement(resources.workspaceEditorBufferCss().expandMarker());
      // TODO: file a Chrome bug, place link here
      element.getStyle().setDisplay(CSSStyleDeclaration.Display.INLINE_BLOCK);

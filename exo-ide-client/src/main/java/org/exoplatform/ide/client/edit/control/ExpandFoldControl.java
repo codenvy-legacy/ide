@@ -24,30 +24,30 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldEvent;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
- * Control for expanding text block.
+ * Control to expand a fold.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: FoldingExpandControl.java Feb 28, 2013 5:00:20 PM azatsarynnyy $
+ * @version $Id: ExpandFoldControl.java Feb 28, 2013 5:00:20 PM azatsarynnyy $
  *
  */
-public class FoldingExpandControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class ExpandFoldControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
    public static final String ID = "Edit/Folding/Expand";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.foldingExpandControlTitle();
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.expandFoldControlTitle();
 
-   public FoldingExpandControl()
+   public ExpandFoldControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
-      setEvent(new EditorFoldingExpandEvent());
+      setEvent(new EditorExpandFoldEvent());
       setHotKey("Ctrl+Numpad +");
    }
 

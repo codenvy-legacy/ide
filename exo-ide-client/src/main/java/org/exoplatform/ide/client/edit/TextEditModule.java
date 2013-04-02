@@ -22,10 +22,11 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.control.AddBlockCommentControl;
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
 import org.exoplatform.ide.client.edit.control.DeleteTextControl;
-import org.exoplatform.ide.client.edit.control.FoldingCollapseAllControl;
-import org.exoplatform.ide.client.edit.control.FoldingCollapseControl;
-import org.exoplatform.ide.client.edit.control.FoldingExpandAllControl;
-import org.exoplatform.ide.client.edit.control.FoldingExpandControl;
+import org.exoplatform.ide.client.edit.control.CollapseAllFoldsControl;
+import org.exoplatform.ide.client.edit.control.CollapseFoldControl;
+import org.exoplatform.ide.client.edit.control.ExpandAllFoldsControl;
+import org.exoplatform.ide.client.edit.control.ExpandFoldControl;
+import org.exoplatform.ide.client.edit.control.FoldSelectionControl;
 import org.exoplatform.ide.client.edit.control.FormatSourceControl;
 import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.edit.control.RedoTypingControl;
@@ -80,10 +81,11 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
 
       IDE.getInstance().addControl(new ShowLineNumbersControl());
       IDE.getInstance().addControl(new DeleteCurrentLineControl());
-//      IDE.getInstance().addControl(new FoldingCollapseControl());
-//      IDE.getInstance().addControl(new FoldingExpandControl());
-//      IDE.getInstance().addControl(new FoldingCollapseAllControl());
-//      IDE.getInstance().addControl(new FoldingExpandAllControl());
+//      IDE.getInstance().addControl(new CollapseFoldControl());
+//      IDE.getInstance().addControl(new ExpandFoldControl());
+//      IDE.getInstance().addControl(new CollapseAllFoldsControl());
+//      IDE.getInstance().addControl(new ExpandAllFoldsControl());
+      IDE.getInstance().addControl(new FoldSelectionControl());
 
       new GoToLinePresenter();
 

@@ -23,12 +23,12 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: EditorFoldingExpandHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
+ * @version $Id: EditorExpandFoldHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
  *
  */
-public interface EditorFoldingExpandHandler extends EventHandler
+public interface EditorExpandFoldHandler extends EventHandler
 {
 
-   void onEditorExpand(EditorFoldingExpandEvent event);
+   void onEditorExpand(EditorExpandFoldEvent event);
 
 }

@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
-import com.google.gwt.dom.client.Node;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.FrameElement;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -2092,6 +2091,15 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     */
    @Override
    public void expandAll()
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.Editor#foldSelection()
+    */
+   @Override
+   public void foldSelection()
    {
       throw new UnsupportedOperationException();
    }

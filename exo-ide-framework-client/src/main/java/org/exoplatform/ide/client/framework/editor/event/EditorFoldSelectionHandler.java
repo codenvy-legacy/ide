@@ -16,22 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.google.collide.client.editor.folding;
+package org.exoplatform.ide.client.framework.editor.event;
 
-import org.exoplatform.ide.editor.shared.text.Position;
-import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * A base implementation of a text range that may be collapsible.
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: AbstractFoldRange.java Mar 18, 2013 12:18:43 PM azatsarynnyy $
+ * @version $Id: EditorFoldSelectionHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
  *
  */
-public abstract class AbstractFoldRange extends Position implements IProjectionPosition
+public interface EditorFoldSelectionHandler extends EventHandler
 {
-   public AbstractFoldRange(int offset, int length)
-   {
-      super(offset, length);
-   }
+
+   void onEditorFoldSelection(EditorFoldSelectionEvent event);
+
 }

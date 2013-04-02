@@ -23,47 +23,33 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
- * @version $Id: EditorFoldingExpandEvent.java Feb 28, 2013 5:08:29 PM azatsarynnyy $
+ * @version $Id: EditorFoldSelectionEvent.java Feb 28, 2013 5:08:29 PM azatsarynnyy $
  *
  */
-public class EditorFoldingExpandEvent extends GwtEvent<EditorFoldingExpandHandler>
+public class EditorFoldSelectionEvent extends GwtEvent<EditorFoldSelectionHandler>
 {
-   private boolean expandAll;
-
-   public EditorFoldingExpandEvent()
+   public EditorFoldSelectionEvent()
    {
       super();
    }
 
-   public EditorFoldingExpandEvent(boolean expandAll)
-   {
-      super();
-      this.expandAll = expandAll;
-   }
-
-   public static final GwtEvent.Type<EditorFoldingExpandHandler> TYPE = new GwtEvent.Type<EditorFoldingExpandHandler>();
+   public static final GwtEvent.Type<EditorFoldSelectionHandler> TYPE = new GwtEvent.Type<EditorFoldSelectionHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(EditorFoldingExpandHandler handler)
+   protected void dispatch(EditorFoldSelectionHandler handler)
    {
-      handler.onEditorExpand(this);
+      handler.onEditorFoldSelection(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFoldingExpandHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorFoldSelectionHandler> getAssociatedType()
    {
       return TYPE;
    }
-
-   public boolean isExpandAll()
-   {
-      return expandAll;
-   }
-
 }

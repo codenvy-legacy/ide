@@ -34,8 +34,8 @@ public interface FoldOccurrencesFinder
    /**
     * Get list of text ranges that may be folded.
     * 
-    * @param Document document to find fold ranges
+    * @param document document to find fold ranges
     * @return list of text ranges to fold
     */
-   List<AbstractFoldRange> computePositions(IDocument Document);
+   List<AbstractFoldRange> findPositions(IDocument document);
 }

@@ -54,7 +54,7 @@ class ChangeTracker
       SelectionModel.SelectionListener,
       Buffer.SpacerListener,
       FocusManager.FocusListener,
-      FoldingManager.FoldMarksStateListener {
+      FoldingManager.FoldsStateListener {
 
   enum ChangeType {
     /** The viewport's top or bottom are now pointing to different lines */
@@ -314,7 +314,7 @@ class ChangeTracker
   }
 
   @Override
-  public void onFoldMarksStateChaged() {
+  public void onFoldsStateChaged() {
     scheduleRender(ChangeType.VIEWPORT_FOLD_MARK);
   } 
 

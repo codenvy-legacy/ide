@@ -504,7 +504,7 @@ public class ViewportRenderer {
       else {
         Element expandElement = line.getTag(LINE_TAG_EXPAND_ELEMENT);
         if (expandElement == null) {
-          expandElement = lineRendererController.createExpandMarkerElement(parent, foldMarker, lineNumber);
+          expandElement = lineRendererController.createFoldingSignElement(parent, foldMarker, lineNumber);
           line.putTag(LINE_TAG_EXPAND_ELEMENT, expandElement);
         }
       }

@@ -425,7 +425,7 @@ public class JavaFoldOccurrencesFinder implements FoldOccurrencesFinder
    private CompilationUnit unit;
 
    @Override
-   public List<AbstractFoldRange> computePositions(IDocument document)
+   public List<AbstractFoldRange> findPositions(IDocument document)
    {
       ASTParser parser = ASTParser.newParser(AST.JLS3);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);

@@ -37,6 +37,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileE
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorCopyTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorCutTextEvent;
@@ -45,13 +47,13 @@ import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLine
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteCurrentLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
@@ -115,7 +117,8 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorContextMenuHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
    ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler,
-   EditorPasteTextHandler, EditorDeleteTextHandler, EditorFoldingCollapseHandler, EditorFoldingExpandHandler
+   EditorPasteTextHandler, EditorDeleteTextHandler, EditorCollapseFoldHandler, EditorExpandFoldHandler,
+   EditorFoldSelectionHandler
 {
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
@@ -174,8 +177,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       IDE.addHandler(ClosingViewEvent.TYPE, this);
       IDE.addHandler(EditorFocusReceivedEvent.TYPE, this);
 
-      IDE.addHandler(EditorFoldingCollapseEvent.TYPE, this);
-      IDE.addHandler(EditorFoldingExpandEvent.TYPE, this);
+      IDE.addHandler(EditorFoldSelectionEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -909,10 +911,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseHandler#onEditorCollapse(org.exoplatform.ide.client.framework.editor.event.EditorFoldingCollapseEvent)
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldHandler#onEditorCollapse(org.exoplatform.ide.client.framework.editor.event.EditorCollapseFoldEvent)
     */
    @Override
-   public void onEditorCollapse(EditorFoldingCollapseEvent event)
+   public void onEditorCollapse(EditorCollapseFoldEvent event)
    {
       if (event.isCollapseAll())
       {
@@ -925,10 +927,10 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandHandler#onEditorExpand(org.exoplatform.ide.client.framework.editor.event.EditorFoldingExpandEvent)
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldHandler#onEditorExpand(org.exoplatform.ide.client.framework.editor.event.EditorExpandFoldEvent)
     */
    @Override
-   public void onEditorExpand(EditorFoldingExpandEvent event)
+   public void onEditorExpand(EditorExpandFoldEvent event)
    {
       if (event.isExpandAll())
       {
@@ -938,6 +940,15 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       {
          getEditorFromView(activeFile.getId()).expand();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionHandler#onEditorFoldSelection(org.exoplatform.ide.client.framework.editor.event.EditorFoldSelectionEvent)
+    */
+   @Override
+   public void onEditorFoldSelection(EditorFoldSelectionEvent event)
+   {
+      getEditorFromView(activeFile.getId()).foldSelection();
    }
 
 }
