@@ -27,33 +27,28 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class CloneMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test clone request marshaller.
-    */
-   public void testCloneRequestMarshaller()
-   {
-      String remoteUri = "path/to/remote/repository";
-      String remoteName = "myRemote";
-      String workingDir = "path/to/my/repo";
+public class CloneMarshallerGwtTest extends BaseGwtTest {
+    /** Test clone request marshaller. */
+    public void testCloneRequestMarshaller() {
+        String remoteUri = "path/to/remote/repository";
+        String remoteName = "myRemote";
+        String workingDir = "path/to/my/repo";
 
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, null, workingDir, remoteName, 0);
-      CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
-      String json = marshaller.marshal();
+        CloneRequest cloneRequest = new CloneRequest(remoteUri, null, workingDir, remoteName, 0);
+        CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.REMOTE_URI));
-      assertEquals(remoteUri, jsonObject.get(Constants.REMOTE_URI).isString().stringValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.REMOTE_URI));
+        assertEquals(remoteUri, jsonObject.get(Constants.REMOTE_URI).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.WORKNG_DIR));
-      assertEquals(workingDir, jsonObject.get(Constants.WORKNG_DIR).isString().stringValue());
+        assertTrue(jsonObject.containsKey(Constants.WORKNG_DIR));
+        assertEquals(workingDir, jsonObject.get(Constants.WORKNG_DIR).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.REMOTE_NAME));
-      assertEquals(remoteName, jsonObject.get(Constants.REMOTE_NAME).isString().stringValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.REMOTE_NAME));
+        assertEquals(remoteName, jsonObject.get(Constants.REMOTE_NAME).isString().stringValue());
+    }
 }

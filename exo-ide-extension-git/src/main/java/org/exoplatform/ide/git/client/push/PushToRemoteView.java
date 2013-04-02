@@ -36,155 +36,119 @@ import java.util.LinkedHashMap;
 
 /**
  * View for pushing changes to remote repository. Must be pointed in View.gwt.xml file.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 4, 2011 10:48:28 AM anya $
- * 
  */
-public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.Display
-{
-   public static final String ID = "idePushToRemoteView";
+public class PushToRemoteView extends ViewImpl implements PushToRemotePresenter.Display {
+    public static final String ID = "idePushToRemoteView";
 
    /* Elements IDs */
 
-   private static final String PUSH_BUTTON_ID = "idePushToRemoteViewPushButton";
+    private static final String PUSH_BUTTON_ID = "idePushToRemoteViewPushButton";
 
-   private static final String CANCEL_BUTTON_ID = "idePushToRemoteViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "idePushToRemoteViewCancelButton";
 
-   private static final String REMOTE_FIELD_ID = "idePushToRemoteViewRemoteField";
+    private static final String REMOTE_FIELD_ID = "idePushToRemoteViewRemoteField";
 
-   private static final String LOCAL_BRANCHES_FIELD_ID = "idePushToRemoteViewLocalBranchesField";
+    private static final String LOCAL_BRANCHES_FIELD_ID = "idePushToRemoteViewLocalBranchesField";
 
-   private static final String REMOTE_BRANCHES_FIELD_ID = "idePushToRemoteViewRemoteBranchesField";
+    private static final String REMOTE_BRANCHES_FIELD_ID = "idePushToRemoteViewRemoteBranchesField";
 
-   @UiField
-   ImageButton pushButton;
+    @UiField
+    ImageButton pushButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   SelectItem remoteField;
+    @UiField
+    SelectItem remoteField;
 
-   @UiField
-   SelectItem localBranchesField;
+    @UiField
+    SelectItem localBranchesField;
 
-   @UiField
-   ComboBoxField remoteBranchesField;
+    @UiField
+    ComboBoxField remoteBranchesField;
 
-   interface PushToRemoteViewUiBinder extends UiBinder<Widget, PushToRemoteView>
-   {
-   }
+    interface PushToRemoteViewUiBinder extends UiBinder<Widget, PushToRemoteView> {
+    }
 
-   private static PushToRemoteViewUiBinder uiBinder = GWT.create(PushToRemoteViewUiBinder.class);
+    private static PushToRemoteViewUiBinder uiBinder = GWT.create(PushToRemoteViewUiBinder.class);
 
-   public PushToRemoteView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.pushViewTitle(), null, 490, 205);
-      add(uiBinder.createAndBindUi(this));
+    public PushToRemoteView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.pushViewTitle(), null, 490, 205);
+        add(uiBinder.createAndBindUi(this));
 
-      remoteField.setName(REMOTE_FIELD_ID);
-      localBranchesField.setName(LOCAL_BRANCHES_FIELD_ID);
-      remoteBranchesField.setName(REMOTE_BRANCHES_FIELD_ID);
-      pushButton.setButtonId(PUSH_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        remoteField.setName(REMOTE_FIELD_ID);
+        localBranchesField.setName(LOCAL_BRANCHES_FIELD_ID);
+        remoteBranchesField.setName(REMOTE_BRANCHES_FIELD_ID);
+        pushButton.setButtonId(PUSH_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getPushButton()
-    */
-   @Override
-   public HasClickHandlers getPushButton()
-   {
-      return pushButton;
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getPushButton() */
+    @Override
+    public HasClickHandlers getPushButton() {
+        return pushButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getRemoteValue()
-    */
-   @Override
-   public HasValue<String> getRemoteValue()
-   {
-      return remoteField;
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getRemoteValue() */
+    @Override
+    public HasValue<String> getRemoteValue() {
+        return remoteField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#setRemoteValues(java.lang.String[])
-    */
-   @Override
-   public void setRemoteValues(LinkedHashMap<String, String> values)
-   {
-      remoteField.setValueMap(values);
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#setRemoteValues(java.lang.String[]) */
+    @Override
+    public void setRemoteValues(LinkedHashMap<String, String> values) {
+        remoteField.setValueMap(values);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getRemoteBranchesValue()
-    */
-   @Override
-   public HasValue<String> getRemoteBranchesValue()
-   {
-      return remoteBranchesField;
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getRemoteBranchesValue() */
+    @Override
+    public HasValue<String> getRemoteBranchesValue() {
+        return remoteBranchesField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getLocalBranchesValue()
-    */
-   @Override
-   public HasValue<String> getLocalBranchesValue()
-   {
-      return localBranchesField;
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getLocalBranchesValue() */
+    @Override
+    public HasValue<String> getLocalBranchesValue() {
+        return localBranchesField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#setRemoteBranches(java.lang.String[])
-    */
-   @Override
-   public void setRemoteBranches(String[] values)
-   {
-      remoteBranchesField.setValueMap(values);
-      if (values != null && values.length > 0)
-      {
-         remoteBranchesField.setValue(values[0], true);
-      }
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#setRemoteBranches(java.lang.String[]) */
+    @Override
+    public void setRemoteBranches(String[] values) {
+        remoteBranchesField.setValueMap(values);
+        if (values != null && values.length > 0) {
+            remoteBranchesField.setValue(values[0], true);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#setLocalBranches(java.lang.String[])
-    */
-   @Override
-   public void setLocalBranches(String[] values)
-   {
-      localBranchesField.setValueMap(values);
-      if (values != null && values.length > 0)
-      {
-         localBranchesField.setValue(values[0], true);
-      }
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#setLocalBranches(java.lang.String[]) */
+    @Override
+    public void setLocalBranches(String[] values) {
+        localBranchesField.setValueMap(values);
+        if (values != null && values.length > 0) {
+            localBranchesField.setValue(values[0], true);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#enablePushButton(boolean)
-    */
-   @Override
-   public void enablePushButton(boolean enable)
-   {
-      pushButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#enablePushButton(boolean) */
+    @Override
+    public void enablePushButton(boolean enable) {
+        pushButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getRemoteDisplayValue()
-    */
-   @Override
-   public String getRemoteDisplayValue()
-   {
-      return remoteField.getDisplayValue();
-   }
+    /** @see org.exoplatform.ide.git.client.push.PushToRemotePresenter.Display#getRemoteDisplayValue() */
+    @Override
+    public String getRemoteDisplayValue() {
+        return remoteField.getDisplayValue();
+    }
 }

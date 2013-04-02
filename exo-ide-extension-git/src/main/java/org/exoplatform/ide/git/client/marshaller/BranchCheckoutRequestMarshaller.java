@@ -27,43 +27,35 @@ import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
 
 /**
  * Marshaller to create branch checkout request in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 8, 2011 3:45:46 PM anya $
- * 
  */
-public class BranchCheckoutRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Branch checkout request.
-    */
-   private BranchCheckoutRequest branchCheckoutRequest;
+public class BranchCheckoutRequestMarshaller implements Marshallable, Constants {
+    /** Branch checkout request. */
+    private BranchCheckoutRequest branchCheckoutRequest;
 
-   /**
-    * @param branchCheckoutRequest branch checkout request
-    */
-   public BranchCheckoutRequestMarshaller(BranchCheckoutRequest branchCheckoutRequest)
-   {
-      this.branchCheckoutRequest = branchCheckoutRequest;
-   }
+    /**
+     * @param branchCheckoutRequest
+     *         branch checkout request
+     */
+    public BranchCheckoutRequestMarshaller(BranchCheckoutRequest branchCheckoutRequest) {
+        this.branchCheckoutRequest = branchCheckoutRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      jsonObject.put(NAME, new JSONString(branchCheckoutRequest.getName()));
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(NAME, new JSONString(branchCheckoutRequest.getName()));
 
-      if (branchCheckoutRequest.getStartPoint() != null)
-      {
-         jsonObject.put(START_POINT, new JSONString(branchCheckoutRequest.getStartPoint()));
-      }
+        if (branchCheckoutRequest.getStartPoint() != null) {
+            jsonObject.put(START_POINT, new JSONString(branchCheckoutRequest.getStartPoint()));
+        }
 
-      jsonObject.put(CREATE_NEW, JSONBoolean.getInstance(branchCheckoutRequest.isCreateNew()));
+        jsonObject.put(CREATE_NEW, JSONBoolean.getInstance(branchCheckoutRequest.isCreateNew()));
 
-      return jsonObject.toString();
-   }
+        return jsonObject.toString();
+    }
 
 }

@@ -26,43 +26,34 @@ import org.exoplatform.ide.git.shared.PullRequest;
 
 /**
  * Marshaller for pull request in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 20, 2011 3:20:49 PM anya $
- * 
  */
-public class PullRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Pull request.
-    */
-   private PullRequest pullRequest;
+public class PullRequestMarshaller implements Marshallable, Constants {
+    /** Pull request. */
+    private PullRequest pullRequest;
 
-   /**
-    * @param pullRequest pull request
-    */
-   public PullRequestMarshaller(PullRequest pullRequest)
-   {
-      this.pullRequest = pullRequest;
-   }
+    /**
+     * @param pullRequest
+     *         pull request
+     */
+    public PullRequestMarshaller(PullRequest pullRequest) {
+        this.pullRequest = pullRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      if (pullRequest.getRefSpec() != null)
-      {
-         jsonObject.put(REF_SPEC, new JSONString(pullRequest.getRefSpec()));
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        if (pullRequest.getRefSpec() != null) {
+            jsonObject.put(REF_SPEC, new JSONString(pullRequest.getRefSpec()));
+        }
 
-      if (pullRequest.getRemote() != null)
-      {
-         jsonObject.put(REMOTE, new JSONString(pullRequest.getRemote()));
-      }
-      return jsonObject.toString();
-   }
+        if (pullRequest.getRemote() != null) {
+            jsonObject.put(REMOTE, new JSONString(pullRequest.getRemote()));
+        }
+        return jsonObject.toString();
+    }
 
 }

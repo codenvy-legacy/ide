@@ -23,35 +23,25 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event occurs, when user tries to view the list of remote repositories. Implement {@link ShowProjectGitReadOnlyUrlHandler}
  * handler to process event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:24:15 AM anya $
- * 
  */
-public class ShowProjectGitReadOnlyUrlEvent extends GwtEvent<ShowProjectGitReadOnlyUrlHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler> TYPE =
-      new GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler>();
+public class ShowProjectGitReadOnlyUrlEvent extends GwtEvent<ShowProjectGitReadOnlyUrlHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler> TYPE =
+            new GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowProjectGitReadOnlyUrlHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowProjectGitReadOnlyUrlHandler handler)
-   {
-      handler.onShowGitUrl(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowProjectGitReadOnlyUrlHandler handler) {
+        handler.onShowGitUrl(this);
+    }
 
 }

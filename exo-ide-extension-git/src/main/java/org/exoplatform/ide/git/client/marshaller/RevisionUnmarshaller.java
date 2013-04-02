@@ -30,80 +30,70 @@ import org.exoplatform.ide.git.shared.Revision;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 31, 2011 11:15:57 AM anya $
- * 
  */
-public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants
-{
+public class RevisionUnmarshaller implements Unmarshallable<Revision>, Constants {
 
-   /**
-    * Represents revision info.
-    */
-   private Revision revision;
+    /** Represents revision info. */
+    private Revision revision;
 
-   /**
-    * @param revision revision information
-    */
-   public RevisionUnmarshaller(Revision revision)
-   {
-      this.revision = revision;
-   }
+    /**
+     * @param revision
+     *         revision information
+     */
+    public RevisionUnmarshaller(Revision revision) {
+        this.revision = revision;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response)
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONValue json = JSONParser.parseStrict(response.getText());
-      if (json == null)
-         return;
-      JSONObject revisionObject = json.isObject();
-      if (revisionObject == null)
-         return;
+        JSONValue json = JSONParser.parseStrict(response.getText());
+        if (json == null)
+            return;
+        JSONObject revisionObject = json.isObject();
+        if (revisionObject == null)
+            return;
 
-      Boolean fake =
-         (revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null) ? revisionObject.get(FAKE)
-            .isBoolean().booleanValue() : false;
-      revision.setFake(fake);
+        Boolean fake =
+                (revisionObject.get(FAKE) != null && revisionObject.get(FAKE).isBoolean() != null) ? revisionObject.get(FAKE)
+                                                                                                                   .isBoolean()
+                                                                                                                   .booleanValue() : false;
+        revision.setFake(fake);
 
-      String id =
-         (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
-            .isString().stringValue() : "";
-      revision.setId(id);
-      String message =
-         (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null) ? revisionObject
-            .get(MESSAGE).isString().stringValue() : "";
-      revision.setMessage(message);
-      long commitTime =
-         (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
-            ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
-      revision.setCommitTime(commitTime);
-      if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null)
-      {
-         JSONObject committerObject = revisionObject.get(COMMITTER).isObject();
-         String name =
-            (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null) ? committerObject
-               .get(NAME).isString().stringValue() : "";
-         String email =
-            (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null) ? committerObject
-               .get(EMAIL).isString().stringValue() : "";
+        String id =
+                (revisionObject.get(ID) != null && revisionObject.get(ID).isString() != null) ? revisionObject.get(ID)
+                                                                                                              .isString().stringValue()
+                                                                                              : "";
+        revision.setId(id);
+        String message =
+                (revisionObject.get(MESSAGE) != null && revisionObject.get(MESSAGE).isString() != null) ? revisionObject
+                        .get(MESSAGE).isString().stringValue() : "";
+        revision.setMessage(message);
+        long commitTime =
+                (long)((revisionObject.get(COMMIT_TIME) != null && revisionObject.get(COMMIT_TIME).isNumber() != null)
+                       ? revisionObject.get(COMMIT_TIME).isNumber().doubleValue() : 0);
+        revision.setCommitTime(commitTime);
+        if (revisionObject.get(COMMITTER) != null && revisionObject.get(COMMITTER).isObject() != null) {
+            JSONObject committerObject = revisionObject.get(COMMITTER).isObject();
+            String name =
+                    (committerObject.containsKey(NAME) && committerObject.get(NAME).isString() != null) ? committerObject
+                            .get(NAME).isString().stringValue() : "";
+            String email =
+                    (committerObject.containsKey(EMAIL) && committerObject.get(EMAIL).isString() != null) ? committerObject
+                            .get(EMAIL).isString().stringValue() : "";
 
-         GitUser gitUser = new GitUser(name, email);
-         revision.setCommitter(gitUser);
-      }
-   }
+            GitUser gitUser = new GitUser(name, email);
+            revision.setCommitter(gitUser);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public Revision getPayload()
-   {
-      return revision;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public Revision getPayload() {
+        return revision;
+    }
 }

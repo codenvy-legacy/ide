@@ -23,44 +23,37 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class CloneRepositoryCompleteEvent extends GwtEvent<CloneRepositoryCompleteHandler>
-{
+public class CloneRepositoryCompleteEvent extends GwtEvent<CloneRepositoryCompleteHandler> {
 
-   public static final GwtEvent.Type<CloneRepositoryCompleteHandler> TYPE =
-      new GwtEvent.Type<CloneRepositoryCompleteHandler>();
+    public static final GwtEvent.Type<CloneRepositoryCompleteHandler> TYPE =
+            new GwtEvent.Type<CloneRepositoryCompleteHandler>();
 
-   private String user;
+    private String user;
 
-   private String repositoryName;
+    private String repositoryName;
 
-   public CloneRepositoryCompleteEvent(String user, String repositoryName)
-   {
-      this.user = user;
-      this.repositoryName = repositoryName;
-   }
+    public CloneRepositoryCompleteEvent(String user, String repositoryName) {
+        this.user = user;
+        this.repositoryName = repositoryName;
+    }
 
-   public String getUser()
-   {
-      return user;
-   }
+    public String getUser() {
+        return user;
+    }
 
-   public String getRepositoryName()
-   {
-      return repositoryName;
-   }
+    public String getRepositoryName() {
+        return repositoryName;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CloneRepositoryCompleteHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CloneRepositoryCompleteHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(CloneRepositoryCompleteHandler handler)
-   {
-      handler.onCloneRepositoryComplete(this);
-   }
+    @Override
+    protected void dispatch(CloneRepositoryCompleteHandler handler) {
+        handler.onCloneRepositoryComplete(this);
+    }
 
 }

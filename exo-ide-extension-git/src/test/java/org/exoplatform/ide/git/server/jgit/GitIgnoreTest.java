@@ -30,31 +30,28 @@ import java.util.Set;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Oct 4, 2011 evgen $
  */
-public class GitIgnoreTest extends BaseTest
-{
-   private Repository repository;
+public class GitIgnoreTest extends BaseTest {
+    private Repository repository;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      repository = getDefaultRepository();
-      Git git = new Git(repository);
-      addFile(repository.getWorkTree(), "added_commited", "xxxxx");
-      File a = new File(repository.getWorkTree(), "a");
-      File b = new File(a, "b");
-      b.mkdirs();
-      GitHelper.addToGitIgnore(a, "b/");
-      git.add().addFilepattern(".").call();
-      git.commit().setMessage("add .gitignore file").call();
-      addFile(b, "ignored", "xxxxx");
-   }
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        repository = getDefaultRepository();
+        Git git = new Git(repository);
+        addFile(repository.getWorkTree(), "added_commited", "xxxxx");
+        File a = new File(repository.getWorkTree(), "a");
+        File b = new File(a, "b");
+        b.mkdirs();
+        GitHelper.addToGitIgnore(a, "b/");
+        git.add().addFilepattern(".").call();
+        git.commit().setMessage("add .gitignore file").call();
+        addFile(b, "ignored", "xxxxx");
+    }
 
-   public void testStatusWithGitIgnore() throws Exception
-   {
-      Status statusPage = getDefaultConnection().status(false);
-      assertEquals("master", statusPage.getBranchName());
-      Set<String> untracked = statusPage.getUntracked();
-      assertEquals(0, untracked.size());
-   }
+    public void testStatusWithGitIgnore() throws Exception {
+        Status statusPage = getDefaultConnection().status(false);
+        assertEquals("master", statusPage.getBranchName());
+        Set<String> untracked = statusPage.getUntracked();
+        assertEquals(0, untracked.size());
+    }
 }

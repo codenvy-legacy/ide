@@ -26,23 +26,18 @@ import org.exoplatform.ide.git.shared.LogRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class LogMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test get log of the commits request marshaller.
-    */
-   public void testLogRequestMarshaller()
-   {
-      LogRequest logRequest = new LogRequest();
-      LogRequestMarshaller marshaller = new LogRequestMarshaller(logRequest);
-      String json = marshaller.marshal();
+public class LogMarshallerGwtTest extends BaseGwtTest {
+    /** Test get log of the commits request marshaller. */
+    public void testLogRequestMarshaller() {
+        LogRequest logRequest = new LogRequest();
+        LogRequestMarshaller marshaller = new LogRequestMarshaller(logRequest);
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
+        JSONObject jsonObject = new JSONObject(build(json));
 
-      assertNotNull(jsonObject);
-   }
+        assertNotNull(jsonObject);
+    }
 }

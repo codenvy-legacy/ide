@@ -30,91 +30,70 @@ import java.util.List;
 
 /**
  * Grid to display remote repositories info.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 12:09:09 PM anya $
- * 
  */
-public class RemoteGrid extends ListGrid<Remote>
-{
-   /**
-    * Grid's ID.
-    */
-   private static final String ID = "ideRemoteGrid";
+public class RemoteGrid extends ListGrid<Remote> {
+    /** Grid's ID. */
+    private static final String ID = "ideRemoteGrid";
 
-   /**
-    * Name column.
-    */
-   Column<Remote, String> nameColumn;
+    /** Name column. */
+    Column<Remote, String> nameColumn;
 
-   /**
-    * Location column.
-    */
-   Column<Remote, String> urlColumn;
+    /** Location column. */
+    Column<Remote, String> urlColumn;
 
-   public RemoteGrid()
-   {
-      super();
-      setID(ID);
-      initColumns();
-   }
+    public RemoteGrid() {
+        super();
+        setID(ID);
+        initColumns();
+    }
 
-   /**
-    * Initialize the columns of the grid.
-    */
-   private void initColumns()
-   {
-      CellTable<Remote> cellTable = getCellTable();
+    /** Initialize the columns of the grid. */
+    private void initColumns() {
+        CellTable<Remote> cellTable = getCellTable();
 
-      nameColumn = new Column<Remote, String>(new TextCell())
-      {
+        nameColumn = new Column<Remote, String>(new TextCell()) {
 
-         @Override
-         public String getValue(Remote remote)
-         {
-            return remote.getName();
-         }
+            @Override
+            public String getValue(Remote remote) {
+                return remote.getName();
+            }
 
-      };
+        };
 
-      urlColumn = new Column<Remote, String>(new TextCell())
-      {
+        urlColumn = new Column<Remote, String>(new TextCell()) {
 
-         @Override
-         public String getValue(Remote remote)
-         {
-            return remote.getUrl();
-         }
+            @Override
+            public String getValue(Remote remote) {
+                return remote.getUrl();
+            }
 
-      };
+        };
 
-      cellTable.addColumn(nameColumn, GitExtension.MESSAGES.remoteGridNameField());
-      cellTable.setColumnWidth(nameColumn, "20%");
-      cellTable.addColumn(urlColumn, GitExtension.MESSAGES.remoteGridLocationField());
-      cellTable.setColumnWidth(urlColumn, "80%");
-   }
+        cellTable.addColumn(nameColumn, GitExtension.MESSAGES.remoteGridNameField());
+        cellTable.setColumnWidth(nameColumn, "20%");
+        cellTable.addColumn(urlColumn, GitExtension.MESSAGES.remoteGridLocationField());
+        cellTable.setColumnWidth(urlColumn, "80%");
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)
-    */
-   @Override
-   public void setValue(List<Remote> value)
-   {
-      super.setValue(value);
-      if (value != null && value.size() > 0)
-      {
-         selectItem(value.get(0));
-         updateGrid();
-      }
-   }
+    /** @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List) */
+    @Override
+    public void setValue(List<Remote> value) {
+        super.setValue(value);
+        if (value != null && value.size() > 0) {
+            selectItem(value.get(0));
+            updateGrid();
+        }
+    }
 
-   /**
-    * Returns selected remote repository in grid.
-    * 
-    * @return {@link Remote} selected remote repository
-    */
-   public Remote getSelectedRemote()
-   {
-      return super.getSelectedItems().get(0);
-   }
+    /**
+     * Returns selected remote repository in grid.
+     *
+     * @return {@link Remote} selected remote repository
+     */
+    public Remote getSelectedRemote() {
+        return super.getSelectedItems().get(0);
+    }
 }

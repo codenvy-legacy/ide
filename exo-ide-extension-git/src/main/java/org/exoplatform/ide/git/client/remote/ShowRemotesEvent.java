@@ -23,34 +23,24 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * Event occurs, when user tries to view the list of remote repositories. Implement {@link ShowRemotesHandler} handler to process
  * event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 10:24:15 AM anya $
- * 
  */
-public class ShowRemotesEvent extends GwtEvent<ShowRemotesHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ShowRemotesHandler> TYPE = new GwtEvent.Type<ShowRemotesHandler>();
+public class ShowRemotesEvent extends GwtEvent<ShowRemotesHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ShowRemotesHandler> TYPE = new GwtEvent.Type<ShowRemotesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowRemotesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowRemotesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowRemotesHandler handler)
-   {
-      handler.onShowRemotes(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowRemotesHandler handler) {
+        handler.onShowRemotes(this);
+    }
 
 }

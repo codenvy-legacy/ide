@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link AddFilesEvent} event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 29, 2011 4:26:27 PM anya $
- * 
  */
-public interface AddFilesHandler extends EventHandler
-{
-   /**
-    * Perform action on adding changes to index.
-    * 
-    * @param event
-    */
-   void onAddFiles(AddFilesEvent event);
+public interface AddFilesHandler extends EventHandler {
+    /**
+     * Perform action on adding changes to index.
+     *
+     * @param event
+     */
+    void onAddFiles(AddFilesEvent event);
 }

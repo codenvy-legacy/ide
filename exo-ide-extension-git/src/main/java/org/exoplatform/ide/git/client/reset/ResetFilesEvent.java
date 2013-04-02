@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to reset files in index. Implement {@link ResetFilesHandler} handler.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 3:54:12 PM anya $
- * 
  */
-public class ResetFilesEvent extends GwtEvent<ResetFilesHandler>
-{
+public class ResetFilesEvent extends GwtEvent<ResetFilesHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ResetFilesHandler> TYPE = new GwtEvent.Type<ResetFilesHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ResetFilesHandler> TYPE = new GwtEvent.Type<ResetFilesHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ResetFilesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ResetFilesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ResetFilesHandler handler)
-   {
-      handler.onResetFiles(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ResetFilesHandler handler) {
+        handler.onResetFiles(this);
+    }
 
 }

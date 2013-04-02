@@ -33,118 +33,88 @@ import org.exoplatform.ide.git.shared.Remote;
 
 /**
  * View for remote repositories list with possibility to add and delete remote repository. Must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 18, 2011 12:31:05 PM anya $
- * 
  */
-public class RemoteView extends ViewImpl implements RemotePresenter.Display
-{
-   private static final int HEIGHT = 280;
+public class RemoteView extends ViewImpl implements RemotePresenter.Display {
+    private static final int HEIGHT = 280;
 
-   private static final int WIDTH = 480;
+    private static final int WIDTH = 480;
 
-   public static final String ID = "ideRemoteView";
+    public static final String ID = "ideRemoteView";
 
    /* Elements IDs */
 
-   private static final String ADD_BUTTON_ID = "ideRemoteViewAddButton";
+    private static final String ADD_BUTTON_ID = "ideRemoteViewAddButton";
 
-   private static final String DELETE_BUTTON_ID = "ideRemoteViewDeleteButton";
+    private static final String DELETE_BUTTON_ID = "ideRemoteViewDeleteButton";
 
-   private static final String CLOSE_BUTTON_ID = "ideRemoteViewCloseButton";
+    private static final String CLOSE_BUTTON_ID = "ideRemoteViewCloseButton";
 
-   /**
-    * Create remote repository button.
-    */
-   @UiField
-   ImageButton addButton;
+    /** Create remote repository button. */
+    @UiField
+    ImageButton addButton;
 
-   /**
-    * Delete remote repository button.
-    */
-   @UiField
-   ImageButton deleteButton;
+    /** Delete remote repository button. */
+    @UiField
+    ImageButton deleteButton;
 
-   /**
-    * Close button.
-    */
-   @UiField
-   ImageButton closeButton;
+    /** Close button. */
+    @UiField
+    ImageButton closeButton;
 
-   /**
-    * Grid with remote repositories.
-    */
-   @UiField
-   RemoteGrid remoteGrid;
+    /** Grid with remote repositories. */
+    @UiField
+    RemoteGrid remoteGrid;
 
-   interface RemoteViewUiBinder extends UiBinder<Widget, RemoteView>
-   {
-   }
+    interface RemoteViewUiBinder extends UiBinder<Widget, RemoteView> {
+    }
 
-   private static RemoteViewUiBinder uiBinder = GWT.create(RemoteViewUiBinder.class);
+    private static RemoteViewUiBinder uiBinder = GWT.create(RemoteViewUiBinder.class);
 
-   public RemoteView()
-   {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.remotesViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public RemoteView() {
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.remotesViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      addButton.setButtonId(ADD_BUTTON_ID);
-      deleteButton.setButtonId(DELETE_BUTTON_ID);
-      closeButton.setButtonId(CLOSE_BUTTON_ID);
-   }
+        addButton.setButtonId(ADD_BUTTON_ID);
+        deleteButton.setButtonId(DELETE_BUTTON_ID);
+        closeButton.setButtonId(CLOSE_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getAddButton()
-    */
-   @Override
-   public HasClickHandlers getAddButton()
-   {
-      return addButton;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getAddButton() */
+    @Override
+    public HasClickHandlers getAddButton() {
+        return addButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getRemoteGrid()
-    */
-   @Override
-   public ListGridItem<Remote> getRemoteGrid()
-   {
-      return remoteGrid;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getRemoteGrid() */
+    @Override
+    public ListGridItem<Remote> getRemoteGrid() {
+        return remoteGrid;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getSelectedRemote()
-    */
-   @Override
-   public Remote getSelectedRemote()
-   {
-      return remoteGrid.getSelectedRemote();
-   }
+    /** @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getSelectedRemote() */
+    @Override
+    public Remote getSelectedRemote() {
+        return remoteGrid.getSelectedRemote();
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getDeleteButton()
-    */
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
+    /** @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#getDeleteButton() */
+    @Override
+    public HasClickHandlers getDeleteButton() {
+        return deleteButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#enableDeleteButton(boolean)
-    */
-   @Override
-   public void enableDeleteButton(boolean enable)
-   {
-      deleteButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.git.client.remote.RemotePresenter.Display#enableDeleteButton(boolean) */
+    @Override
+    public void enableDeleteButton(boolean enable) {
+        deleteButton.setEnabled(enable);
+    }
 }

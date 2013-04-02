@@ -22,54 +22,44 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GetCollboratorsEvent.java Aug 6, 2012
- * 
  */
-public class GetCollboratorsEvent extends GwtEvent<GetCollaboratorsHandler>
-{
-   public static final GwtEvent.Type<GetCollaboratorsHandler> TYPE = new GwtEvent.Type<GetCollaboratorsHandler>();
+public class GetCollboratorsEvent extends GwtEvent<GetCollaboratorsHandler> {
+    public static final GwtEvent.Type<GetCollaboratorsHandler> TYPE = new GwtEvent.Type<GetCollaboratorsHandler>();
 
-   private String user;
+    private String user;
 
-   private String repository;
+    private String repository;
 
-   public GetCollboratorsEvent()
-   {
-      user = "exoplatform";
-      repository = "exogtn";
-   }
+    public GetCollboratorsEvent() {
+        user = "exoplatform";
+        repository = "exogtn";
+    }
 
-   public GetCollboratorsEvent(String user, String repository)
-   {
-      this.user = user;
-      this.repository = repository;
-   }
+    public GetCollboratorsEvent(String user, String repository) {
+        this.user = user;
+        this.repository = repository;
+    }
 
-   @Override
-   protected void dispatch(GetCollaboratorsHandler handler)
-   {
-      handler.onGetCollaborators(this);
-   }
+    @Override
+    protected void dispatch(GetCollaboratorsHandler handler) {
+        handler.onGetCollaborators(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GetCollaboratorsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<GetCollaboratorsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public String getUser()
-   {
-      return user;
-   }
+    public String getUser() {
+        return user;
+    }
 
-   public String getRepository()
-   {
-      return repository;
-   }
+    public String getRepository() {
+        return repository;
+    }
 
 }

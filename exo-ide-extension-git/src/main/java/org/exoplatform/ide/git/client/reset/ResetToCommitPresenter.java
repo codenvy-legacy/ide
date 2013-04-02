@@ -44,211 +44,185 @@ import org.exoplatform.ide.git.shared.Revision;
 
 /**
  * Presenter for view for reseting head to commit. The view must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 10:31:25 AM anya $
- * 
  */
-public class ResetToCommitPresenter extends GitPresenter implements ResetToCommitHandler
-{
-   
-   interface Display extends IsView
-   {
-      /**
-       * Get reset button click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getResetButton();
+public class ResetToCommitPresenter extends GitPresenter implements ResetToCommitHandler {
 
-      /**
-       * Get cancel button click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+    interface Display extends IsView {
+        /**
+         * Get reset button click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getResetButton();
 
-      /**
-       * Get grid with revisions.
-       * 
-       * @return {@link ListGrid}
-       */
-      ListGridItem<Revision> getRevisionGrid();
+        /**
+         * Get cancel button click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Get selected revision in revision grid.
-       * 
-       * @return {@link Revision} selected revision
-       */
-      Revision getSelectedRevision();
+        /**
+         * Get grid with revisions.
+         *
+         * @return {@link ListGrid}
+         */
+        ListGridItem<Revision> getRevisionGrid();
 
-      /**
-       * Get the soft mode radio field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<Boolean> getSoftMode();
+        /**
+         * Get selected revision in revision grid.
+         *
+         * @return {@link Revision} selected revision
+         */
+        Revision getSelectedRevision();
 
-      /**
-       * Get the mix mode radio field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<Boolean> getMixMode();
+        /**
+         * Get the soft mode radio field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getSoftMode();
 
-      /**
-       * Get the hard mode radio field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<Boolean> getHardMode();
+        /**
+         * Get the mix mode radio field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getMixMode();
 
-      /**
-       * Set the enabled state of the reset button.
-       * 
-       * @param enabled enabled state
-       */
-      void enableResetButon(boolean enabled);
-   }
+        /**
+         * Get the hard mode radio field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<Boolean> getHardMode();
 
-   /**
-    * Presenter' display.
-    */
-   private Display display;
+        /**
+         * Set the enabled state of the reset button.
+         *
+         * @param enabled
+         *         enabled state
+         */
+        void enableResetButon(boolean enabled);
+    }
 
-   /**
-    * @param eventBus event handlers
-    */
-   public ResetToCommitPresenter()
-   {
-      IDE.addHandler(ResetToCommitEvent.TYPE, this);
-   }
+    /** Presenter' display. */
+    private Display display;
 
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
+    /**
+     * @param eventBus
+     *         event handlers
+     */
+    public ResetToCommitPresenter() {
+        IDE.addHandler(ResetToCommitEvent.TYPE, this);
+    }
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay(Display d) {
+        this.display = d;
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-      display.getResetButton().addClickHandler(new ClickHandler()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doReset();
-         }
-      });
+        display.getResetButton().addClickHandler(new ClickHandler() {
 
-      display.getRevisionGrid().addSelectionHandler(new SelectionHandler<Revision>()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                doReset();
+            }
+        });
 
-         @Override
-         public void onSelection(SelectionEvent<Revision> event)
-         {
-            boolean enable = event.getSelectedItem() != null;
-            display.enableResetButon(enable);
-         }
-      });
-   }
+        display.getRevisionGrid().addSelectionHandler(new SelectionHandler<Revision>() {
 
-   /**
-    * @see org.exoplatform.ide.git.client.reset.ResetToCommitHandler#onResetToCommit(org.exoplatform.ide.git.client.reset.ResetToCommitEvent)
-    */
-   @Override
-   public void onResetToCommit(ResetToCommitEvent event)
-   {
-      if (makeSelectionCheck())
-      {
-         getCommits();
-      }
-   }
+            @Override
+            public void onSelection(SelectionEvent<Revision> event) {
+                boolean enable = event.getSelectedItem() != null;
+                display.enableResetButon(enable);
+            }
+        });
+    }
 
-   private void getCommits()
-   {
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitHandler#onResetToCommit(org.exoplatform.ide.git.client.reset
+     * .ResetToCommitEvent) */
+    @Override
+    public void onResetToCommit(ResetToCommitEvent event) {
+        if (makeSelectionCheck()) {
+            getCommits();
+        }
+    }
+
+    private void getCommits() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
+        String projectId = getSelectedProject().getId();
 
-      try
-      {
-         GitClientService.getInstance().log(vfs.getId(), projectId, false,
-            new AsyncRequestCallback<LogResponse>(new LogResponseUnmarshaller(new LogResponse(), false))
-            {
+        try {
+            GitClientService.getInstance().log(vfs.getId(), projectId, false,
+                                               new AsyncRequestCallback<LogResponse>(
+                                                       new LogResponseUnmarshaller(new LogResponse(), false)) {
 
-               @Override
-               protected void onSuccess(LogResponse result)
-               {
-                  Display d = GWT.create(Display.class);
-                  IDE.getInstance().openView(d.asView());
-                  bindDisplay(d);
+                                                   @Override
+                                                   protected void onSuccess(LogResponse result) {
+                                                       Display d = GWT.create(Display.class);
+                                                       IDE.getInstance().openView(d.asView());
+                                                       bindDisplay(d);
 
-                  display.getRevisionGrid().setValue(result.getCommits());
-                  display.getMixMode().setValue(true);
-               }
+                                                       display.getRevisionGrid().setValue(result.getCommits());
+                                                       display.getMixMode().setValue(true);
+                                                   }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-      }
-   }
+                                                   @Override
+                                                   protected void onFailure(Throwable exception) {
+                                                       String errorMessage =
+                                                               (exception.getMessage() != null) ? exception.getMessage()
+                                                                                                : GitExtension.MESSAGES.logFailed();
+                                                       IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                   }
+                                               });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
 
-   /**
-    * Reset the head to selected revision with chosen mode (hard, soft or mixed).
-    */
-   private void doReset()
-   {
-      Revision revision = display.getSelectedRevision();
-      ResetType type = display.getMixMode().getValue() ? ResetType.MIXED : null;
-      type = (type == null && display.getSoftMode().getValue()) ? ResetType.SOFT : type;
-      type = (type == null && display.getHardMode().getValue()) ? ResetType.HARD : type;
-      
+    /** Reset the head to selected revision with chosen mode (hard, soft or mixed). */
+    private void doReset() {
+        Revision revision = display.getSelectedRevision();
+        ResetType type = display.getMixMode().getValue() ? ResetType.MIXED : null;
+        type = (type == null && display.getSoftMode().getValue()) ? ResetType.SOFT : type;
+        type = (type == null && display.getHardMode().getValue()) ? ResetType.HARD : type;
+
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type,
-            new AsyncRequestCallback<String>()
-            {
+        String projectId = getSelectedProject().getId();
 
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
-                  IDE.getInstance().closeView(display.asView().getId());
-               }
+        try {
+            GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type,
+                                                 new AsyncRequestCallback<String>() {
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFail();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-      }
-   }
+                                                     @Override
+                                                     protected void onSuccess(String result) {
+                                                         IDE.fireEvent(
+                                                                 new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
+                                                         IDE.getInstance().closeView(display.asView().getId());
+                                                     }
+
+                                                     @Override
+                                                     protected void onFailure(Throwable exception) {
+                                                         String errorMessage =
+                                                                 (exception.getMessage() != null) ? exception.getMessage()
+                                                                                                  : GitExtension.MESSAGES.resetFail();
+                                                         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                                     }
+                                                 });
+        } catch (RequestException e) {
+            String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFail();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
 }

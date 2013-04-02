@@ -27,28 +27,23 @@ import org.exoplatform.ide.git.shared.InitRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class InitMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test init new repository request marshaller.
-    */
-   public void testInitRequestMarshaller()
-   {
-      String workingDir = "my/new/repo";
+public class InitMarshallerGwtTest extends BaseGwtTest {
+    /** Test init new repository request marshaller. */
+    public void testInitRequestMarshaller() {
+        String workingDir = "my/new/repo";
 
-      InitRequest initRequest = new InitRequest(workingDir, false);
-      InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
-      String json = marshaller.marshal();
+        InitRequest initRequest = new InitRequest(workingDir, false);
+        InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.WORKNG_DIR));
-      assertEquals(workingDir, jsonObject.get(Constants.WORKNG_DIR).isString().stringValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.WORKNG_DIR));
+        assertEquals(workingDir, jsonObject.get(Constants.WORKNG_DIR).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.BARE));
-      assertFalse(jsonObject.get(Constants.BARE).isBoolean().booleanValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.BARE));
+        assertFalse(jsonObject.get(Constants.BARE).isBoolean().booleanValue());
+    }
 }

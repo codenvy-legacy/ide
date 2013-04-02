@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to initialize local repository. Implement {@link InitRepositoryHandler} handler.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 23, 2011 5:53:29 PM anya $
- * 
  */
-public class InitRepositoryEvent extends GwtEvent<InitRepositoryHandler>
-{
+public class InitRepositoryEvent extends GwtEvent<InitRepositoryHandler> {
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<InitRepositoryHandler> TYPE = new GwtEvent.Type<InitRepositoryHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<InitRepositoryHandler> TYPE = new GwtEvent.Type<InitRepositoryHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InitRepositoryHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<InitRepositoryHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(InitRepositoryHandler handler)
-   {
-      handler.onInitRepository(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(InitRepositoryHandler handler) {
+        handler.onInitRepository(this);
+    }
 
 }

@@ -27,29 +27,24 @@ import org.exoplatform.ide.git.shared.PullRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class PullMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test pull from remote repository request marshaller.
-    */
-   public void testPullRequestMarshaller()
-   {
-      String remote = "origin";
-      String refspec = "branchToPull";
+public class PullMarshallerGwtTest extends BaseGwtTest {
+    /** Test pull from remote repository request marshaller. */
+    public void testPullRequestMarshaller() {
+        String remote = "origin";
+        String refspec = "branchToPull";
 
-      PullRequest pullRequest = new PullRequest(remote, refspec, 0);
-      PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
-      String json = marshaller.marshal();
+        PullRequest pullRequest = new PullRequest(remote, refspec, 0);
+        PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.REMOTE));
-      assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.REMOTE));
+        assertEquals(remote, jsonObject.get(Constants.REMOTE).isString().stringValue());
 
-      assertTrue(jsonObject.containsKey(Constants.REF_SPEC));
-      assertEquals(refspec, jsonObject.get(Constants.REF_SPEC).isString().stringValue());
-   }
+        assertTrue(jsonObject.containsKey(Constants.REF_SPEC));
+        assertEquals(refspec, jsonObject.get(Constants.REF_SPEC).isString().stringValue());
+    }
 }

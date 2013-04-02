@@ -27,43 +27,34 @@ import org.exoplatform.ide.git.shared.RmRequest;
 
 /**
  * Marshaller for remove files request in JSON format.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 2:55:02 PM anya $
- * 
  */
-public class RemoveRequestMarshaller implements Marshallable, Constants
-{
-   /**
-    * Remove request.
-    */
-   private RmRequest rmRequest;
+public class RemoveRequestMarshaller implements Marshallable, Constants {
+    /** Remove request. */
+    private RmRequest rmRequest;
 
-   /**
-    * @param rmRequest remove request
-    */
-   public RemoveRequestMarshaller(RmRequest rmRequest)
-   {
-      this.rmRequest = rmRequest;
-   }
+    /**
+     * @param rmRequest
+     *         remove request
+     */
+    public RemoveRequestMarshaller(RmRequest rmRequest) {
+        this.rmRequest = rmRequest;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal()
-    */
-   @Override
-   public String marshal()
-   {
-      JSONObject jsonObject = new JSONObject();
-      if (rmRequest.getFiles() != null && rmRequest.getFiles().length > 0)
-      {
-         JSONArray array = new JSONArray();
-         for (int i = 0; i < rmRequest.getFiles().length; i++)
-         {
-            array.set(i, new JSONString(rmRequest.getFiles()[i]));
-         }
-         jsonObject.put(FILES, array);
-      }
-      return jsonObject.toString();
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Marshallable#marshal() */
+    @Override
+    public String marshal() {
+        JSONObject jsonObject = new JSONObject();
+        if (rmRequest.getFiles() != null && rmRequest.getFiles().length > 0) {
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < rmRequest.getFiles().length; i++) {
+                array.set(i, new JSONString(rmRequest.getFiles()[i]));
+            }
+            jsonObject.put(FILES, array);
+        }
+        return jsonObject.toString();
+    }
 
 }

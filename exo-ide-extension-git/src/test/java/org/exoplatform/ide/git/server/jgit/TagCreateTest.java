@@ -31,24 +31,22 @@ import java.util.Map;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagCreateTest.java 22811 2011-03-22 07:28:35Z andrew00x $
  */
-public class TagCreateTest extends BaseTest
-{
-   public void testCreateTag() throws Exception
-   {
-      Tag tag =
-         getDefaultConnection().tagCreate(new TagCreateRequest("new_tag", null/*From HEAD*/, "test create tag"));
-      Map<String, Ref> tags = getDefaultRepository().getTags();
+public class TagCreateTest extends BaseTest {
+    public void testCreateTag() throws Exception {
+        Tag tag =
+                getDefaultConnection().tagCreate(new TagCreateRequest("new_tag", null/*From HEAD*/, "test create tag"));
+        Map<String, Ref> tags = getDefaultRepository().getTags();
 
-      Ref refTag = tags.get(tag.getName());
-      assertNotNull(refTag);
+        Ref refTag = tags.get(tag.getName());
+        assertNotNull(refTag);
 
-      RevTag revTag = new RevWalk(getDefaultRepository()).parseTag(refTag.getLeaf().getObjectId());
+        RevTag revTag = new RevWalk(getDefaultRepository()).parseTag(refTag.getLeaf().getObjectId());
 
-      assertEquals("test create tag", revTag.getFullMessage());
-      PersonIdent tagger = revTag.getTaggerIdent();
-      assertNotNull(tagger);
-      assertEquals("andrey", tagger.getName());
-      assertEquals("andrey@mail.com", tagger.getEmailAddress());
-      assertEquals("new_tag", revTag.getTagName());
-   }
+        assertEquals("test create tag", revTag.getFullMessage());
+        PersonIdent tagger = revTag.getTaggerIdent();
+        assertNotNull(tagger);
+        assertEquals("andrey", tagger.getName());
+        assertEquals("andrey@mail.com", tagger.getEmailAddress());
+        assertEquals("new_tag", revTag.getTagName());
+    }
 }

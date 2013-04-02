@@ -27,29 +27,24 @@ import org.exoplatform.ide.git.shared.RmRequest;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 28, 2011 9:55:30 AM anya $
- * 
  */
-public class RemoveMarshallerGwtTest extends BaseGwtTest
-{
-   /**
-    * Test remove paths from index and working tree request marshaller.
-    */
-   public void testRemovePathsRequestMarshaller()
-   {
-      String path1 = "test/files.txt";
-      String path2 = "test2/*";
+public class RemoveMarshallerGwtTest extends BaseGwtTest {
+    /** Test remove paths from index and working tree request marshaller. */
+    public void testRemovePathsRequestMarshaller() {
+        String path1 = "test/files.txt";
+        String path2 = "test2/*";
 
-      RmRequest rmRequest = new RmRequest(new String[]{path1, path2});
-      RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
+        RmRequest rmRequest = new RmRequest(new String[]{path1, path2});
+        RemoveRequestMarshaller marshaller = new RemoveRequestMarshaller(rmRequest);
 
-      String json = marshaller.marshal();
+        String json = marshaller.marshal();
 
-      assertNotNull(json);
+        assertNotNull(json);
 
-      JSONObject jsonObject = new JSONObject(build(json));
-      assertTrue(jsonObject.containsKey(Constants.FILES));
-      assertEquals(2, jsonObject.get(Constants.FILES).isArray().size());
-      assertEquals(path1, jsonObject.get(Constants.FILES).isArray().get(0).isString().stringValue());
-      assertEquals(path2, jsonObject.get(Constants.FILES).isArray().get(1).isString().stringValue());
-   }
+        JSONObject jsonObject = new JSONObject(build(json));
+        assertTrue(jsonObject.containsKey(Constants.FILES));
+        assertEquals(2, jsonObject.get(Constants.FILES).isArray().size());
+        assertEquals(path1, jsonObject.get(Constants.FILES).isArray().get(0).isString().stringValue());
+        assertEquals(path2, jsonObject.get(Constants.FILES).isArray().get(1).isString().stringValue());
+    }
 }

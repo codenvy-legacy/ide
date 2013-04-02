@@ -24,45 +24,38 @@ package org.exoplatform.ide.git.client.reset;
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 11:57:38 AM anya $
- *
  */
-public class IndexFile
-{
-   /**
-    * File is indexed by Git.
-    */
-   private boolean indexed;
+public class IndexFile {
+    /** File is indexed by Git. */
+    private boolean indexed;
 
-   private String path;
+    private String path;
 
-   /**
-    * @param file git file
-    * @param indexed if <code>true</code> file is in index
-    */
-   public IndexFile(String path, boolean indexed)
-   {
-      this.path = path;
-      this.indexed = indexed;
-   }
+    /**
+     * @param file
+     *         git file
+     * @param indexed
+     *         if <code>true</code> file is in index
+     */
+    public IndexFile(String path, boolean indexed) {
+        this.path = path;
+        this.indexed = indexed;
+    }
 
-   /**
-    * @return the indexed if <code>true</code> file is in index
-    */
-   public boolean isIndexed()
-   {
-      return indexed;
-   }
+    /** @return the indexed if <code>true</code> file is in index */
+    public boolean isIndexed() {
+        return indexed;
+    }
 
-   /**
-    * @param indexed the indexed if <code>true</code> file is in index
-    */
-   public void setIndexed(boolean indexed)
-   {
-      this.indexed = indexed;
-   }
+    /**
+     * @param indexed
+     *         the indexed if <code>true</code> file is in index
+     */
+    public void setIndexed(boolean indexed) {
+        this.indexed = indexed;
+    }
 
-   public String getPath()
-   {
-      return this.path;
-   }
+    public String getPath() {
+        return this.path;
+    }
 }

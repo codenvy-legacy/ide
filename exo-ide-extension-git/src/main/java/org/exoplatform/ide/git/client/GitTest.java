@@ -21,17 +21,12 @@ package org.exoplatform.ide.git.client;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 27, 2011 11:35:04 AM anya $
- * 
  */
-public class GitTest implements com.google.gwt.core.client.EntryPoint
-{
+public class GitTest implements com.google.gwt.core.client.EntryPoint {
 
-   /**
-    * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
-    */
-   @Override
-   public void onModuleLoad()
-   {
-   }
+    /** @see com.google.gwt.core.client.EntryPoint#onModuleLoad() */
+    @Override
+    public void onModuleLoad() {
+    }
 
 }

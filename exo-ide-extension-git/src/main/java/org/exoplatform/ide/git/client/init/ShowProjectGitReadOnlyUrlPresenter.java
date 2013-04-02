@@ -39,125 +39,102 @@ import org.exoplatform.ide.git.client.GitPresenter;
 
 /**
  * Presenter for Init Repository view.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 24, 2011 9:07:58 AM anya $
- * 
  */
-public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements ShowProjectGitReadOnlyUrlHandler
-{
-   
-   public interface Display extends IsView
-   {
-      /**
-       * Get's Git URl field field.
-       * 
-       * @return {@link HasValue}
-       */
-      HasValue<String> getGitUrl();
+public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements ShowProjectGitReadOnlyUrlHandler {
 
-      /**
-       * Gets cancel button.
-       * 
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCloseButton();
-   }
+    public interface Display extends IsView {
+        /**
+         * Get's Git URl field field.
+         *
+         * @return {@link HasValue}
+         */
+        HasValue<String> getGitUrl();
 
-   private Display display;
+        /**
+         * Gets cancel button.
+         *
+         * @return {@link HasClickHandlers}
+         */
+        HasClickHandlers getCloseButton();
+    }
 
-   /**
-    * @param eventBus
-    */
-   public ShowProjectGitReadOnlyUrlPresenter()
-   {
-      IDE.addHandler(ShowProjectGitReadOnlyUrlEvent.TYPE, this);
-   }
+    private Display display;
 
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
+    /** @param eventBus */
+    public ShowProjectGitReadOnlyUrlPresenter() {
+        IDE.addHandler(ShowProjectGitReadOnlyUrlEvent.TYPE, this);
+    }
 
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay(Display d) {
+        this.display = d;
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-   }
+        display.getCloseButton().addClickHandler(new ClickHandler() {
 
-   @Override
-   public void onShowGitUrl(ShowProjectGitReadOnlyUrlEvent event)
-   {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView((View)d);
-      bindDisplay(d);
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+    }
+
+    @Override
+    public void onShowGitUrl(ShowProjectGitReadOnlyUrlEvent event) {
+        Display d = GWT.create(Display.class);
+        IDE.getInstance().openView((View)d);
+        bindDisplay(d);
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      try
-      {
-         GitClientService.getInstance().getGitReadOnlyUrl(
-            vfs.getId(),
-            projectId,
-            new AsyncRequestCallback<StringBuilder>(
-               new StringUnmarshaller(new StringBuilder()))
-            {
+        String projectId = getSelectedProject().getId();
+        try {
+            GitClientService.getInstance().getGitReadOnlyUrl(
+                    vfs.getId(),
+                    projectId,
+                    new AsyncRequestCallback<StringBuilder>(
+                            new StringUnmarshaller(new StringBuilder())) {
 
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  display.getGitUrl().setValue(result.toString());
-               }
+                        @Override
+                        protected void onSuccess(StringBuilder result) {
+                            display.getGitUrl().setValue(result.toString());
+                        }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.initFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         String errorMessage =
-            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .initFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-      }
-   }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            String errorMessage =
+                                    (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                                                                                                            : GitExtension.MESSAGES
+                                                                                                                          .initFailed();
+                            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                        }
+                    });
+        } catch (RequestException e) {
+            String errorMessage =
+                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+                                                                                                           .initFailed();
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+        }
+    }
 
-   private class StringUnmarshaller implements
-      Unmarshallable<StringBuilder>
-   {
+    private class StringUnmarshaller implements
+                                     Unmarshallable<StringBuilder> {
 
-      protected StringBuilder builder;
+        protected StringBuilder builder;
 
-      /**
-       * @param callback
-       */
-      public StringUnmarshaller(StringBuilder builder)
-      {
-         this.builder = builder;
-      }
+        /** @param callback */
+        public StringUnmarshaller(StringBuilder builder) {
+            this.builder = builder;
+        }
 
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-       */
-      @Override
-      public void unmarshal(Response response)
-      {
-         builder.append(response.getText());
-      }
+        /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+        @Override
+        public void unmarshal(Response response) {
+            builder.append(response.getText());
+        }
 
-      @Override
-      public StringBuilder getPayload()
-      {
-         return builder;
-      }
-   }
+        @Override
+        public StringBuilder getPayload() {
+            return builder;
+        }
+    }
 }

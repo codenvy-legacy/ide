@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.git.server;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -31,61 +27,45 @@ import java.util.Set;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class GitHelper
-{
-   public static void addToGitIgnore(File dir, String... rules) throws IOException
-   {
-      if (rules == null || rules.length == 0)
-      {
-         return;
-      }
+public class GitHelper {
+    public static void addToGitIgnore(File dir, String... rules) throws IOException {
+        if (rules == null || rules.length == 0) {
+            return;
+        }
 
-      Set<String> toAdd = new LinkedHashSet<String>(Arrays.asList(rules));
+        Set<String> toAdd = new LinkedHashSet<String>(Arrays.asList(rules));
 
-      File f = new File(dir, ".gitignore");
-      FileWriter w = null;
-      try
-      {
-         if (f.exists() && f.length() > 0)
-         {
-            BufferedReader r = null;
-            try
-            {
-               r = new BufferedReader(new FileReader(f));
-               for (String l = r.readLine(); l != null; l = r.readLine())
-               {
-                  toAdd.remove(l.trim());
-               }
-            }
-            finally
-            {
-               if (r != null)
-               {
-                  r.close();
-               }
+        File f = new File(dir, ".gitignore");
+        FileWriter w = null;
+        try {
+            if (f.exists() && f.length() > 0) {
+                BufferedReader r = null;
+                try {
+                    r = new BufferedReader(new FileReader(f));
+                    for (String l = r.readLine(); l != null; l = r.readLine()) {
+                        toAdd.remove(l.trim());
+                    }
+                } finally {
+                    if (r != null) {
+                        r.close();
+                    }
+                }
+
+                w = new FileWriter(f, true);
+                w.write('\n');
+            } else {
+                w = new FileWriter(f);
             }
 
-            w = new FileWriter(f, true);
-            w.write('\n');
-         }
-         else
-         {
-            w = new FileWriter(f);
-         }
-
-         for (String l : toAdd)
-         {
-            w.write(l);
-            w.write('\n');
-         }
-      }
-      finally
-      {
-         if (w != null)
-         {
-            w.flush();
-            w.close();
-         }
-      }
-   }
+            for (String l : toAdd) {
+                w.write(l);
+                w.write('\n');
+            }
+        } finally {
+            if (w != null) {
+                w.flush();
+                w.close();
+            }
+        }
+    }
 }

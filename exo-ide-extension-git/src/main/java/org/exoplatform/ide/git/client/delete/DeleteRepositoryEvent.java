@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to delete Git repository. Implement {@link DeleteRepositoryHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 5:46:14 PM anya $
- * 
  */
-public class DeleteRepositoryEvent extends GwtEvent<DeleteRepositoryHandler>
-{
-   /**
-    * Type, used to register event.
-    */
-   public static final GwtEvent.Type<DeleteRepositoryHandler> TYPE = new GwtEvent.Type<DeleteRepositoryHandler>();
+public class DeleteRepositoryEvent extends GwtEvent<DeleteRepositoryHandler> {
+    /** Type, used to register event. */
+    public static final GwtEvent.Type<DeleteRepositoryHandler> TYPE = new GwtEvent.Type<DeleteRepositoryHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeleteRepositoryHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DeleteRepositoryHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DeleteRepositoryHandler handler)
-   {
-      handler.onDeleteRepository(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(DeleteRepositoryHandler handler) {
+        handler.onDeleteRepository(this);
+    }
 
 }

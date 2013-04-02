@@ -28,39 +28,28 @@ import org.exoplatform.ide.git.client.GitExtension;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Oct 31, 2011 evgen $
- * 
  */
-public class AddRequestHandler extends RequestStatusHandlerBase
-{
+public class AddRequestHandler extends RequestStatusHandlerBase {
 
-   /**
-    * @param pojectName
-    */
-   public AddRequestHandler(String pojectName)
-   {
-      super(pojectName);
-   }
+    /** @param pojectName */
+    public AddRequestHandler(String pojectName) {
+        super(pojectName);
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(GitExtension.MESSAGES.addStarted(projectName));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(GitExtension.MESSAGES.addStarted(projectName));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(GitExtension.MESSAGES.addFinished(projectName));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(GitExtension.MESSAGES.addFinished(projectName));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

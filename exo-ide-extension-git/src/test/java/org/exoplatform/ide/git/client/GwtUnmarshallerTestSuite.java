@@ -18,23 +18,21 @@
  */
 package org.exoplatform.ide.git.client;
 
-import com.google.gwt.junit.tools.GWTTestSuite;
 import junit.framework.Test;
 import junit.framework.TestCase;
+
+import com.google.gwt.junit.tools.GWTTestSuite;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 27, 2011 12:28:59 PM anya $
- *
  */
-public class GwtUnmarshallerTestSuite extends TestCase
-{
-   public static Test suite()
-   {
-      GWTTestSuite suite = new GWTTestSuite("Codenvy Git Unmarshaller GWT Tests");
-      suite.addTestSuite(BranchesUnmarshallerGwtTest.class);
-      suite.addTestSuite(LogUnmarshallerGwtTest.class);
-      suite.addTestSuite(RemoteListUnmarshallerGwtTest.class);
-      return suite;
-   }
+public class GwtUnmarshallerTestSuite extends TestCase {
+    public static Test suite() {
+        GWTTestSuite suite = new GWTTestSuite("Codenvy Git Unmarshaller GWT Tests");
+        suite.addTestSuite(BranchesUnmarshallerGwtTest.class);
+        suite.addTestSuite(LogUnmarshallerGwtTest.class);
+        suite.addTestSuite(RemoteListUnmarshallerGwtTest.class);
+        return suite;
+    }
 }

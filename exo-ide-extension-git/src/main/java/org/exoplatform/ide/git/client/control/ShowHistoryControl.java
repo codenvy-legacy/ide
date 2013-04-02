@@ -25,21 +25,18 @@ import org.exoplatform.ide.git.client.history.ShowInHistoryEvent;
 
 /**
  * Control for showing the history of commits.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 29, 2011 3:04:01 PM anya $
- * 
  */
-public class ShowHistoryControl extends GitControl
-{
-   public ShowHistoryControl()
-   {
-      super(GitExtension.MESSAGES.historyControlId());
-      setTitle(GitExtension.MESSAGES.historyControlTitle());
-      setPrompt(GitExtension.MESSAGES.historyControlPrompt());
-      setEvent(new ShowInHistoryEvent());
-      setImages(GitClientBundle.INSTANCE.history(), GitClientBundle.INSTANCE.historyDisabled());
-      setDelimiterBefore(true);
-      setGroupName(GroupNames.INFORMATION);
-   }
+public class ShowHistoryControl extends GitControl {
+    public ShowHistoryControl() {
+        super(GitExtension.MESSAGES.historyControlId());
+        setTitle(GitExtension.MESSAGES.historyControlTitle());
+        setPrompt(GitExtension.MESSAGES.historyControlPrompt());
+        setEvent(new ShowInHistoryEvent());
+        setImages(GitClientBundle.INSTANCE.history(), GitClientBundle.INSTANCE.historyDisabled());
+        setDelimiterBefore(true);
+        setGroupName(GroupNames.INFORMATION);
+    }
 }
