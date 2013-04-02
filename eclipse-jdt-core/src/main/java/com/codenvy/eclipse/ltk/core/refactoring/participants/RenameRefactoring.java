@@ -21,28 +21,24 @@ import com.codenvy.eclipse.core.runtime.Assert;
  *
  * @since 3.0
  */
-public class RenameRefactoring extends ProcessorBasedRefactoring
-{
+public class RenameRefactoring extends ProcessorBasedRefactoring {
 
-   private RenameProcessor fProcessor;
+    private RenameProcessor fProcessor;
 
-   /**
-    * Creates a new rename refactoring with the given rename processor.
-    *
-    * @param processor the rename processor
-    */
-   public RenameRefactoring(RenameProcessor processor)
-   {
-      super(processor);
-      Assert.isNotNull(processor);
-      fProcessor = processor;
-   }
+    /**
+     * Creates a new rename refactoring with the given rename processor.
+     *
+     * @param processor
+     *         the rename processor
+     */
+    public RenameRefactoring(RenameProcessor processor) {
+        super(processor);
+        Assert.isNotNull(processor);
+        fProcessor = processor;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringProcessor getProcessor()
-   {
-      return fProcessor;
-   }
+    /** {@inheritDoc} */
+    public RefactoringProcessor getProcessor() {
+        return fProcessor;
+    }
 }

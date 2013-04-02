@@ -31,18 +31,15 @@ import java.util.Map;
  * @see com.codenvy.eclipse.ltk.core.refactoring.participants.ParticipantManager
  * @since 3.0
  */
-public class SharableParticipants
-{
+public class SharableParticipants {
 
-   private Map fMap = new HashMap();
+    private Map fMap = new HashMap();
 
-   /* package */ void put(ParticipantDescriptor descriptor, RefactoringParticipant participant)
-   {
-      fMap.put(descriptor, participant);
-   }
+    /* package */ void put(ParticipantDescriptor descriptor, RefactoringParticipant participant) {
+        fMap.put(descriptor, participant);
+    }
 
-   /* package */ RefactoringParticipant get(ParticipantDescriptor descriptor)
-   {
-      return (RefactoringParticipant)fMap.get(descriptor);
-   }
+    /* package */ RefactoringParticipant get(ParticipantDescriptor descriptor) {
+        return (RefactoringParticipant)fMap.get(descriptor);
+    }
 }

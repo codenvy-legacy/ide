@@ -18,31 +18,27 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 
-/**
- * Collects the resource paths reported by a client to this search requestor.
- */
+/** Collects the resource paths reported by a client to this search requestor. */
 public class PathCollector extends IndexQueryRequestor {
 
-	/* a set of resource paths */
-	public HashSet paths = new HashSet(5);
+    /* a set of resource paths */
+    public HashSet paths = new HashSet(5);
 
-	/* (non-Javadoc)
-	 * @seeIndexQueryRequestor#acceptIndexMatch(IndexRecord, SearchParticipant, SearchPattern)
-	 */
-	public boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord, SearchParticipant participant, AccessRuleSet access) {
-		this.paths.add(documentPath);
-		return true;
-	}
+    /* (non-Javadoc)
+     * @seeIndexQueryRequestor#acceptIndexMatch(IndexRecord, SearchParticipant, SearchPattern)
+     */
+    public boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord, SearchParticipant participant, AccessRuleSet access) {
+        this.paths.add(documentPath);
+        return true;
+    }
 
-	/**
-	 * Returns the paths that have been collected.
-	 */
-	public String[] getPaths() {
-		String[] result = new String[this.paths.size()];
-		int i = 0;
-		for (Iterator iter = this.paths.iterator(); iter.hasNext();) {
-			result[i++] = (String)iter.next();
-		}
-		return result;
-	}
+    /** Returns the paths that have been collected. */
+    public String[] getPaths() {
+        String[] result = new String[this.paths.size()];
+        int i = 0;
+        for (Iterator iter = this.paths.iterator(); iter.hasNext(); ) {
+            result[i++] = (String)iter.next();
+        }
+        return result;
+    }
 }

@@ -16,20 +16,20 @@ import com.codenvy.eclipse.jdt.internal.compiler.ast.Annotation;
 import com.codenvy.eclipse.jdt.internal.compiler.ast.TypeDeclaration;
 
 public class CompletionOnAnnotationOfType extends TypeDeclaration {
-	public ASTNode potentialAnnotatedNode;
-	// During recovery a parameter can be parsed as a FieldDeclaration instead of Argument.
-	// 'isParameter' is set to true in this case.
-	public boolean isParameter;
+    public ASTNode potentialAnnotatedNode;
+    // During recovery a parameter can be parsed as a FieldDeclaration instead of Argument.
+    // 'isParameter' is set to true in this case.
+    public boolean isParameter;
 
-	public CompletionOnAnnotationOfType(char[] typeName, CompilationResult compilationResult, Annotation annotation){
-		super(compilationResult);
-		this.sourceEnd = annotation.sourceEnd;
-		this.sourceStart = annotation.sourceEnd;
-		this.name = typeName;
-		this.annotations = new Annotation[]{annotation};
-	}
+    public CompletionOnAnnotationOfType(char[] typeName, CompilationResult compilationResult, Annotation annotation) {
+        super(compilationResult);
+        this.sourceEnd = annotation.sourceEnd;
+        this.sourceStart = annotation.sourceEnd;
+        this.name = typeName;
+        this.annotations = new Annotation[]{annotation};
+    }
 
-	public StringBuffer print(int indent, StringBuffer output) {
-		return this.annotations[0].print(indent, output);
-	}
+    public StringBuffer print(int indent, StringBuffer output) {
+        return this.annotations[0].print(indent, output);
+    }
 }

@@ -23,28 +23,24 @@ import com.codenvy.eclipse.jdt.internal.ui.viewsupport.BasicElementLabels;
 import com.codenvy.eclipse.jdt.ui.JavaElementLabels;
 import com.codenvy.eclipse.ltk.core.refactoring.Change;
 
-public class CopyPackageFragmentRootChange extends PackageFragmentRootReorgChange
-{
+public class CopyPackageFragmentRootChange extends PackageFragmentRootReorgChange {
 
-   public CopyPackageFragmentRootChange(IPackageFragmentRoot root, IProject destination, INewNameQuery newNameQuery,
-      IPackageFragmentRootManipulationQuery updateClasspathQuery)
-   {
-      super(root, destination, newNameQuery, updateClasspathQuery);
-   }
+    public CopyPackageFragmentRootChange(IPackageFragmentRoot root, IProject destination, INewNameQuery newNameQuery,
+                                         IPackageFragmentRootManipulationQuery updateClasspathQuery) {
+        super(root, destination, newNameQuery, updateClasspathQuery);
+    }
 
-   @Override
-   protected Change doPerformReorg(IPath destinationPath, IProgressMonitor pm) throws JavaModelException
-   {
-      getRoot().copy(destinationPath, getResourceUpdateFlags(), getUpdateModelFlags(true), null, pm);
-      return null;
-   }
+    @Override
+    protected Change doPerformReorg(IPath destinationPath, IProgressMonitor pm) throws JavaModelException {
+        getRoot().copy(destinationPath, getResourceUpdateFlags(), getUpdateModelFlags(true), null, pm);
+        return null;
+    }
 
-   @Override
-   public String getName()
-   {
-      String rootName = JavaElementLabels.getElementLabel(getRoot(), JavaElementLabels.ALL_DEFAULT);
-      String destinationName = BasicElementLabels.getResourceName(getDestination());
-      return Messages.format(RefactoringCoreMessages.CopyPackageFragmentRootChange_copy,
-         new String[]{rootName, destinationName});
-   }
+    @Override
+    public String getName() {
+        String rootName = JavaElementLabels.getElementLabel(getRoot(), JavaElementLabels.ALL_DEFAULT);
+        String destinationName = BasicElementLabels.getResourceName(getDestination());
+        return Messages.format(RefactoringCoreMessages.CopyPackageFragmentRootChange_copy,
+                               new String[]{rootName, destinationName});
+    }
 }

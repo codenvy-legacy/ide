@@ -18,20 +18,20 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.BlockScope;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnMarkerAnnotationName extends MarkerAnnotation {
-	public CompletionOnMarkerAnnotationName(TypeReference type, int sourceStart){
-		super(type, sourceStart);
-	}
+    public CompletionOnMarkerAnnotationName(TypeReference type, int sourceStart) {
+        super(type, sourceStart);
+    }
 
-	public TypeBinding resolveType(BlockScope scope) {
-		if(this.type instanceof QualifiedTypeReference) {
-			QualifiedTypeReference qualifiedTypeReference = (QualifiedTypeReference) this.type;
-			Binding binding = scope.parent.getTypeOrPackage(qualifiedTypeReference.tokens); // step up from the ClassScope
-			if (!binding.isValidBinding()) {
-				scope.problemReporter().invalidType(this, (TypeBinding) binding);
-				throw new CompletionNodeFound();
-			}
-			throw new CompletionNodeFound(this, binding, scope);
-		}
-		throw new CompletionNodeFound(this, null, scope);
-	}
+    public TypeBinding resolveType(BlockScope scope) {
+        if (this.type instanceof QualifiedTypeReference) {
+            QualifiedTypeReference qualifiedTypeReference = (QualifiedTypeReference)this.type;
+            Binding binding = scope.parent.getTypeOrPackage(qualifiedTypeReference.tokens); // step up from the ClassScope
+            if (!binding.isValidBinding()) {
+                scope.problemReporter().invalidType(this, (TypeBinding)binding);
+                throw new CompletionNodeFound();
+            }
+            throw new CompletionNodeFound(this, binding, scope);
+        }
+        throw new CompletionNodeFound(this, null, scope);
+    }
 }

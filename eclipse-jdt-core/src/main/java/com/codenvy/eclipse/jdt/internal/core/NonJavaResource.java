@@ -25,136 +25,104 @@ import com.codenvy.eclipse.jdt.internal.core.util.Util;
 import java.io.InputStream;
 
 
-public class NonJavaResource extends PlatformObject implements IJarEntryResource
-{
+public class NonJavaResource extends PlatformObject implements IJarEntryResource {
 
-   private static final IJarEntryResource[] NO_CHILDREN = new IJarEntryResource[0];
+    private static final IJarEntryResource[] NO_CHILDREN = new IJarEntryResource[0];
 
-   protected Object parent;
+    protected Object parent;
 
-   protected IResource resource;
+    protected IResource resource;
 
-   public NonJavaResource(Object parent, IResource resource)
-   {
-      this.parent = parent;
-      this.resource = resource;
-   }
+    public NonJavaResource(Object parent, IResource resource) {
+        this.parent = parent;
+        this.resource = resource;
+    }
 
-   public boolean equals(Object obj)
-   {
-      if (!(obj instanceof NonJavaResource))
-      {
-         return false;
-      }
-      NonJavaResource other = (NonJavaResource)obj;
-      return this.parent.equals(other.parent) && this.resource.equals(other.resource);
-   }
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NonJavaResource)) {
+            return false;
+        }
+        NonJavaResource other = (NonJavaResource)obj;
+        return this.parent.equals(other.parent) && this.resource.equals(other.resource);
+    }
 
-   public IJarEntryResource[] getChildren()
-   {
-      if (this.resource instanceof IContainer)
-      {
-         IResource[] members;
-         try
-         {
-            members = ((IContainer)this.resource).members();
-         }
-         catch (CoreException e)
-         {
-            Util.log(e, "Could not retrieve children of " + this.resource.getFullPath()); //$NON-NLS-1$
-            return NO_CHILDREN;
-         }
-         int length = members.length;
-         if (length == 0)
-         {
-            return NO_CHILDREN;
-         }
-         IJarEntryResource[] children = new IJarEntryResource[length];
-         for (int i = 0; i < length; i++)
-         {
-            children[i] = new NonJavaResource(this, members[i]);
-         }
-         return children;
-      }
-      return NO_CHILDREN;
-   }
+    public IJarEntryResource[] getChildren() {
+        if (this.resource instanceof IContainer) {
+            IResource[] members;
+            try {
+                members = ((IContainer)this.resource).members();
+            } catch (CoreException e) {
+                Util.log(e, "Could not retrieve children of " + this.resource.getFullPath()); //$NON-NLS-1$
+                return NO_CHILDREN;
+            }
+            int length = members.length;
+            if (length == 0) {
+                return NO_CHILDREN;
+            }
+            IJarEntryResource[] children = new IJarEntryResource[length];
+            for (int i = 0; i < length; i++) {
+                children[i] = new NonJavaResource(this, members[i]);
+            }
+            return children;
+        }
+        return NO_CHILDREN;
+    }
 
-   public InputStream getContents() throws CoreException
-   {
-      if (this.resource instanceof IFile)
-      {
-         return ((IFile)this.resource).getContents();
-      }
-      return null;
-   }
+    public InputStream getContents() throws CoreException {
+        if (this.resource instanceof IFile) {
+            return ((IFile)this.resource).getContents();
+        }
+        return null;
+    }
 
-   protected String getEntryName()
-   {
-      String parentEntryName;
-      if (this.parent instanceof IPackageFragment)
-      {
-         String elementName = ((IPackageFragment)this.parent).getElementName();
-         parentEntryName = elementName.length() == 0 ? "" : elementName.replace('.', '/') + '/'; //$NON-NLS-1$
-      }
-      else if (this.parent instanceof IPackageFragmentRoot)
-      {
-         parentEntryName = ""; //$NON-NLS-1$
-      }
-      else
-      {
-         parentEntryName = ((NonJavaResource)this.parent).getEntryName() + '/';
-      }
-      return parentEntryName + getName();
-   }
+    protected String getEntryName() {
+        String parentEntryName;
+        if (this.parent instanceof IPackageFragment) {
+            String elementName = ((IPackageFragment)this.parent).getElementName();
+            parentEntryName = elementName.length() == 0 ? "" : elementName.replace('.', '/') + '/'; //$NON-NLS-1$
+        } else if (this.parent instanceof IPackageFragmentRoot) {
+            parentEntryName = ""; //$NON-NLS-1$
+        } else {
+            parentEntryName = ((NonJavaResource)this.parent).getEntryName() + '/';
+        }
+        return parentEntryName + getName();
+    }
 
-   public IPath getFullPath()
-   {
-      return new Path(getEntryName()).makeAbsolute();
-   }
+    public IPath getFullPath() {
+        return new Path(getEntryName()).makeAbsolute();
+    }
 
-   public String getName()
-   {
-      return this.resource.getName();
-   }
+    public String getName() {
+        return this.resource.getName();
+    }
 
-   public IPackageFragmentRoot getPackageFragmentRoot()
-   {
-      if (this.parent instanceof IPackageFragment)
-      {
-         return (IPackageFragmentRoot)((IPackageFragment)this.parent).getParent();
-      }
-      else if (this.parent instanceof IPackageFragmentRoot)
-      {
-         return (IPackageFragmentRoot)this.parent;
-      }
-      else
-      {
-         return ((NonJavaResource)this.parent).getPackageFragmentRoot();
-      }
-   }
+    public IPackageFragmentRoot getPackageFragmentRoot() {
+        if (this.parent instanceof IPackageFragment) {
+            return (IPackageFragmentRoot)((IPackageFragment)this.parent).getParent();
+        } else if (this.parent instanceof IPackageFragmentRoot) {
+            return (IPackageFragmentRoot)this.parent;
+        } else {
+            return ((NonJavaResource)this.parent).getPackageFragmentRoot();
+        }
+    }
 
-   public Object getParent()
-   {
-      return this.parent;
-   }
+    public Object getParent() {
+        return this.parent;
+    }
 
-   public int hashCode()
-   {
-      return Util.combineHashCodes(this.resource.hashCode(), this.parent.hashCode());
-   }
+    public int hashCode() {
+        return Util.combineHashCodes(this.resource.hashCode(), this.parent.hashCode());
+    }
 
-   public boolean isFile()
-   {
-      return this.resource instanceof IFile;
-   }
+    public boolean isFile() {
+        return this.resource instanceof IFile;
+    }
 
-   public boolean isReadOnly()
-   {
-      return true;
-   }
+    public boolean isReadOnly() {
+        return true;
+    }
 
-   public String toString()
-   {
-      return "NonJavaResource[" + getEntryName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-   }
+    public String toString() {
+        return "NonJavaResource[" + getEntryName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

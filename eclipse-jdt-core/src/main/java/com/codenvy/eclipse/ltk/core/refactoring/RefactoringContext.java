@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Sergey Prigogin <eclipse.sprigogin@gmail.com> - [refactoring] Provide a way to implement refactorings that depend on resources that have to be explicitly released - https://bugs.eclipse.org/347599
+ *     Sergey Prigogin <eclipse.sprigogin@gmail.com> - [refactoring] Provide a way to implement refactorings that depend on resources
+ *     that have to be explicitly released - https://bugs.eclipse.org/347599
  *     IBM Corporation - bug fixes
  *******************************************************************************/
 package com.codenvy.eclipse.ltk.core.refactoring;
@@ -26,52 +27,48 @@ package com.codenvy.eclipse.ltk.core.refactoring;
  *
  * @since 3.6
  */
-public class RefactoringContext
-{
-   private Refactoring fRefactoring;
+public class RefactoringContext {
+    private Refactoring fRefactoring;
 
-   /**
-    * Creates a context for the given refactoring.
-    *
-    * @param refactoring The refactoring associated with the context. Cannot be <code>null</code>.
-    * @throws NullPointerException if refactoring is <code>null</code>.
-    */
-   public RefactoringContext(Refactoring refactoring)
-   {
-      if (refactoring == null)
-      {
-         throw new NullPointerException();
-      }
-      fRefactoring = refactoring;
-   }
+    /**
+     * Creates a context for the given refactoring.
+     *
+     * @param refactoring
+     *         The refactoring associated with the context. Cannot be <code>null</code>.
+     * @throws NullPointerException
+     *         if refactoring is <code>null</code>.
+     */
+    public RefactoringContext(Refactoring refactoring) {
+        if (refactoring == null) {
+            throw new NullPointerException();
+        }
+        fRefactoring = refactoring;
+    }
 
-   /**
-    * Returns the refactoring associated with the context.
-    * <p>
-    * The returned refactoring must be in an initialized state, i.e. ready to
-    * be executed via {@link PerformRefactoringOperation}.
-    * </p>
-    *
-    * @return The refactoring associated with the context.
-    */
-   public Refactoring getRefactoring()
-   {
-      return fRefactoring;
-   }
+    /**
+     * Returns the refactoring associated with the context.
+     * <p>
+     * The returned refactoring must be in an initialized state, i.e. ready to
+     * be executed via {@link PerformRefactoringOperation}.
+     * </p>
+     *
+     * @return The refactoring associated with the context.
+     */
+    public Refactoring getRefactoring() {
+        return fRefactoring;
+    }
 
-   /**
-    * Disposes of the context. This method will be called exactly once during the life cycle
-    * of the context after the associated refactoring has finished or produced an error.
-    * <p>
-    * Subclasses may extend this method (must call super).
-    * </p>
-    */
-   public void dispose()
-   {
-      if (fRefactoring == null)
-      {
-         throw new IllegalStateException("dispose() called more than once."); //$NON-NLS-1$
-      }
-      fRefactoring = null;
-   }
+    /**
+     * Disposes of the context. This method will be called exactly once during the life cycle
+     * of the context after the associated refactoring has finished or produced an error.
+     * <p>
+     * Subclasses may extend this method (must call super).
+     * </p>
+     */
+    public void dispose() {
+        if (fRefactoring == null) {
+            throw new IllegalStateException("dispose() called more than once."); //$NON-NLS-1$
+        }
+        fRefactoring = null;
+    }
 }

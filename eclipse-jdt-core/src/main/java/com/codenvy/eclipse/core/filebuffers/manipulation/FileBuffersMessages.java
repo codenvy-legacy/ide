@@ -18,40 +18,37 @@ import com.codenvy.eclipse.core.internal.NLS;
  *
  * @since 3.1
  */
-final class FileBuffersMessages extends NLS
-{
+final class FileBuffersMessages extends NLS {
 
-   private static final String BUNDLE_NAME = FileBuffersMessages.class.getName();
+    private static final String BUNDLE_NAME = FileBuffersMessages.class.getName();
 
-   private FileBuffersMessages()
-   {
-      // Do not instantiate
-   }
+    private FileBuffersMessages() {
+        // Do not instantiate
+    }
 
-   public static String ConvertLineDelimitersOperation_name;
+    public static String ConvertLineDelimitersOperation_name;
 
-   public static String ConvertLineDelimitersOperation_task_generatingChanges;
+    public static String ConvertLineDelimitersOperation_task_generatingChanges;
 
-   public static String ConvertLineDelimitersOperation_task_applyingChanges;
+    public static String ConvertLineDelimitersOperation_task_applyingChanges;
 
-   public static String RemoveTrailingWhitespaceOperation_name;
+    public static String RemoveTrailingWhitespaceOperation_name;
 
-   public static String RemoveTrailingWhitespaceOperation_task_generatingChanges;
+    public static String RemoveTrailingWhitespaceOperation_task_generatingChanges;
 
-   public static String RemoveTrailingWhitespaceOperation_task_applyingChanges;
+    public static String RemoveTrailingWhitespaceOperation_task_applyingChanges;
 
-   public static String FileBufferOperationRunner_task_connecting;
+    public static String FileBufferOperationRunner_task_connecting;
 
-   public static String FileBufferOperationRunner_task_disconnecting;
+    public static String FileBufferOperationRunner_task_disconnecting;
 
-   public static String FileBufferOperationRunner_task_committing;
+    public static String FileBufferOperationRunner_task_committing;
 
-   public static String ContainerCreator_task_creatingContainer;
+    public static String ContainerCreator_task_creatingContainer;
 
-   public static String ContainerCreator_destinationMustBeAContainer;
+    public static String ContainerCreator_destinationMustBeAContainer;
 
-   static
-   {
-      NLS.initializeMessages(BUNDLE_NAME, FileBuffersMessages.class);
-   }
+    static {
+        NLS.initializeMessages(BUNDLE_NAME, FileBuffersMessages.class);
+    }
 }

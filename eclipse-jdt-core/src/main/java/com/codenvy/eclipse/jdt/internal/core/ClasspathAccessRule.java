@@ -16,49 +16,41 @@ import com.codenvy.eclipse.jdt.core.IAccessRule;
 import com.codenvy.eclipse.jdt.core.compiler.IProblem;
 import com.codenvy.eclipse.jdt.internal.compiler.env.AccessRule;
 
-public class ClasspathAccessRule extends AccessRule implements IAccessRule
-{
+public class ClasspathAccessRule extends AccessRule implements IAccessRule {
 
-   public ClasspathAccessRule(IPath pattern, int kind)
-   {
-      this(pattern.toString().toCharArray(), toProblemId(kind));
-   }
+    public ClasspathAccessRule(IPath pattern, int kind) {
+        this(pattern.toString().toCharArray(), toProblemId(kind));
+    }
 
-   public ClasspathAccessRule(char[] pattern, int problemId)
-   {
-      super(pattern, problemId);
-   }
+    public ClasspathAccessRule(char[] pattern, int problemId) {
+        super(pattern, problemId);
+    }
 
-   private static int toProblemId(int kind)
-   {
-      boolean ignoreIfBetter = (kind & IAccessRule.IGNORE_IF_BETTER) != 0;
-      switch (kind & ~IAccessRule.IGNORE_IF_BETTER)
-      {
-         case K_NON_ACCESSIBLE:
-            return ignoreIfBetter ? IProblem.ForbiddenReference | AccessRule.IgnoreIfBetter : IProblem.ForbiddenReference;
-         case K_DISCOURAGED:
-            return ignoreIfBetter ? IProblem.DiscouragedReference | AccessRule.IgnoreIfBetter : IProblem.DiscouragedReference;
-         default:
-            return ignoreIfBetter ? AccessRule.IgnoreIfBetter : 0;
-      }
-   }
+    private static int toProblemId(int kind) {
+        boolean ignoreIfBetter = (kind & IAccessRule.IGNORE_IF_BETTER) != 0;
+        switch (kind & ~IAccessRule.IGNORE_IF_BETTER) {
+            case K_NON_ACCESSIBLE:
+                return ignoreIfBetter ? IProblem.ForbiddenReference | AccessRule.IgnoreIfBetter : IProblem.ForbiddenReference;
+            case K_DISCOURAGED:
+                return ignoreIfBetter ? IProblem.DiscouragedReference | AccessRule.IgnoreIfBetter : IProblem.DiscouragedReference;
+            default:
+                return ignoreIfBetter ? AccessRule.IgnoreIfBetter : 0;
+        }
+    }
 
-   public IPath getPattern()
-   {
-      return new Path(new String(this.pattern));
-   }
+    public IPath getPattern() {
+        return new Path(new String(this.pattern));
+    }
 
-   public int getKind()
-   {
-      switch (getProblemId())
-      {
-         case IProblem.ForbiddenReference:
-            return K_NON_ACCESSIBLE;
-         case IProblem.DiscouragedReference:
-            return K_DISCOURAGED;
-         default:
-            return K_ACCESSIBLE;
-      }
-   }
+    public int getKind() {
+        switch (getProblemId()) {
+            case IProblem.ForbiddenReference:
+                return K_NON_ACCESSIBLE;
+            case IProblem.DiscouragedReference:
+                return K_DISCOURAGED;
+            default:
+                return K_ACCESSIBLE;
+        }
+    }
 
 }

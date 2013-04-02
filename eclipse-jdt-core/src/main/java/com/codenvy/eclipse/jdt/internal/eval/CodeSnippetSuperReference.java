@@ -22,51 +22,40 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
  * used to report an error through JavaModelException according to the fact that super
  * reference are not supported in code snippet.
  */
-public class CodeSnippetSuperReference extends SuperReference implements EvaluationConstants, InvocationSite
-{
+public class CodeSnippetSuperReference extends SuperReference implements EvaluationConstants, InvocationSite {
 
-   public CodeSnippetSuperReference(int pos, int sourceEnd)
-   {
-      super(pos, sourceEnd);
-   }
+    public CodeSnippetSuperReference(int pos, int sourceEnd) {
+        super(pos, sourceEnd);
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
-   public TypeBinding[] genericTypeArguments()
-   {
-      return null;
-   }
+    /** @see com.codenvy.eclipse.jdt.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
+    public TypeBinding[] genericTypeArguments() {
+        return null;
+    }
 
-   public TypeBinding resolveType(BlockScope scope)
-   {
-      scope.problemReporter().cannotUseSuperInCodeSnippet(this.sourceStart, this.sourceEnd);
-      return null;
-   }
+    public TypeBinding resolveType(BlockScope scope) {
+        scope.problemReporter().cannotUseSuperInCodeSnippet(this.sourceStart, this.sourceEnd);
+        return null;
+    }
 
-   public boolean isSuperAccess()
-   {
-      return false;
-   }
+    public boolean isSuperAccess() {
+        return false;
+    }
 
-   public boolean isTypeAccess()
-   {
-      return false;
-   }
+    public boolean isTypeAccess() {
+        return false;
+    }
 
-   public void setActualReceiverType(ReferenceBinding receiverType)
-   {
-      // ignored
-   }
+    public void setActualReceiverType(ReferenceBinding receiverType) {
+        // ignored
+    }
 
-   public void setDepth(int depth)
-   {
-      // ignored
-   }
+    public void setDepth(int depth) {
+        // ignored
+    }
 
-   public void setFieldIndex(int index)
-   {
-      // ignored
-   }
+    public void setFieldIndex(int index) {
+        // ignored
+    }
 }
 

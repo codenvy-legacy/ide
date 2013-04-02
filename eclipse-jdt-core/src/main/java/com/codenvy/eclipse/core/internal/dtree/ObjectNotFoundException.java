@@ -14,20 +14,17 @@ package com.codenvy.eclipse.core.internal.dtree;
  * This exception is thrown when an attempt is made to reference a source tree
  * element that does not exist in the given tree.
  */
-public class ObjectNotFoundException extends RuntimeException
-{
-   /**
-    * All serializable objects should have a stable serialVersionUID
-    */
-   private static final long serialVersionUID = 1L;
+public class ObjectNotFoundException extends RuntimeException {
+    /** All serializable objects should have a stable serialVersionUID */
+    private static final long serialVersionUID = 1L;
 
-   /**
-    * ObjectNotFoundException constructor comment.
-    *
-    * @param s java.lang.String
-    */
-   public ObjectNotFoundException(String s)
-   {
-      super(s);
-   }
+    /**
+     * ObjectNotFoundException constructor comment.
+     *
+     * @param s
+     *         java.lang.String
+     */
+    public ObjectNotFoundException(String s) {
+        super(s);
+    }
 }

@@ -21,26 +21,22 @@ import com.codenvy.eclipse.ltk.internal.core.refactoring.RefactoringCoreMessages
  *
  * @since 3.2
  */
-public final class UnknownRefactoringDescriptor extends RefactoringDescriptor
-{
+public final class UnknownRefactoringDescriptor extends RefactoringDescriptor {
 
-   /**
-    * Creates a new unknown refactoring descriptor.
-    *
-    * @param name the name of the change, must not be <code>null</code> or empty
-    */
-   public UnknownRefactoringDescriptor(final String name)
-   {
-      super(ID_UNKNOWN, null, name, null, RefactoringDescriptor.NONE);
-   }
+    /**
+     * Creates a new unknown refactoring descriptor.
+     *
+     * @param name
+     *         the name of the change, must not be <code>null</code> or empty
+     */
+    public UnknownRefactoringDescriptor(final String name) {
+        super(ID_UNKNOWN, null, name, null, RefactoringDescriptor.NONE);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Refactoring createRefactoring(final RefactoringStatus status) throws CoreException
-   {
-      status.merge(RefactoringStatus.createFatalErrorStatus(
-         RefactoringCoreMessages.UnknownRefactoringDescriptor_cannot_create_refactoring));
-      return null;
-   }
+    /** {@inheritDoc} */
+    public Refactoring createRefactoring(final RefactoringStatus status) throws CoreException {
+        status.merge(RefactoringStatus.createFatalErrorStatus(
+                RefactoringCoreMessages.UnknownRefactoringDescriptor_cannot_create_refactoring));
+        return null;
+    }
 }

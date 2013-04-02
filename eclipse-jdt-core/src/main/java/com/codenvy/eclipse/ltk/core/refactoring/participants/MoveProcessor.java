@@ -27,7 +27,6 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.0
  */
-public abstract class MoveProcessor extends RefactoringProcessor
-{
+public abstract class MoveProcessor extends RefactoringProcessor {
 
 }

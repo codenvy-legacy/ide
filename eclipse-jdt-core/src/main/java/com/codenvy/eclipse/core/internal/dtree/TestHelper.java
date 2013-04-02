@@ -10,16 +10,10 @@
  *******************************************************************************/
 package com.codenvy.eclipse.core.internal.dtree;
 
-/**
- * Helper class for the test suite.
- */
-public class TestHelper
-{
-   /**
-    * Returns the root node of a tree.
-    */
-   public static AbstractDataTreeNode getRootNode(AbstractDataTree tree)
-   {
-      return tree.getRootNode();
-   }
+/** Helper class for the test suite. */
+public class TestHelper {
+    /** Returns the root node of a tree. */
+    public static AbstractDataTreeNode getRootNode(AbstractDataTree tree) {
+        return tree.getRootNode();
+    }
 }

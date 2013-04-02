@@ -10,10 +10,9 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2;
 
-public interface ITypeConstraint2
-{
+public interface ITypeConstraint2 {
 
-   public ConstraintVariable2 getLeft();
+    public ConstraintVariable2 getLeft();
 
-   public ConstraintVariable2 getRight();
+    public ConstraintVariable2 getRight();
 }

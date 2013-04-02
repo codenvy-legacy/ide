@@ -11,16 +11,13 @@
 package com.codenvy.eclipse.jdt.core;
 
 
-/**
- * Represents a package declaration in Java compilation unit.
- */
-public interface IPackageDeclaration extends IJavaElement, ISourceReference, IAnnotatable
-{
-   /**
-    * Returns the name of the package the statement refers to.
-    * This is a handle-only method.
-    *
-    * @return the name of the package the statement
-    */
-   String getElementName();
+/** Represents a package declaration in Java compilation unit. */
+public interface IPackageDeclaration extends IJavaElement, ISourceReference, IAnnotatable {
+    /**
+     * Returns the name of the package the statement refers to.
+     * This is a handle-only method.
+     *
+     * @return the name of the package the statement
+     */
+    String getElementName();
 }

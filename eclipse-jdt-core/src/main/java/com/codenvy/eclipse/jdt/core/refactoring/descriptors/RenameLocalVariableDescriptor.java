@@ -35,121 +35,103 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus;
  * @since 1.1
  * @deprecated since 1.2 merged into {@link RenameJavaElementDescriptor}
  */
-public final class RenameLocalVariableDescriptor extends JavaRefactoringDescriptor
-{
+public final class RenameLocalVariableDescriptor extends JavaRefactoringDescriptor {
 
-   /**
-    * The name attribute
-    */
-   private String fName = null;
+    /** The name attribute */
+    private String fName = null;
 
-   /**
-    * The references attribute
-    */
-   private boolean fReferences = false;
+    /** The references attribute */
+    private boolean fReferences = false;
 
-   /**
-    * The selection attribute
-    */
-   private ISourceRange fSelection = null;
+    /** The selection attribute */
+    private ISourceRange fSelection = null;
 
-   /**
-    * The compilation unit attribute
-    */
-   private ICompilationUnit fUnit = null;
+    /** The compilation unit attribute */
+    private ICompilationUnit fUnit = null;
 
-   /**
-    * Creates a new refactoring descriptor.
-    *
-    * @deprecated merged into {@link RenameJavaElementDescriptor}
-    */
-   public RenameLocalVariableDescriptor()
-   {
-      super(IJavaRefactorings.RENAME_LOCAL_VARIABLE);
-   }
+    /**
+     * Creates a new refactoring descriptor.
+     *
+     * @deprecated merged into {@link RenameJavaElementDescriptor}
+     */
+    public RenameLocalVariableDescriptor() {
+        super(IJavaRefactorings.RENAME_LOCAL_VARIABLE);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   protected void populateArgumentMap()
-   {
-      super.populateArgumentMap();
-      JavaRefactoringDescriptorUtil.setString(fArguments, ATTRIBUTE_NAME, fName);
-      JavaRefactoringDescriptorUtil.setJavaElement(fArguments, ATTRIBUTE_INPUT, getProject(), fUnit);
-      JavaRefactoringDescriptorUtil.setSelection(fArguments, ATTRIBUTE_SELECTION, fSelection.getOffset(),
-         fSelection.getLength());
-      JavaRefactoringDescriptorUtil.setBoolean(fArguments, ATTRIBUTE_REFERENCES, fReferences);
-   }
+    /** {@inheritDoc} */
+    protected void populateArgumentMap() {
+        super.populateArgumentMap();
+        JavaRefactoringDescriptorUtil.setString(fArguments, ATTRIBUTE_NAME, fName);
+        JavaRefactoringDescriptorUtil.setJavaElement(fArguments, ATTRIBUTE_INPUT, getProject(), fUnit);
+        JavaRefactoringDescriptorUtil.setSelection(fArguments, ATTRIBUTE_SELECTION, fSelection.getOffset(),
+                                                   fSelection.getLength());
+        JavaRefactoringDescriptorUtil.setBoolean(fArguments, ATTRIBUTE_REFERENCES, fReferences);
+    }
 
-   /**
-    * Sets the compilation unit which contains the local variable.
-    *
-    * @param unit the compilation unit to set
-    */
-   public void setCompilationUnit(final ICompilationUnit unit)
-   {
-      Assert.isNotNull(unit);
-      fUnit = unit;
-   }
+    /**
+     * Sets the compilation unit which contains the local variable.
+     *
+     * @param unit
+     *         the compilation unit to set
+     */
+    public void setCompilationUnit(final ICompilationUnit unit) {
+        Assert.isNotNull(unit);
+        fUnit = unit;
+    }
 
-   /**
-    * Sets the new name to rename the local variable to.
-    *
-    * @param name the non-empty new name to set
-    */
-   public void setNewName(final String name)
-   {
-      Assert.isNotNull(name);
-      Assert.isLegal(!"".equals(name), "Name must not be empty"); //$NON-NLS-1$//$NON-NLS-2$
-      fName = name;
-   }
+    /**
+     * Sets the new name to rename the local variable to.
+     *
+     * @param name
+     *         the non-empty new name to set
+     */
+    public void setNewName(final String name) {
+        Assert.isNotNull(name);
+        Assert.isLegal(!"".equals(name), "Name must not be empty"); //$NON-NLS-1$//$NON-NLS-2$
+        fName = name;
+    }
 
-   /**
-    * Sets the selection within the compilation unit which references the local
-    * variable to rename.
-    *
-    * @param selection the selection to set
-    */
-   public void setSelection(final ISourceRange selection)
-   {
-      Assert.isNotNull(selection);
-      fSelection = selection;
-   }
+    /**
+     * Sets the selection within the compilation unit which references the local
+     * variable to rename.
+     *
+     * @param selection
+     *         the selection to set
+     */
+    public void setSelection(final ISourceRange selection) {
+        Assert.isNotNull(selection);
+        fSelection = selection;
+    }
 
-   /**
-    * Determines whether references to the local variable should be renamed.
-    * <p>
-    * The default is to not update references.
-    * </p>
-    *
-    * @param update <code>true</code> to update references, <code>false</code>
-    *               otherwise
-    */
-   public void setUpdateReferences(final boolean update)
-   {
-      fReferences = update;
-   }
+    /**
+     * Determines whether references to the local variable should be renamed.
+     * <p>
+     * The default is to not update references.
+     * </p>
+     *
+     * @param update
+     *         <code>true</code> to update references, <code>false</code>
+     *         otherwise
+     */
+    public void setUpdateReferences(final boolean update) {
+        fReferences = update;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringStatus validateDescriptor()
-   {
-      RefactoringStatus status = super.validateDescriptor();
-      if (fName == null || "".equals(fName)) //$NON-NLS-1$
-      {
-         status.merge(RefactoringStatus.createFatalErrorStatus("RenameResourceDescriptor_no_new_name"));
-      }
-      if (fUnit == null)
-      {
-         status.merge(RefactoringStatus.createFatalErrorStatus(
-            "DescriptorMessages.RenameLocalVariableDescriptor_no_compilation_unit"));
-      }
-      if (fSelection == null)
-      {
-         status.merge(
-            RefactoringStatus.createFatalErrorStatus("DescriptorMessages.RenameLocalVariableDescriptor_no_selection"));
-      }
-      return status;
-   }
+    /** {@inheritDoc} */
+    public RefactoringStatus validateDescriptor() {
+        RefactoringStatus status = super.validateDescriptor();
+        if (fName == null || "".equals(fName)) //$NON-NLS-1$
+        {
+            status.merge(RefactoringStatus.createFatalErrorStatus("RenameResourceDescriptor_no_new_name"));
+        }
+        if (fUnit == null) {
+            status.merge(RefactoringStatus.createFatalErrorStatus(
+                    "DescriptorMessages.RenameLocalVariableDescriptor_no_compilation_unit"));
+        }
+        if (fSelection == null) {
+            status.merge(
+                    RefactoringStatus.createFatalErrorStatus("DescriptorMessages.RenameLocalVariableDescriptor_no_selection"));
+        }
+        return status;
+    }
 }

@@ -12,13 +12,11 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2;
 
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types.TType;
 
-public final class IndependentTypeVariable2 extends ConstraintVariable2
-{
+public final class IndependentTypeVariable2 extends ConstraintVariable2 {
 
-   public IndependentTypeVariable2(TType type)
-   {
-      super(type);
-   }
+    public IndependentTypeVariable2(TType type) {
+        super(type);
+    }
 
-   // hashCode() and equals(..) not necessary (unique per construction)
+    // hashCode() and equals(..) not necessary (unique per construction)
 }

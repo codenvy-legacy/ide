@@ -12,13 +12,11 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 
 import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 
-class TypeVariableFlowInfo extends FlowInfo
-{
+class TypeVariableFlowInfo extends FlowInfo {
 
-   public TypeVariableFlowInfo(ITypeBinding binding, FlowContext context)
-   {
-      super(NO_RETURN);
-      addTypeVariable(binding);
-   }
+    public TypeVariableFlowInfo(ITypeBinding binding, FlowContext context) {
+        super(NO_RETURN);
+        addTypeVariable(binding);
+    }
 }
 

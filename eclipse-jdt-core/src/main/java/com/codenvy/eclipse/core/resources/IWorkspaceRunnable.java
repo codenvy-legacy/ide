@@ -24,21 +24,22 @@ import com.codenvy.eclipse.core.runtime.IProgressMonitor;
  *
  * @see IWorkspace#run(IWorkspaceRunnable, IProgressMonitor)
  */
-public interface IWorkspaceRunnable
-{
-   /**
-    * Runs the operation reporting progress to and accepting
-    * cancellation requests from the given progress monitor.
-    * <p>
-    * Implementors of this method should check the progress monitor
-    * for cancellation when it is safe and appropriate to do so.  The cancellation
-    * request should be propagated to the caller by throwing
-    * <code>OperationCanceledException</code>.
-    * </p>
-    *
-    * @param monitor a progress monitor, or <code>null</code> if progress
-    *                reporting and cancellation are not desired
-    * @throws CoreException if this operation fails.
-    */
-   public void run(IProgressMonitor monitor) throws CoreException;
+public interface IWorkspaceRunnable {
+    /**
+     * Runs the operation reporting progress to and accepting
+     * cancellation requests from the given progress monitor.
+     * <p>
+     * Implementors of this method should check the progress monitor
+     * for cancellation when it is safe and appropriate to do so.  The cancellation
+     * request should be propagated to the caller by throwing
+     * <code>OperationCanceledException</code>.
+     * </p>
+     *
+     * @param monitor
+     *         a progress monitor, or <code>null</code> if progress
+     *         reporting and cancellation are not desired
+     * @throws CoreException
+     *         if this operation fails.
+     */
+    public void run(IProgressMonitor monitor) throws CoreException;
 }

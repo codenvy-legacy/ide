@@ -21,29 +21,25 @@ import com.codenvy.eclipse.jdt.internal.corext.util.Messages;
 import com.codenvy.eclipse.jdt.internal.ui.viewsupport.BasicElementLabels;
 import com.codenvy.eclipse.ltk.core.refactoring.Change;
 
-public class CopyCompilationUnitChange extends CompilationUnitReorgChange
-{
+public class CopyCompilationUnitChange extends CompilationUnitReorgChange {
 
-   public CopyCompilationUnitChange(ICompilationUnit cu, IPackageFragment dest, INewNameQuery newNameQuery)
-   {
-      super(cu, dest, newNameQuery);
+    public CopyCompilationUnitChange(ICompilationUnit cu, IPackageFragment dest, INewNameQuery newNameQuery) {
+        super(cu, dest, newNameQuery);
 
-      // Copy compilation unit change isn't undoable and isn't used
-      // as a redo/undo change right now.
-      setValidationMethod(SAVE_IF_DIRTY);
-   }
+        // Copy compilation unit change isn't undoable and isn't used
+        // as a redo/undo change right now.
+        setValidationMethod(SAVE_IF_DIRTY);
+    }
 
-   @Override
-   Change doPerformReorg(IProgressMonitor pm) throws CoreException, OperationCanceledException
-   {
-      getCu().copy(getDestinationPackage(), null, getNewName(), true, pm);
-      return null;
-   }
+    @Override
+    Change doPerformReorg(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+        getCu().copy(getDestinationPackage(), null, getNewName(), true, pm);
+        return null;
+    }
 
-   @Override
-   public String getName()
-   {
-      return Messages.format(RefactoringCoreMessages.CopyCompilationUnitChange_copy,
-         new String[]{BasicElementLabels.getFileName(getCu()), getPackageName(getDestinationPackage())});
-   }
+    @Override
+    public String getName() {
+        return Messages.format(RefactoringCoreMessages.CopyCompilationUnitChange_copy,
+                               new String[]{BasicElementLabels.getFileName(getCu()), getPackageName(getDestinationPackage())});
+    }
 }

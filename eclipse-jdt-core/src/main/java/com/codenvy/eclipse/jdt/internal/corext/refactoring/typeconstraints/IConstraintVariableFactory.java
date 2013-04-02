@@ -18,25 +18,24 @@ import com.codenvy.eclipse.jdt.core.dom.IVariableBinding;
 import com.codenvy.eclipse.jdt.core.dom.ReturnStatement;
 import com.codenvy.eclipse.jdt.core.dom.Type;
 
-public interface IConstraintVariableFactory
-{
-   ConstraintVariable makeExpressionOrTypeVariable(Expression expression, IContext context);
+public interface IConstraintVariableFactory {
+    ConstraintVariable makeExpressionOrTypeVariable(Expression expression, IContext context);
 
-   DeclaringTypeVariable makeDeclaringTypeVariable(ITypeBinding memberTypeBinding);
+    DeclaringTypeVariable makeDeclaringTypeVariable(ITypeBinding memberTypeBinding);
 
-   DeclaringTypeVariable makeDeclaringTypeVariable(IVariableBinding fieldBinding);
+    DeclaringTypeVariable makeDeclaringTypeVariable(IVariableBinding fieldBinding);
 
-   DeclaringTypeVariable makeDeclaringTypeVariable(IMethodBinding methodBinding);
+    DeclaringTypeVariable makeDeclaringTypeVariable(IMethodBinding methodBinding);
 
-   ParameterTypeVariable makeParameterTypeVariable(IMethodBinding methodBinding, int parameterIndex);
+    ParameterTypeVariable makeParameterTypeVariable(IMethodBinding methodBinding, int parameterIndex);
 
-   RawBindingVariable makeRawBindingVariable(ITypeBinding binding);
+    RawBindingVariable makeRawBindingVariable(ITypeBinding binding);
 
-   ReturnTypeVariable makeReturnTypeVariable(ReturnStatement returnStatement);
+    ReturnTypeVariable makeReturnTypeVariable(ReturnStatement returnStatement);
 
-   ReturnTypeVariable makeReturnTypeVariable(IMethodBinding methodBinding);
+    ReturnTypeVariable makeReturnTypeVariable(IMethodBinding methodBinding);
 
-   TypeVariable makeTypeVariable(Type type);
+    TypeVariable makeTypeVariable(Type type);
 
-   TypeVariable makeTypeVariable(ITypeBinding binding, String source, CompilationUnitRange range);
+    TypeVariable makeTypeVariable(ITypeBinding binding, String source, CompilationUnitRange range);
 }

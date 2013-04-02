@@ -24,67 +24,48 @@ import com.codenvy.eclipse.ltk.internal.core.refactoring.RefactoringCoreMessages
  *
  * @since 3.0
  */
-public class NullChange extends Change
-{
+public class NullChange extends Change {
 
-   private String fName;
+    private String fName;
 
-   /**
-    * Creates a new <code>NullChange</code> with a default name.
-    */
-   public NullChange()
-   {
-      this(RefactoringCoreMessages.NullChange_name);
-   }
+    /** Creates a new <code>NullChange</code> with a default name. */
+    public NullChange() {
+        this(RefactoringCoreMessages.NullChange_name);
+    }
 
-   /**
-    * Creates a new <code>NullChange</code> with the given name.
-    *
-    * @param name the human readable name of this change
-    */
-   public NullChange(String name)
-   {
-      Assert.isNotNull(name);
-      fName = name;
-   }
+    /**
+     * Creates a new <code>NullChange</code> with the given name.
+     *
+     * @param name
+     *         the human readable name of this change
+     */
+    public NullChange(String name) {
+        Assert.isNotNull(name);
+        fName = name;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getName()
-   {
-      return fName;
-   }
+    /** {@inheritDoc} */
+    public String getName() {
+        return fName;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void initializeValidationData(IProgressMonitor pm)
-   {
-      // do nothing
-   }
+    /** {@inheritDoc} */
+    public void initializeValidationData(IProgressMonitor pm) {
+        // do nothing
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException
-   {
-      return new RefactoringStatus();
-   }
+    /** {@inheritDoc} */
+    public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException {
+        return new RefactoringStatus();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Change perform(IProgressMonitor pm) throws CoreException
-   {
-      return new NullChange();
-   }
+    /** {@inheritDoc} */
+    public Change perform(IProgressMonitor pm) throws CoreException {
+        return new NullChange();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Object getModifiedElement()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    public Object getModifiedElement() {
+        return null;
+    }
 }

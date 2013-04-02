@@ -20,31 +20,32 @@ package com.codenvy.eclipse.core.commands.operations;
  *
  * @since 3.1
  */
-public interface ICompositeOperation extends IUndoableOperation
-{
+public interface ICompositeOperation extends IUndoableOperation {
 
-   /**
-    * <p>
-    * Add the specified operation as a child of this operation.
-    * </p>
-    *
-    * @param operation the operation to be added. If the operation instance has
-    *                  already been added, this method will have no effect.
-    */
-   void add(IUndoableOperation operation);
+    /**
+     * <p>
+     * Add the specified operation as a child of this operation.
+     * </p>
+     *
+     * @param operation
+     *         the operation to be added. If the operation instance has
+     *         already been added, this method will have no effect.
+     */
+    void add(IUndoableOperation operation);
 
-   /**
-    * <p>
-    * Remove the specified operation from this operation.
-    * </p>
-    * <p>
-    * The composite operation should dispose the operation as part of removing
-    * it.
-    * </p>
-    *
-    * @param operation the operation to be removed. The operation should be disposed
-    *                  by the receiver. This method will have no effect if the
-    *                  operation instance is not already a child.
-    */
-   void remove(IUndoableOperation operation);
+    /**
+     * <p>
+     * Remove the specified operation from this operation.
+     * </p>
+     * <p>
+     * The composite operation should dispose the operation as part of removing
+     * it.
+     * </p>
+     *
+     * @param operation
+     *         the operation to be removed. The operation should be disposed
+     *         by the receiver. This method will have no effect if the
+     *         operation instance is not already a child.
+     */
+    void remove(IUndoableOperation operation);
 }

@@ -23,20 +23,20 @@ package com.codenvy.eclipse.ltk.core.refactoring.history;
  * @see RefactoringHistoryEvent
  * @since 3.2
  */
-public interface IRefactoringHistoryListener
-{
+public interface IRefactoringHistoryListener {
 
-   /**
-    * Gets called if a refactoring history event happened.
-    * <p>
-    * Implementors of this method should not rely on a fixed set of event
-    * types.
-    * </p>
-    * <p>
-    * The event object is valid only for the duration of this method.
-    * </p>
-    *
-    * @param event the refactoring history event
-    */
-   public void historyNotification(RefactoringHistoryEvent event);
+    /**
+     * Gets called if a refactoring history event happened.
+     * <p>
+     * Implementors of this method should not rely on a fixed set of event
+     * types.
+     * </p>
+     * <p>
+     * The event object is valid only for the duration of this method.
+     * </p>
+     *
+     * @param event
+     *         the refactoring history event
+     */
+    public void historyNotification(RefactoringHistoryEvent event);
 }

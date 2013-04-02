@@ -16,34 +16,39 @@ import com.codenvy.eclipse.jdt.internal.core.search.processing.IJob;
 import org.exoplatform.services.security.ConversationState;
 
 public abstract class IndexRequest implements IJob {
-	protected boolean isCancelled = false;
-	protected IPath containerPath;
-	protected IndexManager manager;
+    protected boolean isCancelled = false;
+    protected IPath        containerPath;
+    protected IndexManager manager;
 
-   ConversationState state = ConversationState.getCurrent();
+    ConversationState state = ConversationState.getCurrent();
 
-	public IndexRequest(IPath containerPath, IndexManager manager) {
-		this.containerPath = containerPath;
-		this.manager = manager;
-	}
-	public boolean belongsTo(String projectNameOrJarPath) {
-		// used to remove pending jobs because the project was deleted... not to delete index files
-		// can be found either by project name or JAR path name
-		return projectNameOrJarPath.equals(this.containerPath.segment(0))
-			|| projectNameOrJarPath.equals(this.containerPath.toString());
-	}
-	public void cancel() {
-		this.manager.jobWasCancelled(this.containerPath);
-		this.isCancelled = true;
-	}
-	public void ensureReadyToRun() {
-		// tag the index as inconsistent
-		this.manager.aboutToUpdateIndex(this.containerPath, updatedIndexState());
-	}
-	public String getJobFamily() {
-		return this.containerPath.toString();
-	}
-	protected Integer updatedIndexState() {
-		return IndexManager.UPDATING_STATE;
-	}
+    public IndexRequest(IPath containerPath, IndexManager manager) {
+        this.containerPath = containerPath;
+        this.manager = manager;
+    }
+
+    public boolean belongsTo(String projectNameOrJarPath) {
+        // used to remove pending jobs because the project was deleted... not to delete index files
+        // can be found either by project name or JAR path name
+        return projectNameOrJarPath.equals(this.containerPath.segment(0))
+               || projectNameOrJarPath.equals(this.containerPath.toString());
+    }
+
+    public void cancel() {
+        this.manager.jobWasCancelled(this.containerPath);
+        this.isCancelled = true;
+    }
+
+    public void ensureReadyToRun() {
+        // tag the index as inconsistent
+        this.manager.aboutToUpdateIndex(this.containerPath, updatedIndexState());
+    }
+
+    public String getJobFamily() {
+        return this.containerPath.toString();
+    }
+
+    protected Integer updatedIndexState() {
+        return IndexManager.UPDATING_STATE;
+    }
 }

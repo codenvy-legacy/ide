@@ -10,29 +10,23 @@
  *******************************************************************************/
 package com.codenvy.eclipse.core.internal.utils;
 
-public class WrappedRuntimeException extends RuntimeException
-{
+public class WrappedRuntimeException extends RuntimeException {
 
-   /**
-    * All serializable objects should have a stable serialVersionUID
-    */
-   private static final long serialVersionUID = 1L;
+    /** All serializable objects should have a stable serialVersionUID */
+    private static final long serialVersionUID = 1L;
 
-   private Throwable target;
+    private Throwable target;
 
-   public WrappedRuntimeException(Throwable target)
-   {
-      super();
-      this.target = target;
-   }
+    public WrappedRuntimeException(Throwable target) {
+        super();
+        this.target = target;
+    }
 
-   public Throwable getTargetException()
-   {
-      return this.target;
-   }
+    public Throwable getTargetException() {
+        return this.target;
+    }
 
-   public String getMessage()
-   {
-      return target.getMessage();
-   }
+    public String getMessage() {
+        return target.getMessage();
+    }
 }

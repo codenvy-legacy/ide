@@ -40,76 +40,71 @@ import java.io.InputStream;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
  */
-public class CreateTest extends ResourcesBaseTest
-{
+public class CreateTest extends ResourcesBaseTest {
 
-   private IProject projectResource;
+    private IProject projectResource;
 
-   private IFolder folderResource;
+    private IFolder folderResource;
 
-   private IFile fileResource;
+    private IFile fileResource;
 
-   @Override
-   public void setUp() throws Exception
-   {
-      super.setUp();
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
-      projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
-      folderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("folder"), IResource.FOLDER);
-      fileResource = (IFile)ws.newResource(folderResource.getFullPath().append("file"), IResource.FILE);
-   }
+        projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
+        folderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("folder"), IResource.FOLDER);
+        fileResource = (IFile)ws.newResource(folderResource.getFullPath().append("file"), IResource.FILE);
+    }
 
-   @Test
-   public void testCreateProject() throws Exception
-   {
-      IPath originPath = projectResource.getFullPath();
+    @Test
+    public void testCreateProject() throws Exception {
+        IPath originPath = projectResource.getFullPath();
 
-      assertFalse(projectResource.exists());
-      projectResource.create(new NullProgressMonitor());
-      assertTrue(projectResource.exists());
+        assertFalse(projectResource.exists());
+        projectResource.create(new NullProgressMonitor());
+        assertTrue(projectResource.exists());
 
-      assertTrue(projectResource.getType() == IResource.PROJECT);
-      assertEquals(originPath, projectResource.getFullPath());
-   }
+        assertTrue(projectResource.getType() == IResource.PROJECT);
+        assertEquals(originPath, projectResource.getFullPath());
+    }
 
-   @Test
-   public void testCreateFolder() throws Exception
-   {
-      IPath originPath = folderResource.getFullPath();
+    @Test
+    public void testCreateFolder() throws Exception {
+        IPath originPath = folderResource.getFullPath();
 
-      assertFalse(folderResource.exists());
-      folderResource.create(true, true, new NullProgressMonitor());
-      assertTrue(folderResource.exists());
+        assertFalse(folderResource.exists());
+        folderResource.create(true, true, new NullProgressMonitor());
+        assertTrue(folderResource.exists());
 
-      assertTrue(folderResource.getType() == IResource.FOLDER);
-      assertEquals(originPath, folderResource.getFullPath());
-   }
+        assertTrue(folderResource.getType() == IResource.FOLDER);
+        assertEquals(originPath, folderResource.getFullPath());
+    }
 
-   @Test
-   public void testCreateFile() throws Exception
-   {
-      IPath originPath = fileResource.getFullPath();
-      String content = "test create file";
+    @Test
+    public void testCreateFile() throws Exception {
+        IPath originPath = fileResource.getFullPath();
+        String content = "test create file";
 
-      assertFalse(fileResource.exists());
-      InputStream contentsStream = new ByteArrayInputStream(content.getBytes());
-      fileResource.create(contentsStream, true, new NullProgressMonitor());
-      assertTrue(fileResource.exists());
+        assertFalse(fileResource.exists());
+        InputStream contentsStream = new ByteArrayInputStream(content.getBytes());
+        fileResource.create(contentsStream, true, new NullProgressMonitor());
+        assertTrue(fileResource.exists());
 
-      assertTrue(fileResource.getType() == IResource.FILE);
-      assertEquals(originPath, fileResource.getFullPath());
+        assertTrue(fileResource.getType() == IResource.FILE);
+        assertEquals(originPath, fileResource.getFullPath());
 
-      String actualContents = StringUtils.toString(fileResource.getContents());
-      assertEquals(actualContents, content);
-   }
+        String actualContents = StringUtils.toString(fileResource.getContents());
+        assertEquals(actualContents, content);
+    }
 
-   //   @Test(expected = CoreException.class)
-   //   public void testCreateFileAlreadyExist() throws Exception
-   //   {
-   //      assertFalse(fileResource.exists());
-   //      fileResource.create(null, true, new NullProgressMonitor());
-   //      assertTrue(fileResource.exists());
-   //      fileResource.create(null, true, new NullProgressMonitor());
-   //   }
+    //   @Test(expected = CoreException.class)
+    //   public void testCreateFileAlreadyExist() throws Exception
+    //   {
+    //      assertFalse(fileResource.exists());
+    //      fileResource.create(null, true, new NullProgressMonitor());
+    //      assertTrue(fileResource.exists());
+    //      fileResource.create(null, true, new NullProgressMonitor());
+    //   }
 
 }

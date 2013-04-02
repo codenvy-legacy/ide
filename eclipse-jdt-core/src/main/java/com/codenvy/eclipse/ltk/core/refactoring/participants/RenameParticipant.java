@@ -23,26 +23,21 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.0
  */
-public abstract class RenameParticipant extends RefactoringParticipant
-{
+public abstract class RenameParticipant extends RefactoringParticipant {
 
-   private RenameArguments fArguments;
+    private RenameArguments fArguments;
 
-   /**
-    * {@inheritDoc}
-    */
-   protected final void initialize(RefactoringArguments arguments)
-   {
-      fArguments = (RenameArguments)arguments;
-   }
+    /** {@inheritDoc} */
+    protected final void initialize(RefactoringArguments arguments) {
+        fArguments = (RenameArguments)arguments;
+    }
 
-   /**
-    * Returns the rename arguments.
-    *
-    * @return the rename arguments
-    */
-   public RenameArguments getArguments()
-   {
-      return fArguments;
-   }
+    /**
+     * Returns the rename arguments.
+     *
+     * @return the rename arguments
+     */
+    public RenameArguments getArguments() {
+        return fArguments;
+    }
 }

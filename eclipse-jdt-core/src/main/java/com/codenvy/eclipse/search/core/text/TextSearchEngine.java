@@ -31,95 +31,99 @@ import java.util.regex.PatternSyntaxException;
  *
  * @since 3.2
  */
-public abstract class TextSearchEngine
-{
+public abstract class TextSearchEngine {
 
-   /**
-    * Creates an instance of the search engine. By default this is the default text search engine (see {@link #createDefault()}),
-    * but extensions can offer more sophisticated search engine implementations.
-    *
-    * @return the created {@link TextSearchEngine}.
-    */
-   public static TextSearchEngine create()
-   {
-      return createDefault();// SearchPlugin.getDefault().getTextSearchEngineRegistry().getPreferred();
-   }
+    /**
+     * Creates an instance of the search engine. By default this is the default text search engine (see {@link #createDefault()}),
+     * but extensions can offer more sophisticated search engine implementations.
+     *
+     * @return the created {@link TextSearchEngine}.
+     */
+    public static TextSearchEngine create() {
+        return createDefault();// SearchPlugin.getDefault().getTextSearchEngineRegistry().getPreferred();
+    }
 
-   /**
-    * Creates the default, built-in, text search engine that implements a brute-force search, not using
-    * any search index.
-    * Note that clients should always use the search engine provided by {@link #create()}.
-    *
-    * @return an instance of the default text search engine {@link TextSearchEngine}.
-    */
-   public static TextSearchEngine createDefault()
-   {
-      return new TextSearchEngine()
-      {
-         public IStatus search(TextSearchScope scope, TextSearchRequestor requestor, Pattern searchPattern,
-            IProgressMonitor monitor)
-         {
-            return new TextSearchVisitor(requestor, searchPattern).search(scope, monitor);
-         }
+    /**
+     * Creates the default, built-in, text search engine that implements a brute-force search, not using
+     * any search index.
+     * Note that clients should always use the search engine provided by {@link #create()}.
+     *
+     * @return an instance of the default text search engine {@link TextSearchEngine}.
+     */
+    public static TextSearchEngine createDefault() {
+        return new TextSearchEngine() {
+            public IStatus search(TextSearchScope scope, TextSearchRequestor requestor, Pattern searchPattern,
+                                  IProgressMonitor monitor) {
+                return new TextSearchVisitor(requestor, searchPattern).search(scope, monitor);
+            }
 
-         public IStatus search(IFile[] scope, TextSearchRequestor requestor, Pattern searchPattern,
-            IProgressMonitor monitor)
-         {
-            return new TextSearchVisitor(requestor, searchPattern).search(scope, monitor);
-         }
-      };
-   }
+            public IStatus search(IFile[] scope, TextSearchRequestor requestor, Pattern searchPattern,
+                                  IProgressMonitor monitor) {
+                return new TextSearchVisitor(requestor, searchPattern).search(scope, monitor);
+            }
+        };
+    }
 
-   /**
-    * Uses a given search pattern to find matches in the content of workspace file resources. If a file is open in an editor, the
-    * editor buffer is searched.
-    *
-    * @param requestor     the search requestor that gets the search results
-    * @param scope         the scope defining the resources to search in
-    * @param searchPattern The search pattern used to find matches in the file contents.
-    * @param monitor       the progress monitor to use
-    * @return the status containing information about problems in resources searched.
-    */
-   public abstract IStatus search(TextSearchScope scope, TextSearchRequestor requestor, Pattern searchPattern,
-      IProgressMonitor monitor);
+    /**
+     * Uses a given search pattern to find matches in the content of workspace file resources. If a file is open in an editor, the
+     * editor buffer is searched.
+     *
+     * @param requestor
+     *         the search requestor that gets the search results
+     * @param scope
+     *         the scope defining the resources to search in
+     * @param searchPattern
+     *         The search pattern used to find matches in the file contents.
+     * @param monitor
+     *         the progress monitor to use
+     * @return the status containing information about problems in resources searched.
+     */
+    public abstract IStatus search(TextSearchScope scope, TextSearchRequestor requestor, Pattern searchPattern,
+                                   IProgressMonitor monitor);
 
-   /**
-    * Uses a given search pattern to find matches in the content of workspace file resources. If a file is open in an editor, the
-    * editor buffer is searched.
-    *
-    * @param requestor     the search requestor that gets the search results
-    * @param scope         the files to search in
-    * @param searchPattern The search pattern used to find matches in the file contents.
-    * @param monitor       the progress monitor to use
-    * @return the status containing information about problems in resources searched.
-    */
-   public abstract IStatus search(IFile[] scope, TextSearchRequestor requestor, Pattern searchPattern,
-      IProgressMonitor monitor);
+    /**
+     * Uses a given search pattern to find matches in the content of workspace file resources. If a file is open in an editor, the
+     * editor buffer is searched.
+     *
+     * @param requestor
+     *         the search requestor that gets the search results
+     * @param scope
+     *         the files to search in
+     * @param searchPattern
+     *         The search pattern used to find matches in the file contents.
+     * @param monitor
+     *         the progress monitor to use
+     * @return the status containing information about problems in resources searched.
+     */
+    public abstract IStatus search(IFile[] scope, TextSearchRequestor requestor, Pattern searchPattern,
+                                   IProgressMonitor monitor);
 
 
-   /**
-    * Creates a pattern for the given search string and the given options.
-    *
-    * @param pattern         the search pattern. If <code>isRegex</code> is:
-    *                        <ul>
-    *                        <li><code>false</code>: a string including '*' and '?' wildcards and '\' for
-    *                        escaping the literals '*', '?' and '\'</li>
-    *                        <li><code>true</code>: a regex as specified by {@link java.util.regex.Pattern} plus "\R" denoting
-    *                        a line delimiter (platform independent)</li>
-    *                        </ul>
-    * @param isRegex         <code>true</code> if the given string follows the {@link java.util.regex.Pattern} including
-    *                        "\R"
-    * @param isCaseSensitive Set to <code>true</code> to create a case insensitive pattern
-    * @return the created pattern
-    * @throws java.util.regex.PatternSyntaxException
-    *          if "\R" is at an illegal position
-    * @see java.util.regex.Pattern
-    * @since 3.8
-    */
-   public static Pattern createPattern(String pattern, boolean isCaseSensitive,
-      boolean isRegex) throws PatternSyntaxException
-   {
-      return PatternConstructor.createPattern(pattern, isRegex, true, isCaseSensitive, false);
-   }
+    /**
+     * Creates a pattern for the given search string and the given options.
+     *
+     * @param pattern
+     *         the search pattern. If <code>isRegex</code> is:
+     *         <ul>
+     *         <li><code>false</code>: a string including '*' and '?' wildcards and '\' for
+     *         escaping the literals '*', '?' and '\'</li>
+     *         <li><code>true</code>: a regex as specified by {@link java.util.regex.Pattern} plus "\R" denoting
+     *         a line delimiter (platform independent)</li>
+     *         </ul>
+     * @param isRegex
+     *         <code>true</code> if the given string follows the {@link java.util.regex.Pattern} including
+     *         "\R"
+     * @param isCaseSensitive
+     *         Set to <code>true</code> to create a case insensitive pattern
+     * @return the created pattern
+     * @throws java.util.regex.PatternSyntaxException
+     *         if "\R" is at an illegal position
+     * @see java.util.regex.Pattern
+     * @since 3.8
+     */
+    public static Pattern createPattern(String pattern, boolean isCaseSensitive,
+                                        boolean isRegex) throws PatternSyntaxException {
+        return PatternConstructor.createPattern(pattern, isRegex, true, isCaseSensitive, false);
+    }
 
 }

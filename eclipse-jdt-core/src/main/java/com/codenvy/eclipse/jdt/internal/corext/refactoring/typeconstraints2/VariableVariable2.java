@@ -20,58 +20,49 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types
  * the type of a variable, namely a field or a local variable
  * Use {@link ParameterTypeVariable2} for method parameters).
  */
-public final class VariableVariable2 extends ConstraintVariable2 implements ISourceConstraintVariable
-{
+public final class VariableVariable2 extends ConstraintVariable2 implements ISourceConstraintVariable {
 
-   private final String fKey;
+    private final String fKey;
 
-   private ICompilationUnit fCompilationUnit;
+    private ICompilationUnit fCompilationUnit;
 
-   public VariableVariable2(TType type, IVariableBinding binding)
-   {
-      super(type);
-      fKey = binding.getKey();
-   }
+    public VariableVariable2(TType type, IVariableBinding binding) {
+        super(type);
+        fKey = binding.getKey();
+    }
 
-   public void setCompilationUnit(ICompilationUnit unit)
-   {
-      fCompilationUnit = unit;
-   }
+    public void setCompilationUnit(ICompilationUnit unit) {
+        fCompilationUnit = unit;
+    }
 
-   public ICompilationUnit getCompilationUnit()
-   {
-      return fCompilationUnit;
-   }
+    public ICompilationUnit getCompilationUnit() {
+        return fCompilationUnit;
+    }
 
-   public String getKey()
-   {
-      return fKey;
-   }
+    public String getKey() {
+        return fKey;
+    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      return fKey.hashCode();
-   }
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return fKey.hashCode();
+    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object other)
-   {
-      if (this == other)
-      {
-         return true;
-      }
-      if (other.getClass() != VariableVariable2.class)
-      {
-         return false;
-      }
+    /*
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other.getClass() != VariableVariable2.class) {
+            return false;
+        }
 
-      return fKey.equals(((VariableVariable2)other).getKey());
-   }
+        return fKey.equals(((VariableVariable2)other).getKey());
+    }
 }

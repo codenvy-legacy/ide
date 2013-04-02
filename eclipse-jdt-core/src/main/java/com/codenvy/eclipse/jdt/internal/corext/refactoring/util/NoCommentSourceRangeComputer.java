@@ -13,11 +13,9 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.util;
 import com.codenvy.eclipse.jdt.core.dom.ASTNode;
 import com.codenvy.eclipse.jdt.core.dom.rewrite.TargetSourceRangeComputer;
 
-public class NoCommentSourceRangeComputer extends TargetSourceRangeComputer
-{
-   @Override
-   public SourceRange computeSourceRange(ASTNode node)
-   {
-      return new SourceRange(node.getStartPosition(), node.getLength());
-   }
+public class NoCommentSourceRangeComputer extends TargetSourceRangeComputer {
+    @Override
+    public SourceRange computeSourceRange(ASTNode node) {
+        return new SourceRange(node.getStartPosition(), node.getLength());
+    }
 }

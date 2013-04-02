@@ -19,91 +19,73 @@ import com.codenvy.eclipse.jdt.internal.corext.dom.JdtASTMatcher;
 
 import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
-class SimpleFragment extends ASTFragment
-{
-   private final ASTNode fNode;
+class SimpleFragment extends ASTFragment {
+    private final ASTNode fNode;
 
-   SimpleFragment(ASTNode node)
-   {
-      Assert.isNotNull(node);
-      fNode = node;
-   }
+    SimpleFragment(ASTNode node) {
+        Assert.isNotNull(node);
+        fNode = node;
+    }
 
-   @Override
-   public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node)
-   {
-      if (!JdtASTMatcher.doNodesMatch(getAssociatedNode(), node))
-      {
-         return new IASTFragment[0];
-      }
+    @Override
+    public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node) {
+        if (!JdtASTMatcher.doNodesMatch(getAssociatedNode(), node)) {
+            return new IASTFragment[0];
+        }
 
-      IASTFragment match = ASTFragmentFactory.createFragmentForFullSubtree(node);
-      Assert.isTrue(match.matches(this) || this.matches(match));
-      return new IASTFragment[]{match};
-   }
+        IASTFragment match = ASTFragmentFactory.createFragmentForFullSubtree(node);
+        Assert.isTrue(match.matches(this) || this.matches(match));
+        return new IASTFragment[]{match};
+    }
 
-   public boolean matches(IASTFragment other)
-   {
-      return other.getClass().equals(getClass()) && JdtASTMatcher.doNodesMatch(other.getAssociatedNode(),
-         getAssociatedNode());
-   }
+    public boolean matches(IASTFragment other) {
+        return other.getClass().equals(getClass()) && JdtASTMatcher.doNodesMatch(other.getAssociatedNode(),
+                                                                                 getAssociatedNode());
+    }
 
-   public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch)
-   {
-      return ASTMatchingFragmentFinder.findMatchingFragments(getAssociatedNode(), (ASTFragment)toMatch);
-   }
+    public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch) {
+        return ASTMatchingFragmentFinder.findMatchingFragments(getAssociatedNode(), (ASTFragment)toMatch);
+    }
 
-   public int getStartPosition()
-   {
-      return fNode.getStartPosition();
-   }
+    public int getStartPosition() {
+        return fNode.getStartPosition();
+    }
 
-   public int getLength()
-   {
-      return fNode.getLength();
-   }
+    public int getLength() {
+        return fNode.getLength();
+    }
 
-   public ASTNode getAssociatedNode()
-   {
-      return fNode;
-   }
+    public ASTNode getAssociatedNode() {
+        return fNode;
+    }
 
-   public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup)
-   {
-      if (replacement instanceof Name && fNode.getParent() instanceof ParenthesizedExpression)
-      {
-         // replace including the parenthesized expression around it
-         rewrite.replace(fNode.getParent(), replacement, textEditGroup);
-      }
-      else
-      {
-         rewrite.replace(fNode, replacement, textEditGroup);
-      }
-   }
+    public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup) {
+        if (replacement instanceof Name && fNode.getParent() instanceof ParenthesizedExpression) {
+            // replace including the parenthesized expression around it
+            rewrite.replace(fNode.getParent(), replacement, textEditGroup);
+        } else {
+            rewrite.replace(fNode, replacement, textEditGroup);
+        }
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return fNode.hashCode();
-   }
+    @Override
+    public int hashCode() {
+        return fNode.hashCode();
+    }
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (obj == null)
-      {
-         return false;
-      }
-      if (getClass() != obj.getClass())
-      {
-         return false;
-      }
-      SimpleFragment other = (SimpleFragment)obj;
-      return fNode.equals(other.fNode);
-   }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        SimpleFragment other = (SimpleFragment)obj;
+        return fNode.equals(other.fNode);
+    }
 
 }

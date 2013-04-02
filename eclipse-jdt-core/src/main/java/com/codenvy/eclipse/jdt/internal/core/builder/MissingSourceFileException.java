@@ -10,18 +10,14 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.builder;
 
-/**
- * Exception thrown when the build should be aborted because a source file is missing/empty.
- */
-public class MissingSourceFileException extends RuntimeException
-{
+/** Exception thrown when the build should be aborted because a source file is missing/empty. */
+public class MissingSourceFileException extends RuntimeException {
 
-   protected String missingSourceFile;
+    protected String missingSourceFile;
 
-   private static final long serialVersionUID = -1416609004971115719L; // backward compatible
+    private static final long serialVersionUID = -1416609004971115719L; // backward compatible
 
-   public MissingSourceFileException(String missingSourceFile)
-   {
-      this.missingSourceFile = missingSourceFile;
-   }
+    public MissingSourceFileException(String missingSourceFile) {
+        this.missingSourceFile = missingSourceFile;
+    }
 }

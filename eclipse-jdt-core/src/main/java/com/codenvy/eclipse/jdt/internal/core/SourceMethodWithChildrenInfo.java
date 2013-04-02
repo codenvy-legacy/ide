@@ -12,19 +12,16 @@ package com.codenvy.eclipse.jdt.internal.core;
 
 import com.codenvy.eclipse.jdt.core.IJavaElement;
 
-public class SourceMethodWithChildrenInfo extends SourceMethodInfo
-{
+public class SourceMethodWithChildrenInfo extends SourceMethodInfo {
 
-   protected IJavaElement[] children;
+    protected IJavaElement[] children;
 
-   public SourceMethodWithChildrenInfo(IJavaElement[] children)
-   {
-      this.children = children;
-   }
+    public SourceMethodWithChildrenInfo(IJavaElement[] children) {
+        this.children = children;
+    }
 
-   public IJavaElement[] getChildren()
-   {
-      return this.children;
-   }
+    public IJavaElement[] getChildren() {
+        return this.children;
+    }
 
 }

@@ -27,7 +27,7 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
  * fragment maps to an ASTNode, although this mapping is
  * not necessarily straightforward, and more than one
  * fragment may map to a given node.
- *
+ * <p/>
  * Fragments support abstract operations, which
  * support the notion of 'matching' fragments.
  * One operation determines whether a fragment 'matches'
@@ -36,61 +36,65 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
  * parent fragment, including the parent itself)
  * which 'match' another given fragment.
  */
-public interface IASTFragment
-{
+public interface IASTFragment {
 
-   /**
-    * Determines whether <code> other </code>
-    * 'matches' <code> this </code>.
-    * This binary operation should be reflexive,
-    * symmetric, and transitive.
-    *
-    * That two node match does not imply that their source ranges
-    * are the same, or that they map (via getAssociatedNode()) to the
-    * same node.
-    *
-    * @param other the element to test with
-    * @return return <code> true if the passed element matches the current element.
-    */
-   public boolean matches(IASTFragment other);
+    /**
+     * Determines whether <code> other </code>
+     * 'matches' <code> this </code>.
+     * This binary operation should be reflexive,
+     * symmetric, and transitive.
+     * <p/>
+     * That two node match does not imply that their source ranges
+     * are the same, or that they map (via getAssociatedNode()) to the
+     * same node.
+     *
+     * @param other
+     *         the element to test with
+     * @return return <code> true if the passed element matches the current element.
+     */
+    public boolean matches(IASTFragment other);
 
-   /**
-    * Returns (at least some approximation of) a maximal set of
-    * sub-fragments of this fragment which match <code> toMatch </code>
-    *
-    * @param toMatch the fragment to match
-    * @return set of sub fragments that match
-    */
-   public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch);
+    /**
+     * Returns (at least some approximation of) a maximal set of
+     * sub-fragments of this fragment which match <code> toMatch </code>
+     *
+     * @param toMatch
+     *         the fragment to match
+     * @return set of sub fragments that match
+     */
+    public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch);
 
-   /**
-    * Every fragment maps to a node.
-    * Multiple fragments can map to the same node.
-    *
-    * @return ASTNode The node to which this fragment maps.
-    */
-   public ASTNode getAssociatedNode();
+    /**
+     * Every fragment maps to a node.
+     * Multiple fragments can map to the same node.
+     *
+     * @return ASTNode The node to which this fragment maps.
+     */
+    public ASTNode getAssociatedNode();
 
-   /**
-    * Every fragment has a source start position.
-    *
-    * @return int      The source start position.
-    */
-   public int getStartPosition();
+    /**
+     * Every fragment has a source start position.
+     *
+     * @return int      The source start position.
+     */
+    public int getStartPosition();
 
-   /**
-    * Every fragment has a source length.
-    *
-    * @return int      The source length.
-    */
-   public int getLength();
+    /**
+     * Every fragment has a source length.
+     *
+     * @return int      The source length.
+     */
+    public int getLength();
 
-   /**
-    * Replaces this fragment with the given replacement node.
-    *
-    * @param rewrite       an ASTRewrite
-    * @param replacement   replacement for this fragment
-    * @param textEditGroup a description or <code>null</code>
-    */
-   public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup);
+    /**
+     * Replaces this fragment with the given replacement node.
+     *
+     * @param rewrite
+     *         an ASTRewrite
+     * @param replacement
+     *         replacement for this fragment
+     * @param textEditGroup
+     *         a description or <code>null</code>
+     */
+    public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup);
 }

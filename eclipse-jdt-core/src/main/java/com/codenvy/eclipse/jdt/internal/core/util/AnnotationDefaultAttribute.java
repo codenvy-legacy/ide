@@ -20,31 +20,28 @@ import com.codenvy.eclipse.jdt.core.util.IConstantPool;
  *
  * @since 3.0
  */
-public class AnnotationDefaultAttribute extends ClassFileAttribute implements IAnnotationDefaultAttribute
-{
+public class AnnotationDefaultAttribute extends ClassFileAttribute implements IAnnotationDefaultAttribute {
 
-   private IAnnotationComponentValue memberValue;
+    private IAnnotationComponentValue memberValue;
 
-   /**
-    * Constructor for AnnotationDefaultAttribute.
-    *
-    * @param classFileBytes
-    * @param constantPool
-    * @param offset
-    * @throws ClassFormatException
-    */
-   public AnnotationDefaultAttribute(byte[] classFileBytes, IConstantPool constantPool,
-      int offset) throws ClassFormatException
-   {
-      super(classFileBytes, constantPool, offset);
-      this.memberValue = new AnnotationComponentValue(classFileBytes, constantPool, offset + 6);
-   }
+    /**
+     * Constructor for AnnotationDefaultAttribute.
+     *
+     * @param classFileBytes
+     * @param constantPool
+     * @param offset
+     * @throws ClassFormatException
+     */
+    public AnnotationDefaultAttribute(byte[] classFileBytes, IConstantPool constantPool,
+                                      int offset) throws ClassFormatException {
+        super(classFileBytes, constantPool, offset);
+        this.memberValue = new AnnotationComponentValue(classFileBytes, constantPool, offset + 6);
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.core.util.IAnnotationDefaultAttribute#getMemberValue()
-    */
-   public IAnnotationComponentValue getMemberValue()
-   {
-      return this.memberValue;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.core.util.IAnnotationDefaultAttribute#getMemberValue()
+     */
+    public IAnnotationComponentValue getMemberValue() {
+        return this.memberValue;
+    }
 }

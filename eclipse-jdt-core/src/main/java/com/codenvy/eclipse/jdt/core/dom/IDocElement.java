@@ -17,7 +17,6 @@ package com.codenvy.eclipse.jdt.core.dom;
  *
  * @since 3.0
  */
-interface IDocElement
-{
-   // marker-type interfaces have no members
+interface IDocElement {
+    // marker-type interfaces have no members
 }

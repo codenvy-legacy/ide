@@ -15,64 +15,73 @@ import com.codenvy.eclipse.jdt.core.search.SearchPattern;
 
 public class PackageReferencePattern extends IntersectingPattern {
 
-protected char[] pkgName;
+    protected char[] pkgName;
 
-protected char[][] segments;
-protected int currentSegment;
+    protected char[][] segments;
+    protected int      currentSegment;
 
-protected static char[][] CATEGORIES = { REF };
+    protected static char[][] CATEGORIES = {REF};
 
-public PackageReferencePattern(char[] pkgName, int matchRule) {
-	this(matchRule);
+    public PackageReferencePattern(char[] pkgName, int matchRule) {
+        this(matchRule);
 
-	if (pkgName == null || pkgName.length == 0) {
-		this.pkgName = null;
-		this.segments = new char[][] {CharOperation.NO_CHAR};
-		this.mustResolve = false;
-	} else {
-		this.pkgName = (this.isCaseSensitive || this.isCamelCase) ? pkgName : CharOperation.toLowerCase(pkgName);
-		this.segments = CharOperation.splitOn('.', this.pkgName);
-		this.mustResolve = true;
-	}
-}
-PackageReferencePattern(int matchRule) {
-	super(PKG_REF_PATTERN, matchRule);
-}
-public void decodeIndexKey(char[] key) {
-	// Package reference keys are encoded as 'name' (where 'name' is the last segment of the package name)
-	this.pkgName = key;
-}
-public SearchPattern getBlankPattern() {
-	return new PackageReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE);
-}
-public char[] getIndexKey() {
-	// Package reference keys are encoded as 'name' (where 'name' is the last segment of the package name)
-	if (this.currentSegment >= 0)
-		return this.segments[this.currentSegment];
-	return null;
-}
-public char[][] getIndexCategories() {
-	return CATEGORIES;
-}
-protected boolean hasNextQuery() {
-	// if package has at least 4 segments, don't look at the first 2 since they are mostly
-	// redundant (e.g. in 'org.eclipse.jdt.core.*' 'org.eclipse' is used all the time)
-	return --this.currentSegment >= (this.segments.length >= 4 ? 2 : 0);
-}
-public boolean matchesDecodedKey(SearchPattern decodedPattern) {
-	return true; // index key is not encoded so query results all match
-}
-protected void resetQuery() {
-	/* walk the segments from end to start as it will find less potential references using 'lang' than 'java' */
-	this.currentSegment = this.segments.length - 1;
-}
-protected StringBuffer print(StringBuffer output) {
-	output.append("PackageReferencePattern: <"); //$NON-NLS-1$
-	if (this.pkgName != null)
-		output.append(this.pkgName);
-	else
-		output.append("*"); //$NON-NLS-1$
-	output.append(">"); //$NON-NLS-1$
-	return super.print(output);
-}
+        if (pkgName == null || pkgName.length == 0) {
+            this.pkgName = null;
+            this.segments = new char[][]{CharOperation.NO_CHAR};
+            this.mustResolve = false;
+        } else {
+            this.pkgName = (this.isCaseSensitive || this.isCamelCase) ? pkgName : CharOperation.toLowerCase(pkgName);
+            this.segments = CharOperation.splitOn('.', this.pkgName);
+            this.mustResolve = true;
+        }
+    }
+
+    PackageReferencePattern(int matchRule) {
+        super(PKG_REF_PATTERN, matchRule);
+    }
+
+    public void decodeIndexKey(char[] key) {
+        // Package reference keys are encoded as 'name' (where 'name' is the last segment of the package name)
+        this.pkgName = key;
+    }
+
+    public SearchPattern getBlankPattern() {
+        return new PackageReferencePattern(R_EXACT_MATCH | R_CASE_SENSITIVE);
+    }
+
+    public char[] getIndexKey() {
+        // Package reference keys are encoded as 'name' (where 'name' is the last segment of the package name)
+        if (this.currentSegment >= 0)
+            return this.segments[this.currentSegment];
+        return null;
+    }
+
+    public char[][] getIndexCategories() {
+        return CATEGORIES;
+    }
+
+    protected boolean hasNextQuery() {
+        // if package has at least 4 segments, don't look at the first 2 since they are mostly
+        // redundant (e.g. in 'org.eclipse.jdt.core.*' 'org.eclipse' is used all the time)
+        return --this.currentSegment >= (this.segments.length >= 4 ? 2 : 0);
+    }
+
+    public boolean matchesDecodedKey(SearchPattern decodedPattern) {
+        return true; // index key is not encoded so query results all match
+    }
+
+    protected void resetQuery() {
+    /* walk the segments from end to start as it will find less potential references using 'lang' than 'java' */
+        this.currentSegment = this.segments.length - 1;
+    }
+
+    protected StringBuffer print(StringBuffer output) {
+        output.append("PackageReferencePattern: <"); //$NON-NLS-1$
+        if (this.pkgName != null)
+            output.append(this.pkgName);
+        else
+            output.append("*"); //$NON-NLS-1$
+        output.append(">"); //$NON-NLS-1$
+        return super.print(output);
+    }
 }

@@ -23,57 +23,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LocalDeclarationAnalyzer extends ASTVisitor
-{
+public class LocalDeclarationAnalyzer extends ASTVisitor {
 
-   private Selection fSelection;
+    private Selection fSelection;
 
-   private List<VariableDeclaration> fAffectedLocals;
+    private List<VariableDeclaration> fAffectedLocals;
 
-   public static VariableDeclaration[] perform(BodyDeclaration parent, Selection selection)
-   {
-      LocalDeclarationAnalyzer analyzer = new LocalDeclarationAnalyzer(selection);
-      parent.accept(analyzer);
-      return analyzer.fAffectedLocals.toArray(new VariableDeclaration[analyzer.fAffectedLocals.size()]);
-   }
+    public static VariableDeclaration[] perform(BodyDeclaration parent, Selection selection) {
+        LocalDeclarationAnalyzer analyzer = new LocalDeclarationAnalyzer(selection);
+        parent.accept(analyzer);
+        return analyzer.fAffectedLocals.toArray(new VariableDeclaration[analyzer.fAffectedLocals.size()]);
+    }
 
-   private LocalDeclarationAnalyzer(Selection selection)
-   {
-      fSelection = selection;
-      fAffectedLocals = new ArrayList<VariableDeclaration>(1);
-   }
+    private LocalDeclarationAnalyzer(Selection selection) {
+        fSelection = selection;
+        fAffectedLocals = new ArrayList<VariableDeclaration>(1);
+    }
 
-   @Override
-   public boolean visit(SimpleName node)
-   {
-      IVariableBinding binding = null;
-      if (node.isDeclaration() || !considerNode(node) || (binding = ASTNodes.getLocalVariableBinding(node)) == null)
-      {
-         return false;
-      }
-      handleReferenceToLocal(node, binding);
-      return true;
-   }
+    @Override
+    public boolean visit(SimpleName node) {
+        IVariableBinding binding = null;
+        if (node.isDeclaration() || !considerNode(node) || (binding = ASTNodes.getLocalVariableBinding(node)) == null) {
+            return false;
+        }
+        handleReferenceToLocal(node, binding);
+        return true;
+    }
 
-   private boolean considerNode(ASTNode node)
-   {
-      return fSelection.getVisitSelectionMode(node) == Selection.AFTER;
-   }
+    private boolean considerNode(ASTNode node) {
+        return fSelection.getVisitSelectionMode(node) == Selection.AFTER;
+    }
 
-   private void handleReferenceToLocal(SimpleName node, IVariableBinding binding)
-   {
-      VariableDeclaration declaration = ASTNodes.findVariableDeclaration(binding, node);
-      if (declaration != null && fSelection.covers(declaration))
-      {
-         addLocalDeclaration(declaration);
-      }
-   }
+    private void handleReferenceToLocal(SimpleName node, IVariableBinding binding) {
+        VariableDeclaration declaration = ASTNodes.findVariableDeclaration(binding, node);
+        if (declaration != null && fSelection.covers(declaration)) {
+            addLocalDeclaration(declaration);
+        }
+    }
 
-   private void addLocalDeclaration(VariableDeclaration declaration)
-   {
-      if (!fAffectedLocals.contains(declaration))
-      {
-         fAffectedLocals.add(declaration);
-      }
-   }
+    private void addLocalDeclaration(VariableDeclaration declaration) {
+        if (!fAffectedLocals.contains(declaration)) {
+            fAffectedLocals.add(declaration);
+        }
+    }
 }

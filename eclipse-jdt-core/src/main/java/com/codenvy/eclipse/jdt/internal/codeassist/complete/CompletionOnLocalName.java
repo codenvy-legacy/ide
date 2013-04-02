@@ -16,36 +16,36 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.BlockScope;
 
 
 public class CompletionOnLocalName extends LocalDeclaration {
-	private static final char[] FAKENAMESUFFIX = " ".toCharArray(); //$NON-NLS-1$
-	public char[] realName;
+    private static final char[] FAKENAMESUFFIX = " ".toCharArray(); //$NON-NLS-1$
+    public char[] realName;
 
-	public CompletionOnLocalName(char[] name, int sourceStart, int sourceEnd){
+    public CompletionOnLocalName(char[] name, int sourceStart, int sourceEnd) {
 
-		super(CharOperation.concat(name, FAKENAMESUFFIX), sourceStart, sourceEnd);
-		this.realName = name;
-	}
+        super(CharOperation.concat(name, FAKENAMESUFFIX), sourceStart, sourceEnd);
+        this.realName = name;
+    }
 
-	public void resolve(BlockScope scope) {
+    public void resolve(BlockScope scope) {
 
-		super.resolve(scope);
-		throw new CompletionNodeFound(this, scope);
-	}
+        super.resolve(scope);
+        throw new CompletionNodeFound(this, scope);
+    }
 
-	public StringBuffer printAsExpression(int indent, StringBuffer output) {
-		printIndent(indent, output);
-		output.append("<CompleteOnLocalName:"); //$NON-NLS-1$
-		if (this.type != null)  this.type.print(0, output).append(' ');
-		output.append(this.realName);
-		if (this.initialization != null) {
-			output.append(" = "); //$NON-NLS-1$
-			this.initialization.printExpression(0, output);
-		}
-		return output.append('>');
-	}
+    public StringBuffer printAsExpression(int indent, StringBuffer output) {
+        printIndent(indent, output);
+        output.append("<CompleteOnLocalName:"); //$NON-NLS-1$
+        if (this.type != null) this.type.print(0, output).append(' ');
+        output.append(this.realName);
+        if (this.initialization != null) {
+            output.append(" = "); //$NON-NLS-1$
+            this.initialization.printExpression(0, output);
+        }
+        return output.append('>');
+    }
 
-	public StringBuffer printStatement(int indent, StringBuffer output) {
-		printAsExpression(indent, output);
-		return output.append(';');
-	}
+    public StringBuffer printStatement(int indent, StringBuffer output) {
+        printAsExpression(indent, output);
+        return output.append(';');
+    }
 }
 

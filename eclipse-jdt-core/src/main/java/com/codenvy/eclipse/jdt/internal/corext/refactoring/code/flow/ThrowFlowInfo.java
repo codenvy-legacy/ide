@@ -11,23 +11,19 @@
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 
 
-class ThrowFlowInfo extends FlowInfo
-{
+class ThrowFlowInfo extends FlowInfo {
 
-   public ThrowFlowInfo()
-   {
-      super(THROW);
-   }
+    public ThrowFlowInfo() {
+        super(THROW);
+    }
 
-   public void merge(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void merge(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      assignAccessMode(info);
-   }
+        assignAccessMode(info);
+    }
 
 }
 

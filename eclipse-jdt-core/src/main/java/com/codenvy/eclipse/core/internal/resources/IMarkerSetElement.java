@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.codenvy.eclipse.core.internal.resources;
 
-public interface IMarkerSetElement
-{
-   public long getId();
+public interface IMarkerSetElement {
+    public long getId();
 }

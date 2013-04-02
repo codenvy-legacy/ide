@@ -10,37 +10,30 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 
-class EnhancedForFlowInfo extends FlowInfo
-{
+class EnhancedForFlowInfo extends FlowInfo {
 
-   public void mergeParameter(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
-      mergeAccessModeSequential(info, context);
-   }
+    public void mergeParameter(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
+        mergeAccessModeSequential(info, context);
+    }
 
-   public void mergeExpression(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
-      mergeAccessModeSequential(info, context);
-   }
+    public void mergeExpression(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
+        mergeAccessModeSequential(info, context);
+    }
 
-   public void mergeAction(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void mergeAction(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      info.mergeEmptyCondition(context);
+        info.mergeEmptyCondition(context);
 
-      mergeSequential(info, context);
-   }
+        mergeSequential(info, context);
+    }
 }
 

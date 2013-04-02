@@ -15,10 +15,7 @@ package com.codenvy.eclipse.ltk.internal.core.refactoring;
  *
  * @since 3.5
  */
-public class Lock
-{
-   /**
-    * <code>true</code> iff the operation is done.
-    */
-   public boolean fDone;
+public class Lock {
+    /** <code>true</code> iff the operation is done. */
+    public boolean fDone;
 }

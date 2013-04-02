@@ -10,25 +10,20 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.compiler.env;
 
-public interface ISourceImport
-{
+public interface ISourceImport {
 
-   /**
-    * Answer the source end position of the import declaration.
-    */
+    /** Answer the source end position of the import declaration. */
 
-   int getDeclarationSourceEnd();
+    int getDeclarationSourceEnd();
 
-   /**
-    * Answer the source start position of the import declaration.
-    */
+    /** Answer the source start position of the import declaration. */
 
-   int getDeclarationSourceStart();
+    int getDeclarationSourceStart();
 
-   /**
-    * Answer an int whose bits are set according the access constants
-    * defined by the VM spec.
-    * Since Java 1.5, static imports can be defined.
-    */
-   int getModifiers();
+    /**
+     * Answer an int whose bits are set according the access constants
+     * defined by the VM spec.
+     * Since Java 1.5, static imports can be defined.
+     */
+    int getModifiers();
 }

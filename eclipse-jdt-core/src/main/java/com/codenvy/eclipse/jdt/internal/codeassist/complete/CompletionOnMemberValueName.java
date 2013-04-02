@@ -26,14 +26,14 @@ import com.codenvy.eclipse.jdt.internal.compiler.ast.MemberValuePair;
  *       }
  */
 public class CompletionOnMemberValueName extends MemberValuePair {
-	public CompletionOnMemberValueName(char[] token, int sourceStart, int sourceEnd) {
-		super(token, sourceStart, sourceEnd, null);
-	}
+    public CompletionOnMemberValueName(char[] token, int sourceStart, int sourceEnd) {
+        super(token, sourceStart, sourceEnd, null);
+    }
 
-	public StringBuffer print(int indent, StringBuffer output) {
-		output.append("<CompleteOnAttributeName:"); //$NON-NLS-1$
-		output.append(this.name);
-		output.append('>');
-		return output;
-	}
+    public StringBuffer print(int indent, StringBuffer output) {
+        output.append("<CompleteOnAttributeName:"); //$NON-NLS-1$
+        output.append(this.name);
+        output.append('>');
+        return output;
+    }
 }

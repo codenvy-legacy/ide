@@ -39,31 +39,33 @@ import com.codenvy.eclipse.core.runtime.IStatus;
  *
  * @since 3.2
  */
-public interface IOperationApprover2 extends IOperationApprover
-{
-   /**
-    * Return a status indicating whether the specified operation should be
-    * executed. Any status that does not have severity <code>IStatus.OK</code>
-    * will not be approved. Implementers should not assume that the execution
-    * will be performed when the status is <code>OK</code>, since other
-    * operation approvers may veto the execution.
-    *
-    * @param operation the operation to be executed
-    * @param history   the history performing the execution of the operation
-    * @param info      the IAdaptable (or <code>null</code>) provided by the
-    *                  caller in order to supply UI information for prompting the
-    *                  user if necessary. When this parameter is not
-    *                  <code>null</code>, it should minimally contain an adapter
-    *                  for the org.eclipse.swt.widgets.Shell.class. Even if UI
-    *                  information is provided, the implementation of this method
-    *                  must be prepared for being called from a background thread.
-    *                  Any UI access must be properly synchronized using the
-    *                  techniques specified by the client's widget library.
-    * @return the IStatus describing whether the operation is approved. The
-    *         execution will not proceed if the status severity is not
-    *         <code>OK</code>, and the caller requesting the execution will
-    *         be returned the status that caused the rejection. Any other
-    *         status severities will not be interpreted by the history.
-    */
-   IStatus proceedExecuting(IUndoableOperation operation, IOperationHistory history, IAdaptable info);
+public interface IOperationApprover2 extends IOperationApprover {
+    /**
+     * Return a status indicating whether the specified operation should be
+     * executed. Any status that does not have severity <code>IStatus.OK</code>
+     * will not be approved. Implementers should not assume that the execution
+     * will be performed when the status is <code>OK</code>, since other
+     * operation approvers may veto the execution.
+     *
+     * @param operation
+     *         the operation to be executed
+     * @param history
+     *         the history performing the execution of the operation
+     * @param info
+     *         the IAdaptable (or <code>null</code>) provided by the
+     *         caller in order to supply UI information for prompting the
+     *         user if necessary. When this parameter is not
+     *         <code>null</code>, it should minimally contain an adapter
+     *         for the org.eclipse.swt.widgets.Shell.class. Even if UI
+     *         information is provided, the implementation of this method
+     *         must be prepared for being called from a background thread.
+     *         Any UI access must be properly synchronized using the
+     *         techniques specified by the client's widget library.
+     * @return the IStatus describing whether the operation is approved. The
+     *         execution will not proceed if the status severity is not
+     *         <code>OK</code>, and the caller requesting the execution will
+     *         be returned the status that caused the rejection. Any other
+     *         status severities will not be interpreted by the history.
+     */
+    IStatus proceedExecuting(IUndoableOperation operation, IOperationHistory history, IAdaptable info);
 }

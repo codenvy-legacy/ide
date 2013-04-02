@@ -12,16 +12,15 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2;
 
 import com.codenvy.eclipse.jdt.core.ICompilationUnit;
 
-public interface ISourceConstraintVariable
-{
+public interface ISourceConstraintVariable {
 
-   public ICompilationUnit getCompilationUnit();
+    public ICompilationUnit getCompilationUnit();
 
-   public Object getData(String name);
+    public Object getData(String name);
 
-   public ITypeSet getTypeEstimate();
+    public ITypeSet getTypeEstimate();
 
-   public void setCompilationUnit(ICompilationUnit cu);
+    public void setCompilationUnit(ICompilationUnit cu);
 
-   public void setData(String name, Object data);
+    public void setData(String name, Object data);
 }

@@ -29,156 +29,127 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
  * it uses a macro to set the result of the code snippet instead
  * of returning it.
  */
-public class CodeSnippetReturnStatement extends ReturnStatement implements InvocationSite, EvaluationConstants
-{
-   MethodBinding setResultMethod;
+public class CodeSnippetReturnStatement extends ReturnStatement implements InvocationSite, EvaluationConstants {
+    MethodBinding setResultMethod;
 
-   public CodeSnippetReturnStatement(Expression expr, int s, int e)
-   {
-      super(expr, s, e);
-   }
+    public CodeSnippetReturnStatement(Expression expr, int s, int e) {
+        super(expr, s, e);
+    }
 
-   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
-   {
-      FlowInfo info = super.analyseCode(currentScope, flowContext, flowInfo);
-      // we need to remove this optimization in order to prevent the inlining of the return bytecode
-      // 1GH0AU7: ITPJCORE:ALL - Eval - VerifyError in scrapbook page
-      this.expression.bits &= ~IsReturnedValue;
-      return info;
-   }
+    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo) {
+        FlowInfo info = super.analyseCode(currentScope, flowContext, flowInfo);
+        // we need to remove this optimization in order to prevent the inlining of the return bytecode
+        // 1GH0AU7: ITPJCORE:ALL - Eval - VerifyError in scrapbook page
+        this.expression.bits &= ~IsReturnedValue;
+        return info;
+    }
 
-   /**
-    * Dump the suitable return bytecode for a return statement
-    */
-   public void generateReturnBytecode(CodeStream codeStream)
-   {
+    /** Dump the suitable return bytecode for a return statement */
+    public void generateReturnBytecode(CodeStream codeStream) {
 
-      // output the return bytecode
-      codeStream.return_();
-   }
+        // output the return bytecode
+        codeStream.return_();
+    }
 
-   public void generateStoreSaveValueIfNecessary(CodeStream codeStream)
-   {
+    public void generateStoreSaveValueIfNecessary(CodeStream codeStream) {
 
-      // push receiver
-      codeStream.aload_0();
+        // push receiver
+        codeStream.aload_0();
 
-      // push the 2 parameters of "setResult(Object, Class)"
-      if (this.expression == null || this.expression.resolvedType == TypeBinding.VOID)
-      { // expressionType == VoidBinding if code snippet is the expression "System.out.println()"
-         // push null
-         codeStream.aconst_null();
+        // push the 2 parameters of "setResult(Object, Class)"
+        if (this.expression == null || this.expression.resolvedType ==
+                                       TypeBinding.VOID) { // expressionType == VoidBinding if code snippet is the expression "System.out
+                                       // .println()"
+            // push null
+            codeStream.aconst_null();
 
-         // void.class
-         codeStream.generateClassLiteralAccessForType(TypeBinding.VOID, null);
-      }
-      else
-      {
-         // swap with expression
-         int valueTypeID = this.expression.resolvedType.id;
-         if (valueTypeID == T_long || valueTypeID == T_double)
-         {
-            codeStream.dup_x2();
-            codeStream.pop();
-         }
-         else
-         {
-            codeStream.swap();
-         }
-
-         // generate wrapper if needed
-         if (this.expression.resolvedType.isBaseType() && this.expression.resolvedType != TypeBinding.NULL)
-         {
-            codeStream.generateBoxingConversion(this.expression.resolvedType.id);
-         }
-
-         // generate the expression type
-         codeStream.generateClassLiteralAccessForType(this.expression.resolvedType, null);
-      }
-
-      // generate the invoke virtual to "setResult(Object,Class)"
-      codeStream.invoke(Opcodes.OPC_invokevirtual, this.setResultMethod, null /* default declaringClass */);
-   }
-
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.lookup.InvocationSite#genericTypeArguments()
-    */
-   public TypeBinding[] genericTypeArguments()
-   {
-      return null;
-   }
-
-   public boolean isSuperAccess()
-   {
-      return false;
-   }
-
-   public boolean isTypeAccess()
-   {
-      return false;
-   }
-
-   public boolean needValue()
-   {
-      return true;
-   }
-
-   public void prepareSaveValueLocation(TryStatement targetTryStatement)
-   {
-
-      // do nothing: no storage is necessary for snippets
-   }
-
-   public void resolve(BlockScope scope)
-   {
-      if (this.expression != null)
-      {
-         if (this.expression.resolveType(scope) != null)
-         {
-            TypeBinding javaLangClass = scope.getJavaLangClass();
-            if (!javaLangClass.isValidBinding())
-            {
-               scope.problemReporter().codeSnippetMissingClass("java.lang.Class", this.sourceStart,
-                  this.sourceEnd); //$NON-NLS-1$
-               return;
+            // void.class
+            codeStream.generateClassLiteralAccessForType(TypeBinding.VOID, null);
+        } else {
+            // swap with expression
+            int valueTypeID = this.expression.resolvedType.id;
+            if (valueTypeID == T_long || valueTypeID == T_double) {
+                codeStream.dup_x2();
+                codeStream.pop();
+            } else {
+                codeStream.swap();
             }
-            TypeBinding javaLangObject = scope.getJavaLangObject();
-            if (!javaLangObject.isValidBinding())
-            {
-               scope.problemReporter().codeSnippetMissingClass("java.lang.Object", this.sourceStart,
-                  this.sourceEnd); //$NON-NLS-1$
-               return;
-            }
-            TypeBinding[] argumentTypes = new TypeBinding[]{javaLangObject, javaLangClass};
-            this.setResultMethod = scope.getImplicitMethod(SETRESULT_SELECTOR, argumentTypes, this);
-            if (!this.setResultMethod.isValidBinding())
-            {
-               scope.problemReporter().codeSnippetMissingMethod(ROOT_FULL_CLASS_NAME, new String(SETRESULT_SELECTOR),
-                  new String(SETRESULT_ARGUMENTS), this.sourceStart, this.sourceEnd);
-               return;
-            }
-            // in constant case, the implicit conversion cannot be left uninitialized
-            if (this.expression.constant != Constant.NotAConstant)
-            {
-               // fake 'no implicit conversion' (the return type is always void)
-               this.expression.implicitConversion = this.expression.constant.typeID() << 4;
-            }
-         }
-      }
-   }
 
-   public void setActualReceiverType(ReferenceBinding receiverType)
-   {
-      // ignored
-   }
+            // generate wrapper if needed
+            if (this.expression.resolvedType.isBaseType() && this.expression.resolvedType != TypeBinding.NULL) {
+                codeStream.generateBoxingConversion(this.expression.resolvedType.id);
+            }
 
-   public void setDepth(int depth)
-   {
-      // ignored
-   }
+            // generate the expression type
+            codeStream.generateClassLiteralAccessForType(this.expression.resolvedType, null);
+        }
 
-   public void setFieldIndex(int depth)
-   {
-      // ignored
-   }
+        // generate the invoke virtual to "setResult(Object,Class)"
+        codeStream.invoke(Opcodes.OPC_invokevirtual, this.setResultMethod, null /* default declaringClass */);
+    }
+
+    /** @see com.codenvy.eclipse.jdt.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
+    public TypeBinding[] genericTypeArguments() {
+        return null;
+    }
+
+    public boolean isSuperAccess() {
+        return false;
+    }
+
+    public boolean isTypeAccess() {
+        return false;
+    }
+
+    public boolean needValue() {
+        return true;
+    }
+
+    public void prepareSaveValueLocation(TryStatement targetTryStatement) {
+
+        // do nothing: no storage is necessary for snippets
+    }
+
+    public void resolve(BlockScope scope) {
+        if (this.expression != null) {
+            if (this.expression.resolveType(scope) != null) {
+                TypeBinding javaLangClass = scope.getJavaLangClass();
+                if (!javaLangClass.isValidBinding()) {
+                    scope.problemReporter().codeSnippetMissingClass("java.lang.Class", this.sourceStart,
+                                                                    this.sourceEnd); //$NON-NLS-1$
+                    return;
+                }
+                TypeBinding javaLangObject = scope.getJavaLangObject();
+                if (!javaLangObject.isValidBinding()) {
+                    scope.problemReporter().codeSnippetMissingClass("java.lang.Object", this.sourceStart,
+                                                                    this.sourceEnd); //$NON-NLS-1$
+                    return;
+                }
+                TypeBinding[] argumentTypes = new TypeBinding[]{javaLangObject, javaLangClass};
+                this.setResultMethod = scope.getImplicitMethod(SETRESULT_SELECTOR, argumentTypes, this);
+                if (!this.setResultMethod.isValidBinding()) {
+                    scope.problemReporter().codeSnippetMissingMethod(ROOT_FULL_CLASS_NAME, new String(SETRESULT_SELECTOR),
+                                                                     new String(SETRESULT_ARGUMENTS), this.sourceStart, this.sourceEnd);
+                    return;
+                }
+                // in constant case, the implicit conversion cannot be left uninitialized
+                if (this.expression.constant != Constant.NotAConstant) {
+                    // fake 'no implicit conversion' (the return type is always void)
+                    this.expression.implicitConversion = this.expression.constant.typeID() << 4;
+                }
+            }
+        }
+    }
+
+    public void setActualReceiverType(ReferenceBinding receiverType) {
+        // ignored
+    }
+
+    public void setDepth(int depth) {
+        // ignored
+    }
+
+    public void setFieldIndex(int depth) {
+        // ignored
+    }
 }

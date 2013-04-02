@@ -19,43 +19,40 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatusContext;
  * with detailed information about an error detected in Java source code represented
  * by a string.
  */
-public class JavaStringStatusContext extends RefactoringStatusContext
-{
+public class JavaStringStatusContext extends RefactoringStatusContext {
 
-   private String fSource;
+    private String fSource;
 
-   private ISourceRange fSourceRange;
+    private ISourceRange fSourceRange;
 
-   /**
-    * Creates a new <code>JavaStringStatusContext</code>.
-    *
-    * @param source the source code containing the error
-    * @param range  a source range inside <code>source</code> or
-    *               <code>null</code> if no special source range is known.
-    */
-   public JavaStringStatusContext(String source, ISourceRange range)
-   {
-      Assert.isNotNull(source);
-      fSource = source;
-      fSourceRange = range;
-   }
+    /**
+     * Creates a new <code>JavaStringStatusContext</code>.
+     *
+     * @param source
+     *         the source code containing the error
+     * @param range
+     *         a source range inside <code>source</code> or
+     *         <code>null</code> if no special source range is known.
+     */
+    public JavaStringStatusContext(String source, ISourceRange range) {
+        Assert.isNotNull(source);
+        fSource = source;
+        fSourceRange = range;
+    }
 
-   public String getSource()
-   {
-      return fSource;
-   }
+    public String getSource() {
+        return fSource;
+    }
 
-   public ISourceRange getSourceRange()
-   {
-      return fSourceRange;
-   }
+    public ISourceRange getSourceRange() {
+        return fSourceRange;
+    }
 
-   /* (non-Javadoc)
-    * @see RefactoringStatusContext#getCorrespondingElement()
-    */
-   @Override
-   public Object getCorrespondingElement()
-   {
-      return null;
-   }
+    /* (non-Javadoc)
+     * @see RefactoringStatusContext#getCorrespondingElement()
+     */
+    @Override
+    public Object getCorrespondingElement() {
+        return null;
+    }
 }

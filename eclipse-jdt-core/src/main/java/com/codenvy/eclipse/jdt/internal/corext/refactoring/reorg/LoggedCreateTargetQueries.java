@@ -32,136 +32,101 @@ import java.util.List;
  *
  * @since 3.3
  */
-public final class LoggedCreateTargetQueries implements ICreateTargetQueries
-{
+public final class LoggedCreateTargetQueries implements ICreateTargetQueries {
 
-   /**
-    * Default implementation of create target query
-    */
-   private final class CreateTargetQuery implements ICreateTargetQuery
-   {
+    /** Default implementation of create target query */
+    private final class CreateTargetQuery implements ICreateTargetQuery {
 
-      private void createJavaProject(IProject project) throws CoreException
-      {
-         if (!project.exists())
-         {
-            //				BuildPathsBlock.createProject(project, null, new NullProgressMonitor());
-            //				BuildPathsBlock.addJavaNature(project, new NullProgressMonitor());
-         }
-      }
-
-      private void createPackageFragmentRoot(IPackageFragmentRoot root) throws CoreException
-      {
-         final IJavaProject project = root.getJavaProject();
-         if (!project.exists())
-         {
-            createJavaProject(project.getProject());
-         }
-         final IFolder folder = project.getProject().getFolder(root.getElementName());
-         if (!folder.exists())
-         {
-            CoreUtility.createFolder(folder, true, true, new NullProgressMonitor());
-         }
-         final List<IClasspathEntry> list = Arrays.asList(project.getRawClasspath());
-         list.add(JavaCore.newSourceEntry(folder.getFullPath()));
-         project.setRawClasspath(list.toArray(new IClasspathEntry[list.size()]), new NullProgressMonitor());
-      }
-
-      /**
-       * {@inheritDoc}
-       */
-      public Object getCreatedTarget(final Object selection)
-      {
-         final Object target = fLog.getCreatedElement(selection);
-         if (target instanceof IPackageFragment)
-         {
-            final IPackageFragment fragment = (IPackageFragment)target;
-            final IJavaElement parent = fragment.getParent();
-            if (parent instanceof IPackageFragmentRoot)
-            {
-               try
-               {
-                  final IPackageFragmentRoot root = (IPackageFragmentRoot)parent;
-                  if (!root.exists())
-                  {
-                     createPackageFragmentRoot(root);
-                  }
-                  if (!fragment.exists())
-                  {
-                     root.createPackageFragment(fragment.getElementName(), true, new NullProgressMonitor());
-                  }
-               }
-               catch (CoreException exception)
-               {
-                  Util.log(exception);
-                  return null;
-               }
+        private void createJavaProject(IProject project) throws CoreException {
+            if (!project.exists()) {
+                //				BuildPathsBlock.createProject(project, null, new NullProgressMonitor());
+                //				BuildPathsBlock.addJavaNature(project, new NullProgressMonitor());
             }
-         }
-         else if (target instanceof IFolder)
-         {
-            try
-            {
-               final IFolder folder = (IFolder)target;
-               final IProject project = folder.getProject();
-               if (!project.exists())
-               {
-                  createJavaProject(project);
-               }
-               if (!folder.exists())
-               {
-                  CoreUtility.createFolder(folder, true, true, new NullProgressMonitor());
-               }
+        }
+
+        private void createPackageFragmentRoot(IPackageFragmentRoot root) throws CoreException {
+            final IJavaProject project = root.getJavaProject();
+            if (!project.exists()) {
+                createJavaProject(project.getProject());
             }
-            catch (CoreException exception)
-            {
-               Util.log(exception);
-               return null;
+            final IFolder folder = project.getProject().getFolder(root.getElementName());
+            if (!folder.exists()) {
+                CoreUtility.createFolder(folder, true, true, new NullProgressMonitor());
             }
-         }
-         return target;
-      }
+            final List<IClasspathEntry> list = Arrays.asList(project.getRawClasspath());
+            list.add(JavaCore.newSourceEntry(folder.getFullPath()));
+            project.setRawClasspath(list.toArray(new IClasspathEntry[list.size()]), new NullProgressMonitor());
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      public String getNewButtonLabel()
-      {
-         return "unused"; //$NON-NLS-1$
-      }
-   }
+        /** {@inheritDoc} */
+        public Object getCreatedTarget(final Object selection) {
+            final Object target = fLog.getCreatedElement(selection);
+            if (target instanceof IPackageFragment) {
+                final IPackageFragment fragment = (IPackageFragment)target;
+                final IJavaElement parent = fragment.getParent();
+                if (parent instanceof IPackageFragmentRoot) {
+                    try {
+                        final IPackageFragmentRoot root = (IPackageFragmentRoot)parent;
+                        if (!root.exists()) {
+                            createPackageFragmentRoot(root);
+                        }
+                        if (!fragment.exists()) {
+                            root.createPackageFragment(fragment.getElementName(), true, new NullProgressMonitor());
+                        }
+                    } catch (CoreException exception) {
+                        Util.log(exception);
+                        return null;
+                    }
+                }
+            } else if (target instanceof IFolder) {
+                try {
+                    final IFolder folder = (IFolder)target;
+                    final IProject project = folder.getProject();
+                    if (!project.exists()) {
+                        createJavaProject(project);
+                    }
+                    if (!folder.exists()) {
+                        CoreUtility.createFolder(folder, true, true, new NullProgressMonitor());
+                    }
+                } catch (CoreException exception) {
+                    Util.log(exception);
+                    return null;
+                }
+            }
+            return target;
+        }
 
-   /**
-    * The create target execution log
-    */
-   private final CreateTargetExecutionLog fLog;
+        /** {@inheritDoc} */
+        public String getNewButtonLabel() {
+            return "unused"; //$NON-NLS-1$
+        }
+    }
 
-   /**
-    * Creates a new logged create target queries.
-    *
-    * @param log the create target execution log
-    */
-   public LoggedCreateTargetQueries(final CreateTargetExecutionLog log)
-   {
-      Assert.isNotNull(log);
-      fLog = log;
-   }
+    /** The create target execution log */
+    private final CreateTargetExecutionLog fLog;
 
-   /**
-    * {@inheritDoc}
-    */
-   public ICreateTargetQuery createNewPackageQuery()
-   {
-      return new CreateTargetQuery();
-   }
+    /**
+     * Creates a new logged create target queries.
+     *
+     * @param log
+     *         the create target execution log
+     */
+    public LoggedCreateTargetQueries(final CreateTargetExecutionLog log) {
+        Assert.isNotNull(log);
+        fLog = log;
+    }
 
-   /**
-    * Returns the create target execution log.
-    *
-    * @return the create target execution log
-    */
-   public CreateTargetExecutionLog getCreateTargetExecutionLog()
-   {
-      return fLog;
-   }
+    /** {@inheritDoc} */
+    public ICreateTargetQuery createNewPackageQuery() {
+        return new CreateTargetQuery();
+    }
+
+    /**
+     * Returns the create target execution log.
+     *
+     * @return the create target execution log
+     */
+    public CreateTargetExecutionLog getCreateTargetExecutionLog() {
+        return fLog;
+    }
 }

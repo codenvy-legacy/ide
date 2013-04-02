@@ -13,40 +13,37 @@ package com.codenvy.eclipse.jdt.internal.corext;
 
 import com.codenvy.eclipse.core.internal.NLS;
 
-public final class CorextMessages extends NLS
-{
+public final class CorextMessages extends NLS {
 
-   private static final String BUNDLE_NAME = "com.codenvy.eclipse.jdt.internal.corext.CorextMessages";//$NON-NLS-1$
+    private static final String BUNDLE_NAME = "com.codenvy.eclipse.jdt.internal.corext.CorextMessages";//$NON-NLS-1$
 
-   private CorextMessages()
-   {
-      // Do not instantiate
-   }
+    private CorextMessages() {
+        // Do not instantiate
+    }
 
-   public static String Resources_outOfSyncResources;
+    public static String Resources_outOfSyncResources;
 
-   public static String Resources_outOfSync;
+    public static String Resources_outOfSync;
 
-   public static String Resources_modifiedResources;
+    public static String Resources_modifiedResources;
 
-   public static String Resources_fileModified;
+    public static String Resources_fileModified;
 
-   public static String JavaDocLocations_migrate_operation;
+    public static String JavaDocLocations_migrate_operation;
 
-   public static String JavaDocLocations_error_readXML;
+    public static String JavaDocLocations_error_readXML;
 
-   public static String JavaDocLocations_migratejob_name;
+    public static String JavaDocLocations_migratejob_name;
 
-   public static String History_error_serialize;
+    public static String History_error_serialize;
 
-   public static String History_error_read;
+    public static String History_error_read;
 
-   public static String TypeInfoHistory_consistency_check;
+    public static String TypeInfoHistory_consistency_check;
 
-   static
-   {
-      NLS.initializeMessages(BUNDLE_NAME, CorextMessages.class);
-   }
+    static {
+        NLS.initializeMessages(BUNDLE_NAME, CorextMessages.class);
+    }
 
-   public static String JavaModelUtil_applyedit_operation;
+    public static String JavaModelUtil_applyedit_operation;
 }

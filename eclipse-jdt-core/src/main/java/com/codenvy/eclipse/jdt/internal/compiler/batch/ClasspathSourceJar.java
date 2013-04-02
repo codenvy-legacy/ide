@@ -20,48 +20,52 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 
 public class ClasspathSourceJar extends ClasspathJar {
-	private String encoding;
+    private String encoding;
 
-	public ClasspathSourceJar(File file, boolean closeZipFileAtEnd,
-			AccessRuleSet accessRuleSet, String encoding,
-			String destinationPath) {
-		super(file, closeZipFileAtEnd, accessRuleSet, destinationPath);
-		this.encoding = encoding;
-	}
+    public ClasspathSourceJar(File file, boolean closeZipFileAtEnd,
+                              AccessRuleSet accessRuleSet, String encoding,
+                              String destinationPath) {
+        super(file, closeZipFileAtEnd, accessRuleSet, destinationPath);
+        this.encoding = encoding;
+    }
 
-	public NameEnvironmentAnswer findClass(char[] typeName, String qualifiedPackageName, String qualifiedBinaryFileName, boolean asBinaryOnly) {
-		if (!isPackage(qualifiedPackageName))
-			return null; // most common case
+    public NameEnvironmentAnswer findClass(char[] typeName, String qualifiedPackageName, String qualifiedBinaryFileName,
+                                           boolean asBinaryOnly) {
+        if (!isPackage(qualifiedPackageName))
+            return null; // most common case
 
-		ZipEntry sourceEntry = this.zipFile.getEntry(qualifiedBinaryFileName.substring(0, qualifiedBinaryFileName.length() - 6)  + SUFFIX_STRING_java);
-		if (sourceEntry != null) {
-			try {
-				InputStream stream = null;
-				char[] contents = null; 
-				try {
-					stream = this.zipFile.getInputStream(sourceEntry);
-					contents = Util.getInputStreamAsCharArray(stream, -1, this.encoding);
-				} finally {
-					if (stream != null)
-						stream.close();
-				}
-				return new NameEnvironmentAnswer(
-					new CompilationUnit(
-						contents,
-						qualifiedBinaryFileName.substring(0, qualifiedBinaryFileName.length() - 6) + SUFFIX_STRING_java,
-						this.encoding,
-						this.destinationPath),
-					fetchAccessRestriction(qualifiedBinaryFileName));
-			} catch (IOException e) {
-				// treat as if source file is missing
-			}
-		}
-		return null;
-	}
-	public NameEnvironmentAnswer findClass(char[] typeName, String qualifiedPackageName, String qualifiedBinaryFileName) {
-		return findClass(typeName, qualifiedPackageName, qualifiedBinaryFileName, false);
-	}
-	public int getMode() {
-		return SOURCE;
-	}
+        ZipEntry sourceEntry =
+                this.zipFile.getEntry(qualifiedBinaryFileName.substring(0, qualifiedBinaryFileName.length() - 6) + SUFFIX_STRING_java);
+        if (sourceEntry != null) {
+            try {
+                InputStream stream = null;
+                char[] contents = null;
+                try {
+                    stream = this.zipFile.getInputStream(sourceEntry);
+                    contents = Util.getInputStreamAsCharArray(stream, -1, this.encoding);
+                } finally {
+                    if (stream != null)
+                        stream.close();
+                }
+                return new NameEnvironmentAnswer(
+                        new CompilationUnit(
+                                contents,
+                                qualifiedBinaryFileName.substring(0, qualifiedBinaryFileName.length() - 6) + SUFFIX_STRING_java,
+                                this.encoding,
+                                this.destinationPath),
+                        fetchAccessRestriction(qualifiedBinaryFileName));
+            } catch (IOException e) {
+                // treat as if source file is missing
+            }
+        }
+        return null;
+    }
+
+    public NameEnvironmentAnswer findClass(char[] typeName, String qualifiedPackageName, String qualifiedBinaryFileName) {
+        return findClass(typeName, qualifiedPackageName, qualifiedBinaryFileName, false);
+    }
+
+    public int getMode() {
+        return SOURCE;
+    }
 }

@@ -14,15 +14,13 @@ import com.codenvy.eclipse.jdt.core.dom.SimpleName;
 
 import java.util.HashSet;
 
-class BranchFlowInfo extends FlowInfo
-{
+class BranchFlowInfo extends FlowInfo {
 
-   public BranchFlowInfo(SimpleName label, FlowContext context)
-   {
-      super(NO_RETURN);
-      fBranches = new HashSet<String>(2);
-      fBranches.add(makeString(label));
-   }
+    public BranchFlowInfo(SimpleName label, FlowContext context) {
+        super(NO_RETURN);
+        fBranches = new HashSet<String>(2);
+        fBranches.add(makeString(label));
+    }
 }
 
 

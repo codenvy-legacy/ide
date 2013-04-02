@@ -13,18 +13,19 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring;
 import com.codenvy.eclipse.jdt.core.search.SearchMatch;
 
 /**
- * Interface for search requestors used in conjunction with {@link com.codenvy.eclipse.jdt.internal.corext.refactoring.RefactoringSearchEngine2}.
+ * Interface for search requestors used in conjunction with {@link com.codenvy.eclipse.jdt.internal.corext.refactoring
+ * .RefactoringSearchEngine2}.
  *
  * @since 3.1
  */
-public interface IRefactoringSearchRequestor
-{
+public interface IRefactoringSearchRequestor {
 
-   /**
-    * Can the search match be accepted?
-    *
-    * @param match the search match to test
-    * @return The accepted match, or <code>null</code> if not accepted
-    */
-   public SearchMatch acceptSearchMatch(SearchMatch match);
+    /**
+     * Can the search match be accepted?
+     *
+     * @param match
+     *         the search match to test
+     * @return The accepted match, or <code>null</code> if not accepted
+     */
+    public SearchMatch acceptSearchMatch(SearchMatch match);
 }

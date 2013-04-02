@@ -17,14 +17,10 @@ import com.codenvy.eclipse.jdt.internal.core.util.Util;
 import java.io.Writer;
 
 
-/**
- * @since 3.0
- */
-class XMLWriter extends GenericXMLWriter
-{
+/** @since 3.0 */
+class XMLWriter extends GenericXMLWriter {
 
-   public XMLWriter(Writer writer, IJavaProject project, boolean printXmlVersion)
-   {
-      super(writer, Util.getLineSeparator((String)null, project), printXmlVersion);
-   }
+    public XMLWriter(Writer writer, IJavaProject project, boolean printXmlVersion) {
+        super(writer, Util.getLineSeparator((String)null, project), printXmlVersion);
+    }
 }

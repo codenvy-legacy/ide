@@ -17,32 +17,32 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.ClassScope;
 import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class SelectionOnParameterizedSingleTypeReference extends ParameterizedSingleTypeReference {
-	public SelectionOnParameterizedSingleTypeReference(char[] name, TypeReference[] typeArguments, long pos){
-		super(name, typeArguments, 0, pos);
-	}
+    public SelectionOnParameterizedSingleTypeReference(char[] name, TypeReference[] typeArguments, long pos) {
+        super(name, typeArguments, 0, pos);
+    }
 
-	public TypeBinding resolveType(BlockScope scope, boolean checkBounds) {
-		super.resolveType(scope, checkBounds);
-		throw new SelectionNodeFound(this.resolvedType);
-	}
+    public TypeBinding resolveType(BlockScope scope, boolean checkBounds) {
+        super.resolveType(scope, checkBounds);
+        throw new SelectionNodeFound(this.resolvedType);
+    }
 
-	public TypeBinding resolveType(ClassScope scope) {
-		super.resolveType(scope);
-		throw new SelectionNodeFound(this.resolvedType);
-	}
+    public TypeBinding resolveType(ClassScope scope) {
+        super.resolveType(scope);
+        throw new SelectionNodeFound(this.resolvedType);
+    }
 
-	public StringBuffer printExpression(int indent, StringBuffer output){
-		output.append("<SelectOnType:");//$NON-NLS-1$
-		output.append(this.token);
-		output.append('<');
-		int max = this.typeArguments.length - 1;
-		for (int i= 0; i < max; i++) {
-			this.typeArguments[i].print(0, output);
-			output.append(", ");//$NON-NLS-1$
-		}
-		this.typeArguments[max].print(0, output);
-		output.append('>');
-		output.append('>');
-		return output;
-	}
+    public StringBuffer printExpression(int indent, StringBuffer output) {
+        output.append("<SelectOnType:");//$NON-NLS-1$
+        output.append(this.token);
+        output.append('<');
+        int max = this.typeArguments.length - 1;
+        for (int i = 0; i < max; i++) {
+            this.typeArguments[i].print(0, output);
+            output.append(", ");//$NON-NLS-1$
+        }
+        this.typeArguments[max].print(0, output);
+        output.append('>');
+        output.append('>');
+        return output;
+    }
 }

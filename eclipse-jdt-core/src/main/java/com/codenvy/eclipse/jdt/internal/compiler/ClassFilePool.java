@@ -15,52 +15,43 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding;
 import java.util.Arrays;
 
 
-public class ClassFilePool
-{
-   public static final int POOL_SIZE = 25; // need to have enough for 2 units
+public class ClassFilePool {
+    public static final int POOL_SIZE = 25; // need to have enough for 2 units
 
-   ClassFile[] classFiles;
+    ClassFile[] classFiles;
 
-   private ClassFilePool()
-   {
-      // prevent instantiation
-      this.classFiles = new ClassFile[POOL_SIZE];
-   }
+    private ClassFilePool() {
+        // prevent instantiation
+        this.classFiles = new ClassFile[POOL_SIZE];
+    }
 
-   public static ClassFilePool newInstance()
-   {
-      return new ClassFilePool();
-   }
+    public static ClassFilePool newInstance() {
+        return new ClassFilePool();
+    }
 
-   public synchronized ClassFile acquire(SourceTypeBinding typeBinding)
-   {
-      for (int i = 0; i < POOL_SIZE; i++)
-      {
-         ClassFile classFile = this.classFiles[i];
-         if (classFile == null)
-         {
-            ClassFile newClassFile = new ClassFile(typeBinding);
-            this.classFiles[i] = newClassFile;
-            newClassFile.isShared = true;
-            return newClassFile;
-         }
-         if (!classFile.isShared)
-         {
-            classFile.reset(typeBinding);
-            classFile.isShared = true;
-            return classFile;
-         }
-      }
-      return new ClassFile(typeBinding);
-   }
+    public synchronized ClassFile acquire(SourceTypeBinding typeBinding) {
+        for (int i = 0; i < POOL_SIZE; i++) {
+            ClassFile classFile = this.classFiles[i];
+            if (classFile == null) {
+                ClassFile newClassFile = new ClassFile(typeBinding);
+                this.classFiles[i] = newClassFile;
+                newClassFile.isShared = true;
+                return newClassFile;
+            }
+            if (!classFile.isShared) {
+                classFile.reset(typeBinding);
+                classFile.isShared = true;
+                return classFile;
+            }
+        }
+        return new ClassFile(typeBinding);
+    }
 
-   public synchronized void release(ClassFile classFile)
-   {
-      classFile.isShared = false;
-   }
+    public synchronized void release(ClassFile classFile) {
+        classFile.isShared = false;
+    }
 
-   public void reset()
-   {
-      Arrays.fill(this.classFiles, null);
-   }
+    public void reset() {
+        Arrays.fill(this.classFiles, null);
+    }
 }

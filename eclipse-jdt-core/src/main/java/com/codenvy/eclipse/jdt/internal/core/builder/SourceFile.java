@@ -19,130 +19,108 @@ import com.codenvy.eclipse.jdt.internal.compiler.problem.AbortCompilation;
 import com.codenvy.eclipse.jdt.internal.core.util.Util;
 
 
-public class SourceFile implements ICompilationUnit
-{
+public class SourceFile implements ICompilationUnit {
 
-   public IFile resource;
+    public IFile resource;
 
-   ClasspathMultiDirectory sourceLocation;
+    ClasspathMultiDirectory sourceLocation;
 
-   String initialTypeName;
+    String initialTypeName;
 
-   boolean updateClassFile;
+    boolean updateClassFile;
 
-   public SourceFile(IFile resource, ClasspathMultiDirectory sourceLocation)
-   {
-      this.resource = resource;
-      this.sourceLocation = sourceLocation;
-      this.initialTypeName = extractTypeName();
-      this.updateClassFile = false;
-   }
+    public SourceFile(IFile resource, ClasspathMultiDirectory sourceLocation) {
+        this.resource = resource;
+        this.sourceLocation = sourceLocation;
+        this.initialTypeName = extractTypeName();
+        this.updateClassFile = false;
+    }
 
-   public SourceFile(IFile resource, ClasspathMultiDirectory sourceLocation, boolean updateClassFile)
-   {
-      this(resource, sourceLocation);
+    public SourceFile(IFile resource, ClasspathMultiDirectory sourceLocation, boolean updateClassFile) {
+        this(resource, sourceLocation);
 
-      this.updateClassFile = updateClassFile;
-   }
+        this.updateClassFile = updateClassFile;
+    }
 
-   public boolean equals(Object o)
-   {
-      if (this == o)
-      {
-         return true;
-      }
-      if (!(o instanceof SourceFile))
-      {
-         return false;
-      }
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SourceFile)) {
+            return false;
+        }
 
-      SourceFile f = (SourceFile)o;
-      return this.sourceLocation == f.sourceLocation && this.resource.getFullPath().equals(f.resource.getFullPath());
-   }
+        SourceFile f = (SourceFile)o;
+        return this.sourceLocation == f.sourceLocation && this.resource.getFullPath().equals(f.resource.getFullPath());
+    }
 
-   String extractTypeName()
-   {
-      // answer a String with the qualified type name for the source file in the form: 'p1/p2/A'
-      IPath fullPath = this.resource.getFullPath();
-      int resourceSegmentCount = fullPath.segmentCount();
-      int sourceFolderSegmentCount = this.sourceLocation.sourceFolder.getFullPath().segmentCount();
-      int charCount = (resourceSegmentCount - sourceFolderSegmentCount - 1);
-      resourceSegmentCount--; // deal with the last segment separately
-      for (int i = sourceFolderSegmentCount; i < resourceSegmentCount; i++)
-      {
-         charCount += fullPath.segment(i).length();
-      }
-      String lastSegment = fullPath.segment(resourceSegmentCount);
-      int extensionIndex = Util.indexOfJavaLikeExtension(lastSegment);
-      charCount += extensionIndex;
+    String extractTypeName() {
+        // answer a String with the qualified type name for the source file in the form: 'p1/p2/A'
+        IPath fullPath = this.resource.getFullPath();
+        int resourceSegmentCount = fullPath.segmentCount();
+        int sourceFolderSegmentCount = this.sourceLocation.sourceFolder.getFullPath().segmentCount();
+        int charCount = (resourceSegmentCount - sourceFolderSegmentCount - 1);
+        resourceSegmentCount--; // deal with the last segment separately
+        for (int i = sourceFolderSegmentCount; i < resourceSegmentCount; i++) {
+            charCount += fullPath.segment(i).length();
+        }
+        String lastSegment = fullPath.segment(resourceSegmentCount);
+        int extensionIndex = Util.indexOfJavaLikeExtension(lastSegment);
+        charCount += extensionIndex;
 
-      char[] result = new char[charCount];
-      int offset = 0;
-      for (int i = sourceFolderSegmentCount; i < resourceSegmentCount; i++)
-      {
-         String segment = fullPath.segment(i);
-         int size = segment.length();
-         segment.getChars(0, size, result, offset);
-         offset += size;
-         result[offset++] = '/';
-      }
-      lastSegment.getChars(0, extensionIndex, result, offset);
-      return new String(result);
-   }
+        char[] result = new char[charCount];
+        int offset = 0;
+        for (int i = sourceFolderSegmentCount; i < resourceSegmentCount; i++) {
+            String segment = fullPath.segment(i);
+            int size = segment.length();
+            segment.getChars(0, size, result, offset);
+            offset += size;
+            result[offset++] = '/';
+        }
+        lastSegment.getChars(0, extensionIndex, result, offset);
+        return new String(result);
+    }
 
-   public char[] getContents()
-   {
+    public char[] getContents() {
 
-      try
-      {
-         return Util.getResourceContentsAsCharArray(this.resource);
-      }
-      catch (CoreException e)
-      {
-         throw new AbortCompilation(true, new MissingSourceFileException(this.resource.getFullPath().toString()));
-      }
-   }
+        try {
+            return Util.getResourceContentsAsCharArray(this.resource);
+        } catch (CoreException e) {
+            throw new AbortCompilation(true, new MissingSourceFileException(this.resource.getFullPath().toString()));
+        }
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.IDependent#getFileName()
-    */
-   public char[] getFileName()
-   {
-      return this.resource.getFullPath().toString().toCharArray(); // do not know what you want to return here
-   }
+    /** @see com.codenvy.eclipse.jdt.internal.compiler.env.IDependent#getFileName() */
+    public char[] getFileName() {
+        return this.resource.getFullPath().toString().toCharArray(); // do not know what you want to return here
+    }
 
-   public char[] getMainTypeName()
-   {
-      char[] typeName = this.initialTypeName.toCharArray();
-      int lastIndex = CharOperation.lastIndexOf('/', typeName);
-      return CharOperation.subarray(typeName, lastIndex + 1, -1);
-   }
+    public char[] getMainTypeName() {
+        char[] typeName = this.initialTypeName.toCharArray();
+        int lastIndex = CharOperation.lastIndexOf('/', typeName);
+        return CharOperation.subarray(typeName, lastIndex + 1, -1);
+    }
 
-   public char[][] getPackageName()
-   {
-      char[] typeName = this.initialTypeName.toCharArray();
-      int lastIndex = CharOperation.lastIndexOf('/', typeName);
-      return CharOperation.splitOn('/', typeName, 0, lastIndex);
-   }
+    public char[][] getPackageName() {
+        char[] typeName = this.initialTypeName.toCharArray();
+        int lastIndex = CharOperation.lastIndexOf('/', typeName);
+        return CharOperation.splitOn('/', typeName, 0, lastIndex);
+    }
 
-   public int hashCode()
-   {
-      return this.initialTypeName.hashCode();
-   }
+    public int hashCode() {
+        return this.initialTypeName.hashCode();
+    }
 
-   public boolean ignoreOptionalProblems()
-   {
-      return this.sourceLocation.ignoreOptionalProblems;
-   }
+    public boolean ignoreOptionalProblems() {
+        return this.sourceLocation.ignoreOptionalProblems;
+    }
 
-   String typeLocator()
-   {
-      return this.resource.getProjectRelativePath().toString();
-   }
+    String typeLocator() {
+        return this.resource.getProjectRelativePath().toString();
+    }
 
-   public String toString()
-   {
-      return "SourceFile[" //$NON-NLS-1$
-         + this.resource.getFullPath() + "]";  //$NON-NLS-1$
-   }
+    public String toString() {
+        return "SourceFile[" //$NON-NLS-1$
+               + this.resource.getFullPath() + "]";  //$NON-NLS-1$
+    }
 }

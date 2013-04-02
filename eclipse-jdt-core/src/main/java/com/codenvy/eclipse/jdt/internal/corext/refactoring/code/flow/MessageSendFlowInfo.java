@@ -11,29 +11,23 @@
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 
 
-class MessageSendFlowInfo extends FlowInfo
-{
+class MessageSendFlowInfo extends FlowInfo {
 
-   public MessageSendFlowInfo()
-   {
-      super(NO_RETURN);
-   }
+    public MessageSendFlowInfo() {
+        super(NO_RETURN);
+    }
 
-   public void mergeArgument(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
-      mergeSequential(info, context);
-   }
+    public void mergeArgument(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
+        mergeSequential(info, context);
+    }
 
-   public void mergeReceiver(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
-      mergeSequential(info, context);
-   }
+    public void mergeReceiver(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
+        mergeSequential(info, context);
+    }
 }

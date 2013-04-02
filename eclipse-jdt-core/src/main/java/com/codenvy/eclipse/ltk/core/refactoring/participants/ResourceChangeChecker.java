@@ -38,122 +38,103 @@ import java.util.List;
  * @see ResourceChangeValidator
  * @since 3.2
  */
-public class ResourceChangeChecker implements IConditionChecker
-{
+public class ResourceChangeChecker implements IConditionChecker {
 
-   private IResourceChangeDescriptionFactory fDeltaFactory;
+    private IResourceChangeDescriptionFactory fDeltaFactory;
 
-   public ResourceChangeChecker()
-   {
-      fDeltaFactory = ResourceChangeValidator.getValidator().createDeltaFactory();
-   }
+    public ResourceChangeChecker() {
+        fDeltaFactory = ResourceChangeValidator.getValidator().createDeltaFactory();
+    }
 
-   /**
-    * A helper method to check a set of changed files.
-    *
-    * @param files   the array of files that change
-    * @param monitor a progress monitor to report progress or <code>null</code>
-    *                if progress reporting is not desired
-    * @return a refactoring status containing the detect problems
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          a {@link com.codenvy.eclipse.core.runtime.CoreException} if an error occurs
-    * @see ResourceChangeValidator#validateChange(IResourceDelta, com.codenvy.eclipse.core.runtime.IProgressMonitor)
-    */
-   public static RefactoringStatus checkFilesToBeChanged(IFile[] files, IProgressMonitor monitor) throws CoreException
-   {
-      ResourceChangeChecker checker = new ResourceChangeChecker();
-      for (int i = 0; i < files.length; i++)
-      {
-         checker.getDeltaFactory().change(files[i]);
-      }
-      return checker.check(monitor);
-   }
+    /**
+     * A helper method to check a set of changed files.
+     *
+     * @param files
+     *         the array of files that change
+     * @param monitor
+     *         a progress monitor to report progress or <code>null</code>
+     *         if progress reporting is not desired
+     * @return a refactoring status containing the detect problems
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *         a {@link com.codenvy.eclipse.core.runtime.CoreException} if an error occurs
+     * @see ResourceChangeValidator#validateChange(IResourceDelta, com.codenvy.eclipse.core.runtime.IProgressMonitor)
+     */
+    public static RefactoringStatus checkFilesToBeChanged(IFile[] files, IProgressMonitor monitor) throws CoreException {
+        ResourceChangeChecker checker = new ResourceChangeChecker();
+        for (int i = 0; i < files.length; i++) {
+            checker.getDeltaFactory().change(files[i]);
+        }
+        return checker.check(monitor);
+    }
 
-   /**
-    * Returns the delta factory to be used to record resource
-    * operations.
-    *
-    * @return the delta factory
-    */
-   public IResourceChangeDescriptionFactory getDeltaFactory()
-   {
-      return fDeltaFactory;
-   }
+    /**
+     * Returns the delta factory to be used to record resource
+     * operations.
+     *
+     * @return the delta factory
+     */
+    public IResourceChangeDescriptionFactory getDeltaFactory() {
+        return fDeltaFactory;
+    }
 
-   public RefactoringStatus check(IProgressMonitor monitor) throws CoreException
-   {
-      IStatus status = ResourceChangeValidator.getValidator().validateChange(fDeltaFactory.getDelta(), monitor);
-      return createFrom(status);
-   }
+    public RefactoringStatus check(IProgressMonitor monitor) throws CoreException {
+        IStatus status = ResourceChangeValidator.getValidator().validateChange(fDeltaFactory.getDelta(), monitor);
+        return createFrom(status);
+    }
 
-   /* package */ IFile[] getChangedFiles() throws CoreException
-   {
-      IResourceDelta root = fDeltaFactory.getDelta();
-      final List result = new ArrayList();
-      root.accept(new IResourceDeltaVisitor()
-      {
-         public boolean visit(IResourceDelta delta) throws CoreException
-         {
-            final IResource resource = delta.getResource();
-            if (resource.getType() == IResource.FILE)
-            {
-               final int kind = delta.getKind();
-               if (isSet(kind, IResourceDelta.CHANGED))
-               {
-                  result.add(resource);
-               }
-               else if (isSet(kind, IResourceDelta.ADDED) && isSet(delta.getFlags(),
-                  IResourceDelta.CONTENT | IResourceDelta.MOVED_FROM))
-               {
-                  final IFile movedFrom = resource.getWorkspace().getRoot().getFile(delta.getMovedFromPath());
-                  result.add(movedFrom);
-               }
+    /* package */ IFile[] getChangedFiles() throws CoreException {
+        IResourceDelta root = fDeltaFactory.getDelta();
+        final List result = new ArrayList();
+        root.accept(new IResourceDeltaVisitor() {
+            public boolean visit(IResourceDelta delta) throws CoreException {
+                final IResource resource = delta.getResource();
+                if (resource.getType() == IResource.FILE) {
+                    final int kind = delta.getKind();
+                    if (isSet(kind, IResourceDelta.CHANGED)) {
+                        result.add(resource);
+                    } else if (isSet(kind, IResourceDelta.ADDED) && isSet(delta.getFlags(),
+                                                                          IResourceDelta.CONTENT | IResourceDelta.MOVED_FROM)) {
+                        final IFile movedFrom = resource.getWorkspace().getRoot().getFile(delta.getMovedFromPath());
+                        result.add(movedFrom);
+                    }
+                }
+                return true;
             }
-            return true;
-         }
-      });
-      return (IFile[])result.toArray(new IFile[result.size()]);
-   }
+        });
+        return (IFile[])result.toArray(new IFile[result.size()]);
+    }
 
-   private static final boolean isSet(int flags, int flag)
-   {
-      return (flags & flag) == flag;
-   }
+    private static final boolean isSet(int flags, int flag) {
+        return (flags & flag) == flag;
+    }
 
-   private static RefactoringStatus createFrom(IStatus status)
-   {
-      if (status.isOK())
-      {
-         return new RefactoringStatus();
-      }
+    private static RefactoringStatus createFrom(IStatus status) {
+        if (status.isOK()) {
+            return new RefactoringStatus();
+        }
 
-      if (!status.isMultiStatus())
-      {
-         switch (status.getSeverity())
-         {
-            case IStatus.OK:
-               return new RefactoringStatus();
-            case IStatus.INFO:
-               return RefactoringStatus.createInfoStatus(status.getMessage());
-            case IStatus.WARNING:
-               return RefactoringStatus.createWarningStatus(status.getMessage());
-            case IStatus.ERROR:
-               return RefactoringStatus.createErrorStatus(status.getMessage());
-            case IStatus.CANCEL:
-               return RefactoringStatus.createFatalErrorStatus(status.getMessage());
-            default:
-               return RefactoringStatus.createFatalErrorStatus(status.getMessage());
-         }
-      }
-      else
-      {
-         IStatus[] children = status.getChildren();
-         RefactoringStatus result = new RefactoringStatus();
-         for (int i = 0; i < children.length; i++)
-         {
-            result.merge(createFrom(children[i]));
-         }
-         return result;
-      }
-   }
+        if (!status.isMultiStatus()) {
+            switch (status.getSeverity()) {
+                case IStatus.OK:
+                    return new RefactoringStatus();
+                case IStatus.INFO:
+                    return RefactoringStatus.createInfoStatus(status.getMessage());
+                case IStatus.WARNING:
+                    return RefactoringStatus.createWarningStatus(status.getMessage());
+                case IStatus.ERROR:
+                    return RefactoringStatus.createErrorStatus(status.getMessage());
+                case IStatus.CANCEL:
+                    return RefactoringStatus.createFatalErrorStatus(status.getMessage());
+                default:
+                    return RefactoringStatus.createFatalErrorStatus(status.getMessage());
+            }
+        } else {
+            IStatus[] children = status.getChildren();
+            RefactoringStatus result = new RefactoringStatus();
+            for (int i = 0; i < children.length; i++) {
+                result.merge(createFrom(children[i]));
+            }
+            return result;
+        }
+    }
 }

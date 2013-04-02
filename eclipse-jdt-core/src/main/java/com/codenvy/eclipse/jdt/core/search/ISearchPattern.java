@@ -17,8 +17,8 @@ package com.codenvy.eclipse.jdt.core.search;
  * @see SearchEngine#createSearchPattern(com.codenvy.eclipse.jdt.core.IJavaElement, int)
  * @see SearchEngine#createSearchPattern(String, int, int, boolean)
  * @deprecated Since 3.0, the class
- * {@link com.codenvy.eclipse.jdt.core.search.SearchPattern} replaces this interface.
+ *             {@link com.codenvy.eclipse.jdt.core.search.SearchPattern} replaces this interface.
  */
 public interface ISearchPattern {
-	// used as a marker interface: contains no methods
+    // used as a marker interface: contains no methods
 }

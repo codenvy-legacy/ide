@@ -17,58 +17,37 @@ import com.codenvy.eclipse.core.runtime.OperationCanceledException;
  *
  * @since 3.3
  */
-public final class NullReorgQueries implements IReorgQueries
-{
+public final class NullReorgQueries implements IReorgQueries {
 
-   /**
-    * Null implementation of confirm query
-    */
-   private static final class NullConfirmQuery implements IConfirmQuery
-   {
+    /** Null implementation of confirm query */
+    private static final class NullConfirmQuery implements IConfirmQuery {
 
-      /**
-       * {@inheritDoc}
-       */
-      public boolean confirm(String question) throws OperationCanceledException
-      {
-         return true;
-      }
+        /** {@inheritDoc} */
+        public boolean confirm(String question) throws OperationCanceledException {
+            return true;
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      public boolean confirm(String question, Object[] elements) throws OperationCanceledException
-      {
-         return true;
-      }
-   }
+        /** {@inheritDoc} */
+        public boolean confirm(String question, Object[] elements) throws OperationCanceledException {
+            return true;
+        }
+    }
 
-   /**
-    * The null query
-    */
-   private static final IConfirmQuery NULL_QUERY = new NullConfirmQuery();
+    /** The null query */
+    private static final IConfirmQuery NULL_QUERY = new NullConfirmQuery();
 
-   /**
-    * {@inheritDoc}
-    */
-   public IConfirmQuery createSkipQuery(String queryTitle, int queryID)
-   {
-      return NULL_QUERY;
-   }
+    /** {@inheritDoc} */
+    public IConfirmQuery createSkipQuery(String queryTitle, int queryID) {
+        return NULL_QUERY;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public IConfirmQuery createYesNoQuery(String queryTitle, boolean allowCancel, int queryID)
-   {
-      return NULL_QUERY;
-   }
+    /** {@inheritDoc} */
+    public IConfirmQuery createYesNoQuery(String queryTitle, boolean allowCancel, int queryID) {
+        return NULL_QUERY;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public IConfirmQuery createYesYesToAllNoNoToAllQuery(String queryTitle, boolean allowCancel, int queryID)
-   {
-      return NULL_QUERY;
-   }
+    /** {@inheritDoc} */
+    public IConfirmQuery createYesYesToAllNoNoToAllQuery(String queryTitle, boolean allowCancel, int queryID) {
+        return NULL_QUERY;
+    }
 }

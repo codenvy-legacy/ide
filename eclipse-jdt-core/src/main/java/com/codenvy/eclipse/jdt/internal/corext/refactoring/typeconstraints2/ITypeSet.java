@@ -12,14 +12,13 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints2;
 
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types.TType;
 
-public interface ITypeSet
-{
+public interface ITypeSet {
 
-   public TType chooseSingleType();
+    public TType chooseSingleType();
 
-   public ITypeSet restrictedTo(ITypeSet restrictionSet);
+    public ITypeSet restrictedTo(ITypeSet restrictionSet);
 
-   public String toString();
+    public String toString();
 
-   public boolean isEmpty();
+    public boolean isEmpty();
 }

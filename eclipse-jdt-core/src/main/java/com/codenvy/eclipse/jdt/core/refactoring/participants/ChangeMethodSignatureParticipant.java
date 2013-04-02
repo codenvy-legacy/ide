@@ -23,26 +23,21 @@ import com.codenvy.eclipse.ltk.core.refactoring.participants.RefactoringParticip
  *
  * @since 1.2
  */
-public abstract class ChangeMethodSignatureParticipant extends RefactoringParticipant
-{
+public abstract class ChangeMethodSignatureParticipant extends RefactoringParticipant {
 
-   private ChangeMethodSignatureArguments fArguments;
+    private ChangeMethodSignatureArguments fArguments;
 
-   /**
-    * {@inheritDoc}
-    */
-   protected final void initialize(RefactoringArguments arguments)
-   {
-      fArguments = (ChangeMethodSignatureArguments)arguments;
-   }
+    /** {@inheritDoc} */
+    protected final void initialize(RefactoringArguments arguments) {
+        fArguments = (ChangeMethodSignatureArguments)arguments;
+    }
 
-   /**
-    * Returns the change method signature arguments.
-    *
-    * @return the change method signature arguments
-    */
-   public ChangeMethodSignatureArguments getArguments()
-   {
-      return fArguments;
-   }
+    /**
+     * Returns the change method signature arguments.
+     *
+     * @return the change method signature arguments
+     */
+    public ChangeMethodSignatureArguments getArguments() {
+        return fArguments;
+    }
 }

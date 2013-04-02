@@ -15,41 +15,35 @@ import com.codenvy.eclipse.jdt.core.ICompilationUnit;
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.CompilationUnitRange;
 import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types.TType;
 
-public final class CastVariable2 extends ConstraintVariable2 implements ITypeConstraintVariable
-{
+public final class CastVariable2 extends ConstraintVariable2 implements ITypeConstraintVariable {
 
-   private final CompilationUnitRange fRange;
+    private final CompilationUnitRange fRange;
 
-   private final ConstraintVariable2 fExpressionVariable;
+    private final ConstraintVariable2 fExpressionVariable;
 
-   public CastVariable2(TType type, CompilationUnitRange range, ConstraintVariable2 expressionVariable)
-   {
-      super(type);
-      Assert.isNotNull(expressionVariable);
-      Assert.isNotNull(range);
-      fRange = range;
-      fExpressionVariable = expressionVariable;
-   }
+    public CastVariable2(TType type, CompilationUnitRange range, ConstraintVariable2 expressionVariable) {
+        super(type);
+        Assert.isNotNull(expressionVariable);
+        Assert.isNotNull(range);
+        fRange = range;
+        fExpressionVariable = expressionVariable;
+    }
 
-   public CompilationUnitRange getRange()
-   {
-      return fRange;
-   }
+    public CompilationUnitRange getRange() {
+        return fRange;
+    }
 
-   public ICompilationUnit getCompilationUnit()
-   {
-      return fRange.getCompilationUnit();
-   }
+    public ICompilationUnit getCompilationUnit() {
+        return fRange.getCompilationUnit();
+    }
 
-   public void setCompilationUnit(ICompilationUnit unit)
-   {
-      throw new UnsupportedOperationException();
-   }
+    public void setCompilationUnit(ICompilationUnit unit) {
+        throw new UnsupportedOperationException();
+    }
 
-   public ConstraintVariable2 getExpressionVariable()
-   {
-      return fExpressionVariable;
-   }
+    public ConstraintVariable2 getExpressionVariable() {
+        return fExpressionVariable;
+    }
 
-   // hashCode() and equals(..) not necessary (unique per construction)
+    // hashCode() and equals(..) not necessary (unique per construction)
 }

@@ -17,44 +17,36 @@ import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 import com.codenvy.eclipse.jdt.core.dom.IVariableBinding;
 import com.codenvy.eclipse.jdt.internal.corext.dom.Bindings;
 
-/**
- * Tells the type which declares the member.
- */
-public class DeclaringTypeVariable extends ConstraintVariable
-{
+/** Tells the type which declares the member. */
+public class DeclaringTypeVariable extends ConstraintVariable {
 
-   private final IBinding fMemberBinding;
+    private final IBinding fMemberBinding;
 
-   protected DeclaringTypeVariable(ITypeBinding memberTypeBinding)
-   {
-      super(memberTypeBinding.getDeclaringClass());
-      fMemberBinding = memberTypeBinding;
-   }
+    protected DeclaringTypeVariable(ITypeBinding memberTypeBinding) {
+        super(memberTypeBinding.getDeclaringClass());
+        fMemberBinding = memberTypeBinding;
+    }
 
-   protected DeclaringTypeVariable(IVariableBinding fieldBinding)
-   {
-      super(fieldBinding.getDeclaringClass());
-      Assert.isTrue(fieldBinding.isField());
-      fMemberBinding = fieldBinding;
-   }
+    protected DeclaringTypeVariable(IVariableBinding fieldBinding) {
+        super(fieldBinding.getDeclaringClass());
+        Assert.isTrue(fieldBinding.isField());
+        fMemberBinding = fieldBinding;
+    }
 
-   protected DeclaringTypeVariable(IMethodBinding methodBinding)
-   {
-      super(methodBinding.getDeclaringClass());
-      fMemberBinding = methodBinding;
-   }
+    protected DeclaringTypeVariable(IMethodBinding methodBinding) {
+        super(methodBinding.getDeclaringClass());
+        fMemberBinding = methodBinding;
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return "Decl(" + Bindings.asString(fMemberBinding) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-   }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Decl(" + Bindings.asString(fMemberBinding) + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-   public IBinding getMemberBinding()
-   {
-      return fMemberBinding;
-   }
+    public IBinding getMemberBinding() {
+        return fMemberBinding;
+    }
 }

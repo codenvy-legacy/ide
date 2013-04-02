@@ -13,45 +13,37 @@ package com.codenvy.eclipse.jdt.internal.core;
 import com.codenvy.eclipse.jdt.core.ISourceRange;
 import com.codenvy.eclipse.jdt.core.SourceRange;
 
-/**
- * Element info for ISourceReference elements.
- */
-/* package */ class SourceRefElementInfo extends JavaElementInfo
-{
-   protected int sourceRangeStart, sourceRangeEnd;
+/** Element info for ISourceReference elements. */
+/* package */ class SourceRefElementInfo extends JavaElementInfo {
+    protected int sourceRangeStart, sourceRangeEnd;
 
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getDeclarationSourceEnd()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getDeclarationSourceEnd()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getDeclarationSourceEnd()
-    */
-   public int getDeclarationSourceEnd()
-   {
-      return this.sourceRangeEnd;
-   }
+    /**
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getDeclarationSourceEnd()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getDeclarationSourceEnd()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getDeclarationSourceEnd()
+     */
+    public int getDeclarationSourceEnd() {
+        return this.sourceRangeEnd;
+    }
 
-   /**
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getDeclarationSourceStart()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getDeclarationSourceStart()
-    * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getDeclarationSourceStart()
-    */
-   public int getDeclarationSourceStart()
-   {
-      return this.sourceRangeStart;
-   }
+    /**
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceType#getDeclarationSourceStart()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceMethod#getDeclarationSourceStart()
+     * @see com.codenvy.eclipse.jdt.internal.compiler.env.ISourceField#getDeclarationSourceStart()
+     */
+    public int getDeclarationSourceStart() {
+        return this.sourceRangeStart;
+    }
 
-   protected ISourceRange getSourceRange()
-   {
-      return new SourceRange(this.sourceRangeStart, this.sourceRangeEnd - this.sourceRangeStart + 1);
-   }
+    protected ISourceRange getSourceRange() {
+        return new SourceRange(this.sourceRangeStart, this.sourceRangeEnd - this.sourceRangeStart + 1);
+    }
 
-   protected void setSourceRangeEnd(int end)
-   {
-      this.sourceRangeEnd = end;
-   }
+    protected void setSourceRangeEnd(int end) {
+        this.sourceRangeEnd = end;
+    }
 
-   protected void setSourceRangeStart(int start)
-   {
-      this.sourceRangeStart = start;
-   }
+    protected void setSourceRangeStart(int start) {
+        this.sourceRangeStart = start;
+    }
 }

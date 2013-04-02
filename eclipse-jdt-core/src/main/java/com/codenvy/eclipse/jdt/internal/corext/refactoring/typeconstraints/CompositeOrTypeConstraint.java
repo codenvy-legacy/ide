@@ -17,83 +17,69 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class CompositeOrTypeConstraint implements ITypeConstraint
-{
+public class CompositeOrTypeConstraint implements ITypeConstraint {
 
-   private final ITypeConstraint[] fConstraints;
+    private final ITypeConstraint[] fConstraints;
 
-   /* package */ CompositeOrTypeConstraint(ITypeConstraint[] constraints)
-   {
-      Assert.isNotNull(constraints);
-      fConstraints = sort(getCopy(constraints));
-   }
+    /* package */ CompositeOrTypeConstraint(ITypeConstraint[] constraints) {
+        Assert.isNotNull(constraints);
+        fConstraints = sort(getCopy(constraints));
+    }
 
-   private static ITypeConstraint[] getCopy(ITypeConstraint[] constraints)
-   {
-      List<ITypeConstraint> l = Arrays.asList(constraints);
-      return l.toArray(new ITypeConstraint[l.size()]);
-   }
+    private static ITypeConstraint[] getCopy(ITypeConstraint[] constraints) {
+        List<ITypeConstraint> l = Arrays.asList(constraints);
+        return l.toArray(new ITypeConstraint[l.size()]);
+    }
 
-   private static ITypeConstraint[] sort(ITypeConstraint[] constraints)
-   {
-      //TODO bogus to sort by toString - will have to come up with something better
-      Arrays.sort(constraints, new Comparator<ITypeConstraint>()
-      {
-         public int compare(ITypeConstraint o1, ITypeConstraint o2)
-         {
-            return o2.toString().compareTo(o1.toString());
-         }
-      });
-      return constraints;
-   }
+    private static ITypeConstraint[] sort(ITypeConstraint[] constraints) {
+        //TODO bogus to sort by toString - will have to come up with something better
+        Arrays.sort(constraints, new Comparator<ITypeConstraint>() {
+            public int compare(ITypeConstraint o1, ITypeConstraint o2) {
+                return o2.toString().compareTo(o1.toString());
+            }
+        });
+        return constraints;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.corext.refactoring.experiments.ITypeConstraint#toResolvedString()
-    */
-   public String toResolvedString()
-   {
-      StringBuffer buff = new StringBuffer();
-      for (int i = 0; i < fConstraints.length; i++)
-      {
-         ITypeConstraint constraint = fConstraints[i];
-         if (i > 0)
-         {
-            buff.append(" or ");          //$NON-NLS-1$
-         }
-         buff.append(constraint.toResolvedString());
-      }
-      return buff.toString();
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.corext.refactoring.experiments.ITypeConstraint#toResolvedString()
+     */
+    public String toResolvedString() {
+        StringBuffer buff = new StringBuffer();
+        for (int i = 0; i < fConstraints.length; i++) {
+            ITypeConstraint constraint = fConstraints[i];
+            if (i > 0) {
+                buff.append(" or ");          //$NON-NLS-1$
+            }
+            buff.append(constraint.toResolvedString());
+        }
+        return buff.toString();
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.corext.refactoring.experiments.ITypeConstraint#isSimpleTypeConstraint()
-    */
-   public boolean isSimpleTypeConstraint()
-   {
-      return false;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.corext.refactoring.experiments.ITypeConstraint#isSimpleTypeConstraint()
+     */
+    public boolean isSimpleTypeConstraint() {
+        return false;
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      StringBuffer buff = new StringBuffer();
-      for (int i = 0; i < fConstraints.length; i++)
-      {
-         ITypeConstraint constraint = fConstraints[i];
-         if (i > 0)
-         {
-            buff.append(" or ");          //$NON-NLS-1$
-         }
-         buff.append(constraint.toString());
-      }
-      return buff.toString();
-   }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuffer buff = new StringBuffer();
+        for (int i = 0; i < fConstraints.length; i++) {
+            ITypeConstraint constraint = fConstraints[i];
+            if (i > 0) {
+                buff.append(" or ");          //$NON-NLS-1$
+            }
+            buff.append(constraint.toString());
+        }
+        return buff.toString();
+    }
 
-   public ITypeConstraint[] getConstraints()
-   {
-      return fConstraints;
-   }
+    public ITypeConstraint[] getConstraints() {
+        return fConstraints;
+    }
 }

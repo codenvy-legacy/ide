@@ -56,80 +56,70 @@ import com.codenvy.eclipse.core.runtime.Assert;
  * @see RefactoringDescriptor
  * @since 3.2
  */
-public class RefactoringSessionDescriptor
-{
+public class RefactoringSessionDescriptor {
 
-   /**
-    * The version constant for v1.0 (value: 1.0)
-    */
-   public static final String VERSION_1_0 = "1.0"; //$NON-NLS-1$
+    /** The version constant for v1.0 (value: 1.0) */
+    public static final String VERSION_1_0 = "1.0"; //$NON-NLS-1$
 
-   /**
-    * The comment , or <code>null</code> for no comment
-    */
-   private final String fComment;
+    /** The comment , or <code>null</code> for no comment */
+    private final String fComment;
 
-   /**
-    * The refactoring descriptors
-    */
-   private final RefactoringDescriptor[] fDescriptors;
+    /** The refactoring descriptors */
+    private final RefactoringDescriptor[] fDescriptors;
 
-   /**
-    * The non-empty version string
-    */
-   private final String fVersion;
+    /** The non-empty version string */
+    private final String fVersion;
 
-   /**
-    * Creates a new refactoring session descriptor.
-    *
-    * @param descriptors the refactoring descriptors in executed order, or the empty
-    *                    array
-    * @param version     the non-empty version tag, one of the <code>VERSION_xxx</code>
-    *                    constants
-    * @param comment     the comment of the refactoring session, or <code>null</code>
-    *                    for no comment
-    */
-   public RefactoringSessionDescriptor(final RefactoringDescriptor[] descriptors, final String version,
-      final String comment)
-   {
-      Assert.isNotNull(descriptors);
-      Assert.isTrue(version != null && !"".equals(version)); //$NON-NLS-1$
-      fDescriptors = new RefactoringDescriptor[descriptors.length];
-      System.arraycopy(descriptors, 0, fDescriptors, 0, descriptors.length);
-      fVersion = version;
-      fComment = comment;
-   }
+    /**
+     * Creates a new refactoring session descriptor.
+     *
+     * @param descriptors
+     *         the refactoring descriptors in executed order, or the empty
+     *         array
+     * @param version
+     *         the non-empty version tag, one of the <code>VERSION_xxx</code>
+     *         constants
+     * @param comment
+     *         the comment of the refactoring session, or <code>null</code>
+     *         for no comment
+     */
+    public RefactoringSessionDescriptor(final RefactoringDescriptor[] descriptors, final String version,
+                                        final String comment) {
+        Assert.isNotNull(descriptors);
+        Assert.isTrue(version != null && !"".equals(version)); //$NON-NLS-1$
+        fDescriptors = new RefactoringDescriptor[descriptors.length];
+        System.arraycopy(descriptors, 0, fDescriptors, 0, descriptors.length);
+        fVersion = version;
+        fComment = comment;
+    }
 
-   /**
-    * Returns the comment.
-    *
-    * @return the comment, or the empty string
-    */
-   public final String getComment()
-   {
-      return (fComment != null) ? fComment : ""; //$NON-NLS-1$
-   }
+    /**
+     * Returns the comment.
+     *
+     * @return the comment, or the empty string
+     */
+    public final String getComment() {
+        return (fComment != null) ? fComment : ""; //$NON-NLS-1$
+    }
 
-   /**
-    * Returns the refactoring descriptors.
-    *
-    * @return the array of refactoring descriptors in executed order, or the
-    *         empty array
-    */
-   public final RefactoringDescriptor[] getRefactorings()
-   {
-      final RefactoringDescriptor[] result = new RefactoringDescriptor[fDescriptors.length];
-      System.arraycopy(fDescriptors, 0, result, 0, result.length);
-      return result;
-   }
+    /**
+     * Returns the refactoring descriptors.
+     *
+     * @return the array of refactoring descriptors in executed order, or the
+     *         empty array
+     */
+    public final RefactoringDescriptor[] getRefactorings() {
+        final RefactoringDescriptor[] result = new RefactoringDescriptor[fDescriptors.length];
+        System.arraycopy(fDescriptors, 0, result, 0, result.length);
+        return result;
+    }
 
-   /**
-    * Returns the version tag.
-    *
-    * @return the version tag
-    */
-   public final String getVersion()
-   {
-      return fVersion;
-   }
+    /**
+     * Returns the version tag.
+     *
+     * @return the version tag
+     */
+    public final String getVersion() {
+        return fVersion;
+    }
 }

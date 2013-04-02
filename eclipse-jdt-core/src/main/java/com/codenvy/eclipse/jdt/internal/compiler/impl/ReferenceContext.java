@@ -20,17 +20,16 @@ import com.codenvy.eclipse.jdt.core.compiler.CategorizedProblem;
 import com.codenvy.eclipse.jdt.internal.compiler.CompilationResult;
 import com.codenvy.eclipse.jdt.internal.compiler.ast.CompilationUnitDeclaration;
 
-public interface ReferenceContext
-{
+public interface ReferenceContext {
 
-   void abort(int abortLevel, CategorizedProblem problem);
+    void abort(int abortLevel, CategorizedProblem problem);
 
-   CompilationResult compilationResult();
+    CompilationResult compilationResult();
 
-   CompilationUnitDeclaration getCompilationUnitDeclaration();
+    CompilationUnitDeclaration getCompilationUnitDeclaration();
 
-   boolean hasErrors();
+    boolean hasErrors();
 
-   void tagAsHavingErrors();
+    void tagAsHavingErrors();
 
 }

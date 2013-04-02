@@ -24,26 +24,27 @@ package com.codenvy.eclipse.ltk.core.refactoring;
  *
  * @since 3.0
  */
-public interface IValidationCheckResultQuery
-{
+public interface IValidationCheckResultQuery {
 
-   /**
-    * Returns whether the undo proceeds or not. This method is called if the
-    * validation check returned a status greater than <code>OK</code> and less
-    * than <code>FATAL</code>.
-    *
-    * @param status the refactoring status returned from {@link Change#isValid(org.eclipse.core.runtime.IProgressMonitor)}
-    * @return <code>true</code> if the undo should proceed; <code>false</code>
-    *         otherwise
-    */
-   public boolean proceed(RefactoringStatus status);
+    /**
+     * Returns whether the undo proceeds or not. This method is called if the
+     * validation check returned a status greater than <code>OK</code> and less
+     * than <code>FATAL</code>.
+     *
+     * @param status
+     *         the refactoring status returned from {@link Change#isValid(org.eclipse.core.runtime.IProgressMonitor)}
+     * @return <code>true</code> if the undo should proceed; <code>false</code>
+     *         otherwise
+     */
+    public boolean proceed(RefactoringStatus status);
 
-   /**
-    * Called when the validation check returned a fatal error. In this case the
-    * undo can't proceed. The hook can be used to present a corresponding dialog
-    * to the user.
-    *
-    * @param status the refactoring status returned from {@link Change#isValid(org.eclipse.core.runtime.IProgressMonitor)}
-    */
-   public void stopped(RefactoringStatus status);
+    /**
+     * Called when the validation check returned a fatal error. In this case the
+     * undo can't proceed. The hook can be used to present a corresponding dialog
+     * to the user.
+     *
+     * @param status
+     *         the refactoring status returned from {@link Change#isValid(org.eclipse.core.runtime.IProgressMonitor)}
+     */
+    public void stopped(RefactoringStatus status);
 }

@@ -12,17 +12,18 @@ package com.codenvy.eclipse.jdt.internal.formatter;
 
 public class OptimizedReplaceEdit {
 
-	int offset;
-	int length;
-	String replacement;
+    int    offset;
+    int    length;
+    String replacement;
 
-	public OptimizedReplaceEdit(int offset, int length, String replacement) {
-		this.offset = offset;
-		this.length = length;
-		this.replacement = replacement;
-	}
+    public OptimizedReplaceEdit(int offset, int length, String replacement) {
+        this.offset = offset;
+        this.length = length;
+        this.replacement = replacement;
+    }
 
-	public String toString() {
-		return (this.offset < 0 ? "(" : "X(") + this.offset + ", length " + this.length + " :>" + this.replacement + "<"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$
-	}
+    public String toString() {
+        return (this.offset < 0 ? "(" : "X(") + this.offset + ", length " + this.length + " :>" + this.replacement +
+               "<"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$
+    }
 }

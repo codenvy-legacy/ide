@@ -13,26 +13,25 @@ package com.codenvy.eclipse.jdt.core.util;
 /**
  * Description of a source attribute as described in the JVM
  * specifications.
- *
+ * <p/>
  * This interface may be implemented by clients.
  *
  * @since 2.0
  */
-public interface ISourceAttribute extends IClassFileAttribute
-{
+public interface ISourceAttribute extends IClassFileAttribute {
 
-   /**
-    * Answer back the source file index of this attribute.
-    *
-    * @return the source file index of this attribute
-    */
-   int getSourceFileIndex();
+    /**
+     * Answer back the source file index of this attribute.
+     *
+     * @return the source file index of this attribute
+     */
+    int getSourceFileIndex();
 
-   /**
-    * Answer back the source file name of this attribute.
-    *
-    * @return the source file name of this attribute
-    */
-   char[] getSourceFileName();
+    /**
+     * Answer back the source file name of this attribute.
+     *
+     * @return the source file name of this attribute
+     */
+    char[] getSourceFileName();
 
 }

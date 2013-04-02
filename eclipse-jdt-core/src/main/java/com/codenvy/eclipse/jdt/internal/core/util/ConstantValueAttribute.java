@@ -15,37 +15,27 @@ import com.codenvy.eclipse.jdt.core.util.IConstantPool;
 import com.codenvy.eclipse.jdt.core.util.IConstantPoolEntry;
 import com.codenvy.eclipse.jdt.core.util.IConstantValueAttribute;
 
-/**
- * Default implementation of IConstantValueAttribute.
- */
-public class ConstantValueAttribute extends ClassFileAttribute implements IConstantValueAttribute
-{
+/** Default implementation of IConstantValueAttribute. */
+public class ConstantValueAttribute extends ClassFileAttribute implements IConstantValueAttribute {
 
-   private int constantValueIndex;
+    private int constantValueIndex;
 
-   private IConstantPoolEntry constantPoolEntry;
+    private IConstantPoolEntry constantPoolEntry;
 
 
-   ConstantValueAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException
-   {
-      super(classFileBytes, constantPool, offset);
-      this.constantValueIndex = u2At(classFileBytes, 6, offset);
-      this.constantPoolEntry = constantPool.decodeEntry(this.constantValueIndex);
-   }
+    ConstantValueAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException {
+        super(classFileBytes, constantPool, offset);
+        this.constantValueIndex = u2At(classFileBytes, 6, offset);
+        this.constantPoolEntry = constantPool.decodeEntry(this.constantValueIndex);
+    }
 
-   /**
-    * @see IConstantValueAttribute#getConstantValue()
-    */
-   public IConstantPoolEntry getConstantValue()
-   {
-      return this.constantPoolEntry;
-   }
+    /** @see IConstantValueAttribute#getConstantValue() */
+    public IConstantPoolEntry getConstantValue() {
+        return this.constantPoolEntry;
+    }
 
-   /**
-    * @see IConstantValueAttribute#getConstantValueIndex()
-    */
-   public int getConstantValueIndex()
-   {
-      return this.constantValueIndex;
-   }
+    /** @see IConstantValueAttribute#getConstantValueIndex() */
+    public int getConstantValueIndex() {
+        return this.constantValueIndex;
+    }
 }

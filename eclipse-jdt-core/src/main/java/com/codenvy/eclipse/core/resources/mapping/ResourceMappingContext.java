@@ -31,16 +31,15 @@ package com.codenvy.eclipse.core.resources.mapping;
  * @see RemoteResourceMappingContext
  * @since 3.2
  */
-public class ResourceMappingContext
-{
+public class ResourceMappingContext {
 
-   /**
-    * This resource mapping context is used to indicate that the operation
-    * that is requesting the traversals is performing a local operation.
-    * Because the operation is local, the resource mapping is free to be
-    * as precise as desired about what resources make up the mapping without
-    * concern for performing optimized remote operations.
-    */
-   public static final ResourceMappingContext LOCAL_CONTEXT = new ResourceMappingContext();
+    /**
+     * This resource mapping context is used to indicate that the operation
+     * that is requesting the traversals is performing a local operation.
+     * Because the operation is local, the resource mapping is free to be
+     * as precise as desired about what resources make up the mapping without
+     * concern for performing optimized remote operations.
+     */
+    public static final ResourceMappingContext LOCAL_CONTEXT = new ResourceMappingContext();
 
 }

@@ -13,27 +13,26 @@ package com.codenvy.eclipse.jdt.core.util;
 /**
  * Description of a constant value attribute as described in the JVM
  * specifications.
- *
+ * <p/>
  * This interface may be implemented by clients.
  *
  * @since 2.0
  */
-public interface IConstantValueAttribute extends IClassFileAttribute
-{
+public interface IConstantValueAttribute extends IClassFileAttribute {
 
-   /**
-    * Answer back the constant value index.
-    *
-    * @return the constant value index
-    */
-   int getConstantValueIndex();
+    /**
+     * Answer back the constant value index.
+     *
+     * @return the constant value index
+     */
+    int getConstantValueIndex();
 
-   /**
-    * Answer back the constant pool entry that represents the constant
-    * value of this attribute.
-    *
-    * @return the constant pool entry that represents the constant
-    *         value of this attribute
-    */
-   IConstantPoolEntry getConstantValue();
+    /**
+     * Answer back the constant pool entry that represents the constant
+     * value of this attribute.
+     *
+     * @return the constant pool entry that represents the constant
+     *         value of this attribute
+     */
+    IConstantPoolEntry getConstantValue();
 }

@@ -17,31 +17,33 @@ import com.codenvy.eclipse.jdt.internal.core.index.Index;
 import org.exoplatform.services.security.ConversationState;
 
 class RemoveFromIndex extends IndexRequest {
-	String resourceName;
+    String resourceName;
 
-	public RemoveFromIndex(String resourceName, IPath containerPath, IndexManager manager) {
-		super(containerPath, manager);
-		this.resourceName = resourceName;
-	}
-	public boolean execute(IProgressMonitor progressMonitor) {
-      ConversationState.setCurrent(state);
-		if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
+    public RemoveFromIndex(String resourceName, IPath containerPath, IndexManager manager) {
+        super(containerPath, manager);
+        this.resourceName = resourceName;
+    }
+
+    public boolean execute(IProgressMonitor progressMonitor) {
+        ConversationState.setCurrent(state);
+        if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
 
 		/* ensure no concurrent write access to index */
-		Index index = this.manager.getIndex(this.containerPath, true, /*reuse index file*/ false /*create if none*/);
-		if (index == null) return true;
-		ReadWriteMonitor monitor = index.monitor;
-		if (monitor == null) return true; // index got deleted since acquired
+        Index index = this.manager.getIndex(this.containerPath, true, /*reuse index file*/ false /*create if none*/);
+        if (index == null) return true;
+        ReadWriteMonitor monitor = index.monitor;
+        if (monitor == null) return true; // index got deleted since acquired
 
-		try {
-			monitor.enterWrite(); // ask permission to write
-			index.remove(this.resourceName);
-		} finally {
-			monitor.exitWrite(); // free write lock
-		}
-		return true;
-	}
-	public String toString() {
-		return "removing " + this.resourceName + " from index " + this.containerPath; //$NON-NLS-1$ //$NON-NLS-2$
-	}
+        try {
+            monitor.enterWrite(); // ask permission to write
+            index.remove(this.resourceName);
+        } finally {
+            monitor.exitWrite(); // free write lock
+        }
+        return true;
+    }
+
+    public String toString() {
+        return "removing " + this.resourceName + " from index " + this.containerPath; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

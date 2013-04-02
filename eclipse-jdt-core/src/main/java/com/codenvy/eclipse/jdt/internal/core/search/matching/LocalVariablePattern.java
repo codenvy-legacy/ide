@@ -28,49 +28,52 @@ import com.codenvy.eclipse.jdt.internal.core.util.Util;
 
 public class LocalVariablePattern extends VariablePattern {
 
-LocalVariable localVariable;
+    LocalVariable localVariable;
 
-public LocalVariablePattern(LocalVariable localVariable, int limitTo, int matchRule) {
-	super(LOCAL_VAR_PATTERN, localVariable.getElementName().toCharArray(), limitTo, matchRule);
-	this.localVariable = localVariable;
-}
-public void findIndexMatches(Index index, IndexQueryRequestor requestor, SearchParticipant participant, IJavaSearchScope scope, IProgressMonitor progressMonitor) {
-    IPackageFragmentRoot root = (IPackageFragmentRoot)this.localVariable.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-	String documentPath;
-	String relativePath;
-    if (root.isArchive()) {
-        IType type = (IType)this.localVariable.getAncestor(IJavaElement.TYPE);
-        relativePath = (type.getFullyQualifiedName('$')).replace('.', '/') + SuffixConstants.SUFFIX_STRING_class;
-        documentPath = root.getPath() + IJavaSearchScope.JAR_FILE_ENTRY_SEPARATOR + relativePath;
-    } else {
-		IPath path = this.localVariable.getPath();
-        documentPath = path.toString();
-		relativePath = Util.relativePath(path, 1/*remove project segment*/);
+    public LocalVariablePattern(LocalVariable localVariable, int limitTo, int matchRule) {
+        super(LOCAL_VAR_PATTERN, localVariable.getElementName().toCharArray(), limitTo, matchRule);
+        this.localVariable = localVariable;
     }
 
-	if (scope instanceof JavaSearchScope) {
-		JavaSearchScope javaSearchScope = (JavaSearchScope) scope;
-		// Get document path access restriction from java search scope
-		// Note that requestor has to verify if needed whether the document violates the access restriction or not
-		AccessRuleSet access = javaSearchScope.getAccessRuleSet(relativePath, index.containerPath);
-		if (access != JavaSearchScope.NOT_ENCLOSED) { // scope encloses the path
-			if (!requestor.acceptIndexMatch(documentPath, this, participant, access))
-				throw new OperationCanceledException();
-		}
-	} else if (scope.encloses(documentPath)) {
-		if (!requestor.acceptIndexMatch(documentPath, this, participant, null))
-			throw new OperationCanceledException();
-	}
-}
-protected StringBuffer print(StringBuffer output) {
-	if (this.findDeclarations) {
-		output.append(this.findReferences
-			? "LocalVarCombinedPattern: " //$NON-NLS-1$
-			: "LocalVarDeclarationPattern: "); //$NON-NLS-1$
-	} else {
-		output.append("LocalVarReferencePattern: "); //$NON-NLS-1$
-	}
-	output.append(this.localVariable.toStringWithAncestors());
-	return super.print(output);
-}
+    public void findIndexMatches(Index index, IndexQueryRequestor requestor, SearchParticipant participant, IJavaSearchScope scope,
+                                 IProgressMonitor progressMonitor) {
+        IPackageFragmentRoot root = (IPackageFragmentRoot)this.localVariable.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+        String documentPath;
+        String relativePath;
+        if (root.isArchive()) {
+            IType type = (IType)this.localVariable.getAncestor(IJavaElement.TYPE);
+            relativePath = (type.getFullyQualifiedName('$')).replace('.', '/') + SuffixConstants.SUFFIX_STRING_class;
+            documentPath = root.getPath() + IJavaSearchScope.JAR_FILE_ENTRY_SEPARATOR + relativePath;
+        } else {
+            IPath path = this.localVariable.getPath();
+            documentPath = path.toString();
+            relativePath = Util.relativePath(path, 1/*remove project segment*/);
+        }
+
+        if (scope instanceof JavaSearchScope) {
+            JavaSearchScope javaSearchScope = (JavaSearchScope)scope;
+            // Get document path access restriction from java search scope
+            // Note that requestor has to verify if needed whether the document violates the access restriction or not
+            AccessRuleSet access = javaSearchScope.getAccessRuleSet(relativePath, index.containerPath);
+            if (access != JavaSearchScope.NOT_ENCLOSED) { // scope encloses the path
+                if (!requestor.acceptIndexMatch(documentPath, this, participant, access))
+                    throw new OperationCanceledException();
+            }
+        } else if (scope.encloses(documentPath)) {
+            if (!requestor.acceptIndexMatch(documentPath, this, participant, null))
+                throw new OperationCanceledException();
+        }
+    }
+
+    protected StringBuffer print(StringBuffer output) {
+        if (this.findDeclarations) {
+            output.append(this.findReferences
+                          ? "LocalVarCombinedPattern: " //$NON-NLS-1$
+                          : "LocalVarDeclarationPattern: "); //$NON-NLS-1$
+        } else {
+            output.append("LocalVarReferencePattern: "); //$NON-NLS-1$
+        }
+        output.append(this.localVariable.toStringWithAncestors());
+        return super.print(output);
+    }
 }

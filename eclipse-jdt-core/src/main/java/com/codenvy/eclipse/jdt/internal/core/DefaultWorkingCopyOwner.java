@@ -18,29 +18,24 @@ import com.codenvy.eclipse.jdt.core.WorkingCopyOwner;
  * A working copy owner that creates internal buffers.
  * It also defines the PRIMARY working copy owner that is used by JDT/Core.
  */
-public class DefaultWorkingCopyOwner extends WorkingCopyOwner
-{
+public class DefaultWorkingCopyOwner extends WorkingCopyOwner {
 
-   public WorkingCopyOwner primaryBufferProvider;
+    public WorkingCopyOwner primaryBufferProvider;
 
-   public static final DefaultWorkingCopyOwner PRIMARY = new DefaultWorkingCopyOwner();
+    public static final DefaultWorkingCopyOwner PRIMARY = new DefaultWorkingCopyOwner();
 
-   private DefaultWorkingCopyOwner()
-   {
-      // only one instance can be created
-   }
+    private DefaultWorkingCopyOwner() {
+        // only one instance can be created
+    }
 
-   public IBuffer createBuffer(ICompilationUnit workingCopy)
-   {
-      if (this.primaryBufferProvider != null)
-      {
-         return this.primaryBufferProvider.createBuffer(workingCopy);
-      }
-      return super.createBuffer(workingCopy);
-   }
+    public IBuffer createBuffer(ICompilationUnit workingCopy) {
+        if (this.primaryBufferProvider != null) {
+            return this.primaryBufferProvider.createBuffer(workingCopy);
+        }
+        return super.createBuffer(workingCopy);
+    }
 
-   public String toString()
-   {
-      return "Primary owner"; //$NON-NLS-1$
-   }
+    public String toString() {
+        return "Primary owner"; //$NON-NLS-1$
+    }
 }

@@ -19,34 +19,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Changes
-{
+public class Changes {
 
-   public static IFile[] getModifiedFiles(Change[] changes)
-   {
-      List<IFile> result = new ArrayList<IFile>();
-      getModifiedFiles(result, changes);
-      return result.toArray(new IFile[result.size()]);
-   }
+    public static IFile[] getModifiedFiles(Change[] changes) {
+        List<IFile> result = new ArrayList<IFile>();
+        getModifiedFiles(result, changes);
+        return result.toArray(new IFile[result.size()]);
+    }
 
-   private static void getModifiedFiles(List<IFile> result, Change[] changes)
-   {
-      for (int i = 0; i < changes.length; i++)
-      {
-         Change change = changes[i];
-         Object modifiedElement = change.getModifiedElement();
-         if (modifiedElement instanceof IAdaptable)
-         {
-            IFile file = (IFile)((IAdaptable)modifiedElement).getAdapter(IFile.class);
-            if (file != null)
-            {
-               result.add(file);
+    private static void getModifiedFiles(List<IFile> result, Change[] changes) {
+        for (int i = 0; i < changes.length; i++) {
+            Change change = changes[i];
+            Object modifiedElement = change.getModifiedElement();
+            if (modifiedElement instanceof IAdaptable) {
+                IFile file = (IFile)((IAdaptable)modifiedElement).getAdapter(IFile.class);
+                if (file != null) {
+                    result.add(file);
+                }
             }
-         }
-         if (change instanceof CompositeChange)
-         {
-            getModifiedFiles(result, ((CompositeChange)change).getChildren());
-         }
-      }
-   }
+            if (change instanceof CompositeChange) {
+                getModifiedFiles(result, ((CompositeChange)change).getChildren());
+            }
+        }
+    }
 }

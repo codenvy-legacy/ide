@@ -16,40 +16,35 @@ import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 import com.codenvy.eclipse.jdt.core.dom.Type;
 import com.codenvy.eclipse.jdt.internal.corext.dom.ASTNodes;
 
-public final class TypeVariable extends ConstraintVariable
-{
+public final class TypeVariable extends ConstraintVariable {
 
-   private final String fSource;
+    private final String fSource;
 
-   private final CompilationUnitRange fTypeRange;
+    private final CompilationUnitRange fTypeRange;
 
-   public TypeVariable(Type type)
-   {
-      super(type.resolveBinding());
-      fSource = type.toString();
-      ICompilationUnit cu = ASTCreator.getCu(type);
-      Assert.isNotNull(cu);
-      fTypeRange = new CompilationUnitRange(cu, ASTNodes.getElementType(type));
-   }
+    public TypeVariable(Type type) {
+        super(type.resolveBinding());
+        fSource = type.toString();
+        ICompilationUnit cu = ASTCreator.getCu(type);
+        Assert.isNotNull(cu);
+        fTypeRange = new CompilationUnitRange(cu, ASTNodes.getElementType(type));
+    }
 
-   public TypeVariable(ITypeBinding binding, String source, CompilationUnitRange range)
-   {
-      super(binding);
-      fSource = source;
-      fTypeRange = range;
-   }
+    public TypeVariable(ITypeBinding binding, String source, CompilationUnitRange range) {
+        super(binding);
+        fSource = source;
+        fTypeRange = range;
+    }
 
-   /* (non-Javadoc)
-    * @see java.lang.Object#toString()
-    */
-   @Override
-   public String toString()
-   {
-      return fSource;
-   }
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return fSource;
+    }
 
-   public CompilationUnitRange getCompilationUnitRange()
-   {
-      return fTypeRange;
-   }
+    public CompilationUnitRange getCompilationUnitRange() {
+        return fTypeRange;
+    }
 }

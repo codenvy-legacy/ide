@@ -18,55 +18,46 @@ import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatusContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReferencesInBinaryContext extends RefactoringStatusContext
-{
+public class ReferencesInBinaryContext extends RefactoringStatusContext {
 
-   private List<SearchMatch> fMatches = new ArrayList<SearchMatch>();
+    private List<SearchMatch> fMatches = new ArrayList<SearchMatch>();
 
-   private final String fDescription;
+    private final String fDescription;
 
-   public ReferencesInBinaryContext(String description)
-   {
-      fDescription = description;
-   }
+    public ReferencesInBinaryContext(String description) {
+        fDescription = description;
+    }
 
-   public String getDescription()
-   {
-      return fDescription;
-   }
+    public String getDescription() {
+        return fDescription;
+    }
 
 
-   public void add(SearchMatch match)
-   {
-      fMatches.add(match);
-   }
+    public void add(SearchMatch match) {
+        fMatches.add(match);
+    }
 
-   public List<SearchMatch> getMatches()
-   {
-      return fMatches;
-   }
+    public List<SearchMatch> getMatches() {
+        return fMatches;
+    }
 
-   /*
-    * @see org.eclipse.ltk.core.refactoring.RefactoringStatusContext#getCorrespondingElement()
-    */
-   @Override
-   public Object getCorrespondingElement()
-   {
-      return null;
-   }
+    /*
+     * @see org.eclipse.ltk.core.refactoring.RefactoringStatusContext#getCorrespondingElement()
+     */
+    @Override
+    public Object getCorrespondingElement() {
+        return null;
+    }
 
-   public void addErrorIfNecessary(RefactoringStatus status)
-   {
-      if (getMatches().size() != 0)
-      {
-         status.addError(RefactoringCoreMessages.ReferencesInBinaryContext_binaryRefsNotUpdated, this);
-      }
-   }
+    public void addErrorIfNecessary(RefactoringStatus status) {
+        if (getMatches().size() != 0) {
+            status.addError(RefactoringCoreMessages.ReferencesInBinaryContext_binaryRefsNotUpdated, this);
+        }
+    }
 
-   @Override
-   public String toString()
-   {
-      return fDescription + " (" + fMatches.size() + " matches)"; //$NON-NLS-1$ //$NON-NLS-2$
-   }
+    @Override
+    public String toString() {
+        return fDescription + " (" + fMatches.size() + " matches)"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
 }

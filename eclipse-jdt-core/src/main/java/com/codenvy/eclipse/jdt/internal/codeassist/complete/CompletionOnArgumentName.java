@@ -20,39 +20,39 @@ import com.codenvy.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
 public class CompletionOnArgumentName extends Argument {
 
-	private static final char[] FAKENAMESUFFIX = " ".toCharArray(); //$NON-NLS-1$
-	public char[] realName;
-	public boolean isCatchArgument = false;
+    private static final char[] FAKENAMESUFFIX = " ".toCharArray(); //$NON-NLS-1$
+    public char[] realName;
+    public boolean isCatchArgument = false;
 
-	public CompletionOnArgumentName(char[] name , long posNom , TypeReference tr , int modifiers){
+    public CompletionOnArgumentName(char[] name, long posNom, TypeReference tr, int modifiers) {
 
-		super(CharOperation.concat(name, FAKENAMESUFFIX), posNom, tr, modifiers);
-		this.realName = name;
-	}
+        super(CharOperation.concat(name, FAKENAMESUFFIX), posNom, tr, modifiers);
+        this.realName = name;
+    }
 
-	public void bind(MethodScope scope, TypeBinding typeBinding, boolean used) {
+    public void bind(MethodScope scope, TypeBinding typeBinding, boolean used) {
 
-		super.bind(scope, typeBinding, used);
-		throw new CompletionNodeFound(this, scope);
-	}
+        super.bind(scope, typeBinding, used);
+        throw new CompletionNodeFound(this, scope);
+    }
 
-	public StringBuffer print(int indent, StringBuffer output) {
+    public StringBuffer print(int indent, StringBuffer output) {
 
-		printIndent(indent, output);
-		output.append("<CompleteOnArgumentName:"); //$NON-NLS-1$
-		if (this.type != null) this.type.print(0, output).append(' ');
-		output.append(this.realName);
-		if (this.initialization != null) {
-			output.append(" = "); //$NON-NLS-1$
-			this.initialization.printExpression(0, output);
-		}
-		return output.append('>');
-	}
+        printIndent(indent, output);
+        output.append("<CompleteOnArgumentName:"); //$NON-NLS-1$
+        if (this.type != null) this.type.print(0, output).append(' ');
+        output.append(this.realName);
+        if (this.initialization != null) {
+            output.append(" = "); //$NON-NLS-1$
+            this.initialization.printExpression(0, output);
+        }
+        return output.append('>');
+    }
 
-	public void resolve(BlockScope scope) {
+    public void resolve(BlockScope scope) {
 
-		super.resolve(scope);
-		throw new CompletionNodeFound(this, scope);
-	}
+        super.resolve(scope);
+        throw new CompletionNodeFound(this, scope);
+    }
 }
 

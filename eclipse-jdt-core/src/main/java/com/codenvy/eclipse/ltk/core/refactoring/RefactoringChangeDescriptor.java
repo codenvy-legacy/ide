@@ -21,32 +21,28 @@ package com.codenvy.eclipse.ltk.core.refactoring;
  *
  * @since 3.2
  */
-public class RefactoringChangeDescriptor extends ChangeDescriptor
-{
+public class RefactoringChangeDescriptor extends ChangeDescriptor {
 
-   /**
-    * The refactoring descriptor
-    */
-   private final RefactoringDescriptor fRefactoringDescriptor;
+    /** The refactoring descriptor */
+    private final RefactoringDescriptor fRefactoringDescriptor;
 
-   /**
-    * Creates the <code>RefactoringChangeDescriptor</code> with the
-    * {@link RefactoringDescriptor} that originated the change.
-    *
-    * @param descriptor the {@link RefactoringDescriptor} that originated the change.
-    */
-   public RefactoringChangeDescriptor(final RefactoringDescriptor descriptor)
-   {
-      fRefactoringDescriptor = descriptor;
-   }
+    /**
+     * Creates the <code>RefactoringChangeDescriptor</code> with the
+     * {@link RefactoringDescriptor} that originated the change.
+     *
+     * @param descriptor
+     *         the {@link RefactoringDescriptor} that originated the change.
+     */
+    public RefactoringChangeDescriptor(final RefactoringDescriptor descriptor) {
+        fRefactoringDescriptor = descriptor;
+    }
 
-   /**
-    * Returns the {@link RefactoringDescriptor} that originated the change.
-    *
-    * @return the {@link RefactoringDescriptor} that originated the change.
-    */
-   public RefactoringDescriptor getRefactoringDescriptor()
-   {
-      return fRefactoringDescriptor;
-   }
+    /**
+     * Returns the {@link RefactoringDescriptor} that originated the change.
+     *
+     * @return the {@link RefactoringDescriptor} that originated the change.
+     */
+    public RefactoringDescriptor getRefactoringDescriptor() {
+        return fRefactoringDescriptor;
+    }
 }

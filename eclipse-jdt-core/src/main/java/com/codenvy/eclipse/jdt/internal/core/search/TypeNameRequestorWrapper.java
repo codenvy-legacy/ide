@@ -16,32 +16,35 @@ import com.codenvy.eclipse.jdt.internal.compiler.env.AccessRestriction;
 /**
  * Wrapper used to link {@link IRestrictedAccessTypeRequestor} with {@link TypeNameRequestor}.
  * This wrapper specifically allows usage of internal method {@link BasicSearchEngine#searchAllTypeNames(
- * 	char[] packageName,
- * 	int packageMatchRule,
- * 	char[] typeName,
- * 	int typeMatchRule,
- * 	int searchFor,
- * 	com.codenvy.eclipse.jdt.core.search.IJavaSearchScope scope,
- * 	IRestrictedAccessTypeRequestor nameRequestor,
- * 	int waitingPolicy,
- * 	org.eclipse.core.runtime.IProgressMonitor monitor) }.
+ *char[] packageName,
+ * int packageMatchRule,
+ * char[] typeName,
+ * int typeMatchRule,
+ * int searchFor,
+ * com.codenvy.eclipse.jdt.core.search.IJavaSearchScope scope,
+ * IRestrictedAccessTypeRequestor nameRequestor,
+ * int waitingPolicy,
+ * org.eclipse.core.runtime.IProgressMonitor monitor) }.
  * from  API method {@link com.codenvy.eclipse.jdt.core.search.SearchEngine#searchAllTypeNames(
- * 	char[] packageName,
- * 	int packageMatchRule,
- * 	char[] typeName,
- * 	int matchRule,
- * 	int searchFor,
- * 	com.codenvy.eclipse.jdt.core.search.IJavaSearchScope scope,
- * 	TypeNameRequestor nameRequestor,
- * 	int waitingPolicy,
- * 	org.eclipse.core.runtime.IProgressMonitor monitor) }.
+ *char[] packageName,
+ * int packageMatchRule,
+ * char[] typeName,
+ * int matchRule,
+ * int searchFor,
+ * com.codenvy.eclipse.jdt.core.search.IJavaSearchScope scope,
+ * TypeNameRequestor nameRequestor,
+ * int waitingPolicy,
+ * org.eclipse.core.runtime.IProgressMonitor monitor) }.
  */
 public class TypeNameRequestorWrapper implements IRestrictedAccessTypeRequestor {
-	TypeNameRequestor requestor;
-	public TypeNameRequestorWrapper(TypeNameRequestor requestor) {
-		this.requestor = requestor;
-	}
-	public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path, AccessRestriction access) {
-		this.requestor.acceptType(modifiers, packageName, simpleTypeName, enclosingTypeNames, path);
-	}
+    TypeNameRequestor requestor;
+
+    public TypeNameRequestorWrapper(TypeNameRequestor requestor) {
+        this.requestor = requestor;
+    }
+
+    public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path,
+                           AccessRestriction access) {
+        this.requestor.acceptType(modifiers, packageName, simpleTypeName, enclosingTypeNames, path);
+    }
 }

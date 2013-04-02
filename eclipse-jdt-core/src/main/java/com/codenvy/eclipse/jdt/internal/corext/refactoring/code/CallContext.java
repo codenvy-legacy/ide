@@ -18,46 +18,41 @@ import com.codenvy.eclipse.jdt.core.dom.ITypeBinding;
 import com.codenvy.eclipse.jdt.core.dom.rewrite.ImportRewrite;
 import com.codenvy.eclipse.jdt.internal.corext.dom.CodeScopeBuilder;
 
-public class CallContext
-{
+public class CallContext {
 
-   public ASTNode invocation;
+    public ASTNode invocation;
 
-   public Expression[] arguments;
+    public Expression[] arguments;
 
-   public String receiver;
+    public String receiver;
 
-   public boolean receiverIsStatic;
+    public boolean receiverIsStatic;
 
-   public CodeScopeBuilder.Scope scope;
+    public CodeScopeBuilder.Scope scope;
 
-   public int callMode;
+    public int callMode;
 
-   public ImportRewrite importer;
+    public ImportRewrite importer;
 
-   public ICompilationUnit compilationUnit;
+    public ICompilationUnit compilationUnit;
 
-   public CallContext(ASTNode inv, CodeScopeBuilder.Scope s, int cm, ImportRewrite i)
-   {
-      super();
-      invocation = inv;
-      scope = s;
-      callMode = cm;
-      importer = i;
-   }
+    public CallContext(ASTNode inv, CodeScopeBuilder.Scope s, int cm, ImportRewrite i) {
+        super();
+        invocation = inv;
+        scope = s;
+        callMode = cm;
+        importer = i;
+    }
 
-   public ITypeBinding getReceiverType()
-   {
-      Expression expression = Invocations.getExpression(invocation);
-      if (expression != null)
-      {
-         return expression.resolveTypeBinding();
-      }
-      IMethodBinding method = Invocations.resolveBinding(invocation);
-      if (method != null)
-      {
-         return method.getDeclaringClass();
-      }
-      return null;
-   }
+    public ITypeBinding getReceiverType() {
+        Expression expression = Invocations.getExpression(invocation);
+        if (expression != null) {
+            return expression.resolveTypeBinding();
+        }
+        IMethodBinding method = Invocations.resolveBinding(invocation);
+        if (method != null) {
+            return method.getDeclaringClass();
+        }
+        return null;
+    }
 }

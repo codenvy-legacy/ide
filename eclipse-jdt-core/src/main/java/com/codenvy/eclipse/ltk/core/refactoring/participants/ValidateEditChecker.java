@@ -45,70 +45,63 @@ import java.util.Set;
  * @see com.codenvy.eclipse.core.resources.IWorkspace#validateEdit(com.codenvy.eclipse.core.resources.IFile[], Object)
  * @since 3.0
  */
-public class ValidateEditChecker implements IConditionChecker
-{
+public class ValidateEditChecker implements IConditionChecker {
 
-   private Set fFiles = new HashSet();
+    private Set fFiles = new HashSet();
 
-   private Object fContext;
+    private Object fContext;
 
-   /**
-    * The context passed to the validate edit call.
-    *
-    * @param context the <code>org.eclipse.swt.widgets.Shell</code> that is
-    *                to be used to parent any dialogs with the user, or <code>null</code> if
-    *                there is no UI context (declared as an <code>Object</code> to avoid any
-    *                direct references on the SWT component)
-    * @see com.codenvy.eclipse.core.resources.IWorkspace#validateEdit(com.codenvy.eclipse.core.resources.IFile[], Object)
-    */
-   public ValidateEditChecker(Object context)
-   {
-      fContext = context;
-   }
+    /**
+     * The context passed to the validate edit call.
+     *
+     * @param context
+     *         the <code>org.eclipse.swt.widgets.Shell</code> that is
+     *         to be used to parent any dialogs with the user, or <code>null</code> if
+     *         there is no UI context (declared as an <code>Object</code> to avoid any
+     *         direct references on the SWT component)
+     * @see com.codenvy.eclipse.core.resources.IWorkspace#validateEdit(com.codenvy.eclipse.core.resources.IFile[], Object)
+     */
+    public ValidateEditChecker(Object context) {
+        fContext = context;
+    }
 
-   /**
-    * Adds the given file to this checker.
-    *
-    * @param file the file to add
-    */
-   public void addFile(IFile file)
-   {
-      Assert.isNotNull(file);
-      fFiles.add(file);
-   }
+    /**
+     * Adds the given file to this checker.
+     *
+     * @param file
+     *         the file to add
+     */
+    public void addFile(IFile file) {
+        Assert.isNotNull(file);
+        fFiles.add(file);
+    }
 
-   /**
-    * Adds the given array of files.
-    *
-    * @param files the array of files to add
-    */
-   public void addFiles(IFile[] files)
-   {
-      Assert.isNotNull(files);
-      fFiles.addAll(Arrays.asList(files));
-   }
+    /**
+     * Adds the given array of files.
+     *
+     * @param files
+     *         the array of files to add
+     */
+    public void addFiles(IFile[] files) {
+        Assert.isNotNull(files);
+        fFiles.addAll(Arrays.asList(files));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringStatus check(IProgressMonitor monitor) throws CoreException
-   {
-      IResource[] resources = (IResource[])fFiles.toArray(new IResource[fFiles.size()]);
-      RefactoringStatus result = new RefactoringStatus();
-      IStatus status = Resources.checkInSync(resources);
-      if (!status.isOK())
-      {
-         result.merge(RefactoringStatus.create(status));
-      }
-      status = Resources.makeCommittable(resources, fContext);
-      if (!status.isOK())
-      {
-         result.merge(RefactoringStatus.create(status));
-         if (!result.hasFatalError())
-         {
-            result.addFatalError(RefactoringCoreMessages.ValidateEditChecker_failed);
-         }
-      }
-      return result;
-   }
+    /** {@inheritDoc} */
+    public RefactoringStatus check(IProgressMonitor monitor) throws CoreException {
+        IResource[] resources = (IResource[])fFiles.toArray(new IResource[fFiles.size()]);
+        RefactoringStatus result = new RefactoringStatus();
+        IStatus status = Resources.checkInSync(resources);
+        if (!status.isOK()) {
+            result.merge(RefactoringStatus.create(status));
+        }
+        status = Resources.makeCommittable(resources, fContext);
+        if (!status.isOK()) {
+            result.merge(RefactoringStatus.create(status));
+            if (!result.hasFatalError()) {
+                result.addFatalError(RefactoringCoreMessages.ValidateEditChecker_failed);
+            }
+        }
+        return result;
+    }
 }

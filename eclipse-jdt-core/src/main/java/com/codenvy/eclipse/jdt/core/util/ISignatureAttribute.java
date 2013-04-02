@@ -13,26 +13,25 @@ package com.codenvy.eclipse.jdt.core.util;
 /**
  * Description of a signature attribute as described in the JVM specifications
  * (added in J2SE 1.5).
- *
+ * <p/>
  * This interface may be implemented by clients.
  *
  * @since 3.0
  */
-public interface ISignatureAttribute extends IClassFileAttribute
-{
+public interface ISignatureAttribute extends IClassFileAttribute {
 
-   /**
-    * Answer back the signature index as described in the JVM specifications.
-    *
-    * @return the signature index as described in the JVM specifications
-    */
-   int getSignatureIndex();
+    /**
+     * Answer back the signature index as described in the JVM specifications.
+     *
+     * @return the signature index as described in the JVM specifications
+     */
+    int getSignatureIndex();
 
-   /**
-    * Answer back the signature as described in the JVM specifications.
-    *
-    * @return the signature as described in the JVM specifications
-    */
-   char[] getSignature();
+    /**
+     * Answer back the signature as described in the JVM specifications.
+     *
+     * @return the signature as described in the JVM specifications
+     */
+    char[] getSignature();
 
 }

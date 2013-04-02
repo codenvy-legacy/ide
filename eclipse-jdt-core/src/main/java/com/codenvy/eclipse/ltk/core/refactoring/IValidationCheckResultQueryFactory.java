@@ -22,16 +22,16 @@ import com.codenvy.eclipse.core.runtime.IAdaptable;
  *
  * @since 3.1
  */
-public interface IValidationCheckResultQueryFactory
-{
+public interface IValidationCheckResultQueryFactory {
 
-   /**
-    * Creates a new query.
-    *
-    * @param context the factory adapts the context to a
-    *                <code>org.eclipse.swt.widgets.Shell</code> that is to be used to parent
-    *                any dialogs with the user; use <code>null</code> if there is no UI context
-    * @return the new query
-    */
-   public IValidationCheckResultQuery create(IAdaptable context);
+    /**
+     * Creates a new query.
+     *
+     * @param context
+     *         the factory adapts the context to a
+     *         <code>org.eclipse.swt.widgets.Shell</code> that is to be used to parent
+     *         any dialogs with the user; use <code>null</code> if there is no UI context
+     * @return the new query
+     */
+    public IValidationCheckResultQuery create(IAdaptable context);
 }

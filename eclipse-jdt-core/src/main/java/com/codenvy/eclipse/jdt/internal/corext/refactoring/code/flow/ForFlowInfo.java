@@ -10,48 +10,39 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.corext.refactoring.code.flow;
 
-class ForFlowInfo extends FlowInfo
-{
+class ForFlowInfo extends FlowInfo {
 
-   public void mergeInitializer(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
-      mergeAccessModeSequential(info, context);
-   }
+    public void mergeInitializer(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
+        mergeAccessModeSequential(info, context);
+    }
 
-   public void mergeCondition(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
-      mergeAccessModeSequential(info, context);
-   }
+    public void mergeCondition(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
+        mergeAccessModeSequential(info, context);
+    }
 
-   public void mergeIncrement(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void mergeIncrement(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      info.mergeEmptyCondition(context);
-      mergeAccessModeSequential(info, context);
-   }
+        info.mergeEmptyCondition(context);
+        mergeAccessModeSequential(info, context);
+    }
 
-   public void mergeAction(FlowInfo info, FlowContext context)
-   {
-      if (info == null)
-      {
-         return;
-      }
+    public void mergeAction(FlowInfo info, FlowContext context) {
+        if (info == null) {
+            return;
+        }
 
-      info.mergeEmptyCondition(context);
+        info.mergeEmptyCondition(context);
 
-      mergeSequential(info, context);
-   }
+        mergeSequential(info, context);
+    }
 }
 

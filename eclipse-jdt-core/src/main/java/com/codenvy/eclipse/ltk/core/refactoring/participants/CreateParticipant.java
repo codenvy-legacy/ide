@@ -22,26 +22,21 @@ package com.codenvy.eclipse.ltk.core.refactoring.participants;
  *
  * @since 3.0
  */
-public abstract class CreateParticipant extends RefactoringParticipant
-{
+public abstract class CreateParticipant extends RefactoringParticipant {
 
-   private CreateArguments fArguments;
+    private CreateArguments fArguments;
 
-   /**
-    * {@inheritDoc}
-    */
-   protected final void initialize(RefactoringArguments arguments)
-   {
-      fArguments = (CreateArguments)arguments;
-   }
+    /** {@inheritDoc} */
+    protected final void initialize(RefactoringArguments arguments) {
+        fArguments = (CreateArguments)arguments;
+    }
 
-   /**
-    * Returns the create arguments.
-    *
-    * @return the create arguments
-    */
-   public CreateArguments getArguments()
-   {
-      return fArguments;
-   }
+    /**
+     * Returns the create arguments.
+     *
+     * @return the create arguments
+     */
+    public CreateArguments getArguments() {
+        return fArguments;
+    }
 }

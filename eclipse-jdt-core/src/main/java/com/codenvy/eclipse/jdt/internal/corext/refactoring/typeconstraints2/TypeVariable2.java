@@ -20,65 +20,56 @@ import com.codenvy.eclipse.jdt.internal.corext.refactoring.typeconstraints.types
  * A TypeVariable is a ConstraintVariable which stands for a
  * single type reference (in source).
  */
-public final class TypeVariable2 extends ConstraintVariable2 implements ITypeConstraintVariable
-{
+public final class TypeVariable2 extends ConstraintVariable2 implements ITypeConstraintVariable {
 
-   private final CompilationUnitRange fRange;
+    private final CompilationUnitRange fRange;
 
-   public TypeVariable2(TType type, CompilationUnitRange range)
-   {
-      super(type);
-      Assert.isNotNull(range);
-      fRange = range;
-   }
+    public TypeVariable2(TType type, CompilationUnitRange range) {
+        super(type);
+        Assert.isNotNull(range);
+        fRange = range;
+    }
 
-   public CompilationUnitRange getRange()
-   {
-      return fRange;
-   }
+    public CompilationUnitRange getRange() {
+        return fRange;
+    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      return getRange().hashCode() ^ getType().hashCode();
-   }
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return getRange().hashCode() ^ getType().hashCode();
+    }
 
-   /*
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object other)
-   {
-      //TODO: unique per construction?  //return this == other;
-      if (this == other)
-      {
-         return true;
-      }
-      if (other.getClass() != TypeVariable2.class)
-      {
-         return false;
-      }
+    /*
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        //TODO: unique per construction?  //return this == other;
+        if (this == other) {
+            return true;
+        }
+        if (other.getClass() != TypeVariable2.class) {
+            return false;
+        }
 
-      TypeVariable2 otherTypeVariable = (TypeVariable2)other;
-      return getRange().equals(otherTypeVariable.getRange()) && getType() == otherTypeVariable.getType();
-   }
+        TypeVariable2 otherTypeVariable = (TypeVariable2)other;
+        return getRange().equals(otherTypeVariable.getRange()) && getType() == otherTypeVariable.getType();
+    }
 
-   public void setCompilationUnit(ICompilationUnit unit)
-   {
-      throw new UnsupportedOperationException();
-   }
+    public void setCompilationUnit(ICompilationUnit unit) {
+        throw new UnsupportedOperationException();
+    }
 
-   public ICompilationUnit getCompilationUnit()
-   {
-      return fRange.getCompilationUnit();
-   }
+    public ICompilationUnit getCompilationUnit() {
+        return fRange.getCompilationUnit();
+    }
 
-   @Override
-   public String toString()
-   {
-      return super.toString() + " [" + fRange.getSourceRange().getOffset() + '+' + fRange.getSourceRange().getLength() + ']'; //$NON-NLS-1$
-   }
+    @Override
+    public String toString() {
+        return super.toString() + " [" + fRange.getSourceRange().getOffset() + '+' + fRange.getSourceRange().getLength() +
+               ']'; //$NON-NLS-1$
+    }
 }

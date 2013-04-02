@@ -13,47 +13,39 @@ package com.codenvy.eclipse.jdt.internal.core;
 import com.codenvy.eclipse.jdt.core.IClasspathAttribute;
 import com.codenvy.eclipse.jdt.internal.core.util.Util;
 
-public class ClasspathAttribute implements IClasspathAttribute
-{
+public class ClasspathAttribute implements IClasspathAttribute {
 
-   private String name;
+    private String name;
 
-   private String value;
+    private String value;
 
-   public ClasspathAttribute(String name, String value)
-   {
-      this.name = name;
-      this.value = value;
-   }
+    public ClasspathAttribute(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 
-   public boolean equals(Object obj)
-   {
-      if (!(obj instanceof ClasspathAttribute))
-      {
-         return false;
-      }
-      ClasspathAttribute other = (ClasspathAttribute)obj;
-      return this.name.equals(other.name) && this.value.equals(other.value);
-   }
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ClasspathAttribute)) {
+            return false;
+        }
+        ClasspathAttribute other = (ClasspathAttribute)obj;
+        return this.name.equals(other.name) && this.value.equals(other.value);
+    }
 
-   public String getName()
-   {
-      return this.name;
-   }
+    public String getName() {
+        return this.name;
+    }
 
-   public String getValue()
-   {
-      return this.value;
-   }
+    public String getValue() {
+        return this.value;
+    }
 
-   public int hashCode()
-   {
-      return Util.combineHashCodes(this.name.hashCode(), this.value.hashCode());
-   }
+    public int hashCode() {
+        return Util.combineHashCodes(this.name.hashCode(), this.value.hashCode());
+    }
 
-   public String toString()
-   {
-      return this.name + "=" + this.value; //$NON-NLS-1$
-   }
+    public String toString() {
+        return this.name + "=" + this.value; //$NON-NLS-1$
+    }
 
 }

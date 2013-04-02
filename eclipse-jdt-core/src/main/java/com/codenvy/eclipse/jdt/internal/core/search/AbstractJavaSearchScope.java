@@ -16,22 +16,27 @@ import com.codenvy.eclipse.jdt.internal.compiler.env.AccessRuleSet;
 
 public abstract class AbstractJavaSearchScope extends AbstractSearchScope {
 
-/**
- * Get access rule set corresponding to a given path.
- * @param relativePath The path user want to have restriction access
- * @return The access rule set for given path or null if none is set for it.
- * 	Returns specific unit access rule set when scope does not enclose the given path.
- */
-abstract public AccessRuleSet getAccessRuleSet(String relativePath, String containerPath);
+    /**
+     * Get access rule set corresponding to a given path.
+     *
+     * @param relativePath
+     *         The path user want to have restriction access
+     * @return The access rule set for given path or null if none is set for it.
+     *         Returns specific unit access rule set when scope does not enclose the given path.
+     */
+    abstract public AccessRuleSet getAccessRuleSet(String relativePath, String containerPath);
 
-/**
- * Returns the package fragment root corresponding to a given resource path.
- *
- * @param resourcePathString path of expected package fragment root.
- * @param jarSeparatorIndex the index of the jar separator in the resource path, or -1 if none
- * @param jarPath the already extracted jar path, or null if none
- * @return the {@link IPackageFragmentRoot package fragment root} which path
- * 	match the given one or <code>null</code> if none was found.
- */
-abstract public IPackageFragmentRoot packageFragmentRoot(String resourcePathString, int jarSeparatorIndex, String jarPath);
+    /**
+     * Returns the package fragment root corresponding to a given resource path.
+     *
+     * @param resourcePathString
+     *         path of expected package fragment root.
+     * @param jarSeparatorIndex
+     *         the index of the jar separator in the resource path, or -1 if none
+     * @param jarPath
+     *         the already extracted jar path, or null if none
+     * @return the {@link IPackageFragmentRoot package fragment root} which path
+     *         match the given one or <code>null</code> if none was found.
+     */
+    abstract public IPackageFragmentRoot packageFragmentRoot(String resourcePathString, int jarSeparatorIndex, String jarPath);
 }

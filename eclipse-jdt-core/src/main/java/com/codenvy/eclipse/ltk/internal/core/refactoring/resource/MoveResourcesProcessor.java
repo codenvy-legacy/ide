@@ -50,302 +50,267 @@ import java.util.List;
  *
  * @since 3.4
  */
-public class MoveResourcesProcessor extends MoveProcessor
-{
+public class MoveResourcesProcessor extends MoveProcessor {
 
-   private final IResource[] fResourcesToMove;
+    private final IResource[] fResourcesToMove;
 
-   private IContainer fDestination;
+    private IContainer fDestination;
 
-   private boolean fUpdateReferences;
+    private boolean fUpdateReferences;
 
-   private MoveArguments fMoveArguments; // set after checkFinalConditions
+    private MoveArguments fMoveArguments; // set after checkFinalConditions
 
-   /**
-    * Creates a new move resource processor.
-    *
-    * @param resourcesToMove the resources to move
-    */
-   public MoveResourcesProcessor(IResource[] resourcesToMove)
-   {
-      if (resourcesToMove == null)
-      {
-         throw new IllegalArgumentException("resources must not be null"); //$NON-NLS-1$
-      }
+    /**
+     * Creates a new move resource processor.
+     *
+     * @param resourcesToMove
+     *         the resources to move
+     */
+    public MoveResourcesProcessor(IResource[] resourcesToMove) {
+        if (resourcesToMove == null) {
+            throw new IllegalArgumentException("resources must not be null"); //$NON-NLS-1$
+        }
 
-      fResourcesToMove = resourcesToMove;
-      fDestination = null;
-      fUpdateReferences = true;
-   }
+        fResourcesToMove = resourcesToMove;
+        fDestination = null;
+        fUpdateReferences = true;
+    }
 
-   /**
-    * Returns the resources to move.
-    *
-    * @return the resources to move.
-    */
-   public IResource[] getResourcesToMove()
-   {
-      return fResourcesToMove;
-   }
+    /**
+     * Returns the resources to move.
+     *
+     * @return the resources to move.
+     */
+    public IResource[] getResourcesToMove() {
+        return fResourcesToMove;
+    }
 
-   /**
-    * Sets the move destination
-    *
-    * @param destination the move destination
-    */
-   public void setDestination(IContainer destination)
-   {
-      Assert.isNotNull(destination);
-      fDestination = destination;
-   }
+    /**
+     * Sets the move destination
+     *
+     * @param destination
+     *         the move destination
+     */
+    public void setDestination(IContainer destination) {
+        Assert.isNotNull(destination);
+        fDestination = destination;
+    }
 
-   /**
-    * Returns <code>true</code> if the refactoring processor also updates references
-    *
-    * @return <code>true</code> if the refactoring processor also updates references
-    */
-   public boolean isUpdateReferences()
-   {
-      return fUpdateReferences;
-   }
+    /**
+     * Returns <code>true</code> if the refactoring processor also updates references
+     *
+     * @return <code>true</code> if the refactoring processor also updates references
+     */
+    public boolean isUpdateReferences() {
+        return fUpdateReferences;
+    }
 
-   /**
-    * Specifies if the refactoring processor also updates references. The default behavior is to update references.
-    *
-    * @param updateReferences <code>true</code> if the refactoring processor should also updates references
-    */
-   public void setUpdateReferences(boolean updateReferences)
-   {
-      fUpdateReferences = updateReferences;
-   }
+    /**
+     * Specifies if the refactoring processor also updates references. The default behavior is to update references.
+     *
+     * @param updateReferences
+     *         <code>true</code> if the refactoring processor should also updates references
+     */
+    public void setUpdateReferences(boolean updateReferences) {
+        fUpdateReferences = updateReferences;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
-    */
-   public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException
-   {
-      RefactoringStatus result = new RefactoringStatus();
-      result.merge(RefactoringStatus.create(Resources.checkInSync(fResourcesToMove)));
-      return result;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#checkInitialConditions(org.eclipse.core.runtime
+     * .IProgressMonitor)
+     */
+    public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
+        RefactoringStatus result = new RefactoringStatus();
+        result.merge(RefactoringStatus.create(Resources.checkInSync(fResourcesToMove)));
+        return result;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
-    */
-   public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-      CheckConditionsContext context) throws CoreException
-   {
-      pm.beginTask("", 1); //$NON-NLS-1$
-      try
-      {
-         RefactoringStatus status = validateDestination(fDestination);
-         if (status.hasFatalError())
-         {
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#checkFinalConditions(org.eclipse.core.runtime
+     * .IProgressMonitor, org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
+     */
+    public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
+                                                  CheckConditionsContext context) throws CoreException {
+        pm.beginTask("", 1); //$NON-NLS-1$
+        try {
+            RefactoringStatus status = validateDestination(fDestination);
+            if (status.hasFatalError()) {
+                return status;
+            }
+            fMoveArguments = new MoveArguments(fDestination, isUpdateReferences());
+
+            ResourceChangeChecker checker = (ResourceChangeChecker)context.getChecker(ResourceChangeChecker.class);
+            IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
+
+            for (int i = 0; i < fResourcesToMove.length; i++) {
+                IResource resource = fResourcesToMove[i];
+                IResource newResource = fDestination.findMember(resource.getName());
+                if (newResource != null) {
+                    status.addWarning(
+                            Messages.format(RefactoringCoreMessages.MoveResourcesProcessor_warning_destination_already_exists,
+                                            BasicElementLabels.getPathLabel(newResource.getFullPath(), false)));
+                    deltaFactory.delete(newResource);
+                }
+                ResourceModifications.buildMoveDelta(deltaFactory, fResourcesToMove[i], fMoveArguments);
+            }
             return status;
-         }
-         fMoveArguments = new MoveArguments(fDestination, isUpdateReferences());
+        } finally {
+            pm.done();
+        }
+    }
 
-         ResourceChangeChecker checker = (ResourceChangeChecker)context.getChecker(ResourceChangeChecker.class);
-         IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
-
-         for (int i = 0; i < fResourcesToMove.length; i++)
-         {
-            IResource resource = fResourcesToMove[i];
-            IResource newResource = fDestination.findMember(resource.getName());
-            if (newResource != null)
-            {
-               status.addWarning(
-                  Messages.format(RefactoringCoreMessages.MoveResourcesProcessor_warning_destination_already_exists,
-                     BasicElementLabels.getPathLabel(newResource.getFullPath(), false)));
-               deltaFactory.delete(newResource);
-            }
-            ResourceModifications.buildMoveDelta(deltaFactory, fResourcesToMove[i], fMoveArguments);
-         }
-         return status;
-      }
-      finally
-      {
-         pm.done();
-      }
-   }
-
-   /**
-    * Validates if the a destination is valid. This method does not change the destination settings on the refactoring. It is intended to be used
-    * in a wizard to validate user input.
-    *
-    * @param destination the destination to validate
-    * @return returns the resulting status of the validation
-    */
-   public RefactoringStatus validateDestination(IContainer destination)
-   {
-      Assert.isNotNull(destination, "container is null"); //$NON-NLS-1$
-      if (destination instanceof IWorkspaceRoot)
-      {
-         return RefactoringStatus.createFatalErrorStatus(
-            RefactoringCoreMessages.MoveResourceProcessor_error_invalid_destination);
-      }
-
-      if (!destination.exists())
-      {
-         return RefactoringStatus.createFatalErrorStatus(
-            RefactoringCoreMessages.MoveResourceProcessor_error_destination_not_exists);
-      }
-
-      IPath destinationPath = destination.getFullPath();
-      for (int i = 0; i < fResourcesToMove.length; i++)
-      {
-         IPath path = fResourcesToMove[i].getFullPath();
-         if (path.isPrefixOf(destinationPath) || path.equals(destinationPath))
-         {
+    /**
+     * Validates if the a destination is valid. This method does not change the destination settings on the refactoring. It is intended
+     * to be
+     * used
+     * in a wizard to validate user input.
+     *
+     * @param destination
+     *         the destination to validate
+     * @return returns the resulting status of the validation
+     */
+    public RefactoringStatus validateDestination(IContainer destination) {
+        Assert.isNotNull(destination, "container is null"); //$NON-NLS-1$
+        if (destination instanceof IWorkspaceRoot) {
             return RefactoringStatus.createFatalErrorStatus(
-               Messages.format(RefactoringCoreMessages.MoveResourceProcessor_destination_inside_moved,
-                  BasicElementLabels.getPathLabel(path, false)));
-         }
-         if (path.removeLastSegments(1).equals(destinationPath))
-         {
+                    RefactoringCoreMessages.MoveResourceProcessor_error_invalid_destination);
+        }
+
+        if (!destination.exists()) {
             return RefactoringStatus.createFatalErrorStatus(
-               Messages.format(RefactoringCoreMessages.MoveResourceProcessor_destination_same_as_moved,
-                  BasicElementLabels.getPathLabel(path, false)));
-         }
-      }
-      return new RefactoringStatus();
-   }
+                    RefactoringCoreMessages.MoveResourceProcessor_error_destination_not_exists);
+        }
 
-   private String getMoveDescription()
-   {
-      if (fResourcesToMove.length == 1)
-      {
-         return Messages.format(RefactoringCoreMessages.MoveResourceProcessor_description_multiple,
-            new Object[]{new Integer(fResourcesToMove.length), BasicElementLabels.getResourceName(fDestination)});
-      }
-      else
-      {
-         return Messages.format(RefactoringCoreMessages.MoveResourceProcessor_description_single,
-            new String[]{BasicElementLabels.getResourceName(fResourcesToMove[0]), BasicElementLabels.getResourceName(
-               fDestination)});
-      }
-   }
-
-   protected MoveResourcesDescriptor createDescriptor()
-   {
-      MoveResourcesDescriptor descriptor = new MoveResourcesDescriptor();
-      descriptor.setProject(fDestination.getProject().getName());
-      descriptor.setDescription(getMoveDescription());
-      if (fResourcesToMove.length == 1)
-      {
-         descriptor.setComment(descriptor.getDescription());
-      }
-      else
-      {
-         StringBuffer buf = new StringBuffer();
-         for (int i = 0; i < fResourcesToMove.length; i++)
-         {
-            if (i > 0)
-            {
-               buf.append(", "); //$NON-NLS-1$
+        IPath destinationPath = destination.getFullPath();
+        for (int i = 0; i < fResourcesToMove.length; i++) {
+            IPath path = fResourcesToMove[i].getFullPath();
+            if (path.isPrefixOf(destinationPath) || path.equals(destinationPath)) {
+                return RefactoringStatus.createFatalErrorStatus(
+                        Messages.format(RefactoringCoreMessages.MoveResourceProcessor_destination_inside_moved,
+                                        BasicElementLabels.getPathLabel(path, false)));
             }
-            buf.append(fResourcesToMove[i].getName());
-         }
-         descriptor.setComment(Messages.format(RefactoringCoreMessages.MoveResourceProcessor_comment,
-            new String[]{BasicElementLabels.getResourceName(fResourcesToMove[0]), BasicElementLabels.getResourceName(
-               fDestination)}));
+            if (path.removeLastSegments(1).equals(destinationPath)) {
+                return RefactoringStatus.createFatalErrorStatus(
+                        Messages.format(RefactoringCoreMessages.MoveResourceProcessor_destination_same_as_moved,
+                                        BasicElementLabels.getPathLabel(path, false)));
+            }
+        }
+        return new RefactoringStatus();
+    }
 
-      }
-      descriptor.setFlags(
-         RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE | RefactoringDescriptor.BREAKING_CHANGE);
-      descriptor.setDestination(fDestination);
-      descriptor.setUpdateReferences(isUpdateReferences());
-      descriptor.setResourcesToMove(fResourcesToMove);
-      return descriptor;
-   }
+    private String getMoveDescription() {
+        if (fResourcesToMove.length == 1) {
+            return Messages.format(RefactoringCoreMessages.MoveResourceProcessor_description_multiple,
+                                   new Object[]{new Integer(fResourcesToMove.length), BasicElementLabels.getResourceName(fDestination)});
+        } else {
+            return Messages.format(RefactoringCoreMessages.MoveResourceProcessor_description_single,
+                                   new String[]{BasicElementLabels.getResourceName(fResourcesToMove[0]), BasicElementLabels.getResourceName(
+                                           fDestination)});
+        }
+    }
+
+    protected MoveResourcesDescriptor createDescriptor() {
+        MoveResourcesDescriptor descriptor = new MoveResourcesDescriptor();
+        descriptor.setProject(fDestination.getProject().getName());
+        descriptor.setDescription(getMoveDescription());
+        if (fResourcesToMove.length == 1) {
+            descriptor.setComment(descriptor.getDescription());
+        } else {
+            StringBuffer buf = new StringBuffer();
+            for (int i = 0; i < fResourcesToMove.length; i++) {
+                if (i > 0) {
+                    buf.append(", "); //$NON-NLS-1$
+                }
+                buf.append(fResourcesToMove[i].getName());
+            }
+            descriptor.setComment(Messages.format(RefactoringCoreMessages.MoveResourceProcessor_comment,
+                                                  new String[]{BasicElementLabels.getResourceName(fResourcesToMove[0]),
+                                                               BasicElementLabels.getResourceName(
+                                                                       fDestination)}));
+
+        }
+        descriptor.setFlags(
+                RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE | RefactoringDescriptor.BREAKING_CHANGE);
+        descriptor.setDestination(fDestination);
+        descriptor.setUpdateReferences(isUpdateReferences());
+        descriptor.setResourcesToMove(fResourcesToMove);
+        return descriptor;
+    }
 
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#createChange(org.eclipse.core.runtime.IProgressMonitor)
-    */
-   public Change createChange(IProgressMonitor pm) throws CoreException
-   {
-      pm.beginTask("", fResourcesToMove.length); //$NON-NLS-1$
-      try
-      {
-         CompositeChange compositeChange = new CompositeChange(getMoveDescription());
-         compositeChange.markAsSynthetic();
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#createChange(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    public Change createChange(IProgressMonitor pm) throws CoreException {
+        pm.beginTask("", fResourcesToMove.length); //$NON-NLS-1$
+        try {
+            CompositeChange compositeChange = new CompositeChange(getMoveDescription());
+            compositeChange.markAsSynthetic();
 
-         RefactoringChangeDescriptor descriptor = new RefactoringChangeDescriptor(createDescriptor());
-         for (int i = 0; i < fResourcesToMove.length; i++)
-         {
-            MoveResourceChange moveChange = new MoveResourceChange(fResourcesToMove[i], fDestination);
-            moveChange.setDescriptor(descriptor);
-            compositeChange.add(moveChange);
-         }
-         return compositeChange;
-      }
-      finally
-      {
-         pm.done();
-      }
-   }
+            RefactoringChangeDescriptor descriptor = new RefactoringChangeDescriptor(createDescriptor());
+            for (int i = 0; i < fResourcesToMove.length; i++) {
+                MoveResourceChange moveChange = new MoveResourceChange(fResourcesToMove[i], fDestination);
+                moveChange.setDescriptor(descriptor);
+                compositeChange.add(moveChange);
+            }
+            return compositeChange;
+        } finally {
+            pm.done();
+        }
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getElements()
-    */
-   public Object[] getElements()
-   {
-      return fResourcesToMove;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getElements()
+     */
+    public Object[] getElements() {
+        return fResourcesToMove;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getIdentifier()
-    */
-   public String getIdentifier()
-   {
-      return "org.eclipse.ltk.core.refactoring.moveResourcesProcessor"; //$NON-NLS-1$
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getIdentifier()
+     */
+    public String getIdentifier() {
+        return "org.eclipse.ltk.core.refactoring.moveResourcesProcessor"; //$NON-NLS-1$
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getProcessorName()
-    */
-   public String getProcessorName()
-   {
-      return RefactoringCoreMessages.MoveResourceProcessor_processor_name;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getProcessorName()
+     */
+    public String getProcessorName() {
+        return RefactoringCoreMessages.MoveResourceProcessor_processor_name;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#isApplicable()
-    */
-   public boolean isApplicable()
-   {
-      for (int i = 0; i < fResourcesToMove.length; i++)
-      {
-         if (!canMove(fResourcesToMove[i]))
-         {
-            return false;
-         }
-      }
-      return true;
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#isApplicable()
+     */
+    public boolean isApplicable() {
+        for (int i = 0; i < fResourcesToMove.length; i++) {
+            if (!canMove(fResourcesToMove[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-   private static boolean canMove(IResource res)
-   {
-      return (res instanceof IFile || res instanceof IFolder) && res.exists() && !res.isPhantom();
-   }
+    private static boolean canMove(IResource res) {
+        return (res instanceof IFile || res instanceof IFolder) && res.exists() && !res.isPhantom();
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#loadParticipants(org.eclipse.ltk.core.refactoring.RefactoringStatus, org.eclipse.ltk.core.refactoring.participants.SharableParticipants)
-    */
-   public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
-      SharableParticipants shared) throws CoreException
-   {
-      String[] affectedNatures = ResourceProcessors.computeAffectedNatures(fResourcesToMove);
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#loadParticipants(org.eclipse.ltk.core.refactoring
+     * .RefactoringStatus, org.eclipse.ltk.core.refactoring.participants.SharableParticipants)
+     */
+    public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
+                                                     SharableParticipants shared) throws CoreException {
+        String[] affectedNatures = ResourceProcessors.computeAffectedNatures(fResourcesToMove);
 
-      List result = new ArrayList();
-      for (int i = 0; i < fResourcesToMove.length; i++)
-      {
-         MoveParticipant[] participants = ParticipantManager.loadMoveParticipants(status, this, fResourcesToMove[i],
-            fMoveArguments, null, affectedNatures, shared);
-         result.addAll(Arrays.asList(participants));
-      }
-      return (RefactoringParticipant[])result.toArray(new RefactoringParticipant[result.size()]);
-   }
+        List result = new ArrayList();
+        for (int i = 0; i < fResourcesToMove.length; i++) {
+            MoveParticipant[] participants = ParticipantManager.loadMoveParticipants(status, this, fResourcesToMove[i],
+                                                                                     fMoveArguments, null, affectedNatures, shared);
+            result.addAll(Arrays.asList(participants));
+        }
+        return (RefactoringParticipant[])result.toArray(new RefactoringParticipant[result.size()]);
+    }
 
 }

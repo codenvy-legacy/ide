@@ -13,58 +13,57 @@ package com.codenvy.eclipse.jdt.internal.corext.refactoring.tagging;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-/**
- * Represents processors in the JDT space that rename elements.
- */
-public interface INameUpdating
-{
+/** Represents processors in the JDT space that rename elements. */
+public interface INameUpdating {
 
-   /**
-    * Sets new name for the entity that this refactoring is working on.
-    *
-    * @param newName the new name
-    */
-   public void setNewElementName(String newName);
+    /**
+     * Sets new name for the entity that this refactoring is working on.
+     *
+     * @param newName
+     *         the new name
+     */
+    public void setNewElementName(String newName);
 
-   /**
-    * Get the name for the entity that this refactoring is working on.
-    *
-    * @return returns the new name
-    */
-   public String getNewElementName();
+    /**
+     * Get the name for the entity that this refactoring is working on.
+     *
+     * @return returns the new name
+     */
+    public String getNewElementName();
 
-   /**
-    * Gets the current name of the entity that this refactoring is working on.
-    *
-    * @return returns the current name
-    */
-   public String getCurrentElementName();
+    /**
+     * Gets the current name of the entity that this refactoring is working on.
+     *
+     * @return returns the current name
+     */
+    public String getCurrentElementName();
 
-   /**
-    * Gets the original elements. Since an <code>INameUpdating</code> only renames one element,
-    * this method must return an array containing exactly one element.
-    *
-    * @return an array containing exactly one element
-    * @see com.codenvy.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getElements()
-    */
-   public Object[] getElements();
+    /**
+     * Gets the original elements. Since an <code>INameUpdating</code> only renames one element,
+     * this method must return an array containing exactly one element.
+     *
+     * @return an array containing exactly one element
+     * @see com.codenvy.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getElements()
+     */
+    public Object[] getElements();
 
-   /**
-    * Gets the element after renaming, or <code>null</code> if not available.
-    *
-    * @return returns the new element or <code>null</code>
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          thrown when the new element could not be evaluated
-    */
-   public Object getNewElement() throws CoreException;
+    /**
+     * Gets the element after renaming, or <code>null</code> if not available.
+     *
+     * @return returns the new element or <code>null</code>
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *         thrown when the new element could not be evaluated
+     */
+    public Object getNewElement() throws CoreException;
 
-   /**
-    * Checks if the new name is valid for the entity that this refactoring renames.
-    *
-    * @param newName the new name
-    * @return returns the resulting status
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          Core exception is thrown when the validation could not be performed
-    */
-   public RefactoringStatus checkNewElementName(String newName) throws CoreException;
+    /**
+     * Checks if the new name is valid for the entity that this refactoring renames.
+     *
+     * @param newName
+     *         the new name
+     * @return returns the resulting status
+     * @throws com.codenvy.eclipse.core.runtime.CoreException
+     *         Core exception is thrown when the validation could not be performed
+     */
+    public RefactoringStatus checkNewElementName(String newName) throws CoreException;
 }

@@ -16,17 +16,14 @@ import com.codenvy.eclipse.jdt.core.compiler.IProblem;
 import com.codenvy.eclipse.jdt.core.dom.ASTNode;
 
 
-public class SourceRangeFactory
-{
+public class SourceRangeFactory {
 
-   public static ISourceRange create(ASTNode node)
-   {
-      return new SourceRange(node.getStartPosition(), node.getLength());
-   }
+    public static ISourceRange create(ASTNode node) {
+        return new SourceRange(node.getStartPosition(), node.getLength());
+    }
 
-   public static ISourceRange create(IProblem problem)
-   {
-      return new SourceRange(problem.getSourceStart(), problem.getSourceEnd() - problem.getSourceStart() + 1);
-   }
+    public static ISourceRange create(IProblem problem) {
+        return new SourceRange(problem.getSourceStart(), problem.getSourceEnd() - problem.getSourceStart() + 1);
+    }
 
 }

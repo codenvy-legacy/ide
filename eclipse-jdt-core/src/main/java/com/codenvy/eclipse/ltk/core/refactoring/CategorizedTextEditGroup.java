@@ -24,65 +24,68 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
  *
  * @since 3.2
  */
-public class CategorizedTextEditGroup extends TextEditGroup
-{
+public class CategorizedTextEditGroup extends TextEditGroup {
 
-   private GroupCategorySet fGroupCategories;
+    private GroupCategorySet fGroupCategories;
 
-   /**
-    * Creates a new text edit group with the given name and group
-    * categories.
-    *
-    * @param name            the name of the text edit group. Must be
-    *                        a human readable string
-    * @param groupCategories a set of group categories
-    */
-   public CategorizedTextEditGroup(String name, GroupCategorySet groupCategories)
-   {
-      super(name);
-      Assert.isNotNull(groupCategories);
-      fGroupCategories = groupCategories;
-   }
+    /**
+     * Creates a new text edit group with the given name and group
+     * categories.
+     *
+     * @param name
+     *         the name of the text edit group. Must be
+     *         a human readable string
+     * @param groupCategories
+     *         a set of group categories
+     */
+    public CategorizedTextEditGroup(String name, GroupCategorySet groupCategories) {
+        super(name);
+        Assert.isNotNull(groupCategories);
+        fGroupCategories = groupCategories;
+    }
 
-   /**
-    * Creates a new text edit group with a name, a single {@link TextEdit}
-    * and a set of group categories.
-    *
-    * @param name            the name of the text edit group. Must be
-    *                        a human readable string
-    * @param edit            the edit to manage
-    * @param groupCategories a set of group categories
-    */
-   public CategorizedTextEditGroup(String name, TextEdit edit, GroupCategorySet groupCategories)
-   {
-      super(name, edit);
-      Assert.isNotNull(groupCategories);
-      fGroupCategories = groupCategories;
-   }
+    /**
+     * Creates a new text edit group with a name, a single {@link TextEdit}
+     * and a set of group categories.
+     *
+     * @param name
+     *         the name of the text edit group. Must be
+     *         a human readable string
+     * @param edit
+     *         the edit to manage
+     * @param groupCategories
+     *         a set of group categories
+     */
+    public CategorizedTextEditGroup(String name, TextEdit edit, GroupCategorySet groupCategories) {
+        super(name, edit);
+        Assert.isNotNull(groupCategories);
+        fGroupCategories = groupCategories;
+    }
 
-   /**
-    * Creates a new text edit group with the given name, array of edits
-    * and a set of group categories.
-    *
-    * @param name            the name of the text edit group. Must be
-    *                        a human readable string
-    * @param edits           the array of edits
-    * @param groupCategories a set of group categories
-    */
-   public CategorizedTextEditGroup(String name, TextEdit[] edits, GroupCategorySet groupCategories)
-   {
-      super(name, edits);
-      Assert.isNotNull(groupCategories);
-      fGroupCategories = groupCategories;
-   }
+    /**
+     * Creates a new text edit group with the given name, array of edits
+     * and a set of group categories.
+     *
+     * @param name
+     *         the name of the text edit group. Must be
+     *         a human readable string
+     * @param edits
+     *         the array of edits
+     * @param groupCategories
+     *         a set of group categories
+     */
+    public CategorizedTextEditGroup(String name, TextEdit[] edits, GroupCategorySet groupCategories) {
+        super(name, edits);
+        Assert.isNotNull(groupCategories);
+        fGroupCategories = groupCategories;
+    }
 
-   /**
-    * Returns the set of group categories.
-    *
-    * @return the group categories of this text edit group
-    */
-   public GroupCategorySet getGroupCategorySet()
-   {
-      return fGroupCategories;
-   }
+    /**
+     * Returns the set of group categories.
+     *
+     * @return the group categories of this text edit group
+     */
+    public GroupCategorySet getGroupCategorySet() {
+        return fGroupCategories;
+    }
 }

@@ -42,122 +42,113 @@ import com.codenvy.eclipse.ltk.internal.core.refactoring.resource.DeleteResource
  *
  * @since 3.4
  */
-public class DeleteResourcesDescriptor extends RefactoringDescriptor
-{
-   /**
-    * Refactoring id of the 'Delete Resources' refactoring (value:
-    * <code>org.eclipse.ltk.core.refactoring.delete.resources</code>).
-    * <p>
-    * Clients may safely cast the obtained refactoring descriptor to
-    * {@link DeleteResourcesDescriptor}.
-    * </p>
-    */
-   public static final String ID = "org.eclipse.ltk.core.refactoring.delete.resources"; //$NON-NLS-1$
+public class DeleteResourcesDescriptor extends RefactoringDescriptor {
+    /**
+     * Refactoring id of the 'Delete Resources' refactoring (value:
+     * <code>org.eclipse.ltk.core.refactoring.delete.resources</code>).
+     * <p>
+     * Clients may safely cast the obtained refactoring descriptor to
+     * {@link DeleteResourcesDescriptor}.
+     * </p>
+     */
+    public static final String ID = "org.eclipse.ltk.core.refactoring.delete.resources"; //$NON-NLS-1$
 
-   private IPath[] fResourcePaths;
+    private IPath[] fResourcePaths;
 
-   private boolean fDeleteContents;
+    private boolean fDeleteContents;
 
-   /**
-    * Creates a new refactoring descriptor.
-    * <p>
-    * Clients should not instantiated this class but use {@link com.codenvy.eclipse.ltk.core.refactoring.RefactoringCore#getRefactoringContribution(String)}
-    * with {@link #ID} to get the contribution that can create the descriptor.
-    * </p>
-    */
-   public DeleteResourcesDescriptor()
-   {
-      super(ID, null, RefactoringCoreMessages.RenameResourceDescriptor_unnamed_descriptor, null,
-         RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE);
-      fDeleteContents = false;
-   }
+    /**
+     * Creates a new refactoring descriptor.
+     * <p>
+     * Clients should not instantiated this class but use {@link com.codenvy.eclipse.ltk.core.refactoring
+     * .RefactoringCore#getRefactoringContribution(String)}
+     * with {@link #ID} to get the contribution that can create the descriptor.
+     * </p>
+     */
+    public DeleteResourcesDescriptor() {
+        super(ID, null, RefactoringCoreMessages.RenameResourceDescriptor_unnamed_descriptor, null,
+              RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE);
+        fDeleteContents = false;
+    }
 
-   /**
-    * The resource paths to delete.
-    *
-    * @return an array of IPaths.
-    */
-   public IPath[] getResourcePaths()
-   {
-      return fResourcePaths;
-   }
+    /**
+     * The resource paths to delete.
+     *
+     * @return an array of IPaths.
+     */
+    public IPath[] getResourcePaths() {
+        return fResourcePaths;
+    }
 
-   /**
-    * The paths to the resources to be deleted.  The resources can be {@link IProject} or
-    * a mixture of {@link IFile} and {@link IFolder}.
-    *
-    * @param resourcePath paths of the resources to be deleted
-    */
-   public void setResourcePaths(IPath[] resourcePath)
-   {
-      if (resourcePath == null)
-      {
-         throw new IllegalArgumentException();
-      }
-      fResourcePaths = resourcePath;
-   }
+    /**
+     * The paths to the resources to be deleted.  The resources can be {@link IProject} or
+     * a mixture of {@link IFile} and {@link IFolder}.
+     *
+     * @param resourcePath
+     *         paths of the resources to be deleted
+     */
+    public void setResourcePaths(IPath[] resourcePath) {
+        if (resourcePath == null) {
+            throw new IllegalArgumentException();
+        }
+        fResourcePaths = resourcePath;
+    }
 
-   /**
-    * The resources to be deleted.  They can be {@link IProject} or a mixture of {@link IFile}
-    * and {@link IFolder}.
-    *
-    * @param resources IResources to be deleted
-    */
-   public void setResources(IResource[] resources)
-   {
-      if (resources == null)
-      {
-         throw new IllegalArgumentException();
-      }
-      IPath[] paths = new IPath[resources.length];
-      for (int i = 0; i < paths.length; i++)
-      {
-         paths[i] = resources[i].getFullPath();
-      }
-      setResourcePaths(paths);
-   }
+    /**
+     * The resources to be deleted.  They can be {@link IProject} or a mixture of {@link IFile}
+     * and {@link IFolder}.
+     *
+     * @param resources
+     *         IResources to be deleted
+     */
+    public void setResources(IResource[] resources) {
+        if (resources == null) {
+            throw new IllegalArgumentException();
+        }
+        IPath[] paths = new IPath[resources.length];
+        for (int i = 0; i < paths.length; i++) {
+            paths[i] = resources[i].getFullPath();
+        }
+        setResourcePaths(paths);
+    }
 
-   /**
-    * <code>true</code> is returned if projects contents are also deleted.
-    *
-    * @return <code>true</code> if this will delete the project contents.  The content delete is not undoable.
-    */
-   public boolean isDeleteContents()
-   {
-      return fDeleteContents;
-   }
+    /**
+     * <code>true</code> is returned if projects contents are also deleted.
+     *
+     * @return <code>true</code> if this will delete the project contents.  The content delete is not undoable.
+     */
+    public boolean isDeleteContents() {
+        return fDeleteContents;
+    }
 
-   /**
-    * If set to <code>true</code>, delete will also delete project contents.
-    *
-    * @param deleteContents <code>true</code> if this will delete the project contents.  The content delete is not undoable.
-    */
-   public void setDeleteContents(boolean deleteContents)
-   {
-      fDeleteContents = deleteContents;
-   }
+    /**
+     * If set to <code>true</code>, delete will also delete project contents.
+     *
+     * @param deleteContents
+     *         <code>true</code> if this will delete the project contents.  The content delete is not undoable.
+     */
+    public void setDeleteContents(boolean deleteContents) {
+        fDeleteContents = deleteContents;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.ltk.core.refactoring.RefactoringDescriptor#createRefactoring(org.eclipse.ltk.core.refactoring.RefactoringStatus)
-    */
-   public Refactoring createRefactoring(RefactoringStatus status) throws CoreException
-   {
-      IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
-      IResource[] resources = new IResource[fResourcePaths.length];
-      for (int i = 0; i < fResourcePaths.length; i++)
-      {
-         IResource resource = wsRoot.findMember(fResourcePaths[i]);
-         if (resource == null || !resource.exists())
-         {
-            status.addFatalError(
-               Messages.format(RefactoringCoreMessages.DeleteResourcesDescriptor_error_delete_not_exists,
-                  BasicElementLabels.getPathLabel(fResourcePaths[i], false)));
-            return null;
-         }
-         resources[i] = resource;
-      }
-      DeleteResourcesProcessor processor = new DeleteResourcesProcessor(resources, fDeleteContents);
-      return new DeleteRefactoring(processor);
-   }
+    /* (non-Javadoc)
+     * @see org.eclipse.ltk.core.refactoring.RefactoringDescriptor#createRefactoring(org.eclipse.ltk.core.refactoring.RefactoringStatus)
+     */
+    public Refactoring createRefactoring(RefactoringStatus status) throws CoreException {
+        IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
+        IResource[] resources = new IResource[fResourcePaths.length];
+        for (int i = 0; i < fResourcePaths.length; i++) {
+            IResource resource = wsRoot.findMember(fResourcePaths[i]);
+            if (resource == null || !resource.exists()) {
+                status.addFatalError(
+                        Messages.format(RefactoringCoreMessages.DeleteResourcesDescriptor_error_delete_not_exists,
+                                        BasicElementLabels.getPathLabel(fResourcePaths[i], false)));
+                return null;
+            }
+            resources[i] = resource;
+        }
+        DeleteResourcesProcessor processor = new DeleteResourcesProcessor(resources, fDeleteContents);
+        return new DeleteRefactoring(processor);
+    }
 
 }

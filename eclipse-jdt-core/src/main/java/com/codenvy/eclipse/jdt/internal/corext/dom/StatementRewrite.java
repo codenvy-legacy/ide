@@ -20,39 +20,31 @@ import com.codenvy.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 
-public class StatementRewrite extends ReplaceRewrite
-{
+public class StatementRewrite extends ReplaceRewrite {
 
-   public StatementRewrite(ASTRewrite rewrite, ASTNode[] nodes)
-   {
-      super(rewrite, nodes);
-   }
+    public StatementRewrite(ASTRewrite rewrite, ASTNode[] nodes) {
+        super(rewrite, nodes);
+    }
 
-   @Override
-   protected void handleOneMany(ASTNode[] replacements, TextEditGroup description)
-   {
-      AST ast = fToReplace[0].getAST();
-      // to replace == 1, but more than one replacement. Have to check if we
-      // need to insert a block to not change structure
-      if (ASTNodes.isControlStatementBody(fDescriptor))
-      {
-         Block block = ast.newBlock();
-         ListRewrite statements = fRewrite.getListRewrite(block, Block.STATEMENTS_PROPERTY);
-         for (int i = 0; i < replacements.length; i++)
-         {
-            statements.insertLast(replacements[i], description);
-         }
-         fRewrite.replace(fToReplace[0], block, description);
-      }
-      else
-      {
-         ListRewrite container = fRewrite.getListRewrite(fToReplace[0].getParent(),
-            (ChildListPropertyDescriptor)fDescriptor);
-         container.replace(fToReplace[0], replacements[0], description);
-         for (int i = 1; i < replacements.length; i++)
-         {
-            container.insertAfter(replacements[i], replacements[i - 1], description);
-         }
-      }
-   }
+    @Override
+    protected void handleOneMany(ASTNode[] replacements, TextEditGroup description) {
+        AST ast = fToReplace[0].getAST();
+        // to replace == 1, but more than one replacement. Have to check if we
+        // need to insert a block to not change structure
+        if (ASTNodes.isControlStatementBody(fDescriptor)) {
+            Block block = ast.newBlock();
+            ListRewrite statements = fRewrite.getListRewrite(block, Block.STATEMENTS_PROPERTY);
+            for (int i = 0; i < replacements.length; i++) {
+                statements.insertLast(replacements[i], description);
+            }
+            fRewrite.replace(fToReplace[0], block, description);
+        } else {
+            ListRewrite container = fRewrite.getListRewrite(fToReplace[0].getParent(),
+                                                            (ChildListPropertyDescriptor)fDescriptor);
+            container.replace(fToReplace[0], replacements[0], description);
+            for (int i = 1; i < replacements.length; i++) {
+                container.insertAfter(replacements[i], replacements[i - 1], description);
+            }
+        }
+    }
 }
