@@ -24,29 +24,27 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
  * Context information for quick fix and quick assist processors.
  * <p>
  * This interface can be implemented by clients.</p>
- *
  */
-public interface QuickAssistInvocationContext
-{
+public interface QuickAssistInvocationContext {
 
-   /**
-    * Returns the offset where quick assist was invoked.
-    *
-    * @return the invocation offset or <code>-1</code> if unknown
-    */
-   int getOffset();
+    /**
+     * Returns the offset where quick assist was invoked.
+     *
+     * @return the invocation offset or <code>-1</code> if unknown
+     */
+    int getOffset();
 
-   /**
-    * Returns the length of the selection at the invocation offset.
-    *
-    * @return the length of the current selection or <code>-1</code> if none or unknown
-    */
-   int getLength();
+    /**
+     * Returns the length of the selection at the invocation offset.
+     *
+     * @return the length of the current selection or <code>-1</code> if none or unknown
+     */
+    int getLength();
 
-   /**
-    * Returns the editor for this context.
-    *
-    * @return the text editor or <code>null</code> if not available
-    */
-   TextEditorPartView getTextEditor();
+    /**
+     * Returns the editor for this context.
+     *
+     * @return the text editor or <code>null</code> if not available
+     */
+    TextEditorPartView getTextEditor();
 }

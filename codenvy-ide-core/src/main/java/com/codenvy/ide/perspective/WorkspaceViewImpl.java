@@ -27,70 +27,53 @@ import com.google.inject.Inject;
 
 /**
  * Implements {@link WorkspaceView}
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class WorkspaceViewImpl extends Composite implements WorkspaceView
-{
+public class WorkspaceViewImpl extends Composite implements WorkspaceView {
 
-   interface WorspaceViewUiBinder extends UiBinder<Widget, WorkspaceViewImpl>
-   {
-   }
+    interface WorspaceViewUiBinder extends UiBinder<Widget, WorkspaceViewImpl> {
+    }
 
-   private static WorspaceViewUiBinder uiBinder = GWT.create(WorspaceViewUiBinder.class);
+    private static WorspaceViewUiBinder uiBinder = GWT.create(WorspaceViewUiBinder.class);
 
-   @UiField
-   SimplePanel perspectivePanel;
+    @UiField
+    SimplePanel perspectivePanel;
 
-   @UiField
-   SimplePanel menuPanel;
+    @UiField
+    SimplePanel menuPanel;
 
-   @UiField
-   SimplePanel toolbarPanel;
-   
-   /**
-    * Create view.
-    */
-   @Inject
-   protected WorkspaceViewImpl()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    @UiField
+    SimplePanel toolbarPanel;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public AcceptsOneWidget getMenuPanel()
-   {
-      return menuPanel;
-   }
+    /** Create view. */
+    @Inject
+    protected WorkspaceViewImpl() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      // ok
-      // there are no events for now
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getMenuPanel() {
+        return menuPanel;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public AcceptsOneWidget getPerspectivePanel()
-   {
-      return perspectivePanel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        // ok
+        // there are no events for now
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public AcceptsOneWidget getToolbarPanel()
-   {
-      return toolbarPanel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getPerspectivePanel() {
+        return perspectivePanel;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getToolbarPanel() {
+        return toolbarPanel;
+    }
 }

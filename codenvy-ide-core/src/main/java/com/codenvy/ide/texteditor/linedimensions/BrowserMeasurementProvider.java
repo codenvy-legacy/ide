@@ -14,66 +14,61 @@
 
 package com.codenvy.ide.texteditor.linedimensions;
 
+import elemental.css.CSSStyleDeclaration;
+import elemental.html.Element;
+
 import com.codenvy.ide.util.StringUtils;
 import com.codenvy.ide.util.dom.Elements;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator.FontDimensions;
-import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
 
 
-/**
- * A {@link MeasurementProvider} which utilizes the DOM to measure a string.
- */
-class BrowserMeasurementProvider implements MeasurementProvider
-{
+/** A {@link MeasurementProvider} which utilizes the DOM to measure a string. */
+class BrowserMeasurementProvider implements MeasurementProvider {
 
-   /**
-    * The minimum number of characters we require to measure.
-    * #getRenderedStringWidth(String) will use this to duplicate the string when
-    * measuring short strings.
-    */
+    /**
+     * The minimum number of characters we require to measure.
+     * #getRenderedStringWidth(String) will use this to duplicate the string when
+     * measuring short strings.
+     */
    /*
     * this is not completely arbitrary, too low of a number and WebKit
     * mis-calculates the width due to rounding errors and minor variations in
     * zoom level character widths. As a reference, 10.0 was too small.
     */
-   private static final double MINIMUM_TEXT_LENGTH = 30.0;
+    private static final double MINIMUM_TEXT_LENGTH = 30.0;
 
-   private final FontDimensions fontDimensions;
+    private final FontDimensions fontDimensions;
 
-   private final Element element;
+    private final Element element;
 
-   public BrowserMeasurementProvider(FontDimensionsCalculator calculator)
-   {
-      fontDimensions = calculator.getFontDimensions();
+    public BrowserMeasurementProvider(FontDimensionsCalculator calculator) {
+        fontDimensions = calculator.getFontDimensions();
 
-      element = Elements.createSpanElement(calculator.getFontClassName());
-      element.getStyle().setVisibility(CSSStyleDeclaration.Visibility.HIDDEN);
-      element.getStyle().setPosition(CSSStyleDeclaration.Position.ABSOLUTE);
-      Elements.getBody().appendChild(element);
-   }
+        element = Elements.createSpanElement(calculator.getFontClassName());
+        element.getStyle().setVisibility(CSSStyleDeclaration.Visibility.HIDDEN);
+        element.getStyle().setPosition(CSSStyleDeclaration.Position.ABSOLUTE);
+        Elements.getBody().appendChild(element);
+    }
 
-   @Override
-   public double getCharacterWidth()
-   {
-      return fontDimensions.getCharacterWidth();
-   }
+    @Override
+    public double getCharacterWidth() {
+        return fontDimensions.getCharacterWidth();
+    }
 
-   @Override
-   public double measureStringWidth(String text)
-   {
-      int instances = (int)Math.ceil(MINIMUM_TEXT_LENGTH / text.length());
+    @Override
+    public double measureStringWidth(String text) {
+        int instances = (int)Math.ceil(MINIMUM_TEXT_LENGTH / text.length());
       /*
        * We add a hardspace since this prevents bi-directional combining marks
        * from screwing with our measurement (these spaces must be removed from our
        * result at the end).
        */
-      String repeatString = StringUtils.repeatString(text + "\u00A0", instances);
-      String content = repeatString.replaceAll(" ", "\u00A0");
-      element.setTextContent(content);
-      double elementWidht = element.getBoundingClientRect().getWidth();
-      double width = (elementWidht - (getCharacterWidth() * instances)) / instances;
-      return width;
-   }
+        String repeatString = StringUtils.repeatString(text + "\u00A0", instances);
+        String content = repeatString.replaceAll(" ", "\u00A0");
+        element.setTextContent(content);
+        double elementWidht = element.getBoundingClientRect().getWidth();
+        double width = (elementWidht - (getCharacterWidth() * instances)) / instances;
+        return width;
+    }
 }

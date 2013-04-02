@@ -24,100 +24,77 @@ import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.user.client.Window;
 
 /**
- * Abstract implementation of {@link EditorPartPresenter} that is intended to be used by subclassing 
+ * Abstract implementation of {@link EditorPartPresenter} that is intended to be used by subclassing
  * instead of directly implementing an interface.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
-public abstract class AbstractEditorPresenter extends AbstractPartPresenter implements EditorPartPresenter
-{
+public abstract class AbstractEditorPresenter extends AbstractPartPresenter implements EditorPartPresenter {
 
-   protected boolean dirtyState;
+    protected boolean dirtyState;
 
-   protected EditorInput input;
+    protected EditorInput input;
 
-   protected final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
+    protected final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void init(EditorInput input) throws EditorInitException
-   {
-      this.input = input;
-      initializeEditor();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void init(EditorInput input) throws EditorInitException {
+        this.input = input;
+        initializeEditor();
+    }
 
-   /**
-    * Initializes this editor.
-    */
-   protected abstract void initializeEditor();
+    /** Initializes this editor. */
+    protected abstract void initializeEditor();
 
-   /**
-    * Set dirty state and notify expressions 
-    * @param dirty
-    */
-   protected void updateDirtyState(boolean dirty)
-   {
-      dirtyState = dirty;
-      firePropertyChange(EditorPartPresenter.TITLE_PROPERTY);
-      firePropertyChange(EditorPartPresenter.PROP_DIRTY);
-   }
+    /**
+     * Set dirty state and notify expressions
+     *
+     * @param dirty
+     */
+    protected void updateDirtyState(boolean dirty) {
+        dirtyState = dirty;
+        firePropertyChange(EditorPartPresenter.TITLE_PROPERTY);
+        firePropertyChange(EditorPartPresenter.PROP_DIRTY);
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.EditorPartPresenter#isDirty()
-    */
-   @Override
-   public boolean isDirty()
-   {
-      return dirtyState;
-   }
+    /** @see com.codenvy.ide.api.editor.EditorPartPresenter#isDirty() */
+    @Override
+    public boolean isDirty() {
+        return dirtyState;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void addCloseHandler(EditorPartCloseHandler closeHandler)
-   {
-      if (!closeHandlers.contains(closeHandler))
-      {
-         closeHandlers.add(closeHandler);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void addCloseHandler(EditorPartCloseHandler closeHandler) {
+        if (!closeHandlers.contains(closeHandler)) {
+            closeHandlers.add(closeHandler);
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public EditorInput getEditorInput()
-   {
-      return input;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public EditorInput getEditorInput() {
+        return input;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose()
-    */
-   @Override
-   public boolean onClose()
-   {
-      if (isDirty())
-      {
-         if (Window.confirm("'" + getEditorInput().getName() + "' has been modified. Save changes?"))
-         {
-            doSave();
-         }
-      }
-      handleClose();
-      return true;
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose() */
+    @Override
+    public boolean onClose() {
+        if (isDirty()) {
+            if (Window.confirm("'" + getEditorInput().getName() + "' has been modified. Save changes?")) {
+                doSave();
+            }
+        }
+        handleClose();
+        return true;
+    }
 
-   protected void handleClose()
-   {
-      for (int i = 0; i < closeHandlers.size(); i++)
-      {
-         EditorPartCloseHandler handler = closeHandlers.get(i);
-         handler.onClose(this);
-      }
-   }
+    protected void handleClose() {
+        for (int i = 0; i < closeHandlers.size(); i++) {
+            EditorPartCloseHandler handler = closeHandlers.get(i);
+            handler.onClose(this);
+        }
+    }
 
 }

@@ -3,37 +3,37 @@
 @url check checkIcon;
 
 .menuHorizontal .checkedItem {
-	background: keyboardSelectionBackgroundColor;
+    background: keyboardSelectionBackgroundColor;
 }
 
 .menuHorizontal .uncheckedItem {
-	background-color: transparent;
+    background-color: transparent;
 }
 
 .menuVertical .itemContainer {
-	position: relative;
+    position: relative;
 }
 
 .menuVertical .itemIcon {
-	position: absolute;
-	left: 2px;
-	top: 2px;
-	height: 16px;
-	width: 16px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    height: 16px;
+    width: 16px;
 }
 
 .menuVertical .checkedItem .itemTitle:BEFORE {
-	position: absolute;
-	left: 21px;
-	content: check;
+    position: absolute;
+    left: 21px;
+    content: check;
 }
 
 .menuVertical .itemContainer .itemTitle {
-	margin-left: 31px;
+    margin-left: 31px;
 }
 
 .menuVertical .itemContainer .hotKey {
-	float:right;
-	margin-left: 30px;
-	color: #999;
+    float: right;
+    margin-left: 30px;
+    color: #999;
 }

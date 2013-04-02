@@ -27,124 +27,87 @@ import java.util.HashMap;
 
 /**
  * Default implementation of {@link NodeDataAdapter} for {@link CodeBlock}
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock>
-{
+public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock> {
 
-   private HashMap<CodeBlock, TreeNodeElement<CodeBlock>> renderNodes =
-      new HashMap<CodeBlock, TreeNodeElement<CodeBlock>>();
+    private HashMap<CodeBlock, TreeNodeElement<CodeBlock>> renderNodes =
+            new HashMap<CodeBlock, TreeNodeElement<CodeBlock>>();
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int compare(CodeBlock a, CodeBlock b)
-   {
-      // TODO Auto-generated method stub
-      return 0;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int compare(CodeBlock a, CodeBlock b) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean hasChildren(CodeBlock data)
-   {
-      JsonArray<CodeBlock> jsonArray = data.getChildren();
-      return jsonArray != null && !jsonArray.isEmpty();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasChildren(CodeBlock data) {
+        JsonArray<CodeBlock> jsonArray = data.getChildren();
+        return jsonArray != null && !jsonArray.isEmpty();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonArray<CodeBlock> getChildren(CodeBlock data)
-   {
-      return data.getChildren();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<CodeBlock> getChildren(CodeBlock data) {
+        return data.getChildren();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getNodeId(CodeBlock data)
-   {
-      return data.getId();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getNodeId(CodeBlock data) {
+        return data.getId();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getNodeName(CodeBlock data)
-   {
-      return data.getType();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getNodeName(CodeBlock data) {
+        return data.getType();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public CodeBlock getParent(CodeBlock data)
-   {
-      return data.getParent();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public CodeBlock getParent(CodeBlock data) {
+        return data.getParent();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public TreeNodeElement<CodeBlock> getRenderedTreeNode(CodeBlock data)
-   {
-      return renderNodes.get(data);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public TreeNodeElement<CodeBlock> getRenderedTreeNode(CodeBlock data) {
+        return renderNodes.get(data);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setNodeName(CodeBlock data, String name)
-   {
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setNodeName(CodeBlock data, String name) {
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setRenderedTreeNode(CodeBlock data, TreeNodeElement<CodeBlock> renderedNode)
-   {
-      renderNodes.put(data, renderedNode);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setRenderedTreeNode(CodeBlock data, TreeNodeElement<CodeBlock> renderedNode) {
+        renderNodes.put(data, renderedNode);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public CodeBlock getDragDropTarget(CodeBlock data)
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public CodeBlock getDragDropTarget(CodeBlock data) {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonArray<String> getNodePath(CodeBlock data)
-   {
-      return PathUtils.getNodePath(this, data);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<String> getNodePath(CodeBlock data) {
+        return PathUtils.getNodePath(this, data);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public CodeBlock getNodeByPath(CodeBlock root, JsonArray<String> relativeNodePath)
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public CodeBlock getNodeByPath(CodeBlock root, JsonArray<String> relativeNodePath) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

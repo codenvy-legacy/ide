@@ -24,22 +24,21 @@ import com.codenvy.ide.text.store.TextChange;
 
 /**
  * A listener that is called when the user enters or deletes text.
- *
+ * <p/>
  * Similar to {@link DocumentModel.TextListener} except is only called when the
  * text is entered/deleted by the local user.
  */
-public interface TextListener
-{
-   /**
-    * Note: You should not mutate the document within this callback, as this is
-    * not supported yet and can lead to other clients having stale position
-    * information inside the {@code textChange}.
-    *
-    * Note: The {@link TextChange} contains a reference to the live
-    * {@link Line} from the document model. If you hold on to a reference after
-    * {@link #onTextChange} returns, beware that the contents of the
-    * {@link Line} could change, invalidating some of the state in the
-    * {@link TextChange}.
-    */
-   void onTextChange(TextChange textChange);
+public interface TextListener {
+    /**
+     * Note: You should not mutate the document within this callback, as this is
+     * not supported yet and can lead to other clients having stale position
+     * information inside the {@code textChange}.
+     * <p/>
+     * Note: The {@link TextChange} contains a reference to the live
+     * {@link Line} from the document model. If you hold on to a reference after
+     * {@link #onTextChange} returns, beware that the contents of the
+     * {@link Line} could change, invalidating some of the state in the
+     * {@link TextChange}.
+     */
+    void onTextChange(TextChange textChange);
 }

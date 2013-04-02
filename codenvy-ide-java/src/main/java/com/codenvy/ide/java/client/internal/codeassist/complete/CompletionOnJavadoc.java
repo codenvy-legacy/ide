@@ -10,34 +10,36 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.internal.codeassist.complete;
 
-public interface CompletionOnJavadoc
-{
+public interface CompletionOnJavadoc {
 
-   // Bit pattern for javadoc completion flags
-   int JAVADOC = 0x0001;
+    // Bit pattern for javadoc completion flags
+    int JAVADOC = 0x0001;
 
-   int EXCEPTION = 0x0002;
+    int EXCEPTION = 0x0002;
 
-   int TEXT = 0x0004;
+    int TEXT = 0x0004;
 
-   int BASE_TYPES = 0x0008;
+    int BASE_TYPES = 0x0008;
 
-   int ONLY_INLINE_TAG = 0x0010;
+    int ONLY_INLINE_TAG = 0x0010;
 
-   int REPLACE_TAG = 0x0020;
+    int REPLACE_TAG = 0x0020;
 
-   int FORMAL_REFERENCE = 0x0040;
+    int FORMAL_REFERENCE = 0x0040;
 
-   int ALL_POSSIBLE_TAGS = 0x0080;
+    int ALL_POSSIBLE_TAGS = 0x0080;
 
-   /**
-    * Get completion node flags.
-    * 
-    * @return int Flags of the javadoc completion node.
-    */
-   public int getCompletionFlags();
+    /**
+     * Get completion node flags.
+     *
+     * @return int Flags of the javadoc completion node.
+     */
+    public int getCompletionFlags();
 
-   /** @param flags The completionFlags to add. */
-   public void addCompletionFlags(int flags);
+    /**
+     * @param flags
+     *         The completionFlags to add.
+     */
+    public void addCompletionFlags(int flags);
 
 }

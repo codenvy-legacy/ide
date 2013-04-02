@@ -13,11 +13,9 @@ package com.codenvy.ide.java.client.internal.corext.refactoring.util;
 import com.codenvy.ide.java.client.core.dom.ASTNode;
 import com.codenvy.ide.java.client.core.dom.rewrite.TargetSourceRangeComputer;
 
-public class NoCommentSourceRangeComputer extends TargetSourceRangeComputer
-{
-   @Override
-   public SourceRange computeSourceRange(ASTNode node)
-   {
-      return new SourceRange(node.getStartPosition(), node.getLength());
-   }
+public class NoCommentSourceRangeComputer extends TargetSourceRangeComputer {
+    @Override
+    public SourceRange computeSourceRange(ASTNode node) {
+        return new SourceRange(node.getStartPosition(), node.getLength());
+    }
 }

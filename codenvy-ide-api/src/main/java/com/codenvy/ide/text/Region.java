@@ -27,20 +27,19 @@ package com.codenvy.ide.text;
  * Clients may implement this interface or use the standard implementation {@link RegionImpl}.
  * </p>
  */
-public interface Region
-{
+public interface Region {
 
-   /**
-    * Returns the length of the region.
-    * 
-    * @return the length of the region
-    */
-   int getLength();
+    /**
+     * Returns the length of the region.
+     *
+     * @return the length of the region
+     */
+    int getLength();
 
-   /**
-    * Returns the offset of the region.
-    * 
-    * @return the offset of the region
-    */
-   int getOffset();
+    /**
+     * Returns the offset of the region.
+     *
+     * @return the offset of the region
+     */
+    int getOffset();
 }

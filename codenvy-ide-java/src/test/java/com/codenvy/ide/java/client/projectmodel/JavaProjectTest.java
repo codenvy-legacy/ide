@@ -18,9 +18,6 @@
  */
 package com.codenvy.ide.java.client.projectmodel;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.Folder;
@@ -33,67 +30,62 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class JavaProjectTest
-{
+public class JavaProjectTest {
 
-   @Mock
-   private SourceFolder sourceFolder;
-   
-   private static final String[] packages = new String[]{
-       "org",//
-       "org.exo",//
-       "org.exo.ide",
-       "org.exo.ide.cli"
-   };
-   
-   private JavaProject project = new JavaProject(null);
-   
-   @Before
-   public void setUp()
-   {
-      JsonArray<Resource> childrens = JsonCollections.createArray();
-      for(String pack : packages)
-      {
-         Package p = Mockito.mock(Package.class);
-         Mockito.when(p.getName()).thenReturn(pack);
-         childrens.add(p);
-      }
-      Mockito.when(sourceFolder.getChildren()).thenReturn(childrens);
-      when(sourceFolder.getName()).thenReturn("src/main/java");
-   }
-   
-   @Test
-   public void findParentForNewPackage()
-   {
-      Folder parentForPackage = project.findFolderParent(sourceFolder, "org.ide");
-      assertThat(parentForPackage.getName()).isEqualTo("org");
-   }
-   
-   @Test
-   public void findParentForNewPackageWithNameConflict()
-   {
-      Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.ide.client");
-      assertThat(parentForPackage.getName()).isEqualTo("org.exo.ide");
-   }
-   
-   @Test
-   public void parentNotExist()
-   {
-      Folder parentForPackage = project.findFolderParent(sourceFolder, "com.exo.ide.client");
-      assertThat(parentForPackage).isNull();
-   }
-   
-   @Test
-   public void findParentPartNameMathch()
-   {
-      Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.idetest");
-      assertThat(parentForPackage.getName()).isEqualTo("org.exo");
-   }
-   
+    @Mock
+    private SourceFolder sourceFolder;
+
+    private static final String[] packages = new String[]{
+            "org",//
+            "org.exo",//
+            "org.exo.ide",
+            "org.exo.ide.cli"
+    };
+
+    private JavaProject project = new JavaProject(null);
+
+    @Before
+    public void setUp() {
+        JsonArray<Resource> childrens = JsonCollections.createArray();
+        for (String pack : packages) {
+            Package p = Mockito.mock(Package.class);
+            Mockito.when(p.getName()).thenReturn(pack);
+            childrens.add(p);
+        }
+        Mockito.when(sourceFolder.getChildren()).thenReturn(childrens);
+        when(sourceFolder.getName()).thenReturn("src/main/java");
+    }
+
+    @Test
+    public void findParentForNewPackage() {
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.ide");
+        assertThat(parentForPackage.getName()).isEqualTo("org");
+    }
+
+    @Test
+    public void findParentForNewPackageWithNameConflict() {
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.ide.client");
+        assertThat(parentForPackage.getName()).isEqualTo("org.exo.ide");
+    }
+
+    @Test
+    public void parentNotExist() {
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "com.exo.ide.client");
+        assertThat(parentForPackage).isNull();
+    }
+
+    @Test
+    public void findParentPartNameMathch() {
+        Folder parentForPackage = project.findFolderParent(sourceFolder, "org.exo.idetest");
+        assertThat(parentForPackage.getName()).isEqualTo("org.exo");
+    }
+
 }

@@ -32,49 +32,39 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * GenericProjectPageViewImpl is the view of generic project page wizard.
  * Provides entering project's name for new generic project.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericProjectPageViewImpl extends Composite implements NewGenericProjectPageView
-{
-   private ActionDelegate delegate;
+public class NewGenericProjectPageViewImpl extends Composite implements NewGenericProjectPageView {
+    private ActionDelegate delegate;
 
-   private static NewGenericPrPageViewImplUiBinder uiBinder = GWT.create(NewGenericPrPageViewImplUiBinder.class);
+    private static NewGenericPrPageViewImplUiBinder uiBinder = GWT.create(NewGenericPrPageViewImplUiBinder.class);
 
-   @UiField
-   FlowPanel mainPanel;
+    @UiField
+    FlowPanel mainPanel;
 
-   @UiField
-   TextBox projectName;
+    @UiField
+    TextBox projectName;
 
-   interface NewGenericPrPageViewImplUiBinder extends UiBinder<Widget, NewGenericProjectPageViewImpl>
-   {
-   }
+    interface NewGenericPrPageViewImplUiBinder extends UiBinder<Widget, NewGenericProjectPageViewImpl> {
+    }
 
-   public NewGenericProjectPageViewImpl()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    public NewGenericProjectPageViewImpl() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   @UiHandler("projectName")
-   void onProjectNameKeyUp(KeyUpEvent event)
-   {
-      delegate.checkProjectName();
-   }
+    @UiHandler("projectName")
+    void onProjectNameKeyUp(KeyUpEvent event) {
+        delegate.checkProjectName();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getProjectName()
-   {
-      return projectName.getText();
-   }
+    /** {@inheritDoc} */
+    public String getProjectName() {
+        return projectName.getText();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 }

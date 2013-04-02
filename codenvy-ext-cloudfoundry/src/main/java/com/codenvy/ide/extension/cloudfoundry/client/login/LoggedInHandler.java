@@ -20,14 +20,11 @@ package com.codenvy.ide.extension.cloudfoundry.client.login;
 
 /**
  * Can be called after success login.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: LoggedInHandler.java Jul 12, 2011 10:27:16 AM vereshchaka $
  */
-public interface LoggedInHandler
-{
-   /**
-    * Performs some actions when logged in.
-    */
-   void onLoggedIn();
+public interface LoggedInHandler {
+    /** Performs some actions when logged in. */
+    void onLoggedIn();
 }

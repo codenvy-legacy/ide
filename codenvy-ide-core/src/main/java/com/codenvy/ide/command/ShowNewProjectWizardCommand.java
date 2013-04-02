@@ -18,16 +18,13 @@
  */
 package com.codenvy.ide.command;
 
-import com.codenvy.ide.api.expressions.Expression;
-
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.api.expressions.Expression;
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newproject.NewProjectPagePresenter;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,76 +32,59 @@ import com.google.inject.Singleton;
 
 /**
  * Open New project wizard dialog.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowNewProjectWizardCommand implements ExtendedCommand
-{
-   private final WizardAgentImpl wizardAgent;
+public class ShowNewProjectWizardCommand implements ExtendedCommand {
+    private final WizardAgentImpl wizardAgent;
 
-   private final Resources resources;
+    private final Resources resources;
 
-   private final PaaSAgentImpl paasAgent;
+    private final PaaSAgentImpl paasAgent;
 
-   /**
-    * Create command
-    * 
-    * @param wizardAgent
-    * @param resources
-    */
-   @Inject
-   public ShowNewProjectWizardCommand(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent)
-   {
-      this.wizardAgent = wizardAgent;
-      this.resources = resources;
-      this.paasAgent = paasAgent;
-   }
+    /**
+     * Create command
+     *
+     * @param wizardAgent
+     * @param resources
+     */
+    @Inject
+    public ShowNewProjectWizardCommand(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent) {
+        this.wizardAgent = wizardAgent;
+        this.resources = resources;
+        this.paasAgent = paasAgent;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void execute()
-   {
-      NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources, paasAgent);
-      WizardPresenter wizardDialog = new WizardPresenter(firstPage, "Create project");
-      wizardDialog.showWizard();
-   }
+    /** {@inheritDoc} */
+    public void execute() {
+        NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources, paasAgent);
+        WizardPresenter wizardDialog = new WizardPresenter(firstPage, "Create project");
+        wizardDialog.showWizard();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      // TODO need correct image
-      return resources.project();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        // TODO need correct image
+        return resources.project();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "Create new porject";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "Create new porject";
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression inContext()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression inContext() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression canExecute()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression canExecute() {
+        return null;
+    }
 }

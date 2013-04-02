@@ -35,56 +35,53 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Extension add Cloud Foundry support to the IDE Application.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
 @Extension(title = "Cloud Foundry Support.", version = "3.0.0")
-public class CloudFoundryExtension
-{
-   /**
-    * Default CloudFoundry server.
-    */
-   public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
+public class CloudFoundryExtension {
+    /** Default CloudFoundry server. */
+    public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
 
-   public static final String ID = "CloudFoundry";
+    public static final String ID = "CloudFoundry";
 
-   /**
-    * Create CloudFoundry extension.
-    * 
-    * @param paasAgent
-    * @param resources
-    * @param menu
-    * @param createApplicationCommand
-    * @param loginCommand
-    * @param showApplicationsCommand
-    * @param showCloudFoundryProjectCommand
-    * @param eventBus
-    * @param deployAppPresenter
-    * @param constant
-    * @param autoBeanFactory
-    * @param wizardPage
-    */
-   @Inject
-   public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuAgent menu,
-      ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
-      ShowApplicationsCommand showApplicationsCommand, ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
-      EventBus eventBus, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-      CloudFoundryPagePresenter wizardPage)
-   {
-      resources.cloudFoundryCss().ensureInjected();
+    /**
+     * Create CloudFoundry extension.
+     *
+     * @param paasAgent
+     * @param resources
+     * @param menu
+     * @param createApplicationCommand
+     * @param loginCommand
+     * @param showApplicationsCommand
+     * @param showCloudFoundryProjectCommand
+     * @param eventBus
+     * @param deployAppPresenter
+     * @param constant
+     * @param autoBeanFactory
+     * @param wizardPage
+     */
+    @Inject
+    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuAgent menu,
+                                 ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
+                                 ShowApplicationsCommand showApplicationsCommand,
+                                 ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
+                                 EventBus eventBus, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+                                 CloudFoundryPagePresenter wizardPage) {
+        resources.cloudFoundryCss().ensureInjected();
 
-      // TODO change hard code types
-      JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
-      paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, wizardPage, null);
-     
-      // TODO Needs to get service from DI?
-      String restContext = "/rest/private";
-      new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant, autoBeanFactory);
+        // TODO change hard code types
+        JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
+        paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, wizardPage, null);
 
-      menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
-      menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);
-      menu.addMenuItem("PaaS/CloudFoudry/Switch Account...", loginCommand);
-      menu.addMenuItem("Project/Paas/CloudFoudry", showCloudFoundryProjectCommand);
-   }
+        // TODO Needs to get service from DI?
+        String restContext = "/rest/private";
+        new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant, autoBeanFactory);
+
+        menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
+        menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);
+        menu.addMenuItem("PaaS/CloudFoudry/Switch Account...", loginCommand);
+        menu.addMenuItem("Project/Paas/CloudFoudry", showCloudFoundryProjectCommand);
+    }
 }

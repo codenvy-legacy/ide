@@ -1,127 +1,127 @@
 /** Add css rules here for your application. */
 body {
-  background: #DDD;
+    background: #DDD;
 }
 
 /* Style for splitter */
 .gwt-SplitLayoutPanel-HDragger {
-	background: #DDDDDD;
-	cursor: col-resize;
+    background: #DDDDDD;
+    cursor: col-resize;
 }
 
 .gwt-SplitLayoutPanel-VDragger {
-	background: #DDDDDD;
-	cursor: row-resize;
+    background: #DDDDDD;
+    cursor: row-resize;
 }
 
-.gwt-MenuBar .gwt-MenuItem-disabled img{
-	opacity: 0.33;
+.gwt-MenuBar .gwt-MenuItem-disabled img {
+    opacity: 0.33;
 }
 
 .gwt-DialogBox {
-	border: solid 1px #BBB;
-	box-shadow : 0 0 30px -5px;
+    border: solid 1px #BBB;
+    box-shadow: 0 0 30px -5px;
 }
 
 .gwt-DialogBox .Caption {
-	background: white;
-	padding: 3px;
-	border: none;
-	font-size: medium;
-	text-align: center;
+    background: white;
+    padding: 3px;
+    border: none;
+    font-size: medium;
+    text-align: center;
 }
 
 .gwt-DialogBox .dialogContent {
-	
+
 }
 
 .gwt-DialogBox .dialogMiddleCenter {
-	padding: 3px;
-	background: white;
+    padding: 3px;
+    background: white;
 }
 
 .gwt-DialogBox .dialogBottomCenter {
-	background: white;
+    background: white;
 }
 
 .gwt-DialogBox .dialogMiddleLeft {
-	background: white;
+    background: white;
 }
 
 .gwt-DialogBox .dialogMiddleRight {
-	background: white;
+    background: white;
 }
 
 .gwt-DialogBox .dialogTopLeftInner {
-	width: 0px;
-	zoom: 1;
+    width: 0px;
+    zoom: 1;
 }
 
 .gwt-DialogBox .dialogTopRightInner {
-	width: 0px;
-	zoom: 1;
+    width: 0px;
+    zoom: 1;
 }
 
 .gwt-DialogBox .dialogBottomLeftInner {
-	width: 0px;
-	height: 0px;
-	zoom: 1;
+    width: 0px;
+    height: 0px;
+    zoom: 1;
 }
 
 .gwt-DialogBox .dialogBottomRightInner {
-	width: 0px;
-	height: 0px;
-	zoom: 1;
+    width: 0px;
+    height: 0px;
+    zoom: 1;
 }
 
 .gwt-DialogBox .dialogTopLeft {
-	background: white;
+    background: white;
 }
 
 .gwt-DialogBox .dialogTopRight {
-	background: white;
+    background: white;
 }
 
 .gwt-DialogBox .dialogBottomLeft {
-	background: white;
+    background: white;
 }
 
 .gwt-DialogBox .dialogBottomRight {
-	background: white;
+    background: white;
 }
 
 * html .gwt-DialogBox .dialogTopLeftInner {
-	width: 0px;
-	overflow: hidden;
+    width: 0px;
+    overflow: hidden;
 }
 
 * html .gwt-DialogBox .dialogTopRightInner {
-	width: 0px;
-	overflow: hidden;
+    width: 0px;
+    overflow: hidden;
 }
 
 * html .gwt-DialogBox .dialogBottomLeftInner {
-	width: 0px;
-	height: 0px;
-	overflow: hidden;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
 }
 
 * html .gwt-DialogBox .dialogBottomRightInner {
-	width: 0px;
-	height: 0px;
-	overflow: hidden;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
 }
 
 .gwt-Button img {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 .gwt-Button[disabled] img {
-	opacity: 0.7;
+    opacity: 0.7;
 }
 
 .ide-editor-area {
-	box-shadow: 0px 0px 100px 10px #DDD;
-	-moz-box-shadow: 0px 0px 100px 10px #DDD;
-	-webkit-box-shadow: 0px 0px 100px 10px #DDD;
+    box-shadow: 0px 0px 100px 10px #DDD;
+    -moz-box-shadow: 0px 0px 100px 10px #DDD;
+    -webkit-box-shadow: 0px 0px 100px 10px #DDD;
 }

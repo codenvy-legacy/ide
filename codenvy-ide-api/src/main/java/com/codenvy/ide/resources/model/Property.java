@@ -25,90 +25,81 @@ import com.codenvy.ide.json.JsonCollections;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Property.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
-public class Property
-{
-   protected String name;
+public class Property {
+    protected String name;
 
-   protected JsonArray<String> value;
+    protected JsonArray<String> value;
 
-   /**
-    * Create multi-valued Property
-    * 
-    * @param name
-    * @param value
-    */
-   public Property(String name, JsonArray<String> value)
-   {
-      this.name = name;
-      this.value = value;
-   }
+    /**
+     * Create multi-valued Property
+     *
+     * @param name
+     * @param value
+     */
+    public Property(String name, JsonArray<String> value) {
+        this.name = name;
+        this.value = value;
+    }
 
-   /**
-    * Create single-valued Property. Using this constructor is equivalent to:
-    * <p/>
-    * <pre>
-    * String val = ...;
-    * JsonArray&lt;String&gt; l = JsonCollections.&lt;String&gt;createArray();
-    * l.add(val);
-    * new Property(&quot;MyName&quot;, l);
-    * </pre>
-    *
-    * @param name the name of property
-    * @param value the value. If <code>value == null</code> it means no value
-    */
-   public Property(String name, String value)
-   {
-      this.name = name;
-      this.value = JsonCollections.<String> createArray();
-      this.value.add(value);
-   }
+    /**
+     * Create single-valued Property. Using this constructor is equivalent to:
+     * <p/>
+     * <pre>
+     * String val = ...;
+     * JsonArray&lt;String&gt; l = JsonCollections.&lt;String&gt;createArray();
+     * l.add(val);
+     * new Property(&quot;MyName&quot;, l);
+     * </pre>
+     *
+     * @param name
+     *         the name of property
+     * @param value
+     *         the value. If <code>value == null</code> it means no value
+     */
+    public Property(String name, String value) {
+        this.name = name;
+        this.value = JsonCollections.<String>createArray();
+        this.value.add(value);
+    }
 
-   /**
-    * Default constructor for internal needs
-    */
-   public Property()
-   {
-   }
+    /** Default constructor for internal needs */
+    public Property() {
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * Set new Property Name
-    * 
-    * @param name
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /**
+     * Set new Property Name
+     *
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * Get value of the Property
-    * 
-    * @return
-    */
-   public JsonArray<String> getValue()
-   {
-      return value;
-   }
+    /**
+     * Get value of the Property
+     *
+     * @return
+     */
+    public JsonArray<String> getValue() {
+        return value;
+    }
 
-   /**
-    * Set new value of the Property
-    * 
-    * @param value
-    */
-   public void setValue(JsonArray<String> value)
-   {
-      this.value = value;
-   }
+    /**
+     * Set new value of the Property
+     *
+     * @param value
+     */
+    public void setValue(JsonArray<String> value) {
+        this.value = value;
+    }
 
-   /** @see java.lang.Object#toString() */
-   @Override
-   public String toString()
-   {
-      return "Property [name=" + name + ", value=" + value + ']';
-   }
+    /** @see java.lang.Object#toString() */
+    @Override
+    public String toString() {
+        return "Property [name=" + name + ", value=" + value + ']';
+    }
 }

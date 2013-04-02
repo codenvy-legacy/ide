@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client.info;
 
 import com.codenvy.ide.api.parts.ConsolePart;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -38,116 +37,107 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Presenter for showing application info.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationInfoPresenter.java Jun 30, 2011 5:02:31 PM vereshchaka $
  */
 @Singleton
-public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDelegate
-{
-   private ApplicationInfoView view;
+public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDelegate {
+    private ApplicationInfoView view;
 
-   private EventBus eventBus;
+    private EventBus eventBus;
 
-   private ResourceProvider resourceProvider;
+    private ResourceProvider resourceProvider;
 
-   private ConsolePart console;
+    private ConsolePart console;
 
-   private CloudFoundryLocalizationConstant constant;
+    private CloudFoundryLocalizationConstant constant;
 
-   private CloudFoundryAutoBeanFactory autoBeanFactory;
+    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   private LoginPresenter loginPresenter;
+    private LoginPresenter loginPresenter;
 
-   /**
-    * Create presenter.
-    * 
-    * @param view
-    * @param eventBus
-    * @param resourceProvider
-    * @param console
-    * @param constant
-    * @param autoBeanFactory
-    * @param loginPresenter
-    */
-   @Inject
-   protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
-      ConsolePart console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-      LoginPresenter loginPresenter)
-   {
-      this.view = view;
-      this.view.setDelegate(this);
-      this.eventBus = eventBus;
-      this.resourceProvider = resourceProvider;
-      this.console = console;
-      this.constant = constant;
-      this.autoBeanFactory = autoBeanFactory;
-      this.loginPresenter = loginPresenter;
-   }
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param resourceProvider
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param loginPresenter
+     */
+    @Inject
+    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
+                                       ConsolePart console, CloudFoundryLocalizationConstant constant,
+                                       CloudFoundryAutoBeanFactory autoBeanFactory,
+                                       LoginPresenter loginPresenter) {
+        this.view = view;
+        this.view.setDelegate(this);
+        this.eventBus = eventBus;
+        this.resourceProvider = resourceProvider;
+        this.console = console;
+        this.constant = constant;
+        this.autoBeanFactory = autoBeanFactory;
+        this.loginPresenter = loginPresenter;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onOKClicked()
-   {
-      view.close();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onOKClicked() {
+        view.close();
+    }
 
-   /**
-    * Show dialog.
-    */
-   public void showDialog()
-   {
-      showApplicationInfo(resourceProvider.getActiveProject().getId());
-   }
+    /** Show dialog. */
+    public void showDialog() {
+        showApplicationInfo(resourceProvider.getActiveProject().getId());
+    }
 
-   /**
-    * Shows application info.
-    * 
-    * @param projectId
-    */
-   private void showApplicationInfo(final String projectId)
-   {
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+    /**
+     * Shows application info.
+     *
+     * @param projectId
+     */
+    private void showApplicationInfo(final String projectId) {
+        try {
+            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn()
-               {
-                  showApplicationInfo(projectId);
-               }
-            }, null, eventBus, console, constant, loginPresenter)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  view.setName(result.getName());
-                  view.setState(result.getState());
-                  view.setInstances(String.valueOf(result.getInstances()));
-                  view.setVersion(result.getVersion());
-                  view.setDisk(String.valueOf(result.getResources().getDisk()));
-                  view.setMemory(String.valueOf(result.getResources().getMemory()) + "MB");
-                  view.setModel(String.valueOf(result.getStaging().getModel()));
-                  view.setStack(String.valueOf(result.getStaging().getStack()));
-                  view.setApplicationUris(result.getUris());
-                  view.setApplicationServices(result.getServices());
-                  view.setApplicationEnvironments(result.getEnv());
+            CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, new LoggedInHandler() {
+                                                                           @Override
+                                                                           public void onLoggedIn() {
+                                                                               showApplicationInfo(projectId);
+                                                                           }
+                                                                       }, null, eventBus, console, constant, loginPresenter) {
+                                                                           @Override
+                                                                           protected void onSuccess(CloudFoundryApplication result) {
+                                                                               view.setName(result.getName());
+                                                                               view.setState(result.getState());
+                                                                               view.setInstances(String.valueOf(result.getInstances()));
+                                                                               view.setVersion(result.getVersion());
+                                                                               view.setDisk(
+                                                                                       String.valueOf(result.getResources().getDisk()));
+                                                                               view.setMemory(
+                                                                                       String.valueOf(result.getResources().getMemory()) +
+                                                                                       "MB");
+                                                                               view.setModel(
+                                                                                       String.valueOf(result.getStaging().getModel()));
+                                                                               view.setStack(
+                                                                                       String.valueOf(result.getStaging().getStack()));
+                                                                               view.setApplicationUris(result.getUris());
+                                                                               view.setApplicationServices(result.getServices());
+                                                                               view.setApplicationEnvironments(result.getEnv());
 
-                  view.showDialog();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
+                                                                               view.showDialog();
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
+    }
 }

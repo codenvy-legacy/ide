@@ -17,11 +17,7 @@
 package com.codenvy.ide.core.inject;
 
 import com.codenvy.ide.Resources;
-import com.codenvy.ide.api.editor.CodenvyTextEditor;
-import com.codenvy.ide.api.editor.DocumentProvider;
-import com.codenvy.ide.api.editor.EditorAgent;
-import com.codenvy.ide.api.editor.EditorProvider;
-import com.codenvy.ide.api.editor.EditorRegistry;
+import com.codenvy.ide.api.editor.*;
 import com.codenvy.ide.api.expressions.ExpressionManager;
 import com.codenvy.ide.api.extension.ExtensionGinModule;
 import com.codenvy.ide.api.paas.PaaSAgent;
@@ -58,13 +54,8 @@ import com.codenvy.ide.menu.MainMenuViewImpl;
 import com.codenvy.ide.outline.OutlinePartPrenter;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
-import com.codenvy.ide.part.EditorPartStackPresenter;
-import com.codenvy.ide.part.FocusManager;
-import com.codenvy.ide.part.PartStackPresenter;
+import com.codenvy.ide.part.*;
 import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
-import com.codenvy.ide.part.PartStackUIResources;
-import com.codenvy.ide.part.PartStackView;
-import com.codenvy.ide.part.PartStackViewImpl;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
@@ -98,120 +89,99 @@ import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-/**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
- */
+/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
 @ExtensionGinModule
-public class CoreGinModule extends AbstractGinModule
-{
+public class CoreGinModule extends AbstractGinModule {
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void configure()
-   {
-      // generic bindings
-      bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
-      bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
-      bind(Resources.class).in(Singleton.class);
-      bind(ExtensionRegistry.class).in(Singleton.class);
-      bind(StandardComponentInitializer.class).in(Singleton.class);
+    /** {@inheritDoc} */
+    @Override
+    protected void configure() {
+        // generic bindings
+        bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
+        bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
+        bind(Resources.class).in(Singleton.class);
+        bind(ExtensionRegistry.class).in(Singleton.class);
+        bind(StandardComponentInitializer.class).in(Singleton.class);
 
-      apiBindingConfigure();
+        apiBindingConfigure();
 
-      resourcesAPIconfigure();
+        resourcesAPIconfigure();
 
-      coreUiConfigure();
+        coreUiConfigure();
 
-      editorAPIconfigure();
-   }
+        editorAPIconfigure();
+    }
 
-   /**
-    * API Bindings, binds API interfaces to the implementations
-    */
-   private void apiBindingConfigure()
-   {
-      // Agents
-      bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
-      bind(ExpressionManager.class).to(ExpressionManagerImpl.class).in(Singleton.class);
-      bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
-      bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
-      bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
-      bind(ToolbarAgent.class).to(ToolbarPresenter.class).in(Singleton.class);
-      bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
-      bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
-      bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
-      // UI Model
-      bind(PartStack.class).to(PartStackPresenter.class);
-      bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
-      // Parts
-      bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
-      bind(WelcomePart.class).to(WelcomePartPresenter.class).in(Singleton.class);
-      bind(OutlinePart.class).to(OutlinePartPrenter.class).in(Singleton.class);
-      bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
+    /** API Bindings, binds API interfaces to the implementations */
+    private void apiBindingConfigure() {
+        // Agents
+        bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
+        bind(ExpressionManager.class).to(ExpressionManagerImpl.class).in(Singleton.class);
+        bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
+        bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
+        bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
+        bind(ToolbarAgent.class).to(ToolbarPresenter.class).in(Singleton.class);
+        bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
+        bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
+        bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
+        // UI Model
+        bind(PartStack.class).to(PartStackPresenter.class);
+        bind(EditorPartStack.class).to(EditorPartStackPresenter.class).in(Singleton.class);
+        // Parts
+        bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
+        bind(WelcomePart.class).to(WelcomePartPresenter.class).in(Singleton.class);
+        bind(OutlinePart.class).to(OutlinePartPrenter.class).in(Singleton.class);
+        bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
 
-   }
+    }
 
-   /**
-    * Configures binding for Editor API
-    */
-   protected void editorAPIconfigure()
-   {
-      bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
-      bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
-      bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
+    /** Configures binding for Editor API */
+    protected void editorAPIconfigure() {
+        bind(DocumentFactory.class).to(DocumentFactoryImpl.class).in(Singleton.class);
+        bind(CodenvyTextEditor.class).to(TextEditorPresenter.class);
+        bind(EditorAgent.class).to(EditorAgentImpl.class).in(Singleton.class);
 
-      bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
-      bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
-      bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
-      bind(UserActivityManager.class).in(Singleton.class);
-      bind(OutlinePartPrenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
-   }
+        bind(EditorRegistry.class).to(EditorRegistryImpl.class).in(Singleton.class);
+        bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
+        bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
+        bind(UserActivityManager.class).in(Singleton.class);
+        bind(OutlinePartPrenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
+    }
 
-   /**
-    * Configures binding for Resource API (Resource Manager) 
-    */
-   protected void resourcesAPIconfigure()
-   {
-      bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
-      // Generic Model Provider
-      bind(ModelProvider.class).to(GenericModelProvider.class).in(Singleton.class);
-   }
+    /** Configures binding for Resource API (Resource Manager) */
+    protected void resourcesAPIconfigure() {
+        bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
+        // Generic Model Provider
+        bind(ModelProvider.class).to(GenericModelProvider.class).in(Singleton.class);
+    }
 
-   /**
-    * Configure Core UI components, resouces and views
-    */
-   protected void coreUiConfigure()
-   {
-      // Resources
-      bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
-      // Views
-      bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
-      bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
-      bind(NewGenericFilePageView.class).to(NewGenericFilePageViewImpl.class).in(Singleton.class);
-      bind(ToolbarView.class).to(ToolbarViewImpl.class).in(Singleton.class);
-      bind(PartStackView.class).to(PartStackViewImpl.class);
-      bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
-      bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
+    /** Configure Core UI components, resouces and views */
+    protected void coreUiConfigure() {
+        // Resources
+        bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
+        // Views
+        bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
+        bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
+        bind(NewGenericFilePageView.class).to(NewGenericFilePageViewImpl.class).in(Singleton.class);
+        bind(ToolbarView.class).to(ToolbarViewImpl.class).in(Singleton.class);
+        bind(PartStackView.class).to(PartStackViewImpl.class);
+        bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
+        bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
 
-      bind(NewGenericProjectPageView.class).to(NewGenericProjectPageViewImpl.class);
-   }
+        bind(NewGenericProjectPageView.class).to(NewGenericProjectPageViewImpl.class);
+    }
 
-   @Provides
-   @Named("defaultFileType")
-   @Singleton
-   protected FileType provideDefaultFileType()
-   {
-      //TODO add icon for unknown file 
-      return new FileType(null, null);
-   }
+    @Provides
+    @Named("defaultFileType")
+    @Singleton
+    protected FileType provideDefaultFileType() {
+        //TODO add icon for unknown file
+        return new FileType(null, null);
+    }
 
-   @Provides
-   @Singleton
-   protected PartStackEventHandler providePartStackEventHandler(FocusManager partAgentPresenter)
-   {
-      return partAgentPresenter.getPartStackHandler();
-   }
+    @Provides
+    @Singleton
+    protected PartStackEventHandler providePartStackEventHandler(FocusManager partAgentPresenter) {
+        return partAgentPresenter.getPartStackHandler();
+    }
 }

@@ -19,18 +19,14 @@ package com.codenvy.ide.api.extension;
 /**
  * Extension Definition annotation. Used to mark class as Extensio and declare it's description
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public @interface Extension {
 
-   /**
-    * @return Extension version
-    */
-   String version();
+    /** @return Extension version */
+    String version();
 
-   /**
-    * @return Extension brief description
-    */
-   String title();
+    /** @return Extension brief description */
+    String title();
 
 }

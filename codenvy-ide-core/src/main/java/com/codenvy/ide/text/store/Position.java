@@ -17,74 +17,61 @@ package com.codenvy.ide.text.store;
 /**
  * A class to encapsulate a position in the document given in terms of a line
  * and column.
- *
+ * <p/>
  * This should only be used by methods that return the pair. Methods that need
  * to take a line and column as input should take them as separate parameters to
  * reduce code complexity and object allocations.
- *
+ * <p/>
  * This class is immutable.
  */
-public class Position
-{
-   private final LineInfo lineInfo;
+public class Position {
+    private final LineInfo lineInfo;
+    private final int      column;
 
-   private final int column;
+    public Position(LineInfo lineInfo, int column) {
+        // Defensively copy to ensure immutabilty
+        this.lineInfo = lineInfo.copy();
+        this.column = column;
+    }
 
-   public Position(LineInfo lineInfo, int column)
-   {
-      // Defensively copy to ensure immutabilty
-      this.lineInfo = lineInfo.copy();
-      this.column = column;
-   }
+    public int getColumn() {
+        return column;
+    }
 
-   public int getColumn()
-   {
-      return column;
-   }
+    public Line getLine() {
+        return lineInfo.line();
+    }
 
-   public Line getLine()
-   {
-      return lineInfo.line();
-   }
+    /** Returns the line info object, if set by the creator. */
+    public LineInfo getLineInfo() {
+        // Defensively copy to ensure immutabilty
+        return lineInfo.copy();
+    }
 
-   /**
-    * Returns the line info object, if set by the creator.
-    */
-   public LineInfo getLineInfo()
-   {
-      // Defensively copy to ensure immutabilty
-      return lineInfo.copy();
-   }
+    public int getLineNumber() {
+        return lineInfo.number();
+    }
 
-   public int getLineNumber()
-   {
-      return lineInfo.number();
-   }
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 37 * result + lineInfo.hashCode();
+        result = 37 * result + column;
+        return result;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      int result = 17;
-      result = 37 * result + lineInfo.hashCode();
-      result = 37 * result + column;
-      return result;
-   }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Position)) {
+            return false;
+        }
 
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (!(obj instanceof Position))
-      {
-         return false;
-      }
+        Position o = (Position)obj;
+        return lineInfo.equals(o.lineInfo) && column == o.column;
+    }
 
-      Position o = (Position)obj;
-      return lineInfo.equals(o.lineInfo) && column == o.column;
-   }
-
-   @Override
-   public String toString()
-   {
-      return "Position(" + lineInfo + ", " + column + ")";
-   }
+    @Override
+    public String toString() {
+        return "Position(" + lineInfo + ", " + column + ")";
+    }
 }

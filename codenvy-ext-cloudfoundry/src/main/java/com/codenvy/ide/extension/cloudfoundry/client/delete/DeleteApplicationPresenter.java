@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client.delete;
 
 import com.codenvy.ide.api.parts.ConsolePart;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -40,239 +39,197 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Presenter for delete application operation.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
 @Singleton
-public class DeleteApplicationPresenter implements DeleteApplicationView.ActionDelegate
-{
-   private DeleteApplicationView view;
+public class DeleteApplicationPresenter implements DeleteApplicationView.ActionDelegate {
+    private DeleteApplicationView view;
 
-   /**
-    * The name of application.
-    */
-   private String appName;
+    /** The name of application. */
+    private String appName;
 
-   /**
-    * Name of the server.
-    */
-   private String serverName;
+    /** Name of the server. */
+    private String serverName;
 
-   private ResourceProvider resourceProvider;
+    private ResourceProvider resourceProvider;
 
-   private EventBus eventBus;
+    private EventBus eventBus;
 
-   private ConsolePart console;
+    private ConsolePart console;
 
-   private CloudFoundryLocalizationConstant constant;
+    private CloudFoundryLocalizationConstant constant;
 
-   private CloudFoundryAutoBeanFactory autoBeanFactory;
+    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   private LoginPresenter loginPresenter;
+    private LoginPresenter loginPresenter;
 
-   private AsyncCallback<String> appDeleteCallback;
+    private AsyncCallback<String> appDeleteCallback;
 
-   /**
-    * Create presenter.
-    * 
-    * @param view
-    * @param resourceProvider
-    * @param eventBus
-    * @param console
-    * @param constant
-    * @param autoBeanFactory
-    * @param loginPresenter
-    */
-   @Inject
-   protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
-      EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
-   {
-      this.view = view;
-      this.view.setDelegate(this);
-      this.resourceProvider = resourceProvider;
-      this.eventBus = eventBus;
-      this.console = console;
-      this.constant = constant;
-      this.autoBeanFactory = autoBeanFactory;
-      this.loginPresenter = loginPresenter;
-   }
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param resourceProvider
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param loginPresenter
+     */
+    @Inject
+    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
+                                         EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
+                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter) {
+        this.view = view;
+        this.view.setDelegate(this);
+        this.resourceProvider = resourceProvider;
+        this.eventBus = eventBus;
+        this.console = console;
+        this.constant = constant;
+        this.autoBeanFactory = autoBeanFactory;
+        this.loginPresenter = loginPresenter;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onCancelClicked()
-   {
-      view.close();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onCancelClicked() {
+        view.close();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onDeleteClicked()
-   {
-      deleteApplication(appDeleteCallback);
+    /** {@inheritDoc} */
+    @Override
+    public void onDeleteClicked() {
+        deleteApplication(appDeleteCallback);
 
-      view.close();
-   }
+        view.close();
+    }
 
-   /**
-    * Deletes CloudFoundry application.
-    * 
-    * @param serverName
-    * @param appName
-    * @param callback
-    */
-   public void deleteApp(String serverName, String appName, AsyncCallback<String> callback)
-   {
-      this.serverName = serverName;
-      this.appDeleteCallback = callback;
+    /**
+     * Deletes CloudFoundry application.
+     *
+     * @param serverName
+     * @param appName
+     * @param callback
+     */
+    public void deleteApp(String serverName, String appName, AsyncCallback<String> callback) {
+        this.serverName = serverName;
+        this.appDeleteCallback = callback;
 
-      // If application name is absent then need to find it
-      if (appName == null)
-      {
-         getApplicationInfo();
-      }
-      else
-      {
-         this.appName = appName;
-         showDialog(appName);
-      }
-   }
+        // If application name is absent then need to find it
+        if (appName == null) {
+            getApplicationInfo();
+        } else {
+            this.appName = appName;
+            showDialog(appName);
+        }
+    }
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getApplicationInfo();
-      }
-   };
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getApplicationInfo();
+        }
+    };
 
-   /**
-    * Get application's name and put it to the field.
-    */
-   private void getApplicationInfo()
-   {
-      String projectId = resourceProvider.getActiveProject().getId();
+    /** Get application's name and put it to the field. */
+    private void getApplicationInfo() {
+        String projectId = resourceProvider.getActiveProject().getId();
 
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+        try {
+            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(
-            resourceProvider.getVfsId(),
-            projectId,
-            null,
-            null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null,
-               eventBus, console, constant, loginPresenter)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  appName = result.getName();
-                  showDialog(appName);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
+            CloudFoundryClientService.getInstance().getApplicationInfo(
+                    resourceProvider.getVfsId(),
+                    projectId,
+                    null,
+                    null,
+                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null,
+                                                                                  eventBus, console, constant, loginPresenter) {
+                        @Override
+                        protected void onSuccess(CloudFoundryApplication result) {
+                            appName = result.getName();
+                            showDialog(appName);
+                        }
+                    });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
+    }
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         deleteApplication(appDeleteCallback);
-      }
-   };
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            deleteApplication(appDeleteCallback);
+        }
+    };
 
-   /**
-    * Deletes application.
-    * 
-    * @param callback
-    */
-   private void deleteApplication(AsyncCallback<String> callback)
-   {
-      boolean isDeleteServices = view.isDeleteServices();
-      String projectId = null;
+    /**
+     * Deletes application.
+     *
+     * @param callback
+     */
+    private void deleteApplication(AsyncCallback<String> callback) {
+        boolean isDeleteServices = view.isDeleteServices();
+        String projectId = null;
 
-      final Project project = resourceProvider.getActiveProject();
-      // Checking does current project work with deleting CloudFoundry application.
-      // If project don't have the same CloudFoundry application name in properties
-      // then this property won't be cleaned.
-      if (project != null && project.getPropertyValue("cloudfoundry-application") != null
-         && appName.equals(project.getPropertyValue("cloudfoundry-application")))
-      {
-         projectId = project.getId();
-      }
+        final Project project = resourceProvider.getActiveProject();
+        // Checking does current project work with deleting CloudFoundry application.
+        // If project don't have the same CloudFoundry application name in properties
+        // then this property won't be cleaned.
+        if (project != null && project.getPropertyValue("cloudfoundry-application") != null
+            && appName.equals(project.getPropertyValue("cloudfoundry-application"))) {
+            projectId = project.getId();
+        }
 
-      try
-      {
-         CloudFoundryClientService.getInstance().deleteApplication(
-            resourceProvider.getVfsId(),
-            projectId,
-            appName,
-            serverName,
-            isDeleteServices,
-            new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
-               constant, loginPresenter)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  project.refreshProperties(new AsyncCallback<Project>()
-                  {
-                     @Override
-                     public void onSuccess(Project result)
-                     {
-                        view.close();
-                        console.print(constant.applicationDeletedMsg(appName));
-                        appDeleteCallback.onSuccess(appName);
-                     }
+        try {
+            CloudFoundryClientService.getInstance().deleteApplication(
+                    resourceProvider.getVfsId(),
+                    projectId,
+                    appName,
+                    serverName,
+                    isDeleteServices,
+                    new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
+                                                                 constant, loginPresenter) {
+                        @Override
+                        protected void onSuccess(String result) {
+                            project.refreshProperties(new AsyncCallback<Project>() {
+                                @Override
+                                public void onSuccess(Project result) {
+                                    view.close();
+                                    console.print(constant.applicationDeletedMsg(appName));
+                                    appDeleteCallback.onSuccess(appName);
+                                }
 
-                     @Override
-                     public void onFailure(Throwable caught)
-                     {
-                     }
-                  });
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
+                                @Override
+                                public void onFailure(Throwable caught) {
+                                }
+                            });
+                        }
+                    });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
+    }
 
-   /**
-    * Shows dialog.
-    * 
-    * @param appName application name which need to delete
-    */
-   public void showDialog(String appName)
-   {
-      view.setAskMessage(constant.deleteApplicationQuestion(appName));
-      view.setAskDeleteServices(constant.deleteApplicationAskDeleteServices());
-      view.setDeleteServices(false);
+    /**
+     * Shows dialog.
+     *
+     * @param appName
+     *         application name which need to delete
+     */
+    public void showDialog(String appName) {
+        view.setAskMessage(constant.deleteApplicationQuestion(appName));
+        view.setAskDeleteServices(constant.deleteApplicationAskDeleteServices());
+        view.setDeleteServices(false);
 
-      view.showDialog();
-   }
+        view.showDialog();
+    }
 }

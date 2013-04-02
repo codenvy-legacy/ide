@@ -23,20 +23,17 @@ package com.codenvy.ide.loader;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class EmptyLoader extends Loader
-{
+public class EmptyLoader extends Loader {
 
-   public void hide()
-   {
-   }
+    public void hide() {
+    }
 
-   public void show()
-   {
-   }
+    public void show() {
+    }
 
 }

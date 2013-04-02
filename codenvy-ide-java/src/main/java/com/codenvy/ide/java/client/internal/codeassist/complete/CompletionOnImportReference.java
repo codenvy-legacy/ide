@@ -34,24 +34,20 @@ package com.codenvy.ide.java.client.internal.codeassist.complete;
 
 import com.codenvy.ide.java.client.internal.compiler.ast.ImportReference;
 
-public class CompletionOnImportReference extends ImportReference
-{
+public class CompletionOnImportReference extends ImportReference {
 
-   public CompletionOnImportReference(char[][] tokens, long[] positions, int modifiers)
-   {
-      super(tokens, positions, false, modifiers);
-   }
+    public CompletionOnImportReference(char[][] tokens, long[] positions, int modifiers) {
+        super(tokens, positions, false, modifiers);
+    }
 
-   public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand)
-   {
+    public StringBuffer print(int indent, StringBuffer output, boolean withOnDemand) {
 
-      printIndent(indent, output).append("<CompleteOnImport:"); //$NON-NLS-1$
-      for (int i = 0; i < this.tokens.length; i++)
-      {
-         if (i > 0)
-            output.append('.');
-         output.append(this.tokens[i]);
-      }
-      return output.append('>');
-   }
+        printIndent(indent, output).append("<CompleteOnImport:"); //$NON-NLS-1$
+        for (int i = 0; i < this.tokens.length; i++) {
+            if (i > 0)
+                output.append('.');
+            output.append(this.tokens[i]);
+        }
+        return output.append('>');
+    }
 }

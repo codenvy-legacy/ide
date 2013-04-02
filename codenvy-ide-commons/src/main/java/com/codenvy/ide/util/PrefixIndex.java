@@ -19,15 +19,16 @@ import com.codenvy.ide.json.JsonArray;
 /**
  * Interface of the index structure which supports search by the key prefix.
  *
- * @param <T> value data type
+ * @param <T>
+ *         value data type
  */
-public interface PrefixIndex<T>
-{
-   /**
-    * Searches values by the key prefix.
-    *
-    * @param prefix search key prefix
-    * @return values having keys prefixed with {@code prefix}
-    */
-   JsonArray<? extends T> search(String prefix);
+public interface PrefixIndex<T> {
+    /**
+     * Searches values by the key prefix.
+     *
+     * @param prefix
+     *         search key prefix
+     * @return values having keys prefixed with {@code prefix}
+     */
+    JsonArray<? extends T> search(String prefix);
 }

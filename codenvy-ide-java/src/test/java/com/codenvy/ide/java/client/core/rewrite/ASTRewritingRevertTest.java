@@ -10,123 +10,114 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.core.rewrite;
 
-import static org.junit.Assert.*;
-
-import com.codenvy.ide.java.client.core.dom.AST;
-import com.codenvy.ide.java.client.core.dom.ASTNode;
-import com.codenvy.ide.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
-import com.codenvy.ide.java.client.core.dom.PrimitiveType;
-import com.codenvy.ide.java.client.core.dom.SingleVariableDeclaration;
-import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
+import com.codenvy.ide.java.client.core.dom.*;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.internal.compiler.env.ICompilationUnit;
 
 import org.junit.Test;
 
-public class ASTRewritingRevertTest extends ASTRewritingTest
-{
+import static org.junit.Assert.assertTrue;
 
-   @Test
-   public void testRemoveInserted() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      ICompilationUnit cu =
-         new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+public class ASTRewritingRevertTest extends ASTRewritingTest {
 
-      CompilationUnit astRoot = createAST3(cu);
-      ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
+    @Test
+    public void testRemoveInserted() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        ICompilationUnit cu =
+                new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
-      AST ast = astRoot.getAST();
+        CompilationUnit astRoot = createAST3(cu);
+        ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
 
-      assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
-      TypeDeclaration type = findTypeDeclaration(astRoot, "E");
-      MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
-      {
-         // revert inserted node
-         PrimitiveType newType = ast.newPrimitiveType(PrimitiveType.INT);
+        AST ast = astRoot.getAST();
 
-         rewrite.set(methodDecl, MethodDeclaration.RETURN_TYPE2_PROPERTY, newType, null);
-         rewrite.remove(newType, null);
+        assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
+        TypeDeclaration type = findTypeDeclaration(astRoot, "E");
+        MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
+        {
+            // revert inserted node
+            PrimitiveType newType = ast.newPrimitiveType(PrimitiveType.INT);
 
-      }
-      {
-         // revert inserted list child
-         SingleVariableDeclaration newParam = createNewParam(ast, "x");
+            rewrite.set(methodDecl, MethodDeclaration.RETURN_TYPE2_PROPERTY, newType, null);
+            rewrite.remove(newType, null);
 
-         rewrite.getListRewrite(methodDecl, MethodDeclaration.PARAMETERS_PROPERTY).insertFirst(newParam, null);
+        }
+        {
+            // revert inserted list child
+            SingleVariableDeclaration newParam = createNewParam(ast, "x");
 
-         rewrite.remove(newParam, null);
-      }
+            rewrite.getListRewrite(methodDecl, MethodDeclaration.PARAMETERS_PROPERTY).insertFirst(newParam, null);
 
-      String preview = evaluateRewrite(cu, rewrite);
+            rewrite.remove(newParam, null);
+        }
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("    }\n");
-      buf.append("}\n");
+        String preview = evaluateRewrite(cu, rewrite);
 
-      assertEqualString(preview, buf.toString());
-   }
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("    }\n");
+        buf.append("}\n");
 
-   @Test
-   public void testReplaceInserted() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      ICompilationUnit cu =
-         new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
+        assertEqualString(preview, buf.toString());
+    }
 
-      CompilationUnit astRoot = createAST3(cu);
-      ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
+    @Test
+    public void testReplaceInserted() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        ICompilationUnit cu =
+                new com.codenvy.ide.java.client.compiler.batch.CompilationUnit(buf.toString().toCharArray(), "E.java", "");
 
-      AST ast = astRoot.getAST();
+        CompilationUnit astRoot = createAST3(cu);
+        ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
 
-      assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
-      TypeDeclaration type = findTypeDeclaration(astRoot, "E");
-      MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
-      {
-         // replace inserted node
-         PrimitiveType newType = ast.newPrimitiveType(PrimitiveType.INT);
+        AST ast = astRoot.getAST();
 
-         rewrite.set(methodDecl, MethodDeclaration.RETURN_TYPE2_PROPERTY, newType, null);
+        assertTrue("Parse errors", (astRoot.getFlags() & ASTNode.MALFORMED) == 0);
+        TypeDeclaration type = findTypeDeclaration(astRoot, "E");
+        MethodDeclaration methodDecl = findMethodDeclaration(type, "foo");
+        {
+            // replace inserted node
+            PrimitiveType newType = ast.newPrimitiveType(PrimitiveType.INT);
 
-         PrimitiveType betterType = ast.newPrimitiveType(PrimitiveType.BOOLEAN);
+            rewrite.set(methodDecl, MethodDeclaration.RETURN_TYPE2_PROPERTY, newType, null);
 
-         rewrite.replace(newType, betterType, null);
+            PrimitiveType betterType = ast.newPrimitiveType(PrimitiveType.BOOLEAN);
 
-      }
-      {
-         // replace inserted list child
-         SingleVariableDeclaration newParam = createNewParam(ast, "x");
+            rewrite.replace(newType, betterType, null);
 
-         rewrite.getListRewrite(methodDecl, MethodDeclaration.PARAMETERS_PROPERTY).insertFirst(newParam, null);
+        }
+        {
+            // replace inserted list child
+            SingleVariableDeclaration newParam = createNewParam(ast, "x");
 
-         SingleVariableDeclaration betterParam = createNewParam(ast, "y");
+            rewrite.getListRewrite(methodDecl, MethodDeclaration.PARAMETERS_PROPERTY).insertFirst(newParam, null);
 
-         rewrite.replace(newParam, betterParam, null);
-      }
+            SingleVariableDeclaration betterParam = createNewParam(ast, "y");
 
-      String preview = evaluateRewrite(cu, rewrite);
+            rewrite.replace(newParam, betterParam, null);
+        }
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public boolean foo(float y) {\n");
-      buf.append("    }\n");
-      buf.append("}\n");
+        String preview = evaluateRewrite(cu, rewrite);
 
-      assertEqualString(preview, buf.toString());
-   }
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public boolean foo(float y) {\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+
+        assertEqualString(preview, buf.toString());
+    }
 }

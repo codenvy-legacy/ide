@@ -25,16 +25,14 @@ import com.codenvy.ide.api.mvp.View;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface ConsolePartView extends View<ConsolePartView.ActionDelegate>
-{
-   public interface ActionDelegate
-   {
-   }
+public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
+    public interface ActionDelegate {
+    }
 
-   /**
-    * Print message in console area.
-    * 
-    * @param message
-    */
-   public void print(String message);
+    /**
+     * Print message in console area.
+     *
+     * @param message
+     */
+    public void print(String message);
 }

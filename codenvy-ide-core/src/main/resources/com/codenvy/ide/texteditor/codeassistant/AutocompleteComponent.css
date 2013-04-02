@@ -1,56 +1,56 @@
-/* CSS for AutocompleteComponent.java */
+    /* CSS for AutocompleteComponent.java */
 
-@def maxHeight 300px;
+    @def maxHeight 300px;
 
-.container {
-  box-sizing: border-box;
-  
-  border:1px solid rgba(0, 0, 0, 0.2);
-	
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+    .container {
+        box-sizing: border-box;
 
-.items {
-  border-width: 0;
-  border-spacing: 0;
-  width: 100%;
-}
+        border: 1px solid rgba(0, 0, 0, 0.2);
 
-.hint {
-  overflow-x: hidden;
-  font-size: 11px;
-  font-family: arial, sans-serif;
-  color: #666;
-  background-color: #F7F7F7;
+        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-  border:1px solid rgba(0, 0, 0, 0.2);
+    .items {
+        border-width: 0;
+        border-spacing: 0;
+        width: 100%;
+    }
 
-  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  
-  text-align: center;
-  line-height: 16px;
-  padding: 0 3px;
-}
+    .hint {
+        overflow-x: hidden;
+        font-size: 11px;
+        font-family: arial, sans-serif;
+        color: #666;
+        background-color: #F7F7F7;
 
-.proposalIcon {
-  max-width: 16px;
-}
+        border: 1px solid rgba(0, 0, 0, 0.2);
 
-.proposalLabel {
-  max-width: 400px;
-}
+        -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-.cappedProposalLabel {
-  color: #999;
-}
+        text-align: center;
+        line-height: 16px;
+        padding: 0 3px;
+    }
 
-.proposalGroup {
-  padding-left: 5px;
-  color: grey;
-  text-align: right;
-  max-width: 250px;
-}
+    .proposalIcon {
+        max-width: 16px;
+    }
+
+    .proposalLabel {
+        max-width: 400px;
+    }
+
+    .cappedProposalLabel {
+        color: #999;
+    }
+
+    .proposalGroup {
+        padding-left: 5px;
+        color: grey;
+        text-align: right;
+        max-width: 250px;
+    }

@@ -19,17 +19,16 @@ import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
  * This interface can be implemented by clients.
  * </p>
  */
-public interface JavaCompletionProposal extends CompletionProposal
-{
+public interface JavaCompletionProposal extends CompletionProposal {
 
-   /**
-    * Returns the relevance of this completion proposal.
-    * <p>
-    * The relevance is used to determine if this proposal is more relevant than another proposal.
-    * </p>
-    * 
-    * @return the relevance of this completion proposal in the range of [0, 100]
-    */
-   int getRelevance();
+    /**
+     * Returns the relevance of this completion proposal.
+     * <p>
+     * The relevance is used to determine if this proposal is more relevant than another proposal.
+     * </p>
+     *
+     * @return the relevance of this completion proposal in the range of [0, 100]
+     */
+    int getRelevance();
 
 }

@@ -14,43 +14,34 @@
 
 package com.codenvy.ide.text.store.anchor;
 
-/**
- * A type identifier for anchors.
- */
-public class AnchorType
-{
+/** A type identifier for anchors. */
+public class AnchorType {
 
-   public static AnchorType create(Class<?> clientClazz, String name)
-   {
-      return new AnchorType(clientClazz.getName() + "_" + name);
-   }
+    public static AnchorType create(Class<?> clientClazz, String name) {
+        return new AnchorType(clientClazz.getName() + "_" + name);
+    }
 
-   private final String type;
+    private final String type;
 
-   AnchorType(String type)
-   {
-      this.type = type;
-   }
+    AnchorType(String type) {
+        this.type = type;
+    }
 
-   @Override
-   public String toString()
-   {
-      return type;
-   }
+    @Override
+    public String toString() {
+        return type;
+    }
 
-   @Override
-   public boolean equals(Object o)
-   {
-      if (o instanceof AnchorType)
-      {
-         return type.equals(((AnchorType)o).type);
-      }
-      return false;
-   }
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof AnchorType) {
+            return type.equals(((AnchorType)o).type);
+        }
+        return false;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return type.hashCode();
-   }
+    @Override
+    public int hashCode() {
+        return type.hashCode();
+    }
 }

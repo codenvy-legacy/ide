@@ -10,27 +10,24 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.internal.compiler.parser;
 
-public class NLSTag
-{
+public class NLSTag {
 
-   public int start;
+    public int start;
 
-   public int end;
+    public int end;
 
-   public int lineNumber;
+    public int lineNumber;
 
-   public int index;
+    public int index;
 
-   public NLSTag(int start, int end, int lineNumber, int index)
-   {
-      this.start = start;
-      this.end = end;
-      this.lineNumber = lineNumber;
-      this.index = index;
-   }
+    public NLSTag(int start, int end, int lineNumber, int index) {
+        this.start = start;
+        this.end = end;
+        this.lineNumber = lineNumber;
+        this.index = index;
+    }
 
-   public String toString()
-   {
-      return "NLSTag(" + this.start + "," + this.end + "," + this.lineNumber + ")"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
-   }
+    public String toString() {
+        return "NLSTag(" + this.start + "," + this.end + "," + this.lineNumber + ")"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+    }
 }

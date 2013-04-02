@@ -25,179 +25,154 @@ import com.codenvy.ide.texteditor.api.parser.Token;
  * An adapter for {@link DocumentParser.Listener} that performs only async
  * parsing while collecting some line-dependent data.
  */
-public abstract class AsyncParser<T extends AsyncParser.LineAware> implements DocumentParser.Listener
-{
+public abstract class AsyncParser<T extends AsyncParser.LineAware> implements DocumentParser.Listener {
 
-   /**
-    * Data item base interface. It is important that they are associated with
-    * lines because we clear data for lines that are invalidated and need to
-    * be parsed again.
-    */
-   public static interface LineAware
-   {
+    /**
+     * Data item base interface. It is important that they are associated with
+     * lines because we clear data for lines that are invalidated and need to
+     * be parsed again.
+     */
+    public static interface LineAware {
 
-      /**
-       * @return line number this data belongs to
-       */
-      int getLineNumber();
-   }
+        /** @return line number this data belongs to */
+        int getLineNumber();
+    }
 
-   /**
-    * Called before parsing has started.
-    */
-   protected void onBeforeParse()
-   {
-   }
+    /** Called before parsing has started. */
+    protected void onBeforeParse() {
+    }
 
-   /**
-    * Called when the data parsed earlier is discarded. Implementations
-    * should clear everything associated with this data. This method may
-    * be called on any time and should not depend on parsing cycle state.
-    *
-    * @param cleanedData data items that will be deleted
-    */
-   protected void onCleanup(JsonArray<T> cleanedData)
-   {
-   }
+    /**
+     * Called when the data parsed earlier is discarded. Implementations
+     * should clear everything associated with this data. This method may
+     * be called on any time and should not depend on parsing cycle state.
+     *
+     * @param cleanedData
+     *         data items that will be deleted
+     */
+    protected void onCleanup(JsonArray<T> cleanedData) {
+    }
 
-   /**
-    * Called when a line is being parsed. This is guaranteed to be called after
-    * {@link #onBeforeParse} and before {@link #onAfterParse}.
-    *
-    * @param line line being parsed
-    * @param lineNumber line number being parsed
-    * @param tokens tokens collected on the line
-    */
-   protected void onParseLine(Line line, int lineNumber, JsonArray<Token> tokens)
-   {
-   }
+    /**
+     * Called when a line is being parsed. This is guaranteed to be called after
+     * {@link #onBeforeParse} and before {@link #onAfterParse}.
+     *
+     * @param line
+     *         line being parsed
+     * @param lineNumber
+     *         line number being parsed
+     * @param tokens
+     *         tokens collected on the line
+     */
+    protected void onParseLine(Line line, int lineNumber, JsonArray<Token> tokens) {
+    }
 
-   /**
-    * Called just after chunk parsing has finished. This does not mean that
-    * parsing for the whole file has finished. You have to use what you get
-    * here.
-    *
-    * @param nodes resulting array of all nodes collected so far for the whole
-    *        file
-    */
-   protected void onAfterParse(JsonArray<T> nodes)
-   {
-   }
+    /**
+     * Called just after chunk parsing has finished. This does not mean that
+     * parsing for the whole file has finished. You have to use what you get
+     * here.
+     *
+     * @param nodes
+     *         resulting array of all nodes collected so far for the whole
+     *         file
+     */
+    protected void onAfterParse(JsonArray<T> nodes) {
+    }
 
-   /**
-    * Flag that prevents work after instance was cleaned.
-    */
-   private boolean detached;
+    /** Flag that prevents work after instance was cleaned. */
+    private boolean detached;
 
-   /**
-    * Flag indicating that block of lines is being parsed
-    */
-   private boolean iterating;
+    /** Flag indicating that block of lines is being parsed */
+    private boolean iterating;
 
-   /**
-    * Array of data items.
-    *
-    * When new block of lines is parsed, this list is truncated.
-    */
-   private JsonArray<T> nodes = JsonCollections.createArray();
+    /**
+     * Array of data items.
+     * <p/>
+     * When new block of lines is parsed, this list is truncated.
+     */
+    private JsonArray<T> nodes = JsonCollections.createArray();
 
-   @Override
-   public final void onDocumentLineParsed(Line line, int lineNumber, JsonArray<Token> tokens)
-   {
-      if (detached)
-      {
-         return;
-      }
-      if (!iterating)
-      {
-         return;
-      }
-      onParseLine(line, lineNumber, tokens);
-   }
+    @Override
+    public final void onDocumentLineParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
+        if (detached) {
+            return;
+        }
+        if (!iterating) {
+            return;
+        }
+        onParseLine(line, lineNumber, tokens);
+    }
 
-   @Override
-   public final void onIterationFinish()
-   {
-      Assert.isTrue(iterating);
-      if (detached)
-      {
-         return;
-      }
-      iterating = false;
-      onAfterParse(nodes);
-   }
+    @Override
+    public final void onIterationFinish() {
+        Assert.isTrue(iterating);
+        if (detached) {
+            return;
+        }
+        iterating = false;
+        onAfterParse(nodes);
+    }
 
-   @Override
-   public final void onIterationStart(int lineNumber)
-   {
-      Assert.isTrue(!iterating);
-      if (detached)
-      {
-         return;
-      }
-      iterating = true;
-      cutTail(lineNumber);
-      onBeforeParse();
-   }
+    @Override
+    public final void onIterationStart(int lineNumber) {
+        Assert.isTrue(!iterating);
+        if (detached) {
+            return;
+        }
+        iterating = true;
+        cutTail(lineNumber);
+        onBeforeParse();
+    }
 
-   /**
-    * Adds given data to collected set while parsing.
-    *
-    * @param dataNode data to add
-    */
-   protected final void addData(T dataNode)
-   {
-      nodes.add(dataNode);
-   }
+    /**
+     * Adds given data to collected set while parsing.
+     *
+     * @param dataNode
+     *         data to add
+     */
+    protected final void addData(T dataNode) {
+        nodes.add(dataNode);
+    }
 
-   private void cutTail(int lineNumber)
-   {
-      if (nodes.size() != 0)
-      {
-         int cutTailIndex = findCutTailIndex(nodes, lineNumber);
-         if (cutTailIndex < nodes.size())
-         {
-            JsonArray<T> tail = nodes.splice(cutTailIndex, nodes.size() - cutTailIndex);
-            onCleanup(tail);
-         }
-      }
-   }
+    private void cutTail(int lineNumber) {
+        if (nodes.size() != 0) {
+            int cutTailIndex = findCutTailIndex(nodes, lineNumber);
+            if (cutTailIndex < nodes.size()) {
+                JsonArray<T> tail = nodes.splice(cutTailIndex, nodes.size() - cutTailIndex);
+                onCleanup(tail);
+            }
+        }
+    }
 
-   /**
-    * Find index for tail truncation in nodes array.
-    *
-    * <p>We support nodes array sorted by line number.
-    * Now we use that property in modified binary search.
-    */
-   public static <T extends LineAware> int findCutTailIndex(JsonArray<T> nodes, int lineNumber)
-   {
-      int low = 0;
-      int high = nodes.size() - 1;
+    /**
+     * Find index for tail truncation in nodes array.
+     * <p/>
+     * <p>We support nodes array sorted by line number.
+     * Now we use that property in modified binary search.
+     */
+    public static <T extends LineAware> int findCutTailIndex(JsonArray<T> nodes, int lineNumber) {
+        int low = 0;
+        int high = nodes.size() - 1;
 
-      while (low <= high)
-      {
-         int mid = (low + high) >>> 1;
-         if (lineNumber > nodes.get(mid).getLineNumber())
-         {
-            low = mid + 1;
-         }
-         else
-         {
-            high = mid - 1;
-         }
-      }
-      return low;
-   }
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            if (lineNumber > nodes.get(mid).getLineNumber()) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return low;
+    }
 
-   /**
-    * Cleanup object. Overriding implementations should call this method before
-    * any custom cleanup.
-    *
-    * After cleanup is invoked this instance should never be used.
-    */
-   public void cleanup()
-   {
-      cutTail(0);
-      detached = true;
-   }
+    /**
+     * Cleanup object. Overriding implementations should call this method before
+     * any custom cleanup.
+     * <p/>
+     * After cleanup is invoked this instance should never be used.
+     */
+    public void cleanup() {
+        cutTail(0);
+        detached = true;
+    }
 }

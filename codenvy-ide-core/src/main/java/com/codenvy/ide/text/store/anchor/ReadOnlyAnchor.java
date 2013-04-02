@@ -19,60 +19,48 @@ import com.codenvy.ide.text.store.anchor.Anchor.RemovalStrategy;
 import com.codenvy.ide.util.ListenerRegistrar;
 
 
-/**
- * A read-only interface to {@link Anchor}.
- */
-public interface ReadOnlyAnchor
-{
+/** A read-only interface to {@link Anchor}. */
+public interface ReadOnlyAnchor {
 
-   /**
-    * @see Anchor.ShiftListener
-    */
-   public interface ShiftListener extends Anchor.ShiftListenerImpl<ReadOnlyAnchor>
-   {
-   }
+    /** @see Anchor.ShiftListener */
+    public interface ShiftListener extends Anchor.ShiftListenerImpl<ReadOnlyAnchor> {
+    }
 
-   /**
-    * @see Anchor.MoveListener
-    */
-   public interface MoveListener extends Anchor.MoveListenerImpl<ReadOnlyAnchor>
-   {
-   }
+    /** @see Anchor.MoveListener */
+    public interface MoveListener extends Anchor.MoveListenerImpl<ReadOnlyAnchor> {
+    }
 
-   /**
-    * @see Anchor.RemoveListener
-    */
-   public interface RemoveListener extends Anchor.RemoveListenerImpl<ReadOnlyAnchor>
-   {
-   }
+    /** @see Anchor.RemoveListener */
+    public interface RemoveListener extends Anchor.RemoveListenerImpl<ReadOnlyAnchor> {
+    }
 
-   int getColumn();
+    int getColumn();
 
-   int getId();
+    int getId();
 
-   <T> T getValue();
+    <T> T getValue();
 
-   AnchorType getType();
+    AnchorType getType();
 
-   Line getLine();
+    Line getLine();
 
-   int getLineNumber();
+    int getLineNumber();
 
-   boolean isLineAnchor();
+    boolean isLineAnchor();
 
-   RemovalStrategy getRemovalStrategy();
+    RemovalStrategy getRemovalStrategy();
 
-   boolean hasLineNumber();
+    boolean hasLineNumber();
 
-   boolean isAttached();
+    boolean isAttached();
 
-   InsertionPlacementStrategy getInsertionPlacementStrategy();
+    InsertionPlacementStrategy getInsertionPlacementStrategy();
 
-   ListenerRegistrar<ShiftListener> getReadOnlyShiftListenerRegistrar();
+    ListenerRegistrar<ShiftListener> getReadOnlyShiftListenerRegistrar();
 
-   ListenerRegistrar<MoveListener> getReadOnlyMoveListenerRegistrar();
+    ListenerRegistrar<MoveListener> getReadOnlyMoveListenerRegistrar();
 
-   ListenerRegistrar<RemoveListener> getReadOnlyRemoveListenerRegistrar();
+    ListenerRegistrar<RemoveListener> getReadOnlyRemoveListenerRegistrar();
 
-   boolean hasColumn();
+    boolean hasColumn();
 }

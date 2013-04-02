@@ -22,14 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Class, that implements this handler, will listen when project has built.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ProjectBuiltHandler.java Apr 3, 2012 12:23:21 PM azatsarynnyy $
  */
-public interface ProjectBuiltHandler extends EventHandler
-{
-   /**
-    * @param event event generated when project is built
-    */
-   void onProjectBuilt(ProjectBuiltEvent event);
+public interface ProjectBuiltHandler extends EventHandler {
+    /**
+     * @param event
+     *         event generated when project is built
+     */
+    void onProjectBuilt(ProjectBuiltEvent event);
 }

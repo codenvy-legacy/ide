@@ -20,30 +20,32 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.resources.model.File;
 
 /**
- * Editor Agert manages Editors, it allows to open a new editor with given file, 
+ * Editor Agert manages Editors, it allows to open a new editor with given file,
  * retrieve current active editor and find all the opened editors.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface EditorAgent
-{
+public interface EditorAgent {
 
-   /**
-    * Open editor with gieven file
-    * @param file
-    */
-   public void openEditor(final File file);
+    /**
+     * Open editor with gieven file
+     *
+     * @param file
+     */
+    public void openEditor(final File file);
 
-   /**
-    *Get all opened editors
-    * @return map with all opened editors
-    */
-   public JsonStringMap<EditorPartPresenter> getOpenedEditors();
+    /**
+     * Get all opened editors
+     *
+     * @return map with all opened editors
+     */
+    public JsonStringMap<EditorPartPresenter> getOpenedEditors();
 
-   /**
-    * Current active editor
-    * @return the current active editor
-    */
-   public EditorPartPresenter getActiveEditor();
+    /**
+     * Current active editor
+     *
+     * @return the current active editor
+     */
+    public EditorPartPresenter getActiveEditor();
 
 }

@@ -20,40 +20,35 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
-/**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
- */
-public interface PartStackUIResources extends ClientBundle
-{
-   public interface PartStackCss extends CssResource
-   {
+/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+public interface PartStackUIResources extends ClientBundle {
+    public interface PartStackCss extends CssResource {
 
-      @ClassName("ide-PartStack")
-      String idePartStack();
+        @ClassName("ide-PartStack")
+        String idePartStack();
 
-      @ClassName("ide-PartStack-Tab")
-      String idePartStackTab();
+        @ClassName("ide-PartStack-Tab")
+        String idePartStackTab();
 
-      @ClassName("ide-PartStack-Tabs")
-      String idePartStackTabs();
+        @ClassName("ide-PartStack-Tabs")
+        String idePartStackTabs();
 
-      @ClassName("CloseButton")
-      String idePartStackTabCloseButton();
+        @ClassName("CloseButton")
+        String idePartStackTabCloseButton();
 
-      @ClassName("ide-PartStack-Tab-selected")
-      String idePartStackTabSelected();
+        @ClassName("ide-PartStack-Tab-selected")
+        String idePartStackTabSelected();
 
-      @ClassName("ide-PartStack-Content")
-      String idePartStackContent();
+        @ClassName("ide-PartStack-Content")
+        String idePartStackContent();
 
-      @ClassName("ide-PartStack-focused")
-      String idePartStackFocused();
-   }
-   
-   @Source("PartStack.css")
-   PartStackCss partStackCss();
+        @ClassName("ide-PartStack-focused")
+        String idePartStackFocused();
+    }
 
-   ImageResource close();
+    @Source("PartStack.css")
+    PartStackCss partStackCss();
+
+    ImageResource close();
 
 }

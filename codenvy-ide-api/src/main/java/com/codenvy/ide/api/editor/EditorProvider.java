@@ -20,18 +20,17 @@ package com.codenvy.ide.api.editor;
 
 /**
  * Provider interface for creating new instance of {@link EditorPartPresenter}.
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface EditorProvider
-{
+public interface EditorProvider {
 
-   /**
-    * Every call this method should return new instance. 
-    * @return new instance of {@link EditorPartPresenter}
-    */
-   EditorPartPresenter getEditor();
+    /**
+     * Every call this method should return new instance.
+     *
+     * @return new instance of {@link EditorPartPresenter}
+     */
+    EditorPartPresenter getEditor();
 
 }

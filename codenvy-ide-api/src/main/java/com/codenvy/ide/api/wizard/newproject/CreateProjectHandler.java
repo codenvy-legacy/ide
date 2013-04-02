@@ -26,43 +26,45 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface CreateProjectHandler
-{
-   /**
-    * Adds params which needs for creating project. 
-    * 
-    * @param name param's name
-    * @param value param's value
-    */
-   public void addParam(String name, String value);
+public interface CreateProjectHandler {
+    /**
+     * Adds params which needs for creating project.
+     *
+     * @param name
+     *         param's name
+     * @param value
+     *         param's value
+     */
+    public void addParam(String name, String value);
 
-   /**
-    * Returns param's value by name.
-    * 
-    * @param name param's name
-    * 
-    * @return param's name
-    */
-   public String getParam(String name);
+    /**
+     * Returns param's value by name.
+     *
+     * @param name
+     *         param's name
+     * @return param's name
+     */
+    public String getParam(String name);
 
-   /**
-    * Returns project's name.
-    * 
-    * @return project's name
-    */
-   public String getProjectName();
+    /**
+     * Returns project's name.
+     *
+     * @return project's name
+     */
+    public String getProjectName();
 
-   /**
-    * Sets project's name.
-    * 
-    * @param name
-    */
-   public void setProjectName(String name);
+    /**
+     * Sets project's name.
+     *
+     * @param name
+     */
+    public void setProjectName(String name);
 
-   /**
-    * Creates project.
-    * 
-    * @param callback do something when project is created
-    */
-   public void create(AsyncCallback<Project> callback);
+    /**
+     * Creates project.
+     *
+     * @param callback
+     *         do something when project is created
+     */
+    public void create(AsyncCallback<Project> callback);
 }

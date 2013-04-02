@@ -24,28 +24,25 @@ import org.junit.Test;
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 6, 2012  
+ * exo@exoplatform.com
+ * Aug 6, 2012
  */
 @GwtModule("com.codenvy.ide.IDE")
-public class ProjectExplorerViewTest extends GwtTestWithMockito
-{
+public class ProjectExplorerViewTest extends GwtTestWithMockito {
 
 
-   @Test
-   public void shouldReactOnDoubleClick()
-   {
-      //      ProjectExpolorerView view = new ProjectExpolorerView();
-      //      DoubleClickHandler clickHandler = mock(DoubleClickHandler.class);
-      //      view.getTree().addDoubleClickHandler(clickHandler);
-      //      Browser.dblClick(view.cellTree);
-      //      // verify that double click event generated
-      //      verify(clickHandler).onDoubleClick((DoubleClickEvent)any());
-   }
+    @Test
+    public void shouldReactOnDoubleClick() {
+        //      ProjectExpolorerView view = new ProjectExpolorerView();
+        //      DoubleClickHandler clickHandler = mock(DoubleClickHandler.class);
+        //      view.getTree().addDoubleClickHandler(clickHandler);
+        //      Browser.dblClick(view.cellTree);
+        //      // verify that double click event generated
+        //      verify(clickHandler).onDoubleClick((DoubleClickEvent)any());
+    }
 
-   @Test
-   public void shouldSelectOnClick()
-   {
-      // unable to test cell widgets with gwt-test-utils
-   }
+    @Test
+    public void shouldSelectOnClick() {
+        // unable to test cell widgets with gwt-test-utils
+    }
 }

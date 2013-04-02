@@ -14,124 +14,99 @@
 
 package com.codenvy.ide.texteditor.input;
 
-import com.codenvy.ide.util.input.SignalEvent;
 import elemental.js.util.JsMapFromIntTo;
+
+import com.codenvy.ide.util.input.SignalEvent;
 
 /**
  * Controller around a group of {@link InputMode}s to direct text/modifier
  * key input to the active mode. Provides access to the current {@link InputController}
  * to the active mode for performing shortcut actions.
- * 
+ * <p/>
  * Each scheme can contain additional state that needs to be shared between modes,
  * such as a vi line-mode search "/class", and additional command-mode next match
  * "n" commands
- * 
+ * <p/>
  * Tied to the lifetime of an editor instance
- * 
- *
  */
-public abstract class InputScheme
-{
-   /**
-    * Store a reference to the editor's input controller to pass to active mode
-    */
-   private InputController inputController;
+public abstract class InputScheme {
+    /** Store a reference to the editor's input controller to pass to active mode */
+    private InputController inputController;
 
-   private InputMode activeMode = null;
+    private InputMode activeMode = null;
 
-   /**
-    * Map from mode number to mode object. Mode numbers should be constants
-    * defined for each scheme.
-    */
-   private JsMapFromIntTo<InputMode> modes;
+    /**
+     * Map from mode number to mode object. Mode numbers should be constants
+     * defined for each scheme.
+     */
+    private JsMapFromIntTo<InputMode> modes;
 
-   public InputScheme()
-   {
-      this.inputController = null;
-      this.modes = JsMapFromIntTo.create();
-   }
+    public InputScheme() {
+        this.inputController = null;
+        this.modes = JsMapFromIntTo.create();
+    }
 
-   public InputScheme(InputController input)
-   {
-      this.inputController = input;
-      this.modes = JsMapFromIntTo.create();
-   }
+    public InputScheme(InputController input) {
+        this.inputController = input;
+        this.modes = JsMapFromIntTo.create();
+    }
 
-   /**
-    * Add all Scheme modes and setup the default {@link InputMode} by calling
-    * switchMode. Optionally make any scheme-specific document changes 
-    * (add status bar, etc)
-    */
-   public abstract void setup();
+    /**
+     * Add all Scheme modes and setup the default {@link InputMode} by calling
+     * switchMode. Optionally make any scheme-specific document changes
+     * (add status bar, etc)
+     */
+    public abstract void setup();
 
-   /**
-    * Called when switching editor modes, this should undo all document 
-    * changes made in {@link InputScheme#setup()}
-    */
-   public void teardown()
-   {
-      if (activeMode != null)
-      {
-         activeMode.teardown();
-      }
-   }
-
-   /**
-    * Add a new mode to this scheme
-    */
-   public void addMode(int modeNumber, InputMode mode)
-   {
-      mode.setScheme(this);
-      modes.put(modeNumber, mode);
-   }
-
-   public InputController getInputController()
-   {
-      return inputController;
-   }
-
-   public InputMode getMode()
-   {
-      return activeMode;
-   }
-
-   /**
-    * Switch to the new mode:
-    *    call teardown() on active mode (if there is one)
-    *    call setup() on new mode
-    */
-   public void switchMode(int modeNumber)
-   {
-      if (modes.hasKey(modeNumber))
-      {
-         if (activeMode != null)
-         {
+    /**
+     * Called when switching editor modes, this should undo all document
+     * changes made in {@link InputScheme#setup()}
+     */
+    public void teardown() {
+        if (activeMode != null) {
             activeMode.teardown();
-         }
-         activeMode = modes.get(modeNumber);
-         activeMode.setup();
-      }
-   }
+        }
+    }
 
-   /**
-    * Called from the event handler, dispatch this event to the active mode
-    */
-   public boolean handleEvent(SignalEvent event, String text)
-   {
-      if (activeMode != null)
-      {
-         return activeMode.handleEvent(event, text);
-      }
-      else
-      {
-         return false;
-      }
-   }
+    /** Add a new mode to this scheme */
+    public void addMode(int modeNumber, InputMode mode) {
+        mode.setScheme(this);
+        modes.put(modeNumber, mode);
+    }
 
-   /**
-    * This is called after a shortcut has been dispatched.
-    */
-   protected void handleShortcutCalled()
-   {
-   }
+    public InputController getInputController() {
+        return inputController;
+    }
+
+    public InputMode getMode() {
+        return activeMode;
+    }
+
+    /**
+     * Switch to the new mode:
+     * call teardown() on active mode (if there is one)
+     * call setup() on new mode
+     */
+    public void switchMode(int modeNumber) {
+        if (modes.hasKey(modeNumber)) {
+            if (activeMode != null) {
+                activeMode.teardown();
+            }
+            activeMode = modes.get(modeNumber);
+            activeMode.setup();
+        }
+    }
+
+    /** Called from the event handler, dispatch this event to the active mode */
+    public boolean handleEvent(SignalEvent event, String text) {
+        if (activeMode != null) {
+            return activeMode.handleEvent(event, text);
+        } else {
+            return false;
+        }
+    }
+
+    /** This is called after a shortcut has been dispatched. */
+    protected void handleShortcutCalled() {
+    }
 }

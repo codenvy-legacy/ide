@@ -27,128 +27,93 @@ import com.codenvy.ide.texteditor.api.quickassist.QuickAssistProcessor;
 
 /**
  * Default implementation of {@link QuickAssistAssistant}
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class QuickAssistAssistantImpl implements QuickAssistAssistant
-{
+public class QuickAssistAssistantImpl implements QuickAssistAssistant {
 
-   class QuickAssistImpl extends CodeAssistantImpl
-   {
-      public void closeBox()
-      {
-         super.closeBox();
-      }
-   }
+    class QuickAssistImpl extends CodeAssistantImpl {
+        public void closeBox() {
+            super.closeBox();
+        }
+    }
 
-   class CodeAssistProcessorImpl implements CodeAssistProcessor
-   {
+    class CodeAssistProcessorImpl implements CodeAssistProcessor {
 
-      private QuickAssistProcessor processor;
+        private QuickAssistProcessor processor;
 
-      /**
-       * @param processor
-       */
-      public CodeAssistProcessorImpl(QuickAssistProcessor processor)
-      {
-         this.processor = processor;
-      }
+        /** @param processor */
+        public CodeAssistProcessorImpl(QuickAssistProcessor processor) {
+            this.processor = processor;
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset)
-      {
-         return processor.computeQuickAssistProposals(new TextInvocationContext(view, offset, -1));
-      }
+        /** {@inheritDoc} */
+        @Override
+        public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset) {
+            return processor.computeQuickAssistProposals(new TextInvocationContext(view, offset, -1));
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public char[] getCompletionProposalAutoActivationCharacters()
-      {
-         return null;
-      }
+        /** {@inheritDoc} */
+        @Override
+        public char[] getCompletionProposalAutoActivationCharacters() {
+            return null;
+        }
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public String getErrorMessage()
-      {
-         return null;
-      }
+        /** {@inheritDoc} */
+        @Override
+        public String getErrorMessage() {
+            return null;
+        }
 
-   }
+    }
 
-   private QuickAssistImpl fQuickAssistAssistantImpl;
+    private QuickAssistImpl fQuickAssistAssistantImpl;
 
-   private QuickAssistProcessor fQuickAssistProcessor;
+    private QuickAssistProcessor fQuickAssistProcessor;
 
-   /**
-    * 
-    */
-   public QuickAssistAssistantImpl()
-   {
-      fQuickAssistAssistantImpl = new QuickAssistImpl();
-   }
+    /**
+     *
+     */
+    public QuickAssistAssistantImpl() {
+        fQuickAssistAssistantImpl = new QuickAssistImpl();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void install(TextEditorPartView textEditor)
-   {
-      fQuickAssistAssistantImpl.install(textEditor);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void install(TextEditorPartView textEditor) {
+        fQuickAssistAssistantImpl.install(textEditor);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void uninstall()
-   {
-      fQuickAssistAssistantImpl.uninstall();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void uninstall() {
+        fQuickAssistAssistantImpl.uninstall();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String showPossibleQuickAssists()
-   {
-      return fQuickAssistAssistantImpl.showPossibleCompletions();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String showPossibleQuickAssists() {
+        return fQuickAssistAssistantImpl.showPossibleCompletions();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setQuickAssistProcessor(QuickAssistProcessor processor)
-   {
-      fQuickAssistProcessor = processor;
-      fQuickAssistAssistantImpl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, new CodeAssistProcessorImpl(
-         processor));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setQuickAssistProcessor(QuickAssistProcessor processor) {
+        fQuickAssistProcessor = processor;
+        fQuickAssistAssistantImpl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, new CodeAssistProcessorImpl(
+                processor));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public QuickAssistProcessor getQuickAssistProcessor()
-   {
-      return fQuickAssistProcessor;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public QuickAssistProcessor getQuickAssistProcessor() {
+        return fQuickAssistProcessor;
+    }
 
-   /**
-    * Hides any open pop-ups
-    */
-   protected void hide()
-   {
-      fQuickAssistAssistantImpl.closeBox();
-   }
+    /** Hides any open pop-ups */
+    protected void hide() {
+        fQuickAssistAssistantImpl.closeBox();
+    }
 
 }

@@ -22,33 +22,27 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of NewFolder view
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewFolderPageView extends View<NewFolderPageView.ActionDelegate>
-{
-   /**
-    * Returns folder name.
-    * 
-    * @return
-    */
-   String getFolderName();
-   
-   /**
-    * Set Folder name
-    * 
-    * @param name
-    */
-   void setFolderName(String name);
+public interface NewFolderPageView extends View<NewFolderPageView.ActionDelegate> {
+    /**
+     * Returns folder name.
+     *
+     * @return
+     */
+    String getFolderName();
 
-   /**
-    * Needs for delegate some function into NewFolder view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Checks entered information(folder name and etc).
-       */
-      void checkEnteredInformation();
-   }
+    /**
+     * Set Folder name
+     *
+     * @param name
+     */
+    void setFolderName(String name);
+
+    /** Needs for delegate some function into NewFolder view. */
+    public interface ActionDelegate {
+        /** Checks entered information(folder name and etc). */
+        void checkEnteredInformation();
+    }
 }

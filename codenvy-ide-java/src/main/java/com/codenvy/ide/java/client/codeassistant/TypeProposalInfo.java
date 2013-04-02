@@ -16,42 +16,34 @@ import com.codenvy.ide.java.client.core.IJavaElement;
 import com.codenvy.ide.java.client.core.Signature;
 import com.codenvy.ide.java.client.internal.corext.util.SignatureUtil;
 
-/**
- * Proposal info that computes the javadoc lazily when it is queried.
- */
-public final class TypeProposalInfo extends MemberProposalInfo
-{
+/** Proposal info that computes the javadoc lazily when it is queried. */
+public final class TypeProposalInfo extends MemberProposalInfo {
 
-   /**
-    * Creates a new proposal info.
-    * 
-    * @param project the java project to reference when resolving types
-    * @param proposal the proposal to generate information for
-    */
-   public TypeProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
-   {
-      super(proposal, projectId, docContext, vfsId);
-   }
+    /**
+     * Creates a new proposal info.
+     *
+     * @param project
+     *         the java project to reference when resolving types
+     * @param proposal
+     *         the proposal to generate information for
+     */
+    public TypeProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId) {
+        super(proposal, projectId, docContext, vfsId);
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.codeassistant.MemberProposalInfo#getURL()
-    */
-   @Override
-   protected String getURL()
-   {
-      return docContext + Signature.toString(new String(fProposal.getSignature())) + "&projectid=" + projectId
-         + "&vfsid=" + vfsId + "&isclass=true";
+    /** @see com.codenvy.ide.java.client.codeassistant.MemberProposalInfo#getURL() */
+    @Override
+    protected String getURL() {
+        return docContext + Signature.toString(new String(fProposal.getSignature())) + "&projectid=" + projectId
+               + "&vfsid=" + vfsId + "&isclass=true";
 
-   }
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.codeassistant.MemberProposalInfo#getJavaElement()
-    */
-   @Override
-   public IJavaElement getJavaElement()
-   {
-      String fqn = String.valueOf(SignatureUtil.stripSignatureToFQN(String.valueOf(fProposal.getSignature())));
-      return TypeInfoStorage.get().getTypeByFqn(fqn);
-   }
+    /** @see com.codenvy.ide.java.client.codeassistant.MemberProposalInfo#getJavaElement() */
+    @Override
+    public IJavaElement getJavaElement() {
+        String fqn = String.valueOf(SignatureUtil.stripSignatureToFQN(String.valueOf(fProposal.getSignature())));
+        return TypeInfoStorage.get().getTypeByFqn(fqn);
+    }
 
 }

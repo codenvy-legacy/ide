@@ -19,7 +19,6 @@
 package com.codenvy.ide.api.editor;
 
 import com.codenvy.ide.resources.model.File;
-
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -30,43 +29,43 @@ import com.google.gwt.resources.client.ImageResource;
  * An editor input is passed to an editor via the <code>EditorPartPresenter.init</code>
  * method.
  * </p>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface EditorInput
-{
-   /**
-    * Returns the image descriptor for this input.
-    * 
-    * @return the image resource for this input; never <code>null</code>
-    */
-   public ImageResource getImageResource();
+public interface EditorInput {
+    /**
+     * Returns the image descriptor for this input.
+     *
+     * @return the image resource for this input; never <code>null</code>
+     */
+    public ImageResource getImageResource();
 
-   /**
-    * Returns the name of this editor input for display purposes.
-    * <p>
-    * For instance, when the input is from a file, the return value would
-    * ordinarily be just the file name.
-    * 
-    * @return the name string; never <code>null</code>;
-    */
-   public String getName();
-   
-   /**
-    * Returns the tool tip text for this editor input. This text is used to
-    * differentiate between two input with the same name. For instance,
-    * MyClass.java in folder X and MyClass.java in folder Y. The format of the
-    * text varies between input types.
-    * </p>
-    * 
-    * @return the tool tip text; never <code>null</code>.
-    */
-   public String getToolTipText();
-   
-   /**
-    * Return the file of this input
-    * @return the File; never <code>null</code>
-    */
-   public File getFile();
+    /**
+     * Returns the name of this editor input for display purposes.
+     * <p/>
+     * For instance, when the input is from a file, the return value would
+     * ordinarily be just the file name.
+     *
+     * @return the name string; never <code>null</code>;
+     */
+    public String getName();
+
+    /**
+     * Returns the tool tip text for this editor input. This text is used to
+     * differentiate between two input with the same name. For instance,
+     * MyClass.java in folder X and MyClass.java in folder Y. The format of the
+     * text varies between input types.
+     * </p>
+     *
+     * @return the tool tip text; never <code>null</code>.
+     */
+    public String getToolTipText();
+
+    /**
+     * Return the file of this input
+     *
+     * @return the File; never <code>null</code>
+     */
+    public File getFile();
 }

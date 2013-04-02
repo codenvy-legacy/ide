@@ -17,78 +17,64 @@
 package com.codenvy.ide.extension.tasks;
 
 import com.codenvy.ide.api.expressions.Expression;
-
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
-
-import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
-
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.extension.tasks.part.TasksPartPresenter;
-
-import com.google.inject.Singleton;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 
 /**
  * Demo command that opens the Tasks View Part
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class OpenTasksViewCommand implements ExtendedCommand
-{
-   /**
-    * 
-    */
-   private final TasksPartPresenter tasksPartPresenter;
+public class OpenTasksViewCommand implements ExtendedCommand {
+    /**
+     *
+     */
+    private final TasksPartPresenter tasksPartPresenter;
 
-   /**
-    * 
-    */
-   private final WorkspaceAgent agent;
+    /**
+     *
+     */
+    private final WorkspaceAgent agent;
 
-   /**
-    * @param tasksPartPresenter
-    * @param agent
-    */
-   @Inject
-   OpenTasksViewCommand(TasksPartPresenter tasksPartPresenter, WorkspaceAgent agent)
-   {
-      this.tasksPartPresenter = tasksPartPresenter;
-      this.agent = agent;
-   }
+    /**
+     * @param tasksPartPresenter
+     * @param agent
+     */
+    @Inject
+    OpenTasksViewCommand(TasksPartPresenter tasksPartPresenter, WorkspaceAgent agent) {
+        this.tasksPartPresenter = tasksPartPresenter;
+        this.agent = agent;
+    }
 
-   @Override
-   public Expression inContext()
-   {
-      return null;
-   }
+    @Override
+    public Expression inContext() {
+        return null;
+    }
 
-   @Override
-   public String getToolTip()
-   {
-      return "Open the view with tasks";
-   }
+    @Override
+    public String getToolTip() {
+        return "Open the view with tasks";
+    }
 
-   @Override
-   public ImageResource getIcon()
-   {
-      return null;
-   }
+    @Override
+    public ImageResource getIcon() {
+        return null;
+    }
 
-   @Override
-   public void execute()
-   {
-      agent.showPart(tasksPartPresenter, PartStackType.TOOLING);
-   }
+    @Override
+    public void execute() {
+        agent.showPart(tasksPartPresenter, PartStackType.TOOLING);
+    }
 
-   @Override
-   public Expression canExecute()
-   {
-      return null;
-   }
+    @Override
+    public Expression canExecute() {
+        return null;
+    }
 }

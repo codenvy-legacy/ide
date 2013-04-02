@@ -14,42 +14,39 @@
 
 package com.codenvy.ide.ui;
 
-import com.codenvy.ide.mvp.UiComponent;
-import com.codenvy.ide.mvp.View;
-
 import elemental.html.Element;
 import elemental.js.html.JsElement;
+
+import com.codenvy.ide.mvp.UiComponent;
+import com.codenvy.ide.mvp.View;
 
 
 /**
  * A single DOM Element.
- * 
+ * <p/>
  * This is a View (V) in our use of MVP.
- * 
+ * <p/>
  * Use this when you want to give some brains to a single DOM element by making this the View for
  * some {@link UiComponent} that will contain business logic.
- * 
  */
 // TODO: move this to mvp package when ray fixes the
 // JsoRestrictionChecker bug in the gwt compiler.
-public class ElementView<D> extends JsElement implements View<D>
-{
-   protected ElementView()
-   {
-   }
+public class ElementView<D> extends JsElement implements View<D> {
+    protected ElementView() {
+    }
 
-   @Override
-   public final native D getDelegate() /*-{
-		return this["delegate"];
-   }-*/;
+    @Override
+    public final native D getDelegate() /*-{
+        return this["delegate"];
+    }-*/;
 
-   @Override
-   public final native void setDelegate(D delegate) /*-{
-		this["delegate"] = delegate;
-   }-*/;
+    @Override
+    public final native void setDelegate(D delegate) /*-{
+        this["delegate"] = delegate;
+    }-*/;
 
-   @Override
-   public final native Element getElement() /*-{
-		return this;
-   }-*/;
+    @Override
+    public final native Element getElement() /*-{
+        return this;
+    }-*/;
 }

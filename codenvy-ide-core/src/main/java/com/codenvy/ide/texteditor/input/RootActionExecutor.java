@@ -18,50 +18,37 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.util.input.SignalEvent;
 
-/**
- * Implementation of proxy that delegated execution to a list of executors.
- *
- */
-public class RootActionExecutor implements ActionExecutor
-{
+/** Implementation of proxy that delegated execution to a list of executors. */
+public class RootActionExecutor implements ActionExecutor {
 
-   /**
-    * Object used to unregister delegate.
-    */
-   public class Remover
-   {
+    /** Object used to unregister delegate. */
+    public class Remover {
 
-      public Remover(ActionExecutor instance)
-      {
-         this.instance = instance;
-      }
+        public Remover(ActionExecutor instance) {
+            this.instance = instance;
+        }
 
-      private ActionExecutor instance;
+        private ActionExecutor instance;
 
-      public void remove()
-      {
-         delegates.remove(instance);
-      }
-   }
+        public void remove() {
+            delegates.remove(instance);
+        }
+    }
 
-   private final JsonArray<ActionExecutor> delegates = JsonCollections.createArray();
+    private final JsonArray<ActionExecutor> delegates = JsonCollections.createArray();
 
-   public Remover addDelegate(ActionExecutor delegate)
-   {
-      delegates.add(delegate);
-      return new Remover(delegate);
-   }
+    public Remover addDelegate(ActionExecutor delegate) {
+        delegates.add(delegate);
+        return new Remover(delegate);
+    }
 
-   @Override
-   public boolean execute(String actionName, InputScheme scheme, SignalEvent event)
-   {
-      for (int i = 0, l = delegates.size(); i < l; i++)
-      {
-         if (delegates.get(i).execute(actionName, scheme, event))
-         {
-            return true;
-         }
-      }
-      return false;
-   }
+    @Override
+    public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
+        for (int i = 0, l = delegates.size(); i < l; i++) {
+            if (delegates.get(i).execute(actionName, scheme, event)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

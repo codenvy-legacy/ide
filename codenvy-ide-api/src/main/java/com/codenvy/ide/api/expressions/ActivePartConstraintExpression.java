@@ -21,15 +21,15 @@ import com.codenvy.ide.api.ui.perspective.PartPresenter;
 /**
  * Handles the event when Active Part changed
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface ActivePartConstraintExpression extends Expression
-{
+public interface ActivePartConstraintExpression extends Expression {
 
-   /**
-    * @param part new Active Part instance
-    * @return new value of the expression
-    */
-   public boolean onActivePartChanged(PartPresenter part);
+    /**
+     * @param part
+     *         new Active Part instance
+     * @return new value of the expression
+     */
+    public boolean onActivePartChanged(PartPresenter part);
 
 }

@@ -18,10 +18,6 @@
  */
 package com.codenvy.ide.wizard.newfile;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
@@ -42,183 +38,161 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+
 /**
  * Testing {@link NewTextFilePagePresenter} functionality
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestNewTextFilePagePresenter
-{
-   private static final boolean IS_COMPLITED = true;
+public class TestNewTextFilePagePresenter {
+    private static final boolean IS_COMPLITED = true;
 
-   private static final boolean IS_FILE = true;
+    private static final boolean IS_FILE = true;
 
-   @Mock
-   private NewGenericFilePageView view;
+    @Mock
+    private NewGenericFilePageView view;
 
-   @Mock
-   private Project project;
+    @Mock
+    private Project project;
 
-   @Mock
-   private SelectionAgent selectionAgent;
+    @Mock
+    private SelectionAgent selectionAgent;
 
-   private NewTextFilePagePresenter presenter;
+    private NewTextFilePagePresenter presenter;
 
-   @Before
-   public void disarm()
-   {
-      // don't throw an exception if GWT.create() invoked
-      GWTMockUtilities.disarm();
+    @Before
+    public void disarm() {
+        // don't throw an exception if GWT.create() invoked
+        GWTMockUtilities.disarm();
 
-      setUp();
-   }
+        setUp();
+    }
 
-   /**
-    * Create general components for all test.
-    */
-   private void setUp()
-   {
-      ResourceProvider resourceProvider = mock(ResourceProvider.class);
-      when(resourceProvider.getActiveProject()).thenReturn(project);
+    /** Create general components for all test. */
+    private void setUp() {
+        ResourceProvider resourceProvider = mock(ResourceProvider.class);
+        when(resourceProvider.getActiveProject()).thenReturn(project);
 
-      presenter = new NewTextFilePagePresenter(null, view, resourceProvider, selectionAgent);
-      presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
-   }
+        presenter = new NewTextFilePagePresenter(null, view, resourceProvider, selectionAgent);
+        presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
+    }
 
-   @After
-   public void restore()
-   {
-      GWTMockUtilities.restore();
-   }
+    @After
+    public void restore() {
+        GWTMockUtilities.restore();
+    }
 
-   /**
-    * If file name is empty then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeEnterFileNameMessage()
-   {
-      when(view.getFileName()).thenReturn("");
-      when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
+    /** If file name is empty then must be showed message about this situation. */
+    @Test
+    public void shouldBeEnterFileNameMessage() {
+        when(view.getFileName()).thenReturn("");
+        when(project.getChildren()).thenReturn(JsonCollections.<Resource>createArray());
 
-      presenter.onValueChanged();
+        presenter.onValueChanged();
 
-      assertEquals(presenter.getNotice(), "The file name can't be empty.");
-      assertEquals(presenter.isCompleted(), !IS_COMPLITED);
-   }
+        assertEquals(presenter.getNotice(), "The file name can't be empty.");
+        assertEquals(presenter.isCompleted(), !IS_COMPLITED);
+    }
 
-   /**
-    * If file name has incorrect symbol then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeInvalidNameMessage()
-   {
-      when(view.getFileName()).thenReturn("test*");
-      when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
+    /** If file name has incorrect symbol then must be showed message about this situation. */
+    @Test
+    public void shouldBeInvalidNameMessage() {
+        when(view.getFileName()).thenReturn("test*");
+        when(project.getChildren()).thenReturn(JsonCollections.<Resource>createArray());
 
-      presenter.onValueChanged();
+        presenter.onValueChanged();
 
-      assertEquals(presenter.getNotice(), "The file name has incorrect symbol.");
-      assertEquals(presenter.isCompleted(), !IS_COMPLITED);
-   }
+        assertEquals(presenter.getNotice(), "The file name has incorrect symbol.");
+        assertEquals(presenter.isCompleted(), !IS_COMPLITED);
+    }
 
-   /**
-    * If file name has incorrect extension then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeInvalidExtensionMessage()
-   {
-      checkIfIncorrectExtension("test.t");
-      checkIfIncorrectExtension("test.");
-      checkIfIncorrectExtension("test.ttx");
-   }
+    /** If file name has incorrect extension then must be showed message about this situation. */
+    @Test
+    public void shouldBeInvalidExtensionMessage() {
+        checkIfIncorrectExtension("test.t");
+        checkIfIncorrectExtension("test.");
+        checkIfIncorrectExtension("test.ttx");
+    }
 
-   /**
-    * Check situation when file name has incorrect extension.
-    * 
-    * @param fileName
-    */
-   private void checkIfIncorrectExtension(String fileName)
-   {
-      when(view.getFileName()).thenReturn(fileName);
-      when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
+    /**
+     * Check situation when file name has incorrect extension.
+     *
+     * @param fileName
+     */
+    private void checkIfIncorrectExtension(String fileName) {
+        when(view.getFileName()).thenReturn(fileName);
+        when(project.getChildren()).thenReturn(JsonCollections.<Resource>createArray());
 
-      presenter.onValueChanged();
+        presenter.onValueChanged();
 
-      assertEquals(presenter.getNotice(), "The file name must end in one of the following extensions [txt].");
-      assertEquals(presenter.isCompleted(), !IS_COMPLITED);
-   }
+        assertEquals(presenter.getNotice(), "The file name must end in one of the following extensions [txt].");
+        assertEquals(presenter.isCompleted(), !IS_COMPLITED);
+    }
 
-   /**
-    * If file with entered name and extension exists then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeFileExistMessage()
-   {
-      checkIfFileExist("test", "test.txt");
-      checkIfFileExist("test.txt", "test.txt");
-   }
+    /** If file with entered name and extension exists then must be showed message about this situation. */
+    @Test
+    public void shouldBeFileExistMessage() {
+        checkIfFileExist("test", "test.txt");
+        checkIfFileExist("test.txt", "test.txt");
+    }
 
-   /**
-    * Check situation when file with entered name and extension exists.
-    * 
-    * @param newFileName
-    * @param existFileName
-    */
-   private void checkIfFileExist(String newFileName, String existFileName)
-   {
-      Resource file = mock(File.class);
-      when(file.getName()).thenReturn(existFileName);
-      when(file.isFile()).thenReturn(IS_FILE);
+    /**
+     * Check situation when file with entered name and extension exists.
+     *
+     * @param newFileName
+     * @param existFileName
+     */
+    private void checkIfFileExist(String newFileName, String existFileName) {
+        Resource file = mock(File.class);
+        when(file.getName()).thenReturn(existFileName);
+        when(file.isFile()).thenReturn(IS_FILE);
 
-      JsonArray<Resource> children = JsonCollections.createArray();
-      children.add(file);
+        JsonArray<Resource> children = JsonCollections.createArray();
+        children.add(file);
 
-      when(view.getFileName()).thenReturn(newFileName);
-      when(project.getChildren()).thenReturn(children);
+        when(view.getFileName()).thenReturn(newFileName);
+        when(project.getChildren()).thenReturn(children);
 
-      presenter.onValueChanged();
+        presenter.onValueChanged();
 
-      assertEquals(presenter.getNotice(), "The file with same name already exists.");
-      assertEquals(presenter.isCompleted(), !IS_COMPLITED);
-   }
+        assertEquals(presenter.getNotice(), "The file with same name already exists.");
+        assertEquals(presenter.isCompleted(), !IS_COMPLITED);
+    }
 
-   /**
-    * If file name is correct then must be not showing any message.
-    */
-   @Test
-   public void shouldBeCorrectName()
-   {
-      checkIfCorrectName("test");
-      checkIfCorrectName("test.txt");
-   }
+    /** If file name is correct then must be not showing any message. */
+    @Test
+    public void shouldBeCorrectName() {
+        checkIfCorrectName("test");
+        checkIfCorrectName("test.txt");
+    }
 
-   /**
-    * Check situation when file can be created.
-    * 
-    * @param fileName
-    */
-   private void checkIfCorrectName(String fileName)
-   {
-      when(view.getFileName()).thenReturn(fileName);
-      when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
+    /**
+     * Check situation when file can be created.
+     *
+     * @param fileName
+     */
+    private void checkIfCorrectName(String fileName) {
+        when(view.getFileName()).thenReturn(fileName);
+        when(project.getChildren()).thenReturn(JsonCollections.<Resource>createArray());
 
-      presenter.onValueChanged();
+        presenter.onValueChanged();
 
-      assertEquals(presenter.getNotice(), null);
-      assertEquals(presenter.isCompleted(), IS_COMPLITED);
-   }
+        assertEquals(presenter.getNotice(), null);
+        assertEquals(presenter.isCompleted(), IS_COMPLITED);
+    }
 
-   /**
-    * If calls doFinish method then must be call createFile method.
-    */
-   @Test
-   @SuppressWarnings("unchecked")
-   public void shouldBeCallCreateFolder()
-   {
-      presenter.doFinish();
+    /** If calls doFinish method then must be call createFile method. */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldBeCallCreateFolder() {
+        presenter.doFinish();
 
-      verify(project).createFile((Folder)anyObject(), anyString(), anyString(), anyString(),
-         ((AsyncCallback<File>)anyObject()));
-   }
+        verify(project).createFile((Folder)anyObject(), anyString(), anyString(), anyString(),
+                                   ((AsyncCallback<File>)anyObject()));
+    }
 }

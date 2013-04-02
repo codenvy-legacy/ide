@@ -18,10 +18,7 @@
  */
 package com.codenvy.ide.websocket.events;
 
-/**
- * Handler errors occurred during WebSocket connection.
- */
-public interface ConnectionErrorHandler
-{
-   void onError();
+/** Handler errors occurred during WebSocket connection. */
+public interface ConnectionErrorHandler {
+    void onError();
 }

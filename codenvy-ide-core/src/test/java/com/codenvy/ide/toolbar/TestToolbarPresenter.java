@@ -18,9 +18,6 @@
  */
 package com.codenvy.ide.toolbar;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.event.ExpressionsChangedEvent;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.expressions.ToggleStateExpression;
@@ -39,217 +36,206 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
 /**
  * Testing {@link ToolbarPresenter} functionality.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestToolbarPresenter
-{
-   private static final boolean IS_VISIBLE = true;
+public class TestToolbarPresenter {
+    private static final boolean IS_VISIBLE = true;
 
-   private static final boolean IS_ENABLED = true;
-   
-   private static final boolean IS_SELECTED = true;
+    private static final boolean IS_ENABLED = true;
 
-   private static final String PATH = "test";
+    private static final boolean IS_SELECTED = true;
 
-   @Mock
-   private SimpleEventBus eventBus;
+    private static final String PATH = "test";
 
-   @Mock
-   private ToolbarView view;
+    @Mock
+    private SimpleEventBus eventBus;
 
-   private ToolbarPresenter presenter;
+    @Mock
+    private ToolbarView view;
 
-   @Before
-   public void disarm()
-   {
-      // don't throw an exception if GWT.create() invoked
-      GWTMockUtilities.disarm();
+    private ToolbarPresenter presenter;
 
-      setUp();
-   }
-   
-   /**
-    * Create general components for all test.
-    */
-   private void setUp()
-   {
-      presenter = new ToolbarPresenter(view, eventBus);
-   }
+    @Before
+    public void disarm() {
+        // don't throw an exception if GWT.create() invoked
+        GWTMockUtilities.disarm();
 
-   @After
-   public void restore()
-   {
-      GWTMockUtilities.restore();
-   }
+        setUp();
+    }
 
-   /**
-    * If execute addItem method in the presenter then must be called
-    * addItem method in the view with same parameters.
-    */
-   @Test
-   public void shouldAddItemWithCommand()
-   {
-      Expression visible = mock(Expression.class);
-      when(visible.getValue()).thenReturn(!IS_VISIBLE);
+    /** Create general components for all test. */
+    private void setUp() {
+        presenter = new ToolbarPresenter(view, eventBus);
+    }
 
-      Expression enabled = mock(Expression.class);
-      when(enabled.getValue()).thenReturn(!IS_ENABLED);
+    @After
+    public void restore() {
+        GWTMockUtilities.restore();
+    }
 
-      // create command with expressions
-      ExtendedCommand command = mock(ExtendedCommand.class);
-      when(command.inContext()).thenReturn(visible);
-      when(command.canExecute()).thenReturn(enabled);
+    /**
+     * If execute addItem method in the presenter then must be called
+     * addItem method in the view with same parameters.
+     */
+    @Test
+    public void shouldAddItemWithCommand() {
+        Expression visible = mock(Expression.class);
+        when(visible.getValue()).thenReturn(!IS_VISIBLE);
 
-      presenter.addItem(PATH, command);
-      
-      verify(view).addItem(anyString(), (ExtendedCommand)anyObject(), eq(!IS_VISIBLE), eq(!IS_ENABLED));
-   }
+        Expression enabled = mock(Expression.class);
+        when(enabled.getValue()).thenReturn(!IS_ENABLED);
 
-   /**
-    * If execute addItem method in the presenter then must be called
-    * addItem method in the view with default parameters.
-    */
-   @Test
-   public void shouldAddItemWithOutCommand()
-   {
-      presenter.addItem(PATH, null);
+        // create command with expressions
+        ExtendedCommand command = mock(ExtendedCommand.class);
+        when(command.inContext()).thenReturn(visible);
+        when(command.canExecute()).thenReturn(enabled);
 
-      verify(view).addItem(anyString(), (ExtendedCommand)anyObject(), eq(IS_VISIBLE), eq(IS_ENABLED));
-   }
+        presenter.addItem(PATH, command);
 
-   /**
-    * If execute addToggleItem method in the presenter then must be called
-    * addToggleItem method in the view with same parameters.
-    */
-   @Test
-   public void shouldAddToggleItemWithToggleCommand()
-   {
-      Expression visible = mock(Expression.class);
-      when(visible.getValue()).thenReturn(!IS_VISIBLE);
+        verify(view).addItem(anyString(), (ExtendedCommand)anyObject(), eq(!IS_VISIBLE), eq(!IS_ENABLED));
+    }
 
-      Expression enabled = mock(Expression.class);
-      when(enabled.getValue()).thenReturn(!IS_ENABLED);
+    /**
+     * If execute addItem method in the presenter then must be called
+     * addItem method in the view with default parameters.
+     */
+    @Test
+    public void shouldAddItemWithOutCommand() {
+        presenter.addItem(PATH, null);
 
-      ToggleStateExpression selected = mock(ToggleStateExpression.class);
-      when(selected.getValue()).thenReturn(!IS_SELECTED);
+        verify(view).addItem(anyString(), (ExtendedCommand)anyObject(), eq(IS_VISIBLE), eq(IS_ENABLED));
+    }
 
-      // create command with expressions
-      ToggleCommand command = mock(ToggleCommand.class);
-      when(command.inContext()).thenReturn(visible);
-      when(command.canExecute()).thenReturn(enabled);
-      when(command.getState()).thenReturn(selected);
+    /**
+     * If execute addToggleItem method in the presenter then must be called
+     * addToggleItem method in the view with same parameters.
+     */
+    @Test
+    public void shouldAddToggleItemWithToggleCommand() {
+        Expression visible = mock(Expression.class);
+        when(visible.getValue()).thenReturn(!IS_VISIBLE);
 
-      presenter.addToggleItem(PATH, command);
+        Expression enabled = mock(Expression.class);
+        when(enabled.getValue()).thenReturn(!IS_ENABLED);
 
-      verify(view).addToggleItem(anyString(), (ToggleCommand)anyObject(), eq(!IS_VISIBLE), eq(!IS_ENABLED),
-         eq(!IS_SELECTED));
-   }
+        ToggleStateExpression selected = mock(ToggleStateExpression.class);
+        when(selected.getValue()).thenReturn(!IS_SELECTED);
 
-   /**
-    * If execute addToggleItem method in the presenter then must be called
-    * addToggleItem method in the view with default parameters.
-    */
-   @Test
-   public void shouldAddToggleItemWithOutToggleCommand()
-   {
-      presenter.addToggleItem(PATH, null);
+        // create command with expressions
+        ToggleCommand command = mock(ToggleCommand.class);
+        when(command.inContext()).thenReturn(visible);
+        when(command.canExecute()).thenReturn(enabled);
+        when(command.getState()).thenReturn(selected);
 
-      verify(view).addToggleItem(anyString(), (ToggleCommand)anyObject(), eq(IS_VISIBLE), eq(IS_ENABLED),
-         eq(IS_SELECTED));
-   }
+        presenter.addToggleItem(PATH, command);
 
-   /**
-    * If execute addDropDownItem method in the presenter then must be called
-    * addDropDownItem method in the view with default parameters.
-    */
-   @Test
-   public void shouldAddDropDownItemWithOutEpressions()
-   {
-      presenter.addDropDownItem(PATH, mock(ImageResource.class), "toolTip");
-      
-      verify(view)
-         .addDropDownItem(anyString(), (ImageResource)anyObject(), anyString(), eq(IS_VISIBLE), eq(IS_ENABLED));
-   }
-   
-   /**
-    * If execute addDropDownItem method in the presenter then must be called 
-    * addDropDownItem method in the view with same parameters.
-    */
-   @Test
-   public void shouldAddDropDownItemWithEpressions()
-   {
-      Expression visible = mock(Expression.class);
-      when(visible.getValue()).thenReturn(!IS_VISIBLE);
+        verify(view).addToggleItem(anyString(), (ToggleCommand)anyObject(), eq(!IS_VISIBLE), eq(!IS_ENABLED),
+                                   eq(!IS_SELECTED));
+    }
 
-      Expression enabled = mock(Expression.class);
-      when(enabled.getValue()).thenReturn(!IS_ENABLED);
+    /**
+     * If execute addToggleItem method in the presenter then must be called
+     * addToggleItem method in the view with default parameters.
+     */
+    @Test
+    public void shouldAddToggleItemWithOutToggleCommand() {
+        presenter.addToggleItem(PATH, null);
 
-      presenter.addDropDownItem(PATH, mock(ImageResource.class), "toolTip", visible, enabled);
-      
-      verify(view).addDropDownItem(anyString(), (ImageResource)anyObject(), anyString(), eq(!IS_VISIBLE),
-         eq(!IS_ENABLED));
-   }
+        verify(view).addToggleItem(anyString(), (ToggleCommand)anyObject(), eq(IS_VISIBLE), eq(IS_ENABLED),
+                                   eq(IS_SELECTED));
+    }
 
-   /**
-    * If execute copyMainMenuItem method in the presenter then must be called 
-    * copyMainMenuItem method in the view with same parameters.
-    */
-   @Test
-   public void shouldCopyMainMenuItem()
-   {
-      presenter.copyMainMenuItem(PATH, PATH);
+    /**
+     * If execute addDropDownItem method in the presenter then must be called
+     * addDropDownItem method in the view with default parameters.
+     */
+    @Test
+    public void shouldAddDropDownItemWithOutEpressions() {
+        presenter.addDropDownItem(PATH, mock(ImageResource.class), "toolTip");
 
-      verify(view).copyMainMenuItem(eq(PATH), eq(PATH));
-   }
+        verify(view)
+                .addDropDownItem(anyString(), (ImageResource)anyObject(), anyString(), eq(IS_VISIBLE), eq(IS_ENABLED));
+    }
 
-   /**
-    * If expression is changed then item state must be changed.
-    */
-   @Test
-   public void shouldBeChangedItemStateIfExpressionIsChanged()
-   {
-      // create expressions
-      Expression visible = mock(Expression.class);
-      int visibleExpressionID = 1;
-      when(visible.getValue()).thenReturn(!IS_VISIBLE);
-      when(visible.getId()).thenReturn(visibleExpressionID);
+    /**
+     * If execute addDropDownItem method in the presenter then must be called
+     * addDropDownItem method in the view with same parameters.
+     */
+    @Test
+    public void shouldAddDropDownItemWithEpressions() {
+        Expression visible = mock(Expression.class);
+        when(visible.getValue()).thenReturn(!IS_VISIBLE);
 
-      Expression enabled = mock(Expression.class);
-      int enableExprssionID = 2;
-      when(enabled.getValue()).thenReturn(!IS_ENABLED);
-      when(enabled.getId()).thenReturn(enableExprssionID);
+        Expression enabled = mock(Expression.class);
+        when(enabled.getValue()).thenReturn(!IS_ENABLED);
 
-      ToggleStateExpression selected = mock(ToggleStateExpression.class);
-      int selectedExpressionID = 3;
-      when(selected.getValue()).thenReturn(!IS_SELECTED);
-      when(selected.getId()).thenReturn(3);
+        presenter.addDropDownItem(PATH, mock(ImageResource.class), "toolTip", visible, enabled);
 
-      // create command with expressions
-      ToggleCommand command = mock(ToggleCommand.class);
-      when(command.inContext()).thenReturn(visible);
-      when(command.canExecute()).thenReturn(enabled);
-      when(command.getState()).thenReturn(selected);
-      
-      presenter.addToggleItem(PATH, command);
-      
-      // create list of changed expressions
-      JsonIntegerMap<Boolean> expressions = JsonCollections.createIntegerMap();
-      expressions.put(visibleExpressionID, IS_VISIBLE);
-      expressions.put(enableExprssionID, IS_ENABLED);
-      expressions.put(selectedExpressionID, IS_SELECTED);
+        verify(view).addDropDownItem(anyString(), (ImageResource)anyObject(), anyString(), eq(!IS_VISIBLE),
+                                     eq(!IS_ENABLED));
+    }
 
-      ExpressionsChangedEvent event = mock(ExpressionsChangedEvent.class);
-      when(event.getChangedExpressions()).thenReturn(expressions);
+    /**
+     * If execute copyMainMenuItem method in the presenter then must be called
+     * copyMainMenuItem method in the view with same parameters.
+     */
+    @Test
+    public void shouldCopyMainMenuItem() {
+        presenter.copyMainMenuItem(PATH, PATH);
 
-      presenter.onExpressionsChanged(event);
+        verify(view).copyMainMenuItem(eq(PATH), eq(PATH));
+    }
 
-      // check changed item states 
-      verify(view).setVisible(eq(PATH), eq(IS_VISIBLE));
-      verify(view).setEnabled(eq(PATH), eq(IS_ENABLED));
-      verify(view).setSelected(eq(PATH), eq(IS_SELECTED));
-   }
+    /** If expression is changed then item state must be changed. */
+    @Test
+    public void shouldBeChangedItemStateIfExpressionIsChanged() {
+        // create expressions
+        Expression visible = mock(Expression.class);
+        int visibleExpressionID = 1;
+        when(visible.getValue()).thenReturn(!IS_VISIBLE);
+        when(visible.getId()).thenReturn(visibleExpressionID);
+
+        Expression enabled = mock(Expression.class);
+        int enableExprssionID = 2;
+        when(enabled.getValue()).thenReturn(!IS_ENABLED);
+        when(enabled.getId()).thenReturn(enableExprssionID);
+
+        ToggleStateExpression selected = mock(ToggleStateExpression.class);
+        int selectedExpressionID = 3;
+        when(selected.getValue()).thenReturn(!IS_SELECTED);
+        when(selected.getId()).thenReturn(3);
+
+        // create command with expressions
+        ToggleCommand command = mock(ToggleCommand.class);
+        when(command.inContext()).thenReturn(visible);
+        when(command.canExecute()).thenReturn(enabled);
+        when(command.getState()).thenReturn(selected);
+
+        presenter.addToggleItem(PATH, command);
+
+        // create list of changed expressions
+        JsonIntegerMap<Boolean> expressions = JsonCollections.createIntegerMap();
+        expressions.put(visibleExpressionID, IS_VISIBLE);
+        expressions.put(enableExprssionID, IS_ENABLED);
+        expressions.put(selectedExpressionID, IS_SELECTED);
+
+        ExpressionsChangedEvent event = mock(ExpressionsChangedEvent.class);
+        when(event.getChangedExpressions()).thenReturn(expressions);
+
+        presenter.onExpressionsChanged(event);
+
+        // check changed item states
+        verify(view).setVisible(eq(PATH), eq(IS_VISIBLE));
+        verify(view).setEnabled(eq(PATH), eq(IS_ENABLED));
+        verify(view).setSelected(eq(PATH), eq(IS_SELECTED));
+    }
 }

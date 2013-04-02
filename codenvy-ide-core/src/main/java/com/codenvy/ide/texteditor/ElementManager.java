@@ -14,6 +14,9 @@
 
 package com.codenvy.ide.texteditor;
 
+import elemental.css.CSSStyleDeclaration;
+import elemental.html.Element;
+
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
@@ -26,16 +29,15 @@ import com.codenvy.ide.text.store.anchor.ReadOnlyAnchor;
 import com.codenvy.ide.text.store.util.LineUtils;
 import com.codenvy.ide.texteditor.renderer.Renderer;
 import com.codenvy.ide.util.ListenerRegistrar;
-import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
 
 
 // TODO: support RangeAnchoredElements
+
 /**
  * A manager that allows for adding and removing elements to some given
  * container element. This manager is capable of adding elements that are
  * anchored to a point or to a range.
- *
+ * <p/>
  * Some restrictions of anchored elements:
  * <ul>
  * <li>An anchor cannot be used to anchor multiple elements</li>
@@ -43,331 +45,270 @@ import elemental.html.Element;
  * use case arises)</li>
  * </ul>
  */
-public class ElementManager
-{
+public class ElementManager {
 
-   private final ReadOnlyAnchor.ShiftListener anchorShiftedListener = new ReadOnlyAnchor.ShiftListener()
-   {
-      @Override
-      public void onAnchorShifted(ReadOnlyAnchor anchor)
-      {
-         updateAnchoredElements(anchor);
-      }
-   };
+    private final ReadOnlyAnchor.ShiftListener anchorShiftedListener = new ReadOnlyAnchor.ShiftListener() {
+        @Override
+        public void onAnchorShifted(ReadOnlyAnchor anchor) {
+            updateAnchoredElements(anchor);
+        }
+    };
 
-   private final ReadOnlyAnchor.MoveListener anchorMovedListener = new ReadOnlyAnchor.MoveListener()
-   {
-      @Override
-      public void onAnchorMoved(ReadOnlyAnchor anchor)
-      {
-         updateAnchoredElements(anchor);
-      }
-   };
+    private final ReadOnlyAnchor.MoveListener anchorMovedListener = new ReadOnlyAnchor.MoveListener() {
+        @Override
+        public void onAnchorMoved(ReadOnlyAnchor anchor) {
+            updateAnchoredElements(anchor);
+        }
+    };
 
-   private final ReadOnlyAnchor.RemoveListener anchorRemovalListener = new ReadOnlyAnchor.RemoveListener()
-   {
-      @Override
-      public void onAnchorRemoved(ReadOnlyAnchor anchor)
-      {
-         JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-         for (int i = 0, n = elements.size(); i < n; i++)
-         {
-            removeAnchoredElement(anchor, elements.get(i));
-         }
-      }
-   };
-
-   private final Buffer buffer;
-
-   private final Element container;
-
-   private final JsonIntegerMap<JsonArray<Element>> anchoredElements = JsonCollections.createIntegerMap();
-
-   private final JsonArray<ReadOnlyAnchor> anchoredElementAnchors = JsonCollections.createArray();
-
-   private final Renderer.LineLifecycleListener renderedLineLifecycleListener = new Renderer.LineLifecycleListener()
-   {
-      private final AnchorVisitor lineCreatedAnchorVisitor = new AnchorVisitor()
-      {
-         @Override
-         public void visitAnchor(Anchor anchor)
-         {
+    private final ReadOnlyAnchor.RemoveListener anchorRemovalListener = new ReadOnlyAnchor.RemoveListener() {
+        @Override
+        public void onAnchorRemoved(ReadOnlyAnchor anchor) {
             JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-            if (elements != null)
-            {
-               for (int i = 0, n = elements.size(); i < n; i++)
-               {
-                  Element element = elements.get(i);
-                  attachElement(element);
-                  positionElementToAnchorTopLeft(anchor, element);
-               }
+            for (int i = 0, n = elements.size(); i < n; i++) {
+                removeAnchoredElement(anchor, elements.get(i));
             }
-         }
-      };
+        }
+    };
 
-      private final AnchorVisitor lineShiftedAnchorVisitor = new AnchorVisitor()
-      {
-         @Override
-         public void visitAnchor(Anchor anchor)
-         {
-            JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-            if (elements != null)
-            {
-               for (int i = 0, n = elements.size(); i < n; i++)
-               {
-                  updateAnchoredElement(anchor, elements.get(i));
-               }
+    private final Buffer buffer;
+
+    private final Element container;
+
+    private final JsonIntegerMap<JsonArray<Element>> anchoredElements = JsonCollections.createIntegerMap();
+
+    private final JsonArray<ReadOnlyAnchor> anchoredElementAnchors = JsonCollections.createArray();
+
+    private final Renderer.LineLifecycleListener renderedLineLifecycleListener = new Renderer.LineLifecycleListener() {
+        private final AnchorVisitor lineCreatedAnchorVisitor = new AnchorVisitor() {
+            @Override
+            public void visitAnchor(Anchor anchor) {
+                JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+                if (elements != null) {
+                    for (int i = 0, n = elements.size(); i < n; i++) {
+                        Element element = elements.get(i);
+                        attachElement(element);
+                        positionElementToAnchorTopLeft(anchor, element);
+                    }
+                }
             }
-         }
-      };
+        };
 
-      private final AnchorVisitor lineGarbageCollectedAnchorVisitor = new AnchorVisitor()
-      {
-         @Override
-         public void visitAnchor(Anchor anchor)
-         {
-            JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-            if (elements != null)
-            {
-               for (int i = 0, n = elements.size(); i < n; i++)
-               {
-                  detachElement(elements.get(i));
-               }
+        private final AnchorVisitor lineShiftedAnchorVisitor = new AnchorVisitor() {
+            @Override
+            public void visitAnchor(Anchor anchor) {
+                JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+                if (elements != null) {
+                    for (int i = 0, n = elements.size(); i < n; i++) {
+                        updateAnchoredElement(anchor, elements.get(i));
+                    }
+                }
             }
-         }
-      };
+        };
 
-      @Override
-      public void onRenderedLineGarbageCollected(Line line)
-      {
-         AnchorUtils.visitAnchorsOnLine(line, lineGarbageCollectedAnchorVisitor);
-      }
+        private final AnchorVisitor lineGarbageCollectedAnchorVisitor = new AnchorVisitor() {
+            @Override
+            public void visitAnchor(Anchor anchor) {
+                JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+                if (elements != null) {
+                    for (int i = 0, n = elements.size(); i < n; i++) {
+                        detachElement(elements.get(i));
+                    }
+                }
+            }
+        };
 
-      @Override
-      public void onRenderedLineCreated(Line line, int lineNumber)
-      {
-         AnchorUtils.visitAnchorsOnLine(line, lineCreatedAnchorVisitor);
-      }
+        @Override
+        public void onRenderedLineGarbageCollected(Line line) {
+            AnchorUtils.visitAnchorsOnLine(line, lineGarbageCollectedAnchorVisitor);
+        }
 
-      @Override
-      public void onRenderedLineShifted(Line line, int lineNumber)
-      {
+        @Override
+        public void onRenderedLineCreated(Line line, int lineNumber) {
+            AnchorUtils.visitAnchorsOnLine(line, lineCreatedAnchorVisitor);
+        }
+
+        @Override
+        public void onRenderedLineShifted(Line line, int lineNumber) {
          /*
           * TODO: Given this callback exists now, do we really
           * need to require anchors with line numbers?
           */
-         AnchorUtils.visitAnchorsOnLine(line, lineShiftedAnchorVisitor);
-      }
-   };
+            AnchorUtils.visitAnchorsOnLine(line, lineShiftedAnchorVisitor);
+        }
+    };
 
-   private ListenerRegistrar.Remover rendererListenerRemover;
+    private ListenerRegistrar.Remover rendererListenerRemover;
 
-   private final JsonArray<Element> unmanagedElements = JsonCollections.createArray();
+    private final JsonArray<Element> unmanagedElements = JsonCollections.createArray();
 
-   private ViewportModel viewport;
+    private ViewportModel viewport;
 
-   public ElementManager(Element container, Buffer buffer)
-   {
-      this.container = container;
-      this.buffer = buffer;
-   }
+    public ElementManager(Element container, Buffer buffer) {
+        this.container = container;
+        this.buffer = buffer;
+    }
 
-   public void handleDocumentChanged(ViewportModel viewport, Renderer renderer)
-   {
-      if (rendererListenerRemover != null)
-      {
-         rendererListenerRemover.remove();
-      }
+    public void handleDocumentChanged(ViewportModel viewport, Renderer renderer) {
+        if (rendererListenerRemover != null) {
+            rendererListenerRemover.remove();
+        }
 
-      removeAnchoredElements();
-      detachElements(unmanagedElements);
-      unmanagedElements.clear();
+        removeAnchoredElements();
+        detachElements(unmanagedElements);
+        unmanagedElements.clear();
 
-      this.viewport = viewport;
+        this.viewport = viewport;
 
-      rendererListenerRemover = renderer.getLineLifecycleListenerRegistrar().add(renderedLineLifecycleListener);
-   }
+        rendererListenerRemover = renderer.getLineLifecycleListenerRegistrar().add(renderedLineLifecycleListener);
+    }
 
-   public void addAnchoredElement(ReadOnlyAnchor anchor, Element element)
-   {
-      if (!anchor.hasLineNumber())
-      {
-         throw new IllegalArgumentException("The given anchor does not have a line number; create it with line numbers");
-      }
+    public void addAnchoredElement(ReadOnlyAnchor anchor, Element element) {
+        if (!anchor.hasLineNumber()) {
+            throw new IllegalArgumentException("The given anchor does not have a line number; create it with line numbers");
+        }
 
-      JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-      if (elements == null)
-      {
-         elements = JsonCollections.createArray();
-         anchoredElements.put(anchor.getId(), elements);
+        JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+        if (elements == null) {
+            elements = JsonCollections.createArray();
+            anchoredElements.put(anchor.getId(), elements);
 
-         anchoredElementAnchors.add(anchor);
+            anchoredElementAnchors.add(anchor);
 
-         anchor.getReadOnlyShiftListenerRegistrar().add(anchorShiftedListener);
-         anchor.getReadOnlyMoveListenerRegistrar().add(anchorMovedListener);
-         anchor.getReadOnlyRemoveListenerRegistrar().add(anchorRemovalListener);
+            anchor.getReadOnlyShiftListenerRegistrar().add(anchorShiftedListener);
+            anchor.getReadOnlyMoveListenerRegistrar().add(anchorMovedListener);
+            anchor.getReadOnlyRemoveListenerRegistrar().add(anchorRemovalListener);
 
-      }
-      else if (elements.contains(element))
-      {
-         // Already anchored, do nothing
-         return;
-      }
+        } else if (elements.contains(element)) {
+            // Already anchored, do nothing
+            return;
+        }
 
-      elements.add(element);
-      initializeElementForBeingManaged(element);
+        elements.add(element);
+        initializeElementForBeingManaged(element);
 
-      updateAnchoredElement(anchor, element);
-   }
+        updateAnchoredElement(anchor, element);
+    }
 
-   public void removeAnchoredElement(ReadOnlyAnchor anchor, Element element)
-   {
-      JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-      if (elements == null || !elements.remove(element))
-      {
-         return;
-      }
+    public void removeAnchoredElement(ReadOnlyAnchor anchor, Element element) {
+        JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+        if (elements == null || !elements.remove(element)) {
+            return;
+        }
 
-      if (elements.size() == 0)
-      {
-         anchor.getReadOnlyShiftListenerRegistrar().remove(anchorShiftedListener);
-         anchor.getReadOnlyMoveListenerRegistrar().remove(anchorMovedListener);
-         anchor.getReadOnlyRemoveListenerRegistrar().remove(anchorRemovalListener);
+        if (elements.size() == 0) {
+            anchor.getReadOnlyShiftListenerRegistrar().remove(anchorShiftedListener);
+            anchor.getReadOnlyMoveListenerRegistrar().remove(anchorMovedListener);
+            anchor.getReadOnlyRemoveListenerRegistrar().remove(anchorRemovalListener);
 
-         anchoredElements.erase(anchor.getId());
-         anchoredElementAnchors.remove(anchor);
-      }
+            anchoredElements.erase(anchor.getId());
+            anchoredElementAnchors.remove(anchor);
+        }
 
-      detachElement(element);
-   }
+        detachElement(element);
+    }
 
-   private void removeAnchoredElements()
-   {
-      while (anchoredElementAnchors.size() > 0)
-      {
-         ReadOnlyAnchor anchor = anchoredElementAnchors.get(0);
-         JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-         for (int i = 0, n = elements.size(); i < n; i++)
-         {
-            removeAnchoredElement(anchor, elements.get(i));
-         }
-      }
-   }
+    private void removeAnchoredElements() {
+        while (anchoredElementAnchors.size() > 0) {
+            ReadOnlyAnchor anchor = anchoredElementAnchors.get(0);
+            JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+            for (int i = 0, n = elements.size(); i < n; i++) {
+                removeAnchoredElement(anchor, elements.get(i));
+            }
+        }
+    }
 
-   public void addUnmanagedElement(Element element)
-   {
-      unmanagedElements.add(element);
-      attachElement(element);
-   }
+    public void addUnmanagedElement(Element element) {
+        unmanagedElements.add(element);
+        attachElement(element);
+    }
 
-   public void removeUnmanagedElement(Element element)
-   {
-      unmanagedElements.remove(element);
-      detachElement(element);
-   }
+    public void removeUnmanagedElement(Element element) {
+        unmanagedElements.remove(element);
+        detachElement(element);
+    }
 
-   private void initializeElementForBeingManaged(Element element)
-   {
-      element.getStyle().setPosition(CSSStyleDeclaration.Position.ABSOLUTE);
-   }
+    private void initializeElementForBeingManaged(Element element) {
+        element.getStyle().setPosition(CSSStyleDeclaration.Position.ABSOLUTE);
+    }
 
-   private void updateAnchoredElements(ReadOnlyAnchor anchor)
-   {
-      JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-      if (elements != null)
-      {
-         for (int i = 0, n = elements.size(); i < n; i++)
-         {
-            updateAnchoredElement(anchor, elements.get(i));
-         }
-      }
-   }
+    private void updateAnchoredElements(ReadOnlyAnchor anchor) {
+        JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+        if (elements != null) {
+            for (int i = 0, n = elements.size(); i < n; i++) {
+                updateAnchoredElement(anchor, elements.get(i));
+            }
+        }
+    }
 
-   /**
-    * Renders an anchored element intelligently; adds it to the DOM when it is in
-    * the viewport and removes it once it leaves the viewport.
-    */
-   private void updateAnchoredElement(ReadOnlyAnchor anchor, Element element)
-   {
+    /**
+     * Renders an anchored element intelligently; adds it to the DOM when it is in
+     * the viewport and removes it once it leaves the viewport.
+     */
+    private void updateAnchoredElement(ReadOnlyAnchor anchor, Element element) {
       /*
        * We only want the line number if the anchor is in the viewport, and this
        * is a quick way of achieving that
        */
-      int lineNumberGuess = LineUtils.getCachedLineNumber(anchor.getLine());
-      boolean isInViewport =
-         lineNumberGuess != -1 && lineNumberGuess >= viewport.getTopLineNumber()
-            && lineNumberGuess <= viewport.getBottomLineNumber();
-      boolean isRendered = element.getParentElement() != null;
+        int lineNumberGuess = LineUtils.getCachedLineNumber(anchor.getLine());
+        boolean isInViewport =
+                lineNumberGuess != -1 && lineNumberGuess >= viewport.getTopLineNumber()
+                && lineNumberGuess <= viewport.getBottomLineNumber();
+        boolean isRendered = element.getParentElement() != null;
 
-      if (isInViewport && !isRendered)
-      {
-         // Anchor moved into the viewport
-         attachElement(element);
-         positionElementToAnchorTopLeft(anchor, element);
+        if (isInViewport && !isRendered) {
+            // Anchor moved into the viewport
+            attachElement(element);
+            positionElementToAnchorTopLeft(anchor, element);
 
-      }
-      else if (isRendered && !isInViewport)
-      {
-         // Anchor moved out of the viewport
-         detachElement(element);
+        } else if (isRendered && !isInViewport) {
+            // Anchor moved out of the viewport
+            detachElement(element);
 
-      }
-      else if (isInViewport)
-      {
-         // Anchor was and is in viewport, reposition
-         positionElementToAnchorTopLeft(anchor, element);
-      }
-   }
+        } else if (isInViewport) {
+            // Anchor was and is in viewport, reposition
+            positionElementToAnchorTopLeft(anchor, element);
+        }
+    }
 
-   private void positionElementToAnchorTopLeft(ReadOnlyAnchor anchor, Element element)
-   {
-      CSSStyleDeclaration style = element.getStyle();
+    private void positionElementToAnchorTopLeft(ReadOnlyAnchor anchor, Element element) {
+        CSSStyleDeclaration style = element.getStyle();
 
-      style.setTop(buffer.convertLineNumberToY(anchor.getLineNumber()), CSSStyleDeclaration.Unit.PX);
+        style.setTop(buffer.convertLineNumberToY(anchor.getLineNumber()), CSSStyleDeclaration.Unit.PX);
 
-      int column = anchor.getColumn();
-      if (column != AnchorManager.IGNORE_COLUMN)
-      {
-         style.setLeft(buffer.convertColumnToX(anchor.getLine(), column), CSSStyleDeclaration.Unit.PX);
-      }
-   }
+        int column = anchor.getColumn();
+        if (column != AnchorManager.IGNORE_COLUMN) {
+            style.setLeft(buffer.convertColumnToX(anchor.getLine(), column), CSSStyleDeclaration.Unit.PX);
+        }
+    }
 
-   private void attachElement(Element element)
-   {
-      container.appendChild(element);
-   }
+    private void attachElement(Element element) {
+        container.appendChild(element);
+    }
 
-   private void detachElements(JsonArray<Element> elements)
-   {
-      for (int i = 0, n = elements.size(); i < n; i++)
-      {
-         detachElement(elements.get(i));
-      }
-   }
+    private void detachElements(JsonArray<Element> elements) {
+        for (int i = 0, n = elements.size(); i < n; i++) {
+            detachElement(elements.get(i));
+        }
+    }
 
-   private void detachElement(Element element)
-   {
-      if (container.contains(element))
-      {
-         container.removeChild(element);
-      }
-   }
+    private void detachElement(Element element) {
+        if (container.contains(element)) {
+            container.removeChild(element);
+        }
+    }
 
-   public void repositionAnchoredElementsWithColumn()
-   {
-      for (int i = 0, n = anchoredElementAnchors.size(); i < n; i++)
-      {
-         ReadOnlyAnchor anchor = anchoredElementAnchors.get(i);
-         if (!anchor.hasColumn())
-         {
-            continue;
-         }
+    public void repositionAnchoredElementsWithColumn() {
+        for (int i = 0, n = anchoredElementAnchors.size(); i < n; i++) {
+            ReadOnlyAnchor anchor = anchoredElementAnchors.get(i);
+            if (!anchor.hasColumn()) {
+                continue;
+            }
 
-         JsonArray<Element> elements = anchoredElements.get(anchor.getId());
-         for (int elementsPos = 0, elementsSize = elements.size(); elementsPos < elementsSize; elementsPos++)
-         {
-            positionElementToAnchorTopLeft(anchor, elements.get(elementsPos));
-         }
-      }
-   }
+            JsonArray<Element> elements = anchoredElements.get(anchor.getId());
+            for (int elementsPos = 0, elementsSize = elements.size(); elementsPos < elementsSize; elementsPos++) {
+                positionElementToAnchorTopLeft(anchor, elements.get(elementsPos));
+            }
+        }
+    }
 }

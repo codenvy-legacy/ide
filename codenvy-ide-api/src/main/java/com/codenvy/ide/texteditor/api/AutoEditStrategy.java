@@ -27,9 +27,7 @@ package com.codenvy.ide.texteditor.api;
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface AutoEditStrategy
-{
-  //TODO
+public interface AutoEditStrategy {
+    //TODO
 }

@@ -17,66 +17,62 @@
 package com.codenvy.ide.api.ui.perspective;
 
 import com.codenvy.ide.api.mvp.Presenter;
-
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * Part Stack is tabbed layout element, containing Parts.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface PartStack extends Presenter
-{
+public interface PartStack extends Presenter {
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void go(AcceptsOneWidget container);
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container);
 
-   /**
-    * Change the focused state of the PartStack to desired value 
-    * 
-    * @param focused
-    */
-   public void setFocus(boolean focused);
+    /**
+     * Change the focused state of the PartStack to desired value
+     *
+     * @param focused
+     */
+    public void setFocus(boolean focused);
 
-   /**
-    * Add part to the PartStack. Newly added part will be activated. If the Part
-    * has already been added to this PartStack, then it will be activated only. 
-    * 
-    * @param part
-    */
-   public void addPart(PartPresenter part);
+    /**
+     * Add part to the PartStack. Newly added part will be activated. If the Part
+     * has already been added to this PartStack, then it will be activated only.
+     *
+     * @param part
+     */
+    public void addPart(PartPresenter part);
 
-   /**
-    * Ask if PartStack contains given Part. 
-    * 
-    * @param part
-    * @return
-    */
-   public boolean containsPart(PartPresenter part);
+    /**
+     * Ask if PartStack contains given Part.
+     *
+     * @param part
+     * @return
+     */
+    public boolean containsPart(PartPresenter part);
 
-   /**
-    * Number of parts in the PartStack
-    * 
-    * @return
-    */
-   public int getNumberOfParts();
+    /**
+     * Number of parts in the PartStack
+     *
+     * @return
+     */
+    public int getNumberOfParts();
 
-   /**
-    * Get active Part. Active is the part that is currently displayed on the screen
-    * 
-    * @return
-    */
-   public PartPresenter getActivePart();
+    /**
+     * Get active Part. Active is the part that is currently displayed on the screen
+     *
+     * @return
+     */
+    public PartPresenter getActivePart();
 
-   /**
-    * Activate given part (force show it on the screen). If part wasn't previously added
-    * to the PartStack or has been removed, that method has no effect.
-    * 
-    * @param part
-    */
-   public void setActivePart(PartPresenter part);
+    /**
+     * Activate given part (force show it on the screen). If part wasn't previously added
+     * to the PartStack or has been removed, that method has no effect.
+     *
+     * @param part
+     */
+    public void setActivePart(PartPresenter part);
 
 }

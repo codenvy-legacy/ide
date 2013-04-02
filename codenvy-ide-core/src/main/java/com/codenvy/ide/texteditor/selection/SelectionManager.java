@@ -24,47 +24,41 @@ import com.codenvy.ide.texteditor.renderer.Renderer;
  * TODO: split SelectionModel into multiple components owned by
  * this class
  */
-/**
- * Manages and owns different components related to text selection.
- */
-public class SelectionManager
-{
 
-   public static SelectionManager create(Document doc, DocumentModel document, Buffer buffer, com.codenvy.ide.texteditor.api.FocusManager focusManager,
-      Resources resources)
-   {
-      SelectionModel selectionModel = SelectionModel.create(doc, document, buffer);
-      SelectionLineRenderer selectionLineRenderer = new SelectionLineRenderer(selectionModel, focusManager, resources);
+/** Manages and owns different components related to text selection. */
+public class SelectionManager {
 
-      return new SelectionManager(selectionModel, selectionLineRenderer);
-   }
+    public static SelectionManager create(Document doc, DocumentModel document, Buffer buffer,
+                                          com.codenvy.ide.texteditor.api.FocusManager focusManager,
+                                          Resources resources) {
+        SelectionModel selectionModel = SelectionModel.create(doc, document, buffer);
+        SelectionLineRenderer selectionLineRenderer = new SelectionLineRenderer(selectionModel, focusManager, resources);
 
-   private Renderer renderer;
+        return new SelectionManager(selectionModel, selectionLineRenderer);
+    }
 
-   private final SelectionLineRenderer selectionLineRenderer;
+    private Renderer renderer;
 
-   private final SelectionModel selectionModel;
+    private final SelectionLineRenderer selectionLineRenderer;
 
-   private SelectionManager(SelectionModel selectionModel, SelectionLineRenderer selectionLineRenderer)
-   {
-      this.selectionModel = selectionModel;
-      this.selectionLineRenderer = selectionLineRenderer;
-   }
+    private final SelectionModel selectionModel;
 
-   public void initialize(Renderer renderer)
-   {
-      this.renderer = renderer;
-      renderer.addLineRenderer(selectionLineRenderer);
-   }
+    private SelectionManager(SelectionModel selectionModel, SelectionLineRenderer selectionLineRenderer) {
+        this.selectionModel = selectionModel;
+        this.selectionLineRenderer = selectionLineRenderer;
+    }
 
-   public void teardown()
-   {
-      renderer.removeLineRenderer(selectionLineRenderer);
-      selectionModel.teardown();
-   }
+    public void initialize(Renderer renderer) {
+        this.renderer = renderer;
+        renderer.addLineRenderer(selectionLineRenderer);
+    }
 
-   public SelectionModel getSelectionModel()
-   {
-      return selectionModel;
-   }
+    public void teardown() {
+        renderer.removeLineRenderer(selectionLineRenderer);
+        selectionModel.teardown();
+    }
+
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
+    }
 }

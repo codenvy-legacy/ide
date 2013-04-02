@@ -19,14 +19,13 @@ package com.codenvy.ide.java.client.internal.compiler.impl;
 import com.codenvy.ide.java.client.core.compiler.CategorizedProblem;
 import com.codenvy.ide.java.client.internal.compiler.CompilationResult;
 
-public interface ReferenceContext
-{
+public interface ReferenceContext {
 
-   void abort(int abortLevel, CategorizedProblem problem);
+    void abort(int abortLevel, CategorizedProblem problem);
 
-   CompilationResult compilationResult();
+    CompilationResult compilationResult();
 
-   boolean hasErrors();
+    boolean hasErrors();
 
-   void tagAsHavingErrors();
+    void tagAsHavingErrors();
 }

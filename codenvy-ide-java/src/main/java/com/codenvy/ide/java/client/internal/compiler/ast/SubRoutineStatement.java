@@ -13,23 +13,21 @@ package com.codenvy.ide.java.client.internal.compiler.ast;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.LocalVariableBinding;
 
-/**
- * Extra behavior for statements which are generating subroutines
- */
-public abstract class SubRoutineStatement extends Statement
-{
+/** Extra behavior for statements which are generating subroutines */
+public abstract class SubRoutineStatement extends Statement {
 
-   /**
-    * Generate an invocation of a subroutine (e.g. jsr finally) in current context.
-    * @param currentScope
-    * @param codeStream
-    * @param targetLocation
-    * @param stateIndex
-    * @param secretLocal
-    * @return boolean, <code>true</code> if the generated code will abrupt completion
-    */
-   public abstract boolean generateSubRoutineInvocation(BlockScope currentScope, Object targetLocation, int stateIndex,
-      LocalVariableBinding secretLocal);
+    /**
+     * Generate an invocation of a subroutine (e.g. jsr finally) in current context.
+     *
+     * @param currentScope
+     * @param codeStream
+     * @param targetLocation
+     * @param stateIndex
+     * @param secretLocal
+     * @return boolean, <code>true</code> if the generated code will abrupt completion
+     */
+    public abstract boolean generateSubRoutineInvocation(BlockScope currentScope, Object targetLocation, int stateIndex,
+                                                         LocalVariableBinding secretLocal);
 
-   public abstract boolean isSubRoutineEscaping();
+    public abstract boolean isSubRoutineEscaping();
 }

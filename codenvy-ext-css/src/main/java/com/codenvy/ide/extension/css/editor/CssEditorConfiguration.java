@@ -30,47 +30,37 @@ import com.codenvy.ide.texteditor.api.parser.Parser;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CssEditorConfiguration extends TextEditorConfiguration
-{
+public class CssEditorConfiguration extends TextEditorConfiguration {
 
-   private CssResources resourcess;
+    private CssResources resourcess;
 
-   /**
-    * @param resourcess
-    */
-   public CssEditorConfiguration(CssResources resourcess)
-   {
-      super();
-      this.resourcess = resourcess;
-   }
+    /** @param resourcess */
+    public CssEditorConfiguration(CssResources resourcess) {
+        super();
+        this.resourcess = resourcess;
+    }
 
-   private static native CmParser getParserForMime(String mime) /*-{
-      conf = $wnd.CodeMirror.defaults;
-      return $wnd.CodeMirror.getMode(conf, mime);
-   }-*/;
+    private static native CmParser getParserForMime(String mime) /*-{
+        conf = $wnd.CodeMirror.defaults;
+        return $wnd.CodeMirror.getMode(conf, mime);
+    }-*/;
 
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Parser getParser(TextEditorPartView view)
-   {
-      CmParser parser = getParserForMime("text/css");
-      parser.setNameAndFactory("css", new CssTokenFactory());
-      return parser;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Parser getParser(TextEditorPartView view) {
+        CmParser parser = getParserForMime("text/css");
+        parser.setNameAndFactory("css", new CssTokenFactory());
+        return parser;
+    }
 
-   /**
-    * @see com.codenvy.ide.texteditor.api.TextEditorConfiguration#getContentAssistantProcessors(com.codenvy.ide.texteditor.api.TextEditorPartView)
-    */
-   @Override
-   public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view)
-   {
-      JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
-      map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resourcess));
-      return map;
-   }
+    /** @see com.codenvy.ide.texteditor.api.TextEditorConfiguration#getContentAssistantProcessors(com.codenvy.ide.texteditor.api
+     * .TextEditorPartView) */
+    @Override
+    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
+        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+        map.put(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resourcess));
+        return map;
+    }
 }

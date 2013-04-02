@@ -19,16 +19,15 @@
 package com.codenvy.ide.api.expressions;
 
 /**
- * The expression provides change toggle item state. 
- * 
+ * The expression provides change toggle item state.
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface ToggleStateExpression extends Expression
-{
-   /**
-    * Execute different operation when the item state is changing.
-    * 
-    * @return the item state
-    */
-   public boolean onStateChanged();
+public interface ToggleStateExpression extends Expression {
+    /**
+     * Execute different operation when the item state is changing.
+     *
+     * @return the item state
+     */
+    public boolean onStateChanged();
 }

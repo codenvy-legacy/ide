@@ -19,56 +19,54 @@
 package com.codenvy.ide.java.client.wizard;
 
 import com.codenvy.ide.api.mvp.View;
-
 import com.codenvy.ide.json.JsonArray;
 
 
 /**
  * View for new Java package wizard.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * @version $Id:
  */
-public interface NewPackagePageView extends View<NewPackagePageView.ActionDelegate>
-{
-   /**
-    * Action delegate for new Java package wizard.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Package parent changed.
-       * @param index the parent index.
-       */
-      void parentChanged(int index);
+public interface NewPackagePageView extends View<NewPackagePageView.ActionDelegate> {
+    /** Action delegate for new Java package wizard. */
+    public interface ActionDelegate {
+        /**
+         * Package parent changed.
+         *
+         * @param index
+         *         the parent index.
+         */
+        void parentChanged(int index);
 
-      /**
-       * New package name changed, validate it.
-       */
-      void checkPackageName();
-   }
+        /** New package name changed, validate it. */
+        void checkPackageName();
+    }
 
-   /**
-    * Set all packages or source folders in project
-    * @param parents the packages or source folder names
-    */
-   void setParents(JsonArray<String> parents);
+    /**
+     * Set all packages or source folders in project
+     *
+     * @param parents
+     *         the packages or source folder names
+     */
+    void setParents(JsonArray<String> parents);
 
-   /**
-    * Select parent by index
-    * 
-    * @param index of the parent in the list
-    */
-   void selectParent(int indexOf);
+    /**
+     * Select parent by index
+     *
+     * @param index
+     *         of the parent in the list
+     */
+    void selectParent(int indexOf);
 
-   /**
-    * Get new package name.
-    * @return the new package name
-    */
-   String getPackageName();
+    /**
+     * Get new package name.
+     *
+     * @return the new package name
+     */
+    String getPackageName();
 
-   /**
-    * Disable all ui components.
-    */
-   void disableAllUi();
+    /** Disable all ui components. */
+    void disableAllUi();
 
 }

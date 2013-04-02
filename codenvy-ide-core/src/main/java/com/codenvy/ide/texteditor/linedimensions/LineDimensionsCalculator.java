@@ -155,286 +155,242 @@ import com.google.gwt.regexp.shared.RegExp;
  * cursor go right-to-left but still combining mark's don't quite work and in
  * fact some don't render correctly at all (which do otherwise).
  */
-public class LineDimensionsCalculator
-{
-   /**
-    * Creates a new {@link LineDimensionsCalculator} from a
-    * {@link FontDimensionsCalculator}.
-    */
-   public static LineDimensionsCalculator create(FontDimensionsCalculator fontCalculator)
-   {
-      final LineDimensionsCalculator calculator =
-         new LineDimensionsCalculator(new BrowserMeasurementProvider(fontCalculator));
-      // add a listener so that we can clear our cache if the dimensions change.
-      fontCalculator.addCallback(new FontDimensionsCalculator.Callback()
-      {
-         @Override
-         public void onFontDimensionsChanged(FontDimensions fontDimensions)
-         {
-            LineDimensionsCalculator.clearCharacterCacheDueToZoomChange();
-         }
-      });
-      return calculator;
-   }
-
-   /**
-    * Creates a new {@link LineDimensionsCalculator} with a custom
-    * {@link MeasurementProvider}.
-    */
-   static LineDimensionsCalculator createWithCustomProvider(MeasurementProvider provider)
-   {
-      return new LineDimensionsCalculator(provider);
-   }
-
-   /**
-    * Specifies how a X-to-column conversion determines the column if the X isn't on the exact column
-    * boundary.
-    */
-   public enum RoundingStrategy {
-      ROUND, FLOOR, CEIL;
-
-      public int apply(double value)
-      {
-         switch (this)
-         {
-            case ROUND :
-               return (int)Math.round(value);
-
-            case FLOOR :
-               return (int)Math.floor(value);
-
-            case CEIL :
-               return (int)Math.ceil(value);
-
-            default :
-               throw new IllegalStateException("Unexpected value for RoundingStrategy");
-         }
-      }
-   }
-
-   /**
-    * A cache used to cache the width of special characters. Would be final
-    * except there isn't a fast way to clear a map.
-    */
-   private static JsonStringMap<Double> characterWidthCache = JsonCollections.createStringMap();
-
-   /**
-    * A listener which notifies us of dirty lines. We only have to handle the
-    * case where the endLine != startLine since the startLine is handled in the
-    * preTextListener.
-    */
-   private static TextListener textListener = new TextListener()
-   {
-      @Override
-      public void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges)
-      {
-         for (int i = 0; i < textChanges.size(); i++)
-         {
-            TextChange change = textChanges.get(i);
-            if (change.getEndLine() != change.getLine())
-            {
-               LineDimensionsUtils.isOffsetNeededAndCache(change.getEndLine(), change.getEndColumn(), change.getType());
+public class LineDimensionsCalculator {
+    /**
+     * Creates a new {@link LineDimensionsCalculator} from a
+     * {@link FontDimensionsCalculator}.
+     */
+    public static LineDimensionsCalculator create(FontDimensionsCalculator fontCalculator) {
+        final LineDimensionsCalculator calculator =
+                new LineDimensionsCalculator(new BrowserMeasurementProvider(fontCalculator));
+        // add a listener so that we can clear our cache if the dimensions change.
+        fontCalculator.addCallback(new FontDimensionsCalculator.Callback() {
+            @Override
+            public void onFontDimensionsChanged(FontDimensions fontDimensions) {
+                LineDimensionsCalculator.clearCharacterCacheDueToZoomChange();
             }
-         }
-      }
-   };
+        });
+        return calculator;
+    }
 
-   /**
-    * A listener which allows us to mark the cache dirty before a text change
-    * actually takes place.
-    */
-   private static PreTextListener preTextListener = new PreTextListener()
-   {
-      @Override
-      public void onPreTextChange(DocumentModel document, Type type, Line line, int lineNumber, int column, String text)
-      {
+    /**
+     * Creates a new {@link LineDimensionsCalculator} with a custom
+     * {@link MeasurementProvider}.
+     */
+    static LineDimensionsCalculator createWithCustomProvider(MeasurementProvider provider) {
+        return new LineDimensionsCalculator(provider);
+    }
+
+    /**
+     * Specifies how a X-to-column conversion determines the column if the X isn't on the exact column
+     * boundary.
+     */
+    public enum RoundingStrategy {
+        ROUND, FLOOR, CEIL;
+
+        public int apply(double value) {
+            switch (this) {
+                case ROUND:
+                    return (int)Math.round(value);
+
+                case FLOOR:
+                    return (int)Math.floor(value);
+
+                case CEIL:
+                    return (int)Math.ceil(value);
+
+                default:
+                    throw new IllegalStateException("Unexpected value for RoundingStrategy");
+            }
+        }
+    }
+
+    /**
+     * A cache used to cache the width of special characters. Would be final
+     * except there isn't a fast way to clear a map.
+     */
+    private static JsonStringMap<Double> characterWidthCache = JsonCollections.createStringMap();
+
+    /**
+     * A listener which notifies us of dirty lines. We only have to handle the
+     * case where the endLine != startLine since the startLine is handled in the
+     * preTextListener.
+     */
+    private static TextListener textListener = new TextListener() {
+        @Override
+        public void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges) {
+            for (int i = 0; i < textChanges.size(); i++) {
+                TextChange change = textChanges.get(i);
+                if (change.getEndLine() != change.getLine()) {
+                    LineDimensionsUtils.isOffsetNeededAndCache(change.getEndLine(), change.getEndColumn(), change.getType());
+                }
+            }
+        }
+    };
+
+    /**
+     * A listener which allows us to mark the cache dirty before a text change
+     * actually takes place.
+     */
+    private static PreTextListener preTextListener = new PreTextListener() {
+        @Override
+        public void onPreTextChange(DocumentModel document, Type type, Line line, int lineNumber, int column, String text) {
 
          /*
           * In the case where text is deleted, we only need to mark ourselves dirty
           * if there is already an OffsetCache. The insert case though requires
           * looking at the newly typed text for special characters.
           */
-         LineDimensionsUtils.preTextIsOffsetNeededAndCache(line, column, type, text);
-      }
-   };
+            LineDimensionsUtils.preTextIsOffsetNeededAndCache(line, column, type, text);
+        }
+    };
 
-   private final RemoverManager listenerManager = new RemoverManager();
+    private final RemoverManager listenerManager = new RemoverManager();
 
-   private final MeasurementProvider measurementProvider;
+    private final MeasurementProvider measurementProvider;
 
-   private LineDimensionsCalculator(MeasurementProvider measurementProvider)
-   {
-      this.measurementProvider = measurementProvider;
-   }
+    private LineDimensionsCalculator(MeasurementProvider measurementProvider) {
+        this.measurementProvider = measurementProvider;
+    }
 
-   /**
-    * Sets the currently opened document so we can listen for mutations.
-    */
-   public void handleDocumentChange(DocumentModel newDocument)
-   {
-      // Remove old document listener
-      listenerManager.remove();
-      // add the new ones
-      listenerManager.track(newDocument.getPreTextListenerRegistrar().add(preTextListener));
-      listenerManager.track(newDocument.getTextListenerRegistrar().add(textListener));
-   }
+    /** Sets the currently opened document so we can listen for mutations. */
+    public void handleDocumentChange(DocumentModel newDocument) {
+        // Remove old document listener
+        listenerManager.remove();
+        // add the new ones
+        listenerManager.track(newDocument.getPreTextListenerRegistrar().add(preTextListener));
+        listenerManager.track(newDocument.getTextListenerRegistrar().add(textListener));
+    }
 
-   /**
-    * Converts a column to its x coordinate.
-    */
-   public double convertColumnToX(Line line, int column)
-   {
-      // Simple case we early out
-      if (column == 0)
-      {
-         return 0;
-      }
+    /** Converts a column to its x coordinate. */
+    public double convertColumnToX(Line line, int column) {
+        // Simple case we early out
+        if (column == 0) {
+            return 0;
+        }
 
-      if (!LineDimensionsUtils.needsOffset(line))
-      {
-         return simpleConvertColumnToX(line, column);
-      }
-      return convertColumnToXMeasuringIfNeeded(line, column);
-   }
+        if (!LineDimensionsUtils.needsOffset(line)) {
+            return simpleConvertColumnToX(line, column);
+        }
+        return convertColumnToXMeasuringIfNeeded(line, column);
+    }
 
-   /**
-    * Converts an x coordinate to the Editor column.
-    */
-   public int convertXToColumn(Line line, double x, RoundingStrategy roundingStrategy)
-   {
-      // Easy out (< can happen when selection dragging).
-      if (x <= 0)
-      {
-         return 0;
-      }
+    /** Converts an x coordinate to the Editor column. */
+    public int convertXToColumn(Line line, double x, RoundingStrategy roundingStrategy) {
+        // Easy out (< can happen when selection dragging).
+        if (x <= 0) {
+            return 0;
+        }
 
-      if (!LineDimensionsUtils.needsOffset(line))
-      {
-         return simpleConvertXToColumn(line, x, roundingStrategy);
-      }
-      return roundingStrategy.apply(convertXToColumnMeasuringIfNeeded(line, x));
-   }
+        if (!LineDimensionsUtils.needsOffset(line)) {
+            return simpleConvertXToColumn(line, x, roundingStrategy);
+        }
+        return roundingStrategy.apply(convertXToColumnMeasuringIfNeeded(line, x));
+    }
 
-   /**
-    * Converts column to x using the {@link ColumnOffsetCache} stored on the
-    * line, measuring if required.
-    */
-   private double convertColumnToXMeasuringIfNeeded(Line line, int column)
-   {
+    /**
+     * Converts column to x using the {@link ColumnOffsetCache} stored on the
+     * line, measuring if required.
+     */
+    private double convertColumnToXMeasuringIfNeeded(Line line, int column) {
 
-      ColumnOffsetCache cache = ColumnOffsetCache.getOrCreate(line, getColumnWidth());
-      checkColumnInCacheAndMeasureIfNeeded(cache, line, column);
-      ColumnOffset offset = cache.getColumnOffsetForColumn(column);
+        ColumnOffsetCache cache = ColumnOffsetCache.getOrCreate(line, getColumnWidth());
+        checkColumnInCacheAndMeasureIfNeeded(cache, line, column);
+        ColumnOffset offset = cache.getColumnOffsetForColumn(column);
 
-      return smartColumnToX(offset, column);
-   }
+        return smartColumnToX(offset, column);
+    }
 
-   /**
-    * Converts x to a column using the {@link ColumnOffsetCache} stored on the
-    * line, measuring if needed.
-    */
-   private double convertXToColumnMeasuringIfNeeded(Line line, double x)
-   {
+    /**
+     * Converts x to a column using the {@link ColumnOffsetCache} stored on the
+     * line, measuring if needed.
+     */
+    private double convertXToColumnMeasuringIfNeeded(Line line, double x) {
 
-      ColumnOffsetCache cache = ColumnOffsetCache.getOrCreate(line, getColumnWidth());
-      checkXInCacheAndMeasureIfNeeded(cache, line, x);
-      Pair<ColumnOffset, Double> offsetAndWidth = cache.getColumnOffsetForX(x, getColumnWidth());
+        ColumnOffsetCache cache = ColumnOffsetCache.getOrCreate(line, getColumnWidth());
+        checkXInCacheAndMeasureIfNeeded(cache, line, x);
+        Pair<ColumnOffset, Double> offsetAndWidth = cache.getColumnOffsetForX(x, getColumnWidth());
 
-      return smartXToColumn(offsetAndWidth.first, offsetAndWidth.second, x);
-   }
+        return smartXToColumn(offsetAndWidth.first, offsetAndWidth.second, x);
+    }
 
-   /**
-    * Smart column to x conversion which converts a column to an x position based
-    * on a {@link ColumnOffset}.
-    */
-   private double smartColumnToX(ColumnOffset offset, int column)
-   {
-      if (offset.column == column)
-      {
-         return offset.x;
-      }
+    /**
+     * Smart column to x conversion which converts a column to an x position based
+     * on a {@link ColumnOffset}.
+     */
+    private double smartColumnToX(ColumnOffset offset, int column) {
+        if (offset.column == column) {
+            return offset.x;
+        }
 
-      return offset.x + naiveColumnToX(column - offset.column);
-   }
+        return offset.x + naiveColumnToX(column - offset.column);
+    }
 
-   /**
-    * Smart x to column conversion which an x pixel position to a column based on
-    * a {@link ColumnOffset}.
-    */
-   private double smartXToColumn(ColumnOffset offset, double width, double x)
-   {
-      double column = offset.column;
-      if (x == offset.x)
-      {
-         return column;
-      }
-      else if (x < offset.x + width)
-      {
+    /**
+     * Smart x to column conversion which an x pixel position to a column based on
+     * a {@link ColumnOffset}.
+     */
+    private double smartXToColumn(ColumnOffset offset, double width, double x) {
+        double column = offset.column;
+        if (x == offset.x) {
+            return column;
+        } else if (x < offset.x + width) {
          /*
           * We are converting this exact column so lets taken into account this
           * columns length which may be special.
           */
-         column += (x - offset.x) / width;
-      }
-      else
-      {
-         // Figure out the offset in pixels and subtract then convert.
-         column += naiveXToColumn(x - offset.x);
-      }
+            column += (x - offset.x) / width;
+        } else {
+            // Figure out the offset in pixels and subtract then convert.
+            column += naiveXToColumn(x - offset.x);
+        }
 
-      return column;
-   }
+        return column;
+    }
 
-   /**
-    * Naively converts a column to its expected x value not taking into account
-    * any special characters.
-    */
-   private double naiveColumnToX(double column)
-   {
-      return column * getColumnWidth();
-   }
+    /**
+     * Naively converts a column to its expected x value not taking into account
+     * any special characters.
+     */
+    private double naiveColumnToX(double column) {
+        return column * getColumnWidth();
+    }
 
-   /**
-    * Naively converts a x pixel value to its expected column not taking into
-    * account any special characters.
-    */
-   private double naiveXToColumn(double x)
-   {
-      return x / getColumnWidth();
-   }
+    /**
+     * Naively converts a x pixel value to its expected column not taking into
+     * account any special characters.
+     */
+    private double naiveXToColumn(double x) {
+        return x / getColumnWidth();
+    }
 
-   /**
-    * Finds the adjusted column number due to tab indentation and carriage
-    * returns. This is used in the simple case to handle prefixing tabs and the
-    * '\r\n' windows line format. Complex cases are handled in the
-    * {@link ColumnOffsetCache}.
-    */
-   private double simpleConvertColumnToX(Line line, int column)
-   {
-      // early out when we are at the start of the line
-      if (column == 0)
-      {
-         return 0;
-      }
+    /**
+     * Finds the adjusted column number due to tab indentation and carriage
+     * returns. This is used in the simple case to handle prefixing tabs and the
+     * '\r\n' windows line format. Complex cases are handled in the
+     * {@link ColumnOffsetCache}.
+     */
+    private double simpleConvertColumnToX(Line line, int column) {
+        // early out when we are at the start of the line
+        if (column == 0) {
+            return 0;
+        }
 
-      // get any indentation tabs that are affecting us
-      int offsetTabColumns =
-         LineDimensionsUtils.getLastIndentationTabCount(line.getText(), column)
-            * (LineDimensionsUtils.getTabWidth() - 1);
-      int offsetCarriageReturn = 0;
-      if (isColumnAffectedByCarriageReturn(line, column))
-      {
-         offsetCarriageReturn = -1;
-      }
-      return naiveColumnToX(offsetTabColumns + offsetCarriageReturn + column);
-   }
+        // get any indentation tabs that are affecting us
+        int offsetTabColumns =
+                LineDimensionsUtils.getLastIndentationTabCount(line.getText(), column)
+                * (LineDimensionsUtils.getTabWidth() - 1);
+        int offsetCarriageReturn = 0;
+        if (isColumnAffectedByCarriageReturn(line, column)) {
+            offsetCarriageReturn = -1;
+        }
+        return naiveColumnToX(offsetTabColumns + offsetCarriageReturn + column);
+    }
 
-   private int simpleConvertXToColumn(Line line, double x, RoundingStrategy roundingStrategy)
-   {
-      if (x == 0)
-      {
-         return 0;
-      }
+    private int simpleConvertXToColumn(Line line, double x, RoundingStrategy roundingStrategy) {
+        if (x == 0) {
+            return 0;
+        }
 
       /*
        * we just have to be conscious here of prefix tabs which may be a different
@@ -445,101 +401,88 @@ public class LineDimensionsCalculator
        * we divide x by the width of a tab in pixels to overshoot the number of
        * indentation tabs
        */
-      int columnIfAllTabs = (int)Math.floor(x / naiveColumnToX(LineDimensionsUtils.getTabWidth()));
-      int offsetTabColumns = LineDimensionsUtils.getLastIndentationTabCount(line.getText(), columnIfAllTabs);
-      assert columnIfAllTabs >= offsetTabColumns : "You appear to be less tabs then you say you are";
+        int columnIfAllTabs = (int)Math.floor(x / naiveColumnToX(LineDimensionsUtils.getTabWidth()));
+        int offsetTabColumns = LineDimensionsUtils.getLastIndentationTabCount(line.getText(), columnIfAllTabs);
+        assert columnIfAllTabs >= offsetTabColumns : "You appear to be less tabs then you say you are";
 
-      double lineWidthPxWithoutTabs = x - (offsetTabColumns * LineDimensionsUtils.getTabWidth() * getColumnWidth());
-      int column = roundingStrategy.apply(naiveXToColumn(lineWidthPxWithoutTabs) + offsetTabColumns);
-      // if we landed on the carriage return column++
-      if (column < line.length() && line.getText().charAt(column) == '\r')
-      {
-         column++;
-      }
-      return column;
-   }
+        double lineWidthPxWithoutTabs = x - (offsetTabColumns * LineDimensionsUtils.getTabWidth() * getColumnWidth());
+        int column = roundingStrategy.apply(naiveXToColumn(lineWidthPxWithoutTabs) + offsetTabColumns);
+        // if we landed on the carriage return column++
+        if (column < line.length() && line.getText().charAt(column) == '\r') {
+            column++;
+        }
+        return column;
+    }
 
-   /**
-    * @return true if a measurement was performed.
-    */
-   private boolean checkColumnInCacheAndMeasureIfNeeded(ColumnOffsetCache cache, Line line, int column)
-   {
-      if (cache.isColumnMeasurementNeeded(column))
-      {
-         measureLineStoppingAtColumn(cache, line, column);
-         return true;
-      }
-      return false;
-   }
+    /** @return true if a measurement was performed. */
+    private boolean checkColumnInCacheAndMeasureIfNeeded(ColumnOffsetCache cache, Line line, int column) {
+        if (cache.isColumnMeasurementNeeded(column)) {
+            measureLineStoppingAtColumn(cache, line, column);
+            return true;
+        }
+        return false;
+    }
 
-   /**
-    * @return true if a measurement was performed.
-    */
-   private boolean checkXInCacheAndMeasureIfNeeded(ColumnOffsetCache cache, Line line, double x)
-   {
-      if (cache.isXMeasurementNeeded(x))
-      {
-         measureLineStoppingAtX(cache, line, x);
-         return true;
-      }
-      return false;
-   }
+    /** @return true if a measurement was performed. */
+    private boolean checkXInCacheAndMeasureIfNeeded(ColumnOffsetCache cache, Line line, double x) {
+        if (cache.isXMeasurementNeeded(x)) {
+            measureLineStoppingAtX(cache, line, x);
+            return true;
+        }
+        return false;
+    }
 
-   /**
-    * Builds the cache for a line up to or beyond the given endColumn value.
-    *
-    * @see #measureLine(ColumnOffsetCache, Line, int, double)
-    */
-   private void measureLineStoppingAtColumn(ColumnOffsetCache cache, Line line, int endColumn)
-   {
-      measureLine(cache, line, endColumn, Double.MAX_VALUE);
-   }
+    /**
+     * Builds the cache for a line up to or beyond the given endColumn value.
+     *
+     * @see #measureLine(ColumnOffsetCache, Line, int, double)
+     */
+    private void measureLineStoppingAtColumn(ColumnOffsetCache cache, Line line, int endColumn) {
+        measureLine(cache, line, endColumn, Double.MAX_VALUE);
+    }
 
-   /**
-    * Builds the cache for a line up to or beyond the given endX value.
-    *
-    * @see #measureLine(ColumnOffsetCache, Line, int, double)
-    */
-   private void measureLineStoppingAtX(ColumnOffsetCache cache, Line line, double endX)
-   {
-      measureLine(cache, line, Integer.MAX_VALUE, endX);
-   }
+    /**
+     * Builds the cache for a line up to or beyond the given endX value.
+     *
+     * @see #measureLine(ColumnOffsetCache, Line, int, double)
+     */
+    private void measureLineStoppingAtX(ColumnOffsetCache cache, Line line, double endX) {
+        measureLine(cache, line, Integer.MAX_VALUE, endX);
+    }
 
-   /**
-    * Builds the cache for a line up to a particular column. Should not be called
-    * if the line has already been {@link ColumnOffsetCache#FULLY_MEASURED}.
-    *
-    * <p>
-    * You should only rely on either endColumn or endX, one or the other should
-    * be the max value for its data type.
-    *
-    * @see #measureLineStoppingAtColumn(ColumnOffsetCache, Line, int)
-    * @see #measureLineStoppingAtX(ColumnOffsetCache, Line, double)
-    *
-    * @param endColumn inclusive end column (we will end on or after end)
-    * @param endX inclusive end x pixel width (we will end on or after endX)
-    */
-   private void measureLine(ColumnOffsetCache cache, Line line, int endColumn, double endX)
-   {
+    /**
+     * Builds the cache for a line up to a particular column. Should not be called
+     * if the line has already been {@link ColumnOffsetCache#FULLY_MEASURED}.
+     * <p/>
+     * <p/>
+     * You should only rely on either endColumn or endX, one or the other should
+     * be the max value for its data type.
+     *
+     * @param endColumn
+     *         inclusive end column (we will end on or after end)
+     * @param endX
+     *         inclusive end x pixel width (we will end on or after endX)
+     * @see #measureLineStoppingAtColumn(ColumnOffsetCache, Line, int)
+     * @see #measureLineStoppingAtX(ColumnOffsetCache, Line, double)
+     */
+    private void measureLine(ColumnOffsetCache cache, Line line, int endColumn, double endX) {
       /*
        * Starting at cache.measuredColumn we will use the regex to scan forward to
        * see if we hit an interesting character other than prefixed tab. if we do
        * we'll measure that to that point and append a {@link ColumnOffset} if it
        * is a special size. Rinse and repeat.
        */
-      RegExp regexp = UnicodeUtils.regexpNonAsciiTabOrCarriageReturn;
-      regexp.setLastIndex(cache.measuredOffset.column);
-      MatchResult result = regexp.exec(line.getText());
+        RegExp regexp = UnicodeUtils.regexpNonAsciiTabOrCarriageReturn;
+        regexp.setLastIndex(cache.measuredOffset.column);
+        MatchResult result = regexp.exec(line.getText());
 
-      if (result != null)
-      {
-         double x = 0;
-         int index = 0;
-         do
-         {
-            // Calculate any x offset up to this point in the line
-            ColumnOffset offset = cache.getLastColumnOffsetInCache();
-            double baseXOffset = smartColumnToX(offset, result.getIndex());
+        if (result != null) {
+            double x = 0;
+            int index = 0;
+            do {
+                // Calculate any x offset up to this point in the line
+                ColumnOffset offset = cache.getLastColumnOffsetInCache();
+                double baseXOffset = smartColumnToX(offset, result.getIndex());
 
             /*
              * TODO: we can be smarter here, if i > 1, then this character
@@ -547,47 +490,43 @@ public class LineDimensionsCalculator
              * enclosing-marks v. spacing-marks and already know which are supposed
              * to be zero-width based on which groups are null.
              */
-            String match = result.getGroup(0);
-            for (int i = 0; i < match.length(); i++)
-            {
-               x = addOffsetForResult(cache, match.charAt(i), result.getIndex() + i, line, baseXOffset);
-               baseXOffset = x;
+                String match = result.getGroup(0);
+                for (int i = 0; i < match.length(); i++) {
+                    x = addOffsetForResult(cache, match.charAt(i), result.getIndex() + i, line, baseXOffset);
+                    baseXOffset = x;
+                }
+                result = regexp.exec(line.getText());
+                // we have to ensure we measure through the last zero-width character.
+                index = result == null ? 0 : result.getIndex();
             }
-            result = regexp.exec(line.getText());
-            // we have to ensure we measure through the last zero-width character.
-            index = result == null ? 0 : result.getIndex();
-         }
-         while (result != null && result.getIndex() < endColumn && x < endX);
-      }
+            while (result != null && result.getIndex() < endColumn && x < endX);
+        }
 
-      cache.measuredOffset = ColumnOffsetCache.FULLY_MEASURED;
-      if (result == null)
-      {
-         return;
-      }
+        cache.measuredOffset = ColumnOffsetCache.FULLY_MEASURED;
+        if (result == null) {
+            return;
+        }
 
-   }
+    }
 
-   private double addOffsetForResult(ColumnOffsetCache cache, char matchedCharacter, int index, Line line,
-      double baseXOffset)
-   {
+    private double addOffsetForResult(ColumnOffsetCache cache, char matchedCharacter, int index, Line line,
+                                      double baseXOffset) {
       /*
        * Get the string up to the current character, special casing tabs since
        * they must render as the correct number of spaces (we replace them when
        * the appropriate number of hard-spaces so the browser doesn't trim them).
        */
-      String partialLineText =
-         line.getText().substring(0, index + 1)
-            .replace("\t", StringUtils.repeatString("\u00A0", LineDimensionsUtils.getTabWidth()));
+        String partialLineText =
+                line.getText().substring(0, index + 1)
+                    .replace("\t", StringUtils.repeatString("\u00A0", LineDimensionsUtils.getTabWidth()));
 
       /*
        * Get the width of the string including our special character and if needed
        * append an offset to the cache.
        */
-      double expectedWidth = baseXOffset + getColumnWidth();
-      double stringWidth = getStringWidth(matchedCharacter, baseXOffset, partialLineText);
-      if (stringWidth < baseXOffset)
-      {
+        double expectedWidth = baseXOffset + getColumnWidth();
+        double stringWidth = getStringWidth(matchedCharacter, baseXOffset, partialLineText);
+        if (stringWidth < baseXOffset) {
          /*
           * This is a annoying condition where certain combining characters can
           * actually change how the previous character is rendered. In some cases
@@ -601,82 +540,73 @@ public class LineDimensionsCalculator
           * navigating the characters correctly (not that I would even know,
           * considering I can't speak/read Arabic).
           */
-         stringWidth = baseXOffset;
-      }
-      if (stringWidth != expectedWidth)
-      {
-         cache.appendOffset(index + 1, stringWidth, stringWidth - baseXOffset);
-      }
-      return stringWidth;
-   }
+            stringWidth = baseXOffset;
+        }
+        if (stringWidth != expectedWidth) {
+            cache.appendOffset(index + 1, stringWidth, stringWidth - baseXOffset);
+        }
+        return stringWidth;
+    }
 
-   /**
-    * Returns the width of a column within the current zoom level.
-    */
-   private double getColumnWidth()
-   {
-      return measurementProvider.getCharacterWidth();
-   }
+    /** Returns the width of a column within the current zoom level. */
+    private double getColumnWidth() {
+        return measurementProvider.getCharacterWidth();
+    }
 
-   /**
-    * Determines the width of a string using either the cached width of a
-    * character of interest or by measuring it using a
-    * {@link MeasurementProvider}
-    *
-    * @param characterOfInterest The character we are interested in which should
-    *        also be the last character of the textToMeasure string.
-    * @param baseXOffset The base x offset of the column before the character of
-    *        interest. The returned result will be this offset + the width of the
-    *        characterOfInterest.
-    * @param textToMeasureIncludingCharacterOfInterest The string of text to
-    *        measure including the character of interest.
-    *
-    * @return The width of the string which is baseXOffset +
-    *         characterOfInterestWidth
-    */
-   private double getStringWidth(char characterOfInterest, double baseXOffset,
-      String textToMeasureIncludingCharacterOfInterest)
-   {
-      switch (characterOfInterest)
-      {
-         case '\t' :
-            // base + columnWidth * tab_size_in_columns
-            return baseXOffset + LineDimensionsUtils.getTabWidth() * getColumnWidth();
-         case '\r' :
-            // zero-width just return the baseXOffset
-            return baseXOffset;
-         default :
-            Double characterWidth = characterWidthCache.get(String.valueOf(characterOfInterest));
-            // if we know the width already return it
-            if (characterWidth != null)
-            {
-               return baseXOffset + characterWidth;
-            }
-            // Measure and store the width of the character
-            double expectedWidth = baseXOffset + getColumnWidth();
-            double width = measurementProvider.measureStringWidth(textToMeasureIncludingCharacterOfInterest);
+    /**
+     * Determines the width of a string using either the cached width of a
+     * character of interest or by measuring it using a
+     * {@link MeasurementProvider}
+     *
+     * @param characterOfInterest
+     *         The character we are interested in which should
+     *         also be the last character of the textToMeasure string.
+     * @param baseXOffset
+     *         The base x offset of the column before the character of
+     *         interest. The returned result will be this offset + the width of the
+     *         characterOfInterest.
+     * @param textToMeasureIncludingCharacterOfInterest
+     *         The string of text to
+     *         measure including the character of interest.
+     * @return The width of the string which is baseXOffset +
+     *         characterOfInterestWidth
+     */
+    private double getStringWidth(char characterOfInterest, double baseXOffset,
+                                  String textToMeasureIncludingCharacterOfInterest) {
+        switch (characterOfInterest) {
+            case '\t':
+                // base + columnWidth * tab_size_in_columns
+                return baseXOffset + LineDimensionsUtils.getTabWidth() * getColumnWidth();
+            case '\r':
+                // zero-width just return the baseXOffset
+                return baseXOffset;
+            default:
+                Double characterWidth = characterWidthCache.get(String.valueOf(characterOfInterest));
+                // if we know the width already return it
+                if (characterWidth != null) {
+                    return baseXOffset + characterWidth;
+                }
+                // Measure and store the width of the character
+                double expectedWidth = baseXOffset + getColumnWidth();
+                double width = measurementProvider.measureStringWidth(textToMeasureIncludingCharacterOfInterest);
 
-            // cache the width of this character
-            characterWidthCache.put(String.valueOf(characterOfInterest), width - baseXOffset);
-            return width;
-      }
-   }
+                // cache the width of this character
+                characterWidthCache.put(String.valueOf(characterOfInterest), width - baseXOffset);
+                return width;
+        }
+    }
 
-   /**
-    * Returns true if the column is past a carriage return at the end of a line.
-    */
-   private static boolean isColumnAffectedByCarriageReturn(Line line, int column)
-   {
-      return line.length() >= 2 && column > line.length() - 2 && line.getText().charAt(line.length() - 2) == '\r';
-   }
+    /** Returns true if the column is past a carriage return at the end of a line. */
+    private static boolean isColumnAffectedByCarriageReturn(Line line, int column) {
+        return line.length() >= 2 && column > line.length() - 2 && line.getText().charAt(line.length() - 2) == '\r';
+    }
 
-   /**
-    * Due to differences in how characters measure at different zoom levels (it's
-    * not a constant factor for all character types!!!), we just clear the world
-    * and rebuild.
-    */
-   private static void clearCharacterCacheDueToZoomChange()
-   {
-      characterWidthCache = JsonCollections.createStringMap();
-   }
+    /**
+     * Due to differences in how characters measure at different zoom levels (it's
+     * not a constant factor for all character types!!!), we just clear the world
+     * and rebuild.
+     */
+    private static void clearCharacterCacheDueToZoomChange() {
+        characterWidthCache = JsonCollections.createStringMap();
+    }
 }

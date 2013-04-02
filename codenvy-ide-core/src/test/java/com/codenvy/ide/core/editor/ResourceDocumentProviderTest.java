@@ -18,9 +18,6 @@
  */
 package com.codenvy.ide.core.editor;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.editor.DocumentProvider.DocumentCallback;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.resources.model.File;
@@ -38,70 +35,64 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ResourceDocumentProviderTest
-{
+public class ResourceDocumentProviderTest {
 
-   @Mock
-   private DocumentCallback callback;
+    @Mock
+    private DocumentCallback callback;
 
-   @Mock
-   private EditorInput input;
+    @Mock
+    private EditorInput input;
 
-   @Mock
-   private File file;
+    @Mock
+    private File file;
 
-   @Mock
-   private Project project;
+    @Mock
+    private Project project;
 
-   @Before
-   public void setUp()
-   {
-      when(input.getFile()).thenReturn(file);
-      when(file.getProject()).thenReturn(project);
-      when(file.getContent()).thenReturn("test");
-   }
+    @Before
+    public void setUp() {
+        when(input.getFile()).thenReturn(file);
+        when(file.getProject()).thenReturn(project);
+        when(file.getContent()).thenReturn("test");
+    }
 
-   @Test
-   public void shuldCallProjectGetContent()
-   {
-      ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
-      provider.getDocument(input, callback);
-      verify(project).getContent(eq(file), Mockito.<AsyncCallback<File>> any());
-   }
+    @Test
+    public void shuldCallProjectGetContent() {
+        ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
+        provider.getDocument(input, callback);
+        verify(project).getContent(eq(file), Mockito.<AsyncCallback<File>>any());
+    }
 
-   @SuppressWarnings("unchecked")
-   @Test
-   public void shuldCallCallback()
-   {
-      ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
-      doAnswer(createServerResponse()).when(project).getContent((File)any(), (AsyncCallback<File>)any());
-      provider.getDocument(input, callback);
-      verify(callback).onDocument((Document)any());
-   }
+    @SuppressWarnings("unchecked")
+    @Test
+    public void shuldCallCallback() {
+        ResourceDocumentProvider provider = new ResourceDocumentProvider(new DocumentFactoryImpl());
+        doAnswer(createServerResponse()).when(project).getContent((File)any(), (AsyncCallback<File>)any());
+        provider.getDocument(input, callback);
+        verify(callback).onDocument((Document)any());
+    }
 
-   /**
-    * @return
-    */
-   @SuppressWarnings("unchecked")
-   private Answer<?> createServerResponse()
-   {
-      Answer<?> responseEmulator = new Answer<Object>()
-      {
+    /** @return  */
+    @SuppressWarnings("unchecked")
+    private Answer<?> createServerResponse() {
+        Answer<?> responseEmulator = new Answer<Object>() {
 
-         @Override
-         public Object answer(InvocationOnMock invocation) throws Throwable
-         {
-            AsyncCallback<File> callback =  (AsyncCallback<File>)invocation.getArguments()[1];
-            callback.onSuccess(file);
-            return null;
-         }
-      };
-      return responseEmulator;
-   }
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                AsyncCallback<File> callback = (AsyncCallback<File>)invocation.getArguments()[1];
+                callback.onSuccess(file);
+                return null;
+            }
+        };
+        return responseEmulator;
+    }
 }

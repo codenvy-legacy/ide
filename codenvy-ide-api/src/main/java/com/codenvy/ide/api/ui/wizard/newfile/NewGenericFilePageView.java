@@ -22,33 +22,27 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of NewGenericFile view
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewGenericFilePageView extends View<NewGenericFilePageView.ActionDelegate>
-{
-   /**
-    * Returns file name.
-    * 
-    * @return
-    */
-   String getFileName();
+public interface NewGenericFilePageView extends View<NewGenericFilePageView.ActionDelegate> {
+    /**
+     * Returns file name.
+     *
+     * @return
+     */
+    String getFileName();
 
-   /**
-    * Sets file name.
-    * 
-    * @param fileName
-    */
-   void setFileName(String fileName);
+    /**
+     * Sets file name.
+     *
+     * @param fileName
+     */
+    void setFileName(String fileName);
 
-   /**
-    * Needs for delegate some function into NewGenericFile view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Checks entered information(file name and etc).
-       */
-      void onValueChanged();
-   }
+    /** Needs for delegate some function into NewGenericFile view. */
+    public interface ActionDelegate {
+        /** Checks entered information(file name and etc). */
+        void onValueChanged();
+    }
 }

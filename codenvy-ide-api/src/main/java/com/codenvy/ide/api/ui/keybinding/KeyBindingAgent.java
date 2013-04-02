@@ -30,23 +30,22 @@ import com.codenvy.ide.api.extension.SDK;
  * @version $Id:
  */
 @SDK(title = "ide.api.ui.keyBinding")
-public interface KeyBindingAgent
-{
+public interface KeyBindingAgent {
 
 
-   /**
-    * Global scheme, bindings added in this scheme always
-    *
-    * @return
-    */
-   Scheme getGlobal();
+    /**
+     * Global scheme, bindings added in this scheme always
+     *
+     * @return
+     */
+    Scheme getGlobal();
 
-   /**
-    * Get build in Eclipse key binding scheme.
-    *
-    * @return the Eclipse scheme.
-    */
-   Scheme getEclipse();
+    /**
+     * Get build in Eclipse key binding scheme.
+     *
+     * @return the Eclipse scheme.
+     */
+    Scheme getEclipse();
 
 
 }

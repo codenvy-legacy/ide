@@ -26,45 +26,33 @@ import com.codenvy.ide.java.client.core.dom.Name;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class PackageFragment implements IPackageFragment
-{
+public class PackageFragment implements IPackageFragment {
 
-   private final String packageFragment;
+    private final String packageFragment;
 
-   /**
-    * @param fullyQualifiedName
-    */
-   public PackageFragment(String fullyQualifiedName)
-   {
-      this.packageFragment = Signature.getQualifier(fullyQualifiedName);
-   }
+    /** @param fullyQualifiedName */
+    public PackageFragment(String fullyQualifiedName) {
+        this.packageFragment = Signature.getQualifier(fullyQualifiedName);
+    }
 
-   /**
-    * 
-    */
-   public PackageFragment(Name name)
-   {
-      packageFragment = name.getFullyQualifiedName();
-   }
+    /**
+     *
+     */
+    public PackageFragment(Name name) {
+        packageFragment = name.getFullyQualifiedName();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IJavaElement#getElementName()
-    */
-   @Override
-   public String getElementName()
-   {
-      return packageFragment;
-   }
+    /** @see com.codenvy.ide.java.client.core.IJavaElement#getElementName() */
+    @Override
+    public String getElementName() {
+        return packageFragment;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IJavaElement#getElementType()
-    */
-   @Override
-   public int getElementType()
-   {
-      return IJavaElement.PACKAGE_FRAGMENT;
-   }
+    /** @see com.codenvy.ide.java.client.core.IJavaElement#getElementType() */
+    @Override
+    public int getElementType() {
+        return IJavaElement.PACKAGE_FRAGMENT;
+    }
 
 }

@@ -17,11 +17,8 @@
 package com.codenvy.ide.extension.css;
 
 import com.codenvy.ide.api.editor.EditorRegistry;
-
 import com.codenvy.ide.api.extension.Extension;
-
 import com.codenvy.ide.api.resources.FileType;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.extension.css.editor.CssEditorProvider;
@@ -38,34 +35,31 @@ import com.google.inject.Singleton;
  * It porivdes configured TextEditorView with {@link CssEditorProvider} with syntax coloring and
  * autocomplete.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
 @Extension(title = "Css Support : syntax highlighting and autocomplete.", version = "3.0.0")
-public class CssExtension
-{
-   public interface ParserResource extends ClientBundle
-   {
-      @Source("com/codenvy/ide/extension/css/css_parser.js")
-      TextResource cssParser();
-   }
+public class CssExtension {
+    public interface ParserResource extends ClientBundle {
+        @Source("com/codenvy/ide/extension/css/css_parser.js")
+        TextResource cssParser();
+    }
 
-   /**
-    * CSS Extension adds CSS Support to IDE Applicaiton. It provides syntax highlighting and code completion features 
-    * for CSS files to IDE
-    */
-   @Inject
-   public CssExtension(ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider,
-      EditorRegistry editorRegistry, WizardAgent wizardAgent, Provider<NewCSSFilePagePresenter> provider,
-      CssExtensionResource resources, ParserResource res)
-   {
-      // Create and register new File type
-      FileType cssFile = new FileType(null, "text/css", "css");
-      resourceProvider.registerFileType(cssFile);
-      wizardAgent.registerNewResourceWizard("General", "Css file", resources.file(), provider);
+    /**
+     * CSS Extension adds CSS Support to IDE Applicaiton. It provides syntax highlighting and code completion features
+     * for CSS files to IDE
+     */
+    @Inject
+    public CssExtension(ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider,
+                        EditorRegistry editorRegistry, WizardAgent wizardAgent, Provider<NewCSSFilePagePresenter> provider,
+                        CssExtensionResource resources, ParserResource res) {
+        // Create and register new File type
+        FileType cssFile = new FileType(null, "text/css", "css");
+        resourceProvider.registerFileType(cssFile);
+        wizardAgent.registerNewResourceWizard("General", "Css file", resources.file(), provider);
 
-      // register Editor Provider
-      editorRegistry.register(cssFile, cssEditorProvider);
-      Elements.injectJs(res.cssParser().getText());
-   }
+        // register Editor Provider
+        editorRegistry.register(cssFile, cssEditorProvider);
+        Elements.injectJs(res.cssParser().getText());
+    }
 }

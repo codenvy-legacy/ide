@@ -35,115 +35,98 @@ import org.junit.Before;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 12, 2012 3:23:29 PM evgen $
- * 
  */
-public abstract class ParserBaseTest extends BaseTest
-{
+public abstract class ParserBaseTest extends BaseTest {
 
-   protected CompilationUnit unit;
+    protected CompilationUnit unit;
 
-   protected char[] javaFiles;
+    protected char[] javaFiles;
 
-   protected interface Resources extends ClientBundle
-   {
-      @Source("CreateJavaClassPresenter.txt")
-      TextResource resource();
-   }
+    protected interface Resources extends ClientBundle {
+        @Source("CreateJavaClassPresenter.txt")
+        TextResource resource();
+    }
 
 
-   @Before
-   public void gwtSetUp()
-   {
-      Resources rs = GWT.create(Resources.class);
-      javaFiles = rs.resource().getText().toCharArray();
+    @Before
+    public void gwtSetUp() {
+        Resources rs = GWT.create(Resources.class);
+        javaFiles = rs.resource().getText().toCharArray();
 
-      ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      parser.setUnitName("/P/org/test/CreateJavaClassPresenter.java");
-      parser.setSource(javaFiles);
-      parser.setNameEnvironment(new MockNameEnv());
-      ASTNode ast = parser.createAST();
-      unit = (CompilationUnit)ast;
+        ASTParser parser = ASTParser.newParser(AST.JLS3);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setUnitName("/P/org/test/CreateJavaClassPresenter.java");
+        parser.setSource(javaFiles);
+        parser.setNameEnvironment(new MockNameEnv());
+        ASTNode ast = parser.createAST();
+        unit = (CompilationUnit)ast;
 
 //      new JavaCodeAssistantService(null, null);
-   }
+    }
 
-   private class MockNameEnv implements INameEnvironment
-   {
+    private class MockNameEnv implements INameEnvironment {
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findType(char[][])
-       */
-      @Override
-      public NameEnvironmentAnswer findType(char[][] compoundTypeName)
-      {
-         // TODO Auto-generated method stub
-         return null;
-      }
+        /** @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findType(char[][]) */
+        @Override
+        public NameEnvironmentAnswer findType(char[][] compoundTypeName) {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findType(char[], char[][])
-       */
-      @Override
-      public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName)
-      {
-         // TODO Auto-generated method stub
-         return null;
-      }
+        /** @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findType(char[], char[][]) */
+        @Override
+        public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName) {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#isPackage(char[][], char[])
-       */
-      @Override
-      public boolean isPackage(char[][] parentPackageName, char[] packageName)
-      {
-         // TODO Auto-generated method stub
-         return false;
-      }
+        /** @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#isPackage(char[][], char[]) */
+        @Override
+        public boolean isPackage(char[][] parentPackageName, char[] packageName) {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#cleanup()
-       */
-      @Override
-      public void cleanup()
-      {
-         // TODO Auto-generated method stub
+        /** @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#cleanup() */
+        @Override
+        public void cleanup() {
+            // TODO Auto-generated method stub
 
-      }
+        }
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findTypes(char[], boolean, boolean, int, com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor, com.codenvy.ide.java.client.runtime.IProgressMonitor)
-       */
-      @Override
-      public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
-         final ISearchRequestor requestor)
-      {
-      }
+        /**
+         * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findTypes(char[], boolean, boolean, int,
+         *      com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor, com.codenvy.ide.java.client.runtime.IProgressMonitor)
+         */
+        @Override
+        public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
+                              final ISearchRequestor requestor) {
+        }
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findPackages(char[], com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor)
-       */
-      @Override
-      public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
-      {
-      }
+        /**
+         * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findPackages(char[],
+         *      com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor)
+         */
+        @Override
+        public void findPackages(char[] qualifiedName, ISearchRequestor requestor) {
+        }
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findConstructorDeclarations(char[], boolean, com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor, com.codenvy.ide.java.client.runtime.IProgressMonitor)
-       */
-      @Override
-      public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor)
-      {
-      }
+        /**
+         * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findConstructorDeclarations(char[], boolean,
+         *      com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor, com.codenvy.ide.java.client.runtime.IProgressMonitor)
+         */
+        @Override
+        public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor) {
+        }
 
-      /**
-       * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findExactTypes(char[], boolean, int, com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor)
-       */
-      @Override
-      public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
-      {
-      }
+        /**
+         * @see com.codenvy.ide.java.client.internal.compiler.env.INameEnvironment#findExactTypes(char[], boolean, int,
+         *      com.codenvy.ide.java.client.internal.codeassist.ISearchRequestor)
+         */
+        @Override
+        public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage) {
+        }
 
-   }
+    }
 
 }

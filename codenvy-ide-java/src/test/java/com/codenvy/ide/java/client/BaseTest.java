@@ -24,18 +24,15 @@ import com.googlecode.gwt.test.GwtTestWithMockito;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
  */
 @GwtModule("com.codenvy.ide.java.Java")
-public abstract class BaseTest extends GwtTestWithMockito
-{
+public abstract class BaseTest extends GwtTestWithMockito {
 
-   /**
-    * 
-    */
-   public BaseTest()
-   {
-      super();
-   }
+    /**
+     *
+     */
+    public BaseTest() {
+        super();
+    }
 
 }

@@ -21,26 +21,21 @@ import com.codenvy.ide.util.executor.Executor;
 /**
  * An executor that will defer the commands given to {@link #execute(Runnable)}
  * until render-time.
- * 
  */
-public class RenderTimeExecutor implements Executor
-{
+public class RenderTimeExecutor implements Executor {
 
-   private final JsonArray<Runnable> commands = JsonCollections.createArray();
+    private final JsonArray<Runnable> commands = JsonCollections.createArray();
 
-   @Override
-   public void execute(Runnable command)
-   {
-      commands.add(command);
-   }
+    @Override
+    public void execute(Runnable command) {
+        commands.add(command);
+    }
 
-   void executeQueuedCommands()
-   {
-      for (int i = 0, n = commands.size(); i < n; i++)
-      {
-         commands.get(i).run();
-      }
+    void executeQueuedCommands() {
+        for (int i = 0, n = commands.size(); i < n; i++) {
+            commands.get(i).run();
+        }
 
-      commands.clear();
-   }
+        commands.clear();
+    }
 }

@@ -26,101 +26,73 @@ import com.codenvy.ide.text.TextStore;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class DocumentTextStore extends DocumentModel implements TextStore
-{
+public class DocumentTextStore extends DocumentModel implements TextStore {
 
-   private LineTracker lineTracker;
+    private LineTracker lineTracker;
 
-   /**
-    *
-    */
-   public DocumentTextStore(LineTracker lineTracker)
-   {
-      this.lineTracker = lineTracker;
-   }
+    /**
+     *
+     */
+    public DocumentTextStore(LineTracker lineTracker) {
+        this.lineTracker = lineTracker;
+    }
 
-   /**
-    * @see com.codenvy.ide.text.TextStore#get(int)
-    */
-   @Override
-   public char get(int offset)
-   {
-      return get(offset, 1).charAt(0);
-   }
+    /** @see com.codenvy.ide.text.TextStore#get(int) */
+    @Override
+    public char get(int offset) {
+        return get(offset, 1).charAt(0);
+    }
 
-   /**
-    * @see com.codenvy.ide.text.TextStore#get(int, int)
-    */
-   @Override
-   public String get(int offset, int length)
-   {
-      try
-      {
-         int lineNumber = lineTracker.getLineNumberOfOffset(offset);
-         LineInfo line = getLineFinder().findLine(lineNumber);
-         int lineOffset = lineTracker.getLineOffset(lineNumber);
-         return getText(line.line(), offset - lineOffset, length);
+    /** @see com.codenvy.ide.text.TextStore#get(int, int) */
+    @Override
+    public String get(int offset, int length) {
+        try {
+            int lineNumber = lineTracker.getLineNumberOfOffset(offset);
+            LineInfo line = getLineFinder().findLine(lineNumber);
+            int lineOffset = lineTracker.getLineOffset(lineNumber);
+            return getText(line.line(), offset - lineOffset, length);
 
-      }
-      catch (BadLocationException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      return "";
-   }
+        } catch (BadLocationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+    }
 
-   /**
-    * @see com.codenvy.ide.text.TextStore#getLength()
-    */
-   @Override
-   public int getLength()
-   {
-      int lenght = 0;
-      for (Line line = getFirstLine(); line != null; line = line.getNextLine())
-      {
-         lenght += line.getText().length();
-      }
-      return lenght;
-   }
+    /** @see com.codenvy.ide.text.TextStore#getLength() */
+    @Override
+    public int getLength() {
+        int lenght = 0;
+        for (Line line = getFirstLine(); line != null; line = line.getNextLine()) {
+            lenght += line.getText().length();
+        }
+        return lenght;
+    }
 
-   /**
-    * @see com.codenvy.ide.text.TextStore#replace(int, int, java.lang.String)
-    */
-   @Override
-   public void replace(int offset, int length, String text)
-   {
+    /** @see com.codenvy.ide.text.TextStore#replace(int, int, java.lang.String) */
+    @Override
+    public void replace(int offset, int length, String text) {
 
-      try
-      {
-         int lineNumber = lineTracker.getLineNumberOfOffset(offset);
-         LineInfo line = getLineFinder().findLine(lineNumber);
-         int lineOffset = lineTracker.getLineOffset(lineNumber);
-         if (length != 0)
-         {
-            deleteText(line.line(), lineNumber, offset - lineOffset, length);
-         }
-         if (text == null)
-         {
-            return;
-         }
-         insertText(line.line(), lineNumber, offset - lineOffset, text);
-      }
-      catch (BadLocationException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-   }
+        try {
+            int lineNumber = lineTracker.getLineNumberOfOffset(offset);
+            LineInfo line = getLineFinder().findLine(lineNumber);
+            int lineOffset = lineTracker.getLineOffset(lineNumber);
+            if (length != 0)
+                deleteText(line.line(), lineNumber, offset - lineOffset, length);
+            if (text == null)
+                return;
+            insertText(line.line(), lineNumber, offset - lineOffset, text);
+        } catch (BadLocationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-   /**
-    * @see com.codenvy.ide.text.TextStore#set(java.lang.String)
-    */
-   @Override
-   public void set(String text)
-   {
-      deleteText(getFirstLine(), 0, getLength());
-      insertText(getFirstLine(), 0, 0, text);
-   }
+    /** @see com.codenvy.ide.text.TextStore#set(java.lang.String) */
+    @Override
+    public void set(String text) {
+        deleteText(getFirstLine(), 0, getLength());
+        insertText(getFirstLine(), 0, 0, text);
+    }
 
 }

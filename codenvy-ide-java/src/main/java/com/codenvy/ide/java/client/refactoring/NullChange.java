@@ -10,9 +10,8 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.refactoring;
 
-import com.codenvy.ide.runtime.CoreException;
-
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.runtime.CoreException;
 
 
 /**
@@ -22,71 +21,51 @@ import com.codenvy.ide.runtime.Assert;
  * Note: this class is not intended to be extended by clients.
  * </p>
  *
- * @since 3.0
- *
  * @noextend This class is not intended to be subclassed by clients.
+ * @since 3.0
  */
-public class NullChange extends Change
-{
+public class NullChange extends Change {
 
-   private String fName;
+    private String fName;
 
-   /**
-    * Creates a new <code>NullChange</code> with a default name.
-    */
-   public NullChange()
-   {
-      this(" No operation change");
-   }
+    /** Creates a new <code>NullChange</code> with a default name. */
+    public NullChange() {
+        this(" No operation change");
+    }
 
-   /**
-    * Creates a new <code>NullChange</code> with the given name.
-    *
-    * @param name the human readable name of this change
-    */
-   public NullChange(String name)
-   {
-      Assert.isNotNull(name);
-      fName = name;
-   }
+    /**
+     * Creates a new <code>NullChange</code> with the given name.
+     *
+     * @param name
+     *         the human readable name of this change
+     */
+    public NullChange(String name) {
+        Assert.isNotNull(name);
+        fName = name;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public String getName()
-   {
-      return fName;
-   }
+    /** {@inheritDoc} */
+    public String getName() {
+        return fName;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void initializeValidationData()
-   {
-      // do nothing
-   }
+    /** {@inheritDoc} */
+    public void initializeValidationData() {
+        // do nothing
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public RefactoringStatus isValid() throws CoreException
-   {
-      return new RefactoringStatus();
-   }
+    /** {@inheritDoc} */
+    public RefactoringStatus isValid() throws CoreException {
+        return new RefactoringStatus();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Change perform() throws CoreException
-   {
-      return new NullChange();
-   }
+    /** {@inheritDoc} */
+    public Change perform() throws CoreException {
+        return new NullChange();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Object getModifiedElement()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    public Object getModifiedElement() {
+        return null;
+    }
 }

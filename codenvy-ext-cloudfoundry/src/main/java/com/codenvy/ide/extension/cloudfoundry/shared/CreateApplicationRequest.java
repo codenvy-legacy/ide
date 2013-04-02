@@ -22,105 +22,94 @@ package com.codenvy.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 7, 2012 11:49:20 AM anya $
  */
-public interface CreateApplicationRequest
-{
-   /**
-    * @return the server
-    */
-   public abstract String getServer();
+public interface CreateApplicationRequest {
+    /** @return the server */
+    public abstract String getServer();
 
-   /**
-    * @param server the server to set
-    */
-   public abstract void setServer(String server);
+    /**
+     * @param server
+     *         the server to set
+     */
+    public abstract void setServer(String server);
 
-   /**
-    * @return the name
-    */
-   public abstract String getName();
+    /** @return the name */
+    public abstract String getName();
 
-   /**
-    * @param name the name to set
-    */
-   public abstract void setName(String name);
+    /**
+     * @param name
+     *         the name to set
+     */
+    public abstract void setName(String name);
 
-   /**
-    * @return the type
-    */
-   public abstract String getType();
+    /** @return the type */
+    public abstract String getType();
 
-   /**
-    * @param type the type to set
-    */
-   public abstract void setType(String type);
+    /**
+     * @param type
+     *         the type to set
+     */
+    public abstract void setType(String type);
 
-   /**
-    * @return the url
-    */
-   public abstract String getUrl();
+    /** @return the url */
+    public abstract String getUrl();
 
-   /**
-    * @param url the url to set
-    */
-   public abstract void setUrl(String url);
+    /**
+     * @param url
+     *         the url to set
+     */
+    public abstract void setUrl(String url);
 
-   /**
-    * @return the instances
-    */
-   public abstract int getInstances();
+    /** @return the instances */
+    public abstract int getInstances();
 
-   /**
-    * @param instances the instances to set
-    */
-   public abstract void setInstances(int instances);
+    /**
+     * @param instances
+     *         the instances to set
+     */
+    public abstract void setInstances(int instances);
 
-   /**
-    * @return the memory
-    */
-   public abstract int getMemory();
+    /** @return the memory */
+    public abstract int getMemory();
 
-   /**
-    * @param memory the memory to set
-    */
-   public abstract void setMemory(int memory);
+    /**
+     * @param memory
+     *         the memory to set
+     */
+    public abstract void setMemory(int memory);
 
-   /**
-    * @return the nostart
-    */
-   public abstract boolean isNostart();
+    /** @return the nostart */
+    public abstract boolean isNostart();
 
-   /**
-    * @param nostart the nostart to set
-    */
-   public abstract void setNostart(boolean nostart);
+    /**
+     * @param nostart
+     *         the nostart to set
+     */
+    public abstract void setNostart(boolean nostart);
 
-   /**
-    * @return the vfsId
-    */
-   public abstract String getVfsid();
+    /** @return the vfsId */
+    public abstract String getVfsid();
 
-   /**
-    * @param vfsId the vfsId to set
-    */
-   public abstract void setVfsid(String vfsId);
+    /**
+     * @param vfsId
+     *         the vfsId to set
+     */
+    public abstract void setVfsid(String vfsId);
 
-   /**
-    * @return the projectId
-    */
-   public abstract String getProjectid();
+    /** @return the projectId */
+    public abstract String getProjectid();
 
-   /**
-    * @param projectId the projectId to set
-    */
-   public abstract void setProjectid(String projectId);
+    /**
+     * @param projectId
+     *         the projectId to set
+     */
+    public abstract void setProjectid(String projectId);
 
-   /**
-    * @return the war
-    */
-   public abstract String getWar();
+    /** @return the war */
+    public abstract String getWar();
 
-   /**
-    * @param war the war to set
-    */
-   public abstract void setWar(String war);
+    /**
+     * @param war
+     *         the war to set
+     */
+    public abstract void setWar(String war);
 }

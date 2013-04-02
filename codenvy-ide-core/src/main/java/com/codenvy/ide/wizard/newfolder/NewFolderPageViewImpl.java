@@ -29,60 +29,45 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * NewFolderPageViewImpl is the view of NewFolder wizard.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewFolderPageViewImpl extends Composite implements NewFolderPageView
-{
-   private static NewFolderViewUiBinder uiBinder = GWT.create(NewFolderViewUiBinder.class);
+public class NewFolderPageViewImpl extends Composite implements NewFolderPageView {
+    private static NewFolderViewUiBinder uiBinder = GWT.create(NewFolderViewUiBinder.class);
 
-   @UiField
-   TextBox folderName;
+    @UiField
+    TextBox folderName;
 
-   interface NewFolderViewUiBinder extends UiBinder<Widget, NewFolderPageViewImpl>
-   {
-   }
+    interface NewFolderViewUiBinder extends UiBinder<Widget, NewFolderPageViewImpl> {
+    }
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   /**
-    * Create view.
-    */
-   public NewFolderPageViewImpl()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    /** Create view. */
+    public NewFolderPageViewImpl() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getFolderName()
-   {
-      return folderName.getText();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getFolderName() {
+        return folderName.getText();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   @UiHandler("folderName")
-   void onFolderNameKeyUp(KeyUpEvent event)
-   {
-      delegate.checkEnteredInformation();
-   }
+    @UiHandler("folderName")
+    void onFolderNameKeyUp(KeyUpEvent event) {
+        delegate.checkEnteredInformation();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setFolderName(String name)
-   {
-      folderName.setText(name);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setFolderName(String name) {
+        folderName.setText(name);
+    }
 }

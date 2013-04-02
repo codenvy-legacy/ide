@@ -16,34 +16,23 @@
  */
 package com.codenvy.ide.java.client.projectmodel;
 
+import com.codenvy.ide.json.JsonStringSet;
 import com.codenvy.ide.resources.model.ProjectDescription;
 
-import com.codenvy.ide.json.JsonStringSet;
+
+/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+public class JavaProjectDesctiprion extends ProjectDescription {
+
+    public static final String PROPERTY_SOURCE_FOLDERS = "folders.source";
+
+    /** @param project */
+    public JavaProjectDesctiprion(JavaProject project) {
+        super(project);
+    }
 
 
-/**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
- */
-public class JavaProjectDesctiprion extends ProjectDescription
-{
-
-   public static final String PROPERTY_SOURCE_FOLDERS = "folders.source";
-   
-   /**
-    * @param project
-    */
-   public JavaProjectDesctiprion(JavaProject project)
-   {
-      super(project);
-   }
-
-
-   /**
-    * @return The set of Project's source folders or empty set.
-    */
-   public JsonStringSet getSourceFolders()
-   {
-      return asStringSet(PROPERTY_SOURCE_FOLDERS);
-   }
+    /** @return The set of Project's source folders or empty set. */
+    public JsonStringSet getSourceFolders() {
+        return asStringSet(PROPERTY_SOURCE_FOLDERS);
+    }
 }

@@ -20,35 +20,30 @@ package com.codenvy.ide.java.shared;
 
 
 /**
- * 
  * Member is reflects identifying information about a single member (a field or
  * a method) or a constructor.
- * 
+ *
  * @see FieldInfo
  * @see MethodInfo
- * 
  */
-public interface Member
-{
+public interface Member {
 
-   /**
-    * @return the modifiers
-    */
-   int getModifiers();
+    /** @return the modifiers */
+    int getModifiers();
 
-   /**
-    * @return the name
-    */
-   String getName();
-   
-   /**
-    * @param modifiers the modifiers to set
-    */
-   void setModifiers(int modifiers);
+    /** @return the name */
+    String getName();
 
-   /**
-    * @param name the name to set
-    */
-   void setName(String name);
+    /**
+     * @param modifiers
+     *         the modifiers to set
+     */
+    void setModifiers(int modifiers);
+
+    /**
+     * @param name
+     *         the name to set
+     */
+    void setName(String name);
 
 }

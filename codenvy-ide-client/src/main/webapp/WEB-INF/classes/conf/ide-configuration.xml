@@ -23,11 +23,6 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-   <component>
-      <key>org.exoplatform.ide.invite.InviteUserService</key>
-      <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
-   </component>
-
 <!-- 
 ***************************************************************************************
 ********************** eXo IDE Commons Components *************************************
@@ -35,31 +30,10 @@
 -->
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
-      <init-params>
-         <value-param>
-            <name>defaultEntryPoint</name>
-            <value>dev-monit</value>
-         </value-param>
-         <value-param>
-            <name>discoverable</name>
-            <value>true</value>
-         </value-param>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
-         </value-param>
-         <value-param>
-            <name>template-config</name>
-            <value>/ide-home/templates</value>
-         </value-param>
-      </init-params>
    </component>
 
 <!-- VirtualFileSystem -->
+
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
    </component>
@@ -73,53 +47,24 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
-      <init-params>
-         <values-param>
-            <name>workspaces</name>
-            <value>dev-monit</value>
-            <value>production</value>
-         </values-param>
-      </init-params>
+     <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
+     <init-params>
+        <values-param>
+           <name>ids</name>
+           <value>dev-monit</value>
+        </values-param>
+     </init-params>
+   </component>
+   
+   <component>
+     <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
+     <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
    
-    <!--component>
-      <type>org.exoplatform.ide.davmount.WebDavFolderBinder</type>
-      <description>Bind WebDavFolder</description>
-      <init-params>
-         <value-param>
-            <name>priority</name>
-            <value>60</value>
-         </value-param>
-         <value-param>
-            <name>workspace-name</name>
-            <value>dev-monit</value>
-         </value-param>
-         <value-param>
-            <name>webdav-user</name>
-            <value>exo</value>
-         </value-param>
-         <value-param>
-            <name>webdav-password</name>
-            <value>exo</value>
-         </value-param>
-
-         <value-param>
-            <name>webdav-service-url</name>
-            <value>/rest/private/jcr</value>
-         </value-param>
-         <value-param>
-            <name>base-url</name>
-            <value>http://127.0.0.1:8080</value>
-         </value-param>
-      </init-params>
-   </component-->
-   
-<!-- End VirtualFileSystem -->  
+<!-- End VirtualFileSystem -->
 
 <!-- Java -->
    <component>
@@ -167,7 +112,8 @@
 
 <!-- CloudFoundry -->
 
-   <component>
+   <!-- TODO need to delete this when solved problem with CF-->
+   <!-- component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
    </component>
 
@@ -193,6 +139,26 @@
                </field>
                <field name="password">
                   <string>eXoAdmin12321</string>
+               </field>
+            </object>
+         </object-param>
+      </init-params>
+   </component-->
+   
+   <component>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
+      <init-params>
+         <object-param>
+            <name>CF0</name>
+            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
+               <field name="target">
+                  <string>http://api.javarun4.exoplatform.com</string>
+               </field>
+               <field name="user">
+                  <string>exoidedev@exoplatform.com</string>
+               </field>
+               <field name="password">
+                  <string>1234qwer</string>
                </field>
             </object>
          </object-param>

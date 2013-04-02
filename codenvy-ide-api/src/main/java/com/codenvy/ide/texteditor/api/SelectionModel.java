@@ -22,48 +22,49 @@ import com.codenvy.ide.text.Position;
 
 /**
  * A interface that models the user's selection.
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface SelectionModel
-{
-   /**
-    * Clear selection
-    */
-   void deselect();
+public interface SelectionModel {
+    /** Clear selection */
+    void deselect();
 
-   /**
-    * @return true if editor has selection
-    */
-   boolean hasSelection();
+    /** @return true if editor has selection */
+    boolean hasSelection();
 
-   /**
-    * Select all test in editor.
-    */
-   void selectAll();
+    /** Select all test in editor. */
+    void selectAll();
 
-   /**
-    * Get selected range
-    * @return the selected range
-    */
-   Position getSelectedRange();
+    /**
+     * Get selected range
+     *
+     * @return the selected range
+     */
+    Position getSelectedRange();
 
-   /**
-    * Move cursor to offset.
-    * @param offset the offset
-    */
-   void setCursorPosition(int offset);
+    /**
+     * Move cursor to offset.
+     *
+     * @param offset
+     *         the offset
+     */
+    void setCursorPosition(int offset);
 
-   /**
-    * Select and reveal text in editor
-    * @param offset the offset, start selection
-    * @param length the length of the selection
-    */
-   void selectAndReveal(int offset, int length);
+    /**
+     * Select and reveal text in editor
+     *
+     * @param offset
+     *         the offset, start selection
+     * @param length
+     *         the length of the selection
+     */
+    void selectAndReveal(int offset, int length);
 
-   /**
-    * Get cursor position
-    * @return the position of cursor.
-    */
-   Position getCursorPosition();
+    /**
+     * Get cursor position
+     *
+     * @return the position of cursor.
+     */
+    Position getCursorPosition();
 }

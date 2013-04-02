@@ -18,13 +18,11 @@ package com.codenvy.ide.text.store;
  * An exception that is thrown when the thrower has gone out of the document's
  * bounds.
  */
-public class PositionOutOfBoundsException extends RuntimeException
-{
+public class PositionOutOfBoundsException extends RuntimeException {
 
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-   public PositionOutOfBoundsException(String message)
-   {
-      super(message);
-   }
+    public PositionOutOfBoundsException(String message) {
+        super(message);
+    }
 }

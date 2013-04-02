@@ -22,21 +22,20 @@ package com.codenvy.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ProvisionedService
-{
-   String getName();
+public interface ProvisionedService {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getType();
+    String getType();
 
-   void setType(String type);
+    void setType(String type);
 
-   String getVendor();
+    String getVendor();
 
-   void setVendor(String vendor);
+    void setVendor(String vendor);
 
-   String getVersion();
+    String getVersion();
 
-   void setVersion(String version);
+    void setVersion(String version);
 }

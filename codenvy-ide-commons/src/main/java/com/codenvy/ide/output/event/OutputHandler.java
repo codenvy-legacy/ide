@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public interface OutputHandler extends EventHandler
-{
+public interface OutputHandler extends EventHandler {
 
-   void onOutput(OutputEvent event);
+    void onOutput(OutputEvent event);
 
 }

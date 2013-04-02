@@ -31,11 +31,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.inject.Inject;
@@ -49,239 +45,195 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ManageServicesViewImpl extends DialogBox implements ManageServicesView
-{
-   private static ManageServicesViewImplUiBinder uiBinder = GWT.create(ManageServicesViewImplUiBinder.class);
+public class ManageServicesViewImpl extends DialogBox implements ManageServicesView {
+    private static ManageServicesViewImplUiBinder uiBinder = GWT.create(ManageServicesViewImplUiBinder.class);
 
-   @UiField(provided = true)
-   CellTable<String> boundedServices = new CellTable<String>();
+    @UiField(provided = true)
+    CellTable<String> boundedServices = new CellTable<String>();
 
-   @UiField(provided = true)
-   CellTable<ProvisionedService> services = new CellTable<ProvisionedService>();
+    @UiField(provided = true)
+    CellTable<ProvisionedService> services = new CellTable<ProvisionedService>();
 
-   @UiField
-   Button btnClose;
+    @UiField
+    Button btnClose;
 
-   @UiField
-   Button btnAdd;
+    @UiField
+    Button btnAdd;
 
-   @UiField
-   Button btnDelete;
+    @UiField
+    Button btnDelete;
 
-   @UiField
-   Label boundServiceLabel;
+    @UiField
+    Label boundServiceLabel;
 
-   @UiField
-   Label provisionServiceLabel;
+    @UiField
+    Label provisionServiceLabel;
 
-   interface ManageServicesViewImplUiBinder extends UiBinder<Widget, ManageServicesViewImpl>
-   {
-   }
+    interface ManageServicesViewImplUiBinder extends UiBinder<Widget, ManageServicesViewImpl> {
+    }
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   private CloudFoundryLocalizationConstant constant;
+    private CloudFoundryLocalizationConstant constant;
 
-   /**
-    * Create view.
-    * 
-    * @param resources
-    * @param constant
-    */
-   @Inject
-   protected ManageServicesViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant)
-   {
-      this.constant = constant;
+    /**
+     * Create view.
+     *
+     * @param resources
+     * @param constant
+     */
+    @Inject
+    protected ManageServicesViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant) {
+        this.constant = constant;
 
-      createBoundServicesTable();
-      createServicesTable();
+        createBoundServicesTable();
+        createServicesTable();
 
-      Widget widget = uiBinder.createAndBindUi(this);
+        Widget widget = uiBinder.createAndBindUi(this);
 
-      this.setWidget(widget);
-      this.setText("Manage CloudFoundry Services");
+        this.setWidget(widget);
+        this.setText("Manage CloudFoundry Services");
 
-      // adds styles to graphic components
-      this.addStyleName(resources.cloudFoundryCss().manageService());
-      boundServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
-      provisionServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
+        // adds styles to graphic components
+        this.addStyleName(resources.cloudFoundryCss().manageService());
+        boundServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
+        provisionServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
 
-      // adds text with icon into button
-      btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
-      btnAdd.setHTML(new Image(resources.addButton()) + " " + constant.addButton());
-      btnDelete.setHTML(new Image(resources.deleteButton()) + " " + constant.deleteButton());
-   }
+        // adds text with icon into button
+        btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
+        btnAdd.setHTML(new Image(resources.addButton()) + " " + constant.addButton());
+        btnDelete.setHTML(new Image(resources.deleteButton()) + " " + constant.deleteButton());
+    }
 
-   /**
-    * Creates BoundServices table.
-    */
-   private void createBoundServicesTable()
-   {
-      Column<String, String> nameColumn = new Column<String, String>(new TextCell())
-      {
-         @Override
-         public String getValue(String name)
-         {
-            return name;
-         }
-      };
+    /** Creates BoundServices table. */
+    private void createBoundServicesTable() {
+        Column<String, String> nameColumn = new Column<String, String>(new TextCell()) {
+            @Override
+            public String getValue(String name) {
+                return name;
+            }
+        };
 
-      Column<String, String> unbindColumn = new Column<String, String>(new ButtonCell())
-      {
-         @Override
-         public String getValue(String object)
-         {
-            return constant.unBindButton();
-         }
-      };
+        Column<String, String> unbindColumn = new Column<String, String>(new ButtonCell()) {
+            @Override
+            public String getValue(String object) {
+                return constant.unBindButton();
+            }
+        };
 
-      // Creates handler on button clicked
-      unbindColumn.setFieldUpdater(new FieldUpdater<String, String>()
-      {
-         @Override
-         public void update(int index, String object, String value)
-         {
-            delegate.onUnbindServiceClicked(object);
-         }
-      });
+        // Creates handler on button clicked
+        unbindColumn.setFieldUpdater(new FieldUpdater<String, String>() {
+            @Override
+            public void update(int index, String object, String value) {
+                delegate.onUnbindServiceClicked(object);
+            }
+        });
 
-      // Adds headers and size of column
-      boundedServices.addColumn(nameColumn);
-      boundedServices.addColumn(unbindColumn);
-      boundedServices.setColumnWidth(unbindColumn, "60px");
+        // Adds headers and size of column
+        boundedServices.addColumn(nameColumn);
+        boundedServices.addColumn(unbindColumn);
+        boundedServices.setColumnWidth(unbindColumn, "60px");
 
-      // don't show loading indicator
-      boundedServices.setLoadingIndicator(null);
-   }
+        // don't show loading indicator
+        boundedServices.setLoadingIndicator(null);
+    }
 
-   /**
-    * Creates ProvisionedService table.
-    */
-   private void createServicesTable()
-   {
-      Column<ProvisionedService, String> nameColumn = new Column<ProvisionedService, String>(new TextCell())
-      {
-         @Override
-         public String getValue(ProvisionedService object)
-         {
-            StringBuilder title = new StringBuilder(object.getName());
-            title.append(" (").append(object.getVendor()).append(" ").append(object.getVersion()).append(")");
+    /** Creates ProvisionedService table. */
+    private void createServicesTable() {
+        Column<ProvisionedService, String> nameColumn = new Column<ProvisionedService, String>(new TextCell()) {
+            @Override
+            public String getValue(ProvisionedService object) {
+                StringBuilder title = new StringBuilder(object.getName());
+                title.append(" (").append(object.getVendor()).append(" ").append(object.getVersion()).append(")");
 
-            return title.toString();
-         }
-      };
+                return title.toString();
+            }
+        };
 
-      Column<ProvisionedService, String> bindColumn = new Column<ProvisionedService, String>(new ButtonCell())
-      {
-         @Override
-         public String getValue(ProvisionedService object)
-         {
-            return constant.bindButton();
-         }
-      };
+        Column<ProvisionedService, String> bindColumn = new Column<ProvisionedService, String>(new ButtonCell()) {
+            @Override
+            public String getValue(ProvisionedService object) {
+                return constant.bindButton();
+            }
+        };
 
-      // Creates handler on button clicked
-      bindColumn.setFieldUpdater(new FieldUpdater<ProvisionedService, String>()
-      {
-         @Override
-         public void update(int index, ProvisionedService object, String value)
-         {
-            delegate.onBindServiceClicked(object);
-         }
-      });
+        // Creates handler on button clicked
+        bindColumn.setFieldUpdater(new FieldUpdater<ProvisionedService, String>() {
+            @Override
+            public void update(int index, ProvisionedService object, String value) {
+                delegate.onBindServiceClicked(object);
+            }
+        });
 
-      // Adds headers and size of column
-      services.addColumn(nameColumn);
-      services.addColumn(bindColumn);
-      services.setColumnWidth(bindColumn, "60px");
+        // Adds headers and size of column
+        services.addColumn(nameColumn);
+        services.addColumn(bindColumn);
+        services.setColumnWidth(bindColumn, "60px");
 
-      // don't show loading indicator
-      services.setLoadingIndicator(null);
+        // don't show loading indicator
+        services.setLoadingIndicator(null);
 
-      // adds selection model
-      final NoSelectionModel<ProvisionedService> selectionModel = new NoSelectionModel<ProvisionedService>();
-      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
-      {
-         @Override
-         public void onSelectionChange(SelectionChangeEvent event)
-         {
-            ProvisionedService service = selectionModel.getLastSelectedObject();
-            delegate.onSelectedService(service);
-         }
-      });
-      services.setSelectionModel(selectionModel);
-   }
+        // adds selection model
+        final NoSelectionModel<ProvisionedService> selectionModel = new NoSelectionModel<ProvisionedService>();
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                ProvisionedService service = selectionModel.getLastSelectedObject();
+                delegate.onSelectedService(service);
+            }
+        });
+        services.setSelectionModel(selectionModel);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setEnableDeleteButton(boolean enabled)
-   {
-      btnDelete.setEnabled(enabled);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setEnableDeleteButton(boolean enabled) {
+        btnDelete.setEnabled(enabled);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setProvisionedServices(List<ProvisionedService> services)
-   {
-      this.services.setRowData(services);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setProvisionedServices(List<ProvisionedService> services) {
+        this.services.setRowData(services);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setBoundedServices(List<String> services)
-   {
-      this.boundedServices.setRowData(services);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setBoundedServices(List<String> services) {
+        this.boundedServices.setRowData(services);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void showDialog()
-   {
-      this.center();
-      this.show();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void showDialog() {
+        this.center();
+        this.show();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void close()
-   {
-      this.hide();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        this.hide();
+    }
 
-   @UiHandler("btnAdd")
-   void onBtnAddClick(ClickEvent event)
-   {
-      delegate.onAddClicked();
-   }
+    @UiHandler("btnAdd")
+    void onBtnAddClick(ClickEvent event) {
+        delegate.onAddClicked();
+    }
 
-   @UiHandler("btnDelete")
-   void onBtnDeleteClick(ClickEvent event)
-   {
-      delegate.onDeleteClicked();
-   }
+    @UiHandler("btnDelete")
+    void onBtnDeleteClick(ClickEvent event) {
+        delegate.onDeleteClicked();
+    }
 
-   @UiHandler("btnClose")
-   void onBtnCloseClick(ClickEvent event)
-   {
-      delegate.onCloseClicked();
-   }
+    @UiHandler("btnClose")
+    void onBtnCloseClick(ClickEvent event) {
+        delegate.onCloseClicked();
+    }
 }

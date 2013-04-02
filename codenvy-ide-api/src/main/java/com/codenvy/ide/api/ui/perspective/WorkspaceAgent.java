@@ -18,63 +18,60 @@ package com.codenvy.ide.api.ui.perspective;
 
 
 import com.codenvy.ide.api.extension.SDK;
-
 import com.codenvy.ide.api.ui.perspective.PerspectivePresenter.PartStackType;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
 
 
 /**
- * Handles IDE Perspective, allows to open/close/switch beetween perspectives, 
+ * Handles IDE Perspective, allows to open/close/switch beetween perspectives,
  * manages opened Parts.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @SDK(title = "ide.api.ui.workspace")
-public interface WorkspaceAgent
-{
+public interface WorkspaceAgent {
 
-   /**
-    * Register a new perspective.
-    * 
-    * TODO: associate perspectives by groups to prompt when some actions performed:
-    * like start Java Debug, open Java project and etc.
-    * 
-    * @param title
-    * @param icon
-    * @param pespectiveProvider
-    */
-   public void registerPerspective(String title, ImageResource icon,
-      Provider<? extends PerspectivePresenter> pespectiveProvider);
+    /**
+     * Register a new perspective.
+     * <p/>
+     * TODO: associate perspectives by groups to prompt when some actions performed:
+     * like start Java Debug, open Java project and etc.
+     *
+     * @param title
+     * @param icon
+     * @param pespectiveProvider
+     */
+    public void registerPerspective(String title, ImageResource icon,
+                                    Provider<? extends PerspectivePresenter> pespectiveProvider);
 
-   /**
-    * Open new or show already opened Perspective
-    * 
-    * @param title
-    */
-   public void openPerspective(String title);
+    /**
+     * Open new or show already opened Perspective
+     *
+     * @param title
+     */
+    public void openPerspective(String title);
 
-   /**
-    * Closed opened perspective
-    * 
-    * @param title
-    */
-   public void closePerspective(String title);
+    /**
+     * Closed opened perspective
+     *
+     * @param title
+     */
+    public void closePerspective(String title);
 
-   /**
-    * Activate given part
-    * 
-    * @param part
-    */
-   public void setActivePart(PartPresenter part);
+    /**
+     * Activate given part
+     *
+     * @param part
+     */
+    public void setActivePart(PartPresenter part);
 
-   /**
-    * Opens given Part
-    * 
-    * @param part
-    * @param type
-    * 
-    */
-   public void showPart(PartPresenter part, PartStackType type);
+    /**
+     * Opens given Part
+     *
+     * @param part
+     * @param type
+     */
+    public void showPart(PartPresenter part, PartStackType type);
 
 }

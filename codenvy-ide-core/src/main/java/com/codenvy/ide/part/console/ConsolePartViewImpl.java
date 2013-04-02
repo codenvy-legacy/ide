@@ -34,40 +34,31 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ConsolePartViewImpl extends Composite implements ConsolePartView
-{
-   private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
+public class ConsolePartViewImpl extends Composite implements ConsolePartView {
+    private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
 
-   @UiField
-   FlowPanel consoleArea;
+    @UiField
+    FlowPanel consoleArea;
 
-   interface ConsolePartViewImplUiBinder extends UiBinder<Widget, ConsolePartViewImpl>
-   {
-   }
+    interface ConsolePartViewImplUiBinder extends UiBinder<Widget, ConsolePartViewImpl> {
+    }
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   @Inject
-   public ConsolePartViewImpl()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    @Inject
+    public ConsolePartViewImpl() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void print(String message)
-   {
-      consoleArea.add(new Label(message));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void print(String message) {
+        consoleArea.add(new Label(message));
+    }
 }

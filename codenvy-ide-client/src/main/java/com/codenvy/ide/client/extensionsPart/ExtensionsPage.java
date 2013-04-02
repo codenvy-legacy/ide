@@ -31,98 +31,80 @@ import com.google.inject.Singleton;
 
 /**
  * For demo purposes. Displays the list of registered extensions and their dependensies.
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class ExtensionsPage extends AbstractPartPresenter
-{
+public class ExtensionsPage extends AbstractPartPresenter {
 
-   private final ExtensionInitializer extInitializer;
+    private final ExtensionInitializer extInitializer;
 
-   private PageResources resources;
+    private PageResources resources;
 
-   @Inject
-   public ExtensionsPage(ExtensionInitializer extInitializer, PageResources resources)
-   {
-      this.extInitializer = extInitializer;
-      this.resources = resources;
-   }
+    @Inject
+    public ExtensionsPage(ExtensionInitializer extInitializer, PageResources resources) {
+        this.extInitializer = extInitializer;
+        this.resources = resources;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      final StringBuilder builder = new StringBuilder();
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        final StringBuilder builder = new StringBuilder();
 
-      extInitializer.getExtensionDescriptions().iterate(new IterationCallback<ExtensionDescription>()
-      {
+        extInitializer.getExtensionDescriptions().iterate(new IterationCallback<ExtensionDescription>() {
 
-         @Override
-         public void onIteration(String key, ExtensionDescription ext)
-         {
-            builder.append("<div>");
+            @Override
+            public void onIteration(String key, ExtensionDescription ext) {
+                builder.append("<div>");
 
-            builder.append("<h3>");
-            builder.append(ext.getId());
-            builder.append("(" + (ext.isEnabled() ? "enabled" : "disabled") + ")");
-            builder.append("-");
-            builder.append(ext.getVersion());
-            builder.append("</h3>");
+                builder.append("<h3>");
+                builder.append(ext.getId());
+                builder.append("(" + (ext.isEnabled() ? "enabled" : "disabled") + ")");
+                builder.append("-");
+                builder.append(ext.getVersion());
+                builder.append("</h3>");
 
-            if (!ext.getDependencies().isEmpty())
-            {
-               builder.append("<ul>");
-               JsonArray<DependencyDescription> dependencies = ext.getDependencies();
+                if (!ext.getDependencies().isEmpty()) {
+                    builder.append("<ul>");
+                    JsonArray<DependencyDescription> dependencies = ext.getDependencies();
 
-               for (int i = 0; i < dependencies.size(); i++)
-               {
-                  DependencyDescription dep = dependencies.get(i);
-                  builder.append("<li>");
-                  builder.append(dep.getId());
-                  builder.append(":");
-                  builder.append(dep.getVersion());
-                  builder.append("</li>");
+                    for (int i = 0; i < dependencies.size(); i++) {
+                        DependencyDescription dep = dependencies.get(i);
+                        builder.append("<li>");
+                        builder.append(dep.getId());
+                        builder.append(":");
+                        builder.append(dep.getVersion());
+                        builder.append("</li>");
 
-               }
+                    }
 
-               builder.append("</ul>");
+                    builder.append("</ul>");
+                }
+
+                builder.append("</div>");
             }
+        });
 
-            builder.append("</div>");
-         }
-      });
+        HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
+        container.setWidget(htmlPanel);
+    }
 
-      HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
-      container.setWidget(htmlPanel);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return "Extensions";
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public String getTitle()
-   {
-      return "Extensions";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getTitleImage() {
+        return resources.extentionPageIcon();
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public ImageResource getTitleImage()
-   {
-      return resources.extentionPageIcon();
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public String getTitleToolTip()
-   {
-      return "This view displays the list of extensions";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitleToolTip() {
+        return "This view displays the list of extensions";
+    }
 }

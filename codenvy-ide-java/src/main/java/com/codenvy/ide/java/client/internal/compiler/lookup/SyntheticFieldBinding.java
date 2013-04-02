@@ -12,16 +12,14 @@ package com.codenvy.ide.java.client.internal.compiler.lookup;
 
 import com.codenvy.ide.java.client.internal.compiler.impl.Constant;
 
-public class SyntheticFieldBinding extends FieldBinding
-{
+public class SyntheticFieldBinding extends FieldBinding {
 
-   public int index;
+    public int index;
 
-   public SyntheticFieldBinding(char[] name, TypeBinding type, int modifiers, ReferenceBinding declaringClass,
-      Constant constant, int index)
-   {
-      super(name, type, modifiers, declaringClass, constant);
-      this.index = index;
-      this.tagBits |= (TagBits.AnnotationResolved | TagBits.DeprecatedAnnotationResolved);
-   }
+    public SyntheticFieldBinding(char[] name, TypeBinding type, int modifiers, ReferenceBinding declaringClass,
+                                 Constant constant, int index) {
+        super(name, type, modifiers, declaringClass, constant);
+        this.index = index;
+        this.tagBits |= (TagBits.AnnotationResolved | TagBits.DeprecatedAnnotationResolved);
+    }
 }

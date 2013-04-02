@@ -17,30 +17,26 @@
 package com.codenvy.ide.api.selection;
 
 import com.codenvy.ide.api.event.SelectionChangedEvent;
-
 import com.codenvy.ide.api.extension.SDK;
-
-
 import com.google.web.bindery.event.shared.EventBus;
 
 
 /**
- * Selection API allows to provide a way of data-based communication, when Parts provide a static 
+ * Selection API allows to provide a way of data-based communication, when Parts provide a static
  * access to the data selected in active Part.
- * In order to listen to dynamic Selection changes, please subscribe to {@link SelectionChangedEvent} 
- * on {@link EventBus}. 
+ * In order to listen to dynamic Selection changes, please subscribe to {@link SelectionChangedEvent}
+ * on {@link EventBus}.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @SDK(title = "ide.api.ui.selection")
-public interface SelectionAgent
-{
+public interface SelectionAgent {
 
-   /**
-    * Provides a way of getting current app-wide Selection.
-    * 
-    * @return
-    */
-   public Selection<?> getSelection();
+    /**
+     * Provides a way of getting current app-wide Selection.
+     *
+     * @return
+     */
+    public Selection<?> getSelection();
 
 }

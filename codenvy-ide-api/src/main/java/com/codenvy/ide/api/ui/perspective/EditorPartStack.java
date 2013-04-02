@@ -17,12 +17,11 @@
 package com.codenvy.ide.api.ui.perspective;
 
 /**
- * Part Stack is tabbed layout element, containing Parts. EditorParstack is shared 
+ * Part Stack is tabbed layout element, containing Parts. EditorParstack is shared
  * across the Perspeciteves and allows to display EditorParts
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface EditorPartStack extends PartStack
-{
+public interface EditorPartStack extends PartStack {
 
 }

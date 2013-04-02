@@ -16,16 +16,13 @@
  */
 package com.codenvy.ide.client.projectExplorer;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-
+import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
+import com.codenvy.ide.part.projectexplorer.ProjectExplorerView;
+import com.codenvy.ide.part.projectexplorer.ProjectExplorerView.ActionDelegate;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import com.codenvy.ide.part.projectexplorer.ProjectExplorerPartPresenter;
-import com.codenvy.ide.part.projectexplorer.ProjectExplorerView;
-import com.codenvy.ide.part.projectexplorer.ProjectExplorerView.ActionDelegate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,61 +33,54 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+
 /**
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 3, 2012  
+ * exo@exoplatform.com
+ * Aug 3, 2012
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectExpolorerPresenterTest
-{
+public class ProjectExpolorerPresenterTest {
 
-   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-   ProjectExplorerView projectExplorerView;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    ProjectExplorerView projectExplorerView;
 
-   @Spy
-   EventBus eventBus = new SimpleEventBus();
+    @Spy
+    EventBus eventBus = new SimpleEventBus();
 
-   @InjectMocks
-   ProjectExplorerPartPresenter explorerPresenter;
+    @InjectMocks
+    ProjectExplorerPartPresenter explorerPresenter;
 
-   @Before
-   public void disarm()
-   {
-      // don't throw an exception if GWT.create() invoked
-      GWTMockUtilities.disarm();
-   }
+    @Before
+    public void disarm() {
+        // don't throw an exception if GWT.create() invoked
+        GWTMockUtilities.disarm();
+    }
 
-   @After
-   public void restore()
-   {
-      // 
-      GWTMockUtilities.restore();
-   }
+    @After
+    public void restore() {
+        //
+        GWTMockUtilities.restore();
+    }
 
-   /**
-    * Check that Presenter binds a double click handler
-    */
-   @Test
-   public void shouldBindDoubleClickHandler()
-   {
+    /** Check that Presenter binds a double click handler */
+    @Test
+    public void shouldBindDoubleClickHandler() {
 
-      verify(projectExplorerView).setDelegate((ActionDelegate)any());
-   }
+        verify(projectExplorerView).setDelegate((ActionDelegate)any());
+    }
 
-   /**
-    * Testing that doubleClick generates OpenFileEvent and fire it on EventBus
-    */
-   @Test
-   public void shoudFireOpenFileOnDoubleClick()
-   {
-      // TODO
-   }
+    /** Testing that doubleClick generates OpenFileEvent and fire it on EventBus */
+    @Test
+    public void shoudFireOpenFileOnDoubleClick() {
+        // TODO
+    }
 
-   @Test
-   public void shouldRetrieveFileListOnGo()
-   {
-      // TODO
-   }
+    @Test
+    public void shouldRetrieveFileListOnGo() {
+        // TODO
+    }
 }

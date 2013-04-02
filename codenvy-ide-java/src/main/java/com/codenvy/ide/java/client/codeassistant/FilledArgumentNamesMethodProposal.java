@@ -11,160 +11,149 @@
 package com.codenvy.ide.java.client.codeassistant;
 
 import com.codenvy.ide.java.client.core.CompletionProposal;
-
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.RegionImpl;
 
 
-/**
- * A method proposal with filled in argument names.
- */
-public final class FilledArgumentNamesMethodProposal extends JavaMethodCompletionProposal
-{
+/** A method proposal with filled in argument names. */
+public final class FilledArgumentNamesMethodProposal extends JavaMethodCompletionProposal {
 
-   private Region fSelectedRegion; // initialized by apply()
+    private Region fSelectedRegion; // initialized by apply()
 
-   private int[] fArgumentOffsets;
+    private int[] fArgumentOffsets;
 
-   private int[] fArgumentLengths;
+    private int[] fArgumentLengths;
 
-   public FilledArgumentNamesMethodProposal(CompletionProposal proposal, JavaContentAssistInvocationContext context)
-   {
-      super(proposal, context);
-   }
+    public FilledArgumentNamesMethodProposal(CompletionProposal proposal, JavaContentAssistInvocationContext context) {
+        super(proposal, context);
+    }
 
-   /*
-    * @see ICompletionProposalExtension#apply(IDocument, char)
-    */
-   @Override
-   public void apply(Document document, char trigger, int offset)
-   {
-      super.apply(document, trigger, offset);
-      // int baseOffset= getReplacementOffset();
-      // String replacement= getReplacementString();
-      //
-      // if (fArgumentOffsets != null && getTextViewer() != null) {
-      // try {
-      // LinkedModeModel model= new LinkedModeModel();
-      // for (int i= 0; i != fArgumentOffsets.length; i++) {
-      // LinkedPositionGroup group= new LinkedPositionGroup();
-      // group.addPosition(new LinkedPosition(document, baseOffset + fArgumentOffsets[i], fArgumentLengths[i],
-      // LinkedPositionGroup.NO_STOP));
-      // model.addGroup(group);
-      // }
-      //
-      // model.forceInstall();
-      // JavaEditor editor= getJavaEditor();
-      // if (editor != null) {
-      // model.addLinkingListener(new EditorHighlightingSynchronizer(editor));
-      // }
-      //
-      // LinkedModeUI ui= new EditorLinkedModeUI(model, getTextViewer());
-      // ui.setExitPosition(getTextViewer(), baseOffset + replacement.length(), 0, Integer.MAX_VALUE);
-      // ui.setExitPolicy(new ExitPolicy(')', document));
-      // ui.setDoContextInfo(true);
-      // ui.setCyclingMode(LinkedModeUI.CYCLE_WHEN_NO_PARENT);
-      // ui.enter();
-      //
-      // fSelectedRegion= ui.getSelectedRegion();
-      //
-      // } catch (BadLocationException e) {
-      // JavaPlugin.log(e);
-      // openErrorDialog(e);
-      // }
-      // } else {
-      // fSelectedRegion= new Region(baseOffset + replacement.length(), 0);
-      // }
-   }
+    /*
+     * @see ICompletionProposalExtension#apply(IDocument, char)
+     */
+    @Override
+    public void apply(Document document, char trigger, int offset) {
+        super.apply(document, trigger, offset);
+        // int baseOffset= getReplacementOffset();
+        // String replacement= getReplacementString();
+        //
+        // if (fArgumentOffsets != null && getTextViewer() != null) {
+        // try {
+        // LinkedModeModel model= new LinkedModeModel();
+        // for (int i= 0; i != fArgumentOffsets.length; i++) {
+        // LinkedPositionGroup group= new LinkedPositionGroup();
+        // group.addPosition(new LinkedPosition(document, baseOffset + fArgumentOffsets[i], fArgumentLengths[i],
+        // LinkedPositionGroup.NO_STOP));
+        // model.addGroup(group);
+        // }
+        //
+        // model.forceInstall();
+        // JavaEditor editor= getJavaEditor();
+        // if (editor != null) {
+        // model.addLinkingListener(new EditorHighlightingSynchronizer(editor));
+        // }
+        //
+        // LinkedModeUI ui= new EditorLinkedModeUI(model, getTextViewer());
+        // ui.setExitPosition(getTextViewer(), baseOffset + replacement.length(), 0, Integer.MAX_VALUE);
+        // ui.setExitPolicy(new ExitPolicy(')', document));
+        // ui.setDoContextInfo(true);
+        // ui.setCyclingMode(LinkedModeUI.CYCLE_WHEN_NO_PARENT);
+        // ui.enter();
+        //
+        // fSelectedRegion= ui.getSelectedRegion();
+        //
+        // } catch (BadLocationException e) {
+        // JavaPlugin.log(e);
+        // openErrorDialog(e);
+        // }
+        // } else {
+        // fSelectedRegion= new Region(baseOffset + replacement.length(), 0);
+        // }
+    }
 
-   /*
-    * @see org.eclipse.jdt.internal.ui.text.java.JavaMethodCompletionProposal#needsLinkedMode()
-    */
-   @Override
-   protected boolean needsLinkedMode()
-   {
-      return false; // we handle it ourselves
-   }
+    /*
+     * @see org.eclipse.jdt.internal.ui.text.java.JavaMethodCompletionProposal#needsLinkedMode()
+     */
+    @Override
+    protected boolean needsLinkedMode() {
+        return false; // we handle it ourselves
+    }
 
-   /*
-    * @see org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal#computeReplacementString()
-    */
-   @Override
-   protected String computeReplacementString()
-   {
+    /*
+     * @see org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal#computeReplacementString()
+     */
+    @Override
+    protected String computeReplacementString() {
 
-      if (!hasParameters() || !hasArgumentList())
-         return super.computeReplacementString();
+        if (!hasParameters() || !hasArgumentList())
+            return super.computeReplacementString();
 
-      StringBuffer buffer = new StringBuffer();
-      appendMethodNameReplacement(buffer);
+        StringBuffer buffer = new StringBuffer();
+        appendMethodNameReplacement(buffer);
 
-      char[][] parameterNames = fProposal.findParameterNames();
-      int count = parameterNames.length;
-      fArgumentOffsets = new int[count];
-      fArgumentLengths = new int[count];
+        char[][] parameterNames = fProposal.findParameterNames();
+        int count = parameterNames.length;
+        fArgumentOffsets = new int[count];
+        fArgumentLengths = new int[count];
 
-      FormatterPrefs prefs = getFormatterPrefs();
+        FormatterPrefs prefs = getFormatterPrefs();
 
-      setCursorPosition(buffer.length());
+        setCursorPosition(buffer.length());
 
-      if (prefs.afterOpeningParen)
-         buffer.append(SPACE);
+        if (prefs.afterOpeningParen)
+            buffer.append(SPACE);
 
-      for (int i = 0; i != count; i++)
-      {
-         if (i != 0)
-         {
-            if (prefs.beforeComma)
-               buffer.append(SPACE);
-            buffer.append(COMMA);
-            if (prefs.afterComma)
-               buffer.append(SPACE);
-         }
+        for (int i = 0; i != count; i++) {
+            if (i != 0) {
+                if (prefs.beforeComma)
+                    buffer.append(SPACE);
+                buffer.append(COMMA);
+                if (prefs.afterComma)
+                    buffer.append(SPACE);
+            }
 
-         fArgumentOffsets[i] = buffer.length();
-         buffer.append(parameterNames[i]);
-         fArgumentLengths[i] = parameterNames[i].length;
-      }
+            fArgumentOffsets[i] = buffer.length();
+            buffer.append(parameterNames[i]);
+            fArgumentLengths[i] = parameterNames[i].length;
+        }
 
-      if (prefs.beforeClosingParen)
-         buffer.append(SPACE);
+        if (prefs.beforeClosingParen)
+            buffer.append(SPACE);
 
-      buffer.append(RPAREN);
+        buffer.append(RPAREN);
 
-      return buffer.toString();
-   }
+        return buffer.toString();
+    }
 
-   // /**
-   // * Returns the currently active java editor, or <code>null</code> if it
-   // * cannot be determined.
-   // *
-   // * @return the currently active java editor, or <code>null</code>
-   // */
-   // private JavaEditor getJavaEditor() {
-   // IEditorPart part= JavaPlugin.getActivePage().getActiveEditor();
-   // if (part instanceof JavaEditor)
-   // return (JavaEditor) part;
-   // else
-   // return null;
-   // }
+    // /**
+    // * Returns the currently active java editor, or <code>null</code> if it
+    // * cannot be determined.
+    // *
+    // * @return the currently active java editor, or <code>null</code>
+    // */
+    // private JavaEditor getJavaEditor() {
+    // IEditorPart part= JavaPlugin.getActivePage().getActiveEditor();
+    // if (part instanceof JavaEditor)
+    // return (JavaEditor) part;
+    // else
+    // return null;
+    // }
 
-   /*
-    * @see ICompletionProposal#getSelection(IDocument)
-    */
-   @Override
-   public Region getSelection(Document document)
-   {
-      if (fSelectedRegion == null)
-         return new RegionImpl(getReplacementOffset(), 0);
+    /*
+     * @see ICompletionProposal#getSelection(IDocument)
+     */
+    @Override
+    public Region getSelection(Document document) {
+        if (fSelectedRegion == null)
+            return new RegionImpl(getReplacementOffset(), 0);
 
-      return new RegionImpl(fSelectedRegion.getOffset(), fSelectedRegion.getLength());
-   }
+        return new RegionImpl(fSelectedRegion.getOffset(), fSelectedRegion.getLength());
+    }
 
-   // private void openErrorDialog(BadLocationException e) {
-   // Shell shell= getTextViewer().getTextWidget().getShell();
-   // MessageDialog.openError(shell, JavaTextMessages.FilledArgumentNamesMethodProposal_error_msg, e.getMessage());
-   // }
+    // private void openErrorDialog(BadLocationException e) {
+    // Shell shell= getTextViewer().getTextWidget().getShell();
+    // MessageDialog.openError(shell, JavaTextMessages.FilledArgumentNamesMethodProposal_error_msg, e.getMessage());
+    // }
 
 }

@@ -10,24 +10,20 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.internal.compiler.ast;
 
-public abstract class MagicLiteral extends Literal
-{
+public abstract class MagicLiteral extends Literal {
 
-   public MagicLiteral(int start, int end)
-   {
+    public MagicLiteral(int start, int end) {
 
-      super(start, end);
-   }
+        super(start, end);
+    }
 
-   public boolean isValidJavaStatement()
-   {
+    public boolean isValidJavaStatement() {
 
-      return false;
-   }
+        return false;
+    }
 
-   public char[] source()
-   {
+    public char[] source() {
 
-      return null;
-   }
+        return null;
+    }
 }

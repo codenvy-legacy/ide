@@ -11,43 +11,38 @@
 package com.codenvy.ide.java.client.internal.text.correction.proposals;
 
 import com.codenvy.ide.java.client.JavaClientBundle;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.edits.ReplaceEdit;
 import com.codenvy.ide.text.edits.TextEdit;
-
 import com.google.gwt.user.client.ui.Image;
 
 
-public class ReplaceCorrectionProposal extends CUCorrectionProposal
-{
+public class ReplaceCorrectionProposal extends CUCorrectionProposal {
 
-   private String fReplacementString;
+    private String fReplacementString;
 
-   private int fOffset;
+    private int fOffset;
 
-   private int fLength;
+    private int fLength;
 
-   public ReplaceCorrectionProposal(String name, int offset, int length, String replacementString, int relevance,
-      Document document)
-   {
-      super(name, relevance, document, new Image(JavaClientBundle.INSTANCE.correction_change()));
-      fReplacementString = replacementString;
-      fOffset = offset;
-      fLength = length;
-   }
+    public ReplaceCorrectionProposal(String name, int offset, int length, String replacementString, int relevance,
+                                     Document document) {
+        super(name, relevance, document, new Image(JavaClientBundle.INSTANCE.correction_change()));
+        fReplacementString = replacementString;
+        fOffset = offset;
+        fLength = length;
+    }
 
-   /* (non-Javadoc)
-    * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
-    */
-   @Override
-   protected void addEdits(Document doc, TextEdit rootEdit) throws CoreException
-   {
-      super.addEdits(doc, rootEdit);
+    /* (non-Javadoc)
+     * @see org.eclipse.jdt.internal.ui.text.correction.CUCorrectionProposal#addEdits(org.eclipse.jface.text.IDocument)
+     */
+    @Override
+    protected void addEdits(Document doc, TextEdit rootEdit) throws CoreException {
+        super.addEdits(doc, rootEdit);
 
-      TextEdit edit = new ReplaceEdit(fOffset, fLength, fReplacementString);
-      rootEdit.addChild(edit);
-   }
+        TextEdit edit = new ReplaceEdit(fOffset, fLength, fReplacementString);
+        rootEdit.addChild(edit);
+    }
 
 }

@@ -18,10 +18,9 @@
  */
 package com.codenvy.ide.api.paas;
 
+import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 import com.codenvy.ide.api.wizard.newproject.HasCreateProjectHandler;
-
-import com.codenvy.ide.api.ui.wizard.AbstractWizardPagePresenter;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -29,47 +28,38 @@ import com.google.gwt.resources.client.ImageResource;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractPaasWizardPagePresenter extends AbstractWizardPagePresenter implements HasCreateProjectHandler
-{
-   private CreateProjectHandler createProjectHandler;
+public abstract class AbstractPaasWizardPagePresenter extends AbstractWizardPagePresenter implements HasCreateProjectHandler {
+    private CreateProjectHandler createProjectHandler;
 
-   /**
-    * Create WizardPage with given wizard page caption
-    * 
-    * @param caption
-    */
-   public AbstractPaasWizardPagePresenter(String caption)
-   {
-      super(caption);
-   }
+    /**
+     * Create WizardPage with given wizard page caption
+     *
+     * @param caption
+     */
+    public AbstractPaasWizardPagePresenter(String caption) {
+        super(caption);
+    }
 
-   /**
-    * Create WizardPage with given wizard page caption and wizard page image.
-    * Size of image must be less than 48px * 48px.
-    * 
-    * @param caption
-    * @param image
-    */
-   public AbstractPaasWizardPagePresenter(String caption, ImageResource image)
-   {
-      super(caption, image);
-   }
+    /**
+     * Create WizardPage with given wizard page caption and wizard page image.
+     * Size of image must be less than 48px * 48px.
+     *
+     * @param caption
+     * @param image
+     */
+    public AbstractPaasWizardPagePresenter(String caption, ImageResource image) {
+        super(caption, image);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public CreateProjectHandler getCreateProjectHandler()
-   {
-      return createProjectHandler;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public CreateProjectHandler getCreateProjectHandler() {
+        return createProjectHandler;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setCreateProjectHandler(CreateProjectHandler handler)
-   {
-      createProjectHandler = handler;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setCreateProjectHandler(CreateProjectHandler handler) {
+        createProjectHandler = handler;
+    }
 }

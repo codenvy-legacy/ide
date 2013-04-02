@@ -16,47 +16,41 @@
  */
 package com.codenvy.ide.util;
 
-import static junit.framework.Assert.*;
-
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 
-/**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
- */
-public class TestGeneratorUtils
-{
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
-   /**
-    * Should match package name
-    */
-   @Test
-   public void shouldMatchPackage()
-   {
-      String packageString =
-         "* along with this program; if not, see<http://www.gnu.org/licenses/>.\n" + "*/ \n"
-            + "package com.codenvy.ide.util;" + "import junit.framework.Assert;";
-      Matcher matcher = GeneratorUtils.PACKAGE_PATTERN.matcher(packageString);
-      assertTrue(matcher.matches());
-      assertEquals(1, matcher.groupCount());
-      String group = matcher.group(1);
+/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+public class TestGeneratorUtils {
 
-      assertEquals("com.codenvy.ide.util", group);
-   }
+    /** Should match package name */
+    @Test
+    public void shouldMatchPackage() {
+        String packageString =
+                "* along with this program; if not, see<http://www.gnu.org/licenses/>.\n" + "*/ \n"
+                + "package com.codenvy.ide.util;" + "import junit.framework.Assert;";
+        Matcher matcher = GeneratorUtils.PACKAGE_PATTERN.matcher(packageString);
+        assertTrue(matcher.matches());
+        assertEquals(1, matcher.groupCount());
+        String group = matcher.group(1);
 
-   /**
-    * Should match package name
-    * @throws IOException 
-    */
-   @Test
-   public void shouldExtractPackage() throws IOException
-   {
-      String packageString =
-         "* along with this program; if not, see<http://www.gnu.org/licenses/>.\n" + "*/ \n"
-            + "package com.codenvy.ide.util;" + "import junit.framework.Assert;";
-      assertEquals("com.codenvy.ide.util", GeneratorUtils.getClassFQN("dummy", packageString));
-   }
+        assertEquals("com.codenvy.ide.util", group);
+    }
+
+    /**
+     * Should match package name
+     *
+     * @throws IOException
+     */
+    @Test
+    public void shouldExtractPackage() throws IOException {
+        String packageString =
+                "* along with this program; if not, see<http://www.gnu.org/licenses/>.\n" + "*/ \n"
+                + "package com.codenvy.ide.util;" + "import junit.framework.Assert;";
+        assertEquals("com.codenvy.ide.util", GeneratorUtils.getClassFQN("dummy", packageString));
+    }
 }

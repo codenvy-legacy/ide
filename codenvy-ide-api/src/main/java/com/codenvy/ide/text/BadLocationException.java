@@ -25,31 +25,28 @@ package com.codenvy.ide.text;
  * This class is not intended to be serialized.
  * </p>
  */
-public class BadLocationException extends Exception
-{
+public class BadLocationException extends Exception {
 
-   /**
-    * Serial version UID for this class.
-    * <p>
-    * Note: This class is not intended to be serialized.
-    * </p>
-    * 
-    */
-   private static final long serialVersionUID = 3257281452776370224L;
+    /**
+     * Serial version UID for this class.
+     * <p>
+     * Note: This class is not intended to be serialized.
+     * </p>
+     */
+    private static final long serialVersionUID = 3257281452776370224L;
 
-   /** Creates a new bad location exception. */
-   public BadLocationException()
-   {
-      super();
-   }
+    /** Creates a new bad location exception. */
+    public BadLocationException() {
+        super();
+    }
 
-   /**
-    * Creates a new bad location exception.
-    * 
-    * @param message the exception message
-    */
-   public BadLocationException(String message)
-   {
-      super(message);
-   }
+    /**
+     * Creates a new bad location exception.
+     *
+     * @param message
+     *         the exception message
+     */
+    public BadLocationException(String message) {
+        super(message);
+    }
 }

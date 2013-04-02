@@ -19,12 +19,8 @@ package com.codenvy.ide.extension.css;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
-/**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
- */
-public interface CssExtensionResource extends ClientBundle
-{
-   @Source("com/codenvy/ide/extension/css/file.png")
-   ImageResource file();
+/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+public interface CssExtensionResource extends ClientBundle {
+    @Source("com/codenvy/ide/extension/css/file.png")
+    ImageResource file();
 }

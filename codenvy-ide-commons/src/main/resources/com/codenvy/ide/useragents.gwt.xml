@@ -1,7 +1,7 @@
 <module>
-<inherits name="com.google.gwt.user.User" />
-<define-property name="mobile.user.agent" values="android, iphone, not_mobile" />
-<property-provider name="mobile.user.agent"><![CDATA[
+    <inherits name="com.google.gwt.user.User"/>
+    <define-property name="mobile.user.agent" values="android, iphone, not_mobile"/>
+    <property-provider name="mobile.user.agent"><![CDATA[
   {
     var ua = window.navigator.userAgent.toLowerCase();
     if (ua.indexOf('android') != -1) { return 'android'; }
@@ -10,11 +10,11 @@
   }
 ]]></property-provider>
 
-<!-- Constrain the value for non-webkit browsers -->
-<set-property name="mobile.user.agent" value="not_mobile" >
-  <none> <!-- Actually means NOR, in this case "not safari" -->
-    <when-property-is name="user.agent" value="safari" />
-  </none>
-</set-property>
+    <!-- Constrain the value for non-webkit browsers -->
+    <set-property name="mobile.user.agent" value="not_mobile">
+        <none> <!-- Actually means NOR, in this case "not safari" -->
+            <when-property-is name="user.agent" value="safari"/>
+        </none>
+    </set-property>
 
 </module>

@@ -25,65 +25,55 @@ import com.codenvy.ide.api.mvp.View;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface RenameApplicationView extends View<RenameApplicationView.ActionDelegate>
-{
-   /**
-    * Needs for delegate some function into RenameApplication view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having changed application name.
-       */
-      public void onNameChanged();
+public interface RenameApplicationView extends View<RenameApplicationView.ActionDelegate> {
+    /** Needs for delegate some function into RenameApplication view. */
+    public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response to the user
+         * having changed application name.
+         */
+        public void onNameChanged();
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Rename button.
-       */
-      public void onRenameClicked();
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Rename button.
+         */
+        public void onRenameClicked();
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Cancel button.
-       */
-      public void onCancelClicked();
-   }
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Cancel button.
+         */
+        public void onCancelClicked();
+    }
 
-   /**
-    * Select value in rename field.
-    */
-   public void selectValueInRenameField();
+    /** Select value in rename field. */
+    public void selectValueInRenameField();
 
-   /**
-    * Change the enable state of the rename button.
-    * 
-    * @param isEnabled
-    */
-   public void setEnableRenameButton(boolean isEnabled);
+    /**
+     * Change the enable state of the rename button.
+     *
+     * @param isEnabled
+     */
+    public void setEnableRenameButton(boolean isEnabled);
 
-   /**
-    * Returns application's name.
-    * 
-    * @return
-    */
-   public String getName();
+    /**
+     * Returns application's name.
+     *
+     * @return
+     */
+    public String getName();
 
-   /**
-    * Sets application's name.
-    * 
-    * @param name
-    */
-   public void setName(String name);
+    /**
+     * Sets application's name.
+     *
+     * @param name
+     */
+    public void setName(String name);
 
-   /**
-    * Show dialog.
-    */
-   public void showDialog();
+    /** Show dialog. */
+    public void showDialog();
 
-   /**
-    * Close dialog.
-    */
-   public void close();
+    /** Close dialog. */
+    public void close();
 }

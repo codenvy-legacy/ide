@@ -18,42 +18,37 @@
  */
 package com.codenvy.ide.client;
 
-import com.google.inject.Inject;
-
 import com.codenvy.ide.Resources;
+import com.google.inject.Inject;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class StyleInjector
-{
-   private Resources resources;
+public class StyleInjector {
+    private Resources resources;
 
-   /**
-   * 
-   */
-   @Inject
-   public StyleInjector(Resources resources)
-   {
-      this.resources = resources;
-   }
+    /**
+     *
+     */
+    @Inject
+    public StyleInjector(Resources resources) {
+        this.resources = resources;
+    }
 
-   public void inject()
-   {
-      resources.coreCss().ensureInjected();
-      resources.editableContentAreaCss().ensureInjected();
-      resources.editorSelectionLineRendererCss().ensureInjected();
-      resources.lineNumberRendererCss().ensureInjected();
-      resources.treeCss().ensureInjected();
-      resources.defaultSimpleListCss().ensureInjected();
-      resources.workspaceEditorBufferCss().ensureInjected();
-      resources.workspaceEditorCss().ensureInjected();
-      resources.workspaceEditorCursorCss().ensureInjected();
-      resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
-      resources.partStackCss().ensureInjected();
-      resources.parenMatchHighlighterCss().ensureInjected();
-      resources.menuCSS().ensureInjected();
-   }
+    public void inject() {
+        resources.coreCss().ensureInjected();
+        resources.editableContentAreaCss().ensureInjected();
+        resources.editorSelectionLineRendererCss().ensureInjected();
+        resources.lineNumberRendererCss().ensureInjected();
+        resources.treeCss().ensureInjected();
+        resources.defaultSimpleListCss().ensureInjected();
+        resources.workspaceEditorBufferCss().ensureInjected();
+        resources.workspaceEditorCss().ensureInjected();
+        resources.workspaceEditorCursorCss().ensureInjected();
+        resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
+        resources.partStackCss().ensureInjected();
+        resources.parenMatchHighlighterCss().ensureInjected();
+        resources.menuCSS().ensureInjected();
+    }
 }

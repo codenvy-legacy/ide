@@ -22,15 +22,14 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handles Changed Toggle Item State Event.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface ChangeToggleItemStateHandler extends EventHandler
-{
-   /**
-    * Toggle item state have changed.
-    * 
-    * @param event
-    */
-   public void onStateChanged(ChangeToggleItemStateEvent event);
+public interface ChangeToggleItemStateHandler extends EventHandler {
+    /**
+     * Toggle item state have changed.
+     *
+     * @param event
+     */
+    public void onStateChanged(ChangeToggleItemStateEvent event);
 }

@@ -18,9 +18,6 @@
  */
 package com.codenvy.ide.wizard.newproject;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.paas.PaaS;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
@@ -39,79 +36,74 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
- * Testing {@link NewProjectPagePresenter} functionality 
- * 
+ * Testing {@link NewProjectPagePresenter} functionality
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestNewProjectPagePresenter
-{
-   @Mock
-   private WizardAgentImpl wizardAgent;
+public class TestNewProjectPagePresenter {
+    @Mock
+    private WizardAgentImpl wizardAgent;
 
-   @Mock
-   private NewProjectPageView view;
+    @Mock
+    private NewProjectPageView view;
 
-   @Mock
-   private CreateProjectHandler createProjectHandler;
+    @Mock
+    private CreateProjectHandler createProjectHandler;
 
-   @Mock
-   private AbstractNewProjectWizardPage newPage;
+    @Mock
+    private AbstractNewProjectWizardPage newPage;
 
-   @Mock
-   private PaaSAgentImpl paasAgent;
+    @Mock
+    private PaaSAgentImpl paasAgent;
 
-   private NewProjectPagePresenter presenter;
+    private NewProjectPagePresenter presenter;
 
-   @Before
-   public void disarm()
-   {
-      // don't throw an exception if GWT.create() invoked
-      GWTMockUtilities.disarm();
-   }
+    @Before
+    public void disarm() {
+        // don't throw an exception if GWT.create() invoked
+        GWTMockUtilities.disarm();
+    }
 
-   /**
-    * Create general components for all test.
-    */
-   @SuppressWarnings("unchecked")
-   private void setUp()
-   {
-      Provider<AbstractNewProjectWizardPage> nextPage = mock(Provider.class);
-      when(nextPage.get()).thenReturn(newPage);
+    /** Create general components for all test. */
+    @SuppressWarnings("unchecked")
+    private void setUp() {
+        Provider<AbstractNewProjectWizardPage> nextPage = mock(Provider.class);
+        when(nextPage.get()).thenReturn(newPage);
 
-      JsonArray<NewProjectWizardData> wizards = JsonCollections.createArray();
-      wizards.add(new NewProjectWizardData("Title", "Description", "PrimaryType", null, nextPage, createProjectHandler,
-         null));
+        JsonArray<NewProjectWizardData> wizards = JsonCollections.createArray();
+        wizards.add(new NewProjectWizardData("Title", "Description", "PrimaryType", null, nextPage, createProjectHandler,
+                                             null));
 
-      when(wizardAgent.getNewProjectWizards()).thenReturn(wizards);
+        when(wizardAgent.getNewProjectWizards()).thenReturn(wizards);
 
-      JsonArray<PaaS> paases = JsonCollections.createArray(mock(PaaS.class));
-      when(paasAgent.getPaaSes()).thenReturn(paases);
+        JsonArray<PaaS> paases = JsonCollections.createArray(mock(PaaS.class));
+        when(paasAgent.getPaaSes()).thenReturn(paases);
 
-      presenter = new NewProjectPagePresenter(wizardAgent, null, view, paasAgent);
-      presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
-   }
+        presenter = new NewProjectPagePresenter(wizardAgent, null, view, paasAgent);
+        presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
+    }
 
-   @After
-   public void restore()
-   {
-      GWTMockUtilities.restore();
-   }
+    @After
+    public void restore() {
+        GWTMockUtilities.restore();
+    }
 
-   /**
-    * If technology is selected and PaaS is selected then next page must be chosen technology page. 
-    */
-   @Test
-   public void shouldBeFlipToChosenPage()
-   {
-      setUp();
+    /** If technology is selected and PaaS is selected then next page must be chosen technology page. */
+    @Test
+    public void shouldBeFlipToChosenPage() {
+        setUp();
 
-      //selected registered technology
-      presenter.onProjectTypeSelected(0);
-      // selected PaaS
-      presenter.onPaaSSelected(0);
-      
-      assertEquals(presenter.flipToNext(), newPage);
-   }
+        //selected registered technology
+        presenter.onProjectTypeSelected(0);
+        // selected PaaS
+        presenter.onPaaSSelected(0);
+
+        assertEquals(presenter.flipToNext(), newPage);
+    }
 }

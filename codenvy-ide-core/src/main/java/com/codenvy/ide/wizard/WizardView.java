@@ -19,124 +19,119 @@
 package com.codenvy.ide.wizard;
 
 import com.codenvy.ide.api.mvp.View;
-
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 
 
-
 /**
  * Interface of Wizard view.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardView extends View<WizardView.ActionDelegate>
-{
-   /**
-    * Sets whether Next button is visible.
-    * 
-    * @param isVisible <code>true</code> to visible the button, <code>false</code>
-    * to disable it
-    */
-   void setNextButtonVisible(boolean isVisible);
+public interface WizardView extends View<WizardView.ActionDelegate> {
+    /**
+     * Sets whether Next button is visible.
+     *
+     * @param isVisible
+     *         <code>true</code> to visible the button, <code>false</code>
+     *         to disable it
+     */
+    void setNextButtonVisible(boolean isVisible);
 
-   /**
-    * Sets whether Next button is enabled.
-    * 
-    * @param isEnabled <code>true</code> to enable the button, <code>false</code>
-    * to disable it
-    */
-   void setNextButtonEnabled(boolean isEnabled);
+    /**
+     * Sets whether Next button is enabled.
+     *
+     * @param isEnabled
+     *         <code>true</code> to enable the button, <code>false</code>
+     *         to disable it
+     */
+    void setNextButtonEnabled(boolean isEnabled);
 
-   /**
-    * Sets whether Back button is visible.
-    * 
-    * @param isVisible <code>true</code> to visible the button, <code>false</code>
-    * to disable it
-    */
-   void setBackButtonVisible(boolean isVisible);
+    /**
+     * Sets whether Back button is visible.
+     *
+     * @param isVisible
+     *         <code>true</code> to visible the button, <code>false</code>
+     *         to disable it
+     */
+    void setBackButtonVisible(boolean isVisible);
 
-   /**
-    * Sets whether Finish button is enabled.
-    * 
-    * @param isEnabled <code>true</code> to enable the button, <code>false</code>
-    * to disable it
-    */
-   void setFinishButtonEnabled(boolean isEnabled);
+    /**
+     * Sets whether Finish button is enabled.
+     *
+     * @param isEnabled
+     *         <code>true</code> to enable the button, <code>false</code>
+     *         to disable it
+     */
+    void setFinishButtonEnabled(boolean isEnabled);
 
-   /**
-    * Sets new caption of wizard's page
-    * 
-    * @param caption
-    */
-   void setCaption(String caption);
+    /**
+     * Sets new caption of wizard's page
+     *
+     * @param caption
+     */
+    void setCaption(String caption);
 
-   /**
-    * Sets new notice of wizard's page
-    * 
-    * @param notice
-    */
-   void setNotice(String notice);
+    /**
+     * Sets new notice of wizard's page
+     *
+     * @param notice
+     */
+    void setNotice(String notice);
 
-   /**
-    * Sets new image of wizard's page
-    * 
-    * @param image
-    */
-   void setImage(Image image);
+    /**
+     * Sets new image of wizard's page
+     *
+     * @param image
+     */
+    void setImage(Image image);
 
-   /**
-    * Close wizard
-    */
-   void close();
+    /** Close wizard */
+    void close();
 
-   /**
-    * Show wizard
-    */
-   void showWizard();
-   
-   /**
-    * Sets whether animation for change page is enabled.
-    * 
-    * @param isEnabled <code>true</code> to enable the animation, <code>false</code>
-    * to disable it
-    */
-   void setChangePageAnimationEnabled(boolean isEnabled);
+    /** Show wizard */
+    void showWizard();
 
-   /**
-    * Returns place of main form where will be shown current wizard page.
-    * 
-    * @return place of main form
-    */
-   AcceptsOneWidget getContentPanel();
+    /**
+     * Sets whether animation for change page is enabled.
+     *
+     * @param isEnabled
+     *         <code>true</code> to enable the animation, <code>false</code>
+     *         to disable it
+     */
+    void setChangePageAnimationEnabled(boolean isEnabled);
 
-   /**
-    * Needs for delegate some function into Wizard view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Next button
-       */
-      void onNextClicked();
+    /**
+     * Returns place of main form where will be shown current wizard page.
+     *
+     * @return place of main form
+     */
+    AcceptsOneWidget getContentPanel();
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Back button
-       */
-      void onBackClicked();
-      
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Finish button
-       */
-      void onFinishClicked();
-      
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Cancel button
-       */
-      void onCancelClicked();
-   }
+    /** Needs for delegate some function into Wizard view. */
+    public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Next button
+         */
+        void onNextClicked();
+
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Back button
+         */
+        void onBackClicked();
+
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Finish button
+         */
+        void onFinishClicked();
+
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Cancel button
+         */
+        void onCancelClicked();
+    }
 }

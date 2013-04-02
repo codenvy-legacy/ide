@@ -8,9 +8,12 @@ package com.codenvy.ide.java.client.internal.corext.refactoring.code;
 // *
 // * Contributors:
 // *     IBM Corporation - initial API and implementation
-// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Does not replace similar code in parent class of anonymous class - https://bugs.eclipse.org/bugs/show_bug.cgi?id=160853
-// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Extract method and continue https://bugs.eclipse.org/bugs/show_bug.cgi?id=48056
-// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] should declare method static if extracted from anonymous in static method - https://bugs.eclipse.org/bugs/show_bug.cgi?id=152004
+// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Does not replace similar code in parent class of anonymous
+// class - https://bugs.eclipse.org/bugs/show_bug.cgi?id=160853
+// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] Extract method and continue https://bugs.eclipse
+// .org/bugs/show_bug.cgi?id=48056
+// *     Benjamin Muskalla <bmuskalla@eclipsesource.com> - [extract method] should declare method static if extracted from anonymous in
+// static method - https://bugs.eclipse.org/bugs/show_bug.cgi?id=152004
 // *******************************************************************************/
 //package com.codenvy.ide.java.client.internal.corext.refactoring.code;
 //

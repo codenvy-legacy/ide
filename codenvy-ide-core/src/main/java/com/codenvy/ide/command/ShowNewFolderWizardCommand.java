@@ -18,17 +18,14 @@
  */
 package com.codenvy.ide.command;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
-
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.selection.SelectionAgent;
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newfolder.NewFolderPagePresenter;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,77 +37,60 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowNewFolderWizardCommand implements ExtendedCommand
-{
-   private final Resources resources;
+public class ShowNewFolderWizardCommand implements ExtendedCommand {
+    private final Resources resources;
 
-   private final ResourceProvider resourceProvider;
+    private final ResourceProvider resourceProvider;
 
-   private final ProjectOpenedExpression expression;
+    private final ProjectOpenedExpression expression;
 
-   private final SelectionAgent selectionAgent;
+    private final SelectionAgent selectionAgent;
 
-   /**
-    * Create command.
-    *
-    * @param resources
-    * @param resourceProvider
-    * @param expression
-    */
-   @Inject
-   public ShowNewFolderWizardCommand(Resources resources, ResourceProvider resourceProvider,
-      ProjectOpenedExpression expression, SelectionAgent selectionAgent)
-   {
-      this.resources = resources;
-      this.resourceProvider = resourceProvider;
-      this.expression = expression;
-      this.selectionAgent = selectionAgent;
-   }
+    /**
+     * Create command.
+     *
+     * @param resources
+     * @param resourceProvider
+     * @param expression
+     */
+    @Inject
+    public ShowNewFolderWizardCommand(Resources resources, ResourceProvider resourceProvider,
+                                      ProjectOpenedExpression expression, SelectionAgent selectionAgent) {
+        this.resources = resources;
+        this.resourceProvider = resourceProvider;
+        this.expression = expression;
+        this.selectionAgent = selectionAgent;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void execute()
-   {
-      NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider, selectionAgent);
-      WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder");
-      wizardDialog.showWizard();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void execute() {
+        NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider, selectionAgent);
+        WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder");
+        wizardDialog.showWizard();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      return resources.folder();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        return resources.folder();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression inContext()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression inContext() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression canExecute()
-   {
-      return expression;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression canExecute() {
+        return expression;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "Create new folder";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "Create new folder";
+    }
 }

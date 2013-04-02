@@ -23,69 +23,67 @@ import com.google.gwt.resources.client.CssResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface JavaCss extends CssResource
-{
+public interface JavaCss extends CssResource {
 
-   @ClassName("exo-autocomplete-fqn")
-   String fqnStyle();
+    @ClassName("exo-autocomplete-fqn")
+    String fqnStyle();
 
-   @ClassName("exo-codeassistant-counter")
-   String counter();
+    @ClassName("exo-codeassistant-counter")
+    String counter();
 
-   @ClassName("outline-root")
-   String outlineRoot();
+    @ClassName("outline-root")
+    String outlineRoot();
 
-   @ClassName("outline-icon")
-   String outlineIcon();
+    @ClassName("outline-icon")
+    String outlineIcon();
 
-   @ClassName("outline-label")
-   String outlineLabel();
+    @ClassName("outline-label")
+    String outlineLabel();
 
-   @ClassName("imports")
-   String imports();
+    @ClassName("imports")
+    String imports();
 
-   @ClassName("importItem")
-   String importItem();
+    @ClassName("importItem")
+    String importItem();
 
-   @ClassName("classItem")
-   String classItem();
+    @ClassName("classItem")
+    String classItem();
 
-   @ClassName("interfaceItem")
-   String interfaceItem();
+    @ClassName("interfaceItem")
+    String interfaceItem();
 
-   @ClassName("enumItem")
-   String enumItem();
+    @ClassName("enumItem")
+    String enumItem();
 
-   @ClassName("annotationItem")
-   String annotationItem();
-   
-   @ClassName("publicMethod")
-   String publicMethod();
-   
-   @ClassName("protectedMethod")
-   String protectedMethod();
-   
-   @ClassName("privateMethod")
-   String privateMethod();
-   
-   @ClassName("defaultMethod")
-   String defaultMethod();
-   
-   @ClassName("publicField")
-   String publicField();
-   
-   @ClassName("protectedField")
-   String protectedField();
-   
-   @ClassName("privateField")
-   String privateField();
-   
-   @ClassName("defaultField")
-   String defaultField();
-   
-   @ClassName("packageItem")
-   String packageItem();
+    @ClassName("annotationItem")
+    String annotationItem();
+
+    @ClassName("publicMethod")
+    String publicMethod();
+
+    @ClassName("protectedMethod")
+    String protectedMethod();
+
+    @ClassName("privateMethod")
+    String privateMethod();
+
+    @ClassName("defaultMethod")
+    String defaultMethod();
+
+    @ClassName("publicField")
+    String publicField();
+
+    @ClassName("protectedField")
+    String protectedField();
+
+    @ClassName("privateField")
+    String privateField();
+
+    @ClassName("defaultField")
+    String defaultField();
+
+    @ClassName("packageItem")
+    String packageItem();
 
 }

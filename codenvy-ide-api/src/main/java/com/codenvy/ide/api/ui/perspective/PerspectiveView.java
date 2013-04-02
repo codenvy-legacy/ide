@@ -20,44 +20,40 @@ import com.codenvy.ide.api.mvp.View;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
- * Perspective View contains abstract containers for PartStack 
+ * Perspective View contains abstract containers for PartStack
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface PerspectiveView<T> extends View<T>
-{
-   /**
-    * Returns central panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getEditorPanel();
+public interface PerspectiveView<T> extends View<T> {
+    /**
+     * Returns central panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getEditorPanel();
 
-   /**
-    * Returns left panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getNavigationPanel();
+    /**
+     * Returns left panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getNavigationPanel();
 
-   /**
-    * Returns bottom panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getInformationPanel();
+    /**
+     * Returns bottom panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getInformationPanel();
 
-   /**
-    * Returns right panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getToolPanel();
+    /**
+     * Returns right panel.
+     *
+     * @return
+     */
+    AcceptsOneWidget getToolPanel();
 
-   /**
-    * Handle View events 
-    */
-   public interface ActionDelegate
-   {
-   }
+    /** Handle View events */
+    public interface ActionDelegate {
+    }
 }

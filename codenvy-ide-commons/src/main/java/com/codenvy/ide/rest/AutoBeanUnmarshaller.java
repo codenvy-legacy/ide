@@ -19,7 +19,6 @@
 package com.codenvy.ide.rest;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-
 import com.google.gwt.http.client.Response;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -27,38 +26,29 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 
-/**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- */
-public class AutoBeanUnmarshaller<T> implements Unmarshallable<T>
-{
-   private AutoBean<T> bean;
+/** @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a> */
+public class AutoBeanUnmarshaller<T> implements Unmarshallable<T> {
+    private AutoBean<T> bean;
 
-   /**
-    * Create unmarshaller.
-    * 
-    * @param autoBean
-    */
-   public AutoBeanUnmarshaller(AutoBean<T> autoBean)
-   {
-      this.bean = autoBean;
-   }
+    /**
+     * Create unmarshaller.
+     *
+     * @param autoBean
+     */
+    public AutoBeanUnmarshaller(AutoBean<T> autoBean) {
+        this.bean = autoBean;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getStatusCode() != 204 && response.getText() != null)
-      {
-         Splittable data = StringQuoter.split(response.getText());
-         AutoBeanCodex.decodeInto(data, bean);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getStatusCode() != 204 && response.getText() != null) {
+            Splittable data = StringQuoter.split(response.getText());
+            AutoBeanCodex.decodeInto(data, bean);
+        }
+    }
 
-   public T getPayload()
-   {
-      return bean.as();
-   }
+    public T getPayload() {
+        return bean.as();
+    }
 }

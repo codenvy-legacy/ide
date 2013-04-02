@@ -10,12 +10,7 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.internal.corext.refactoring.code;
 
-import com.codenvy.ide.java.client.core.dom.ASTNode;
-import com.codenvy.ide.java.client.core.dom.SimpleName;
-import com.codenvy.ide.java.client.core.dom.SingleVariableDeclaration;
-import com.codenvy.ide.java.client.core.dom.TypeDeclarationStatement;
-import com.codenvy.ide.java.client.core.dom.VariableDeclarationFragment;
-import com.codenvy.ide.java.client.core.dom.VariableDeclarationStatement;
+import com.codenvy.ide.java.client.core.dom.*;
 import com.codenvy.ide.java.client.internal.corext.dom.GenericVisitor;
 import com.codenvy.ide.java.client.internal.corext.dom.Selection;
 
@@ -23,68 +18,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+class NameCollector extends GenericVisitor {
+    private List<String> names = new ArrayList<String>();
 
-class NameCollector extends GenericVisitor
-{
-   private List<String> names = new ArrayList<String>();
+    private Selection fSelection;
 
-   private Selection fSelection;
+    public NameCollector(ASTNode node) {
+        fSelection = Selection.createFromStartLength(node.getStartPosition(), node.getLength());
+    }
 
-   public NameCollector(ASTNode node)
-   {
-      fSelection = Selection.createFromStartLength(node.getStartPosition(), node.getLength());
-   }
+    @Override
+    protected boolean visitNode(ASTNode node) {
+        if (node.getStartPosition() > fSelection.getInclusiveEnd())
+            return true;
+        if (fSelection.coveredBy(node))
+            return true;
+        return false;
+    }
 
-   @Override
-   protected boolean visitNode(ASTNode node)
-   {
-      if (node.getStartPosition() > fSelection.getInclusiveEnd())
-         return true;
-      if (fSelection.coveredBy(node))
-         return true;
-      return false;
-   }
+    @Override
+    public boolean visit(SimpleName node) {
+        names.add(node.getIdentifier());
+        return super.visit(node);
+    }
 
-   @Override
-   public boolean visit(SimpleName node)
-   {
-      names.add(node.getIdentifier());
-      return super.visit(node);
-   }
+    @Override
+    public boolean visit(VariableDeclarationStatement node) {
+        return true;
+    }
 
-   @Override
-   public boolean visit(VariableDeclarationStatement node)
-   {
-      return true;
-   }
+    @Override
+    public boolean visit(VariableDeclarationFragment node) {
+        boolean result = super.visit(node);
+        if (!result)
+            names.add(node.getName().getIdentifier());
+        return result;
+    }
 
-   @Override
-   public boolean visit(VariableDeclarationFragment node)
-   {
-      boolean result = super.visit(node);
-      if (!result)
-         names.add(node.getName().getIdentifier());
-      return result;
-   }
+    @Override
+    public boolean visit(SingleVariableDeclaration node) {
+        boolean result = super.visit(node);
+        if (!result)
+            names.add(node.getName().getIdentifier());
+        return result;
+    }
 
-   @Override
-   public boolean visit(SingleVariableDeclaration node)
-   {
-      boolean result = super.visit(node);
-      if (!result)
-         names.add(node.getName().getIdentifier());
-      return result;
-   }
+    @Override
+    public boolean visit(TypeDeclarationStatement node) {
+        names.add(node.getDeclaration().getName().getIdentifier());
+        return false;
+    }
 
-   @Override
-   public boolean visit(TypeDeclarationStatement node)
-   {
-      names.add(node.getDeclaration().getName().getIdentifier());
-      return false;
-   }
-
-   List<String> getNames()
-   {
-      return names;
-   }
+    List<String> getNames() {
+        return names;
+    }
 }

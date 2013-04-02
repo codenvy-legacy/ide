@@ -18,14 +18,16 @@
  */
 package com.codenvy.ide.perspective;
 
-import com.codenvy.ide.Resources;
-import com.codenvy.ide.perspective.WorkspacePresenter.PerspectiveDescriptor;
+import elemental.html.Element;
+import elemental.html.TableCellElement;
+import elemental.html.TableElement;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.perspective.WorkspacePresenter.PerspectiveDescriptor;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
@@ -33,162 +35,129 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.Widget;
-import elemental.html.Element;
-import elemental.html.TableCellElement;
-import elemental.html.TableElement;
+import com.google.gwt.user.client.ui.*;
 
 
 /**
  * The implementation of {@link OpenPerspectiveView}.
  * Provides selecting perspective what want to open.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class OpenPerspectiveViewImpl extends DialogBox implements OpenPerspectiveView
-{
-   private static ChangePerspectiveViewImplUiBinder uiBinder = GWT.create(ChangePerspectiveViewImplUiBinder.class);
+public class OpenPerspectiveViewImpl extends DialogBox implements OpenPerspectiveView {
+    private static ChangePerspectiveViewImplUiBinder uiBinder = GWT.create(ChangePerspectiveViewImplUiBinder.class);
 
-   @UiField
-   FlowPanel btnPanel;
+    @UiField
+    FlowPanel btnPanel;
 
-   @UiField
-   Button btnOpen;
+    @UiField
+    Button btnOpen;
 
-   @UiField
-   Button btnCancel;
+    @UiField
+    Button btnCancel;
 
-   @UiField
-   ScrollPanel listPanel;
+    @UiField
+    ScrollPanel listPanel;
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   private SimpleList<PerspectiveDescriptor> list;
+    private SimpleList<PerspectiveDescriptor> list;
 
-   private SimpleList.ListItemRenderer<PerspectiveDescriptor> listItemRenderer =
-      new SimpleList.ListItemRenderer<PerspectiveDescriptor>()
-      {
-         @Override
-         public void render(Element itemElement, PerspectiveDescriptor itemData)
-         {
-            TableCellElement label = Elements.createTDElement();
+    private SimpleList.ListItemRenderer<PerspectiveDescriptor> listItemRenderer =
+            new SimpleList.ListItemRenderer<PerspectiveDescriptor>() {
+                @Override
+                public void render(Element itemElement, PerspectiveDescriptor itemData) {
+                    TableCellElement label = Elements.createTDElement();
 
-            SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
 
-            // Add icon
-            sb.appendHtmlConstant("<table><tr><td>");
-            ImageResource icon = itemData.getIcon();
-            if (icon != null)
-            {
-               sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-            }
-            sb.appendHtmlConstant("</td>");
+                    // Add icon
+                    sb.appendHtmlConstant("<table><tr><td>");
+                    ImageResource icon = itemData.getIcon();
+                    if (icon != null) {
+                        sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
+                    }
+                    sb.appendHtmlConstant("</td>");
 
-            // Add title
-            sb.appendHtmlConstant("<td>");
-            sb.appendEscaped(itemData.getTitle());
-            sb.appendHtmlConstant("</td></tr></table>");
+                    // Add title
+                    sb.appendHtmlConstant("<td>");
+                    sb.appendEscaped(itemData.getTitle());
+                    sb.appendHtmlConstant("</td></tr></table>");
 
-            label.setInnerHTML(sb.toSafeHtml().asString());
+                    label.setInnerHTML(sb.toSafeHtml().asString());
 
-            itemElement.appendChild(label);
-         }
+                    itemElement.appendChild(label);
+                }
 
-         @Override
-         public Element createElement()
-         {
-            return Elements.createTRElement();
-         }
-      };
+                @Override
+                public Element createElement() {
+                    return Elements.createTRElement();
+                }
+            };
 
-   private SimpleList.ListEventDelegate<PerspectiveDescriptor> listDelegate =
-      new SimpleList.ListEventDelegate<PerspectiveDescriptor>()
-      {
-         public void onListItemClicked(Element itemElement, PerspectiveDescriptor itemData)
-         {
-            list.getSelectionModel().setSelectedItem(itemData);
-            delegate.selectedPerspective(itemData.getTitle());
-         }
+    private SimpleList.ListEventDelegate<PerspectiveDescriptor> listDelegate =
+            new SimpleList.ListEventDelegate<PerspectiveDescriptor>() {
+                public void onListItemClicked(Element itemElement, PerspectiveDescriptor itemData) {
+                    list.getSelectionModel().setSelectedItem(itemData);
+                    delegate.selectedPerspective(itemData.getTitle());
+                }
 
-         public void onListItemDoubleClicked(Element listItemBase, PerspectiveDescriptor itemData)
-         {
-         }
-      };
+                public void onListItemDoubleClicked(Element listItemBase, PerspectiveDescriptor itemData) {
+                }
+            };
 
-   interface ChangePerspectiveViewImplUiBinder extends UiBinder<Widget, OpenPerspectiveViewImpl>
-   {
-   }
+    interface ChangePerspectiveViewImplUiBinder extends UiBinder<Widget, OpenPerspectiveViewImpl> {
+    }
 
-   /**
-    * Create view.
-    */
-   public OpenPerspectiveViewImpl(JsonArray<PerspectiveDescriptor> perspectives, Resources resources)
-   {
-      Widget widget = uiBinder.createAndBindUi(this);
+    /** Create view. */
+    public OpenPerspectiveViewImpl(JsonArray<PerspectiveDescriptor> perspectives, Resources resources) {
+        Widget widget = uiBinder.createAndBindUi(this);
 
-      TableElement tableElement = Elements.createTableElement();
-      tableElement.setAttribute("style", "width: 100%");
-      list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        TableElement tableElement = Elements.createTableElement();
+        tableElement.setAttribute("style", "width: 100%");
+        list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
 
-      this.listPanel.setStyleName(resources.coreCss().simpleListContainer());
-      this.listPanel.add(list);
+        this.listPanel.setStyleName(resources.coreCss().simpleListContainer());
+        this.listPanel.add(list);
 
-      this.setText("Open Perspective");
-      this.setWidget(widget);
+        this.setText("Open Perspective");
+        this.setWidget(widget);
 
-      list.render(perspectives);
-   }
+        list.render(perspectives);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setOpenButtonEnabled(boolean isEnabled)
-   {
-      btnOpen.setEnabled(isEnabled);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setOpenButtonEnabled(boolean isEnabled) {
+        btnOpen.setEnabled(isEnabled);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void close()
-   {
-      this.hide();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        this.hide();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void showDialog()
-   {
-      this.center();
-      this.show();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void showDialog() {
+        this.center();
+        this.show();
+    }
 
-   @UiHandler("btnOpen")
-   void onBtnOpenClick(ClickEvent event)
-   {
-      delegate.onOpenClicked();
-   }
+    @UiHandler("btnOpen")
+    void onBtnOpenClick(ClickEvent event) {
+        delegate.onOpenClicked();
+    }
 
-   @UiHandler("btnCancel")
-   void onBtnCancelClick(ClickEvent event)
-   {
-      delegate.onCancelClicked();
-   }
+    @UiHandler("btnCancel")
+    void onBtnCancelClick(ClickEvent event) {
+        delegate.onCancelClicked();
+    }
 }

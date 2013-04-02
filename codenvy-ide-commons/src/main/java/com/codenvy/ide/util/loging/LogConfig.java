@@ -19,77 +19,64 @@ import com.google.gwt.user.client.Window;
 /**
  * Deferred bound class to determing statically whether or not logging is
  * enabled.
- *
+ * <p/>
  * This is package protected all the way and only used internally by
  * {@link Log}.
- *
  */
-class LogConfig
-{
-   public static enum LogLevel {
-      DEBUG, INFO, WARNING, ERROR
-   }
+class LogConfig {
+    public static enum LogLevel {
+        DEBUG, INFO, WARNING, ERROR
+    }
 
-   private static final String LOG_LEVEL_PARAM = "logLevel";
+    private static final String LOG_LEVEL_PARAM = "logLevel";
 
-   private static final LogConfig INSTANCE = new LogConfig();
+    private static final LogConfig INSTANCE = new LogConfig();
 
-   static LogLevel getLogLevel()
-   {
-      return INSTANCE.getLogLevelImpl();
-   }
+    static LogLevel getLogLevel() {
+        return INSTANCE.getLogLevelImpl();
+    }
 
-   static void setLogLevel(LogLevel level)
-   {
-      INSTANCE.setLogLevelImpl(level);
-   }
+    static void setLogLevel(LogLevel level) {
+        INSTANCE.setLogLevelImpl(level);
+    }
 
-   private LogLevel currentLevel = null;
+    private LogLevel currentLevel = null;
 
-   private void ensureLogLevel()
-   {
-      if (currentLevel == null)
-      {
-         // First inspect the URL to see if it has one set.
-         setLogLevel(maybeGetLevelFromUrl());
+    private void ensureLogLevel() {
+        if (currentLevel == null) {
+            // First inspect the URL to see if it has one set.
+            setLogLevel(maybeGetLevelFromUrl());
 
-         // If it is still not set, make the default be INFO.
-         setLogLevel((currentLevel == null) ? LogLevel.INFO : currentLevel);
-      }
-   }
+            // If it is still not set, make the default be INFO.
+            setLogLevel((currentLevel == null) ? LogLevel.INFO : currentLevel);
+        }
+    }
 
-   private LogLevel getLogLevelImpl()
-   {
-      ensureLogLevel();
-      return currentLevel;
-   }
+    private LogLevel getLogLevelImpl() {
+        ensureLogLevel();
+        return currentLevel;
+    }
 
-   private LogLevel maybeGetLevelFromUrl()
-   {
-      String levelStr = Window.Location.getParameter(LOG_LEVEL_PARAM);
+    private LogLevel maybeGetLevelFromUrl() {
+        String levelStr = Window.Location.getParameter(LOG_LEVEL_PARAM);
 
-      // The common case.
-      if (levelStr == null)
-      {
-         return null;
-      }
+        // The common case.
+        if (levelStr == null) {
+            return null;
+        }
 
-      levelStr = levelStr.toUpperCase();
+        levelStr = levelStr.toUpperCase();
 
-      try
-      {
-         // Extract the correct Enum value;
-         return LogLevel.valueOf(levelStr);
-      }
-      catch (IllegalArgumentException e)
-      {
-         // We had a String but it was malformed.
-         return null;
-      }
-   }
+        try {
+            // Extract the correct Enum value;
+            return LogLevel.valueOf(levelStr);
+        } catch (IllegalArgumentException e) {
+            // We had a String but it was malformed.
+            return null;
+        }
+    }
 
-   private void setLogLevelImpl(LogLevel level)
-   {
-      currentLevel = level;
-   }
+    private void setLogLevelImpl(LogLevel level) {
+        currentLevel = level;
+    }
 }

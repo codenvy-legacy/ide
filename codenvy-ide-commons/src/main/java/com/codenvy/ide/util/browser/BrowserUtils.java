@@ -16,55 +16,52 @@ package com.codenvy.ide.util.browser;
 
 
 import com.codenvy.ide.util.StringUtils;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
-/**
- * Utility methods relating to the browser.
- */
+/** Utility methods relating to the browser. */
 public abstract class BrowserUtils {
 
-  private static final BrowserUtils INSTANCE = GWT.create(BrowserUtils.class);
+    private static final BrowserUtils INSTANCE = GWT.create(BrowserUtils.class);
 
-  abstract boolean isFFox();
+    abstract boolean isFFox();
 
-  static class Chrome extends BrowserUtils {
-    Chrome() {
+    static class Chrome extends BrowserUtils {
+        Chrome() {
+        }
+
+        @Override
+        boolean isFFox() {
+            return false;
+        }
     }
 
-    @Override
-    boolean isFFox() {
-      return false;
+    static class Firefox extends BrowserUtils {
+        Firefox() {
+        }
+
+        @Override
+        boolean isFFox() {
+            return true;
+        }
     }
-  }
 
-  static class Firefox extends BrowserUtils {
-    Firefox() {
+    public static boolean isFirefox() {
+        return INSTANCE.isFFox();
     }
 
-    @Override
-    boolean isFFox() {
-      return true;
+    public static boolean isChromeOs() {
+        return Window.Navigator.getUserAgent().contains(" CrOS ");
     }
-  }
 
-  public static boolean isFirefox() {
-    return INSTANCE.isFFox();
-  }
+    public static boolean hasUrlParameter(String parameter) {
+        return Window.Location.getParameter(parameter) != null;
+    }
 
-  public static boolean isChromeOs() {
-    return Window.Navigator.getUserAgent().contains(" CrOS ");
-  }
+    public static boolean hasUrlParameter(String parameter, String value) {
+        return StringUtils.equalNonEmptyStrings(Window.Location.getParameter(parameter), value);
+    }
 
-  public static boolean hasUrlParameter(String parameter) {
-    return Window.Location.getParameter(parameter) != null;
-  }
-
-  public static boolean hasUrlParameter(String parameter, String value) {
-    return StringUtils.equalNonEmptyStrings(Window.Location.getParameter(parameter), value);
-  }
-
-  private BrowserUtils() {
-  }
+    private BrowserUtils() {
+    }
 }

@@ -20,17 +20,15 @@ package com.codenvy.ide.java.client.projectmodel;
 
 /**
  * A checked exception representing a failure in the Java model.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaModelException extends Exception
-{
-   /**
-    * 
-    */
-   public JavaModelException(String message)
-   {
-      super(message);
-   }
+public class JavaModelException extends Exception {
+    /**
+     *
+     */
+    public JavaModelException(String message) {
+        super(message);
+    }
 }

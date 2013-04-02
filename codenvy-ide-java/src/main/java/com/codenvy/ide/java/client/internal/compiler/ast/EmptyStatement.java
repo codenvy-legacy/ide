@@ -16,57 +16,45 @@ import com.codenvy.ide.java.client.internal.compiler.flow.FlowContext;
 import com.codenvy.ide.java.client.internal.compiler.flow.FlowInfo;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 
-public class EmptyStatement extends Statement
-{
+public class EmptyStatement extends Statement {
 
-   public EmptyStatement(int startPosition, int endPosition)
-   {
-      this.sourceStart = startPosition;
-      this.sourceEnd = endPosition;
-   }
+    public EmptyStatement(int startPosition, int endPosition) {
+        this.sourceStart = startPosition;
+        this.sourceEnd = endPosition;
+    }
 
-   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
-   {
-      return flowInfo;
-   }
+    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo) {
+        return flowInfo;
+    }
 
-   // Report an error if necessary
-   public int complainIfUnreachable(FlowInfo flowInfo, BlockScope scope, int complaintLevel)
-   {
-      // before 1.4, empty statements are tolerated anywhere
-      if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_4)
-      {
-         return complaintLevel;
-      }
-      return super.complainIfUnreachable(flowInfo, scope, complaintLevel);
-   }
+    // Report an error if necessary
+    public int complainIfUnreachable(FlowInfo flowInfo, BlockScope scope, int complaintLevel) {
+        // before 1.4, empty statements are tolerated anywhere
+        if (scope.compilerOptions().complianceLevel < ClassFileConstants.JDK1_4) {
+            return complaintLevel;
+        }
+        return super.complainIfUnreachable(flowInfo, scope, complaintLevel);
+    }
 
-   public void generateCode(BlockScope currentScope)
-   {
-      // no bytecode, no need to check for reachability or recording source positions
-   }
+    public void generateCode(BlockScope currentScope) {
+        // no bytecode, no need to check for reachability or recording source positions
+    }
 
-   public StringBuffer printStatement(int tab, StringBuffer output)
-   {
-      return printIndent(tab, output).append(';');
-   }
+    public StringBuffer printStatement(int tab, StringBuffer output) {
+        return printIndent(tab, output).append(';');
+    }
 
-   public void resolve(BlockScope scope)
-   {
-      if ((this.bits & IsUsefulEmptyStatement) == 0)
-      {
-         scope.problemReporter().superfluousSemicolon(this.sourceStart, this.sourceEnd);
-      }
-      else
-      {
-         scope.problemReporter().emptyControlFlowStatement(this.sourceStart, this.sourceEnd);
-      }
-   }
+    public void resolve(BlockScope scope) {
+        if ((this.bits & IsUsefulEmptyStatement) == 0) {
+            scope.problemReporter().superfluousSemicolon(this.sourceStart, this.sourceEnd);
+        } else {
+            scope.problemReporter().emptyControlFlowStatement(this.sourceStart, this.sourceEnd);
+        }
+    }
 
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      visitor.visit(this, scope);
-      visitor.endVisit(this, scope);
-   }
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        visitor.visit(this, scope);
+        visitor.endVisit(this, scope);
+    }
 
 }

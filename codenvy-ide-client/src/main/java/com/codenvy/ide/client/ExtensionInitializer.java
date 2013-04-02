@@ -17,10 +17,7 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.extension.ExtensionDescription;
-
 import com.codenvy.ide.extension.ExtensionRegistry;
-
-
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.google.inject.Inject;
@@ -28,54 +25,44 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 /**
- * {@link ExtensionInitializer} responsible for bringing up Extensions. It uses ExtensionRegistry to acquire 
- * Extension description and dependencies. 
+ * {@link ExtensionInitializer} responsible for bringing up Extensions. It uses ExtensionRegistry to acquire
+ * Extension description and dependencies.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class ExtensionInitializer
-{
-   protected final ExtensionRegistry extensionRegistry;
+public class ExtensionInitializer {
+    protected final ExtensionRegistry extensionRegistry;
 
-   private final ExtensionManager extensionManager;
+    private final ExtensionManager extensionManager;
 
-   /**
-    *
-    */
-   @Inject
-   public ExtensionInitializer(final ExtensionRegistry extensionRegistry, final ExtensionManager extensionManager)
-   {
-      this.extensionRegistry = extensionRegistry;
-      this.extensionManager = extensionManager;
-   }
+    /**
+     *
+     */
+    @Inject
+    public ExtensionInitializer(final ExtensionRegistry extensionRegistry, final ExtensionManager extensionManager) {
+        this.extensionRegistry = extensionRegistry;
+        this.extensionManager = extensionManager;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @SuppressWarnings("rawtypes")
-   public void startExtensions()
-   {
-      extensionManager.getExtensions().iterate(new IterationCallback<Provider>()
-      {
-         @Override
-         public void onIteration(String extensionFqn, Provider extensionProvider)
-         {
-            // this will instantiate extension so it's get enabled
-            // Order of startup is managed by GIN dependency injection framework
-            extensionProvider.get();
-            // extension has been enabled
-            extensionRegistry.getExtensionDescriptions().get(extensionFqn).setEnabled(true);
-         }
-      });
-   }
+    /** {@inheritDoc} */
+    @SuppressWarnings("rawtypes")
+    public void startExtensions() {
+        extensionManager.getExtensions().iterate(new IterationCallback<Provider>() {
+            @Override
+            public void onIteration(String extensionFqn, Provider extensionProvider) {
+                // this will instantiate extension so it's get enabled
+                // Order of startup is managed by GIN dependency injection framework
+                extensionProvider.get();
+                // extension has been enabled
+                extensionRegistry.getExtensionDescriptions().get(extensionFqn).setEnabled(true);
+            }
+        });
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public JsonStringMap<ExtensionDescription> getExtensionDescriptions()
-   {
-      return extensionRegistry.getExtensionDescriptions();
-   }
+    /** {@inheritDoc} */
+    public JsonStringMap<ExtensionDescription> getExtensionDescriptions() {
+        return extensionRegistry.getExtensionDescriptions();
+    }
 
 }

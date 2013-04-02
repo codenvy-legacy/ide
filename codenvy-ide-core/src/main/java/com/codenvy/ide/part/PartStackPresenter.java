@@ -17,20 +17,14 @@
 package com.codenvy.ide.part;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-
 import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
-
 import com.codenvy.ide.api.mvp.Presenter;
-
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
 import com.codenvy.ide.api.ui.perspective.PropertyListener;
-
-import com.codenvy.ide.part.PartStackView.TabItem;
-
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
+import com.codenvy.ide.part.PartStackView.TabItem;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -46,249 +40,200 @@ import com.google.web.bindery.event.shared.EventBus;
  * Implements "Tab-like" UI Component, that accepts PartPresenters as child elements.
  * It's designed to remove child from DOM, when it is hidden. So keeping DOM as small
  * as possible.
- * 
+ * <p/>
  * PartStack support "focus" (please don't mix with GWT Widget's Focus feature).
- * Focused PartStack will highlight active Part, notifying user what component is 
+ * Focused PartStack will highlight active Part, notifying user what component is
  * currently active.
- * 
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack
-{
-   /** list of parts */
-   private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
+public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
+    /** list of parts */
+    private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
 
-   /** view implementation */
-   private final PartStackView view;
+    /** view implementation */
+    private final PartStackView view;
 
-   /** current active part */
-   private PartPresenter activePart;
+    /** current active part */
+    private PartPresenter activePart;
 
-   private PartStackEventHandler partStackHandler;
+    private PartStackEventHandler partStackHandler;
 
-   /** Handles PartStack actions */
-   public interface PartStackEventHandler
-   {
-      /** PartStack is being clicked and requests Focus */
-      void onActivePartChanged(PartPresenter part);
+    /** Handles PartStack actions */
+    public interface PartStackEventHandler {
+        /** PartStack is being clicked and requests Focus */
+        void onActivePartChanged(PartPresenter part);
 
-      /** PartStack is being clicked and requests Focus */
-      void onRequestFocus(PartStack partStack);
-   }
+        /** PartStack is being clicked and requests Focus */
+        void onRequestFocus(PartStack partStack);
+    }
 
-   private PropertyListener propertyListener = new PropertyListener()
-   {
+    private PropertyListener propertyListener = new PropertyListener() {
 
-      @Override
-      public void propertyChanged(PartPresenter source, int propId)
-      {
-         if (PartPresenter.TITLE_PROPERTY == propId)
-         {
-            updatePartTab(source);
-         }
-         else if (EditorPartPresenter.PROP_DIRTY == propId)
-         {
-            eventBus.fireEvent(new EditorDirtyStateChangedEvent((EditorPartPresenter)source));
-         }
-      }
-   };
+        @Override
+        public void propertyChanged(PartPresenter source, int propId) {
+            if (PartPresenter.TITLE_PROPERTY == propId) {
+                updatePartTab(source);
+            } else if (EditorPartPresenter.PROP_DIRTY == propId) {
+                eventBus.fireEvent(new EditorDirtyStateChangedEvent((EditorPartPresenter)source));
+            }
+        }
+    };
 
-   private final EventBus eventBus;
-
-   /**
-    * 
-    * Creates PartStack with given instance of display and resources (CSS and Images)
-    * 
-    * @param partStackResources
-    */
-   @Inject
-   public PartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus,
-      PartStackEventHandler partStackEventHandler)
-   {
-      this.view = view;
-      this.eventBus = eventBus;
-      partStackHandler = partStackEventHandler;
-      view.setDelegate(this);
-   }
-
-   /**
-    * Update part tab, it's may be title, icon or tooltip
-    * @param part
-    */
-   private void updatePartTab(PartPresenter part)
-   {
-      if (!parts.contains(part))
-      {
-         throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
-      }
-      int index = parts.indexOf(part);
-      view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
-   }
+    private final EventBus eventBus;
 
     /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(view);
-      if (activePart!=null)
-      {
-         activePart.go(view.getContentPanel());
-      }
-   }
+     * Creates PartStack with given instance of display and resources (CSS and Images)
+     *
+     * @param partStackResources
+     */
+    @Inject
+    public PartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus,
+                              PartStackEventHandler partStackEventHandler) {
+        this.view = view;
+        this.eventBus = eventBus;
+        partStackHandler = partStackEventHandler;
+        view.setDelegate(this);
+    }
 
     /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setFocus(boolean focused)
-   {
-      view.setFocus(focused);
-   }
+     * Update part tab, it's may be title, icon or tooltip
+     *
+     * @param part
+     */
+    private void updatePartTab(PartPresenter part) {
+        if (!parts.contains(part)) {
+            throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
+        }
+        int index = parts.indexOf(part);
+        view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
+    }
 
-    /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void addPart(PartPresenter part)
-   {
-      if (parts.contains(part))
-      {
-         // part already exists
-         // activate it
-         setActivePart(part);
-         // and return
-         return;
-      }
-      parts.add(part);
-      part.addPropertyListener(propertyListener);
-      // include close button
-      ImageResource titleImage = part.getTitleImage();
-      TabItem tabItem =
-         view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
-            true);
-      bindEvents(tabItem, part);
-      setActivePart(part);
-      // requst focus
-      onRequestFocus();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+        if (activePart != null) {
+            activePart.go(view.getContentPanel());
+        }
+    }
 
-    /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean containsPart(PartPresenter part)
-   {
-      return parts.contains(part);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setFocus(boolean focused) {
+        view.setFocus(focused);
+    }
 
-    /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getNumberOfParts()
-   {
-      return parts.size();
-   }
-
-    /**
-    * {@inheritDoc}
-    */
-   @Override
-   public PartPresenter getActivePart()
-   {
-      return activePart;
-   }
-
-    /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setActivePart(PartPresenter part)
-   {
-      if (activePart == part)
-      {
-         return;
-      }
-      activePart = part;
-      AcceptsOneWidget contentPanel = view.getContentPanel();
-
-      if (part == null)
-      {
-         view.setActiveTabButton(-1);
-      }
-      else
-      {
-         view.setActiveTabButton(parts.indexOf(activePart));
-         activePart.go(contentPanel);
-      }
-      // request part stack to get the focus
-      onRequestFocus();
-      // notify handler, that part changed
-      partStackHandler.onActivePartChanged(activePart);
-   }
-
-   /**
-    * Close Part
-    * 
-    * @param part
-    */
-   protected void close(PartPresenter part)
-   {
-      // may cancel close
-      if (part.onClose())
-      {
-         int partIndex = parts.indexOf(part);
-         view.removeTabButton(partIndex);
-         parts.remove(part);
-         part.removePropertyListener(propertyListener);
-         if (activePart == part)
-         {
-            //select another part
-            setActivePart(parts.isEmpty() ? null : parts.get(0));
-         }
-      }
-   }
-
-   /**
-    * Bind Activate and Close events to the Tab 
-    * 
-    * @param item
-    * @param part
-    */
-   protected void bindEvents(final TabItem item, final PartPresenter part)
-   {
-      item.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            // make active
+    /** {@inheritDoc} */
+    @Override
+    public void addPart(PartPresenter part) {
+        if (parts.contains(part)) {
+            // part already exists
+            // activate it
             setActivePart(part);
-         }
-      });
+            // and return
+            return;
+        }
+        parts.add(part);
+        part.addPropertyListener(propertyListener);
+        // include close button
+        ImageResource titleImage = part.getTitleImage();
+        TabItem tabItem =
+                view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
+                                  true);
+        bindEvents(tabItem, part);
+        setActivePart(part);
+        // requst focus
+        onRequestFocus();
+    }
 
-      item.addCloseHandler(new CloseHandler<PartStackView.TabItem>()
-      {
-         @Override
-         public void onClose(CloseEvent<TabItem> event)
-         {
-            // close
-            close(part);
-         }
-      });
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean containsPart(PartPresenter part) {
+        return parts.contains(part);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onRequestFocus()
-   {
-      // notify partStackHandler
-      // notify handler, that part changed
-      partStackHandler.onRequestFocus(PartStackPresenter.this);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getNumberOfParts() {
+        return parts.size();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PartPresenter getActivePart() {
+        return activePart;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setActivePart(PartPresenter part) {
+        if (activePart == part) {
+            return;
+        }
+        activePart = part;
+        AcceptsOneWidget contentPanel = view.getContentPanel();
+
+        if (part == null) {
+            view.setActiveTabButton(-1);
+        } else {
+            view.setActiveTabButton(parts.indexOf(activePart));
+            activePart.go(contentPanel);
+        }
+        // request part stack to get the focus
+        onRequestFocus();
+        // notify handler, that part changed
+        partStackHandler.onActivePartChanged(activePart);
+    }
+
+    /**
+     * Close Part
+     *
+     * @param part
+     */
+    protected void close(PartPresenter part) {
+        // may cancel close
+        if (part.onClose()) {
+            int partIndex = parts.indexOf(part);
+            view.removeTabButton(partIndex);
+            parts.remove(part);
+            part.removePropertyListener(propertyListener);
+            if (activePart == part) {
+                //select another part
+                setActivePart(parts.isEmpty() ? null : parts.get(0));
+            }
+        }
+    }
+
+    /**
+     * Bind Activate and Close events to the Tab
+     *
+     * @param item
+     * @param part
+     */
+    protected void bindEvents(final TabItem item, final PartPresenter part) {
+        item.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                // make active
+                setActivePart(part);
+            }
+        });
+
+        item.addCloseHandler(new CloseHandler<PartStackView.TabItem>() {
+            @Override
+            public void onClose(CloseEvent<TabItem> event) {
+                // close
+                close(part);
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onRequestFocus() {
+        // notify partStackHandler
+        // notify handler, that part changed
+        partStackHandler.onRequestFocus(PartStackPresenter.this);
+    }
 }

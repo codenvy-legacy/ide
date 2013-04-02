@@ -23,51 +23,45 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Jul 26, 2012 12:40:03 PM anya $
- *
  */
-public interface Template
-{
+public interface Template {
 
-   /**
-    * @return the isDefault
-    */
-   Boolean isDefault();
+    /** @return the isDefault */
+    Boolean isDefault();
 
-   /**
-    * @param isDefault the isDefault to set
-    */
-   void setDefault(Boolean isDefault);
+    /**
+     * @param isDefault
+     *         the isDefault to set
+     */
+    void setDefault(Boolean isDefault);
 
-   /**
-    * @return the name
-    */
-   String getName();
+    /** @return the name */
+    String getName();
 
-   /**
-    * @param name the name to set
-    */
-   void setName(String name);
+    /**
+     * @param name
+     *         the name to set
+     */
+    void setName(String name);
 
-   /**
-    * @return the description
-    */
-   String getDescription();
+    /** @return the description */
+    String getDescription();
 
-   /**
-    * @param description the description to set
-    */
-   void setDescription(String description);
+    /**
+     * @param description
+     *         the description to set
+     */
+    void setDescription(String description);
 
-   /**
-    * @return the nodeName
-    */
-   String getNodeName();
+    /** @return the nodeName */
+    String getNodeName();
 
-   /**
-    * @param nodeName the nodeName to set
-    */
-   void setNodeName(String nodeName);
+    /**
+     * @param nodeName
+     *         the nodeName to set
+     */
+    void setNodeName(String nodeName);
 
-   ImageResource getIcon();
+    ImageResource getIcon();
 
 }

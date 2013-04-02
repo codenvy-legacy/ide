@@ -23,19 +23,18 @@ package com.codenvy.ide.api.wizard.newproject;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface HasCreateProjectHandler
-{
-   /**
-    * Returns create project handler.
-    * 
-    * @return handler
-    */
-   public CreateProjectHandler getCreateProjectHandler();
+public interface HasCreateProjectHandler {
+    /**
+     * Returns create project handler.
+     *
+     * @return handler
+     */
+    public CreateProjectHandler getCreateProjectHandler();
 
-   /**
-    * Sets create project handler.
-    * 
-    * @param handler
-    */
-   public void setCreateProjectHandler(CreateProjectHandler handler);
+    /**
+     * Sets create project handler.
+     *
+     * @param handler
+     */
+    public void setCreateProjectHandler(CreateProjectHandler handler);
 }

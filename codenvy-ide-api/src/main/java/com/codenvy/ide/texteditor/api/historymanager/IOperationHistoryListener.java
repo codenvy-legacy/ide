@@ -21,18 +21,16 @@ package com.codenvy.ide.texteditor.api.historymanager;
  * properly synchronized using the techniques specified by the client's widget
  * library.
  * </p>
- * 
  */
-public interface IOperationHistoryListener
-{
-   /**
-    * Something of note has happened in the IOperationHistory. Listeners should
-    * check the supplied event for details.
-    * 
-    * @param event 
-    *            the OperationHistoryEvent that describes the particular
-    *            notification.
-    */
-   void historyNotification(OperationHistoryEvent event);
+public interface IOperationHistoryListener {
+    /**
+     * Something of note has happened in the IOperationHistory. Listeners should
+     * check the supplied event for details.
+     *
+     * @param event
+     *         the OperationHistoryEvent that describes the particular
+     *         notification.
+     */
+    void historyNotification(OperationHistoryEvent event);
 
 }

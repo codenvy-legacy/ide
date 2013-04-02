@@ -23,33 +23,30 @@ import com.google.gwt.regexp.shared.RegExp;
 /**
  * Used for validating new resource names.
  * <b>Note, methods in this class check names only of limitation provided by Resource API</b>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- * //TODO check howe use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
+ *          //TODO check howe use GWT Validation API https://developers.google.com/web-toolkit/doc/latest/DevGuideValidation
  */
-public class ResourceNameValidator
-{
+public class ResourceNameValidator {
 
-   private static final RegExp PROJECT_VALIDATOR = RegExp.compile("^[A-Za-z0-9_]*$");
+    private static final RegExp PROJECT_VALIDATOR = RegExp.compile("^[A-Za-z0-9_]*$");
 
-   private static final RegExp FOLDER_VALIDATOR = RegExp.compile("^[A-Za-z0-9_/.]*$");
+    private static final RegExp FOLDER_VALIDATOR = RegExp.compile("^[A-Za-z0-9_/.]*$");
 
-   private static final RegExp FILE_VALIDATOR = RegExp.compile("^[A-Za-z0-9_.]*$");
+    private static final RegExp FILE_VALIDATOR = RegExp.compile("^[A-Za-z0-9_.]*$");
 
-   public static boolean isFileNameValid(String name)
-   {
-      return FILE_VALIDATOR.test(name);
-   }
+    public static boolean isFileNameValid(String name) {
+        return FILE_VALIDATOR.test(name);
+    }
 
-   public static boolean isFolderNameValid(String name)
-   {
-      return FOLDER_VALIDATOR.test(name);
-   }
+    public static boolean isFolderNameValid(String name) {
+        return FOLDER_VALIDATOR.test(name);
+    }
 
-   public static boolean isProjectNameValid(String name)
-   {
-      return PROJECT_VALIDATOR.test(name);
-   }
+    public static boolean isProjectNameValid(String name) {
+        return PROJECT_VALIDATOR.test(name);
+    }
 
 
 }

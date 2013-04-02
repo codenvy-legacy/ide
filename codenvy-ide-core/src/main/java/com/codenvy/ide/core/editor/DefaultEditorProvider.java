@@ -22,7 +22,6 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
-
 import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -31,34 +30,28 @@ import com.google.inject.Provider;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class DefaultEditorProvider implements EditorProvider
-{
+public class DefaultEditorProvider implements EditorProvider {
 
-   private final DocumentProvider documentProvider;
+    private final DocumentProvider documentProvider;
 
-   private Provider<CodenvyTextEditor> editorProvider;
+    private Provider<CodenvyTextEditor> editorProvider;
 
-   private final TextEditorConfiguration configuration = new TextEditorConfiguration();
+    private final TextEditorConfiguration configuration = new TextEditorConfiguration();
 
-   @Inject
-   public DefaultEditorProvider(DocumentProvider documentProvider, Provider<CodenvyTextEditor> editorProvider)
-   {
-      super();
-      this.documentProvider = documentProvider;
-      this.editorProvider = editorProvider;
-   }
+    @Inject
+    public DefaultEditorProvider(DocumentProvider documentProvider, Provider<CodenvyTextEditor> editorProvider) {
+        super();
+        this.documentProvider = documentProvider;
+        this.editorProvider = editorProvider;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.EditorProvider#getEditor()
-    */
-   @Override
-   public EditorPartPresenter getEditor()
-   {
-      CodenvyTextEditor editor = editorProvider.get();
-      editor.initialize(configuration, documentProvider);
-      return editor;
-   }
+    /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */
+    @Override
+    public EditorPartPresenter getEditor() {
+        CodenvyTextEditor editor = editorProvider.get();
+        editor.initialize(configuration, documentProvider);
+        return editor;
+    }
 
 }

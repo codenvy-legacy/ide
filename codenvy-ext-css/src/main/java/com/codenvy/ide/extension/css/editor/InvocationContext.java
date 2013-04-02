@@ -22,62 +22,48 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
 
 /**
  * Invocation context for Css code assistant, it's hold prefix, offset and resources of currant code assistant session.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class InvocationContext
-{
-   private final String prefix;
+public class InvocationContext {
+    private final String prefix;
 
-   private final int offset;
+    private final int offset;
 
-   private final CssResources resources;
+    private final CssResources resources;
 
-   private final TextEditorPartView editor;
+    private final TextEditorPartView editor;
 
-   /**
-    * @param prefix
-    * @param offset
-    */
-   public InvocationContext(String prefix, int offset, CssResources resources, TextEditorPartView editor)
-   {
-      super();
-      this.prefix = prefix;
-      this.offset = offset;
-      this.resources = resources;
-      this.editor = editor;
-   }
+    /**
+     * @param prefix
+     * @param offset
+     */
+    public InvocationContext(String prefix, int offset, CssResources resources, TextEditorPartView editor) {
+        super();
+        this.prefix = prefix;
+        this.offset = offset;
+        this.resources = resources;
+        this.editor = editor;
+    }
 
-   /**
-    * @return the prefix
-    */
-   public String getPrefix()
-   {
-      return prefix;
-   }
+    /** @return the prefix */
+    public String getPrefix() {
+        return prefix;
+    }
 
-   /**
-    * @return the offset
-    */
-   public int getOffset()
-   {
-      return offset;
-   }
+    /** @return the offset */
+    public int getOffset() {
+        return offset;
+    }
 
-   /**
-    * @return the resourcess
-    */
-   public CssResources getResources()
-   {
-      return resources;
-   }
+    /** @return the resourcess */
+    public CssResources getResources() {
+        return resources;
+    }
 
-   /**
-    * @return the editor
-    */
-   public TextEditorPartView getEditor()
-   {
-      return editor;
-   }
+    /** @return the editor */
+    public TextEditorPartView getEditor() {
+        return editor;
+    }
 }

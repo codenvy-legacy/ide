@@ -28,48 +28,38 @@ import com.google.gwt.json.client.JSONValue;
 
 /**
  * Unmarshaller for the list of targets, received from server.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TargetsUnmarshaller.java Sep 21, 2011 5:34:51 PM vereshchaka $
  */
-public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>>
-{
-   private JsonArray<String> targets;
+public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>> {
+    private JsonArray<String> targets;
 
-   /**
-    * Create unmarshaller.
-    * 
-    * @param targets
-    */
-   public TargetsUnmarshaller(JsonArray<String> targets)
-   {
-      this.targets = targets;
-   }
+    /**
+     * Create unmarshaller.
+     *
+     * @param targets
+     */
+    public TargetsUnmarshaller(JsonArray<String> targets) {
+        this.targets = targets;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        JSONArray jsonArray = JSONParser.parseStrict(response.getText()).isArray();
 
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         JSONValue value = jsonArray.get(i);
-         if (value.isString() != null)
-         {
-            targets.add(value.isString().stringValue());
-         }
-      }
-   }
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONValue value = jsonArray.get(i);
+            if (value.isString() != null) {
+                targets.add(value.isString().stringValue());
+            }
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonArray<String> getPayload()
-   {
-      return targets;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<String> getPayload() {
+        return targets;
+    }
 }

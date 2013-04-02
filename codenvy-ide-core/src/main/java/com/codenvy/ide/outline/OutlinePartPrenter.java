@@ -19,15 +19,10 @@
 package com.codenvy.ide.outline;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.ActivePartChangedHandler;
-
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-
 import com.codenvy.ide.api.parts.OutlinePart;
-
-
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -38,94 +33,71 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Part presenter for Outline.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @Singleton
-public class OutlinePartPrenter extends AbstractPartPresenter implements ActivePartChangedHandler, OutlinePart
-{
+public class OutlinePartPrenter extends AbstractPartPresenter implements ActivePartChangedHandler, OutlinePart {
 
-   public interface OutlinePartView extends IsWidget
-   {
-      AcceptsOneWidget getContainer();
+    public interface OutlinePartView extends IsWidget {
+        AcceptsOneWidget getContainer();
 
-      void showNoOutline();
-   }
+        void showNoOutline();
+    }
 
-   private final OutlinePartView view;
+    private final OutlinePartView view;
 
-   private TextEditorPartPresenter activePart;
+    private TextEditorPartPresenter activePart;
 
-   /**
-    * 
-    */
-   @Inject
-   public OutlinePartPrenter(OutlinePartView view, EventBus eventBus)
-   {
-      this.view = view;
-      eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    @Inject
+    public OutlinePartPrenter(OutlinePartView view, EventBus eventBus) {
+        this.view = view;
+        eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getTitle()
-   {
-      return "Outline";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return "Outline";
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getTitleImage()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getTitleImage() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getTitleToolTip()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitleToolTip() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(view);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onActivePartChanged(ActivePartChangedEvent event)
-   {
-      if (event.getActivePart() instanceof TextEditorPartPresenter)
-      {
-         if (activePart != event.getActivePart())
-         {
-            activePart = (TextEditorPartPresenter)event.getActivePart();
-            if (activePart.getOutline() != null)
-            {
-               activePart.getOutline().go(view.getContainer());
+    /** {@inheritDoc} */
+    @Override
+    public void onActivePartChanged(ActivePartChangedEvent event) {
+        if (event.getActivePart() instanceof TextEditorPartPresenter) {
+            if (activePart != event.getActivePart()) {
+                activePart = (TextEditorPartPresenter)event.getActivePart();
+                if (activePart.getOutline() != null) {
+                    activePart.getOutline().go(view.getContainer());
+                } else {
+                    view.showNoOutline();
+                }
             }
-            else
-            {
-               view.showNoOutline();
-            }
-         }
-      }
-   }
+        }
+    }
 
 }

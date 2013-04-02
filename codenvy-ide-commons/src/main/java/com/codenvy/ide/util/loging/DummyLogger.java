@@ -21,50 +21,33 @@ package com.codenvy.ide.util.loging;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-class DummyLogger implements Logger
-{
+class DummyLogger implements Logger {
 
-   /**
-    * @see com.codenvy.ide.util.loging.Logger#debug(java.lang.Class, java.lang.Object[])
-    */
-   @Override
-   public void debug(Class<?> clazz, Object... args)
-   {
-   }
+    /** @see com.codenvy.ide.util.loging.Logger#debug(java.lang.Class, java.lang.Object[]) */
+    @Override
+    public void debug(Class<?> clazz, Object... args) {
+    }
 
-   /**
-    * @see com.codenvy.ide.util.loging.Logger#error(java.lang.Class, java.lang.Object[])
-    */
-   @Override
-   public void error(Class<?> clazz, Object... args)
-   {
-   }
+    /** @see com.codenvy.ide.util.loging.Logger#error(java.lang.Class, java.lang.Object[]) */
+    @Override
+    public void error(Class<?> clazz, Object... args) {
+    }
 
-   /**
-    * @see com.codenvy.ide.util.loging.Logger#info(java.lang.Class, java.lang.Object[])
-    */
-   @Override
-   public void info(Class<?> clazz, Object... args)
-   {
-   }
+    /** @see com.codenvy.ide.util.loging.Logger#info(java.lang.Class, java.lang.Object[]) */
+    @Override
+    public void info(Class<?> clazz, Object... args) {
+    }
 
-   /**
-    * @see com.codenvy.ide.util.loging.Logger#isLoggingEnabled()
-    */
-   @Override
-   public boolean isLoggingEnabled()
-   {
-      return false;
-   }
+    /** @see com.codenvy.ide.util.loging.Logger#isLoggingEnabled() */
+    @Override
+    public boolean isLoggingEnabled() {
+        return false;
+    }
 
-   /**
-    * @see com.codenvy.ide.util.loging.Logger#warn(java.lang.Class, java.lang.Object[])
-    */
-   @Override
-   public void warn(Class<?> clazz, Object... args)
-   {
-   }
+    /** @see com.codenvy.ide.util.loging.Logger#warn(java.lang.Class, java.lang.Object[]) */
+    @Override
+    public void warn(Class<?> clazz, Object... args) {
+    }
 
 }

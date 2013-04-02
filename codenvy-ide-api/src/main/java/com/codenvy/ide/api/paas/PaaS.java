@@ -24,104 +24,74 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Aggregate information about registered PaaS.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class PaaS
-{
-   /**
-    * Id of the PaaS.
-    */
-   private String id;
+public class PaaS {
+    /** Id of the PaaS. */
+    private String id;
 
-   /**
-    * Title of the PaaS.
-    */
-   private String title;
+    /** Title of the PaaS. */
+    private String title;
 
-   /**
-    * PaaS image.
-    */
-   private ImageResource image;
+    /** PaaS image. */
+    private ImageResource image;
 
-   /**
-    * PaaS provides application's template or not.
-    */
-   private boolean providesTemplate;
+    /** PaaS provides application's template or not. */
+    private boolean providesTemplate;
 
-   /**
-    * List of project types, required by the PaaS (can be deployed).
-    */
-   private JsonArray<String> requiredProjectTypes;
+    /** List of project types, required by the PaaS (can be deployed). */
+    private JsonArray<String> requiredProjectTypes;
 
-   private AbstractPaasWizardPagePresenter wizardPage;
+    private AbstractPaasWizardPagePresenter wizardPage;
 
-   /**
-    * Create PaaS.
-    * 
-    * @param id
-    * @param title
-    * @param image
-    * @param providesTemplate
-    * @param requiredProjectTypes
-    * @param wizardPage
-    */
-   public PaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredProjectTypes, AbstractPaasWizardPagePresenter wizardPage)
-   {
-      this.id = id;
-      this.title = title;
-      this.image = image;
-      this.providesTemplate = providesTemplate;
-      this.requiredProjectTypes = requiredProjectTypes;
-      this.wizardPage = wizardPage;
-   }
+    /**
+     * Create PaaS.
+     *
+     * @param id
+     * @param title
+     * @param image
+     * @param providesTemplate
+     * @param requiredProjectTypes
+     * @param wizardPage
+     */
+    public PaaS(String id, String title, ImageResource image, boolean providesTemplate,
+                JsonArray<String> requiredProjectTypes, AbstractPaasWizardPagePresenter wizardPage) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
+        this.providesTemplate = providesTemplate;
+        this.requiredProjectTypes = requiredProjectTypes;
+        this.wizardPage = wizardPage;
+    }
 
-   /**
-    * @return the wizardPage
-    */
-   public AbstractPaasWizardPagePresenter getWizardPage()
-   {
-      return wizardPage;
-   }
+    /** @return the wizardPage */
+    public AbstractPaasWizardPagePresenter getWizardPage() {
+        return wizardPage;
+    }
 
-   /**
-    * @return {@link String} PaaS id
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /** @return {@link String} PaaS id */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * @return the title
-    */
-   public String getTitle()
-   {
-      return title;
-   }
+    /** @return the title */
+    public String getTitle() {
+        return title;
+    }
 
-   /**
-    * @return the image
-    */
-   public ImageResource getImage()
-   {
-      return image;
-   }
+    /** @return the image */
+    public ImageResource getImage() {
+        return image;
+    }
 
-   /**
-    * @return the providesTemplate
-    */
-   public boolean isProvidesTemplate()
-   {
-      return providesTemplate;
-   }
+    /** @return the providesTemplate */
+    public boolean isProvidesTemplate() {
+        return providesTemplate;
+    }
 
-   /**
-    * @return the requiredProjectTypes
-    */
-   public JsonArray<String> getRequiredProjectTypes()
-   {
-      return requiredProjectTypes;
-   }
+    /** @return the requiredProjectTypes */
+    public JsonArray<String> getRequiredProjectTypes() {
+        return requiredProjectTypes;
+    }
 }

@@ -20,7 +20,6 @@ package com.codenvy.ide.paas;
 
 import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
 import com.codenvy.ide.api.paas.PaaS;
-
 import com.codenvy.ide.api.paas.PaaSAgent;
 import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
@@ -32,44 +31,36 @@ import com.google.inject.Singleton;
 
 /**
  * The implementation of {@link PaaSAgent}.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class PaaSAgentImpl implements PaaSAgent
-{
-   private final JsonArray<PaaS> registeredPaaS;
+public class PaaSAgentImpl implements PaaSAgent {
+    private final JsonArray<PaaS> registeredPaaS;
 
-   /**
-    * Create agent.
-    */
-   @Inject
-   public PaaSAgentImpl()
-   {
-      this.registeredPaaS = JsonCollections.createArray();
-   }
+    /** Create agent. */
+    @Inject
+    public PaaSAgentImpl() {
+        this.registeredPaaS = JsonCollections.createArray();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
-      PreferencesPagePresenter preferencePage)
-   {
-      PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes, wizardPage);
-      registeredPaaS.add(paas);
+    /** {@inheritDoc} */
+    @Override
+    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
+                             JsonArray<String> requiredTypes, AbstractPaasWizardPagePresenter wizardPage,
+                             PreferencesPagePresenter preferencePage) {
+        PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes, wizardPage);
+        registeredPaaS.add(paas);
 
-      // TODO preference page
-   }
+        // TODO preference page
+    }
 
-   /**
-    * Returns all available PaaSes.
-    * 
-    * @return
-    */
-   public JsonArray<PaaS> getPaaSes()
-   {
-      return registeredPaaS;
-   }
+    /**
+     * Returns all available PaaSes.
+     *
+     * @return
+     */
+    public JsonArray<PaaS> getPaaSes() {
+        return registeredPaaS;
+    }
 }

@@ -17,36 +17,34 @@ package com.codenvy.ide.texteditor.renderer;
 import com.codenvy.ide.text.store.Line;
 
 
-/**
- * An interface for a renderer that renders a line at a time.
- */
+/** An interface for a renderer that renders a line at a time. */
 public interface LineRenderer {
 
-  /**
-   * Receives the style to render the next {@code characterCount} characters.
-   * This is how the renderer "renders".
-   */
-  public interface Target {
-    void render(int characterCount, String styleName);
-  }
+    /**
+     * Receives the style to render the next {@code characterCount} characters.
+     * This is how the renderer "renders".
+     */
+    public interface Target {
+        void render(int characterCount, String styleName);
+    }
 
-  /**
-   * Called when the LineRenderer should render its next chunk by calling
-   * {@link Target#render(int, String)} on {@code target}.
-   */
-  void renderNextChunk(Target target);
+    /**
+     * Called when the LineRenderer should render its next chunk by calling
+     * {@link Target#render(int, String)} on {@code target}.
+     */
+    void renderNextChunk(Target target);
 
-  /**
-   * Called when a line is about to be rendered.
-   *
-   * @return true if this LineRenderer wants to participate in the rendering of
-   *         this line
-   */
-  boolean resetToBeginningOfLine(Line line, int lineNumber);
+    /**
+     * Called when a line is about to be rendered.
+     *
+     * @return true if this LineRenderer wants to participate in the rendering of
+     *         this line
+     */
+    boolean resetToBeginningOfLine(Line line, int lineNumber);
 
-  /**
-   * @return true if last chunk (\n character) style should fill to right until
-   *         visible end of the editor line
-   */
-  boolean shouldLastChunkFillToRight();
+    /**
+     * @return true if last chunk (\n character) style should fill to right until
+     *         visible end of the editor line
+     */
+    boolean shouldLastChunkFillToRight();
 }

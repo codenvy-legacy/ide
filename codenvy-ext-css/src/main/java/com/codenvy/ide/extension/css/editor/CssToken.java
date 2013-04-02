@@ -17,32 +17,24 @@ package com.codenvy.ide.extension.css.editor;
 import com.codenvy.ide.texteditor.api.parser.Token;
 import com.codenvy.ide.texteditor.api.parser.TokenType;
 
-/**
- * Token that knows about CSS state stack.
- */
-public class CssToken extends Token
-{
+/** Token that knows about CSS state stack. */
+public class CssToken extends Token {
 
-   /**
-    * CSS parsing context is the value at the top of state stack.
-    */
-   private final String context;
+    /** CSS parsing context is the value at the top of state stack. */
+    private final String context;
 
-   CssToken(String mode, TokenType type, String value, String context)
-   {
-      super(mode, type, value);
-      this.context = context;
-   }
+    CssToken(String mode, TokenType type, String value, String context) {
+        super(mode, type, value);
+        this.context = context;
+    }
 
-   public String getContext()
-   {
-      return context;
-   }
+    public String getContext() {
+        return context;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "CssToken{" + "mode='" + getMode() + '\'' + ", type=" + getType() + ", value='" + getValue() + '\''
-         + ", context='" + context + '\'' + '}';
-   }
+    @Override
+    public String toString() {
+        return "CssToken{" + "mode='" + getMode() + '\'' + ", type=" + getType() + ", value='" + getValue() + '\''
+               + ", context='" + context + '\'' + '}';
+    }
 }

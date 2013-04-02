@@ -11,7 +11,7 @@
 package com.codenvy.ide.java.client.core.dom;
 
 import com.codenvy.ide.java.client.internal.compiler.ASTVisitor;
-import com.codenvy.ide.java.client.internal.compiler.ast.ConstructorDeclaration;
+import com.codenvy.ide.java.client.internal.compiler.ast.*;
 import com.codenvy.ide.java.client.internal.compiler.ast.FieldDeclaration;
 import com.codenvy.ide.java.client.internal.compiler.ast.Initializer;
 import com.codenvy.ide.java.client.internal.compiler.ast.MethodDeclaration;
@@ -20,85 +20,71 @@ import com.codenvy.ide.java.client.internal.compiler.lookup.ClassScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.CompilationUnitScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.MethodScope;
 
-class NodeSearcher extends ASTVisitor
-{
-   public com.codenvy.ide.java.client.internal.compiler.ast.ASTNode found;
+class NodeSearcher extends ASTVisitor {
+    public com.codenvy.ide.java.client.internal.compiler.ast.ASTNode found;
 
-   public TypeDeclaration enclosingType;
+    public TypeDeclaration enclosingType;
 
-   public int position;
+    public int position;
 
-   NodeSearcher(int position)
-   {
-      this.position = position;
-   }
+    NodeSearcher(int position) {
+        this.position = position;
+    }
 
-   public boolean visit(ConstructorDeclaration constructorDeclaration, ClassScope scope)
-   {
+    public boolean visit(ConstructorDeclaration constructorDeclaration, ClassScope scope) {
 
-      if (constructorDeclaration.declarationSourceStart <= this.position
-         && this.position <= constructorDeclaration.declarationSourceEnd)
-      {
-         this.found = constructorDeclaration;
-         return false;
-      }
-      return true;
-   }
+        if (constructorDeclaration.declarationSourceStart <= this.position
+            && this.position <= constructorDeclaration.declarationSourceEnd) {
+            this.found = constructorDeclaration;
+            return false;
+        }
+        return true;
+    }
 
-   public boolean visit(FieldDeclaration fieldDeclaration, MethodScope scope)
-   {
-      if (fieldDeclaration.declarationSourceStart <= this.position
-         && this.position <= fieldDeclaration.declarationSourceEnd)
-      {
-         this.found = fieldDeclaration;
-         return false;
-      }
-      return true;
-   }
+    public boolean visit(FieldDeclaration fieldDeclaration, MethodScope scope) {
+        if (fieldDeclaration.declarationSourceStart <= this.position
+            && this.position <= fieldDeclaration.declarationSourceEnd) {
+            this.found = fieldDeclaration;
+            return false;
+        }
+        return true;
+    }
 
-   public boolean visit(Initializer initializer, MethodScope scope)
-   {
-      if (initializer.declarationSourceStart <= this.position && this.position <= initializer.declarationSourceEnd)
-      {
-         this.found = initializer;
-         return false;
-      }
-      return true;
-   }
+    public boolean visit(Initializer initializer, MethodScope scope) {
+        if (initializer.declarationSourceStart <= this.position && this.position <= initializer.declarationSourceEnd) {
+            this.found = initializer;
+            return false;
+        }
+        return true;
+    }
 
-   public boolean visit(TypeDeclaration memberTypeDeclaration, ClassScope scope)
-   {
-      if (memberTypeDeclaration.declarationSourceStart <= this.position
-         && this.position <= memberTypeDeclaration.declarationSourceEnd)
-      {
-         this.enclosingType = memberTypeDeclaration;
-         return true;
+    public boolean visit(TypeDeclaration memberTypeDeclaration, ClassScope scope) {
+        if (memberTypeDeclaration.declarationSourceStart <= this.position
+            && this.position <= memberTypeDeclaration.declarationSourceEnd) {
+            this.enclosingType = memberTypeDeclaration;
+            return true;
 
-      }
-      return false;
-   }
+        }
+        return false;
+    }
 
-   public boolean visit(MethodDeclaration methodDeclaration, ClassScope scope)
-   {
+    public boolean visit(MethodDeclaration methodDeclaration, ClassScope scope) {
 
-      if (methodDeclaration.declarationSourceStart <= this.position
-         && this.position <= methodDeclaration.declarationSourceEnd)
-      {
-         this.found = methodDeclaration;
-         return false;
-      }
-      return true;
-   }
+        if (methodDeclaration.declarationSourceStart <= this.position
+            && this.position <= methodDeclaration.declarationSourceEnd) {
+            this.found = methodDeclaration;
+            return false;
+        }
+        return true;
+    }
 
-   public boolean visit(TypeDeclaration typeDeclaration, CompilationUnitScope scope)
-   {
-      if (typeDeclaration.declarationSourceStart <= this.position
-         && this.position <= typeDeclaration.declarationSourceEnd)
-      {
-         this.enclosingType = typeDeclaration;
-         return true;
-      }
-      return false;
-   }
+    public boolean visit(TypeDeclaration typeDeclaration, CompilationUnitScope scope) {
+        if (typeDeclaration.declarationSourceStart <= this.position
+            && this.position <= typeDeclaration.declarationSourceEnd) {
+            this.enclosingType = typeDeclaration;
+            return true;
+        }
+        return false;
+    }
 
 }

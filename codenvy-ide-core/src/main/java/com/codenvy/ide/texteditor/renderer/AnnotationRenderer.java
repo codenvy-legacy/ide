@@ -38,114 +38,91 @@ import java.util.Iterator;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class AnnotationRenderer implements AnnotationModelListener
-{
+public class AnnotationRenderer implements AnnotationModelListener {
 
-   private TextEditorViewImpl editor;
+    private TextEditorViewImpl editor;
 
-   private AnnotationModel annotationModel;
+    private AnnotationModel annotationModel;
 
-   private final JsonStringMap<String> decorations;
+    private final JsonStringMap<String> decorations;
 
-   private ErrorRenderer renderer;
+    private ErrorRenderer renderer;
 
-   /**
-    * @param editor
-    */
-   public AnnotationRenderer(TextEditorViewImpl editor, JsonStringMap<String> decorations)
-   {
-      super();
-      this.editor = editor;
-      this.decorations = decorations;
-      renderer = new ErrorRenderer();
-      editor.addLineRenderer(renderer);
-   }
+    /** @param editor */
+    public AnnotationRenderer(TextEditorViewImpl editor, JsonStringMap<String> decorations) {
+        super();
+        this.editor = editor;
+        this.decorations = decorations;
+        renderer = new ErrorRenderer();
+        editor.addLineRenderer(renderer);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void modelChanged(AnnotationModelEvent event)
-   {
+    /** {@inheritDoc} */
+    @Override
+    public void modelChanged(AnnotationModelEvent event) {
 
-      JsonArray<AnnotationCode> annotations = JsonCollections.createArray();
-      for (Iterator<Annotation> iterator = annotationModel.getAnnotationIterator(); iterator.hasNext();)
-      {
-         Annotation annotation = iterator.next();
-         //only annotation with decoration
-         if (decorations.containsKey(annotation.getType()))
-         {
-            Position position = annotationModel.getPosition(annotation);
-            AnnotationCode ac =
-               new AnnotationCode(getDocumentPosition(position.offset), getDocumentPosition(position.length
-                  + position.offset -1), decorations.get(annotation.getType()));
-            annotations.add(ac);
-         }
-      }
-      onAnnotationsChanged(annotations);
-   }
-
-   private DocumentPosition getDocumentPosition(int offset)
-   {
-
-      try
-      {
-         int lineNumber = editor.getDocument().getLineOfOffset(offset);
-         return new DocumentPosition(lineNumber, offset - editor.getDocument().getLineOffset(lineNumber));
-      }
-      catch (BadLocationException e)
-      {
-         Log.error(getClass(), e);
-      }
-      return null;
-   }
-
-   private void onAnnotationsChanged(JsonArray<AnnotationCode> newErrors)
-   {
-      if (editor.getDocument() == null)
-      {
-         return;
-      }
-      JsonArray<Line> linesToRender = JsonCollections.createArray();
-      getLinesOfErrorsInViewport(renderer.getCodeErrors(), linesToRender);
-      getLinesOfErrorsInViewport(newErrors, linesToRender);
-      //      positionMigrator.reset();
-      renderer.setCodeErrors(newErrors);
-
-      for (int i = 0; i < linesToRender.size(); i++)
-      {
-         editor.getRenderer().requestRenderLine(linesToRender.get(i));
-      }
-      editor.getRenderer().renderChanges();
-   }
-
-   private void getLinesOfErrorsInViewport(JsonArray<AnnotationCode> errors, JsonArray<Line> lines)
-   {
-      LineFinder lineFinder = ((DocumentImpl)editor.getDocument()).getTextStore().getLineFinder();
-      int topLineNumber = editor.getViewport().getTopLineNumber();
-      int bottomLineNumber = editor.getViewport().getBottomLineNumber();
-      for (int i = 0; i < errors.size(); i++)
-      {
-         AnnotationCode error = errors.get(i);
-         for (int j = error.getStart().getLineNumber(); j <= error.getEnd().getLineNumber(); j++)
-         {
-            if (j >= topLineNumber && j <= bottomLineNumber)
-            {
-               lines.add(lineFinder.findLine(j).line());
+        JsonArray<AnnotationCode> annotations = JsonCollections.createArray();
+        for (Iterator<Annotation> iterator = annotationModel.getAnnotationIterator(); iterator.hasNext(); ) {
+            Annotation annotation = iterator.next();
+            //only annotation with decoration
+            if (decorations.containsKey(annotation.getType())) {
+                Position position = annotationModel.getPosition(annotation);
+                AnnotationCode ac =
+                        new AnnotationCode(getDocumentPosition(position.offset), getDocumentPosition(position.length
+                                                                                                     + position.offset - 1),
+                                           decorations.get(annotation.getType()));
+                annotations.add(ac);
             }
-         }
-      }
-   }
+        }
+        onAnnotationsChanged(annotations);
+    }
 
-   /**
-    * @param annotationModel
-    */
-   public void setMode(AnnotationModel annotationModel)
-   {
-      this.annotationModel = annotationModel;
-      annotationModel.addAnnotationModelListener(this);
-   }
+    private DocumentPosition getDocumentPosition(int offset) {
+
+        try {
+            int lineNumber = editor.getDocument().getLineOfOffset(offset);
+            return new DocumentPosition(lineNumber, offset - editor.getDocument().getLineOffset(lineNumber));
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        }
+        return null;
+    }
+
+    private void onAnnotationsChanged(JsonArray<AnnotationCode> newErrors) {
+        if (editor.getDocument() == null) {
+            return;
+        }
+        JsonArray<Line> linesToRender = JsonCollections.createArray();
+        getLinesOfErrorsInViewport(renderer.getCodeErrors(), linesToRender);
+        getLinesOfErrorsInViewport(newErrors, linesToRender);
+        //      positionMigrator.reset();
+        renderer.setCodeErrors(newErrors);
+
+        for (int i = 0; i < linesToRender.size(); i++) {
+            editor.getRenderer().requestRenderLine(linesToRender.get(i));
+        }
+        editor.getRenderer().renderChanges();
+    }
+
+    private void getLinesOfErrorsInViewport(JsonArray<AnnotationCode> errors, JsonArray<Line> lines) {
+        LineFinder lineFinder = ((DocumentImpl)editor.getDocument()).getTextStore().getLineFinder();
+        int topLineNumber = editor.getViewport().getTopLineNumber();
+        int bottomLineNumber = editor.getViewport().getBottomLineNumber();
+        for (int i = 0; i < errors.size(); i++) {
+            AnnotationCode error = errors.get(i);
+            for (int j = error.getStart().getLineNumber(); j <= error.getEnd().getLineNumber(); j++) {
+                if (j >= topLineNumber && j <= bottomLineNumber) {
+                    lines.add(lineFinder.findLine(j).line());
+                }
+            }
+        }
+    }
+
+    /** @param annotationModel */
+    public void setMode(AnnotationModel annotationModel) {
+        this.annotationModel = annotationModel;
+        annotationModel.addAnnotationModelListener(this);
+    }
 
 }

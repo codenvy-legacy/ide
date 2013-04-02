@@ -23,16 +23,15 @@ import com.codenvy.ide.api.extension.SDK;
 
 /**
  * Provides add new preference page.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @SDK(title = "ide.api.ui.preferences")
-public interface PreferencesAgent
-{
-   /**
-    * Adds new preference page into preferences list.
-    * 
-    * @param page
-    */
-   void addPage(PreferencesPagePresenter page);
+public interface PreferencesAgent {
+    /**
+     * Adds new preference page into preferences list.
+     *
+     * @param page
+     */
+    void addPage(PreferencesPagePresenter page);
 }

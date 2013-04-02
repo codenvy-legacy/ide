@@ -19,7 +19,6 @@
 package com.codenvy.ide.outline;
 
 import com.codenvy.ide.outline.OutlinePartPrenter.OutlinePartView;
-
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -30,49 +29,37 @@ import com.google.inject.Inject;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class OutlinePartViewImpl implements OutlinePartView
-{
+public class OutlinePartViewImpl implements OutlinePartView {
 
-   private SimplePanel container;
+    private SimplePanel container;
 
-   private Label noOutline;
+    private Label noOutline;
 
-   @Inject
-   public OutlinePartViewImpl()
-   {
-      //TODO extract message constant
-      noOutline = new Label("An outline is not available.");
-      container = new SimplePanel();
-   }
+    @Inject
+    public OutlinePartViewImpl() {
+        //TODO extract message constant
+        noOutline = new Label("An outline is not available.");
+        container = new SimplePanel();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Widget asWidget()
-   {
-      return container;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Widget asWidget() {
+        return container;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void showNoOutline()
-   {
-      container.clear();
-      container.add(noOutline);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void showNoOutline() {
+        container.clear();
+        container.add(noOutline);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public AcceptsOneWidget getContainer()
-   {
-      return container;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getContainer() {
+        return container;
+    }
 
 }

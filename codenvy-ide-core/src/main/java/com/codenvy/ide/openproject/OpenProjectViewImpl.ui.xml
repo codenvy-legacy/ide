@@ -1,20 +1,20 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	<ui:style>
-		.alignBtn {
-			float: right;
-		}
-	</ui:style>
-	<g:DockLayoutPanel unit="PX" width="300px" height="300px">
-		<g:south size="26">
-			<g:FlowPanel>
-				<g:Button styleName="{style.alignBtn}" text="Open" ui:field="btnOpen" />
-				<g:Button styleName="{style.alignBtn}" text="Cancel" ui:field="btnCancel" />
-			</g:FlowPanel>
-		</g:south>
-		<g:center>
-			<g:ScrollPanel ui:field="listPanel"/>
-		</g:center>
-	</g:DockLayoutPanel>
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style>
+        .alignBtn {
+            float: right;
+        }
+    </ui:style>
+    <g:DockLayoutPanel unit="PX" width="300px" height="300px">
+        <g:south size="26">
+            <g:FlowPanel>
+                <g:Button styleName="{style.alignBtn}" text="Open" ui:field="btnOpen"/>
+                <g:Button styleName="{style.alignBtn}" text="Cancel" ui:field="btnCancel"/>
+            </g:FlowPanel>
+        </g:south>
+        <g:center>
+            <g:ScrollPanel ui:field="listPanel"/>
+        </g:center>
+    </g:DockLayoutPanel>
 </ui:UiBinder> 

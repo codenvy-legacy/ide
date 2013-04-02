@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Mateusz Wenus <mateusz.wenus@gmail.com> - [override method] generate in declaration order [code generation] - https://bugs.eclipse.org/bugs/show_bug.cgi?id=140971
+ *     Mateusz Wenus <mateusz.wenus@gmail.com> - [override method] generate in declaration order [code generation] - https://bugs.eclipse
+ *     .org/bugs/show_bug.cgi?id=140971
  *     IBM Corporation - bug fixes
  *******************************************************************************/
 package com.codenvy.ide.java.client.internal.corext.util;
@@ -28,7 +29,7 @@ import java.util.Comparator;
  * <li><code>m1</code> and <code>m2</code> are defined in the same type (<code>T</code> or any
  * supertype of <code>T</code>), that type doesn't have a source attachment and name of
  * <code>m1</code> alphabetically precedes name of <code>m2</code></li>
- * 
+ * <p/>
  * <li><code>m2</code> is defined in <code>T</code> and <code>m1</code> is defined in any supertype
  * of <code>T</code></li>
  * <li><code>m2</code> is defined in a superclass of <code>T</code> and <code>m1</code> is defined
@@ -40,90 +41,72 @@ import java.util.Comparator;
  * defines <code>m1</code> in <code>implements</code> clause of declaration of type <code>T</code></li>
  * </ul>
  */
-public class MethodsSourcePositionComparator implements Comparator<IMethodBinding>
-{
+public class MethodsSourcePositionComparator implements Comparator<IMethodBinding> {
 
-   private final ITypeBinding fTypeBinding;
+    private final ITypeBinding fTypeBinding;
 
-   public MethodsSourcePositionComparator(ITypeBinding typeBinding)
-   {
-      if (typeBinding == null)
-      {
-         throw new IllegalArgumentException();
-      }
-      fTypeBinding = typeBinding;
-   }
+    public MethodsSourcePositionComparator(ITypeBinding typeBinding) {
+        if (typeBinding == null) {
+            throw new IllegalArgumentException();
+        }
+        fTypeBinding = typeBinding;
+    }
 
-   public int compare(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding)
-   {
-      if (firstMethodBinding == null || secondMethodBinding == null)
-      {
-         return 0;
-      }
-      ITypeBinding firstMethodType = firstMethodBinding.getDeclaringClass();
-      ITypeBinding secondMethodType = secondMethodBinding.getDeclaringClass();
+    public int compare(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding) {
+        if (firstMethodBinding == null || secondMethodBinding == null) {
+            return 0;
+        }
+        ITypeBinding firstMethodType = firstMethodBinding.getDeclaringClass();
+        ITypeBinding secondMethodType = secondMethodBinding.getDeclaringClass();
 
-      if (firstMethodType.equals(secondMethodType))
-      {
-         return compareInTheSameType(firstMethodBinding, secondMethodBinding);
-      }
+        if (firstMethodType.equals(secondMethodType)) {
+            return compareInTheSameType(firstMethodBinding, secondMethodBinding);
+        }
 
-      if (firstMethodType.equals(fTypeBinding))
-      {
-         return 1;
-      }
-      if (secondMethodType.equals(fTypeBinding))
-      {
-         return -1;
-      }
-
-      ITypeBinding type = fTypeBinding;
-      int count = 0, firstCount = -1, secondCount = -1;
-      while ((type = type.getSuperclass()) != null)
-      {
-         if (firstMethodType.equals(type))
-         {
-            firstCount = count;
-         }
-         if (secondMethodType.equals(type))
-         {
-            secondCount = count;
-         }
-         count++;
-      }
-      if (firstCount != -1 && secondCount != -1)
-      {
-         return (firstCount - secondCount);
-      }
-      if (firstCount != -1 && secondCount == -1)
-      {
-         return 1;
-      }
-      if (firstCount == -1 && secondCount != -1)
-      {
-         return -1;
-      }
-
-      ITypeBinding[] interfaces = fTypeBinding.getInterfaces();
-      for (int i = 0; i < interfaces.length; i++)
-      {
-         if (firstMethodType.equals(interfaces[i]))
-         {
+        if (firstMethodType.equals(fTypeBinding)) {
             return 1;
-         }
-         if (secondMethodType.equals(interfaces[i]))
-         {
+        }
+        if (secondMethodType.equals(fTypeBinding)) {
             return -1;
-         }
-      }
-      return 0;
-   }
+        }
 
-   private int compareInTheSameType(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding)
-   {
-      //			IMethod firstMethod= (IMethod)firstMethodBinding.getJavaElement();
-      //			IMethod secondMethod= (IMethod)secondMethodBinding.getJavaElement();
-      //TODO
+        ITypeBinding type = fTypeBinding;
+        int count = 0, firstCount = -1, secondCount = -1;
+        while ((type = type.getSuperclass()) != null) {
+            if (firstMethodType.equals(type)) {
+                firstCount = count;
+            }
+            if (secondMethodType.equals(type)) {
+                secondCount = count;
+            }
+            count++;
+        }
+        if (firstCount != -1 && secondCount != -1) {
+            return (firstCount - secondCount);
+        }
+        if (firstCount != -1 && secondCount == -1) {
+            return 1;
+        }
+        if (firstCount == -1 && secondCount != -1) {
+            return -1;
+        }
+
+        ITypeBinding[] interfaces = fTypeBinding.getInterfaces();
+        for (int i = 0; i < interfaces.length; i++) {
+            if (firstMethodType.equals(interfaces[i])) {
+                return 1;
+            }
+            if (secondMethodType.equals(interfaces[i])) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    private int compareInTheSameType(IMethodBinding firstMethodBinding, IMethodBinding secondMethodBinding) {
+        //			IMethod firstMethod= (IMethod)firstMethodBinding.getJavaElement();
+        //			IMethod secondMethod= (IMethod)secondMethodBinding.getJavaElement();
+        //TODO
 //      			if (firstMethod == null || secondMethod == null) {
 //      				return 0;
 //      			}
@@ -131,10 +114,10 @@ public class MethodsSourcePositionComparator implements Comparator<IMethodBindin
 //      			ISourceRange secondSourceRange= secondMethod.getSourceRange();
 //      
 //      			if (!SourceRange.isAvailable(firstSourceRange) || !SourceRange.isAvailable(secondSourceRange)) {
-      				return firstMethodBinding.getName().compareTo(secondMethodBinding.getName());
+        return firstMethodBinding.getName().compareTo(secondMethodBinding.getName());
 //      			} else {
 //      				return firstSourceRange.getOffset() - secondSourceRange.getOffset();
 //      			}
 //      return 0;
-   }
+    }
 }

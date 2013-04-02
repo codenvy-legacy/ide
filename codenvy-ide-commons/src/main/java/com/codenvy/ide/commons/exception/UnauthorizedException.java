@@ -19,39 +19,34 @@
 package com.codenvy.ide.commons.exception;
 
 import com.codenvy.ide.rest.AsyncRequest;
-
 import com.google.gwt.http.client.Response;
 
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 @SuppressWarnings("serial")
-public class UnauthorizedException extends Exception
-{
+public class UnauthorizedException extends Exception {
 
-   private Response response;
+    private Response response;
 
-   private AsyncRequest request;
+    private AsyncRequest request;
 
-   public UnauthorizedException(Response response, AsyncRequest request)
-   {
-      this.response = response;
-      this.request = request;
-   }
+    public UnauthorizedException(Response response, AsyncRequest request) {
+        this.response = response;
+        this.request = request;
+    }
 
-   public Response getResponse()
-   {
-      return response;
-   }
+    public Response getResponse() {
+        return response;
+    }
 
-   public AsyncRequest getRequest()
-   {
-      return request;
-   }
+    public AsyncRequest getRequest() {
+        return request;
+    }
 
 }

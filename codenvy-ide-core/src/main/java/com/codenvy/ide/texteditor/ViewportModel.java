@@ -37,219 +37,196 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
  * The model for the editor's viewport. This model also listens for events that
  * affect the viewport, and adjusts the bounds accordingly. For example, it
  * listens as a scroll listener and shifts the viewport when the user scrolls.
- *
+ * <p/>
  * The lifecycle of this class is tied to the current document in the editor. If
  * the document is replaced, a new instance of this class is used for the new
  * document.
  */
 public class ViewportModel implements Buffer.ScrollListener, Buffer.ResizeListener, DocumentModel.LineListener,
-   SelectionModel.CursorListener, Buffer.SpacerListener
-{
+                                      SelectionModel.CursorListener, Buffer.SpacerListener {
 
-   private static final AnchorType VIEWPORT_MODEL_ANCHOR_TYPE = AnchorType
-      .create(ViewportModel.class, "viewport model");
+    private static final AnchorType VIEWPORT_MODEL_ANCHOR_TYPE = AnchorType
+            .create(ViewportModel.class, "viewport model");
 
-   /**
-    * Listener that is notified of viewport changes.
-    */
-   public interface Listener
-   {
-      /**
-       * Called when the content of the viewport changes, for example a line gets
-       * added or removed. This will not be called if the text changes within a
-       * line.
-       *
-       * @param added true if the given {@code lineInfo} was added, false if
-       *        removed (note that when removed, the lines will no longer be in
-       *        the document)
-       * @param lines the lines added or removed (see the parameters on
-       *        {@link DocumentModel.LineListener})
-       */
-      void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added, JsonArray<Line> lines);
+    /** Listener that is notified of viewport changes. */
+    public interface Listener {
+        /**
+         * Called when the content of the viewport changes, for example a line gets
+         * added or removed. This will not be called if the text changes within a
+         * line.
+         *
+         * @param added
+         *         true if the given {@code lineInfo} was added, false if
+         *         removed (note that when removed, the lines will no longer be in
+         *         the document)
+         * @param lines
+         *         the lines added or removed (see the parameters on
+         *         {@link DocumentModel.LineListener})
+         */
+        void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added, JsonArray<Line> lines);
 
-      /**
-       * Called when the viewport is shifted, meaning at least one of its edges
-       * points to new lines.
-       *
-       * @param oldTop may be null if this is the first range set
-       * @param oldBottom may be null if this is the first range set
-       */
-      void onViewportShifted(ViewportModel viewport, LineInfo top, LineInfo bottom, LineInfo oldTop, LineInfo oldBottom);
+        /**
+         * Called when the viewport is shifted, meaning at least one of its edges
+         * points to new lines.
+         *
+         * @param oldTop
+         *         may be null if this is the first range set
+         * @param oldBottom
+         *         may be null if this is the first range set
+         */
+        void onViewportShifted(ViewportModel viewport, LineInfo top, LineInfo bottom, LineInfo oldTop, LineInfo oldBottom);
 
-      /**
-       * Called when the line number of the viewport top or bottom changes.
-       *
-       * One example of where this differs from {@link #onViewportShifted} is if a
-       * collaborator is typing above our viewport. When she presses ENTER, it our
-       * viewport's line numbers will change, but will still point to the same
-       * line instances. Therefore, this method would be called but not
-       * {@link #onViewportShifted}.
-       */
-      void onViewportLineNumberChanged(ViewportModel viewport, Edge edge);
-   }
+        /**
+         * Called when the line number of the viewport top or bottom changes.
+         * <p/>
+         * One example of where this differs from {@link #onViewportShifted} is if a
+         * collaborator is typing above our viewport. When she presses ENTER, it our
+         * viewport's line numbers will change, but will still point to the same
+         * line instances. Therefore, this method would be called but not
+         * {@link #onViewportShifted}.
+         */
+        void onViewportLineNumberChanged(ViewportModel viewport, Edge edge);
+    }
 
-   public enum Edge {
-      TOP, BOTTOM
-   }
+    public enum Edge {
+        TOP, BOTTOM
+    }
 
-   private class ChangeDispatcher implements ListenerManager.Dispatcher<Listener>
-   {
-      private LineInfo oldTop;
+    private class ChangeDispatcher implements ListenerManager.Dispatcher<Listener> {
+        private LineInfo oldTop;
 
-      private LineInfo oldBottom;
+        private LineInfo oldBottom;
 
-      @Override
-      public void dispatch(Listener listener)
-      {
-         listener.onViewportShifted(ViewportModel.this, topAnchor.getLineInfo(), bottomAnchor.getLineInfo(), oldTop,
-            oldBottom);
-      }
+        @Override
+        public void dispatch(Listener listener) {
+            listener.onViewportShifted(ViewportModel.this, topAnchor.getLineInfo(), bottomAnchor.getLineInfo(), oldTop,
+                                       oldBottom);
+        }
 
-      private void dispatch(LineInfo oldTop, LineInfo oldBottom)
-      {
-         this.oldTop = oldTop;
-         this.oldBottom = oldBottom;
-         listenerManager.dispatch(this);
-      }
-   }
+        private void dispatch(LineInfo oldTop, LineInfo oldBottom) {
+            this.oldTop = oldTop;
+            this.oldBottom = oldBottom;
+            listenerManager.dispatch(this);
+        }
+    }
 
-   static ViewportModel create(DocumentModel document, SelectionModel selection, Buffer buffer)
-   {
-      return new ViewportModel(document, selection, buffer);
-   }
+    static ViewportModel create(DocumentModel document, SelectionModel selection, Buffer buffer) {
+        return new ViewportModel(document, selection, buffer);
+    }
 
-   private final Anchor.ShiftListener anchorShiftedListener = new Anchor.ShiftListener()
-   {
-      private final Dispatcher<Listener> lineNumberChangedDispatcher =
-         new ListenerManager.Dispatcher<ViewportModel.Listener>()
-         {
-            @Override
-            public void dispatch(Listener listener)
-            {
-               listener.onViewportLineNumberChanged(ViewportModel.this, curChangedEdge);
-            }
-         };
+    private final Anchor.ShiftListener anchorShiftedListener = new Anchor.ShiftListener() {
+        private final Dispatcher<Listener> lineNumberChangedDispatcher =
+                new ListenerManager.Dispatcher<ViewportModel.Listener>() {
+                    @Override
+                    public void dispatch(Listener listener) {
+                        listener.onViewportLineNumberChanged(ViewportModel.this, curChangedEdge);
+                    }
+                };
 
-      private Edge curChangedEdge;
+        private Edge curChangedEdge;
 
-      @Override
-      public void onAnchorShifted(Anchor anchor)
-      {
-         curChangedEdge = anchor == topAnchor ? Edge.TOP : Edge.BOTTOM;
-         listenerManager.dispatch(lineNumberChangedDispatcher);
-      }
-   };
+        @Override
+        public void onAnchorShifted(Anchor anchor) {
+            curChangedEdge = anchor == topAnchor ? Edge.TOP : Edge.BOTTOM;
+            listenerManager.dispatch(lineNumberChangedDispatcher);
+        }
+    };
 
-   private final AnchorManager anchorManager;
+    private final AnchorManager anchorManager;
 
-   private Anchor bottomAnchor;
+    private Anchor bottomAnchor;
 
-   private final Buffer buffer;
+    private final Buffer buffer;
 
-   private final DocumentModel document;
+    private final DocumentModel document;
 
-   private final ChangeDispatcher changeDispatcher;
+    private final ChangeDispatcher changeDispatcher;
 
-   private final ListenerManager<Listener> listenerManager;
+    private final ListenerManager<Listener> listenerManager;
 
-   private final SelectionModel selection;
+    private final SelectionModel selection;
 
-   private Anchor topAnchor;
+    private Anchor topAnchor;
 
-   private final ListenerRegistrar.RemoverManager removerManager = new ListenerRegistrar.RemoverManager();
+    private final ListenerRegistrar.RemoverManager removerManager = new ListenerRegistrar.RemoverManager();
 
-   private ViewportModel(DocumentModel document, SelectionModel selection, Buffer buffer)
-   {
-      this.document = document;
-      this.anchorManager = document.getAnchorManager();
-      this.buffer = buffer;
-      this.changeDispatcher = new ChangeDispatcher();
-      this.listenerManager = ListenerManager.create();
-      this.selection = selection;
+    private ViewportModel(DocumentModel document, SelectionModel selection, Buffer buffer) {
+        this.document = document;
+        this.anchorManager = document.getAnchorManager();
+        this.buffer = buffer;
+        this.changeDispatcher = new ChangeDispatcher();
+        this.listenerManager = ListenerManager.create();
+        this.selection = selection;
 
-      attachHandlers();
-   }
+        attachHandlers();
+    }
 
-   public LineInfo getBottom()
-   {
-      return bottomAnchor.getLineInfo();
-   }
+    public LineInfo getBottom() {
+        return bottomAnchor.getLineInfo();
+    }
 
-   public Line getBottomLine()
-   {
-      return bottomAnchor.getLine();
-   }
+    public Line getBottomLine() {
+        return bottomAnchor.getLine();
+    }
 
-   public int getBottomLineNumber()
-   {
-      return bottomAnchor.getLineNumber();
-   }
+    public int getBottomLineNumber() {
+        return bottomAnchor.getLineNumber();
+    }
 
-   public LineInfo getBottomLineInfo()
-   {
-      return bottomAnchor.getLineInfo();
-   }
+    public LineInfo getBottomLineInfo() {
+        return bottomAnchor.getLineInfo();
+    }
 
-   public DocumentModel getDocument()
-   {
-      return document;
-   }
+    public DocumentModel getDocument() {
+        return document;
+    }
 
-   public ListenerRegistrar<Listener> getListenerRegistrar()
-   {
-      return listenerManager;
-   }
+    public ListenerRegistrar<Listener> getListenerRegistrar() {
+        return listenerManager;
+    }
 
-   public LineInfo getTop()
-   {
-      return topAnchor.getLineInfo();
-   }
+    public LineInfo getTop() {
+        return topAnchor.getLineInfo();
+    }
 
-   public Line getTopLine()
-   {
-      return topAnchor.getLine();
-   }
+    public Line getTopLine() {
+        return topAnchor.getLine();
+    }
 
-   public LineInfo getTopLineInfo()
-   {
-      return topAnchor.getLineInfo();
-   }
+    public LineInfo getTopLineInfo() {
+        return topAnchor.getLineInfo();
+    }
 
-   public int getTopLineNumber()
-   {
-      return topAnchor.getLineNumber();
-   }
+    public int getTopLineNumber() {
+        return topAnchor.getLineNumber();
+    }
 
-   public void initialize()
-   {
-      resetPosition();
-   }
+    public void initialize() {
+        resetPosition();
+    }
 
-   /**
-    * Returns whether the text of the given {@code lineNumber} is fully visible
-    * in the viewport, determined by the current scrollTop and height of the
-    * buffer.
-    *
-    * Note: This does not check whether any spacers above the given line are
-    * fully visible.
-    */
-   public boolean isLineNumberFullyVisibleInViewport(int lineNumber)
-   {
-      int lineTop = buffer.calculateLineTop(lineNumber);
-      int scrollTop = buffer.getScrollTop();
-      int lineHeight = buffer.getEditorLineHeight();
-      return lineTop >= scrollTop && (lineTop + lineHeight) <= scrollTop + buffer.getHeight();
-   }
+    /**
+     * Returns whether the text of the given {@code lineNumber} is fully visible
+     * in the viewport, determined by the current scrollTop and height of the
+     * buffer.
+     * <p/>
+     * Note: This does not check whether any spacers above the given line are
+     * fully visible.
+     */
+    public boolean isLineNumberFullyVisibleInViewport(int lineNumber) {
+        int lineTop = buffer.calculateLineTop(lineNumber);
+        int scrollTop = buffer.getScrollTop();
+        int lineHeight = buffer.getEditorLineHeight();
+        return lineTop >= scrollTop && (lineTop + lineHeight) <= scrollTop + buffer.getHeight();
+    }
 
-   public boolean isLineInViewport(Line line)
-   {
-      // Lines in the viewport will always return a line number
-      int lineNumber = LineUtils.getCachedLineNumber(line);
-      return (lineNumber != -1) && isLineNumberInViewport(lineNumber);
-   }
+    public boolean isLineInViewport(Line line) {
+        // Lines in the viewport will always return a line number
+        int lineNumber = LineUtils.getCachedLineNumber(line);
+        return (lineNumber != -1) && isLineNumberInViewport(lineNumber);
+    }
 
-   public boolean isLineNumberInViewport(int lineNumber)
-   {
+    public boolean isLineNumberInViewport(int lineNumber) {
       /*
        * TODO: fix this to only do the expensive
        * calculation when a spacer is in the viewport.
@@ -259,128 +236,105 @@ public class ViewportModel implements Buffer.ScrollListener, Buffer.ResizeListen
        * and bottom aren't actually visible, so check using their absolute buffer
        * positions.
        */
-      int bufferTop = buffer.getScrollTop();
-      int bufferBottom = bufferTop + buffer.getHeight();
-      int lineTop = buffer.calculateLineTop(lineNumber);
-      int lineBottom = lineTop + buffer.getEditorLineHeight();
-      return !(bufferTop > lineBottom || bufferBottom < lineTop);
-   }
+        int bufferTop = buffer.getScrollTop();
+        int bufferBottom = bufferTop + buffer.getHeight();
+        int lineTop = buffer.calculateLineTop(lineNumber);
+        int lineBottom = lineTop + buffer.getEditorLineHeight();
+        return !(bufferTop > lineBottom || bufferBottom < lineTop);
+    }
 
-   @Override
-   public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
-   {
-      int cursorLineNumber = lineInfo.number();
-      int cursorLeft = buffer.calculateColumnLeft(lineInfo.line(), column);
-      int cursorTop = buffer.calculateLineTop(cursorLineNumber);
-      int scrollLeft = buffer.getScrollLeft();
-      int scrollTop = buffer.getScrollTop();
-      int newScrollLeft = scrollLeft;
-      int newScrollTop = scrollTop;
+    @Override
+    public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
+        int cursorLineNumber = lineInfo.number();
+        int cursorLeft = buffer.calculateColumnLeft(lineInfo.line(), column);
+        int cursorTop = buffer.calculateLineTop(cursorLineNumber);
+        int scrollLeft = buffer.getScrollLeft();
+        int scrollTop = buffer.getScrollTop();
+        int newScrollLeft = scrollLeft;
+        int newScrollTop = scrollTop;
 
-      int lineHeight = buffer.getEditorLineHeight();
-      int bufferHeight = buffer.getHeight();
+        int lineHeight = buffer.getEditorLineHeight();
+        int bufferHeight = buffer.getHeight();
 
-      int preCursorLineTop = Math.max(cursorTop - lineHeight, 0);
-      int postCursorLineBottom = cursorTop + 2 * lineHeight;
+        int preCursorLineTop = Math.max(cursorTop - lineHeight, 0);
+        int postCursorLineBottom = cursorTop + 2 * lineHeight;
 
-      if (preCursorLineTop < scrollTop)
-      {
-         newScrollTop = preCursorLineTop;
-      }
-      else
-      {
-         if (postCursorLineBottom > scrollTop + bufferHeight)
-         {
-            newScrollTop = postCursorLineBottom - bufferHeight;
-         }
-      }
-
-      if (cursorLeft < scrollLeft)
-      {
-         newScrollLeft = cursorLeft;
-      }
-      else
-      {
-         int bufferWidth = buffer.getWidth();
-         int columnWidth = (int)buffer.getEditorCharacterWidth();
-         if (cursorLeft + columnWidth > scrollLeft + bufferWidth)
-         {
-            newScrollLeft = cursorLeft + columnWidth - bufferWidth;
-         }
-      }
-
-      if (newScrollTop != scrollTop || newScrollLeft != scrollLeft)
-      {
-         setBufferScrollAsync(newScrollLeft, newScrollTop);
-      }
-   }
-
-   @Override
-   public void onLineAdded(DocumentModel document, final int lineNumber, final JsonArray<Line> addedLines)
-   {
-      if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber))
-      {
-         listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>()
-         {
-            @Override
-            public void dispatch(Listener listener)
-            {
-               listener.onViewportContentChanged(ViewportModel.this, lineNumber, true, addedLines);
+        if (preCursorLineTop < scrollTop) {
+            newScrollTop = preCursorLineTop;
+        } else {
+            if (postCursorLineBottom > scrollTop + bufferHeight) {
+                newScrollTop = postCursorLineBottom - bufferHeight;
             }
-         });
-      }
-   }
+        }
 
-   @Override
-   public void onLineRemoved(DocumentModel document, final int lineNumber, final JsonArray<Line> removedLines)
-   {
-      if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber))
-      {
-         listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>()
-         {
-            @Override
-            public void dispatch(Listener listener)
-            {
-               listener.onViewportContentChanged(ViewportModel.this, lineNumber, false, removedLines);
+        if (cursorLeft < scrollLeft) {
+            newScrollLeft = cursorLeft;
+        } else {
+            int bufferWidth = buffer.getWidth();
+            int columnWidth = (int)buffer.getEditorCharacterWidth();
+            if (cursorLeft + columnWidth > scrollLeft + bufferWidth) {
+                newScrollLeft = cursorLeft + columnWidth - bufferWidth;
             }
-         });
-      }
-   }
+        }
 
-   @Override
-   public void onScroll(Buffer buffer, int scrollTop)
-   {
-      moveViewportToScrollTop(scrollTop);
-   }
+        if (newScrollTop != scrollTop || newScrollLeft != scrollLeft) {
+            setBufferScrollAsync(newScrollLeft, newScrollTop);
+        }
+    }
 
-   @Override
-   public void onResize(Buffer buffer, int documentHeight, int viewportHeight, int scrollTop)
-   {
-      moveViewportToScrollTop(scrollTop);
-   }
+    @Override
+    public void onLineAdded(DocumentModel document, final int lineNumber, final JsonArray<Line> addedLines) {
+        if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
+            listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
+                @Override
+                public void dispatch(Listener listener) {
+                    listener.onViewportContentChanged(ViewportModel.this, lineNumber, true, addedLines);
+                }
+            });
+        }
+    }
 
-   private void moveViewportToScrollTop(int scrollTop)
-   {
-      int newTopLineNumber = buffer.convertYToLineNumber(scrollTop, true);
-      int numLinesToShow = buffer.getFlooredHeightInLines() + 1;
-      moveViewportToLineNumber(newTopLineNumber, numLinesToShow);
-   }
+    @Override
+    public void onLineRemoved(DocumentModel document, final int lineNumber, final JsonArray<Line> removedLines) {
+        if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
+            listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
+                @Override
+                public void dispatch(Listener listener) {
+                    listener.onViewportContentChanged(ViewportModel.this, lineNumber, false, removedLines);
+                }
+            });
+        }
+    }
 
-   public void teardown()
-   {
-      removeAnchors();
-      detachHandlers();
-   }
+    @Override
+    public void onScroll(Buffer buffer, int scrollTop) {
+        moveViewportToScrollTop(scrollTop);
+    }
 
-   /**
-    * Adjusts the viewport bounds after a line is added or removed, returning
-    * whether there an adjustment was made.
-    */
-   private boolean adjustViewportBoundsForLineAdditionOrRemoval(DocumentModel document, int lineNumber)
-   {
-      int bottomLineNumber = bottomAnchor.getLineNumber();
-      int topLineNumber = topAnchor.getLineNumber();
-      int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines();
+    @Override
+    public void onResize(Buffer buffer, int documentHeight, int viewportHeight, int scrollTop) {
+        moveViewportToScrollTop(scrollTop);
+    }
+
+    private void moveViewportToScrollTop(int scrollTop) {
+        int newTopLineNumber = buffer.convertYToLineNumber(scrollTop, true);
+        int numLinesToShow = buffer.getFlooredHeightInLines() + 1;
+        moveViewportToLineNumber(newTopLineNumber, numLinesToShow);
+    }
+
+    public void teardown() {
+        removeAnchors();
+        detachHandlers();
+    }
+
+    /**
+     * Adjusts the viewport bounds after a line is added or removed, returning
+     * whether there an adjustment was made.
+     */
+    private boolean adjustViewportBoundsForLineAdditionOrRemoval(DocumentModel document, int lineNumber) {
+        int bottomLineNumber = bottomAnchor.getLineNumber();
+        int topLineNumber = topAnchor.getLineNumber();
+        int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines();
 
       /*
        * The "lastVisibleLineNumber != bottomLineNumber" catches the case where
@@ -388,200 +342,170 @@ public class ViewportModel implements Buffer.ScrollListener, Buffer.ResizeListen
        * up a line before this method is called. So, the lineNumber will not be in
        * the range of the top and bottom anchors.
        */
-      if (MathUtils.isInRangeInclusive(lineNumber, topLineNumber, bottomLineNumber)
-         || lastVisibleLineNumber != bottomLineNumber)
-      {
+        if (MathUtils.isInRangeInclusive(lineNumber, topLineNumber, bottomLineNumber)
+            || lastVisibleLineNumber != bottomLineNumber) {
 
-         // Update the viewport to cope with the line addition or removal
-         int shiftAmount = lastVisibleLineNumber - bottomLineNumber;
-         if (shiftAmount != 0)
-         {
-            shiftBottomAnchor(shiftAmount);
-         }
+            // Update the viewport to cope with the line addition or removal
+            int shiftAmount = lastVisibleLineNumber - bottomLineNumber;
+            if (shiftAmount != 0) {
+                shiftBottomAnchor(shiftAmount);
+            }
 
-         return true;
-      }
-      else
-      {
-         return false;
-      }
-   }
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-   private void attachHandlers()
-   {
-      removerManager.track(buffer.getScrollListenerRegistrar().add(this));
-      removerManager.track(buffer.getResizeListenerRegistrar().add(this));
-      removerManager.track(document.getLineListenerRegistrar().add(this));
-      removerManager.track(selection.getCursorListenerRegistrar().add(this));
-      removerManager.track(buffer.getSpacerListenerRegistrar().add(this));
-   }
+    private void attachHandlers() {
+        removerManager.track(buffer.getScrollListenerRegistrar().add(this));
+        removerManager.track(buffer.getResizeListenerRegistrar().add(this));
+        removerManager.track(document.getLineListenerRegistrar().add(this));
+        removerManager.track(selection.getCursorListenerRegistrar().add(this));
+        removerManager.track(buffer.getSpacerListenerRegistrar().add(this));
+    }
 
-   private void detachHandlers()
-   {
-      removerManager.remove();
-   }
+    private void detachHandlers() {
+        removerManager.remove();
+    }
 
-   private void moveViewportToLineNumber(int topLineNumber, int numLinesToShow)
-   {
-      LineFinder lineFinder = buffer.getDocument().getLineFinder();
+    private void moveViewportToLineNumber(int topLineNumber, int numLinesToShow) {
+        LineFinder lineFinder = buffer.getDocument().getLineFinder();
 
-      LineInfo newTop = lineFinder.findLine(getTop(), topLineNumber);
+        LineInfo newTop = lineFinder.findLine(getTop(), topLineNumber);
 
-      int targetBottomLineNumber = newTop.number() + numLinesToShow - 1;
-      LineInfo newBottom =
-         lineFinder.findLine(getBottom(), Math.min(document.getLastLineNumber(), targetBottomLineNumber));
+        int targetBottomLineNumber = newTop.number() + numLinesToShow - 1;
+        LineInfo newBottom =
+                lineFinder.findLine(getBottom(), Math.min(document.getLastLineNumber(), targetBottomLineNumber));
 
-      setRange(newTop, newBottom);
-   }
+        setRange(newTop, newBottom);
+    }
 
-   public void shiftHorizontally(boolean right)
-   {
-      int deltaScrollLeft = right ? 20 : -20;
-      setBufferScrollAsync(buffer.getScrollLeft() + deltaScrollLeft, buffer.getScrollTop());
-   }
+    public void shiftHorizontally(boolean right) {
+        int deltaScrollLeft = right ? 20 : -20;
+        setBufferScrollAsync(buffer.getScrollLeft() + deltaScrollLeft, buffer.getScrollTop());
+    }
 
-   public void shiftVertically(boolean down, boolean byPage)
-   {
-      int deltaAbsoluteScrollTop =
-         byPage ? buffer.getHeight() - buffer.getEditorLineHeight() : buffer.getEditorLineHeight();
-      int deltaScrollTop = down ? deltaAbsoluteScrollTop : -deltaAbsoluteScrollTop;
-      setBufferScrollAsync(buffer.getScrollLeft(), buffer.getScrollTop() + deltaScrollTop);
-   }
+    public void shiftVertically(boolean down, boolean byPage) {
+        int deltaAbsoluteScrollTop =
+                byPage ? buffer.getHeight() - buffer.getEditorLineHeight() : buffer.getEditorLineHeight();
+        int deltaScrollTop = down ? deltaAbsoluteScrollTop : -deltaAbsoluteScrollTop;
+        setBufferScrollAsync(buffer.getScrollLeft(), buffer.getScrollTop() + deltaScrollTop);
+    }
 
-   public void jumpTo(boolean end)
-   {
-      int newScrollTop = end ? buffer.getScrollHeight() - buffer.getHeight() : 0;
-      setBufferScrollAsync(buffer.getScrollLeft(), newScrollTop);
-   }
+    public void jumpTo(boolean end) {
+        int newScrollTop = end ? buffer.getScrollHeight() - buffer.getHeight() : 0;
+        setBufferScrollAsync(buffer.getScrollLeft(), newScrollTop);
+    }
 
-   private void removeAnchors()
-   {
-      anchorManager.removeAnchor(topAnchor);
-      anchorManager.removeAnchor(bottomAnchor);
+    private void removeAnchors() {
+        anchorManager.removeAnchor(topAnchor);
+        anchorManager.removeAnchor(bottomAnchor);
 
-      topAnchor = null;
-      bottomAnchor = null;
-   }
+        topAnchor = null;
+        bottomAnchor = null;
+    }
 
-   private void resetPosition()
-   {
-      LineInfo firstLine = new LineInfo(document.getFirstLine(), 0);
-      int lastLineNumber = Math.min(document.getLastLineNumber(), buffer.getFlooredHeightInLines());
-      LineInfo lastLine = document.getLineFinder().findLine(lastLineNumber);
-      setRange(firstLine, lastLine);
-   }
+    private void resetPosition() {
+        LineInfo firstLine = new LineInfo(document.getFirstLine(), 0);
+        int lastLineNumber = Math.min(document.getLastLineNumber(), buffer.getFlooredHeightInLines());
+        LineInfo lastLine = document.getLineFinder().findLine(lastLineNumber);
+        setRange(firstLine, lastLine);
+    }
 
-   /**
-    * Sets scroll top of the buffer asynchronously. This allows some events to be
-    * processed in the browser event loop between renders. (For example, without
-    * the asynchronous posting, holding down page down would only render one
-    * frame a second.)
-    */
-   private void setBufferScrollAsync(final int scrollLeft, final int scrollTop)
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            buffer.setScrollLeft(Math.max(0, scrollLeft));
+    /**
+     * Sets scroll top of the buffer asynchronously. This allows some events to be
+     * processed in the browser event loop between renders. (For example, without
+     * the asynchronous posting, holding down page down would only render one
+     * frame a second.)
+     */
+    private void setBufferScrollAsync(final int scrollLeft, final int scrollTop) {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                buffer.setScrollLeft(Math.max(0, scrollLeft));
 
             /* We'll synchronously get a callback and shift our viewport model to this new scroll top */
-            buffer.setScrollTop(Math.max(0, scrollTop));
-         }
-      });
-   }
+                buffer.setScrollTop(Math.max(0, scrollTop));
+            }
+        });
+    }
 
-   private void setRange(LineInfo newTop, LineInfo newBottom)
-   {
-      LineInfo oldTop;
-      LineInfo oldBottom;
+    private void setRange(LineInfo newTop, LineInfo newBottom) {
+        LineInfo oldTop;
+        LineInfo oldBottom;
 
-      if (topAnchor == null || bottomAnchor == null)
-      {
-         oldTop = oldBottom = null;
-         topAnchor =
-            anchorManager.createAnchor(VIEWPORT_MODEL_ANCHOR_TYPE, newTop.line(), newTop.number(),
-               AnchorManager.IGNORE_COLUMN);
-         topAnchor.setRemovalStrategy(RemovalStrategy.SHIFT);
-         topAnchor.getShiftListenerRegistrar().add(anchorShiftedListener);
+        if (topAnchor == null || bottomAnchor == null) {
+            oldTop = oldBottom = null;
+            topAnchor =
+                    anchorManager.createAnchor(VIEWPORT_MODEL_ANCHOR_TYPE, newTop.line(), newTop.number(),
+                                               AnchorManager.IGNORE_COLUMN);
+            topAnchor.setRemovalStrategy(RemovalStrategy.SHIFT);
+            topAnchor.getShiftListenerRegistrar().add(anchorShiftedListener);
 
-         bottomAnchor =
-            anchorManager.createAnchor(VIEWPORT_MODEL_ANCHOR_TYPE, newBottom.line(), newBottom.number(),
-               AnchorManager.IGNORE_COLUMN);
-         bottomAnchor.setRemovalStrategy(RemovalStrategy.SHIFT);
-         bottomAnchor.getShiftListenerRegistrar().add(anchorShiftedListener);
+            bottomAnchor =
+                    anchorManager.createAnchor(VIEWPORT_MODEL_ANCHOR_TYPE, newBottom.line(), newBottom.number(),
+                                               AnchorManager.IGNORE_COLUMN);
+            bottomAnchor.setRemovalStrategy(RemovalStrategy.SHIFT);
+            bottomAnchor.getShiftListenerRegistrar().add(anchorShiftedListener);
 
-      }
-      else
-      {
-         oldTop = topAnchor.getLineInfo();
-         oldBottom = bottomAnchor.getLineInfo();
+        } else {
+            oldTop = topAnchor.getLineInfo();
+            oldBottom = bottomAnchor.getLineInfo();
 
-         if (oldTop.equals(newTop) && oldBottom.equals(newBottom))
-         {
+            if (oldTop.equals(newTop) && oldBottom.equals(newBottom)) {
+                return;
+            }
+
+            anchorManager.moveAnchor(topAnchor, newTop.line(), newTop.number(), AnchorManager.IGNORE_COLUMN);
+            anchorManager.moveAnchor(bottomAnchor, newBottom.line(), newBottom.number(), AnchorManager.IGNORE_COLUMN);
+        }
+
+        changeDispatcher.dispatch(oldTop, oldBottom);
+    }
+
+    /**
+     * @param lineCount
+     *         if negative, the bottom anchor will shift upward that many
+     *         lines
+     */
+    private void shiftBottomAnchor(int lineCount) {
+        LineInfo bottomLineInfo = bottomAnchor.getLineInfo();
+        if (lineCount < 0) {
+            for (; lineCount < 0; lineCount++) {
+                bottomLineInfo.moveToPrevious();
+            }
+        } else {
+            for (; lineCount > 0; lineCount--) {
+                bottomLineInfo.moveToNext();
+            }
+        }
+
+        setRange(topAnchor.getLineInfo(), bottomLineInfo);
+    }
+
+    @Override
+    public void onSpacerAdded(Spacer spacer) {
+        updateBoundsAfterSpacerChanged(spacer.getLineNumber());
+    }
+
+    @Override
+    public void onSpacerHeightChanged(Spacer spacer, int oldHeight) {
+        updateBoundsAfterSpacerChanged(spacer.getLineNumber());
+    }
+
+    @Override
+    public void onSpacerRemoved(Spacer spacer, Line oldLine, int oldLineNumber) {
+        updateBoundsAfterSpacerChanged(oldLineNumber);
+    }
+
+    private void updateBoundsAfterSpacerChanged(int spacerLineNumber) {
+        if (spacerLineNumber < getTopLineNumber() || spacerLineNumber > getBottomLineNumber()) {
             return;
-         }
+        }
 
-         anchorManager.moveAnchor(topAnchor, newTop.line(), newTop.number(), AnchorManager.IGNORE_COLUMN);
-         anchorManager.moveAnchor(bottomAnchor, newBottom.line(), newBottom.number(), AnchorManager.IGNORE_COLUMN);
-      }
-
-      changeDispatcher.dispatch(oldTop, oldBottom);
-   }
-
-   /**
-    * @param lineCount if negative, the bottom anchor will shift upward that many
-    *        lines
-    */
-   private void shiftBottomAnchor(int lineCount)
-   {
-      LineInfo bottomLineInfo = bottomAnchor.getLineInfo();
-      if (lineCount < 0)
-      {
-         for (; lineCount < 0; lineCount++)
-         {
-            bottomLineInfo.moveToPrevious();
-         }
-      }
-      else
-      {
-         for (; lineCount > 0; lineCount--)
-         {
-            bottomLineInfo.moveToNext();
-         }
-      }
-
-      setRange(topAnchor.getLineInfo(), bottomLineInfo);
-   }
-
-   @Override
-   public void onSpacerAdded(Spacer spacer)
-   {
-      updateBoundsAfterSpacerChanged(spacer.getLineNumber());
-   }
-
-   @Override
-   public void onSpacerHeightChanged(Spacer spacer, int oldHeight)
-   {
-      updateBoundsAfterSpacerChanged(spacer.getLineNumber());
-   }
-
-   @Override
-   public void onSpacerRemoved(Spacer spacer, Line oldLine, int oldLineNumber)
-   {
-      updateBoundsAfterSpacerChanged(oldLineNumber);
-   }
-
-   private void updateBoundsAfterSpacerChanged(int spacerLineNumber)
-   {
-      if (spacerLineNumber < getTopLineNumber() || spacerLineNumber > getBottomLineNumber())
-      {
-         return;
-      }
-
-      int newBottomLineNumber = buffer.convertYToLineNumber(buffer.getScrollTop() + buffer.getHeight(), true);
-      setRange(getTop(), document.getLineFinder().findLine(getBottom(), newBottomLineNumber));
-   }
+        int newBottomLineNumber = buffer.convertYToLineNumber(buffer.getScrollTop() + buffer.getHeight(), true);
+        setRange(getTop(), document.getLineFinder().findLine(getBottom(), newBottomLineNumber));
+    }
 
 }

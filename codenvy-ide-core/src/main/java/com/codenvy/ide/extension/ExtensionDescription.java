@@ -27,89 +27,80 @@ import com.codenvy.ide.json.JsonArray;
  * <li>dependencies - the list of required dependencies</li>
  * </ul>
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ExtensionDescription
-{
-   private final String id;
+public class ExtensionDescription {
+    private final String id;
 
-   private final String version;
+    private final String version;
 
-   private final JsonArray<DependencyDescription> dependencies;
+    private final JsonArray<DependencyDescription> dependencies;
 
-   private final String title;
-   
-   private boolean enabled = false;
+    private final String title;
 
-   /**
-    * Construct {@link ExtensionDescription}
-    * 
-    * @param id
-    * @param version
-    * @param title
-    * @param dependencies
-    */
-   public ExtensionDescription(String id, String version, String title, JsonArray<DependencyDescription> dependencies)
-   {
-      this.id = id;
-      this.version = version;
-      this.title = title;
-      this.dependencies = dependencies;
-   }
+    private boolean enabled = false;
 
-   /**
-    * Get Extension ID
-    * 
-    * @return
-    */
-   public String getId()
-   {
-      return id;
-   }
+    /**
+     * Construct {@link ExtensionDescription}
+     *
+     * @param id
+     * @param version
+     * @param title
+     * @param dependencies
+     */
+    public ExtensionDescription(String id, String version, String title, JsonArray<DependencyDescription> dependencies) {
+        this.id = id;
+        this.version = version;
+        this.title = title;
+        this.dependencies = dependencies;
+    }
 
-   /**
-    * Get Extension Version
-    * 
-    * @return
-    */
-   public String getVersion()
-   {
-      return version;
-   }
+    /**
+     * Get Extension ID
+     *
+     * @return
+     */
+    public String getId() {
+        return id;
+    }
 
-   /**
-    * Get Extension title
-    * 
-    * @return the title
-    */
-   public String getTitle()
-   {
-      return title;
-   }
+    /**
+     * Get Extension Version
+     *
+     * @return
+     */
+    public String getVersion() {
+        return version;
+    }
 
-   /**
-    * Get the list of {@link DependencyDescription}
-    * 
-    * @return
-    */
-   public JsonArray<DependencyDescription> getDependencies()
-   {
-      return dependencies;
-   }
-   
-   /**
-    * @return the enabled
-    */
-   public boolean isEnabled()
-   {
-      return enabled;
-   }
-   
-   /**
-    * @param enabled the enabled to set
-    */
-   public void setEnabled(boolean enabled)
-   {
-      this.enabled = enabled;
-   }
+    /**
+     * Get Extension title
+     *
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Get the list of {@link DependencyDescription}
+     *
+     * @return
+     */
+    public JsonArray<DependencyDescription> getDependencies() {
+        return dependencies;
+    }
+
+    /** @return the enabled */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * @param enabled
+     *         the enabled to set
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

@@ -19,23 +19,22 @@
 package com.codenvy.ide.api.paas;
 
 /**
- * General interface for all classes which contains PaaS's wizard page. 
+ * General interface for all classes which contains PaaS's wizard page.
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface HasPaaSWizardPage
-{
-   /**
-    * Returns PaaS's wizard page.
-    * 
-    * @return PaaS
-    */
-   public AbstractPaasWizardPagePresenter getPaaSWizardPage();
+public interface HasPaaSWizardPage {
+    /**
+     * Returns PaaS's wizard page.
+     *
+     * @return PaaS
+     */
+    public AbstractPaasWizardPagePresenter getPaaSWizardPage();
 
-   /**
-    * Sets PaaS's wizard page.
-    * 
-    * @param paasPage
-    */
-   public void setPaaSWizardPage(AbstractPaasWizardPagePresenter paasPage);
+    /**
+     * Sets PaaS's wizard page.
+     *
+     * @param paasPage
+     */
+    public void setPaaSWizardPage(AbstractPaasWizardPagePresenter paasPage);
 }

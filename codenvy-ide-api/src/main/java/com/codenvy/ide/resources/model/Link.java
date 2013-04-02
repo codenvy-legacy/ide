@@ -22,121 +22,111 @@ package com.codenvy.ide.resources.model;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Link.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
-public class Link
-{
-   // Folder
-   public static String REL_CHILDREN = "children";
-   
-   public static String REL_TREE = "tree";
+public class Link {
+    // Folder
+    public static String REL_CHILDREN = "children";
 
-   public static String REL_CREATE_PROJECT = "create-project";
+    public static String REL_TREE = "tree";
 
-   public static String REL_CREATE_FOLDER = "create-folder";
+    public static String REL_CREATE_PROJECT = "create-project";
 
-   public static String REL_CREATE_FILE = "create-file";
+    public static String REL_CREATE_FOLDER = "create-folder";
 
-   public static String REL_UPLOAD_FILE = "upload-file";
+    public static String REL_CREATE_FILE = "create-file";
 
-   public static String REL_EXPORT = "export";
+    public static String REL_UPLOAD_FILE = "upload-file";
 
-   public static String REL_IMPORT = "import";
+    public static String REL_EXPORT = "export";
 
-   public static String REL_DOWNLOAD_ZIP = "download-zip";
+    public static String REL_IMPORT = "import";
 
-   public static String REL_UPLOAD_ZIP = "upload-zip";
+    public static String REL_DOWNLOAD_ZIP = "download-zip";
 
-   // File
-   public static String REL_CURRENT_VERSION = "current-version";
+    public static String REL_UPLOAD_ZIP = "upload-zip";
 
-   public static String REL_VERSION_HISTORY = "version-history";
+    // File
+    public static String REL_CURRENT_VERSION = "current-version";
 
-   public static String REL_CONTENT = "content";
+    public static String REL_VERSION_HISTORY = "version-history";
 
-   public static String REL_DOWNLOAD_FILE = "download-file";
+    public static String REL_CONTENT = "content";
 
-   public static String REL_CONTENT_BY_PATH = "content-by-path";
+    public static String REL_DOWNLOAD_FILE = "download-file";
 
-   public static String REL_UNLOCK = "unlock";
+    public static String REL_CONTENT_BY_PATH = "content-by-path";
 
-   public static String REL_LOCK = "lock";
+    public static String REL_UNLOCK = "unlock";
 
-   // Common
-   public static String REL_PARENT = "parent";
+    public static String REL_LOCK = "lock";
 
-   public static String REL_DELETE = "delete";
+    // Common
+    public static String REL_PARENT = "parent";
 
-   public static String REL_MOVE = "move";
+    public static String REL_DELETE = "delete";
 
-   public static String REL_COPY = "copy";
+    public static String REL_MOVE = "move";
 
-   public static String REL_SELF = "self";
+    public static String REL_COPY = "copy";
 
-   public static String REL_ITEM = "item";
+    public static String REL_SELF = "self";
 
-   public static String REL_ITEM_BY_PATH = "item-by-path";
+    public static String REL_ITEM = "item";
 
-   public static String REL_ACL = "acl";
+    public static String REL_ITEM_BY_PATH = "item-by-path";
 
-   public static String REL_RENAME = "rename";
+    public static String REL_ACL = "acl";
 
-   public static String REL_SEARCH = "search";
+    public static String REL_RENAME = "rename";
 
-   public static String REL_SEARCH_FORM = "search-form";
+    public static String REL_SEARCH = "search";
 
-   /** URL of resource. */
-   private String href;
+    public static String REL_SEARCH_FORM = "search-form";
 
-   /** Produced media type of resource described by this link. */
-   private String type;
+    /** URL of resource. */
+    private String href;
 
-   /** Relation attribute of link. Client may use it for choice links to retrieve specific info about resource. */
-   private String rel;
+    /** Produced media type of resource described by this link. */
+    private String type;
 
-   public Link(String href, String rel, String type)
-   {
-      this.href = href;
-      this.rel = rel;
-      this.type = type;
-   }
+    /** Relation attribute of link. Client may use it for choice links to retrieve specific info about resource. */
+    private String rel;
 
-   public Link()
-   {
-   }
+    public Link(String href, String rel, String type) {
+        this.href = href;
+        this.rel = rel;
+        this.type = type;
+    }
 
-   public String getHref()
-   {
-      return href;
-   }
+    public Link() {
+    }
 
-   public void setHref(String href)
-   {
-      this.href = href;
-   }
+    public String getHref() {
+        return href;
+    }
 
-   public String getRel()
-   {
-      return rel;
-   }
+    public void setHref(String href) {
+        this.href = href;
+    }
 
-   public void setRel(String rel)
-   {
-      this.rel = rel;
-   }
+    public String getRel() {
+        return rel;
+    }
 
-   public String getType()
-   {
-      return type;
-   }
+    public void setRel(String rel) {
+        this.rel = rel;
+    }
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    public String getType() {
+        return type;
+    }
 
-   /** @see java.lang.Object#toString() */
-   @Override
-   public String toString()
-   {
-      return "Link [href=" + href + ", type=" + type + ", rel=" + rel + ']';
-   }
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /** @see java.lang.Object#toString() */
+    @Override
+    public String toString() {
+        return "Link [href=" + href + ", type=" + type + ", rel=" + rel + ']';
+    }
 }

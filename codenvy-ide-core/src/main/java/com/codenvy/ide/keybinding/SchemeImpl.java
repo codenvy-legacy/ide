@@ -18,10 +18,8 @@
  */
 package com.codenvy.ide.keybinding;
 
-import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
 import com.codenvy.ide.api.ui.keybinding.Scheme;
-
+import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonIntegerMap;
@@ -33,85 +31,65 @@ import com.codenvy.ide.util.input.SignalEvent;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class SchemeImpl implements Scheme
-{
+public class SchemeImpl implements Scheme {
 
-   private String id;
+    private String id;
 
-   private String description;
+    private String description;
 
-   private JsonIntegerMap<JsonArray<ExtendedCommand>> handlers;
+    private JsonIntegerMap<JsonArray<ExtendedCommand>> handlers;
 
 
-   public SchemeImpl(String id, String description)
-   {
-      this.id = id;
-      this.description = description;
-      handlers = JsonCollections.createIntegerMap();
-   }
+    public SchemeImpl(String id, String description) {
+        this.id = id;
+        this.description = description;
+        handlers = JsonCollections.createIntegerMap();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getSchemeId()
-   {
-      return id;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getSchemeId() {
+        return id;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getDescription()
-   {
-      return description;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void addKeyBinding(CharCodeWithModifiers keyBinging, ExtendedCommand command)
-   {
-      int digest = keyBinging.getKeyDigest();
-      if (!handlers.hasKey(digest))
-      {
-         handlers.put(digest, JsonCollections.<ExtendedCommand>createArray());
-      }
-      handlers.get(digest).add(command);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void addKeyBinding(CharCodeWithModifiers keyBinging, ExtendedCommand command) {
+        int digest = keyBinging.getKeyDigest();
+        if (!handlers.hasKey(digest)) {
+            handlers.put(digest, JsonCollections.<ExtendedCommand>createArray());
+        }
+        handlers.get(digest).add(command);
+    }
 
-   public boolean handleKeyEvent(SignalEvent event)
-   {
-      int digest = CharCodeWithModifiers.computeKeyDigest(event);
-      if (handlers.hasKey(digest))
-      {
-         executeCommand(handlers.get(digest));
-         return true;
-      }
-      else
-      {
-         return false;
-      }
-   }
+    public boolean handleKeyEvent(SignalEvent event) {
+        int digest = CharCodeWithModifiers.computeKeyDigest(event);
+        if (handlers.hasKey(digest)) {
+            executeCommand(handlers.get(digest));
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-   private void executeCommand(JsonArray<ExtendedCommand> commands)
-   {
-      for (ExtendedCommand command : commands.asIterable())
-      {
-         // check command context
-         if (command.inContext() != null && !command.inContext().getValue())
-         {
-            continue;
-         }
+    private void executeCommand(JsonArray<ExtendedCommand> commands) {
+        for (ExtendedCommand command : commands.asIterable()) {
+            // check command context
+            if (command.inContext() != null && !command.inContext().getValue()) {
+                continue;
+            }
 
-         if (command.canExecute() != null && !command.canExecute().getValue())
-         {
-            continue;
-         }
-         // TODO handle if we have more than one enabled command
-         command.execute();
-      }
-   }
+            if (command.canExecute() != null && !command.canExecute().getValue()) {
+                continue;
+            }
+            // TODO handle if we have more than one enabled command
+            command.execute();
+        }
+    }
 }

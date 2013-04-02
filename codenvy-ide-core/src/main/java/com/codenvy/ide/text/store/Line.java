@@ -25,161 +25,141 @@ import com.codenvy.ide.json.JsonStringMap;
 
 /**
  * Model for a line of text (including the newline character) in a document.
- *
+ * <p/>
  * Lines by design do not know their line numbers since that would require a
  * line insertion/deletion to iterate through all of the following lines to
  * update the line numbers, thus making insertion/deletion slower operations
  * than they have to be. The {@link LineFinder} can help to efficiently resolve
  * a line number given the line, or vice versa.
- *
+ * <p/>
  * Lines can have tags attached to them by clients of this class.
  */
-public class Line implements TaggableLine
-{
+public class Line implements TaggableLine {
 
-   static Line create(DocumentModel document, String text)
-   {
-      return new Line(document, text);
-   }
+    static Line create(DocumentModel document, String text) {
+        return new Line(document, text);
+    }
 
-   private boolean attached;
+    private boolean attached;
 
-   private final DocumentModel document;
+    private final DocumentModel document;
 
-   private Line nextLine;
+    private Line nextLine;
 
-   private Line previousLine;
+    private Line previousLine;
 
-   // Not final so we can do O(1) clearTags
-   private JsonStringMap<Object> tags;
+    // Not final so we can do O(1) clearTags
+    private JsonStringMap<Object> tags;
 
-   private String text;
+    private String text;
 
-   private Line(DocumentModel document, String text)
-   {
-      this.document = document;
-      this.text = text;
+    private Line(DocumentModel document, String text) {
+        this.document = document;
+        this.text = text;
 
-      tags = JsonCollections.createStringMap();
-   }
+        tags = JsonCollections.createStringMap();
+    }
 
-   public DocumentModel getDocument()
-   {
-      return document;
-   }
+    public DocumentModel getDocument() {
+        return document;
+    }
 
-   public Line getNextLine()
-   {
-      return nextLine;
-   }
+    public Line getNextLine() {
+        return nextLine;
+    }
 
-   @Override
-   public Line getPreviousLine()
-   {
-      return previousLine;
-   }
+    @Override
+    public Line getPreviousLine() {
+        return previousLine;
+    }
 
-   /**
-    * Gets a tag set on this line with {@link #putTag}. This serves as storage
-    * for arbitrary objects for this line. For example, a document parser may
-    * store its snapshot here.
-    *
-    * It is the client's responsibility to ensure type safety, this method
-    * blindly casts as a convenience.
-    *
-    * @param key the unique identifier for this tag. In order to prevent
-    *            namespace collisions, prefix this with the caller's fully qualified
-    *            class name
-    */
-   @Override
-   @SuppressWarnings("unchecked")
-   public <T> T getTag(String key)
-   {
-      return (T)tags.get(key);
-   }
+    /**
+     * Gets a tag set on this line with {@link #putTag}. This serves as storage
+     * for arbitrary objects for this line. For example, a document parser may
+     * store its snapshot here.
+     * <p/>
+     * It is the client's responsibility to ensure type safety, this method
+     * blindly casts as a convenience.
+     *
+     * @param key
+     *         the unique identifier for this tag. In order to prevent
+     *         namespace collisions, prefix this with the caller's fully qualified
+     *         class name
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getTag(String key) {
+        return (T)tags.get(key);
+    }
 
-   @SuppressWarnings("unchecked")
-   public <T> T removeTag(String key)
-   {
-      return (T)tags.remove(key);
-   }
+    @SuppressWarnings("unchecked")
+    public <T> T removeTag(String key) {
+        return (T)tags.remove(key);
+    }
 
-   public String getText()
-   {
-      return text;
-   }
+    public String getText() {
+        return text;
+    }
 
-   public boolean hasColumn(int column)
-   {
-      return column >= 0 && column < text.length();
-   }
+    public boolean hasColumn(int column) {
+        return column >= 0 && column < text.length();
+    }
 
-   public boolean isAttached()
-   {
-      return attached;
-   }
+    public boolean isAttached() {
+        return attached;
+    }
 
-   public int length()
-   {
-      return text.length();
-   }
+    public int length() {
+        return text.length();
+    }
 
-   /**
-    * Puts a tag on this line.
-    *
-    * @see Line#getTag(String)
-    */
-   @Override
-   public <T> void putTag(String key, T value)
-   {
-      tags.put(key, value);
-   }
+    /**
+     * Puts a tag on this line.
+     *
+     * @see Line#getTag(String)
+     */
+    @Override
+    public <T> void putTag(String key, T value) {
+        tags.put(key, value);
+    }
 
-   /**
-    * This is not public API and will eventually be hidden in the public
-    * interface
-    */
-   public void clearTags()
-   {
-      tags = JsonCollections.createStringMap();
-   }
+    /**
+     * This is not public API and will eventually be hidden in the public
+     * interface
+     */
+    public void clearTags() {
+        tags = JsonCollections.createStringMap();
+    }
 
-   @Override
-   public String toString()
-   {
-      String trimmedText = text.trim();
-      return (trimmedText.length() > 50 ? trimmedText.substring(0, 50) + "..." : trimmedText);
-   }
+    @Override
+    public String toString() {
+        String trimmedText = text.trim();
+        return (trimmedText.length() > 50 ? trimmedText.substring(0, 50) + "..." : trimmedText);
+    }
 
-   @Override
-   public boolean isFirstLine()
-   {
-      return getPreviousLine() == null;
-   }
+    @Override
+    public boolean isFirstLine() {
+        return getPreviousLine() == null;
+    }
 
-   @Override
-   public boolean isLastLine()
-   {
-      return getNextLine() == null;
-   }
+    @Override
+    public boolean isLastLine() {
+        return getNextLine() == null;
+    }
 
-   void setAttached(boolean attached)
-   {
-      this.attached = attached;
-   }
+    void setAttached(boolean attached) {
+        this.attached = attached;
+    }
 
-   void setNextLine(Line nextLine)
-   {
-      this.nextLine = nextLine;
-   }
+    void setNextLine(Line nextLine) {
+        this.nextLine = nextLine;
+    }
 
-   void setPreviousLine(Line previousLine)
-   {
-      this.previousLine = previousLine;
-   }
+    void setPreviousLine(Line previousLine) {
+        this.previousLine = previousLine;
+    }
 
-   void setText(String text)
-   {
-      this.text = text;
-   }
+    void setText(String text) {
+        this.text = text;
+    }
 }

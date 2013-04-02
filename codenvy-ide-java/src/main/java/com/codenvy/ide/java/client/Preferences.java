@@ -23,58 +23,51 @@ import com.google.gwt.storage.client.Storage;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:30:50 PM Mar 29, 2012 evgen $
- * 
  */
-public class Preferences
-{
+public class Preferences {
 
-   /**
-    * A named preference that stores the content assist LRU history
-    * <p>
-    * Value is an JSON encoded version of the history.
-    * </p>
-    * 
-    */
-   public static final String CODEASSIST_LRU_HISTORY = "content_assist_lru_history_";
+    /**
+     * A named preference that stores the content assist LRU history
+     * <p>
+     * Value is an JSON encoded version of the history.
+     * </p>
+     */
+    public static final String CODEASSIST_LRU_HISTORY = "content_assist_lru_history_";
 
-   public static final String QUALIFIED_TYPE_NAMEHISTORY = "Qualified_Type_Name_History_";
+    public static final String QUALIFIED_TYPE_NAMEHISTORY = "Qualified_Type_Name_History_";
 
-   private Storage storage;
+    private Storage storage;
 
-   private boolean supported = false;
+    private boolean supported = false;
 
-   /**
-    * 
-    */
-   public Preferences()
-   {
-      if (Storage.isSupported())
-      {
-         storage = Storage.getLocalStorageIfSupported();
-         supported = true;
-      }
+    /**
+     *
+     */
+    public Preferences() {
+        if (Storage.isSupported()) {
+            storage = Storage.getLocalStorageIfSupported();
+            supported = true;
+        }
 
-   }
+    }
 
-   /**
-    * @param key
-    * @param string
-    */
-   public void setValue(String key, String string)
-   {
-      if (supported)
-         storage.setItem(key, string);
-   }
+    /**
+     * @param key
+     * @param string
+     */
+    public void setValue(String key, String string) {
+        if (supported)
+            storage.setItem(key, string);
+    }
 
-   /**
-    * @param key
-    * @return
-    */
-   public String getString(String key)
-   {
-      if (supported)
-         return storage.getItem(key);
-      return "";
-   }
+    /**
+     * @param key
+     * @return
+     */
+    public String getString(String key) {
+        if (supported)
+            return storage.getItem(key);
+        return "";
+    }
 
 }

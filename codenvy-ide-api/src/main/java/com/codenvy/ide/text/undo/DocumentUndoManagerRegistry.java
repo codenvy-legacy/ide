@@ -28,88 +28,83 @@ import java.util.Map;
  * <p>
  * <em>The recoding of changes starts with the first {@link #connect(Document)}.</em></p>
  *
- * @since 3.2
  * @noinstantiate This class is not intended to be instantiated by clients.
+ * @since 3.2
  */
-public final class DocumentUndoManagerRegistry
-{
+public final class DocumentUndoManagerRegistry {
 
-   private static final class Record
-   {
-      public Record(Document document)
-      {
-         count = 0;
-         undoManager = new DocumentUndoManagerImpl(document);
-      }
+    private static final class Record {
+        public Record(Document document) {
+            count = 0;
+            undoManager = new DocumentUndoManagerImpl(document);
+        }
 
-      private int count;
+        private int count;
 
-      private DocumentUndoManager undoManager;
-   }
+        private DocumentUndoManager undoManager;
+    }
 
-   private static Map<Document, Record> fgFactory = new HashMap<Document, DocumentUndoManagerRegistry.Record>();
+    private static Map<Document, Record> fgFactory = new HashMap<Document, DocumentUndoManagerRegistry.Record>();
 
-   private DocumentUndoManagerRegistry()
-   {
-      // 	Do not instantiate
-   }
+    private DocumentUndoManagerRegistry() {
+        // 	Do not instantiate
+    }
 
-   /**
-    * Connects the file at the given location to this manager. After that call
-    * successfully completed it is guaranteed that each call to <code>getFileBuffer</code>
-    * returns the same file buffer until <code>disconnect</code> is called.
-    * <p>
-    * <em>The recoding of changes starts with the first {@link #connect(Document)}.</em></p>
-    *
-    * @param document the document to be connected
-    */
-   public static void connect(Document document)
-   {
-      Assert.isNotNull(document);
-      Record record = (Record)fgFactory.get(document);
-      if (record == null)
-      {
-         record = new Record(document);
-         fgFactory.put(document, record);
-      }
-      record.count++;
-   }
+    /**
+     * Connects the file at the given location to this manager. After that call
+     * successfully completed it is guaranteed that each call to <code>getFileBuffer</code>
+     * returns the same file buffer until <code>disconnect</code> is called.
+     * <p>
+     * <em>The recoding of changes starts with the first {@link #connect(Document)}.</em></p>
+     *
+     * @param document
+     *         the document to be connected
+     */
+    public static void connect(Document document) {
+        Assert.isNotNull(document);
+        Record record = (Record)fgFactory.get(document);
+        if (record == null) {
+            record = new Record(document);
+            fgFactory.put(document, record);
+        }
+        record.count++;
+    }
 
-   /**
-    * Disconnects the given document from this registry.
-    *
-    * @param document the document to be disconnected
-    */
-   public static void disconnect(Document document)
-   {
-      Assert.isNotNull(document);
-      Record record = fgFactory.get(document);
-      record.count--;
-      if (record.count == 0)
-         fgFactory.remove(document);
+    /**
+     * Disconnects the given document from this registry.
+     *
+     * @param document
+     *         the document to be disconnected
+     */
+    public static void disconnect(Document document) {
+        Assert.isNotNull(document);
+        Record record = fgFactory.get(document);
+        record.count--;
+        if (record.count == 0)
+            fgFactory.remove(document);
 
-   }
+    }
 
-   /**
-    * Returns the file buffer managed for the given location or <code>null</code>
-    * if there is no such file buffer.
-    * <p>
-    * The provided location is either a full path of a workspace resource or
-    * an absolute path in the local file system. The file buffer manager does
-    * not resolve the location of workspace resources in the case of linked
-    * resources.
-    * </p>
-    *
-    * @param document the document for which to get its undo manager
-    * @return the document undo manager or <code>null</code>
-    */
-   public static DocumentUndoManager getDocumentUndoManager(Document document)
-   {
-      Assert.isNotNull(document);
-      Record record = (Record)fgFactory.get(document);
-      if (record == null)
-         return null;
-      return record.undoManager;
-   }
+    /**
+     * Returns the file buffer managed for the given location or <code>null</code>
+     * if there is no such file buffer.
+     * <p>
+     * The provided location is either a full path of a workspace resource or
+     * an absolute path in the local file system. The file buffer manager does
+     * not resolve the location of workspace resources in the case of linked
+     * resources.
+     * </p>
+     *
+     * @param document
+     *         the document for which to get its undo manager
+     * @return the document undo manager or <code>null</code>
+     */
+    public static DocumentUndoManager getDocumentUndoManager(Document document) {
+        Assert.isNotNull(document);
+        Record record = (Record)fgFactory.get(document);
+        if (record == null)
+            return null;
+        return record.undoManager;
+    }
 
 }

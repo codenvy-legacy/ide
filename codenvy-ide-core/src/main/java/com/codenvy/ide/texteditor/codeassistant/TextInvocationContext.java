@@ -23,57 +23,46 @@ import com.codenvy.ide.texteditor.api.quickassist.QuickAssistInvocationContext;
 
 /**
  * Text quick assist invocation context.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class TextInvocationContext implements QuickAssistInvocationContext
-{
+public class TextInvocationContext implements QuickAssistInvocationContext {
 
-   private TextEditorPartView view;
+    private TextEditorPartView view;
 
-   private int offset;
+    private int offset;
 
-   private int length;
+    private int length;
 
-   /**
-    * @param view
-    * @param offset
-    * @param length
-    */
-   public TextInvocationContext(TextEditorPartView view, int offset, int length)
-   {
-      super();
-      this.view = view;
-      this.offset = offset;
-      this.length = length;
-   }
+    /**
+     * @param view
+     * @param offset
+     * @param length
+     */
+    public TextInvocationContext(TextEditorPartView view, int offset, int length) {
+        super();
+        this.view = view;
+        this.offset = offset;
+        this.length = length;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getOffset()
-   {
-      return offset;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getOffset() {
+        return offset;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getLength()
-   {
-      return length;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public int getLength() {
+        return length;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public TextEditorPartView getTextEditor()
-   {
-      return view;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public TextEditorPartView getTextEditor() {
+        return view;
+    }
 
 }

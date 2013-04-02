@@ -12,7 +12,6 @@
 package com.codenvy.ide.java.client.internal.core.dom.rewrite;
 
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
-
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 
@@ -20,57 +19,42 @@ import com.codenvy.ide.text.Document;
 /**
  *
  */
-public abstract class LineInformation
-{
+public abstract class LineInformation {
 
-   public static LineInformation create(final Document doc)
-   {
-      return new LineInformation()
-      {
-         public int getLineOfOffset(int offset)
-         {
-            try
-            {
-               return doc.getLineOfOffset(offset);
+    public static LineInformation create(final Document doc) {
+        return new LineInformation() {
+            public int getLineOfOffset(int offset) {
+                try {
+                    return doc.getLineOfOffset(offset);
+                } catch (BadLocationException e) {
+                    return -1;
+                }
             }
-            catch (BadLocationException e)
-            {
-               return -1;
+
+            public int getLineOffset(int line) {
+                try {
+                    return doc.getLineOffset(line);
+                } catch (BadLocationException e) {
+                    return -1;
+                }
             }
-         }
+        };
+    }
 
-         public int getLineOffset(int line)
-         {
-            try
-            {
-               return doc.getLineOffset(line);
+    public static LineInformation create(final CompilationUnit astRoot) {
+        return new LineInformation() {
+            public int getLineOfOffset(int offset) {
+                return astRoot.getLineNumber(offset) - 1;
             }
-            catch (BadLocationException e)
-            {
-               return -1;
+
+            public int getLineOffset(int line) {
+                return astRoot.getPosition(line + 1, 0);
             }
-         }
-      };
-   }
+        };
+    }
 
-   public static LineInformation create(final CompilationUnit astRoot)
-   {
-      return new LineInformation()
-      {
-         public int getLineOfOffset(int offset)
-         {
-            return astRoot.getLineNumber(offset) - 1;
-         }
+    public abstract int getLineOfOffset(int offset);
 
-         public int getLineOffset(int line)
-         {
-            return astRoot.getPosition(line + 1, 0);
-         }
-      };
-   }
-
-   public abstract int getLineOfOffset(int offset);
-
-   public abstract int getLineOffset(int line);
+    public abstract int getLineOffset(int line);
 
 }

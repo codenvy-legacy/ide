@@ -19,7 +19,6 @@
 package com.codenvy.ide.wizard.newfile;
 
 import com.codenvy.ide.api.ui.wizard.newfile.NewGenericFilePageView;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -31,60 +30,45 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * NewGenericFilePageViewImpl is the view of NewGenericFile wizard.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericFilePageViewImpl extends Composite implements NewGenericFilePageView
-{
-   private static NewGenericFilePageViewImplUiBinder uiBinder = GWT.create(NewGenericFilePageViewImplUiBinder.class);
+public class NewGenericFilePageViewImpl extends Composite implements NewGenericFilePageView {
+    private static NewGenericFilePageViewImplUiBinder uiBinder = GWT.create(NewGenericFilePageViewImplUiBinder.class);
 
-   @UiField
-   TextBox fileName;
+    @UiField
+    TextBox fileName;
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   interface NewGenericFilePageViewImplUiBinder extends UiBinder<Widget, NewGenericFilePageViewImpl>
-   {
-   }
+    interface NewGenericFilePageViewImplUiBinder extends UiBinder<Widget, NewGenericFilePageViewImpl> {
+    }
 
-   /**
-    * Create view.
-    */
-   public NewGenericFilePageViewImpl()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
+    /** Create view. */
+    public NewGenericFilePageViewImpl() {
+        initWidget(uiBinder.createAndBindUi(this));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getFileName()
-   {
-      return fileName.getText();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getFileName() {
+        return fileName.getText();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   @UiHandler("fileName")
-   void onFileNameKeyUp(KeyUpEvent event)
-   {
-      delegate.onValueChanged();
-   }
+    @UiHandler("fileName")
+    void onFileNameKeyUp(KeyUpEvent event) {
+        delegate.onValueChanged();
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void setFileName(String fileName)
-   {
-      this.fileName.setText(fileName);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName.setText(fileName);
+    }
 }

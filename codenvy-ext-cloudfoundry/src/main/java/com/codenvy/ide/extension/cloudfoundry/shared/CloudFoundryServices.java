@@ -18,20 +18,16 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.shared;
 
-import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface CloudFoundryServices
-{
-   SystemService[] getSystem();
+public interface CloudFoundryServices {
+    SystemService[] getSystem();
 
-   void setSystem(SystemService[] system);
+    void setSystem(SystemService[] system);
 
-   ProvisionedService[] getProvisioned();
+    ProvisionedService[] getProvisioned();
 
-   void setProvisioned(ProvisionedService[] provisioned);
+    void setProvisioned(ProvisionedService[] provisioned);
 }

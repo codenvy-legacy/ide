@@ -9,121 +9,99 @@ import com.codenvy.ide.ui.tree.NodeDataAdapter;
 import com.codenvy.ide.ui.tree.TreeNodeElement;
 
 
-public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource>
-{
-   @Override
-   public int compare(Resource a, Resource b)
-   {
-      return a.getPath().compareTo(b.getPath());
-   }
+public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource> {
+    @Override
+    public int compare(Resource a, Resource b) {
+        return a.getPath().compareTo(b.getPath());
+    }
 
-   @Override
-   public boolean hasChildren(Resource data)
-   {
-      return data.isFolder() && ((Folder)data).getChildren().size() > 0;
-   }
+    @Override
+    public boolean hasChildren(Resource data) {
+        return data.isFolder() && ((Folder)data).getChildren().size() > 0;
+    }
 
-   @Override
-   public JsonArray<Resource> getChildren(Resource data)
-   {
-      if (data instanceof Folder)
-      {
-         return ((Folder)data).getChildren();
-      }
-      return null;
-   }
+    @Override
+    public JsonArray<Resource> getChildren(Resource data) {
+        if (data instanceof Folder) {
+            return ((Folder)data).getChildren();
+        }
+        return null;
+    }
 
-   @Override
-   public String getNodeId(Resource data)
-   {
-      return data.getId();
-   }
+    @Override
+    public String getNodeId(Resource data) {
+        return data.getId();
+    }
 
-   @Override
-   public String getNodeName(Resource data)
-   {
-      return data.getName();
-   }
+    @Override
+    public String getNodeName(Resource data) {
+        return data.getName();
+    }
 
-   @Override
-   public Resource getParent(Resource data)
-   {
-      return data.getParent();
-   }
+    @Override
+    public Resource getParent(Resource data) {
+        return data.getParent();
+    }
 
-   @SuppressWarnings("unchecked")
-   @Override
-   public TreeNodeElement<Resource> getRenderedTreeNode(Resource data)
-   {
-      return (TreeNodeElement<Resource>)data.getTag();
-   }
+    @SuppressWarnings("unchecked")
+    @Override
+    public TreeNodeElement<Resource> getRenderedTreeNode(Resource data) {
+        return (TreeNodeElement<Resource>)data.getTag();
+    }
 
-   @Override
-   public void setNodeName(Resource data, String name)
-   {
-      // TODO Auto-generated method stub
+    @Override
+    public void setNodeName(Resource data, String name) {
+        // TODO Auto-generated method stub
 
-   }
+    }
 
-   @Override
-   public void setRenderedTreeNode(Resource data, TreeNodeElement<Resource> renderedNode)
-   {
-      data.setTag(renderedNode);
-   }
+    @Override
+    public void setRenderedTreeNode(Resource data, TreeNodeElement<Resource> renderedNode) {
+        data.setTag(renderedNode);
+    }
 
-   @Override
-   public Resource getDragDropTarget(Resource data)
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    @Override
+    public Resource getDragDropTarget(Resource data) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-   @Override
-   public JsonArray<String> getNodePath(Resource data)
-   {
-      JsonArray<String> list = JsonCollections.<String> createArray();
-      JsonArray<String> result = JsonCollections.<String> createArray();
-      list.add(data.getId());
+    @Override
+    public JsonArray<String> getNodePath(Resource data) {
+        JsonArray<String> list = JsonCollections.<String>createArray();
+        JsonArray<String> result = JsonCollections.<String>createArray();
+        list.add(data.getId());
 
-      Resource localData = data;
-      while (localData.getParent() != null)
-      {
-         localData.getParent().getId();
-         localData = localData.getParent();
-      }
+        Resource localData = data;
+        while (localData.getParent() != null) {
+            localData.getParent().getId();
+            localData = localData.getParent();
+        }
 
-      for (int i = list.size(); i > 0; i--)
-      {
-         result.add(list.get(i - 1));
-      }
-      return result;
-   }
+        for (int i = list.size(); i > 0; i--) {
+            result.add(list.get(i - 1));
+        }
+        return result;
+    }
 
-   @Override
-   public Resource getNodeByPath(Resource root, JsonArray<String> relativeNodePath)
-   {
-      if (root instanceof Folder)
-      {
-         Folder localRoot = (Folder)root;
-         for (int i = 0; i < relativeNodePath.size(); i++)
-         {
-            if (localRoot != null)
-            {
-               Resource findResourceById = localRoot.findResourceById(relativeNodePath.get(i));
-               if (findResourceById instanceof Folder)
-               {
-                  localRoot = (Folder)findResourceById;
-               }
-               if (findResourceById instanceof File)
-               {
-                  if (i == (relativeNodePath.size() - 1))
-                  {
-                     return findResourceById;
-                  }
-               }
+    @Override
+    public Resource getNodeByPath(Resource root, JsonArray<String> relativeNodePath) {
+        if (root instanceof Folder) {
+            Folder localRoot = (Folder)root;
+            for (int i = 0; i < relativeNodePath.size(); i++) {
+                if (localRoot != null) {
+                    Resource findResourceById = localRoot.findResourceById(relativeNodePath.get(i));
+                    if (findResourceById instanceof Folder) {
+                        localRoot = (Folder)findResourceById;
+                    }
+                    if (findResourceById instanceof File) {
+                        if (i == (relativeNodePath.size() - 1)) {
+                            return findResourceById;
+                        }
+                    }
+                }
             }
-         }
-      }
-      return null;
-   }
+        }
+        return null;
+    }
 }

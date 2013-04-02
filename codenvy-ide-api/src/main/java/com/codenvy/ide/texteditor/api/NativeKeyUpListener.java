@@ -20,16 +20,14 @@ package com.codenvy.ide.texteditor.api;
 
 import elemental.events.Event;
 
-/**
- * A listener that is called on "keyup" native event.
- */
-public interface NativeKeyUpListener
-{
+/** A listener that is called on "keyup" native event. */
+public interface NativeKeyUpListener {
 
-   /**
-    * @param event the event for the key up
-    * @return true if the event was handled, false to proceed with default
-    *         behavior
-    */
-   boolean onNativeKeyUp(Event event);
+    /**
+     * @param event
+     *         the event for the key up
+     * @return true if the event was handled, false to proceed with default
+     *         behavior
+     */
+    boolean onNativeKeyUp(Event event);
 }

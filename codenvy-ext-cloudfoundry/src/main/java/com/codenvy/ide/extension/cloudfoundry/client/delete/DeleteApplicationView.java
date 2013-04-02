@@ -25,63 +25,56 @@ import com.codenvy.ide.api.mvp.View;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public interface DeleteApplicationView extends View<DeleteApplicationView.ActionDelegate>
-{
-   /**
-    * Needs for delegate some function into DeleteApplication view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Delete button.
-       */
-      public void onDeleteClicked();
+public interface DeleteApplicationView extends View<DeleteApplicationView.ActionDelegate> {
+    /** Needs for delegate some function into DeleteApplication view. */
+    public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Delete button.
+         */
+        public void onDeleteClicked();
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Cancel button.
-       */
-      public void onCancelClicked();
-   }
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Cancel button.
+         */
+        public void onCancelClicked();
+    }
 
-   /**
-    * Returns whether need to delete services. 
-    * 
-    * @return <code>true</code> if need to delete services, and 
-    * <code>false</code> otherwise
-    */
-   public boolean isDeleteServices();
+    /**
+     * Returns whether need to delete services.
+     *
+     * @return <code>true</code> if need to delete services, and
+     *         <code>false</code> otherwise
+     */
+    public boolean isDeleteServices();
 
-   /**
-    * Sets whether need to delete services.
-    * 
-    * @param start <code>true</code> need to delete, <code>false</code>
-    * otherwise
-    */
-   public void setDeleteServices(boolean isDeleted);
+    /**
+     * Sets whether need to delete services.
+     *
+     * @param start
+     *         <code>true</code> need to delete, <code>false</code>
+     *         otherwise
+     */
+    public void setDeleteServices(boolean isDeleted);
 
-   /**
-    * Set the ask message to delete application.
-    * 
-    * @param message
-    */
-   public void setAskMessage(String message);
+    /**
+     * Set the ask message to delete application.
+     *
+     * @param message
+     */
+    public void setAskMessage(String message);
 
-   /**
-    * Set the ask message to delete services.
-    * 
-    * @param message
-    */
-   public void setAskDeleteServices(String text);
+    /**
+     * Set the ask message to delete services.
+     *
+     * @param message
+     */
+    public void setAskDeleteServices(String text);
 
-   /**
-    * Show dialog.
-    */
-   public void showDialog();
+    /** Show dialog. */
+    public void showDialog();
 
-   /**
-    * Close dialog.
-    */
-   public void close();
+    /** Close dialog. */
+    public void close();
 }

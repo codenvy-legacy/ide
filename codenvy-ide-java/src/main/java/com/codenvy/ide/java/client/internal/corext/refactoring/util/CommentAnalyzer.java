@@ -17,110 +17,92 @@ import com.codenvy.ide.java.client.core.compiler.InvalidInputException;
 import com.codenvy.ide.java.client.internal.corext.dom.Selection;
 import com.codenvy.ide.java.client.internal.corext.refactoring.RefactoringCoreMessages;
 import com.codenvy.ide.java.client.refactoring.RefactoringStatus;
-
 import com.codenvy.ide.runtime.Assert;
 
 
-public class CommentAnalyzer
-{
+public class CommentAnalyzer {
 
-   private CommentAnalyzer()
-   {
-   }
+    private CommentAnalyzer() {
+    }
 
-   public static RefactoringStatus perform(Selection selection, IScanner scanner, int start, int length)
-   {
-      RefactoringStatus result = new RefactoringStatus();
-      if (length <= 0)
-         return result;
-      new CommentAnalyzer().check(result, selection, scanner, start, start + length - 1);
-      return result;
-   }
+    public static RefactoringStatus perform(Selection selection, IScanner scanner, int start, int length) {
+        RefactoringStatus result = new RefactoringStatus();
+        if (length <= 0)
+            return result;
+        new CommentAnalyzer().check(result, selection, scanner, start, start + length - 1);
+        return result;
+    }
 
-   private void check(RefactoringStatus result, Selection selection, IScanner scanner, int start, int end)
-   {
-      char[] characters = scanner.getSource();
-      selection = adjustSelection(characters, selection, end);
-      scanner.resetTo(start, end);
+    private void check(RefactoringStatus result, Selection selection, IScanner scanner, int start, int end) {
+        char[] characters = scanner.getSource();
+        selection = adjustSelection(characters, selection, end);
+        scanner.resetTo(start, end);
 
-      int token = 0;
-      try
-      {
-         loop : while (token != ITerminalSymbols.TokenNameEOF)
-         {
-            token = scanner.getNextToken();
-            switch (token)
-            {
-               case ITerminalSymbols.TokenNameCOMMENT_LINE :
-               case ITerminalSymbols.TokenNameCOMMENT_BLOCK :
-               case ITerminalSymbols.TokenNameCOMMENT_JAVADOC :
-                  if (checkStart(scanner, selection.getOffset()))
-                  {
-                     result.addFatalError(RefactoringCoreMessages.INSTANCE.CommentAnalyzer_starts_inside_comment());
-                     break loop;
-                  }
-                  if (checkEnd(scanner, selection.getInclusiveEnd()))
-                  {
-                     result.addFatalError(RefactoringCoreMessages.INSTANCE.CommentAnalyzer_ends_inside_comment());
-                     break loop;
-                  }
-                  break;
+        int token = 0;
+        try {
+            loop:
+            while (token != ITerminalSymbols.TokenNameEOF) {
+                token = scanner.getNextToken();
+                switch (token) {
+                    case ITerminalSymbols.TokenNameCOMMENT_LINE:
+                    case ITerminalSymbols.TokenNameCOMMENT_BLOCK:
+                    case ITerminalSymbols.TokenNameCOMMENT_JAVADOC:
+                        if (checkStart(scanner, selection.getOffset())) {
+                            result.addFatalError(RefactoringCoreMessages.INSTANCE.CommentAnalyzer_starts_inside_comment());
+                            break loop;
+                        }
+                        if (checkEnd(scanner, selection.getInclusiveEnd())) {
+                            result.addFatalError(RefactoringCoreMessages.INSTANCE.CommentAnalyzer_ends_inside_comment());
+                            break loop;
+                        }
+                        break;
+                }
             }
-         }
-      }
-      catch (InvalidInputException e)
-      {
-         result.addFatalError(RefactoringCoreMessages.INSTANCE.CommentAnalyzer_internal_error());
-      }
-   }
+        } catch (InvalidInputException e) {
+            result.addFatalError(RefactoringCoreMessages.INSTANCE.CommentAnalyzer_internal_error());
+        }
+    }
 
-   private boolean checkStart(IScanner scanner, int position)
-   {
-      return scanner.getCurrentTokenStartPosition() < position && position <= scanner.getCurrentTokenEndPosition();
-   }
+    private boolean checkStart(IScanner scanner, int position) {
+        return scanner.getCurrentTokenStartPosition() < position && position <= scanner.getCurrentTokenEndPosition();
+    }
 
-   private boolean checkEnd(IScanner scanner, int position)
-   {
-      return scanner.getCurrentTokenStartPosition() <= position && position < scanner.getCurrentTokenEndPosition();
-   }
+    private boolean checkEnd(IScanner scanner, int position) {
+        return scanner.getCurrentTokenStartPosition() <= position && position < scanner.getCurrentTokenEndPosition();
+    }
 
-   private Selection adjustSelection(char[] characters, Selection selection, int end)
-   {
-      int newEnd = selection.getInclusiveEnd();
-      for (int i = selection.getExclusiveEnd(); i <= end; i++)
-      {
-         char ch = characters[i];
-         if (ch != '\n' && ch != '\r')
-            break;
-         newEnd++;
-      }
-      return Selection.createFromStartEnd(selection.getOffset(), newEnd);
-   }
+    private Selection adjustSelection(char[] characters, Selection selection, int end) {
+        int newEnd = selection.getInclusiveEnd();
+        for (int i = selection.getExclusiveEnd(); i <= end; i++) {
+            char ch = characters[i];
+            if (ch != '\n' && ch != '\r')
+                break;
+            newEnd++;
+        }
+        return Selection.createFromStartEnd(selection.getOffset(), newEnd);
+    }
 
-   /**
-    * Removes comments and whitespace
-    * @param reference the type reference
-    * @return the reference only consisting of dots and java identifier characters
-    */
-   public static String normalizeReference(String reference)
-   {
-      IScanner scanner = ToolFactory.createScanner(false, false, false, false);
-      scanner.setSource(reference.toCharArray());
-      StringBuffer sb = new StringBuffer();
-      try
-      {
-         int tokenType = scanner.getNextToken();
-         while (tokenType != ITerminalSymbols.TokenNameEOF)
-         {
-            sb.append(scanner.getRawTokenSource());
-            tokenType = scanner.getNextToken();
-         }
-      }
-      catch (InvalidInputException e)
-      {
-         Assert.isTrue(false, reference);
-      }
-      reference = sb.toString();
-      return reference;
-   }
+    /**
+     * Removes comments and whitespace
+     *
+     * @param reference
+     *         the type reference
+     * @return the reference only consisting of dots and java identifier characters
+     */
+    public static String normalizeReference(String reference) {
+        IScanner scanner = ToolFactory.createScanner(false, false, false, false);
+        scanner.setSource(reference.toCharArray());
+        StringBuffer sb = new StringBuffer();
+        try {
+            int tokenType = scanner.getNextToken();
+            while (tokenType != ITerminalSymbols.TokenNameEOF) {
+                sb.append(scanner.getRawTokenSource());
+                tokenType = scanner.getNextToken();
+            }
+        } catch (InvalidInputException e) {
+            Assert.isTrue(false, reference);
+        }
+        reference = sb.toString();
+        return reference;
+    }
 }
