@@ -33,96 +33,87 @@ import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GadgetPreviewPane extends ViewImpl
-{
+public class GadgetPreviewPane extends ViewImpl {
 
-   /**
-    * 
-    */
-   public static final String TITLE = "Preview";
+    /**
+     *
+     */
+    public static final String TITLE = "Preview";
 
-   private String meta;
+    private String meta;
 
-   private GadgetMetadata metadata;
+    private GadgetMetadata metadata;
 
-   /**
-    * 
-    */
-   public static final String ID = "gadgetpreview";
+    /**
+     *
+     */
+    public static final String ID = "gadgetpreview";
 
-   private IDEConfiguration configuration;
+    private IDEConfiguration configuration;
 
-   private FlowPanel framePanel;
+    private FlowPanel framePanel;
 
-   private String gadgetUrl;
+    private String gadgetUrl;
 
-   private String gadgetServer;
+    private String gadgetServer;
 
-   public GadgetPreviewPane(String href, String gadgetServer)
-   {
-      super(ID, ViewType.OPERATION, TITLE);
-      this.gadgetUrl = href;
-      this.gadgetServer = gadgetServer;
-      framePanel = new FlowPanel();
-      framePanel.setSize("100%", "100%");
-      add(framePanel);
-   }
+    public GadgetPreviewPane(String href, String gadgetServer) {
+        super(ID, ViewType.OPERATION, TITLE);
+        this.gadgetUrl = href;
+        this.gadgetServer = gadgetServer;
+        framePanel = new FlowPanel();
+        framePanel.setSize("100%", "100%");
+        add(framePanel);
+    }
 
-   /**
-    * Create iframe. Gadget will be load here.
-    * 
-    */
-   public void showGadget()
-   {
-      String url = gadgetServer // 
-         + "samplecontainer/samplecontainer.html?url=" + gadgetUrl;
-      final PreviewFrame frame = new PreviewFrame(url);
-      DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
-      DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
-      frame.setWidth("100%");
-      frame.setHeight("100%");
-      frame.setStyleName("");
-      frame.addLoadHandler(new LoadHandler()
-      {
+    /** Create iframe. Gadget will be load here. */
+    public void showGadget() {
+        String url = gadgetServer //
+                     + "samplecontainer/samplecontainer.html?url=" + gadgetUrl;
+        final PreviewFrame frame = new PreviewFrame(url);
+        DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
+        DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
+        frame.setWidth("100%");
+        frame.setHeight("100%");
+        frame.setStyleName("");
+        frame.addLoadHandler(new LoadHandler() {
 
-         @Override
-         public void onLoad(LoadEvent event)
-         {
-            setHandler(IFrameElement.as(frame.getElement()));
-         }
-      });
+            @Override
+            public void onLoad(LoadEvent event) {
+                setHandler(IFrameElement.as(frame.getElement()));
+            }
+        });
 
-      framePanel.clear();
-      framePanel.add(frame);
-   }
+        framePanel.clear();
+        framePanel.add(frame);
+    }
 
-   private native void setHandler(Element e)/*-{
-                                            var type = "mousedown";
-                                            var instance = this;
-                                            if (typeof e.contentDocument != "undefined") {
-                                            e.contentDocument
-                                            .addEventListener(
-                                            type,
-                                            function() {
-                                            instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
-                                            }, false);
-                                            } else if (typeof e.contentWindow != "undefined") {
-                                            e.contentWindow.document
-                                            .attachEvent(
-                                            "on" + type,
-                                            function() {
-                                            instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
-                                            });
-                                            }
-                                            }-*/;
+    private native void setHandler(Element e)/*-{
+        var type = "mousedown";
+        var instance = this;
+        if (typeof e.contentDocument != "undefined") {
+            e.contentDocument
+                .addEventListener(
+                type,
+                function () {
+                    instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
+                }, false);
+        } else if (typeof e.contentWindow != "undefined") {
+            e.contentWindow.document
+                .attachEvent(
+                "on" + type,
+                function () {
+                    instance.@org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane::activate()();
+                });
+        }
+    }-*/;
 
-   public String getId()
-   {
-      return ID;
-   }
+    public String getId() {
+        return ID;
+    }
 
 }

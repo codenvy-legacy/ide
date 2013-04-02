@@ -20,11 +20,10 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
 
 /**
  * Enumeration of genders.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- * 
  */
 public enum Gender {
-   FEMALE, MALE, NONE;
+    FEMALE, MALE, NONE;
 }

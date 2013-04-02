@@ -22,37 +22,32 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GadgetPeviewEvent extends GwtEvent<GadgetPeviewHandler>
-{
+public class GadgetPeviewEvent extends GwtEvent<GadgetPeviewHandler> {
 
-   public static final Type<GadgetPeviewHandler> TYPE = new Type<GadgetPeviewHandler>();
+    public static final Type<GadgetPeviewHandler> TYPE = new Type<GadgetPeviewHandler>();
 
-   private String url;
+    private String url;
 
-   public GadgetPeviewEvent(String url)
-   {
-      this.url = url;
-   }
+    public GadgetPeviewEvent(String url) {
+        this.url = url;
+    }
 
-   @Override
-   protected void dispatch(GadgetPeviewHandler handler)
-   {
-      handler.onGadgetPreview(this);
-   }
+    @Override
+    protected void dispatch(GadgetPeviewHandler handler) {
+        handler.onGadgetPreview(this);
+    }
 
-   @Override
-   public Type<GadgetPeviewHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<GadgetPeviewHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public String getUrl()
-   {
-      return url;
-   }
+    public String getUrl() {
+        return url;
+    }
 
 }

@@ -20,72 +20,64 @@ package org.exoplatform.ide.extension.gadget.shared;
 
 /**
  * Interface describe the request of security token.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: TokenRequest.java Mar 21, 2012 11:12:11 AM azatsarynnyy $
- *
  */
-public interface TokenRequest
-{
+public interface TokenRequest {
 
-   /**
-    * @return the gadget's URL
-    */
-   public String getGadgetURL();
+    /** @return the gadget's URL */
+    public String getGadgetURL();
 
-   /**
-    * @param gadgetURL the gadget's URL to set
-    */
-   public void setGadgetURL(String gadgetURL);
+    /**
+     * @param gadgetURL
+     *         the gadget's URL to set
+     */
+    public void setGadgetURL(String gadgetURL);
 
-   /**
-    * @return the owner
-    */
-   public String getOwner();
+    /** @return the owner */
+    public String getOwner();
 
-   /**
-    * @param owner the owner to set
-    */
-   public void setOwner(String owner);
+    /**
+     * @param owner
+     *         the owner to set
+     */
+    public void setOwner(String owner);
 
-   /**
-    * @return the viewer
-    */
-   public String getViewer();
+    /** @return the viewer */
+    public String getViewer();
 
-   /**
-    * @param viewer the viewer to set
-    */
-   public void setViewer(String viewer);
+    /**
+     * @param viewer
+     *         the viewer to set
+     */
+    public void setViewer(String viewer);
 
-   /**
-    * @return the module identifier
-    */
-   public Long getModuleId();
+    /** @return the module identifier */
+    public Long getModuleId();
 
-   /**
-    * @param moduleId the module identifier to set
-    */
-   public void setModuleId(Long moduleId);
+    /**
+     * @param moduleId
+     *         the module identifier to set
+     */
+    public void setModuleId(Long moduleId);
 
-   /**
-    * @return the container
-    */
-   public String getContainer();
+    /** @return the container */
+    public String getContainer();
 
-   /**
-    * @param container the container to set
-    */
-   public void setContainer(String container);
+    /**
+     * @param container
+     *         the container to set
+     */
+    public void setContainer(String container);
 
-   /**
-    * @return the domain
-    */
-   public String getDomain();
+    /** @return the domain */
+    public String getDomain();
 
-   /**
-    * @param domain the domain to set
-    */
-   public void setDomain(String domain);
+    /**
+     * @param domain
+     *         the domain to set
+     */
+    public void setDomain(String domain);
 
 }

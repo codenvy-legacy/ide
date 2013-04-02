@@ -34,53 +34,49 @@ import org.exoplatform.ide.extension.gadget.shared.TokenResponse;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GadgetService
-{
+public class GadgetService {
 
-   private static GadgetService instance;
+    private static GadgetService instance;
 
-   public static GadgetService getInstance()
-   {
-      return instance;
-   }
+    public static GadgetService getInstance() {
+        return instance;
+    }
 
-   private Loader loader;
+    private Loader loader;
 
-   private String restServiceContext;
+    private String restServiceContext;
 
-   private String gadgetServer;
+    private String gadgetServer;
 
-   public GadgetService(Loader loader, String restServiceContext, String gadgetServer, String publicContext)
-   {
-      this.loader = loader;
-      this.restServiceContext = restServiceContext;
-      this.gadgetServer = gadgetServer;
-      instance = this;
-   }
+    public GadgetService(Loader loader, String restServiceContext, String gadgetServer, String publicContext) {
+        this.loader = loader;
+        this.restServiceContext = restServiceContext;
+        this.gadgetServer = gadgetServer;
+        instance = this;
+    }
 
-   public void getGadgetMetadata(String gadgetUrl, AsyncRequestCallback<Gadget> callback) throws RequestException
-   {
-      String data =
-         "{\"context\":{\"country\":\"default\",\"language\":\"default\",\"view\":\"default\",\"container\":\"default\"},\"gadgets\":["
-            + "{\"moduleId\":" + 0L + ",\"url\":\"" + gadgetUrl + "\",\"prefs\":[]}]}";
+    public void getGadgetMetadata(String gadgetUrl, AsyncRequestCallback<Gadget> callback) throws RequestException {
+        String data =
+                "{\"context\":{\"country\":\"default\",\"language\":\"default\",\"view\":\"default\",\"container\":\"default\"}," +
+                "\"gadgets\":["
+                + "{\"moduleId\":" + 0L + ",\"url\":\"" + gadgetUrl + "\",\"prefs\":[]}]}";
 
-      String url = gadgetServer + "metadata";
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(data).send(callback);
-   }
+        String url = gadgetServer + "metadata";
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(data).send(callback);
+    }
 
-   //TODO : temporary don't call this method 
-   public void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback)
-      throws RequestException
-   {
-      String tokenRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
+    //TODO : temporary don't call this method
+    public void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback)
+            throws RequestException {
+        String tokenRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
 
-      String url = restServiceContext + "/ide/shindig/securitytoken/createToken";
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(tokenRequest).send(callback);
-   }
+        String url = restServiceContext + "/ide/shindig/securitytoken/createToken";
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
+                    .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(tokenRequest).send(callback);
+    }
 
 }

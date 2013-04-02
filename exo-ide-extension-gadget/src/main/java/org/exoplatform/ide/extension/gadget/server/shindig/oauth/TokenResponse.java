@@ -20,71 +20,61 @@ package org.exoplatform.ide.extension.gadget.server.shindig.oauth;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class TokenResponse
-{
-   public static final String SECURITY_TOKEN = "securityToken";
+public class TokenResponse {
+    public static final String SECURITY_TOKEN = "securityToken";
 
-   public static final String GADGET_URL = "gadgetURL";
+    public static final String GADGET_URL = "gadgetURL";
 
-   public static final String MODULE_ID = "moduleId";
+    public static final String MODULE_ID = "moduleId";
 
-   private String securityToken;
+    private String securityToken;
 
-   private String gadgetURL;
+    private String gadgetURL;
 
-   private Long moduleId;
+    private Long moduleId;
 
-   public TokenResponse()
-   {
-   }
+    public TokenResponse() {
+    }
 
-   public TokenResponse(String securityToken, String gadgetURL, Long moduleId)
-   {
-      this.securityToken = securityToken;
-      this.gadgetURL = gadgetURL;
-      this.moduleId = moduleId;
-   }
+    public TokenResponse(String securityToken, String gadgetURL, Long moduleId) {
+        this.securityToken = securityToken;
+        this.gadgetURL = gadgetURL;
+        this.moduleId = moduleId;
+    }
 
-   public String getSecurityToken()
-   {
-      return securityToken;
-   }
+    public String getSecurityToken() {
+        return securityToken;
+    }
 
-   public void setSecurityToken(String securityToken)
-   {
-      this.securityToken = securityToken;
-   }
+    public void setSecurityToken(String securityToken) {
+        this.securityToken = securityToken;
+    }
 
-   public String getGadgetURL()
-   {
-      return gadgetURL;
-   }
+    public String getGadgetURL() {
+        return gadgetURL;
+    }
 
-   public void setGadgetURL(String gadgetURL)
-   {
-      this.gadgetURL = gadgetURL;
-   }
+    public void setGadgetURL(String gadgetURL) {
+        this.gadgetURL = gadgetURL;
+    }
 
-   public void setModuleId(Long moduleId)
-   {
-      this.moduleId = moduleId;
-   }
+    public void setModuleId(Long moduleId) {
+        this.moduleId = moduleId;
+    }
 
-   public Long getModuleId()
-   {
-      return moduleId;
-   }
+    public Long getModuleId() {
+        return moduleId;
+    }
 
-   @Override
-   public String toString()
-   {
-      String json =
-         "{\"" + GADGET_URL + "\":\"" + gadgetURL + "\",\"" + SECURITY_TOKEN + "\":\"" + securityToken + "\",\""
-            + MODULE_ID + "\":\"" + moduleId + "\"}";
-      return json;
-   }
+    @Override
+    public String toString() {
+        String json =
+                "{\"" + GADGET_URL + "\":\"" + gadgetURL + "\",\"" + SECURITY_TOKEN + "\":\"" + securityToken + "\",\""
+                + MODULE_ID + "\":\"" + moduleId + "\"}";
+        return json;
+    }
 }

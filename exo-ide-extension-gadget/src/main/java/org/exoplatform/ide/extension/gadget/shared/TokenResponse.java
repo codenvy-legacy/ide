@@ -20,60 +20,61 @@ package org.exoplatform.ide.extension.gadget.shared;
 
 /**
  * Interface describe the response of security token.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: TokenResponse.java Mar 21, 2012 11:12:11 AM azatsarynnyy $
- *
  */
-public interface TokenResponse
-{
+public interface TokenResponse {
 
-   /**
-    * Returns the security token.
-    * 
-    * @return the security token
-    */
-   public String getSecurityToken();
+    /**
+     * Returns the security token.
+     *
+     * @return the security token
+     */
+    public String getSecurityToken();
 
-   /**
-    * Change the security token.
-    * 
-    * @param securityToken the security token
-    */
-   public void setSecurityToken(String securityToken);
+    /**
+     * Change the security token.
+     *
+     * @param securityToken
+     *         the security token
+     */
+    public void setSecurityToken(String securityToken);
 
-   /**
-    * Returns the gadget's URL.
-    * 
-    * @return the gadget's URL
-    */
-   public String getGadgetURL();
+    /**
+     * Returns the gadget's URL.
+     *
+     * @return the gadget's URL
+     */
+    public String getGadgetURL();
 
-   /**
-    * Set the gadget's URL.
-    * 
-    * @param gadgetURL the gadget's URL
-    */
-   public void setGadgetURL(String gadgetURL);
+    /**
+     * Set the gadget's URL.
+     *
+     * @param gadgetURL
+     *         the gadget's URL
+     */
+    public void setGadgetURL(String gadgetURL);
 
-   /**
-    * Change the module identifier.
-    * 
-    * Used double because the Java long type cannot be represented in JavaScript as a numeric type.
-    * http://code.google.com/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html#important
-    * 
-    * @param moduleId the module identifier
-    */
-   public void setModuleId(double moduleId);
+    /**
+     * Change the module identifier.
+     * <p/>
+     * Used double because the Java long type cannot be represented in JavaScript as a numeric type.
+     * http://code.google.com/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html#important
+     *
+     * @param moduleId
+     *         the module identifier
+     */
+    public void setModuleId(double moduleId);
 
-   /**
-    * Returns the module identifier.
-    * 
-    * Used double because the Java long type cannot be represented in JavaScript as a numeric type.
-    * http://code.google.com/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html#important
-    * 
-    * @return the module ID
-    */
-   public double getModuleId();
+    /**
+     * Returns the module identifier.
+     * <p/>
+     * Used double because the Java long type cannot be represented in JavaScript as a numeric type.
+     * http://code.google.com/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html#important
+     *
+     * @return the module ID
+     */
+    public double getModuleId();
 
 }

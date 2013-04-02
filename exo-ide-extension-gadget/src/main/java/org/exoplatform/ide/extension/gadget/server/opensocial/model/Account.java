@@ -20,73 +20,56 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
 
 /**
  * Describes an account held by this Person, which MAY be on the Service Provider's service, or MAY be on a different service.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- * 
  */
-public class Account
-{
-   /**
-    * The top-most authoritative domain for this account.
-    */
-   private String domain;
+public class Account {
+    /** The top-most authoritative domain for this account. */
+    private String domain;
 
-   /**
-    * An alphanumeric user name, usually chosen by the user.
-    */
-   private String userName;
+    /** An alphanumeric user name, usually chosen by the user. */
+    private String userName;
 
-   /**
-    * A user ID associated with this account.
-    */
-   private String userId;
+    /** A user ID associated with this account. */
+    private String userId;
 
-   /**
-    * @return the domain
-    */
-   public String getDomain()
-   {
-      return domain;
-   }
+    /** @return the domain */
+    public String getDomain() {
+        return domain;
+    }
 
-   /**
-    * @param domain the domain to set
-    */
-   public void setDomain(String domain)
-   {
-      this.domain = domain;
-   }
+    /**
+     * @param domain
+     *         the domain to set
+     */
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
 
-   /**
-    * @return the userName
-    */
-   public String getUserName()
-   {
-      return userName;
-   }
+    /** @return the userName */
+    public String getUserName() {
+        return userName;
+    }
 
-   /**
-    * @param userName the userName to set
-    */
-   public void setUserName(String userName)
-   {
-      this.userName = userName;
-   }
+    /**
+     * @param userName
+     *         the userName to set
+     */
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-   /**
-    * @return the userId
-    */
-   public String getUserId()
-   {
-      return userId;
-   }
+    /** @return the userId */
+    public String getUserId() {
+        return userId;
+    }
 
-   /**
-    * @param userId the userId to set
-    */
-   public void setUserId(String userId)
-   {
-      this.userId = userId;
-   }
+    /**
+     * @param userId
+     *         the userId to set
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }

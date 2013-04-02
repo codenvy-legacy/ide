@@ -20,28 +20,21 @@ package org.exoplatform.ide.extension.gadget.server.opensocial.model;
 
 /**
  * Enumeration of message statuses.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Nov 19, 2010 $
- * 
  */
 public enum Status {
-   NEW("new"), DELETED("deleted"), FLAGGED("read");
-   /**
-    * The type of message.
-    */
-   private final String status;
+    NEW("new"), DELETED("deleted"), FLAGGED("read");
+    /** The type of message. */
+    private final String status;
 
-   Status(String status)
-   {
-      this.status = status;
-   }
+    Status(String status) {
+        this.status = status;
+    }
 
-   /**
-    * @return String
-    */
-   public String value()
-   {
-      return status;
-   }
+    /** @return String */
+    public String value() {
+        return status;
+    }
 }

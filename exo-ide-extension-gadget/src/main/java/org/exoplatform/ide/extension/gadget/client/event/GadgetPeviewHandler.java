@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface GadgetPeviewHandler extends EventHandler
-{
+public interface GadgetPeviewHandler extends EventHandler {
 
-   void onGadgetPreview(GadgetPeviewEvent event);
+    void onGadgetPreview(GadgetPeviewEvent event);
 
 }
