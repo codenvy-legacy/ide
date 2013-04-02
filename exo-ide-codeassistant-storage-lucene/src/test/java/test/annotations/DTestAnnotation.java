@@ -21,7 +21,6 @@ package test.annotations;
 /**
  *
  */
-public @interface DTestAnnotation
-{
+public @interface DTestAnnotation {
 
 }

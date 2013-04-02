@@ -23,49 +23,33 @@ import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 
-/**
- * Field prefixed constraint
- */
-public class FieldPrefixSearchConstraint implements LuceneSearchConstraint
-{
-   /**
-    * Name of field to search
-    */
-   private final String filedName;
+/** Field prefixed constraint */
+public class FieldPrefixSearchConstraint implements LuceneSearchConstraint {
+    /** Name of field to search */
+    private final String filedName;
 
-   /**
-    * Prefix of the field
-    */
-   private final String prefix;
+    /** Prefix of the field */
+    private final String prefix;
 
-   public FieldPrefixSearchConstraint(String filedName, String prefix)
-   {
-      super();
-      this.filedName = filedName;
-      this.prefix = prefix;
-   }
+    public FieldPrefixSearchConstraint(String filedName, String prefix) {
+        super();
+        this.filedName = filedName;
+        this.prefix = prefix;
+    }
 
-   /**
-    * @throws CodeAssistantException
-    * 
-    */
-   @Override
-   public Query getQuery() throws CodeAssistantException
-   {
-      return new PrefixQuery(new Term(filedName, prefix));
-   }
+    /** @throws CodeAssistantException */
+    @Override
+    public Query getQuery() throws CodeAssistantException {
+        return new PrefixQuery(new Term(filedName, prefix));
+    }
 
-   public static LuceneSearchConstraint prefix(String fieldName, String prefix)
-   {
-      return new FieldPrefixSearchConstraint(fieldName, prefix);
-   }
+    public static LuceneSearchConstraint prefix(String fieldName, String prefix) {
+        return new FieldPrefixSearchConstraint(fieldName, prefix);
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneSearchConstraint#matchAll()
-    */
-   @Override
-   public boolean matchAll()
-   {
-      return prefix == null || prefix.isEmpty();
-   }
+    /** @see org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneSearchConstraint#matchAll() */
+    @Override
+    public boolean matchAll() {
+        return prefix == null || prefix.isEmpty();
+    }
 }

@@ -26,142 +26,98 @@ import java.util.List;
  * with tags and<br>
  * few lines.
  * </p>
+ *
  * @author Test class doclets
  */
-public class JavaDocClass
-{
+public class JavaDocClass {
 
-   public String fieldWithoutJavaDoc;
+    public String fieldWithoutJavaDoc;
 
-   /**
-    * Field java doc
-    * @author Test field doclets
-    */
-   public String field;
+    /**
+     * Field java doc
+     *
+     * @author Test field doclets
+     */
+    public String field;
 
-   /**
-    * Constructor java doc with parameters
-    */
-   public JavaDocClass(int p1, Integer p2)
-   {
-   }
+    /** Constructor java doc with parameters */
+    public JavaDocClass(int p1, Integer p2) {
+    }
 
-   public JavaDocClass()
-   {
-   }
+    public JavaDocClass() {
+    }
 
-   /**
-    * Method java doc
-    */
-   public void method()
-   {
-   }
+    /** Method java doc */
+    public void method() {
+    }
 
-   /**
-    * Method with primitive param
-    */
-   public void method(int p1)
-   {
-   }
+    /** Method with primitive param */
+    public void method(int p1) {
+    }
 
-   /**
-    * Method with object param
-    */
-   public void method(Double p1)
-   {
-   }
+    /** Method with object param */
+    public void method(Double p1) {
+    }
 
-   /**
-    * Method with primitive and object params
-    */
-   public void method(int p1, Double p2)
-   {
-   }
+    /** Method with primitive and object params */
+    public void method(int p1, Double p2) {
+    }
 
-   public void methodWithoutJavaDocs(Object p1)
-   {
-   }
+    public void methodWithoutJavaDocs(Object p1) {
+    }
 
-   /**
-    * Private class with java doc
-    */
-   private class PrivateClass
-   {
+    /** Private class with java doc */
+    private class PrivateClass {
 
-      /**
-       * Constructor of private class
-       */
-      public PrivateClass()
-      {
-      }
+        /** Constructor of private class */
+        public PrivateClass() {
+        }
 
-      /**
-       * Method of private class
-       */
-      public void method()
-      {
-      }
+        /** Method of private class */
+        public void method() {
+        }
 
-   }
+    }
 
-   private class ClassWithoutJavadoc
-   {
+    private class ClassWithoutJavadoc {
 
-      /**
-       * Method with java docs in uncommented class
-       */
-      public void method()
-      {
-      }
+        /** Method with java docs in uncommented class */
+        public void method() {
+        }
 
-   }
+    }
 
 }
 
-/**
- * Second private class
- */
-class PrivateClass
-{
+/** Second private class */
+class PrivateClass {
 
 }
 
-/**
- * Class with generics
- */
-class ClassWithGenerics<T extends Number>
-{
+/** Class with generics */
+class ClassWithGenerics<T extends Number> {
 
-   /**
-    * Field with generics
-    */
-   T genericField;
+    /** Field with generics */
+    T genericField;
 
-   /**
-    * Method with generics
-    */
-   public T method(T p1)
-   {
-      return null;
-   }
+    /** Method with generics */
+    public T method(T p1) {
+        return null;
+    }
 
-   /**
-    * Method with list as parameter {@link asdf}
-    */
-   public T method(List<? extends Number> p1)
-   {
-      return null;
-   }
+    /** Method with list as parameter {@link asdf} */
+    public T method(List<? extends Number> p1) {
+        return null;
+    }
 
-   /**
-    * Begin
-    * 
-    * @see PrivateClass asdf Middle
-    * @see ClassWithGenerics#method(List)
-    * @author Author End
-    */
-   public void method()
-   {
-   }
+    /**
+     * Begin
+     *
+     * @author Author End
+     * @see PrivateClass asdf Middle
+     * @see ClassWithGenerics#method(List)
+     */
+    public void method() {
+    }
 
 }

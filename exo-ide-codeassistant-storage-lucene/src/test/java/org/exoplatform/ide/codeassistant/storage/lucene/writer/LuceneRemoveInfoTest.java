@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
-import static org.exoplatform.ide.codeassistant.asm.ClassParser.getClassFile;
-import static org.exoplatform.ide.codeassistant.asm.ClassParser.parse;
-import static org.junit.Assert.assertEquals;
-
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -35,78 +31,75 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
+import static org.exoplatform.ide.codeassistant.asm.ClassParser.getClassFile;
+import static org.exoplatform.ide.codeassistant.asm.ClassParser.parse;
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: LuceneTypeInfoRemoveTest.java Oct 24, 2012 vetal $
- *
  */
-public class LuceneRemoveInfoTest
-{
+public class LuceneRemoveInfoTest {
 
-   private LuceneDataWriter writer;
+    private LuceneDataWriter writer;
 
-   private LuceneInfoStorage luceneInfoStorage;
+    private LuceneInfoStorage luceneInfoStorage;
 
-   private IndexWriter indexWriter;
+    private IndexWriter indexWriter;
 
-   RAMDirectory indexDirectory;
+    RAMDirectory indexDirectory;
 
-   @Before
-   public void createIndex() throws Exception
-   {
-      indexDirectory = new RAMDirectory();
-      luceneInfoStorage = new LuceneInfoStorage(indexDirectory);
-      writer = new LuceneDataWriter(luceneInfoStorage);
-      indexWriter = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-   }
+    @Before
+    public void createIndex() throws Exception {
+        indexDirectory = new RAMDirectory();
+        luceneInfoStorage = new LuceneInfoStorage(indexDirectory);
+        writer = new LuceneDataWriter(luceneInfoStorage);
+        indexWriter = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+    }
 
-   @Test
-   public void removeTypeInfoTest() throws Exception
-   {
-      //full index
-      List<TypeInfo> typeInfos = Arrays.asList(new TypeInfo[]{parse(getClassFile(Object.class))});
-      DataIndexer indexer = new DataIndexer();
-      for (TypeInfo typeInfo : typeInfos)
-      {
-         indexWriter.addDocument(indexer.createTypeInfoDocument(typeInfo, "rt"));
-      }
-      indexWriter.commit();
-      indexWriter.close();
+    @Test
+    public void removeTypeInfoTest() throws Exception {
+        //full index
+        List<TypeInfo> typeInfos = Arrays.asList(new TypeInfo[]{parse(getClassFile(Object.class))});
+        DataIndexer indexer = new DataIndexer();
+        for (TypeInfo typeInfo : typeInfos) {
+            indexWriter.addDocument(indexer.createTypeInfoDocument(typeInfo, "rt"));
+        }
+        indexWriter.commit();
+        indexWriter.close();
 
-      //insure that document add
-      IndexReader reader = IndexReader.open(indexDirectory, true);
-      assertEquals(1, reader.numDocs());
+        //insure that document add
+        IndexReader reader = IndexReader.open(indexDirectory, true);
+        assertEquals(1, reader.numDocs());
 
-      writer.removeTypeInfo("rt");
+        writer.removeTypeInfo("rt");
 
-      reader = IndexReader.open(indexDirectory, true);
-      assertEquals(0, reader.numDocs());
+        reader = IndexReader.open(indexDirectory, true);
+        assertEquals(0, reader.numDocs());
 
-   }
-   
-   
-   @Test
-   public void removePackageTest() throws Exception
-   {
-      //full index
-      DataIndexer indexer = new DataIndexer();
-      TreeSet<String> packages = new TreeSet<String>(Arrays.asList("java", "java.lang","org","org.exoplatform","org.exoplatform.ide"));
-      for (String pack : packages)
-      {
-         indexWriter.addDocument(indexer.createPackageDocument(pack, "rt"));
-      }
-      indexWriter.commit();
-      indexWriter.close();
+    }
 
-      //insure that document add
-      IndexReader reader = IndexReader.open(indexDirectory, true);
-      assertEquals(5, reader.numDocs());
 
-      writer.removePackages("rt");
+    @Test
+    public void removePackageTest() throws Exception {
+        //full index
+        DataIndexer indexer = new DataIndexer();
+        TreeSet<String> packages = new TreeSet<String>(Arrays.asList("java", "java.lang", "org", "org.exoplatform", "org.exoplatform.ide"));
+        for (String pack : packages) {
+            indexWriter.addDocument(indexer.createPackageDocument(pack, "rt"));
+        }
+        indexWriter.commit();
+        indexWriter.close();
 
-      reader = IndexReader.open(indexDirectory, true);
-      assertEquals(0, reader.numDocs());
+        //insure that document add
+        IndexReader reader = IndexReader.open(indexDirectory, true);
+        assertEquals(5, reader.numDocs());
 
-   }
+        writer.removePackages("rt");
+
+        reader = IndexReader.open(indexDirectory, true);
+        assertEquals(0, reader.numDocs());
+
+    }
 
 }

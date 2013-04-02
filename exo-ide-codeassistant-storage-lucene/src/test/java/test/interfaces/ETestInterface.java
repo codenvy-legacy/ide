@@ -21,7 +21,6 @@ package test.interfaces;
 /**
  *
  */
-public interface ETestInterface
-{
+public interface ETestInterface {
 
 }

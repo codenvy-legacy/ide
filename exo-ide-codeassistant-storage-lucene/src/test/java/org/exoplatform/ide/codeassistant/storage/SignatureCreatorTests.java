@@ -18,31 +18,24 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
 
+public class SignatureCreatorTests {
 
-public class SignatureCreatorTests
-{
-
-   /**
-    * Ensures that creating an invalid type signature throws an IllegalArgumentException or return the expected signature.
-    */
-   protected void assertInvalidTypeSignature(String typeName, boolean isResolved, String expected)
-   {
-      String actual;
-      try
-      {
-         actual = SignatureCreator.createTypeSignature(typeName, isResolved);
-      }
-      catch (IllegalArgumentException e)
-      {
-         return;
-      }
-      assertEquals(expected, actual);
-   }
+    /** Ensures that creating an invalid type signature throws an IllegalArgumentException or return the expected signature. */
+    protected void assertInvalidTypeSignature(String typeName, boolean isResolved, String expected) {
+        String actual;
+        try {
+            actual = SignatureCreator.createTypeSignature(typeName, isResolved);
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+        assertEquals(expected, actual);
+    }
 
 //   /**
 //    * @see Signature
@@ -58,122 +51,108 @@ public class SignatureCreatorTests
 //
 //   }
 
-   @Test
-   public void testCreateMethodSignature()
-   {
-      assertEquals("Signature#createMethodSignature is not correct 1", "(QString;QObject;I)I",
-         SignatureCreator.createMethodSignature(new String[]{"QString;", "QObject;", "I"}, "I"));
-      assertEquals("Signature#createMethodSignature is not correct 2", "()Ljava.lang.String;",
-         SignatureCreator.createMethodSignature(new String[]{}, "Ljava.lang.String;"));
-   }
+    @Test
+    public void testCreateMethodSignature() {
+        assertEquals("Signature#createMethodSignature is not correct 1", "(QString;QObject;I)I",
+                     SignatureCreator.createMethodSignature(new String[]{"QString;", "QObject;", "I"}, "I"));
+        assertEquals("Signature#createMethodSignature is not correct 2", "()Ljava.lang.String;",
+                     SignatureCreator.createMethodSignature(new String[]{}, "Ljava.lang.String;"));
+    }
 
-   @Test
-   public void testCreateTypeSignature()
-   {
-      assertEquals("Signature#createTypeSignature is not correct1", "I",
-         SignatureCreator.createTypeSignature("int".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct2", "Ljava.lang.String;",
-         SignatureCreator.createTypeSignature("java.lang.String".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct3", "QString;",
-         SignatureCreator.createTypeSignature("String".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct4", "Qjava.lang.String;",
-         SignatureCreator.createTypeSignature("java.lang.String".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct5", "[I",
-         SignatureCreator.createTypeSignature("int []".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct6", "[QString;",
-         SignatureCreator.createTypeSignature("String []".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct7", "[Ljava.util.Vector;",
-         SignatureCreator.createTypeSignature("java.util.Vector []".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct8", "[[Ljava.util.Vector;",
-         SignatureCreator.createTypeSignature("java .\n util  .  Vector[  ][]".toCharArray(), true));
-      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=41019
-      assertEquals("Signature#createTypeSignature is not correct9", "Linteration.test.MyData;",
-         SignatureCreator.createTypeSignature("interation.test.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct10", "Llongtest.MyData;",
-         SignatureCreator.createTypeSignature("longtest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct11", "Lbooleantest.MyData;",
-         SignatureCreator.createTypeSignature("booleantest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct12", "Lbytetest.MyData;",
-         SignatureCreator.createTypeSignature("bytetest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct13", "Lchartest.MyData;",
-         SignatureCreator.createTypeSignature("chartest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct14", "Lshorttest.MyData;",
-         SignatureCreator.createTypeSignature("shorttest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct15", "Ldoubletest.MyData;",
-         SignatureCreator.createTypeSignature("doubletest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct16", "Lfloattest.MyData;",
-         SignatureCreator.createTypeSignature("floattest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct17", "Lvoidtest.MyData;",
-         SignatureCreator.createTypeSignature("voidtest.MyData".toCharArray(), true));
-      assertEquals("Signature#createTypeSignature is not correct18", "QList<QList<QString;>;>;",
-         SignatureCreator.createTypeSignature("List<List<String>>".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct19", "QList<QList<I>;>;",
-         SignatureCreator.createTypeSignature("List<List<int>>".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct20", "[QList<QList<[I>;>;",
-         SignatureCreator.createTypeSignature("List<List<int[]>>[]".toCharArray(), false));
-      assertEquals("Signature#createTypeSignature is not correct21",
-         "Qjava.y.Map<[QObject;QString;>.MapEntry<[Qp.K<QT;>;[Qq.r.V2;>;",
-         SignatureCreator.createTypeSignature("java.y.Map<Object[],String>.MapEntry<p.K<T>[],q.r.V2[]>".toCharArray(), false));
-   }
+    @Test
+    public void testCreateTypeSignature() {
+        assertEquals("Signature#createTypeSignature is not correct1", "I",
+                     SignatureCreator.createTypeSignature("int".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct2", "Ljava.lang.String;",
+                     SignatureCreator.createTypeSignature("java.lang.String".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct3", "QString;",
+                     SignatureCreator.createTypeSignature("String".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct4", "Qjava.lang.String;",
+                     SignatureCreator.createTypeSignature("java.lang.String".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct5", "[I",
+                     SignatureCreator.createTypeSignature("int []".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct6", "[QString;",
+                     SignatureCreator.createTypeSignature("String []".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct7", "[Ljava.util.Vector;",
+                     SignatureCreator.createTypeSignature("java.util.Vector []".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct8", "[[Ljava.util.Vector;",
+                     SignatureCreator.createTypeSignature("java .\n util  .  Vector[  ][]".toCharArray(), true));
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=41019
+        assertEquals("Signature#createTypeSignature is not correct9", "Linteration.test.MyData;",
+                     SignatureCreator.createTypeSignature("interation.test.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct10", "Llongtest.MyData;",
+                     SignatureCreator.createTypeSignature("longtest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct11", "Lbooleantest.MyData;",
+                     SignatureCreator.createTypeSignature("booleantest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct12", "Lbytetest.MyData;",
+                     SignatureCreator.createTypeSignature("bytetest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct13", "Lchartest.MyData;",
+                     SignatureCreator.createTypeSignature("chartest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct14", "Lshorttest.MyData;",
+                     SignatureCreator.createTypeSignature("shorttest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct15", "Ldoubletest.MyData;",
+                     SignatureCreator.createTypeSignature("doubletest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct16", "Lfloattest.MyData;",
+                     SignatureCreator.createTypeSignature("floattest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct17", "Lvoidtest.MyData;",
+                     SignatureCreator.createTypeSignature("voidtest.MyData".toCharArray(), true));
+        assertEquals("Signature#createTypeSignature is not correct18", "QList<QList<QString;>;>;",
+                     SignatureCreator.createTypeSignature("List<List<String>>".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct19", "QList<QList<I>;>;",
+                     SignatureCreator.createTypeSignature("List<List<int>>".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct20", "[QList<QList<[I>;>;",
+                     SignatureCreator.createTypeSignature("List<List<int[]>>[]".toCharArray(), false));
+        assertEquals("Signature#createTypeSignature is not correct21",
+                     "Qjava.y.Map<[QObject;QString;>.MapEntry<[Qp.K<QT;>;[Qq.r.V2;>;",
+                     SignatureCreator.createTypeSignature("java.y.Map<Object[],String>.MapEntry<p.K<T>[],q.r.V2[]>".toCharArray(), false));
+    }
 
-   /**
-    * Ensures that creating an invalid type signature throws an IllegalArgumentException.
-    */
-   @Test
-   public void testCreateInvalidTypeSignature()
-   {
-      assertInvalidTypeSignature(null, false, null);
-      assertInvalidTypeSignature("", false, "");
-      assertInvalidTypeSignature("int.Y", false, "I");
-      assertInvalidTypeSignature("Y [].X", false, "[QY;");
-      assertInvalidTypeSignature("X[[]", true, "[[LX;");
-   }
+    /** Ensures that creating an invalid type signature throws an IllegalArgumentException. */
+    @Test
+    public void testCreateInvalidTypeSignature() {
+        assertInvalidTypeSignature(null, false, null);
+        assertInvalidTypeSignature("", false, "");
+        assertInvalidTypeSignature("int.Y", false, "I");
+        assertInvalidTypeSignature("Y [].X", false, "[QY;");
+        assertInvalidTypeSignature("X[[]", true, "[[LX;");
+    }
 
-   @Test
-   public void testGetArrayCount()
-   {
-      assertEquals("Signature#getArrayCount is not correct", 4, SignatureCreator.getArrayCount("[[[[QString;"));
-      try
-      {
-         SignatureCreator.getArrayCount("");
-         assertTrue("Signature#getArrayCount is not correct, exception", false);
-      }
-      catch (IllegalArgumentException iae)
-      {
-         // do nothing
-      }
+    @Test
+    public void testGetArrayCount() {
+        assertEquals("Signature#getArrayCount is not correct", 4, SignatureCreator.getArrayCount("[[[[QString;"));
+        try {
+            SignatureCreator.getArrayCount("");
+            assertTrue("Signature#getArrayCount is not correct, exception", false);
+        } catch (IllegalArgumentException iae) {
+            // do nothing
+        }
 
-      // tests with 1.5-specific elements
-      assertEquals("Signature#getArrayCount not correct", 4, SignatureCreator.getArrayCount("[[[[Qlist<Qstring;>;"));
-   }
+        // tests with 1.5-specific elements
+        assertEquals("Signature#getArrayCount not correct", 4, SignatureCreator.getArrayCount("[[[[Qlist<Qstring;>;"));
+    }
 
-   @Test
-   public void testGetElementType()
-   {
-      assertEquals("Signature#getElementType is not correct1", "QString;", SignatureCreator.getElementType("[[[[QString;"));
-      assertEquals("Signature#getElementType is not correct2", "QString;", SignatureCreator.getElementType("QString;"));
-      assertEquals("Signature#getElementType is not correct2", "I", SignatureCreator.getElementType("[[I"));
-      try
-      {
-         SignatureCreator.getElementType("");
-         assertTrue("Signature#getArrayCount is not correct, exception", false);
-      }
-      catch (IllegalArgumentException iae)
-      {
-         // do nothing
-      }
+    @Test
+    public void testGetElementType() {
+        assertEquals("Signature#getElementType is not correct1", "QString;", SignatureCreator.getElementType("[[[[QString;"));
+        assertEquals("Signature#getElementType is not correct2", "QString;", SignatureCreator.getElementType("QString;"));
+        assertEquals("Signature#getElementType is not correct2", "I", SignatureCreator.getElementType("[[I"));
+        try {
+            SignatureCreator.getElementType("");
+            assertTrue("Signature#getArrayCount is not correct, exception", false);
+        } catch (IllegalArgumentException iae) {
+            // do nothing
+        }
 
-      // tests with 1.5-specific elements
-      assertEquals("Signature#getElementType not correct", "Qlist<Qstring;>;",
-         SignatureCreator.getElementType("[[[[Qlist<Qstring;>;"));
-   }
+        // tests with 1.5-specific elements
+        assertEquals("Signature#getElementType not correct", "Qlist<Qstring;>;",
+                     SignatureCreator.getElementType("[[[[Qlist<Qstring;>;"));
+    }
 
-   @Test
-   public void testGetElementType2()
-   {
-      String typeSign = "Ljava.util.List;";
-      assertTrue(SignatureCreator.getElementType(typeSign) == typeSign);
-   }
+    @Test
+    public void testGetElementType2() {
+        String typeSign = "Ljava.util.List;";
+        assertTrue(SignatureCreator.getElementType(typeSign) == typeSign);
+    }
 
 //   /**
 //    * @see Signature

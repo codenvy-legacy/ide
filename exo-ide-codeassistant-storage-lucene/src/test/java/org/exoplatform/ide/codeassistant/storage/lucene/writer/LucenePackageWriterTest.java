@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
-import static org.junit.Assert.*;
-
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
@@ -29,30 +27,28 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.TreeSet;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  4:26:14 PM Mar 5, 2012 evgen $
- *
  */
-public class LucenePackageWriterTest
-{
-   private LuceneDataWriter writer;
+public class LucenePackageWriterTest {
+    private LuceneDataWriter writer;
 
-   private LuceneInfoStorage luceneInfoStorage;
+    private LuceneInfoStorage luceneInfoStorage;
 
-   @Before
-   public void createIndex() throws Exception
-   {
-      luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
-      writer = new LuceneDataWriter(luceneInfoStorage);
-   }
-   
-   @Test
-   public void shouldAddPackage() throws Exception
-   {
-      writer.addPackages(new TreeSet<String>(Arrays.asList("java", "java.lang","org","org.exoplatform","org.exoplatform.ide")),"rt");
-      IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
-      assertEquals(5, reader.numDocs());
-      reader.close();
-   }
+    @Before
+    public void createIndex() throws Exception {
+        luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
+        writer = new LuceneDataWriter(luceneInfoStorage);
+    }
+
+    @Test
+    public void shouldAddPackage() throws Exception {
+        writer.addPackages(new TreeSet<String>(Arrays.asList("java", "java.lang", "org", "org.exoplatform", "org.exoplatform.ide")), "rt");
+        IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
+        assertEquals(5, reader.numDocs());
+        reader.close();
+    }
 }

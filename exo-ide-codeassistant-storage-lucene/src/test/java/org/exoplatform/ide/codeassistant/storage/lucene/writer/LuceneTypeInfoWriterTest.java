@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
-import static org.exoplatform.ide.codeassistant.asm.ClassParser.getClassFile;
-import static org.exoplatform.ide.codeassistant.asm.ClassParser.parse;
-import static org.junit.Assert.assertEquals;
-import static test.ClassManager.createIndexForClass;
-import static test.ClassManager.getAllTestClasses;
-
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
@@ -34,40 +28,42 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.exoplatform.ide.codeassistant.asm.ClassParser.getClassFile;
+import static org.exoplatform.ide.codeassistant.asm.ClassParser.parse;
+import static org.junit.Assert.assertEquals;
+import static test.ClassManager.createIndexForClass;
+import static test.ClassManager.getAllTestClasses;
+
 /**
  *
  */
-public class LuceneTypeInfoWriterTest
-{
-   private LuceneDataWriter writer;
+public class LuceneTypeInfoWriterTest {
+    private LuceneDataWriter writer;
 
-   private LuceneInfoStorage luceneInfoStorage;
+    private LuceneInfoStorage luceneInfoStorage;
 
-   @Before
-   public void createIndex() throws Exception
-   {
-      luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
-      writer = new LuceneDataWriter(luceneInfoStorage);
-   }
+    @Before
+    public void createIndex() throws Exception {
+        luceneInfoStorage = new LuceneInfoStorage(new RAMDirectory());
+        writer = new LuceneDataWriter(luceneInfoStorage);
+    }
 
-   @Test
-   public void shouldIndexAllClasses() throws Exception
-   {
-      createIndexForClass(writer, getAllTestClasses());
-      IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
-      assertEquals(getAllTestClasses().length, reader.numDocs());
-      reader.close();
-   }
+    @Test
+    public void shouldIndexAllClasses() throws Exception {
+        createIndexForClass(writer, getAllTestClasses());
+        IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
+        assertEquals(getAllTestClasses().length, reader.numDocs());
+        reader.close();
+    }
 
-   @Test
-   public void shouldBeAbleToAddTwice() throws Exception
-   {
-      writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(Object.class))}), "rt");
-      IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
-      assertEquals(1, reader.numDocs());
-      writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(List.class))}), "rt");
-      reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
-      assertEquals(2, reader.numDocs());
+    @Test
+    public void shouldBeAbleToAddTwice() throws Exception {
+        writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(Object.class))}), "rt");
+        IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
+        assertEquals(1, reader.numDocs());
+        writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(List.class))}), "rt");
+        reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
+        assertEquals(2, reader.numDocs());
 
-   }
+    }
 }

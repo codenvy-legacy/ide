@@ -23,23 +23,17 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 
 /**
  * Capability to search some functionality according to the specific structure.
- * 
+ * <p/>
  * Implementation should provide necessary document changes and assist in the
  * query creation
- * 
  */
-public interface LuceneSearchConstraint
-{
-   /**
-    * 
-    * @return - lucene query
-    * @throws CodeAssistantException
-    */
-   public Query getQuery() throws CodeAssistantException;
+public interface LuceneSearchConstraint {
+    /**
+     * @return - lucene query
+     * @throws CodeAssistantException
+     */
+    public Query getQuery() throws CodeAssistantException;
 
-   /**
-    * 
-    * @return - true if this constraint match all documents.
-    */
-   public boolean matchAll();
+    /** @return - true if this constraint match all documents. */
+    public boolean matchAll();
 }

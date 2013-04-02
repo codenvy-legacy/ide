@@ -28,21 +28,18 @@ import java.io.IOException;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 5:25:23 PM Mar 5, 2012 evgen $
- * 
  */
-public class PackageExtractor implements ContentExtractor<String>
-{
+public class PackageExtractor implements ContentExtractor<String> {
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(org.apache.lucene.index.IndexReader,
-    *      int)
-    */
-   @Override
-   public String getValue(IndexReader reader, int doc) throws IOException
-   {
-      Document document = reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.PACKAGE}));
+    /**
+     * @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(org.apache.lucene.index.IndexReader,
+     *      int)
+     */
+    @Override
+    public String getValue(IndexReader reader, int doc) throws IOException {
+        Document document = reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.PACKAGE}));
 
-      return document.get(DataIndexFields.PACKAGE);
-   }
+        return document.get(DataIndexFields.PACKAGE);
+    }
 
 }
