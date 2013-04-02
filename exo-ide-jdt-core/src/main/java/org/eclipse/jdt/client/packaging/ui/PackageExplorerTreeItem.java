@@ -217,5 +217,10 @@ public abstract class PackageExplorerTreeItem extends TreeItem
          return item1.getName().compareTo(item2.getName());
       }
    };
+   
+   public void setIcons()
+   {
+      
+   }
 
 }
