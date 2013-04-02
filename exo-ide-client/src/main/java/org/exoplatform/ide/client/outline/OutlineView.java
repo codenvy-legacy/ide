@@ -19,6 +19,12 @@
 package org.exoplatform.ide.client.outline;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTree;
@@ -99,6 +105,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
 
       outlineTreeViewModel = new OutlineTreeViewModel(selectionModel);
       outlineTree = new CellTree(outlineTreeViewModel, null, res);
+      outlineTree.getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
 
       // Keyboard is disabled because of the selection problem (when selecting programmatically), if
       // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
@@ -106,9 +113,56 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
       outlineTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
       outlineTree.getElement().setId("ideOutlineTreeGrid");
+      outlineTree.getElement().getStyle().setWhiteSpace(Style.WhiteSpace.NOWRAP);
       mainPanel.add(outlineTree);
       outlineTreeViewModel.getDataProvider().getList().add(loadingMessage);
       outlineTree.setVisible(false);
+
+      /**
+       * when node opened we start fixing properly appear of scrollbar
+       */
+      outlineTree.addOpenHandler(new OpenHandler<TreeNode>()
+      {
+         @Override
+         public void onOpen(OpenEvent<TreeNode> event)
+         {
+            cellTreeScrollBarFix();
+         }
+      });
+
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            outlineTree.getElement().getFirstChildElement().getStyle().setOverflow(Style.Overflow.VISIBLE);
+         }
+      });
+   }
+
+   /**
+    * This fix need for properly working scrollbar in outline view, solution is not good, but for this moment it works.
+    *
+    */
+   private void cellTreeScrollBarFix()
+   {
+      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            NodeList<Element> elements = outlineTree.getElement().getElementsByTagName("div");
+            for (int i = 0; i < elements.getLength(); i++) {
+               Element el = elements.getItem(i);
+               if (el.hasAttribute("role") && el.getAttribute("role").equals("treeitem")) {
+                  if (el.getChildCount() == 2) {
+                     com.google.gwt.user.client.Element uel = el.getChild(1).cast();
+                     uel.getStyle().clearOverflow(); // <- !!! this allow to show scrollbar
+                  }
+               }
+            }
+         }
+      });
    }
 
    @Override
@@ -215,6 +269,7 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
          }
       }
 
+      cellTreeScrollBarFix();
    }
 
    /**
