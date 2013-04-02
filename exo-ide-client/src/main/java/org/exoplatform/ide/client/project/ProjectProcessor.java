@@ -85,7 +85,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             @Override
             public void onSuccess(Folder result) {
                 IDELoader.hide();
-                openedProject.dump();
+                //openedProject.dump();
                 IDE.fireEvent(new ProjectOpenedEvent(openedProject));
 
                 new Timer() {
@@ -184,7 +184,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             @Override
             public void onSuccess(Folder result) {
                 IDELoader.hide();
-                openedProject.dump();
+                //openedProject.dump();
 
                 refreshedFolders.add((FolderModel)result);
                 Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
@@ -198,7 +198,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             @Override
             public void onFailure(Throwable caught) {
                 IDELoader.hide();
-                openedProject.dump();
+                //openedProject.dump();
                 caught.printStackTrace();
                 //IDE.fireEvent(new ExceptionThrownEvent(caught));
             }

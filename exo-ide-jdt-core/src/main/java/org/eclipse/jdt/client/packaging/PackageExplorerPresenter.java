@@ -23,17 +23,51 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.event.*;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.*;
-import org.exoplatform.ide.client.framework.project.*;
-import org.exoplatform.ide.client.framework.project.api.*;
+import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
+import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent;
+import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.FolderOpenedEvent;
+import org.exoplatform.ide.client.framework.project.api.IDEProject;
+import org.exoplatform.ide.client.framework.project.api.ProjectBuilder;
 import org.exoplatform.ide.client.framework.project.api.ProjectBuilder.Builder;
-import org.exoplatform.ide.client.framework.settings.*;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsSavedEvent;
+import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -41,6 +75,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -144,53 +179,52 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     }
 
     private void bindDisplay() {
-//      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
-//      {
-//         @Override
-//         public void onOpen(final OpenEvent<Item> event)
-//         {
-//            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//            {
-//               @Override
-//               public void execute()
-//               {
-//                  FolderModel folder = (FolderModel)event.getTarget();
-//                  List<Item> children = display.getTreeChildren(folder);
-//                  IDE.fireEvent(new FolderOpenedEvent(folder, children));
-//               }
-//            });            
-//         }
-//      });
+      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
+      {
+         @Override
+         public void onOpen(final OpenEvent<Item> event)
+         {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+            {
+               @Override
+               public void execute()
+               {
+                  FolderModel folder = (FolderModel)event.getTarget();
+                  List<Item> children = display.getTreeChildren(folder);
+                  IDE.fireEvent(new FolderOpenedEvent(folder, children));
+               }
+            });            
+         }
+      });
 
-//      display.getBrowserTree().addDoubleClickHandler(new DoubleClickHandler()
-//      {
-//         @Override
-//         public void onDoubleClick(DoubleClickEvent event)
-//         {
-//            Object selectedObject = display.getSelectedObject();
-//            if (selectedObject instanceof FileModel)
-//            {
-//               FileModel file = (FileModel)selectedObject;
-//               IDE.fireEvent(new OpenFileEvent(file));
-//            }
-//         }
-//      });
+      display.getBrowserTree().addDoubleClickHandler(new DoubleClickHandler()
+      {
+         @Override
+         public void onDoubleClick(DoubleClickEvent event)
+         {
+            Item selectedItem = display.getSelectedItem();
+            if (selectedItem instanceof FileModel)
+            {
+               IDE.fireEvent(new OpenFileEvent((FileModel)selectedItem));
+            }
+         }
+      });
 
-//      display.getBrowserTree().addSelectionHandler(new SelectionHandler<Item>()
-//      {
-//         @Override
-//         public void onSelection(SelectionEvent<Item> event)
-//         {
-//            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//            {
-//               @Override
-//               public void execute()
-//               {
-//                  treeItemSelected();
-//               }
-//            });
-//         }
-//      });
+      display.getBrowserTree().addSelectionHandler(new SelectionHandler<Item>()
+      {
+         @Override
+         public void onSelection(SelectionEvent<Item> event)
+         {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+            {
+               @Override
+               public void execute()
+               {
+                  treeItemSelected();
+               }
+            });
+         }
+      });
 
         display.getLinkWithEditorButton().addClickHandler(new ClickHandler() {
             @Override
@@ -512,6 +546,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
     @Override
     public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event) {
+       System.out.println("PackageExplorerPresenter.onShowHideHiddenFiles()");
+       
         if (display == null) {
             return;
         }

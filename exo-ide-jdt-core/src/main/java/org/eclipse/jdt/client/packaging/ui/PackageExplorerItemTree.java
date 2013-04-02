@@ -36,6 +36,7 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,7 +99,6 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     }
 
     public boolean selectItem(Item item) {
-        System.out.println("PackageExplorerItemTree.selectItem()");
         if (tree.getItemCount() == 0) {
             return false;
         }
@@ -138,6 +138,8 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     }
 
     public void refresh() {
+       System.out.println("PackageExplorerItemTree.refresh()");
+       
         if (tree.getItemCount() == 1) {
             PackageExplorerTreeItem packageExplorerTreeItem = (JavaProjectTreeItem)tree.getItem(0);
             packageExplorerTreeItem.refresh(false);
@@ -152,23 +154,19 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
      *         Map of Item, info icon position and info icon URL
      */
     public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons) {
-        System.out.println("PackageExplorerItemTree.addItemsIcons()");
-
-        //      for (Item item : itemsIcons.keySet())
-        //      {
-        //         TreeItem node = treeItems.get(item.getId());
-        //         if (node == null)
-        //         {
-        //            continue;
-        //         }
-        //         Grid grid = (Grid)node.getWidget();
-        //         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-        //         Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);
-        //         for (TreeIconPosition position : map.keySet())
-        //         {
-        //            treeIcon.addIcon(position, map.get(position));
-        //         }
-        //      }
+        if (tree.getItemCount() == 0)
+        {
+           return;
+        }
+        
+        Map<String, Map<TreeIconPosition, ImageResource>> icons = new HashMap<String, Map<TreeIconPosition,ImageResource>>();
+        for (Item item : itemsIcons.keySet())
+        {
+           Map<TreeIconPosition, ImageResource> iconMap = itemsIcons.get(item);
+           icons.put(item.getId(), iconMap);
+        }
+        
+        ((PackageExplorerTreeItem)tree.getItem(0)).setIcons(icons);
     }
 
     /**
@@ -178,20 +176,19 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
      *         Map of item and position of info icon
      */
     public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons) {
-        System.out.println("PackageExplorerItemTree.removeItemIcons()");
-
-        //      for (Item item : itemsIcons.keySet())
-        //      {
-        //         TreeItem node = treeItems.get(item.getId());
-        //         if (node == null)
-        //         {
-        //            continue;
-        //         }
-        //
-        //         Grid grid = (Grid)node.getWidget();
-        //         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-        //         treeIcon.removeIcon(itemsIcons.get(item));
-        //      }
+        if (tree.getItemCount() == 0)
+        {
+           return;
+        }
+        
+        Map<String, TreeIconPosition> icons = new HashMap<String, TreeIconPosition>();
+        for (Item item : itemsIcons.keySet())
+        {
+           TreeIconPosition iconPosition = itemsIcons.get(item);
+           icons.put(item.getId(), iconPosition);
+        }
+        
+        ((PackageExplorerTreeItem)tree.getItem(0)).removeIcons(icons);        
     }
 
     public List<Item> getTreeChildren(FolderModel folder) {
