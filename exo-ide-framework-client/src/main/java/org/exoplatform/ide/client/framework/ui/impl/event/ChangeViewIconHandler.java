@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ChangeViewIconHandler extends EventHandler
-{
+public interface ChangeViewIconHandler extends EventHandler {
 
-   void onChangeViewIcon(ChangeViewIconEvent event);
+    void onChangeViewIcon(ChangeViewIconEvent event);
 
 }

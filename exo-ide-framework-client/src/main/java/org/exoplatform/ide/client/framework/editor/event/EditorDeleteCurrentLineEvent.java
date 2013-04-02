@@ -23,30 +23,22 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class EditorDeleteCurrentLineEvent extends GwtEvent<EditorDeleteCurrentLineHandler>
-{
+public class EditorDeleteCurrentLineEvent extends GwtEvent<EditorDeleteCurrentLineHandler> {
 
-   public static final GwtEvent.Type<EditorDeleteCurrentLineHandler> TYPE =
-      new GwtEvent.Type<EditorDeleteCurrentLineHandler>();
+    public static final GwtEvent.Type<EditorDeleteCurrentLineHandler> TYPE =
+            new GwtEvent.Type<EditorDeleteCurrentLineHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorDeleteCurrentLineHandler handler)
-   {
-      handler.onEditorDeleteCurrentLine(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorDeleteCurrentLineHandler handler) {
+        handler.onEditorDeleteCurrentLine(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorDeleteCurrentLineHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorDeleteCurrentLineHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

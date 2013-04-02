@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ShowContextMenuEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 23, 2012 11:31:01 AM anya $
- * 
  */
-public interface ShowContextMenuHandler extends EventHandler
-{
-   /**
-    * Show context menu.
-    * 
-    * @param event
-    */
-   void onShowContextMenu(ShowContextMenuEvent event);
+public interface ShowContextMenuHandler extends EventHandler {
+    /**
+     * Show context menu.
+     *
+     * @param event
+     */
+    void onShowContextMenu(ShowContextMenuEvent event);
 }

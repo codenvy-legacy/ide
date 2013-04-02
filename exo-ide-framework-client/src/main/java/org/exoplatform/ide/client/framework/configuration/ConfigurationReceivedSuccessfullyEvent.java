@@ -18,47 +18,40 @@
  */
 package org.exoplatform.ide.client.framework.configuration;
 
-import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Called after success configuration loading.
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ConfigurationReceivedSuccessfullyEvent extends GwtEvent<ConfigurationReceivedSuccessfullyHandler>
-{
+public class ConfigurationReceivedSuccessfullyEvent extends GwtEvent<ConfigurationReceivedSuccessfullyHandler> {
 
-   public static final GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> TYPE =
-      new GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler>();
+    public static final GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> TYPE =
+            new GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler>();
 
-   private IDEConfiguration configuration;
+    private IDEConfiguration configuration;
 
-   public ConfigurationReceivedSuccessfullyEvent(IDEConfiguration configuration)
-   {
-      this.configuration = configuration;
-   }
+    public ConfigurationReceivedSuccessfullyEvent(IDEConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
-   public IDEConfiguration getConfiguration()
-   {
-      return configuration;
-   }
+    public IDEConfiguration getConfiguration() {
+        return configuration;
+    }
 
-   @Override
-   protected void dispatch(ConfigurationReceivedSuccessfullyHandler handler)
-   {
-      handler.onConfigurationReceivedSuccessfully(this);
-   }
+    @Override
+    protected void dispatch(ConfigurationReceivedSuccessfullyHandler handler) {
+        handler.onConfigurationReceivedSuccessfully(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ConfigurationReceivedSuccessfullyHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

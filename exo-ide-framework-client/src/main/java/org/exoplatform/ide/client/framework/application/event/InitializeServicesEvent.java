@@ -18,55 +18,49 @@
  */
 package org.exoplatform.ide.client.framework.application.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 /**
  * Called after success configuration loading (IDEConficuration, UserInfo, ApplicationSettings)
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class InitializeServicesEvent extends GwtEvent<InitializeServicesHandler>
-{
+public class InitializeServicesEvent extends GwtEvent<InitializeServicesHandler> {
 
-   public static final GwtEvent.Type<InitializeServicesHandler> TYPE = new GwtEvent.Type<InitializeServicesHandler>();
+    public static final GwtEvent.Type<InitializeServicesHandler> TYPE = new GwtEvent.Type<InitializeServicesHandler>();
 
-   private IDEConfiguration applicationConfiguration;
+    private IDEConfiguration applicationConfiguration;
 
-   private Loader loader;
+    private Loader loader;
 
-   public InitializeServicesEvent(IDEConfiguration applicationConfiguration, Loader loader)
-   {
-      this.applicationConfiguration = applicationConfiguration;
-      this.loader = loader;
-   }
+    public InitializeServicesEvent(IDEConfiguration applicationConfiguration, Loader loader) {
+        this.applicationConfiguration = applicationConfiguration;
+        this.loader = loader;
+    }
 
-   public IDEConfiguration getApplicationConfiguration()
-   {
-      return applicationConfiguration;
-   }
+    public IDEConfiguration getApplicationConfiguration() {
+        return applicationConfiguration;
+    }
 
-   public Loader getLoader()
-   {
-      return loader;
-   }
+    public Loader getLoader() {
+        return loader;
+    }
 
-   @Override
-   protected void dispatch(InitializeServicesHandler handler)
-   {
-      handler.onInitializeServices(this);
-   }
+    @Override
+    protected void dispatch(InitializeServicesHandler handler) {
+        handler.onInitializeServices(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InitializeServicesHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<InitializeServicesHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

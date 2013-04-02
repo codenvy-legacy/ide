@@ -22,40 +22,34 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class OperationCompleteEvent extends GwtEvent<OperationCompleteHandler>
-{
+public class OperationCompleteEvent extends GwtEvent<OperationCompleteHandler> {
 
-   public static final GwtEvent.Type<OperationCompleteHandler> TYPE = new GwtEvent.Type<OperationCompleteHandler>();
+    public static final GwtEvent.Type<OperationCompleteHandler> TYPE = new GwtEvent.Type<OperationCompleteHandler>();
 
-   private GwtEvent<?> initialEvent;
+    private GwtEvent<?> initialEvent;
 
-   public OperationCompleteEvent(GwtEvent<?> initialEvent)
-   {
-      this.initialEvent = initialEvent;
-   }
+    public OperationCompleteEvent(GwtEvent<?> initialEvent) {
+        this.initialEvent = initialEvent;
+    }
 
-   public GwtEvent<?> getInitialEvent()
-   {
-      return initialEvent;
-   }
+    public GwtEvent<?> getInitialEvent() {
+        return initialEvent;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OperationCompleteHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<OperationCompleteHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(OperationCompleteHandler handler)
-   {
-      handler.onOperationComplete(this);
-   }
+    @Override
+    protected void dispatch(OperationCompleteHandler handler) {
+        handler.onOperationComplete(this);
+    }
 
 }

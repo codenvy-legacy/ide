@@ -24,45 +24,39 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class EditorReplaceFileEvent extends GwtEvent<EditorReplaceFileHandler>
-{
+public class EditorReplaceFileEvent extends GwtEvent<EditorReplaceFileHandler> {
 
-   public static final GwtEvent.Type<EditorReplaceFileHandler> TYPE = new GwtEvent.Type<EditorReplaceFileHandler>();
+    public static final GwtEvent.Type<EditorReplaceFileHandler> TYPE = new GwtEvent.Type<EditorReplaceFileHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   private FileModel newFile;
+    private FileModel newFile;
 
-   public EditorReplaceFileEvent(FileModel file, FileModel newFile)
-   {
-      this.file = file;
-      this.newFile = newFile;
-   }
+    public EditorReplaceFileEvent(FileModel file, FileModel newFile) {
+        this.file = file;
+        this.newFile = newFile;
+    }
 
-   public FileModel getFile()
-   {
-      return file;
-   }
+    public FileModel getFile() {
+        return file;
+    }
 
-   public FileModel getNewFile()
-   {
-      return newFile;
-   }
+    public FileModel getNewFile() {
+        return newFile;
+    }
 
-   @Override
-   protected void dispatch(EditorReplaceFileHandler handler)
-   {
-      handler.onEditorReplaceFile(this);
-   }
+    @Override
+    protected void dispatch(EditorReplaceFileHandler handler) {
+        handler.onEditorReplaceFile(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorReplaceFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorReplaceFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

@@ -21,14 +21,11 @@ package org.exoplatform.ide.client.framework.editor.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: EditorExpandFoldHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
- *
  */
-public interface EditorExpandFoldHandler extends EventHandler
-{
+public interface EditorExpandFoldHandler extends EventHandler {
 
-   void onEditorExpand(EditorExpandFoldEvent event);
+    void onEditorExpand(EditorExpandFoldEvent event);
 
 }

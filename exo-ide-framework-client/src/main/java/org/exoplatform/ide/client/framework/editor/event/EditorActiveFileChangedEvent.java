@@ -25,51 +25,42 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @version $Id: $
- * 
+ *          <p/>
  *          Fired when changed active file in editor
- * 
  */
-public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChangedHandler>
-{
+public class EditorActiveFileChangedEvent extends GwtEvent<EditorActiveFileChangedHandler> {
 
-   public static final GwtEvent.Type<EditorActiveFileChangedHandler> TYPE =
-      new GwtEvent.Type<EditorActiveFileChangedHandler>();
+    public static final GwtEvent.Type<EditorActiveFileChangedHandler> TYPE =
+            new GwtEvent.Type<EditorActiveFileChangedHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   private Editor editor;
+    private Editor editor;
 
-   public EditorActiveFileChangedEvent(FileModel file, Editor editor)
-   {
-      this.file = file;
-      this.editor = editor;
-   }
+    public EditorActiveFileChangedEvent(FileModel file, Editor editor) {
+        this.file = file;
+        this.editor = editor;
+    }
 
-   @Override
-   protected void dispatch(EditorActiveFileChangedHandler handler)
-   {
-      handler.onEditorActiveFileChanged(this);
-   }
+    @Override
+    protected void dispatch(EditorActiveFileChangedHandler handler) {
+        handler.onEditorActiveFileChanged(this);
+    }
 
-   @Override
-   public GwtEvent.Type<EditorActiveFileChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public GwtEvent.Type<EditorActiveFileChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public FileModel getFile()
-   {
-      return file;
-   }
+    public FileModel getFile() {
+        return file;
+    }
 
-   /**
-    * @return the editor
-    */
-   public Editor getEditor()
-   {
-      return editor;
-   }
+    /** @return the editor */
+    public Editor getEditor() {
+        return editor;
+    }
 
 }

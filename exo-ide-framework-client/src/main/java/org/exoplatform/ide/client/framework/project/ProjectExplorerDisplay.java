@@ -35,127 +35,126 @@ import java.util.Map;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 12, 2011 5:45:42 PM anya $
- * 
  */
-public interface ProjectExplorerDisplay extends IsView
-{
-   /**
-    * Change tree visibility.
-    * 
-    * @param visible <code>true</code> if visible
-    */
-   void setProjectExplorerTreeVisible(boolean visible);
+public interface ProjectExplorerDisplay extends IsView {
+    /**
+     * Change tree visibility.
+     *
+     * @param visible
+     *         <code>true</code> if visible
+     */
+    void setProjectExplorerTreeVisible(boolean visible);
 
-   /**
-    * @return {@link TreeGridItem}
-    */
-   TreeGridItem<Item> getBrowserTree();
-   
-   void setProject(ProjectModel project);
-   
-   void navigateToItem(Item item);
+    /** @return {@link TreeGridItem} */
+    TreeGridItem<Item> getBrowserTree();
 
-   /**
-    * Get selected items in the tree.
-    * 
-    * @return {@link List} selected items
-    */
-   List<Item> getSelectedItems();
-   
-   List<Item> getVisibleItems();
-   
-   /**
-    * Select item.
-    * 
-    * @param item item
-    * @return <b>true</b> is item was found and selected, <b>false</b> otherwise
-    */
-   boolean selectItem(Item item);
+    void setProject(ProjectModel project);
 
-   /**
-    * Deselect item in browser tree by path.
-    * 
-    * @param path item's path
-    */
-   void deselectItem(String path);
+    void navigateToItem(Item item);
 
-   /**
-    * Update the state of the item in the tree.
-    * 
-    * @param file
-    */
-   void updateItemState(FileModel file);
+    /**
+     * Get selected items in the tree.
+     *
+     * @return {@link List} selected items
+     */
+    List<Item> getSelectedItems();
 
-   /**
-    * Set lock tokens to the items in the tree.
-    * 
-    * @param locktokens
-    */
-   void setLockTokens(Map<String, String> locktokens);
+    List<Item> getVisibleItems();
 
-   /**
-    * Add info icons to main item icon.
-    */
-   void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
+    /**
+     * Select item.
+     *
+     * @param item
+     *         item
+     * @return <b>true</b> is item was found and selected, <b>false</b> otherwise
+     */
+    boolean selectItem(Item item);
 
-   /**
-    * Remove additional icons from items.
-    */
-   void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
-   
-   /**
-    * Linking with Editor
-    */
+    /**
+     * Deselect item in browser tree by path.
+     *
+     * @param path
+     *         item's path
+     */
+    void deselectItem(String path);
 
-   /**
-    * Returns Link with Editor button.
-    * 
-    * @return Link with Editor button
-    */
-   HasClickHandlers getLinkWithEditorButton();
+    /**
+     * Update the state of the item in the tree.
+     *
+     * @param file
+     */
+    void updateItemState(FileModel file);
 
-   /**
-    * Enables or disables Link with Editor button.
-    * 
-    * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
-    */
-   void setLinkWithEditorButtonEnabled(boolean enabled);
+    /**
+     * Set lock tokens to the items in the tree.
+     *
+     * @param locktokens
+     */
+    void setLockTokens(Map<String, String> locktokens);
 
-   /**
-    * Adds or removes selection of Link with Editor button.
-    * 
-    * @param selected <b>true</b> makes button selected, <b>false</b> otherwise
-    */
-   void setLinkWithEditorButtonSelected(boolean selected);
+    /** Add info icons to main item icon. */
+    void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
 
-   /**
-    * Change projects list grid visibility.
-    * 
-    * @param visible <code>true</code> if visible
-    */
-   void setProjectsListGridVisible(boolean visible);
+    /** Remove additional icons from items. */
+    void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 
-   /**
-    * Change ProjectNotOpenedPanel visibility.
-    * 
-    * @param visible <code>true</code> if visible
-    */
-   void setProjectNotOpenedPanelVisible(boolean visible);
+    /**
+     * Linking with Editor
+     */
 
-   /**
-    * Get projects list grid.
-    * 
-    * @return projects list grid
-    */
-   ListGrid<ProjectModel> getProjectsListGrid();
+    /**
+     * Returns Link with Editor button.
+     *
+     * @return Link with Editor button
+     */
+    HasClickHandlers getLinkWithEditorButton();
 
-   /**
-    * Returns selected projects in the projects list grid.
-    * 
-    * @return {@link List} of selected projects
-    */
-   List<ProjectModel> getSelectedProjects();
-   
-   void refreshTree();
+    /**
+     * Enables or disables Link with Editor button.
+     *
+     * @param enabled
+     *         <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
+     */
+    void setLinkWithEditorButtonEnabled(boolean enabled);
+
+    /**
+     * Adds or removes selection of Link with Editor button.
+     *
+     * @param selected
+     *         <b>true</b> makes button selected, <b>false</b> otherwise
+     */
+    void setLinkWithEditorButtonSelected(boolean selected);
+
+    /**
+     * Change projects list grid visibility.
+     *
+     * @param visible
+     *         <code>true</code> if visible
+     */
+    void setProjectsListGridVisible(boolean visible);
+
+    /**
+     * Change ProjectNotOpenedPanel visibility.
+     *
+     * @param visible
+     *         <code>true</code> if visible
+     */
+    void setProjectNotOpenedPanelVisible(boolean visible);
+
+    /**
+     * Get projects list grid.
+     *
+     * @return projects list grid
+     */
+    ListGrid<ProjectModel> getProjectsListGrid();
+
+    /**
+     * Returns selected projects in the projects list grid.
+     *
+     * @return {@link List} of selected projects
+     */
+    List<ProjectModel> getSelectedProjects();
+
+    void refreshTree();
 
 }

@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to add block comment to source code.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 11:03:56 AM anya $
- * 
  */
-public class EditorAddBlockCommentEvent extends GwtEvent<EditorAddBlockCommentHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<EditorAddBlockCommentHandler> TYPE =
-      new GwtEvent.Type<EditorAddBlockCommentHandler>();
+public class EditorAddBlockCommentEvent extends GwtEvent<EditorAddBlockCommentHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<EditorAddBlockCommentHandler> TYPE =
+            new GwtEvent.Type<EditorAddBlockCommentHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorAddBlockCommentHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorAddBlockCommentHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorAddBlockCommentHandler handler)
-   {
-      handler.onEditorAddBlockComment(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorAddBlockCommentHandler handler) {
+        handler.onEditorAddBlockComment(this);
+    }
 
 }

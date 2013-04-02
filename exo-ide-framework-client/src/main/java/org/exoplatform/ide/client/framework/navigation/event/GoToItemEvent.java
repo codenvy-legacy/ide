@@ -25,75 +25,61 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class GoToItemEvent extends GwtEvent<GoToItemHandler>
-{
+public class GoToItemEvent extends GwtEvent<GoToItemHandler> {
 
-   public static final GwtEvent.Type<GoToItemHandler> TYPE = new GwtEvent.Type<GoToItemHandler>();
-   
-   
-
-   private final boolean needOpen;
+    public static final GwtEvent.Type<GoToItemHandler> TYPE = new GwtEvent.Type<GoToItemHandler>();
 
 
-
-   private final FileModel fileToOpen;
-
+    private final boolean needOpen;
 
 
-   private final CursorPosition cursorPosition;
-   
-   /**
-    * Will be opened parent folder for active file in Editor 
-    */
-   public GoToItemEvent()
-   {
-      this(null, null);
-   }
-   
-   public GoToItemEvent(FileModel fileToOpen, CursorPosition cursorPosition)
-   {
-      this(fileToOpen, cursorPosition, false);
-   }
-   
-   public GoToItemEvent(FileModel fileToOpen, CursorPosition cursorPosition, boolean needOpen)
-   {
-     
-      this.fileToOpen = fileToOpen;
-      this.cursorPosition = cursorPosition;
-      this.needOpen = needOpen;
-   }
-   
+    private final FileModel fileToOpen;
 
-   @Override
-   protected void dispatch(GoToItemHandler handler)
-   {
-      handler.onGoToFolder(this);
-   }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GoToItemHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-   
-   public FileModel getFileToOpen()
-   {
-      return fileToOpen;
-   }
-   
-   public CursorPosition getCursorPosition()
-   {
-      return cursorPosition;
-   }
-   
-   public boolean isNeedOpen()
-   {
-      return needOpen;
-   }
+    private final CursorPosition cursorPosition;
+
+    /** Will be opened parent folder for active file in Editor */
+    public GoToItemEvent() {
+        this(null, null);
+    }
+
+    public GoToItemEvent(FileModel fileToOpen, CursorPosition cursorPosition) {
+        this(fileToOpen, cursorPosition, false);
+    }
+
+    public GoToItemEvent(FileModel fileToOpen, CursorPosition cursorPosition, boolean needOpen) {
+
+        this.fileToOpen = fileToOpen;
+        this.cursorPosition = cursorPosition;
+        this.needOpen = needOpen;
+    }
+
+
+    @Override
+    protected void dispatch(GoToItemHandler handler) {
+        handler.onGoToFolder(this);
+    }
+
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<GoToItemHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    public FileModel getFileToOpen() {
+        return fileToOpen;
+    }
+
+    public CursorPosition getCursorPosition() {
+        return cursorPosition;
+    }
+
+    public boolean isNeedOpen() {
+        return needOpen;
+    }
 
 }

@@ -22,58 +22,47 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class OutputEvent extends GwtEvent<OutputHandler>
-{
+public class OutputEvent extends GwtEvent<OutputHandler> {
 
-   public static final GwtEvent.Type<OutputHandler> TYPE = new GwtEvent.Type<OutputHandler>();
+    public static final GwtEvent.Type<OutputHandler> TYPE = new GwtEvent.Type<OutputHandler>();
 
-   private String message;
+    private String message;
 
-   private OutputMessage.Type outputType;
+    private OutputMessage.Type outputType;
 
-   public OutputEvent(String message)
-   {
-      this.message = message;
-      outputType = OutputMessage.Type.INFO;
-   }
+    public OutputEvent(String message) {
+        this.message = message;
+        outputType = OutputMessage.Type.INFO;
+    }
 
-   public OutputEvent(String message, OutputMessage.Type outputType)
-   {
-      this.message = message;
-      this.outputType = outputType;
-   }
+    public OutputEvent(String message, OutputMessage.Type outputType) {
+        this.message = message;
+        this.outputType = outputType;
+    }
 
-   @Override
-   protected void dispatch(OutputHandler handler)
-   {
-      handler.onOutput(this);
-   }
+    @Override
+    protected void dispatch(OutputHandler handler) {
+        handler.onOutput(this);
+    }
 
-   /**
-    * @return the message
-    */
-   public String getMessage()
-   {
-      return message;
-   }
+    /** @return the message */
+    public String getMessage() {
+        return message;
+    }
 
-   /**
-    * @return the outputType
-    */
-   public OutputMessage.Type getOutputType()
-   {
-      return outputType;
-   }
+    /** @return the outputType */
+    public OutputMessage.Type getOutputType() {
+        return outputType;
+    }
 
-   @Override
-   public Type<OutputHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<OutputHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

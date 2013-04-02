@@ -24,42 +24,36 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class SaveFileEvent extends GwtEvent<SaveFileHandler>
-{
+public class SaveFileEvent extends GwtEvent<SaveFileHandler> {
 
-   public static final GwtEvent.Type<SaveFileHandler> TYPE = new GwtEvent.Type<SaveFileHandler>();
+    public static final GwtEvent.Type<SaveFileHandler> TYPE = new GwtEvent.Type<SaveFileHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   public SaveFileEvent()
-   {
-   }
+    public SaveFileEvent() {
+    }
 
-   public SaveFileEvent(FileModel file)
-   {
-      this.file = file;
-   }
+    public SaveFileEvent(FileModel file) {
+        this.file = file;
+    }
 
-   public FileModel getFile()
-   {
-      return file;
-   }
+    public FileModel getFile() {
+        return file;
+    }
 
-   @Override
-   protected void dispatch(SaveFileHandler handler)
-   {
-      handler.onSaveFile(this);
-   }
+    @Override
+    protected void dispatch(SaveFileHandler handler) {
+        handler.onSaveFile(this);
+    }
 
-   @Override
-   public Type<SaveFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<SaveFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

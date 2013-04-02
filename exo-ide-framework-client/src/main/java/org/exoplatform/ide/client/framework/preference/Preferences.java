@@ -24,64 +24,48 @@ import java.util.List;
 /**
  * Is used to preferences registration. Add preferences for any extension: <br>
  * <code>
- *  Preferences.get().addPreferenceItem(new SamplePreference());
+ * Preferences.get().addPreferenceItem(new SamplePreference());
  * </code>
- * 
+ * <p/>
  * Get registered preferences:<br>
  * <code>
- *  Preferences.get().getPreferences();
+ * Preferences.get().getPreferences();
  * </code>
- * 
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 18, 2012 3:33:38 PM anya $
- * 
  */
-public class Preferences
-{
-   /**
-    * List of registered preferences.
-    */
-   private List<PreferenceItem> preferenceItems;
+public class Preferences {
+    /** List of registered preferences. */
+    private List<PreferenceItem> preferenceItems;
 
-   /**
-    * Instance.
-    */
-   private static Preferences instance;
+    /** Instance. */
+    private static Preferences instance;
 
-   protected Preferences()
-   {
-      instance = this;
-      preferenceItems = new ArrayList<PreferenceItem>();
-   }
+    protected Preferences() {
+        instance = this;
+        preferenceItems = new ArrayList<PreferenceItem>();
+    }
 
-   /**
-    * @return {@link Preferences}
-    */
-   public static Preferences get()
-   {
-      if (instance == null)
-      {
-         instance = new Preferences();
-      }
-      return instance;
-   }
+    /** @return {@link Preferences} */
+    public static Preferences get() {
+        if (instance == null) {
+            instance = new Preferences();
+        }
+        return instance;
+    }
 
-   /**
-    * @return {@link List} of {@link PreferenceItem}
-    */
-   public List<PreferenceItem> getPreferences()
-   {
-      return preferenceItems;
-   }
+    /** @return {@link List} of {@link PreferenceItem} */
+    public List<PreferenceItem> getPreferences() {
+        return preferenceItems;
+    }
 
-   /**
-    * Registers preference item.
-    * 
-    * @param preferenceItem
-    */
-   public void addPreferenceItem(PreferenceItem preferenceItem)
-   {
-      getPreferences().add(preferenceItem);
-   }
+    /**
+     * Registers preference item.
+     *
+     * @param preferenceItem
+     */
+    public void addPreferenceItem(PreferenceItem preferenceItem) {
+        getPreferences().add(preferenceItem);
+    }
 }

@@ -26,10 +26,9 @@ import java.lang.annotation.Target;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
- * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface RolesAllowed {
-   String[] value();
+    String[] value();
 }

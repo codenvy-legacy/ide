@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public interface ModuleCreatedHandler extends EventHandler
-{
-   
-   void onModuleCreated(ModuleCreatedEvent event);
+public interface ModuleCreatedHandler extends EventHandler {
+
+    void onModuleCreated(ModuleCreatedEvent event);
 
 }

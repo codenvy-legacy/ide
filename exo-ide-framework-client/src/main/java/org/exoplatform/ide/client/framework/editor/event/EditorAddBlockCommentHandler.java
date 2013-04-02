@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorAddBlockCommentEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 11:04:59 AM anya $
- * 
  */
-public interface EditorAddBlockCommentHandler extends EventHandler
-{
-   /**
-    * Perform adding block comment to source code.
-    * 
-    * @param event
-    */
-   void onEditorAddBlockComment(EditorAddBlockCommentEvent event);
+public interface EditorAddBlockCommentHandler extends EventHandler {
+    /**
+     * Perform adding block comment to source code.
+     *
+     * @param event
+     */
+    void onEditorAddBlockComment(EditorAddBlockCommentEvent event);
 }

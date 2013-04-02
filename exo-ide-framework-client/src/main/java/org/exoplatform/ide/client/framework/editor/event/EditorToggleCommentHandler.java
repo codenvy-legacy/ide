@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorToggleCommentEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Apr 13, 2012 1:48:11 PM anya $
- *
  */
-public interface EditorToggleCommentHandler extends EventHandler
-{
-   /**
-    * Toggle single line comment in source code. 
-    * 
-    * @param event
-    */
-   void onEditorToggleComment(EditorToggleCommentEvent event);
+public interface EditorToggleCommentHandler extends EventHandler {
+    /**
+     * Toggle single line comment in source code.
+     *
+     * @param event
+     */
+    void onEditorToggleComment(EditorToggleCommentEvent event);
 }

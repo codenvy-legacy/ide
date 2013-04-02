@@ -21,55 +21,43 @@ package org.exoplatform.ide.client.framework.codenow;
 /**
  * Describe parameters for CodeNow feature.
  * Version of specification CodeNow 1.0
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CodeNowSpec10.java Nov 30, 2012 vetal $
- *
  */
-public class CodeNowSpec10
-{
+public class CodeNowSpec10 {
 
-   /**
-    * Mandatory parameter
-    */
-   public final static String VERSION_PARAMETER = "v";
+    /** Mandatory parameter */
+    public final static String VERSION_PARAMETER = "v";
 
-   public final static String CURRENT_VERSION = "codenow1.0";
+    public final static String CURRENT_VERSION = "codenow1.0";
 
-   /**
-    * Mandatory parameter use for setting location sources in Version Control System  
-    */
-   public final static String VCS_URL = "vcsurl";
+    /** Mandatory parameter use for setting location sources in Version Control System */
+    public final static String VCS_URL = "vcsurl";
 
-   /**
-    * Version Control System by default "Git"; 
-    */
-   public final static String VCS = "vcs";
+    /** Version Control System by default "Git"; */
+    public final static String VCS = "vcs";
 
-   /**
-    * 
-    */
-   public final static String DEFAULT_VCS = "Git";
+    /**
+     *
+     */
+    public final static String DEFAULT_VCS = "Git";
 
-   /**
-    * Optional parameter, by default will be use DEFAULT_ACTION_PARAMETER 
-    */
-   public final static String ACTION_PARAMETER = "action";
+    /** Optional parameter, by default will be use DEFAULT_ACTION_PARAMETER */
+    public final static String ACTION_PARAMETER = "action";
 
-   public final static String DEFAULT_ACTION = "openproject";
+    public final static String DEFAULT_ACTION = "openproject";
 
-   /**
-    * Optional parameter for project name in file system, if not set we try detect it from  
-    * VCS_URL param.
-    * 
-    * e.g. for "git@github.com:exodev/ide.git" project name will be "ide" 
-    */
-   public final static String PROJECT_NAME = "pn";
-   
-   
-   /**
-    * Optional parameter for project type, if not set we try detect it 
-    */
-   public final static String PROJECT_TYPE = "pt";
+    /**
+     * Optional parameter for project name in file system, if not set we try detect it from
+     * VCS_URL param.
+     * <p/>
+     * e.g. for "git@github.com:exodev/ide.git" project name will be "ide"
+     */
+    public final static String PROJECT_NAME = "pn";
+
+
+    /** Optional parameter for project type, if not set we try detect it */
+    public final static String PROJECT_TYPE = "pt";
 
 }

@@ -19,45 +19,38 @@
 
 package org.exoplatform.ide.client.framework.project;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CurrnetProjectEvent.java Nov 7, 2012 vetal $
- *
  * @deprecated handle ItemsSelectedEvent and  use ItemsSelectedEvent.getItem().getProject() instead
  */
-public class ActiveProjectChangedEvent extends GwtEvent<ActiveProjectChangedHandler>
-{
+public class ActiveProjectChangedEvent extends GwtEvent<ActiveProjectChangedHandler> {
 
-   public static final GwtEvent.Type<ActiveProjectChangedHandler> TYPE = new GwtEvent.Type<ActiveProjectChangedHandler>();
+    public static final GwtEvent.Type<ActiveProjectChangedHandler> TYPE = new GwtEvent.Type<ActiveProjectChangedHandler>();
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   public ActiveProjectChangedEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+    public ActiveProjectChangedEvent(ProjectModel project) {
+        this.project = project;
+    }
 
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    public ProjectModel getProject() {
+        return project;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ActiveProjectChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ActiveProjectChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(ActiveProjectChangedHandler handler)
-   {
-      handler.onActiveProjectChanged(this);
-   }
+    @Override
+    protected void dispatch(ActiveProjectChangedHandler handler) {
+        handler.onActiveProjectChanged(this);
+    }
 
 }

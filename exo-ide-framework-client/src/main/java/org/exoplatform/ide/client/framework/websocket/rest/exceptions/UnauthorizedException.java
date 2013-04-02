@@ -22,23 +22,19 @@ import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 
 /**
  * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: UnauthorizedException.java Nov 9, 2012 5:09:29 PM azatsarynnyy $
- *
  */
 @SuppressWarnings("serial")
-public class UnauthorizedException extends Exception
-{
-   private ResponseMessage response;
+public class UnauthorizedException extends Exception {
+    private ResponseMessage response;
 
-   public UnauthorizedException(ResponseMessage response)
-   {
-      this.response = response;
-   }
+    public UnauthorizedException(ResponseMessage response) {
+        this.response = response;
+    }
 
-   public int getHTTPStatus()
-   {
-      return response.getResponseCode();
-   }
+    public int getHTTPStatus() {
+        return response.getResponseCode();
+    }
 }

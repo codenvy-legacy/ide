@@ -21,35 +21,25 @@ package org.exoplatform.ide.client.framework.editor.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: EditorFoldSelectionEvent.java Feb 28, 2013 5:08:29 PM azatsarynnyy $
- *
  */
-public class EditorFoldSelectionEvent extends GwtEvent<EditorFoldSelectionHandler>
-{
-   public EditorFoldSelectionEvent()
-   {
-      super();
-   }
+public class EditorFoldSelectionEvent extends GwtEvent<EditorFoldSelectionHandler> {
+    public EditorFoldSelectionEvent() {
+        super();
+    }
 
-   public static final GwtEvent.Type<EditorFoldSelectionHandler> TYPE = new GwtEvent.Type<EditorFoldSelectionHandler>();
+    public static final GwtEvent.Type<EditorFoldSelectionHandler> TYPE = new GwtEvent.Type<EditorFoldSelectionHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(EditorFoldSelectionHandler handler)
-   {
-      handler.onEditorFoldSelection(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(EditorFoldSelectionHandler handler) {
+        handler.onEditorFoldSelection(this);
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorFoldSelectionHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorFoldSelectionHandler> getAssociatedType() {
+        return TYPE;
+    }
 }

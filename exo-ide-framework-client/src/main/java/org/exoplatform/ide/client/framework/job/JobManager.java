@@ -20,28 +20,24 @@
 package org.exoplatform.ide.client.framework.job;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public abstract class JobManager
-{
+public abstract class JobManager {
 
-   private static JobManager instance;
+    private static JobManager instance;
 
-   public static JobManager get()
-   {
-      return instance;
-   }
+    public static JobManager get() {
+        return instance;
+    }
 
-   protected JobManager()
-   {
-      instance = this;
-   }
+    protected JobManager() {
+        instance = this;
+    }
 
-   public abstract void showJobSeparated();
+    public abstract void showJobSeparated();
 
 }

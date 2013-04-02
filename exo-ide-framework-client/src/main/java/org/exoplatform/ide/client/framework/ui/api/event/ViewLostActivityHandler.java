@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ViewLostActivityHandler extends EventHandler
-{
+public interface ViewLostActivityHandler extends EventHandler {
 
-   void onViewLostActivity(ViewLostActivityEvent event);
+    void onViewLostActivity(ViewLostActivityEvent event);
 
 }

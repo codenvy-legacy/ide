@@ -21,14 +21,11 @@ package org.exoplatform.ide.client.framework.editor.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@codenvy.com">Artem Zatsarynnyy</a>
  * @version $Id: EditorCollapseFoldHandler.java Feb 28, 2013 5:09:18 PM azatsarynnyy $
- *
  */
-public interface EditorCollapseFoldHandler extends EventHandler
-{
+public interface EditorCollapseFoldHandler extends EventHandler {
 
-   void onEditorCollapse(EditorCollapseFoldEvent event);
+    void onEditorCollapse(EditorCollapseFoldEvent event);
 
 }

@@ -20,21 +20,20 @@ package org.exoplatform.ide.client.framework.ui.api;
 
 /**
  * This interface determines whether the implementing object View interface
- * 
+ * <p/>
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface IsView
-{
+public interface IsView {
 
-   /**
-    * Gets View instance.
-    * 
-    * @return
-    */
-   View asView();
+    /**
+     * Gets View instance.
+     *
+     * @return
+     */
+    View asView();
 
 }

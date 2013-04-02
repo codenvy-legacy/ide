@@ -22,13 +22,12 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface RefreshBrowserHandler extends EventHandler
-{
+public interface RefreshBrowserHandler extends EventHandler {
 
-   void onRefreshBrowser(RefreshBrowserEvent event);
+    void onRefreshBrowser(RefreshBrowserEvent event);
 
 }

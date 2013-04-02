@@ -25,41 +25,35 @@ import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * Contains hidden component, to clear focus from active component.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ClearFocusForm.java Feb 4, 2011 12:16:35 PM vereshchaka $
- * 
  */
-public class ClearFocusForm
-{
+public class ClearFocusForm {
 
-   private static ClearFocusForm form;
+    private static ClearFocusForm form;
 
-   private TextBox textBox;
+    private TextBox textBox;
 
-   private ClearFocusForm()
-   {
-      textBox = new TextBox();
-      textBox.getElement().getStyle().setPosition(Position.ABSOLUTE);
-      textBox.getElement().getStyle().setWidth(10, Unit.PX);
-      textBox.getElement().getStyle().setHeight(10, Unit.PX);
-      RootPanel.get().add(textBox, -10000, -10000);
-   }
+    private ClearFocusForm() {
+        textBox = new TextBox();
+        textBox.getElement().getStyle().setPosition(Position.ABSOLUTE);
+        textBox.getElement().getStyle().setWidth(10, Unit.PX);
+        textBox.getElement().getStyle().setHeight(10, Unit.PX);
+        RootPanel.get().add(textBox, -10000, -10000);
+    }
 
-   public void clearFocus()
-   {
-      textBox.setFocus(true);
-      textBox.setText(".");
-   }
+    public void clearFocus() {
+        textBox.setFocus(true);
+        textBox.setText(".");
+    }
 
-   public static ClearFocusForm getInstance()
-   {
-      if (form == null)
-      {
-         form = new ClearFocusForm();
-      }
-      return form;
-   }
+    public static ClearFocusForm getInstance() {
+        if (form == null) {
+            form = new ClearFocusForm();
+        }
+        return form;
+    }
 
 }

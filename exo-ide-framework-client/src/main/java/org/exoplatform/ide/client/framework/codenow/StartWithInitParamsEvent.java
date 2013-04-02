@@ -27,40 +27,33 @@ import java.util.Map;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: StartWithInitParamsEvent.java Nov 21, 2012 vetal $
- *
  */
-public class StartWithInitParamsEvent extends GwtEvent<StartWithInitParamsHandler>
-{
+public class StartWithInitParamsEvent extends GwtEvent<StartWithInitParamsHandler> {
 
-   public static final GwtEvent.Type<StartWithInitParamsHandler> TYPE = new GwtEvent.Type<StartWithInitParamsHandler>();
+    public static final GwtEvent.Type<StartWithInitParamsHandler> TYPE = new GwtEvent.Type<StartWithInitParamsHandler>();
 
-   private Map<String, List<String>> parameterMap;
+    private Map<String, List<String>> parameterMap;
 
-   public StartWithInitParamsEvent(Map<String, List<String>> parameterMap)
-   {
-      this.parameterMap = parameterMap;
-   }
+    public StartWithInitParamsEvent(Map<String, List<String>> parameterMap) {
+        this.parameterMap = parameterMap;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StartWithInitParamsHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<StartWithInitParamsHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(StartWithInitParamsHandler handler)
-   {
-      handler.onStartWithInitParams(this);
-   }
+    @Override
+    protected void dispatch(StartWithInitParamsHandler handler) {
+        handler.onStartWithInitParams(this);
+    }
 
-   public Map<String, List<String>> getParameterMap()
-   {
-      return parameterMap;
-   }
+    public Map<String, List<String>> getParameterMap() {
+        return parameterMap;
+    }
 
-   public void setParameterMap(Map<String, List<String>> parameterMap)
-   {
-      this.parameterMap = parameterMap;
-   }
+    public void setParameterMap(Map<String, List<String>> parameterMap) {
+        this.parameterMap = parameterMap;
+    }
 
 }

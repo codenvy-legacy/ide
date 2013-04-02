@@ -20,14 +20,11 @@ package org.exoplatform.ide.client.framework.util;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
 import org.exoplatform.ide.client.framework.discovery.RestServicesList;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemNode;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.LockToken;
-import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.*;
 
 import java.util.List;
 
@@ -38,70 +35,63 @@ import java.util.List;
  * @version $Id: IDEAutoBeanFactory.java Mar 27, 2012 9:57:25 AM azatsarynnyy $
  */
 @AutoBeanFactory.Category(IDEAutoBeanFactory.ItemCategory.class)
-public interface IDEAutoBeanFactory extends AutoBeanFactory
-{
-   class ItemCategory
-   {
-      public static boolean hasProperty(AutoBean<Item> item, String property)
-      {
-         return false;
-      }
+public interface IDEAutoBeanFactory extends AutoBeanFactory {
+    class ItemCategory {
+        public static boolean hasProperty(AutoBean<Item> item, String property) {
+            return false;
+        }
 
-      public static String getPropertyValue(AutoBean<Item> item, String name)
-      {
-         return null;
-      }
+        public static String getPropertyValue(AutoBean<Item> item, String name) {
+            return null;
+        }
 
-      public static List<String> getPropertyValues(AutoBean<Item> item, String name)
-      {
-         return null;
-      }
+        public static List<String> getPropertyValues(AutoBean<Item> item, String name) {
+            return null;
+        }
 
-      public static Link getLinkByRelation(AutoBean<Item> item, String rel)
-      {
-         return null;
-      }
+        public static Link getLinkByRelation(AutoBean<Item> item, String rel) {
+            return null;
+        }
 
-      public static Property getProperty(AutoBean<Item> item, String name)
-      {
-         return null;
-      }
-   }
+        public static Property getProperty(AutoBean<Item> item, String name) {
+            return null;
+        }
+    }
 
-   /**
-    * A factory method for a REST-services list bean.
-    *
-    * @return an {@link AutoBean} of type {@link RestServicesList}
-    */
-   AutoBean<RestServicesList> restServicesList();
+    /**
+     * A factory method for a REST-services list bean.
+     *
+     * @return an {@link AutoBean} of type {@link RestServicesList}
+     */
+    AutoBean<RestServicesList> restServicesList();
 
-   /**
-    * A factory method for a lock token bean.
-    *
-    * @return an {@link AutoBean} of type {@link LockToken}
-    */
-   AutoBean<LockToken> lockToken();
+    /**
+     * A factory method for a lock token bean.
+     *
+     * @return an {@link AutoBean} of type {@link LockToken}
+     */
+    AutoBean<LockToken> lockToken();
 
-   /**
-    * A factory method for a information about user bean.
-    *
-    * @return an {@link AutoBean} of type {@link UserInfo}
-    */
-   AutoBean<UserInfo> userInfo();
+    /**
+     * A factory method for a information about user bean.
+     *
+     * @return an {@link AutoBean} of type {@link UserInfo}
+     */
+    AutoBean<UserInfo> userInfo();
 
-   /**
-    * A factory method for a information about user bean.
-    *
-    * @return an {@link AutoBean} of type {@link UserInfo}
-    */
-   AutoBean<GoogleContact> googleContact();
+    /**
+     * A factory method for a information about user bean.
+     *
+     * @return an {@link AutoBean} of type {@link UserInfo}
+     */
+    AutoBean<GoogleContact> googleContact();
 
-   AutoBean<ItemNode> itemNode();
+    AutoBean<ItemNode> itemNode();
 
-   AutoBean<Item> item();
+    AutoBean<Item> item();
 
-   AutoBean<Link> link();
+    AutoBean<Link> link();
 
-   AutoBean<Property> property();
+    AutoBean<Property> property();
 
 }

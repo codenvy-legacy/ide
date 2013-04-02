@@ -20,15 +20,14 @@
 package org.exoplatform.ide.client.framework.control;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public enum Docking {
 
-   TOOLBAR, TOOLBAR_RIGHT, STATUSBAR, STATUSBAR_RIGHT, NONE
+    TOOLBAR, TOOLBAR_RIGHT, STATUSBAR, STATUSBAR_RIGHT, NONE
 
 }

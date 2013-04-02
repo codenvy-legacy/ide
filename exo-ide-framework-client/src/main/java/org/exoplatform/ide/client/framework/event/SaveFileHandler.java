@@ -22,14 +22,13 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public interface SaveFileHandler extends EventHandler
-{
+public interface SaveFileHandler extends EventHandler {
 
-   void onSaveFile(SaveFileEvent event);
+    void onSaveFile(SaveFileEvent event);
 
 }

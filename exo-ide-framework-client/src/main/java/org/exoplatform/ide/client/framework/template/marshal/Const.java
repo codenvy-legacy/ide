@@ -20,47 +20,45 @@ package org.exoplatform.ide.client.framework.template.marshal;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface Const
-{
+public interface Const {
 
-   public interface TemplateType
-   {
-      String FILE = "file";
+    public interface TemplateType {
+        String FILE = "file";
 
-      String PROJECT = "project";
-   }
+        String PROJECT = "project";
+    }
 
-   String TEMPLATE = "template";
+    String TEMPLATE = "template";
 
-   String TEMPLATES = "templates";
+    String TEMPLATES = "templates";
 
-   // common nodes
-   String NAME = "name";
+    // common nodes
+    String NAME = "name";
 
-   String DESCRIPTION = "description";
+    String DESCRIPTION = "description";
 
-   String TEMPLATE_TYPE = "template-type";
+    String TEMPLATE_TYPE = "template-type";
 
-   // file template nodes
-   String MIME_TYPE = "mime-type";
+    // file template nodes
+    String MIME_TYPE = "mime-type";
 
-   String CONTENT = "content";
+    String CONTENT = "content";
 
-   // project template nodes
-   String FILE = "file";
+    // project template nodes
+    String FILE = "file";
 
-   String FOLDER = "folder";
+    String FOLDER = "folder";
 
-   String ITEMS = "items";
+    String ITEMS = "items";
 
-   String TEMPLATE_FILE_NAME = "template-file-name";
+    String TEMPLATE_FILE_NAME = "template-file-name";
 
-   String FILE_NAME = "file-name";
+    String FILE_NAME = "file-name";
 
-   String CLASSPATH = "classpath";
+    String CLASSPATH = "classpath";
 }

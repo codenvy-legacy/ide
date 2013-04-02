@@ -18,57 +18,50 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
-{
+public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler> {
 
-   public static final GwtEvent.Type<EditorOpenFileHandler> TYPE = new GwtEvent.Type<EditorOpenFileHandler>();
+    public static final GwtEvent.Type<EditorOpenFileHandler> TYPE = new GwtEvent.Type<EditorOpenFileHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   private CursorPosition cursorPosition;
+    private CursorPosition cursorPosition;
 
-   public EditorOpenFileEvent(FileModel file)
-   {
-      this(file, new CursorPosition(1,1));
-   }
-   
-   public EditorOpenFileEvent(FileModel file, CursorPosition cursorPosition)
-   {
-      this.file = file;
-      this.cursorPosition = cursorPosition;
-   }
+    public EditorOpenFileEvent(FileModel file) {
+        this(file, new CursorPosition(1, 1));
+    }
 
-   public FileModel getFile()
-   {
-      return file;
-   }
+    public EditorOpenFileEvent(FileModel file, CursorPosition cursorPosition) {
+        this.file = file;
+        this.cursorPosition = cursorPosition;
+    }
 
-   public CursorPosition getCursorPosition()
-   {
-      return cursorPosition;
-   }
+    public FileModel getFile() {
+        return file;
+    }
 
-   @Override
-   protected void dispatch(EditorOpenFileHandler handler)
-   {
-      handler.onEditorOpenFile(this);
-   }
+    public CursorPosition getCursorPosition() {
+        return cursorPosition;
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorOpenFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    protected void dispatch(EditorOpenFileHandler handler) {
+        handler.onEditorOpenFile(this);
+    }
+
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorOpenFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

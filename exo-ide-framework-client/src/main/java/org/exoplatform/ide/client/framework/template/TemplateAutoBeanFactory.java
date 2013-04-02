@@ -25,37 +25,35 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 27, 2012 2:35:55 PM anya $
- * 
  */
-public interface TemplateAutoBeanFactory extends AutoBeanFactory
-{
-   TemplateAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(TemplateAutoBeanFactory.class);
+public interface TemplateAutoBeanFactory extends AutoBeanFactory {
+    TemplateAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(TemplateAutoBeanFactory.class);
 
-   /**
-    * A factory method for folder template.
-    * 
-    * @return an {@link AutoBean} of type {@link FolderTemplate}
-    */
-   AutoBean<FolderTemplate> folderTemplate();
+    /**
+     * A factory method for folder template.
+     *
+     * @return an {@link AutoBean} of type {@link FolderTemplate}
+     */
+    AutoBean<FolderTemplate> folderTemplate();
 
-   /**
-    * A factory method for folder template.
-    * 
-    * @return an {@link AutoBean} of type {@link FolderTemplate}
-    */
-   AutoBean<Template> template();
+    /**
+     * A factory method for folder template.
+     *
+     * @return an {@link AutoBean} of type {@link FolderTemplate}
+     */
+    AutoBean<Template> template();
 
-   /**
-    * A factory method for folder template.
-    * 
-    * @return an {@link AutoBean} of type {@link FileTemplate}
-    */
-   AutoBean<FileTemplate> fileTemplate();
+    /**
+     * A factory method for folder template.
+     *
+     * @return an {@link AutoBean} of type {@link FileTemplate}
+     */
+    AutoBean<FileTemplate> fileTemplate();
 
-   /**
-    * A factory method for project template.
-    * 
-    * @return an {@link AutoBean} of type {@link ProjectTemplate}
-    */
-   AutoBean<ProjectTemplate> projectTemplate();
+    /**
+     * A factory method for project template.
+     *
+     * @return an {@link AutoBean} of type {@link ProjectTemplate}
+     */
+    AutoBean<ProjectTemplate> projectTemplate();
 }

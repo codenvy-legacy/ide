@@ -23,48 +23,34 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 19, 2011 evgen $
- * 
  */
-public class JobChangeEvent extends GwtEvent<JobChangeHandler>
-{
+public class JobChangeEvent extends GwtEvent<JobChangeHandler> {
 
-   public static final GwtEvent.Type<JobChangeHandler> TYPE = new Type<JobChangeHandler>();
+    public static final GwtEvent.Type<JobChangeHandler> TYPE = new Type<JobChangeHandler>();
 
-   private Job job;
+    private Job job;
 
-   /**
-    * @param job
-    */
-   public JobChangeEvent(Job job)
-   {
-      super();
-      this.job = job;
-   }
+    /** @param job */
+    public JobChangeEvent(Job job) {
+        super();
+        this.job = job;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public Type<JobChangeHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public Type<JobChangeHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(JobChangeHandler handler)
-   {
-      handler.onJobChangeHandler(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(JobChangeHandler handler) {
+        handler.onJobChangeHandler(this);
+    }
 
-   /**
-    * @return the job
-    */
-   public Job getJob()
-   {
-      return job;
-   }
+    /** @return the job */
+    public Job getJob() {
+        return job;
+    }
 
 }

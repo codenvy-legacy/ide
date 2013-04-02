@@ -24,29 +24,27 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * Code comments modifier.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 6, 2012 2:59:01 PM anya $
- * 
  */
-public interface CommentsModifier
-{
-   /**
-    * @param document
-    * @return {@link TextEdit}
-    */
-   TextEdit addBlockComment(SelectionRange selectionRange, IDocument document);
+public interface CommentsModifier {
+    /**
+     * @param document
+     * @return {@link TextEdit}
+     */
+    TextEdit addBlockComment(SelectionRange selectionRange, IDocument document);
 
-   /**
-    * @param document
-    * @return {@link TextEdit}
-    */
-   TextEdit removeBlockComment(SelectionRange selectionRange, IDocument document);
+    /**
+     * @param document
+     * @return {@link TextEdit}
+     */
+    TextEdit removeBlockComment(SelectionRange selectionRange, IDocument document);
 
-   /**
-    * @param selectionRange
-    * @param document
-    * @return {@link TextEdit}
-    */
-   TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document);
+    /**
+     * @param selectionRange
+     * @param document
+     * @return {@link TextEdit}
+     */
+    TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document);
 }

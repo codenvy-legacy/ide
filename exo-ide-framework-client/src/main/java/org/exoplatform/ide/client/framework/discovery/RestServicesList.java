@@ -22,24 +22,23 @@ import java.util.List;
 
 /**
  * Interface describe list of REST-services.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: RestServicesList.java Mar 26, 2012 11:22:53 AM azatsarynnyy $
- *
  */
-public interface RestServicesList
-{
-   /**
-    * Returns the list of REST-services.
-    * 
-    * @return the root resources
-    */
-   public List<IRestService> getRootResources();
+public interface RestServicesList {
+    /**
+     * Returns the list of REST-services.
+     *
+     * @return the root resources
+     */
+    public List<IRestService> getRootResources();
 
-   /**
-    * Set the list of REST-services.
-    * 
-    * @param rootResources the root resources
-    */
-   public void setRootResources(List<IRestService> rootResources);
+    /**
+     * Set the list of REST-services.
+     *
+     * @param rootResources
+     *         the root resources
+     */
+    public void setRootResources(List<IRestService> rootResources);
 }

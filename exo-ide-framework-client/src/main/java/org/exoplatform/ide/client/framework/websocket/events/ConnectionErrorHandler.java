@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.websocket.events;
 
-/**
- * Handler errors occurred during WebSocket connection.
- */
-public interface ConnectionErrorHandler
-{
-   void onError();
+/** Handler errors occurred during WebSocket connection. */
+public interface ConnectionErrorHandler {
+    void onError();
 }

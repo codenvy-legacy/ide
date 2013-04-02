@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link EditorCopyTextEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  May 4, 2012 9:36:16 AM anya $
- *
  */
-public interface EditorCopyTextHandler extends EventHandler
-{
-   /**
-    * Perform copying selected text from editor.
-    * 
-    * @param event
-    */
-   void onEditorCopyText(EditorCopyTextEvent event);
+public interface EditorCopyTextHandler extends EventHandler {
+    /**
+     * Perform copying selected text from editor.
+     *
+     * @param event
+     */
+    void onEditorCopyText(EditorCopyTextEvent event);
 }

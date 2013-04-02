@@ -22,25 +22,22 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Anna Zhuleva</a>
  * @version $Id:
  */
-public class EditorFormatTextEvent extends GwtEvent<EditorFormatTextHandler>
-{
+public class EditorFormatTextEvent extends GwtEvent<EditorFormatTextHandler> {
 
-   public static final GwtEvent.Type<EditorFormatTextHandler> TYPE = new GwtEvent.Type<EditorFormatTextHandler>();
+    public static final GwtEvent.Type<EditorFormatTextHandler> TYPE = new GwtEvent.Type<EditorFormatTextHandler>();
 
-   @Override
-   protected void dispatch(EditorFormatTextHandler handler)
-   {
-      handler.onFormatFile(this);
-   }
+    @Override
+    protected void dispatch(EditorFormatTextHandler handler) {
+        handler.onFormatFile(this);
+    }
 
-   @Override
-   public Type<EditorFormatTextHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<EditorFormatTextHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

@@ -24,56 +24,49 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
-public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler>
-{
+public class EditorCloseFileEvent extends GwtEvent<EditorCloseFileHandler> {
 
-   public static final GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
+    public static final GwtEvent.Type<EditorCloseFileHandler> TYPE = new GwtEvent.Type<EditorCloseFileHandler>();
 
-   private FileModel file;
+    private FileModel file;
 
-   private boolean ignoreChanges = false;
+    private boolean ignoreChanges = false;
 
-   public EditorCloseFileEvent(FileModel file)
-   {
-      this.file = file;
-   }
+    public EditorCloseFileEvent(FileModel file) {
+        this.file = file;
+    }
 
-   public EditorCloseFileEvent(FileModel file, boolean ignoreChanges)
-   {
-      this.file = file;
-      this.ignoreChanges = ignoreChanges;
-   }
+    public EditorCloseFileEvent(FileModel file, boolean ignoreChanges) {
+        this.file = file;
+        this.ignoreChanges = ignoreChanges;
+    }
 
-   public boolean isIgnoreChanges()
-   {
-      return ignoreChanges;
-   }
+    public boolean isIgnoreChanges() {
+        return ignoreChanges;
+    }
 
-   /**
-    * Return file will be closed
-    * 
-    * @return
-    */
-   public FileModel getFile()
-   {
-      return file;
-   }
+    /**
+     * Return file will be closed
+     *
+     * @return
+     */
+    public FileModel getFile() {
+        return file;
+    }
 
-   @Override
-   protected void dispatch(EditorCloseFileHandler handler)
-   {
-      handler.onEditorCloseFile(this);
-   }
+    @Override
+    protected void dispatch(EditorCloseFileHandler handler) {
+        handler.onEditorCloseFile(this);
+    }
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<EditorCloseFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<EditorCloseFileHandler> getAssociatedType() {
+        return TYPE;
+    }
 
 }

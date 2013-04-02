@@ -24,103 +24,87 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $Id: $
  */
 
-public class ApplicationSettings
-{
+public class ApplicationSettings {
 
-   public enum Store {
+    public enum Store {
 
-      COOKIES, SERVER, NONE
+        COOKIES, SERVER, NONE
 
-   }
+    }
 
-   private HashMap<String, Store> stores = new HashMap<String, Store>();
+    private HashMap<String, Store> stores = new HashMap<String, Store>();
 
-   /*
-    * Values can be only next types: String, Integer, Boolean, Map, List
-    */
-   private HashMap<String, Object> values = new HashMap<String, Object>();
+    /*
+     * Values can be only next types: String, Integer, Boolean, Map, List
+     */
+    private HashMap<String, Object> values = new HashMap<String, Object>();
 
-   public Map<String, Object> getValues()
-   {
-      return values;
-   }
+    public Map<String, Object> getValues() {
+        return values;
+    }
 
-   public boolean containsKey(String key)
-   {
-      return values.containsKey(key);
-   }
+    public boolean containsKey(String key) {
+        return values.containsKey(key);
+    }
 
-   public void setValue(String key, Object value, Store store)
-   {
-      values.put(key, value);
-      stores.put(key, store);
-   }
+    public void setValue(String key, Object value, Store store) {
+        values.put(key, value);
+        stores.put(key, store);
+    }
 
-   public Object getValueAsObject(String key)
-   {
-      return values.get(key);
-   }
+    public Object getValueAsObject(String key) {
+        return values.get(key);
+    }
 
-   public String getValueAsString(String key)
-   {
-      return (String)values.get(key);
-   }
+    public String getValueAsString(String key) {
+        return (String)values.get(key);
+    }
 
-   public Integer getValueAsInteger(String key)
-   {
-      if (values.get(key) == null)
-      {
-         return 0;
-      }
+    public Integer getValueAsInteger(String key) {
+        if (values.get(key) == null) {
+            return 0;
+        }
 
-      return Integer.valueOf((String)values.get(key));
-   }
+        return Integer.valueOf((String)values.get(key));
+    }
 
-   public Boolean getValueAsBoolean(String key)
-   {
-      if (values.get(key) == null)
-      {
-         return null;
-      }
+    public Boolean getValueAsBoolean(String key) {
+        if (values.get(key) == null) {
+            return null;
+        }
 
-      return (Boolean)values.get(key);
-   }
+        return (Boolean)values.get(key);
+    }
 
-   @SuppressWarnings("unchecked")
-   public List<String> getValueAsList(String key)
-   {
-      if (values.get(key) == null)
-      {
-         return null;
-      }
+    @SuppressWarnings("unchecked")
+    public List<String> getValueAsList(String key) {
+        if (values.get(key) == null) {
+            return null;
+        }
 
-      return (List<String>)(values.get(key));
-   }
+        return (List<String>)(values.get(key));
+    }
 
-   @SuppressWarnings("unchecked")
-   public Map<String, String> getValueAsMap(String key)
-   {
-      if (values.get(key) == null)
-      {
-         return null;
-      }
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getValueAsMap(String key) {
+        if (values.get(key) == null) {
+            return null;
+        }
 
-      return (Map<String, String>)(values.get(key));
-   }
+        return (Map<String, String>)(values.get(key));
+    }
 
-   public Store getStore(String key)
-   {
-      if (stores.get(key) == null)
-      {
-         return Store.NONE;
-      }
+    public Store getStore(String key) {
+        if (stores.get(key) == null) {
+            return Store.NONE;
+        }
 
-      return stores.get(key);
-   }
+        return stores.get(key);
+    }
 
 }

@@ -32,219 +32,175 @@ import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Apr 10, 2012 5:29:30 PM anya $
- * 
  */
-public abstract class AbstractCommentsModifier implements CommentsModifier
-{
+public abstract class AbstractCommentsModifier implements CommentsModifier {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#addBlockComment(org.exoplatform.ide.client.framework.editor.SelectionRange,
-    *      org.exoplatform.ide.client.framework.editor.IDocument)
-    */
-   @Override
-   public TextEdit addBlockComment(SelectionRange selectionRange, IDocument document)
-   {
-      MultiTextEdit textEdit = new MultiTextEdit();
-      int startOffset = 0;
-      int endOffset = 0;
-      try
-      {
-         startOffset = document.getLineOffset(selectionRange.getStartLine() - 1) + selectionRange.getStartSymbol();
-         endOffset = document.getLineOffset(selectionRange.getEndLine() - 1) + selectionRange.getEndSymbol();
-      }
-      catch (BadLocationException e)
-      {
-      }
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#addBlockComment(org.exoplatform.ide.client.framework.editor
+     * .SelectionRange,
+     *      org.exoplatform.ide.client.framework.editor.IDocument)
+     */
+    @Override
+    public TextEdit addBlockComment(SelectionRange selectionRange, IDocument document) {
+        MultiTextEdit textEdit = new MultiTextEdit();
+        int startOffset = 0;
+        int endOffset = 0;
+        try {
+            startOffset = document.getLineOffset(selectionRange.getStartLine() - 1) + selectionRange.getStartSymbol();
+            endOffset = document.getLineOffset(selectionRange.getEndLine() - 1) + selectionRange.getEndSymbol();
+        } catch (BadLocationException e) {
+        }
 
-      FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
-      try
-      {
-         IRegion region = findReplaceDocument.find(startOffset, getOpenBlockComment(), true, false, false, false);
-         if (region != null && region.getOffset() < endOffset)
-         {
-            textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
-         }
-
-         region = findReplaceDocument.find(startOffset, getCloseBlockComment(), true, false, false, false);
-         if (region != null && region.getOffset() < endOffset)
-         {
-            textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
-         }
-      }
-      catch (BadLocationException e)
-      {
-      }
-
-      textEdit.addChild(new InsertEdit(startOffset, getOpenBlockComment()));
-      textEdit.addChild(new InsertEdit(endOffset, getCloseBlockComment()));
-
-      return textEdit;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#removeBlockComment(org.exoplatform.ide.client.framework.editor.SelectionRange,
-    *      org.exoplatform.ide.client.framework.editor.IDocument)
-    */
-   @Override
-   public TextEdit removeBlockComment(SelectionRange selectionRange, IDocument document)
-   {
-      MultiTextEdit textEdit = new MultiTextEdit();
-      int startOffset = 0;
-      int endOffset = 0;
-      try
-      {
-         startOffset = document.getLineOffset(selectionRange.getStartLine() - 1) + selectionRange.getStartSymbol();
-         endOffset = document.getLineOffset(selectionRange.getEndLine() - 1) + selectionRange.getEndSymbol();
-      }
-      catch (BadLocationException e)
-      {
-      }
-
-      FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
-      try
-      {
-         IRegion startRegion = findReplaceDocument.find(startOffset, getOpenBlockComment(), true, false, false, false);
-         if (startRegion != null && startRegion.getOffset() < endOffset)
-         {
-            textEdit.addChild(new DeleteEdit(startRegion.getOffset(), startRegion.getLength()));
-         }
-         else
-         {
-            // Perform backward search:
-            startRegion = findReplaceDocument.find(startOffset, getOpenBlockComment(), false, false, false, false);
-            IRegion endRegion =
-               findReplaceDocument.find(startOffset, getCloseBlockComment(), false, false, false, false);
-            if ((startRegion != null && endRegion == null)
-               || (startRegion != null && endRegion != null && startRegion.getOffset() > endRegion.getOffset()))
-            {
-               textEdit.addChild(new DeleteEdit(startRegion.getOffset(), startRegion.getLength()));
+        FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
+        try {
+            IRegion region = findReplaceDocument.find(startOffset, getOpenBlockComment(), true, false, false, false);
+            if (region != null && region.getOffset() < endOffset) {
+                textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
             }
-            else
-            {
-               return textEdit;
+
+            region = findReplaceDocument.find(startOffset, getCloseBlockComment(), true, false, false, false);
+            if (region != null && region.getOffset() < endOffset) {
+                textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
             }
-         }
+        } catch (BadLocationException e) {
+        }
 
-         IRegion endRegion = findReplaceDocument.find(startOffset, getCloseBlockComment(), true, false, false, false);
-         if (endRegion != null)
-         {
-            textEdit.addChild(new DeleteEdit(endRegion.getOffset(), endRegion.getLength()));
-         }
-      }
-      catch (BadLocationException e)
-      {
-      }
-      return textEdit;
-   }
+        textEdit.addChild(new InsertEdit(startOffset, getOpenBlockComment()));
+        textEdit.addChild(new InsertEdit(endOffset, getCloseBlockComment()));
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.client.api.SelectionRange,
-    *      org.exoplatform.ide.editor.shared.text.IDocument)
-    */
-   @Override
-   public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document)
-   {
-      MultiTextEdit textEdit = new MultiTextEdit();
-      boolean removeComment = isRemoveCommentOperation(selectionRange, document);
-      boolean processLineAsBlock = getSingleLineComment() == null;
+        return textEdit;
+    }
 
-      for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++)
-      {
-         try
-         {
-            int lineLength = document.getLineLength(i - 1);
-            int lineStartOffset = document.getLineOffset(i - 1);
-            int lineEndOffset = lineStartOffset + lineLength;
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#removeBlockComment(org.exoplatform.ide.client.framework.editor
+     * .SelectionRange,
+     *      org.exoplatform.ide.client.framework.editor.IDocument)
+     */
+    @Override
+    public TextEdit removeBlockComment(SelectionRange selectionRange, IDocument document) {
+        MultiTextEdit textEdit = new MultiTextEdit();
+        int startOffset = 0;
+        int endOffset = 0;
+        try {
+            startOffset = document.getLineOffset(selectionRange.getStartLine() - 1) + selectionRange.getStartSymbol();
+            endOffset = document.getLineOffset(selectionRange.getEndLine() - 1) + selectionRange.getEndSymbol();
+        } catch (BadLocationException e) {
+        }
 
-            if (processLineAsBlock)
-            {
-               int endSymbol = lineLength;
-               String lineText = document.get(lineStartOffset, endSymbol);
-               if (lineText.endsWith(document.getLineDelimiter(i)))
-               {
-                  endSymbol--;
-               }
-               SelectionRange lineSelectionRange = new SelectionRange(i, 0, i, endSymbol);
-
-               if (removeComment)
-               {
-                  textEdit.addChild(removeBlockComment(lineSelectionRange, document));
-               }
-               else
-               {
-                  textEdit.addChild(addBlockComment(lineSelectionRange, document));
-               }
+        FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
+        try {
+            IRegion startRegion = findReplaceDocument.find(startOffset, getOpenBlockComment(), true, false, false, false);
+            if (startRegion != null && startRegion.getOffset() < endOffset) {
+                textEdit.addChild(new DeleteEdit(startRegion.getOffset(), startRegion.getLength()));
+            } else {
+                // Perform backward search:
+                startRegion = findReplaceDocument.find(startOffset, getOpenBlockComment(), false, false, false, false);
+                IRegion endRegion =
+                        findReplaceDocument.find(startOffset, getCloseBlockComment(), false, false, false, false);
+                if ((startRegion != null && endRegion == null)
+                    || (startRegion != null && endRegion != null && startRegion.getOffset() > endRegion.getOffset())) {
+                    textEdit.addChild(new DeleteEdit(startRegion.getOffset(), startRegion.getLength()));
+                } else {
+                    return textEdit;
+                }
             }
-            else
-            {
-               if (removeComment)
-               {
-                  FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
-                  IRegion region =
-                     findReplaceDocument.find(lineStartOffset, getSingleLineComment(), true, false, false, false);
-                  if (region != null && region.getOffset() < lineEndOffset)
-                  {
-                     textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
-                  }
-               }
-               else
-               {
-                  textEdit.addChild(new InsertEdit(lineStartOffset, getSingleLineComment()));
-               }
+
+            IRegion endRegion = findReplaceDocument.find(startOffset, getCloseBlockComment(), true, false, false, false);
+            if (endRegion != null) {
+                textEdit.addChild(new DeleteEdit(endRegion.getOffset(), endRegion.getLength()));
             }
-         }
-         catch (BadLocationException e)
-         {
-            Log.info(e.getMessage());
-         }
-      }
-      return textEdit;
-   }
+        } catch (BadLocationException e) {
+        }
+        return textEdit;
+    }
 
-   private boolean isRemoveCommentOperation(SelectionRange selectionRange, IDocument document)
-   {
-      String singleLineComment = getSingleLineComment();
-      singleLineComment = singleLineComment == null ? getOpenBlockComment() : singleLineComment;
+    /**
+     * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.client.api
+     * .SelectionRange,
+     *      org.exoplatform.ide.editor.shared.text.IDocument)
+     */
+    @Override
+    public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document) {
+        MultiTextEdit textEdit = new MultiTextEdit();
+        boolean removeComment = isRemoveCommentOperation(selectionRange, document);
+        boolean processLineAsBlock = getSingleLineComment() == null;
 
-      for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++)
-      {
-         int line = i - 1;
-         try
-         {
-            String lineContent = document.get(document.getLineOffset(line), document.getLineLength(line));
-            if (!lineContent.trim().startsWith(singleLineComment))
-            {
-               return false;
+        for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++) {
+            try {
+                int lineLength = document.getLineLength(i - 1);
+                int lineStartOffset = document.getLineOffset(i - 1);
+                int lineEndOffset = lineStartOffset + lineLength;
+
+                if (processLineAsBlock) {
+                    int endSymbol = lineLength;
+                    String lineText = document.get(lineStartOffset, endSymbol);
+                    if (lineText.endsWith(document.getLineDelimiter(i))) {
+                        endSymbol--;
+                    }
+                    SelectionRange lineSelectionRange = new SelectionRange(i, 0, i, endSymbol);
+
+                    if (removeComment) {
+                        textEdit.addChild(removeBlockComment(lineSelectionRange, document));
+                    } else {
+                        textEdit.addChild(addBlockComment(lineSelectionRange, document));
+                    }
+                } else {
+                    if (removeComment) {
+                        FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
+                        IRegion region =
+                                findReplaceDocument.find(lineStartOffset, getSingleLineComment(), true, false, false, false);
+                        if (region != null && region.getOffset() < lineEndOffset) {
+                            textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
+                        }
+                    } else {
+                        textEdit.addChild(new InsertEdit(lineStartOffset, getSingleLineComment()));
+                    }
+                }
+            } catch (BadLocationException e) {
+                Log.info(e.getMessage());
             }
-         }
-         catch (BadLocationException e)
-         {
-            return false;
-         }
-      }
-      return true;
-   }
+        }
+        return textEdit;
+    }
 
-   /**
-    * Returns mark of the opening block comment.
-    * 
-    * @return {@link String} mark of the opening block comment
-    */
-   public abstract String getOpenBlockComment();
+    private boolean isRemoveCommentOperation(SelectionRange selectionRange, IDocument document) {
+        String singleLineComment = getSingleLineComment();
+        singleLineComment = singleLineComment == null ? getOpenBlockComment() : singleLineComment;
 
-   /**
-    * Returns mark of the closing block comment.
-    * 
-    * @return {@link String} mark of the closing block comment
-    */
-   public abstract String getCloseBlockComment();
+        for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++) {
+            int line = i - 1;
+            try {
+                String lineContent = document.get(document.getLineOffset(line), document.getLineLength(line));
+                if (!lineContent.trim().startsWith(singleLineComment)) {
+                    return false;
+                }
+            } catch (BadLocationException e) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-   /**
-    * Returns mark of the single line comment or <code>null</code>
-    * if no mark for the appropriate content type.
-    * 
-    * @return {@link String} mark of the single line comment or
-    *          <code>null</code> if no mark for the appropriate content type
-    */
-   public abstract String getSingleLineComment();
+    /**
+     * Returns mark of the opening block comment.
+     *
+     * @return {@link String} mark of the opening block comment
+     */
+    public abstract String getOpenBlockComment();
+
+    /**
+     * Returns mark of the closing block comment.
+     *
+     * @return {@link String} mark of the closing block comment
+     */
+    public abstract String getCloseBlockComment();
+
+    /**
+     * Returns mark of the single line comment or <code>null</code>
+     * if no mark for the appropriate content type.
+     *
+     * @return {@link String} mark of the single line comment or
+     *         <code>null</code> if no mark for the appropriate content type
+     */
+    public abstract String getSingleLineComment();
 }

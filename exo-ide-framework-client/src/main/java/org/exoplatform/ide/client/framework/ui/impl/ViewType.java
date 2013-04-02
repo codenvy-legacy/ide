@@ -20,42 +20,28 @@ package org.exoplatform.ide.client.framework.ui.impl;
 
 /**
  * Types of view.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 8, 2010 $
- * 
  */
-public interface ViewType
-{
+public interface ViewType {
 
-   /**
-    * View type "navigation". All views of this type will be opened in the left part of IDE.
-    */
-   String NAVIGATION = "navigation";
+    /** View type "navigation". All views of this type will be opened in the left part of IDE. */
+    String NAVIGATION = "navigation";
 
-   /**
-    * View type "editor". All views of this type will be opened in the editor panel.
-    */
-   String EDITOR = "editor";
+    /** View type "editor". All views of this type will be opened in the editor panel. */
+    String EDITOR = "editor";
 
-   /**
-    * View type "information". All views of this type will be opened in the right part of IDE.
-    */
-   String INFORMATION = "information";
+    /** View type "information". All views of this type will be opened in the right part of IDE. */
+    String INFORMATION = "information";
 
-   /**
-    * View type "operation". All views of this type will be opened in the bottom part of IDE.
-    */
-   String OPERATION = "operation";
+    /** View type "operation". All views of this type will be opened in the bottom part of IDE. */
+    String OPERATION = "operation";
 
-   /**
-    * View type "popup". All views of this type will be opened in window.
-    */
-   String POPUP = "popup";
+    /** View type "popup". All views of this type will be opened in window. */
+    String POPUP = "popup";
 
-   /**
-    * View type "modal". All views of this type will be opened in modal window.
-    */
-   String MODAL = "modal";
+    /** View type "modal". All views of this type will be opened in modal window. */
+    String MODAL = "modal";
 
 }

@@ -31,65 +31,61 @@ import java.io.PrintWriter;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 21, 2010 $
- * 
  */
-public abstract class BaseGenerator extends Generator
-{
-   protected static final String IMPORT = "import %1$s;";
+public abstract class BaseGenerator extends Generator {
+    protected static final String IMPORT = "import %1$s;";
 
-   protected static final String PACKAGE = "package %s;";
+    protected static final String PACKAGE = "package %s;";
 
-   /**
-    * @see com.google.gwt.core.ext.Generator#generate(com.google.gwt.core.ext.TreeLogger,
-    *      com.google.gwt.core.ext.GeneratorContext, java.lang.String)
-    */
-   @Override
-   public String generate(TreeLogger logger, GeneratorContext context, String typeName)
-      throws UnableToCompleteException
-   {
-      JClassType interfaceType = getInterfaceType(context.getTypeOracle(), typeName, logger);
+    /**
+     * @see com.google.gwt.core.ext.Generator#generate(com.google.gwt.core.ext.TreeLogger,
+     *      com.google.gwt.core.ext.GeneratorContext, java.lang.String)
+     */
+    @Override
+    public String generate(TreeLogger logger, GeneratorContext context, String typeName)
+            throws UnableToCompleteException {
+        JClassType interfaceType = getInterfaceType(context.getTypeOracle(), typeName, logger);
 
-      String packageName = interfaceType.getPackage().getName();
+        String packageName = interfaceType.getPackage().getName();
 
-      // Create implementation class name
-      String implName = interfaceType.getName().replace(".", "_") + "Impl";
-      PrintWriter printWriter = context.tryCreate(logger, packageName, implName);
-      if (printWriter != null)
-      {
-         ConsolePrintWriter writer = new ConsolePrintWriter(printWriter);
-         // Write package information to generating class
-         writer.write(PACKAGE, packageName);
-         writer.println();
-         // Generate source of the class
-         doGenerate(interfaceType, implName, writer, context);
-         context.commit(logger, printWriter);
-      }
-      return packageName + "." + implName;
-   }
+        // Create implementation class name
+        String implName = interfaceType.getName().replace(".", "_") + "Impl";
+        PrintWriter printWriter = context.tryCreate(logger, packageName, implName);
+        if (printWriter != null) {
+            ConsolePrintWriter writer = new ConsolePrintWriter(printWriter);
+            // Write package information to generating class
+            writer.write(PACKAGE, packageName);
+            writer.println();
+            // Generate source of the class
+            doGenerate(interfaceType, implName, writer, context);
+            context.commit(logger, printWriter);
+        }
+        return packageName + "." + implName;
+    }
 
-   protected JClassType getInterfaceType(TypeOracle oracle, String s, TreeLogger treeLogger)
-      throws UnableToCompleteException
-   {
-      JClassType interfaceType;
-      try
-      {
-         interfaceType = oracle.getType(s);
-      }
-      catch (NotFoundException e)
-      {
-         treeLogger.log(TreeLogger.ERROR,
-            String.format("%s: Could not find the interface [%s]. %s", e.getClass().getName(), s, e.getMessage()));
-         throw new UnableToCompleteException();
-      }
-      return interfaceType;
-   }
+    protected JClassType getInterfaceType(TypeOracle oracle, String s, TreeLogger treeLogger)
+            throws UnableToCompleteException {
+        JClassType interfaceType;
+        try {
+            interfaceType = oracle.getType(s);
+        } catch (NotFoundException e) {
+            treeLogger.log(TreeLogger.ERROR,
+                           String.format("%s: Could not find the interface [%s]. %s", e.getClass().getName(), s, e.getMessage()));
+            throw new UnableToCompleteException();
+        }
+        return interfaceType;
+    }
 
-   /**
-    * @param interfaceType interface for generating class
-    * @param implName name of the generating class
-    * @param writer source writer
-    * @param context generator context
-    */
-   abstract protected void doGenerate(JClassType interfaceType, String implName, ConsolePrintWriter writer,
-      GeneratorContext context);
+    /**
+     * @param interfaceType
+     *         interface for generating class
+     * @param implName
+     *         name of the generating class
+     * @param writer
+     *         source writer
+     * @param context
+     *         generator context
+     */
+    abstract protected void doGenerate(JClassType interfaceType, String implName, ConsolePrintWriter writer,
+                                       GeneratorContext context);
 }

@@ -23,23 +23,19 @@ import com.google.gwt.event.shared.GwtEvent;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
  */
-public class CreateModuleEvent extends GwtEvent<CreateModuleHandler>
-{
+public class CreateModuleEvent extends GwtEvent<CreateModuleHandler> {
 
-   public static final GwtEvent.Type<CreateModuleHandler> TYPE = new GwtEvent.Type<CreateModuleHandler>();
+    public static final GwtEvent.Type<CreateModuleHandler> TYPE = new GwtEvent.Type<CreateModuleHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateModuleHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateModuleHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(CreateModuleHandler handler)
-   {
-      handler.onCreateModule(this);
-   }
+    @Override
+    protected void dispatch(CreateModuleHandler handler) {
+        handler.onCreateModule(this);
+    }
 
 }
