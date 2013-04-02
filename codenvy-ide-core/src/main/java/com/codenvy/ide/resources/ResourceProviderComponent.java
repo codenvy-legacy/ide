@@ -78,25 +78,24 @@ public class ResourceProviderComponent implements ResourceProvider, Component {
 
     private final FileType defaulFile;
 
-    /**
-     * Resources API for client application.
-     * It deals with VFS to retrieve the content of  the files
-     *
-     * @throws ResourceException
-     */
-    @Inject
-    public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
-                                     @Named("defaultFileType") FileType defaulFile) {
-        super();
-        this.genericModelProvider = genericModelProvider;
-        this.eventBus = eventBus;
-        this.defaulFile = defaulFile;
-        this.workspaceURL = "rest/ide/vfs/dev-monit";
-        this.modelProviders = JsonCollections.<ModelProvider>createStringMap();
-        this.natures = JsonCollections.<ProjectNature>createStringMap();
-        this.fileTypes = JsonCollections.createIntegerMap();
-        this.loader = loader;
-    }
+   /**
+    * Resources API for client application.
+    * It deals with VFS to retrieve the content of  the files 
+    * @throws ResourceException 
+    */
+   @Inject
+   public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
+                                    @Named("defaultFileType") FileType defaulFile){
+      super();
+      this.genericModelProvider = genericModelProvider;
+      this.eventBus = eventBus;
+      this.defaulFile = defaulFile;
+      this.workspaceURL = "rest/ide/vfs/v2";
+      this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
+      this.natures = JsonCollections.<ProjectNature> createStringMap();
+      this.fileTypes = JsonCollections.createIntegerMap();
+      this.loader = loader;
+   }
 
     @Override
     public void start(final Callback<Component, ComponentException> callback) {
