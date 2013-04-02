@@ -20,14 +20,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-shell</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-editor</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-vfs</artifactId>
@@ -39,26 +37,6 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-framework-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.crsh</groupId>
-			<artifactId>crsh.shell.core</artifactId>
-			<version>${crash.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.crsh</groupId>
-			<artifactId>crsh.jcr</artifactId>
-			<version>${crash.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>crsh.shell.packaging</artifactId>
-					<groupId>org.crsh</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
