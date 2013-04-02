@@ -16,31 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model;
+package org.eclipse.jdt.client.packaging.ui;
+
+import com.google.gwt.resources.client.ImageResource;
+
+import org.exoplatform.ide.client.framework.util.ImageUtil;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class Dependency
+public class FileTreeItem extends PackageExplorerTreeItem
 {
 
-   private String name;
-
-   public Dependency(String name)
+   public FileTreeItem(FileModel file)
    {
-      this.name = name;
+      super(file);
    }
 
-   public String getName()
+   @Override
+   protected ImageResource getItemIcon()
    {
-      return name;
+      return ImageUtil.getIcon(((FileModel)getUserObject()).getMimeType());
    }
 
-   public void setName(String name)
+   @Override
+   protected String getItemTitle()
    {
-      this.name = name;
+      return ((FileModel)getUserObject()).getName();
+   }
+
+   @Override
+   public List<Item> getItems()
+   {
+      return null;
+   }
+
+   @Override
+   public void refresh(boolean open)
+   {
+      render();
    }
 
 }

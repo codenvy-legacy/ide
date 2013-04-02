@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -41,23 +42,25 @@ import java.util.Map;
 public interface PackageExplorerDisplay extends IsView
 {
 
-   /**
-    * Change tree visibility.
-    * 
-    * @param visible <code>true</code> if visible
-    */
-   void setPackageExplorerTreeVisible(boolean visible);
+//   /**
+//    * Change tree visibility.
+//    * 
+//    * @param visible <code>true</code> if visible
+//    */
+//   void setPackageExplorerTreeVisible(boolean visible);
+   
+   void setProject(IDEProject project);
 
-   /**
-    * @return {@link TreeGridItem}
-    */
-   TreeGridItem<Item> getBrowserTree();
+//   /**
+//    * @return {@link TreeGridItem}
+//    */
+//   TreeGridItem<Item> getBrowserTree();
    
    boolean selectItem(Item item);
    
-   Object getSelectedObject();
+   Item getSelectedItem();
 
-   void goToItem(List<Object> itemList, boolean collapseBranches);
+//   void goToItem(List<Object> itemList, boolean collapseBranches);
    
    List<Item> getTreeChildren(FolderModel folder);
    
@@ -90,19 +93,19 @@ public interface PackageExplorerDisplay extends IsView
     */
    void setLinkWithEditorButtonSelected(boolean selected);
 
-   /**
-    * Update the state of the item in the tree.
-    * 
-    * @param file
-    */
-   void updateItemState(FileModel file);   
+//   /**
+//    * Update the state of the item in the tree.
+//    * 
+//    * @param file
+//    */
+//   void updateItemState(FileModel file);   
 
-   /**
-    * Set lock tokens to the items in the tree.
-    * 
-    * @param locktokens
-    */
-   void setLockTokens(Map<String, String> locktokens);
+//   /**
+//    * Set lock tokens to the items in the tree.
+//    * 
+//    * @param locktokens
+//    */
+//   void setLockTokens(Map<String, String> locktokens);
    
    /**
     * Add info icons to main item icon.

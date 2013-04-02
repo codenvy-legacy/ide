@@ -30,7 +30,7 @@ import java.util.List;
  * @version $
  * 
  */
-public class ProjectTypes
+public class JavaProjects
 {
 
    private static ArrayList<String> projects = new ArrayList<String>();

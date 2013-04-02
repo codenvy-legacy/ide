@@ -288,4 +288,46 @@ public class IDEProject extends ProjectModel
       }
    }
 
+   public void dump()
+   {
+      System.out.println("-------------------------------------------------------------------");
+      System.out.println("Project " + getName() + ", id=" + getId() + ", path=" + getPath());
+      System.out.println("-------------------------------------------------------------------");
+      dump(this, 0);
+      System.out.println("-------------------------------------------------------------------");
+   }
+   
+   private void dump(Item item, int depth)
+   {
+      String prefix = "";
+      for (int i = 0; i < depth; i++)
+      {
+         prefix += "    ";
+      }
+      
+      if (item instanceof ProjectModel)
+      {
+         //System.out.println(prefix + item);
+         System.out.println(prefix + "# " + item.getName() + ", id=" + item.getId() + ", path=" + item.getPath() + ", mime-type=" + item.getMimeType());
+         for (Item i : ((ProjectModel)item).getChildren().getItems())
+         {
+            dump(i, depth + 1);
+         }
+      }
+      else if (item instanceof FolderModel)
+      {
+         //System.out.println(prefix + item);
+         System.out.println(prefix + "> " + item.getName() + ", id=" + item.getId() + ", path=" + item.getPath() + ", mime-type=" + item.getMimeType());
+         for (Item i : ((FolderModel)item).getChildren().getItems())
+         {
+            dump(i, depth + 1);
+         }
+      }
+      else if (item instanceof FileModel)
+      {
+         //System.out.println(prefix + item);
+         System.out.println(prefix + "  " + item.getName() + ", id=" + item.getId() + ", path=" + item.getPath() + ", mime-type=" + item.getMimeType());
+      }
+   }
+
 }
