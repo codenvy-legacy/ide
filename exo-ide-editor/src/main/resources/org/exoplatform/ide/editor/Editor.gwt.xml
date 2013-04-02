@@ -20,29 +20,29 @@
 -->
 
 <module>
-	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE' />
+    <set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 
-	<!-- Inherit the core Web Toolkit stuff. -->
-	<inherits name='com.google.gwt.user.User' />
-	<inherits name='com.google.gwt.user.Debug' />
-	<inherits name='com.google.gwt.xml.XML' />
-	<inherits name='com.google.gwt.json.JSON' />
-	<inherits name="com.google.gwt.resources.Resources" />
+    <!-- Inherit the core Web Toolkit stuff. -->
+    <inherits name='com.google.gwt.user.User'/>
+    <inherits name='com.google.gwt.user.Debug'/>
+    <inherits name='com.google.gwt.xml.XML'/>
+    <inherits name='com.google.gwt.json.JSON'/>
+    <inherits name="com.google.gwt.resources.Resources"/>
 
-	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
-	<inherits name='org.exoplatform.gwtframework.ui.UI' />
-	<inherits name='org.exoplatform.ide.editor.API' />
+    <inherits name='org.exoplatform.gwtframework.commons.Commons'/>
+    <inherits name='org.exoplatform.gwtframework.ui.UI'/>
+    <inherits name='org.exoplatform.ide.editor.API'/>
 
-	<source path="api" />
-	<source path="ckeditor" />
-	<source path="codeassistant" />
-	<source path="codemirror" />
+    <source path="api"/>
+    <source path="ckeditor"/>
+    <source path="codeassistant"/>
+    <source path="codemirror"/>
 
-	<!-- Styles for notifications -->
-	<stylesheet src="codemirror-0.94/notifications.css" />
+    <!-- Styles for notifications -->
+    <stylesheet src="codemirror-0.94/notifications.css"/>
 
-	<!-- Load FCKEditor files. -->
-	<script src="ckeditor-3.1/ckeditor.js" />
-	<script src="ckeditor-3.1/config.js" />
+    <!-- Load FCKEditor files. -->
+    <script src="ckeditor-3.1/ckeditor.js"/>
+    <script src="ckeditor-3.1/config.js"/>
 
 </module>

@@ -23,20 +23,18 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 /**
  * This interface describes factory that builds {@link TokenWidget} by specific token.<br>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 25, 2010 3:59:50 PM evgen $
- * 
  */
-public interface TokenWidgetFactory
-{
+public interface TokenWidgetFactory {
 
-   /**
-    * Create new {@link TokenWidget} for token.
-    * 
-    * @param token
-    * @return {@link TokenWidget} that represent token
-    */
-   TokenWidget buildTokenWidget(Token token);
+    /**
+     * Create new {@link TokenWidget} for token.
+     *
+     * @param token
+     * @return {@link TokenWidget} that represent token
+     */
+    TokenWidget buildTokenWidget(Token token);
 
 }

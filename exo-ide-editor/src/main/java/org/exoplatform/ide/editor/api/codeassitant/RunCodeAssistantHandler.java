@@ -24,9 +24,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 24, 2012 5:08:16 PM evgen $
  */
-public interface RunCodeAssistantHandler extends EventHandler
-{
+public interface RunCodeAssistantHandler extends EventHandler {
 
-   void onRunCodeAssistant(RunCodeAssistantEvent event);
+    void onRunCodeAssistant(RunCodeAssistantEvent event);
 
 }

@@ -20,53 +20,42 @@ package org.exoplatform.ide.editor.api.codeassitant;
 
 /**
  * String implementation of {@link TokenProperty} Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class StringProperty extends TokenProperty
-{
+public class StringProperty extends TokenProperty {
 
-   private String value;
+    private String value;
 
-   /**
-    * @param value
-    */
-   public StringProperty(String value)
-   {
-      super();
-      this.value = value;
-   }
+    /** @param value */
+    public StringProperty(String value) {
+        super();
+        this.value = value;
+    }
 
-   @Override
-   public StringProperty isStringProperty()
-   {
-      return this;
-   }
+    @Override
+    public StringProperty isStringProperty() {
+        return this;
+    }
 
-   /**
-    * @return value of this property
-    */
-   public String stringValue()
-   {
-      return value;
-   }
+    /** @return value of this property */
+    public String stringValue() {
+        return value;
+    }
 
-   @Override
-   public NumericProperty isNumericProperty()
-   {
-      return null;
-   }
+    @Override
+    public NumericProperty isNumericProperty() {
+        return null;
+    }
 
-   @Override
-   public ArrayProperty isArrayProperty()
-   {
-      return null;
-   }
+    @Override
+    public ArrayProperty isArrayProperty() {
+        return null;
+    }
 
-   @Override
-   public ObjectProperty isObjectProperty()
-   {
-      return null;
-   }
+    @Override
+    public ObjectProperty isObjectProperty() {
+        return null;
+    }
 }

@@ -22,58 +22,45 @@ import java.util.List;
 
 /**
  * Array implentation of {@link TokenProperty} Contains {@link List} of {@link Token}
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class ArrayProperty extends TokenProperty
-{
+public class ArrayProperty extends TokenProperty {
 
-   private List<? extends Token> value;
+    private List<? extends Token> value;
 
-   /**
-    * @param value
-    */
-   public ArrayProperty(List<? extends Token> value)
-   {
-      super();
-      this.value = value;
-   }
+    /** @param value */
+    public ArrayProperty(List<? extends Token> value) {
+        super();
+        this.value = value;
+    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isArrayProperty()
-    */
-   @Override
-   public ArrayProperty isArrayProperty()
-   {
-      return this;
-   }
+    /** @see org.exoplatform.ide.editor.api.codeassitant.TokenProperty#isArrayProperty() */
+    @Override
+    public ArrayProperty isArrayProperty() {
+        return this;
+    }
 
-   /**
-    * @return value of this property
-    */
-   public List<? extends Token> arrayValue()
-   {
-      return value;
-   }
+    /** @return value of this property */
+    public List<? extends Token> arrayValue() {
+        return value;
+    }
 
-   @Override
-   public StringProperty isStringProperty()
-   {
-      return null;
-   }
+    @Override
+    public StringProperty isStringProperty() {
+        return null;
+    }
 
-   @Override
-   public NumericProperty isNumericProperty()
-   {
-      return null;
-   }
+    @Override
+    public NumericProperty isNumericProperty() {
+        return null;
+    }
 
-   @Override
-   public ObjectProperty isObjectProperty()
-   {
-      return null;
-   }
+    @Override
+    public ObjectProperty isObjectProperty() {
+        return null;
+    }
 }

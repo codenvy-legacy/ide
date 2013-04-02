@@ -21,40 +21,34 @@ package org.exoplatform.ide.editor.api;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- * 
  */
-public class CodeLine
-{
-   CodeType type;
+public class CodeLine {
+    CodeType type;
 
-   String lineContent;
+    String lineContent;
 
-   int lineNumber;
+    int lineNumber;
 
-   public CodeLine(CodeType type, String lineContent, int lineNumber)
-   {
-      this.type = type;
-      this.lineContent = lineContent;
-      this.lineNumber = lineNumber;
-   }
+    public CodeLine(CodeType type, String lineContent, int lineNumber) {
+        this.type = type;
+        this.lineContent = lineContent;
+        this.lineNumber = lineNumber;
+    }
 
-   public CodeType getType()
-   {
-      return type;
-   }
+    public CodeType getType() {
+        return type;
+    }
 
-   public String getLineContent()
-   {
-      return lineContent;
-   }
+    public String getLineContent() {
+        return lineContent;
+    }
 
-   public int getLineNumber()
-   {
-      return lineNumber;
-   }
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
-   public enum CodeType {
-      TYPE_ERROR, IMPORT_STATEMENT;
-   }
-   
+    public enum CodeType {
+        TYPE_ERROR, IMPORT_STATEMENT;
+    }
+
 }

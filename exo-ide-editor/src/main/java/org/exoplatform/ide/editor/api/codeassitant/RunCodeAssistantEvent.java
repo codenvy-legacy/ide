@@ -24,23 +24,20 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 24, 2012 5:07:58 PM evgen $
  */
-public class RunCodeAssistantEvent extends GwtEvent<RunCodeAssistantHandler>
-{
+public class RunCodeAssistantEvent extends GwtEvent<RunCodeAssistantHandler> {
 
-   public static GwtEvent.Type<RunCodeAssistantHandler> TYPE = new Type<RunCodeAssistantHandler>();
+    public static GwtEvent.Type<RunCodeAssistantHandler> TYPE = new Type<RunCodeAssistantHandler>();
 
-   /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RunCodeAssistantHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<RunCodeAssistantHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
-   @Override
-   protected void dispatch(RunCodeAssistantHandler handler)
-   {
-      handler.onRunCodeAssistant(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(RunCodeAssistantHandler handler) {
+        handler.onRunCodeAssistant(this);
+    }
 
 }
