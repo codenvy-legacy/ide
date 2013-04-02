@@ -22,33 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to create application on Beanstalk.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 17, 2012 11:32:25 AM anya $
- * 
  */
-public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
+public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(CreateApplicationHandler handler)
-   {
-      handler.onCreateApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(CreateApplicationHandler handler) {
+        handler.onCreateApplication(this);
+    }
 }

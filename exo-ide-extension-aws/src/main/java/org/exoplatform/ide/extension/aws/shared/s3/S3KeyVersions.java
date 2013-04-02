@@ -26,33 +26,32 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface S3KeyVersions
-{
-   /**
-    * Get S3 key name
-    *
-    * @return
-    */
-   String getS3Key();
+public interface S3KeyVersions {
+    /**
+     * Get S3 key name
+     *
+     * @return
+     */
+    String getS3Key();
 
-   /**
-    * Set S3 key name
-    *
-    * @param s3Key
-    */
-   void setS3Key(String s3Key);
+    /**
+     * Set S3 key name
+     *
+     * @param s3Key
+     */
+    void setS3Key(String s3Key);
 
-   /**
-    * Get list of versions for S3 key
-    *
-    * @return
-    */
-   List<String> getVersions();
+    /**
+     * Get list of versions for S3 key
+     *
+     * @return
+     */
+    List<String> getVersions();
 
-   /**
-    * Set list of versions for S3 key
-    *
-    * @param versions
-    */
-   void setVersions(List<String> versions);
+    /**
+     * Set list of versions for S3 key
+     *
+     * @param versions
+     */
+    void setVersions(List<String> versions);
 }

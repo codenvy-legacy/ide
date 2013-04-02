@@ -1,52 +1,53 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-   <ui:with field='locale' type='org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant' />
-   <ui:style>
-      .floatLeft {
-      	float: left;
-      }
-      
-      .floatRight {
-      	float: right;
-      }
-      
-      .center {
-      	display: block;
-      	margin-left: auto;
-      	margin-right: auto;
-      }
-      
-      .spacing {
-      	margin-bottom: 10px;
-      }
-      
-      .label {
-      	margin-top: 2px;
-      }
-   </ui:style>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with field='locale' type='org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant'/>
+    <ui:style>
+        .floatLeft {
+            float: left;
+        }
 
-   <f:Border margin="15" borderColor="transparent">
-      <f:layer>
-         <g:DockLayoutPanel width="100%" unit="PCT" height="75%">
-            <g:north size="40">
-               <f:Label ui:field="questionLabel"></f:Label>
-            </g:north>
-            <g:south size="60">
-               <g:FlowPanel>
-                  <g:CheckBox ui:field="forceCheckBox" height="22px" addStyleNames="{style.floatLeft}"></g:CheckBox>
-                  <f:Label value="{locale.stopEC2Force}" height="18px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
-               </g:FlowPanel>
-            </g:south>
-         </g:DockLayoutPanel>
-      </f:layer>
-      <f:layer height="22px" bottom="0">
-         <g:FlowPanel width="190px" styleName="{style.center}">
-            <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.okButton}" addStyleNames="{style.floatLeft}"
-               imageName="ok"></f:ImageButton>
-            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" addStyleNames="{style.floatLeft}"
-               imageName="cancel"></f:ImageButton>
-         </g:FlowPanel>
-      </f:layer>
-   </f:Border>
+        .floatRight {
+            float: right;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .spacing {
+            margin-bottom: 10px;
+        }
+
+        .label {
+            margin-top: 2px;
+        }
+    </ui:style>
+
+    <f:Border margin="15" borderColor="transparent">
+        <f:layer>
+            <g:DockLayoutPanel width="100%" unit="PCT" height="75%">
+                <g:north size="40">
+                    <f:Label ui:field="questionLabel"></f:Label>
+                </g:north>
+                <g:south size="60">
+                    <g:FlowPanel>
+                        <g:CheckBox ui:field="forceCheckBox" height="22px" addStyleNames="{style.floatLeft}"></g:CheckBox>
+                        <f:Label value="{locale.stopEC2Force}" height="18px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
+                    </g:FlowPanel>
+                </g:south>
+            </g:DockLayoutPanel>
+        </f:layer>
+        <f:layer height="22px" bottom="0">
+            <g:FlowPanel width="190px" styleName="{style.center}">
+                <f:ImageButton ui:field="okButton" width="90" height="22" text="{locale.okButton}" addStyleNames="{style.floatLeft}"
+                               imageName="ok"></f:ImageButton>
+                <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+                <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" addStyleNames="{style.floatLeft}"
+                               imageName="cancel"></f:ImageButton>
+            </g:FlowPanel>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder> 

@@ -22,34 +22,28 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum ConfigurationTemplateDeploymentStatus
-{
-   deployed("deployed"),
-   pending("pending"),
-   failed("failed");
+public enum ConfigurationTemplateDeploymentStatus {
+    deployed("deployed"),
+    pending("pending"),
+    failed("failed");
 
-   private final String value;
+    private final String value;
 
-   private ConfigurationTemplateDeploymentStatus(String value)
-   {
-      this.value = value;
-   }
+    private ConfigurationTemplateDeploymentStatus(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static ConfigurationTemplateDeploymentStatus fromValue(String value)
-   {
-      for (ConfigurationTemplateDeploymentStatus v : ConfigurationTemplateDeploymentStatus.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static ConfigurationTemplateDeploymentStatus fromValue(String value) {
+        for (ConfigurationTemplateDeploymentStatus v : ConfigurationTemplateDeploymentStatus.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

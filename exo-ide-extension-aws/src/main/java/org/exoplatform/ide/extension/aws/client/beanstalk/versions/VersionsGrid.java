@@ -34,142 +34,115 @@ import java.sql.Date;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 12:28:23 PM anya $
- * 
  */
-public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements HasVersionActions
-{
-   private final String ID = "ideVersionsGrid";
+public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements HasVersionActions {
+    private final String ID = "ideVersionsGrid";
 
-   private final String LABEL = AWSExtension.LOCALIZATION_CONSTANT.versionsGridLabel();
+    private final String LABEL = AWSExtension.LOCALIZATION_CONSTANT.versionsGridLabel();
 
-   private final String DESCRIPTION = AWSExtension.LOCALIZATION_CONSTANT.versionsGridDescription();
+    private final String DESCRIPTION = AWSExtension.LOCALIZATION_CONSTANT.versionsGridDescription();
 
-   private final String CREATED = AWSExtension.LOCALIZATION_CONSTANT.versionsGridCreated();
+    private final String CREATED = AWSExtension.LOCALIZATION_CONSTANT.versionsGridCreated();
 
-   private final String UPDATED = AWSExtension.LOCALIZATION_CONSTANT.versionsGridUpdated();
+    private final String UPDATED = AWSExtension.LOCALIZATION_CONSTANT.versionsGridUpdated();
 
-   private final String DEPLOY = AWSExtension.LOCALIZATION_CONSTANT.deployButton();
+    private final String DEPLOY = AWSExtension.LOCALIZATION_CONSTANT.deployButton();
 
-   private final String DELETE = AWSExtension.LOCALIZATION_CONSTANT.deleteButton();
+    private final String DELETE = AWSExtension.LOCALIZATION_CONSTANT.deleteButton();
 
-   private Column<ApplicationVersionInfo, String> deployColumn;
+    private Column<ApplicationVersionInfo, String> deployColumn;
 
-   private Column<ApplicationVersionInfo, String> deleteColumn;
+    private Column<ApplicationVersionInfo, String> deleteColumn;
 
-   public VersionsGrid()
-   {
-      setID(ID);
+    public VersionsGrid() {
+        setID(ID);
 
-      Column<ApplicationVersionInfo, String> labelColumn = new Column<ApplicationVersionInfo, String>(new TextCell())
-      {
-
-         @Override
-         public String getValue(ApplicationVersionInfo application)
-         {
-            return application.getVersionLabel();
-         }
-      };
-
-      Column<ApplicationVersionInfo, String> descriptionColumn =
-         new Column<ApplicationVersionInfo, String>(new TextCell())
-         {
+        Column<ApplicationVersionInfo, String> labelColumn = new Column<ApplicationVersionInfo, String>(new TextCell()) {
 
             @Override
-            public String getValue(ApplicationVersionInfo application)
-            {
-               return application.getDescription();
+            public String getValue(ApplicationVersionInfo application) {
+                return application.getVersionLabel();
             }
-         };
+        };
 
-      Column<ApplicationVersionInfo, String> createdColumn = new Column<ApplicationVersionInfo, String>(new TextCell())
-      {
+        Column<ApplicationVersionInfo, String> descriptionColumn =
+                new Column<ApplicationVersionInfo, String>(new TextCell()) {
 
-         @Override
-         public String getValue(ApplicationVersionInfo application)
-         {
-            return new Date(application.getCreated()).toString();
-         }
-      };
+                    @Override
+                    public String getValue(ApplicationVersionInfo application) {
+                        return application.getDescription();
+                    }
+                };
 
-      Column<ApplicationVersionInfo, String> updatedColumn = new Column<ApplicationVersionInfo, String>(new TextCell())
-      {
+        Column<ApplicationVersionInfo, String> createdColumn = new Column<ApplicationVersionInfo, String>(new TextCell()) {
 
-         @Override
-         public String getValue(ApplicationVersionInfo application)
-         {
-            return new Date(application.getUpdated()).toString();
-         }
-      };
+            @Override
+            public String getValue(ApplicationVersionInfo application) {
+                return new Date(application.getCreated()).toString();
+            }
+        };
 
-      deployColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell())
-      {
+        Column<ApplicationVersionInfo, String> updatedColumn = new Column<ApplicationVersionInfo, String>(new TextCell()) {
 
-         @Override
-         public String getValue(ApplicationVersionInfo application)
-         {
-            return DEPLOY;
-         }
-      };
+            @Override
+            public String getValue(ApplicationVersionInfo application) {
+                return new Date(application.getUpdated()).toString();
+            }
+        };
 
-      deleteColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell())
-      {
+        deployColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell()) {
 
-         @Override
-         public String getValue(ApplicationVersionInfo application)
-         {
-            return DELETE;
-         }
-      };
+            @Override
+            public String getValue(ApplicationVersionInfo application) {
+                return DEPLOY;
+            }
+        };
 
-      getCellTable().addColumn(labelColumn, LABEL);
-      getCellTable().addColumn(descriptionColumn, DESCRIPTION);
-      getCellTable().addColumn(createdColumn, CREATED);
-      getCellTable().addColumn(updatedColumn, UPDATED);
-      getCellTable().addColumn(deployColumn, DEPLOY);
-      getCellTable().addColumn(deleteColumn, DELETE);
-   }
+        deleteColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell()) {
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.HasVersionActions#addDeployHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addDeployHandler(final SelectionHandler<ApplicationVersionInfo> handler)
-   {
-      deployColumn.setFieldUpdater(new FieldUpdater<ApplicationVersionInfo, String>()
-      {
-         @Override
-         public void update(int index, ApplicationVersionInfo object, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(object));
-         }
-      });
-   }
+            @Override
+            public String getValue(ApplicationVersionInfo application) {
+                return DELETE;
+            }
+        };
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.HasVersionActions#addDeleteHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addDeleteHandler(final SelectionHandler<ApplicationVersionInfo> handler)
-   {
-      deleteColumn.setFieldUpdater(new FieldUpdater<ApplicationVersionInfo, String>()
-      {
-         @Override
-         public void update(int index, ApplicationVersionInfo object, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(object));
-         }
-      });
-   }
+        getCellTable().addColumn(labelColumn, LABEL);
+        getCellTable().addColumn(descriptionColumn, DESCRIPTION);
+        getCellTable().addColumn(createdColumn, CREATED);
+        getCellTable().addColumn(updatedColumn, UPDATED);
+        getCellTable().addColumn(deployColumn, DEPLOY);
+        getCellTable().addColumn(deleteColumn, DELETE);
+    }
 
-   private class SelectionEventImpl extends SelectionEvent<ApplicationVersionInfo>
-   {
-      /**
-       * @param selectedItem
-       */
-      protected SelectionEventImpl(ApplicationVersionInfo selectedItem)
-      {
-         super(selectedItem);
-      }
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.HasVersionActions#addDeployHandler(com.google.gwt.event.logical
+     * .shared.SelectionHandler) */
+    @Override
+    public void addDeployHandler(final SelectionHandler<ApplicationVersionInfo> handler) {
+        deployColumn.setFieldUpdater(new FieldUpdater<ApplicationVersionInfo, String>() {
+            @Override
+            public void update(int index, ApplicationVersionInfo object, String value) {
+                handler.onSelection(new SelectionEventImpl(object));
+            }
+        });
+    }
+
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.HasVersionActions#addDeleteHandler(com.google.gwt.event.logical
+     * .shared.SelectionHandler) */
+    @Override
+    public void addDeleteHandler(final SelectionHandler<ApplicationVersionInfo> handler) {
+        deleteColumn.setFieldUpdater(new FieldUpdater<ApplicationVersionInfo, String>() {
+            @Override
+            public void update(int index, ApplicationVersionInfo object, String value) {
+                handler.onSelection(new SelectionEventImpl(object));
+            }
+        });
+    }
+
+    private class SelectionEventImpl extends SelectionEvent<ApplicationVersionInfo> {
+        /** @param selectedItem */
+        protected SelectionEventImpl(ApplicationVersionInfo selectedItem) {
+            super(selectedItem);
+        }
+    }
 
 }

@@ -23,14 +23,12 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 4:52:49 PM anya $
- * 
  */
-public interface VersionDeletedHandler
-{
-   /**
-    * Perform actions, when application version is deleted.
-    * 
-    * @param version
-    */
-   void onVersionDeleted(ApplicationVersionInfo version);
+public interface VersionDeletedHandler {
+    /**
+     * Perform actions, when application version is deleted.
+     *
+     * @param version
+     */
+    void onVersionDeleted(ApplicationVersionInfo version);
 }

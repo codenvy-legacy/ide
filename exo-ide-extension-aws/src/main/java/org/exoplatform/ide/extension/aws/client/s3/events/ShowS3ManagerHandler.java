@@ -24,14 +24,12 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Parfonov Vitaly</a>
  * @version $Id: OpenS3ManagerHandler.java Sep 18, 2012 vetal $
- *
  */
-public interface ShowS3ManagerHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to create application on Elastic Beanstalk.
-    * 
-    * @param event
-    */
-   void onShowS3Manager(ShowS3ManagerEvent event);
+public interface ShowS3ManagerHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to create application on Elastic Beanstalk.
+     *
+     * @param event
+     */
+    void onShowS3Manager(ShowS3ManagerEvent event);
 }

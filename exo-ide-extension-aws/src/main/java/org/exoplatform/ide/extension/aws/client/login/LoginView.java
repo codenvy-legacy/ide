@@ -34,136 +34,100 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
-public class LoginView extends ViewImpl implements LoginPresenter.Display
-{
-   private static final String ID = "ideLoginView";
+public class LoginView extends ViewImpl implements LoginPresenter.Display {
+    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 410;
+    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 213;
+    private static final int HEIGHT = 213;
 
-   private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
+    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
-   private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
+    private static final String LOGIN_RESULT_ID = "ideLoginViewLoginResult";
 
-   private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideLoginViewCancelButton";
 
-   private static final String ACCESS_KEY_FIELD_ID = "ideLoginViewAccessKeyField";
+    private static final String ACCESS_KEY_FIELD_ID = "ideLoginViewAccessKeyField";
 
-   private static final String SECRET_KEY__FIELD_ID = "ideLoginViewSecretKeyField";
+    private static final String SECRET_KEY__FIELD_ID = "ideLoginViewSecretKeyField";
 
-   /**
-    * UI binder for this view.
-    */
-   private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
+    /** UI binder for this view. */
+    private static LoginViewUiBinder uiBinder = GWT.create(LoginViewUiBinder.class);
 
-   interface LoginViewUiBinder extends UiBinder<Widget, LoginView>
-   {
-   }
+    interface LoginViewUiBinder extends UiBinder<Widget, LoginView> {
+    }
 
-   /**
-    * Email field.
-    */
-   @UiField
-   TextInput accessKeyField;
+    /** Email field. */
+    @UiField
+    TextInput accessKeyField;
 
-   /**
-    * Password field.
-    */
-   @UiField
-   PasswordTextInput secretKeyField;
+    /** Password field. */
+    @UiField
+    PasswordTextInput secretKeyField;
 
-   /**
-    * Login button.
-    */
-   @UiField
-   ImageButton loginButton;
+    /** Login button. */
+    @UiField
+    ImageButton loginButton;
 
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+    /** Cancel button. */
+    @UiField
+    ImageButton cancelButton;
 
-   /**
-    * Login result label.
-    */
-   @UiField
-   Label loginResult;
+    /** Login result label. */
+    @UiField
+    Label loginResult;
 
-   public LoginView()
-   {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.loginTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public LoginView() {
+        super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.loginTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      accessKeyField.setName(ACCESS_KEY_FIELD_ID);
-      secretKeyField.setName(SECRET_KEY__FIELD_ID);
-      loginButton.setButtonId(LOGIN_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-      loginResult.setID(LOGIN_RESULT_ID);
-   }
+        accessKeyField.setName(ACCESS_KEY_FIELD_ID);
+        secretKeyField.setName(SECRET_KEY__FIELD_ID);
+        loginButton.setButtonId(LOGIN_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+        loginResult.setID(LOGIN_RESULT_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getAccessKey()
-    */
-   @Override
-   public TextFieldItem getAccessKey()
-   {
-      return accessKeyField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getAccessKey() */
+    @Override
+    public TextFieldItem getAccessKey() {
+        return accessKeyField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getSecretKey()
-    */
-   @Override
-   public TextFieldItem getSecretKey()
-   {
-      return secretKeyField;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getSecretKey() */
+    @Override
+    public TextFieldItem getSecretKey() {
+        return secretKeyField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getLoginButton()
-    */
-   @Override
-   public HasClickHandlers getLoginButton()
-   {
-      return loginButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getLoginButton() */
+    @Override
+    public HasClickHandlers getLoginButton() {
+        return loginButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getLoginResult()
-    */
-   @Override
-   public HasValue<String> getLoginResult()
-   {
-      return loginResult;
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getLoginResult() */
+    @Override
+    public HasValue<String> getLoginResult() {
+        return loginResult;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#enableLoginButton(boolean)
-    */
-   @Override
-   public void enableLoginButton(boolean enable)
-   {
-      loginButton.setEnabled(enable);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#enableLoginButton(boolean) */
+    @Override
+    public void enableLoginButton(boolean enable) {
+        loginButton.setEnabled(enable);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#focusInAccessKey()
-    */
-   @Override
-   public void focusInAccessKey()
-   {
-      accessKeyField.setFocus(true);
-   }
+    /** @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#focusInAccessKey() */
+    @Override
+    public void focusInAccessKey() {
+        accessKeyField.setFocus(true);
+    }
 
 }

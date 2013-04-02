@@ -50,221 +50,187 @@ import java.util.Map;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: UploadFilePresenter.java Oct 1, 2012 vetal $
- *
  */
-public class UploadFilePresenter implements ViewClosedHandler
-{
+public class UploadFilePresenter implements ViewClosedHandler {
 
-   public interface Display extends IsView
-   {
+    public interface Display extends IsView {
 
-      HasValue<String> getMimeTypeField();
+        HasValue<String> getMimeTypeField();
 
-      void setSelectedMimeType(String mimeType);
+        void setSelectedMimeType(String mimeType);
 
-      void setMimeTypes(String[] mimeTypes);
+        void setMimeTypes(String[] mimeTypes);
 
-      void setMimeTypeFieldEnabled(boolean enabled);
+        void setMimeTypeFieldEnabled(boolean enabled);
 
-      HasClickHandlers getOpenButton();
+        HasClickHandlers getOpenButton();
 
-      void setOpenButtonEnabled(boolean enabled);
+        void setOpenButtonEnabled(boolean enabled);
 
-      HasClickHandlers getCloseButton();
+        HasClickHandlers getCloseButton();
 
-      FormPanel getUploadForm();
+        FormPanel getUploadForm();
 
-      HasValue<String> getFileNameField();
+        HasValue<String> getFileNameField();
 
-      HasFileSelectedHandler getFileUploadInput();
+        HasFileSelectedHandler getFileUploadInput();
 
-      void setMimeTypeHiddedField(String mimeType);
+        void setMimeTypeHiddedField(String mimeType);
 
-      void setNameHiddedField(String name);
+        void setNameHiddedField(String name);
 
-      void setOverwriteHiddedField(Boolean overwrite);
+        void setOverwriteHiddedField(Boolean overwrite);
 
-   }
+    }
 
-   private Display display;
+    private Display display;
 
-   private String fileName;
+    private String fileName;
 
-   private String s3Bucket;
+    private String s3Bucket;
 
-   private Loader loader;
+    private Loader loader;
 
-   @SuppressWarnings("serial")
-   private static final Map<String, String> fileTypes = Collections.unmodifiableMap(new HashMap<String, String>()
-   {
-      {
-         put("txt", "text/plain");
-         put("jpg", "image/jpeg");
-         put("png", "image/png");
-         put("gif", "image/gif");
-         put("bmp", "image/bmp");
-         put("tiff", "image/tiff");
-         put("rtf", "text/rtf");
-         put("doc", "application/msword");
-         put("zip", "application/zip");
-         put("mpeg", "audio/mpeg");
-         put("pdf", "application/pdf");
-         put("gzip", "application/x-gzip");
-         put("rar", "application/x-compressed");
-         put("zip", "application/zip");
-         put("", "application/octet-stream");
+    @SuppressWarnings("serial")
+    private static final Map<String, String> fileTypes = Collections.unmodifiableMap(new HashMap<String, String>() {
+        {
+            put("txt", "text/plain");
+            put("jpg", "image/jpeg");
+            put("png", "image/png");
+            put("gif", "image/gif");
+            put("bmp", "image/bmp");
+            put("tiff", "image/tiff");
+            put("rtf", "text/rtf");
+            put("doc", "application/msword");
+            put("zip", "application/zip");
+            put("mpeg", "audio/mpeg");
+            put("pdf", "application/pdf");
+            put("gzip", "application/x-gzip");
+            put("rar", "application/x-compressed");
+            put("zip", "application/zip");
+            put("", "application/octet-stream");
 
-      }
-   });
+        }
+    });
 
-   public UploadFilePresenter()
-   {
-      loader = new GWTLoader();
-      loader.setMessage("Uploading...");
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public UploadFilePresenter() {
+        loader = new GWTLoader();
+        loader.setMessage("Uploading...");
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   public void onUploadFile(String s3Bucket)
-   {
-      this.s3Bucket = s3Bucket;
-      if (display != null)
-      {
-         return;
-      }
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-   }
+    public void onUploadFile(String s3Bucket) {
+        this.s3Bucket = s3Bucket;
+        if (display != null) {
+            return;
+        }
+        display = GWT.create(Display.class);
+        IDE.getInstance().openView(display.asView());
+        bindDisplay();
+    }
 
-   private void bindDisplay()
-   {
-      display.getUploadForm().setMethod(FormPanel.METHOD_POST);
-      display.getUploadForm().setEncoding(FormPanel.ENCODING_MULTIPART);
+    private void bindDisplay() {
+        display.getUploadForm().setMethod(FormPanel.METHOD_POST);
+        display.getUploadForm().setEncoding(FormPanel.ENCODING_MULTIPART);
 
-      display.setOpenButtonEnabled(false);
-      display.setMimeTypeFieldEnabled(false);
-      display.getFileUploadInput().addFileSelectedHandler(fileSelectedHandler);
-      display.getMimeTypeField().addValueChangeHandler(mimeTypeChangedHandler);
+        display.setOpenButtonEnabled(false);
+        display.setMimeTypeFieldEnabled(false);
+        display.getFileUploadInput().addFileSelectedHandler(fileSelectedHandler);
+        display.getMimeTypeField().addValueChangeHandler(mimeTypeChangedHandler);
 
-      display.getOpenButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doUploadFile();
-         }
-      });
+        display.getOpenButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                doUploadFile();
+            }
+        });
 
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
 
-      display.getUploadForm().addSubmitCompleteHandler(new SubmitCompleteHandler()
-      {
-         public void onSubmitComplete(SubmitCompleteEvent event)
-         {
-            submitComplete(event.getResults());
-         }
-      });
-   }
+        display.getUploadForm().addSubmitCompleteHandler(new SubmitCompleteHandler() {
+            public void onSubmitComplete(SubmitCompleteEvent event) {
+                submitComplete(event.getResults());
+            }
+        });
+    }
 
-   private FileSelectedHandler fileSelectedHandler = new FileSelectedHandler()
-   {
-      @Override
-      public void onFileSelected(FileSelectedEvent event)
-      {
-         fileName = event.getFileName();
-         fileName = fileName.replace('\\', '/');
+    private FileSelectedHandler fileSelectedHandler = new FileSelectedHandler() {
+        @Override
+        public void onFileSelected(FileSelectedEvent event) {
+            fileName = event.getFileName();
+            fileName = fileName.replace('\\', '/');
 
-         if (fileName.indexOf('/') >= 0)
-         {
-            fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-         }
+            if (fileName.indexOf('/') >= 0) {
+                fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+            }
 
-         display.getFileNameField().setValue(fileName);
-         display.setMimeTypeFieldEnabled(true);
+            display.getFileNameField().setValue(fileName);
+            display.setMimeTypeFieldEnabled(true);
 
-         String[] valueMap = fileTypes.values().toArray(new String[fileTypes.size()]);
+            String[] valueMap = fileTypes.values().toArray(new String[fileTypes.size()]);
 
-         display.setMimeTypes(valueMap);
+            display.setMimeTypes(valueMap);
 
-         String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
-         String mimeType = null;
-         if (fileTypes.containsKey(fileExtension))
-         {
-            mimeType = fileTypes.get(fileExtension);
-         }
-         else 
-         {
-            mimeType = fileTypes.get("");
-         }
+            String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+            String mimeType = null;
+            if (fileTypes.containsKey(fileExtension)) {
+                mimeType = fileTypes.get(fileExtension);
+            } else {
+                mimeType = fileTypes.get("");
+            }
 
-         if (valueMap != null && valueMap.length > 0)
-         {
-            display.setSelectedMimeType(mimeType);
-            display.setOpenButtonEnabled(true);
-         }
-         else
-         {
-            display.setOpenButtonEnabled(false);
-         }
-      }
-   };
+            if (valueMap != null && valueMap.length > 0) {
+                display.setSelectedMimeType(mimeType);
+                display.setOpenButtonEnabled(true);
+            } else {
+                display.setOpenButtonEnabled(false);
+            }
+        }
+    };
 
-   ValueChangeHandler<String> mimeTypeChangedHandler = new ValueChangeHandler<String>()
-   {
-      @Override
-      public void onValueChange(ValueChangeEvent<String> event)
-      {
-         if (display.getMimeTypeField().getValue() != null && display.getMimeTypeField().getValue().length() > 0)
-         {
-            display.setOpenButtonEnabled(true);
-         }
-         else
-         {
-            display.setOpenButtonEnabled(false);
-         }
-      }
-   };
+    ValueChangeHandler<String> mimeTypeChangedHandler = new ValueChangeHandler<String>() {
+        @Override
+        public void onValueChange(ValueChangeEvent<String> event) {
+            if (display.getMimeTypeField().getValue() != null && display.getMimeTypeField().getValue().length() > 0) {
+                display.setOpenButtonEnabled(true);
+            } else {
+                display.setOpenButtonEnabled(false);
+            }
+        }
+    };
 
-   private void doUploadFile()
-   {
-      String mimeType = display.getMimeTypeField().getValue();
-      if (mimeType == null || "".equals(mimeType))
-      {
-         mimeType = null;
-      }
-      String name = display.getFileNameField().getValue();
-      String uploadUrl = Utils.getRestContext() + "/ide/aws/s3/objects/upload/" + s3Bucket;
-      display.getUploadForm().setAction(uploadUrl);
-      display.setMimeTypeHiddedField(mimeType);
-      display.setNameHiddedField(name);
-      display.getUploadForm().submit();
-   }
+    private void doUploadFile() {
+        String mimeType = display.getMimeTypeField().getValue();
+        if (mimeType == null || "".equals(mimeType)) {
+            mimeType = null;
+        }
+        String name = display.getFileNameField().getValue();
+        String uploadUrl = Utils.getRestContext() + "/ide/aws/s3/objects/upload/" + s3Bucket;
+        display.getUploadForm().setAction(uploadUrl);
+        display.setMimeTypeHiddedField(mimeType);
+        display.setNameHiddedField(name);
+        display.getUploadForm().submit();
+    }
 
-   private void submitComplete(String uploadServiceResponse)
-   {
-      if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
-      {
-         // if response is null or empty - than complete upload
-         closeView();
-         IDE.fireEvent(new S3ObjectUploadedEvent());
-         return;
-      }
+    private void submitComplete(String uploadServiceResponse) {
+        if (uploadServiceResponse == null || uploadServiceResponse.isEmpty()) {
+            // if response is null or empty - than complete upload
+            closeView();
+            IDE.fireEvent(new S3ObjectUploadedEvent());
+            return;
+        }
 // TODO : need add confirmation for replace existing object
 //      ErrorData errData = UploadHelper.parseError(uploadServiceResponse);
 //      if (ExitCodes.ITEM_EXISTS == errData.code)
@@ -294,16 +260,14 @@ public class UploadFilePresenter implements ViewClosedHandler
 //         };
 //         IDE.getInstance().openView(dialog);
 //      }
-      else
-      {
-         // in this case show the error, received from server.
-         Dialogs.getInstance().showError(uploadServiceResponse);
-      }
-   }
+        else {
+            // in this case show the error, received from server.
+            Dialogs.getInstance().showError(uploadServiceResponse);
+        }
+    }
 
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+    private void closeView() {
+        IDE.getInstance().closeView(display.asView().getId());
+    }
 
 }

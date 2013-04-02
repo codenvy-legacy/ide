@@ -25,36 +25,30 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
  * Control for switching AWS user accounts.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Sep 14, 2012 1:06:27 PM anya $
- *
  */
-public class SwitchAccountControl extends SimpleControl implements IDEControl
-{
-   private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.loginControlId();
-   
-   private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.loginControlTitle();
-   
-   private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.loginControlPrompt();
-   
-   public SwitchAccountControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(AWSClientBundle.INSTANCE.switchAccount(), AWSClientBundle.INSTANCE.switchAccountDisabled());
+public class SwitchAccountControl extends SimpleControl implements IDEControl {
+    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.loginControlId();
 
-      setEvent(new LoginEvent());
-   }
-   
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.loginControlTitle();
+
+    private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.loginControlPrompt();
+
+    public SwitchAccountControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(AWSClientBundle.INSTANCE.switchAccount(), AWSClientBundle.INSTANCE.switchAccountDisabled());
+
+        setEvent(new LoginEvent());
+    }
+
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 }

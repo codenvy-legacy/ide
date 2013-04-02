@@ -28,87 +28,74 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ImagesListImpl implements ImagesList
-{
-   private List<ImageInfo> images;
-   private int total = -1;
-   private boolean hasMore;
-   private int skip = -1;
-   private int maxItems = -1;
+public class ImagesListImpl implements ImagesList {
+    private List<ImageInfo> images;
+    private int total = -1;
+    private boolean hasMore;
+    private int skip     = -1;
+    private int maxItems = -1;
 
-   @Override
-   public List<ImageInfo> getImages()
-   {
-      if (images == null)
-      {
-         images = new ArrayList<ImageInfo>();
-      }
-      return images;
-   }
+    @Override
+    public List<ImageInfo> getImages() {
+        if (images == null) {
+            images = new ArrayList<ImageInfo>();
+        }
+        return images;
+    }
 
-   @Override
-   public void setImages(List<ImageInfo> images)
-   {
-      this.images = images;
-   }
+    @Override
+    public void setImages(List<ImageInfo> images) {
+        this.images = images;
+    }
 
-   @Override
-   public int getTotal()
-   {
-      return total;
-   }
+    @Override
+    public int getTotal() {
+        return total;
+    }
 
-   @Override
-   public void setTotal(int total)
-   {
-      this.total = total;
-   }
+    @Override
+    public void setTotal(int total) {
+        this.total = total;
+    }
 
-   @Override
-   public boolean isHasMore()
-   {
-      return hasMore;
-   }
+    @Override
+    public boolean isHasMore() {
+        return hasMore;
+    }
 
-   @Override
-   public void setHasMore(boolean hasMore)
-   {
-      this.hasMore = hasMore;
-   }
+    @Override
+    public void setHasMore(boolean hasMore) {
+        this.hasMore = hasMore;
+    }
 
-   @Override
-   public int getNextSkip()
-   {
-      return skip;
-   }
+    @Override
+    public int getNextSkip() {
+        return skip;
+    }
 
-   @Override
-   public void setNextSkip(int skip)
-   {
-      this.skip = skip;
-   }
+    @Override
+    public void setNextSkip(int skip) {
+        this.skip = skip;
+    }
 
-   @Override
-   public int getMaxItems()
-   {
-      return maxItems;
-   }
+    @Override
+    public int getMaxItems() {
+        return maxItems;
+    }
 
-   @Override
-   public void setMaxItems(int maxItems)
-   {
-      this.maxItems = maxItems;
-   }
+    @Override
+    public void setMaxItems(int maxItems) {
+        this.maxItems = maxItems;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "ImagesListImpl{" +
-         "images=" + images +
-         ", total=" + total +
-         ", hasMore=" + hasMore +
-         ", skip=" + skip +
-         ", maxItems=" + maxItems +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "ImagesListImpl{" +
+               "images=" + images +
+               ", total=" + total +
+               ", hasMore=" + hasMore +
+               ", skip=" + skip +
+               ", maxItems=" + maxItems +
+               '}';
+    }
 }

@@ -23,8 +23,8 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-   
-   <!-- Amazon Web Services -->
+
+    <!-- Amazon Web Services -->
 
     <component>
         <type>org.exoplatform.ide.extension.aws.server.rest.AWSApplication</type>
@@ -52,6 +52,6 @@
     <component>
         <type>org.exoplatform.ide.extension.aws.server.ec2.EC2</type>
     </component>
-    <!-- End EC2 --> 
-   
+    <!-- End EC2 -->
+
 </configuration>

@@ -25,64 +25,54 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Owner;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class S3BucketImpl implements S3Bucket
-{
-   private String name;
-   private long creationDate = -1;
-   private S3Owner owner;
+public class S3BucketImpl implements S3Bucket {
+    private String name;
+    private long creationDate = -1;
+    private S3Owner owner;
 
-   public S3BucketImpl()
-   {
-   }
+    public S3BucketImpl() {
+    }
 
-   public S3BucketImpl(String name)
-   {
-      this.name = name;
-   }
+    public S3BucketImpl(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public long getCreated()
-   {
-      return creationDate;
-   }
+    @Override
+    public long getCreated() {
+        return creationDate;
+    }
 
-   @Override
-   public void setCreated(long creationDate)
-   {
-      this.creationDate = creationDate;
-   }
+    @Override
+    public void setCreated(long creationDate) {
+        this.creationDate = creationDate;
+    }
 
-   @Override
-   public S3Owner getOwner()
-   {
-      return owner;
-   }
+    @Override
+    public S3Owner getOwner() {
+        return owner;
+    }
 
-   @Override
-   public void setOwner(S3Owner owner)
-   {
-      this.owner = owner;
-   }
+    @Override
+    public void setOwner(S3Owner owner) {
+        this.owner = owner;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "S3BucketImpl{" +
-         "name='" + name + '\'' +
-         ", creationDate=" + creationDate +
-         ", owner=" + owner +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "S3BucketImpl{" +
+               "name='" + name + '\'' +
+               ", creationDate=" + creationDate +
+               ", owner=" + owner +
+               '}';
+    }
 }

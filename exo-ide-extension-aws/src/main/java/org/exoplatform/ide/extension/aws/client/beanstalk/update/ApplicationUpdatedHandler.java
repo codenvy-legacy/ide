@@ -22,12 +22,10 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 
 /**
  * Handler for application updated operation.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 19, 2012 4:33:57 PM anya $
- * 
  */
-public interface ApplicationUpdatedHandler
-{
-   void onApplicationUpdated(ApplicationInfo application);
+public interface ApplicationUpdatedHandler {
+    void onApplicationUpdated(ApplicationInfo application);
 }

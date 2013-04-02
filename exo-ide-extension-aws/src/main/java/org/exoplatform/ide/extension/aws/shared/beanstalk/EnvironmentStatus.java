@@ -24,36 +24,30 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum EnvironmentStatus
-{
-   Launching("Launching"),
-   Updating("Updating"),
-   Ready("Ready"),
-   Terminating("Terminating"),
-   Terminated("Terminated");
+public enum EnvironmentStatus {
+    Launching("Launching"),
+    Updating("Updating"),
+    Ready("Ready"),
+    Terminating("Terminating"),
+    Terminated("Terminated");
 
-   private final String value;
+    private final String value;
 
-   private EnvironmentStatus(String value)
-   {
-      this.value = value;
-   }
+    private EnvironmentStatus(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static EnvironmentStatus fromValue(String value)
-   {
-      for (EnvironmentStatus v : EnvironmentStatus.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static EnvironmentStatus fromValue(String value) {
+        for (EnvironmentStatus v : EnvironmentStatus.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

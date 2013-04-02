@@ -29,116 +29,98 @@ import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: ServerTabPain.java Oct 8, 2012 5:38:06 PM azatsarynnyy $
- *
  */
-public class ServerTabPain extends Composite
-{
+public class ServerTabPain extends Composite {
 
-   private static ServerTabPainUiBinder uiBinder = GWT.create(ServerTabPainUiBinder.class);
+    private static ServerTabPainUiBinder uiBinder = GWT.create(ServerTabPainUiBinder.class);
 
-   interface ServerTabPainUiBinder extends UiBinder<Widget, ServerTabPain>
-   {
-   }
+    interface ServerTabPainUiBinder extends UiBinder<Widget, ServerTabPain> {
+    }
 
-   private static final String EC2_INSTANCE_TYPE_FIELD_ID = "ideServerTabPainEC2InstanceTypeField";
+    private static final String EC2_INSTANCE_TYPE_FIELD_ID = "ideServerTabPainEC2InstanceTypeField";
 
-   private static final String EC2_SECURITY_GROUPS_FIELD_ID = "ideServerTabPainEC2SecurityGroupsField";
+    private static final String EC2_SECURITY_GROUPS_FIELD_ID = "ideServerTabPainEC2SecurityGroupsField";
 
-   private static final String KEY_NAME_FIELD_ID = "ideServerTabPainKeyNameField";
+    private static final String KEY_NAME_FIELD_ID = "ideServerTabPainKeyNameField";
 
-   private static final String MONITORING_INTERVAL_FIELD_ID = "ideServerTabPainMonitoringIntervalField";
+    private static final String MONITORING_INTERVAL_FIELD_ID = "ideServerTabPainMonitoringIntervalField";
 
-   private static final String IMAGE_ID_FIELD_ID = "ideServerTabPainImageIdField";
+    private static final String IMAGE_ID_FIELD_ID = "ideServerTabPainImageIdField";
 
-   @UiField
-   SelectItem ec2InstanceTypeField;
+    @UiField
+    SelectItem ec2InstanceTypeField;
 
-   @UiField
-   TextInput ec2SecurityGroupsField;
+    @UiField
+    TextInput ec2SecurityGroupsField;
 
-   @UiField
-   TextInput keyNameField;
+    @UiField
+    TextInput keyNameField;
 
-   @UiField
-   SelectItem monitoringIntervalField;
+    @UiField
+    SelectItem monitoringIntervalField;
 
-   @UiField
-   TextInput imageIdField;
+    @UiField
+    TextInput imageIdField;
 
-   public ServerTabPain()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
+    public ServerTabPain() {
+        initWidget(uiBinder.createAndBindUi(this));
 
-      ec2InstanceTypeField.setName(EC2_INSTANCE_TYPE_FIELD_ID);
-      ec2SecurityGroupsField.setName(EC2_SECURITY_GROUPS_FIELD_ID);
-      keyNameField.setName(KEY_NAME_FIELD_ID);
-      monitoringIntervalField.setName(MONITORING_INTERVAL_FIELD_ID);
-      imageIdField.setName(IMAGE_ID_FIELD_ID);
-   }
+        ec2InstanceTypeField.setName(EC2_INSTANCE_TYPE_FIELD_ID);
+        ec2SecurityGroupsField.setName(EC2_SECURITY_GROUPS_FIELD_ID);
+        keyNameField.setName(KEY_NAME_FIELD_ID);
+        monitoringIntervalField.setName(MONITORING_INTERVAL_FIELD_ID);
+        imageIdField.setName(IMAGE_ID_FIELD_ID);
+    }
 
-   /**
-    * @return the ec2InstanceTypeField
-    */
-   public HasValue<String> getEC2InstanceTypeField()
-   {
-      return ec2InstanceTypeField;
-   }
+    /** @return the ec2InstanceTypeField */
+    public HasValue<String> getEC2InstanceTypeField() {
+        return ec2InstanceTypeField;
+    }
 
-   /**
-    * Set new value map and select the <code>selected</code> value.
-    * 
-    * @param values the list of values
-    * @param selected the selected value
-    */
-   public void setEC2InstanceTypeValues(String[] values, String selected)
-   {
-      ec2InstanceTypeField.setValueMap(values, selected);
-   }
+    /**
+     * Set new value map and select the <code>selected</code> value.
+     *
+     * @param values
+     *         the list of values
+     * @param selected
+     *         the selected value
+     */
+    public void setEC2InstanceTypeValues(String[] values, String selected) {
+        ec2InstanceTypeField.setValueMap(values, selected);
+    }
 
-   /**
-    * @return the ec2SecurityGroupsField
-    */
-   public TextInput getEC2SecurityGroupsField()
-   {
-      return ec2SecurityGroupsField;
-   }
+    /** @return the ec2SecurityGroupsField */
+    public TextInput getEC2SecurityGroupsField() {
+        return ec2SecurityGroupsField;
+    }
 
-   /**
-    * @return the ec2KeyNameField
-    */
-   public TextInput getKeyNameField()
-   {
-      return keyNameField;
-   }
+    /** @return the ec2KeyNameField */
+    public TextInput getKeyNameField() {
+        return keyNameField;
+    }
 
-   /**
-    * @return the monitoringIntervalField
-    */
-   public HasValue<String> getMonitoringIntervalField()
-   {
-      return monitoringIntervalField;
-   }
+    /** @return the monitoringIntervalField */
+    public HasValue<String> getMonitoringIntervalField() {
+        return monitoringIntervalField;
+    }
 
-   /**
-    * Set new value map and select the <code>selected</code> value.
-    * 
-    * @param values the list of values
-    * @param selected the selected value
-    */
-   public void setMonitoringIntervalValues(String[] values, String selected)
-   {
-      monitoringIntervalField.setValueMap(values, selected);
-   }
+    /**
+     * Set new value map and select the <code>selected</code> value.
+     *
+     * @param values
+     *         the list of values
+     * @param selected
+     *         the selected value
+     */
+    public void setMonitoringIntervalValues(String[] values, String selected) {
+        monitoringIntervalField.setValueMap(values, selected);
+    }
 
-   /**
-    * @return the imageIdField
-    */
-   public TextInput getImageIdField()
-   {
-      return imageIdField;
-   }
+    /** @return the imageIdField */
+    public TextInput getImageIdField() {
+        return imageIdField;
+    }
 
 }

@@ -22,17 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link TerminateEnvironmentEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: TerminateEnvironmentHandler.java Oct 1, 2012 10:59:30 AM azatsarynnyy $
- *
  */
-public interface TerminateEnvironmentHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to terminate environment.
-    * 
-    * @param event {@link TerminateEnvironmentEvent}
-    */
-   void onTerminateEnvironment(TerminateEnvironmentEvent event);
+public interface TerminateEnvironmentHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to terminate environment.
+     *
+     * @param event
+     *         {@link TerminateEnvironmentEvent}
+     */
+    void onTerminateEnvironment(TerminateEnvironmentEvent event);
 }

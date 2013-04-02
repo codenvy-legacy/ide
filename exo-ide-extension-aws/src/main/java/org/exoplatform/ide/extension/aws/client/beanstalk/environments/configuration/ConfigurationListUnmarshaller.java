@@ -33,49 +33,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: ConfigurationListUnmarshaller.java Oct 8, 2012 10:22:32 AM azatsarynnyy $
- *
  */
-public class ConfigurationListUnmarshaller implements Unmarshallable<List<Configuration>>
-{
-   private List<Configuration> configurationList = new ArrayList<Configuration>();
+public class ConfigurationListUnmarshaller implements Unmarshallable<List<Configuration>> {
+    private List<Configuration> configurationList = new ArrayList<Configuration>();
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
+        JSONArray value = JSONParser.parseLenient(response.getText()).isArray();
 
-      if (value == null)
-      {
-         return;
-      }
+        if (value == null) {
+            return;
+        }
 
-      for (int i = 0; i < value.size(); i++)
-      {
-         String payload = value.get(i).isObject().toString();
+        for (int i = 0; i < value.size(); i++) {
+            String payload = value.get(i).isObject().toString();
 
-         AutoBean<Configuration> configurationBean =
-            AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, Configuration.class, payload);
-         configurationList.add(configurationBean.as());
-      }
-   }
+            AutoBean<Configuration> configurationBean =
+                    AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, Configuration.class, payload);
+            configurationList.add(configurationBean.as());
+        }
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<Configuration> getPayload()
-   {
-      return configurationList;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload() */
+    @Override
+    public List<Configuration> getPayload() {
+        return configurationList;
+    }
 }

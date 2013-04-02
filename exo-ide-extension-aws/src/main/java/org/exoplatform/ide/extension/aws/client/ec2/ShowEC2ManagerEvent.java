@@ -22,33 +22,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to manage Amazon EC2 virtual sever instances.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: ShowEC2ManagerEvent.java Sep 21, 2012 10:01:12 AM azatsarynnyy $
- *
  */
-public class ShowEC2ManagerEvent extends GwtEvent<ShowEC2ManagerHandler>
-{
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<ShowEC2ManagerHandler> TYPE = new GwtEvent.Type<ShowEC2ManagerHandler>();
+public class ShowEC2ManagerEvent extends GwtEvent<ShowEC2ManagerHandler> {
+    /** Type, used to register the event. */
+    public static final GwtEvent.Type<ShowEC2ManagerHandler> TYPE = new GwtEvent.Type<ShowEC2ManagerHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowEC2ManagerHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ShowEC2ManagerHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ShowEC2ManagerHandler handler)
-   {
-      handler.onShowEC2Manager(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ShowEC2ManagerHandler handler) {
+        handler.onShowEC2Manager(this);
+    }
 }

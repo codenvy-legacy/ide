@@ -26,13 +26,12 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface EventsList
-{
-   List<Event> getEvents();
+public interface EventsList {
+    List<Event> getEvents();
 
-   void setEvents(List<Event> events);
+    void setEvents(List<Event> events);
 
-   String getNextToken();
+    String getNextToken();
 
-   void setNextToken(String nextToken);
+    void setNextToken(String nextToken);
 }

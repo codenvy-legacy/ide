@@ -24,45 +24,36 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum S3Region
-{
-   US_Standard(null),
-   US_West("us-west-1"),
-   US_West_2("us-west-2"),
-   EU_Ireland("EU"),
-   AP_Singapore("ap-southeast-1"),
-   AP_Tokyo("ap-northeast-1"),
-   SA_SaoPaulo("sa-east-1");
+public enum S3Region {
+    US_Standard(null),
+    US_West("us-west-1"),
+    US_West_2("us-west-2"),
+    EU_Ireland("EU"),
+    AP_Singapore("ap-southeast-1"),
+    AP_Tokyo("ap-northeast-1"),
+    SA_SaoPaulo("sa-east-1");
 
-   private final String value;
+    private final String value;
 
-   private S3Region(String value)
-   {
-      this.value = value;
-   }
+    private S3Region(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static S3Region fromValue(String value)
-   {
-      for (S3Region v : S3Region.values())
-      {
-         if (v.value == null)
-         {
-            if (value == null)
-            {
-               return v;
+    public static S3Region fromValue(String value) {
+        for (S3Region v : S3Region.values()) {
+            if (v.value == null) {
+                if (value == null) {
+                    return v;
+                }
+            } else if (v.value.equals(value)) {
+                return v;
             }
-         }
-         else if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

@@ -37,96 +37,81 @@ import java.util.List;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: S3ServiceImpl.java Sep 19, 2012 vetal $
- *
  */
-public class S3Service
-{
-   private static S3Service instance;
+public class S3Service {
+    private static S3Service instance;
 
-   public static S3Service getInstance()
-   {
-      if (instance == null)
-      {
-         instance = new S3Service(Utils.getRestContext(), new S3Loader());
-      }
-      return instance;
-   }
+    public static S3Service getInstance() {
+        if (instance == null) {
+            instance = new S3Service(Utils.getRestContext(), new S3Loader());
+        }
+        return instance;
+    }
 
-   private static final String BASE_URL = "/ide/aws/s3";
+    private static final String BASE_URL = "/ide/aws/s3";
 
-   private static final String BUCKETS = BASE_URL + "/buckets";
+    private static final String BUCKETS = BASE_URL + "/buckets";
 
-   private static final String OBJECTS = BASE_URL + "/objects/";
+    private static final String OBJECTS = BASE_URL + "/objects/";
 
-   private static final String OBJECT_DELETE = BASE_URL + "/objects/delete/";
+    private static final String OBJECT_DELETE = BASE_URL + "/objects/delete/";
 
-   private static final String BUCKETS_DELETE = BASE_URL + "/buckets/delete/";
+    private static final String BUCKETS_DELETE = BASE_URL + "/buckets/delete/";
 
-   private static final String BUCKETS_CREATE = BASE_URL + "/buckets/create";
+    private static final String BUCKETS_CREATE = BASE_URL + "/buckets/create";
 
-   private static final String PROJECT_UPLOAD = BASE_URL + "/objects/upload_project/";
-   
-   /**
-    * REST service context.
-    */
-   private String restServiceContext;
+    private static final String PROJECT_UPLOAD = BASE_URL + "/objects/upload_project/";
 
-   /**
-    * Loader to be displayed.
-    */
-   private Loader loader;
+    /** REST service context. */
+    private String restServiceContext;
 
-   private S3Service(String restContext, Loader loader)
-   {
-      this.loader = loader;
-      this.restServiceContext = restContext;
-   }
+    /** Loader to be displayed. */
+    private Loader loader;
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   public void getBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback) throws RequestException
-   {
-      String url = restServiceContext + BUCKETS;
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+    private S3Service(String restContext, Loader loader) {
+        this.loader = loader;
+        this.restServiceContext = restContext;
+    }
 
-   public void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker, int itemNums)
-      throws RequestException
-   {
-      String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=" + String.valueOf(itemNums);
-      if (nextMarker != null)
-         url += "&nextmarker=" + nextMarker;
+    /** @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform
+     * .gwtframework.commons.rest.AsyncRequestCallback) */
+    public void getBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback) throws RequestException {
+        String url = restServiceContext + BUCKETS;
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
-         .send(callback);
-   }
+    public void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker, int itemNums)
+            throws RequestException {
+        String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=" + String.valueOf(itemNums);
+        if (nextMarker != null)
+            url += "&nextmarker=" + nextMarker;
 
-   public void deleteObject(AsyncRequestCallback<String> callback, String s3Bucket, String s3key)
-      throws RequestException
-   {
-      String url = restServiceContext + OBJECT_DELETE + s3Bucket + "?s3key=" + s3key;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+                    .send(callback);
+    }
 
-   }
+    public void deleteObject(AsyncRequestCallback<String> callback, String s3Bucket, String s3key)
+            throws RequestException {
+        String url = restServiceContext + OBJECT_DELETE + s3Bucket + "?s3key=" + s3key;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
 
-   public void deleteBucket(AsyncRequestCallback<String> callback, String bucketId) throws RequestException
-   {
-      String url = restServiceContext + BUCKETS_DELETE + bucketId;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
+    }
 
-   public void createBucket(AsyncRequestCallback<String> callback, String name, String region) throws RequestException
-   {
-      String url = restServiceContext + BUCKETS_CREATE + "?name=" + name + "&region=" + region;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
-   
-   public void uploadProject(AsyncRequestCallback<NewS3Object> callback, String s3Bucket, String s3key, String vfsid, String projectid) throws RequestException
-   {
-      String url = restServiceContext + PROJECT_UPLOAD + s3Bucket + "?s3key=" + s3key + "&vfsid=" + vfsid + "&projectid=" + projectid;
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
-   }
+    public void deleteBucket(AsyncRequestCallback<String> callback, String bucketId) throws RequestException {
+        String url = restServiceContext + BUCKETS_DELETE + bucketId;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
+
+    public void createBucket(AsyncRequestCallback<String> callback, String name, String region) throws RequestException {
+        String url = restServiceContext + BUCKETS_CREATE + "?name=" + name + "&region=" + region;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
+
+    public void uploadProject(AsyncRequestCallback<NewS3Object> callback, String s3Bucket, String s3key, String vfsid, String projectid)
+            throws RequestException {
+        String url = restServiceContext + PROJECT_UPLOAD + s3Bucket + "?s3key=" + s3key + "&vfsid=" + vfsid + "&projectid=" + projectid;
+        AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+    }
 
 }

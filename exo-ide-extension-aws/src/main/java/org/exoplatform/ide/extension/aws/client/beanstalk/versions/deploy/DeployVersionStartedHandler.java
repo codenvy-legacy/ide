@@ -21,18 +21,15 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * 
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: DeployVersionStartedHandler.java Sep 27, 2012 6:05:02 PM azatsarynnyy $
- *
  */
-public interface DeployVersionStartedHandler
-{
-   /**
-    * Perform actions, when deploying of version is started.
-    * 
-    * @param environment version's environment info
-    */
-   void onDeployVersionStarted(EnvironmentInfo environment);
+public interface DeployVersionStartedHandler {
+    /**
+     * Perform actions, when deploying of version is started.
+     *
+     * @param environment
+     *         version's environment info
+     */
+    void onDeployVersionStarted(EnvironmentInfo environment);
 }

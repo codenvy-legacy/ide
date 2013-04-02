@@ -20,86 +20,86 @@
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
-   <ui:with field='resource' type='org.exoplatform.ide.extension.aws.client.AWSClientBundle' />
-   <ui:with field="locale" type="org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant"></ui:with>
+    <ui:with field='resource' type='org.exoplatform.ide.extension.aws.client.AWSClientBundle'/>
+    <ui:with field="locale" type="org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant"></ui:with>
 
-   <ui:style>
-      .formLine {
-      	margin-top: 10px;
-      }
-      
-      .cancelBbutton {
-      	position: absolute;
-      	right: 200px;
-      }
-      
-      .innerBox {
-      	display: block;
-      	margin: 0 8px;
-      }
-      
-      .title {
-      	height: 45px;
-      	display: block;
-      	width: 100%;
-      	border-bottom: 1px solid #ACACAC;
-      	margin-bottom: 30px;
-      	font-size: 14;
-      	font-weight: bold;
-      }
-      
-      .image {
-      	float: left;
-      	width: 66px;
-      	height: 36px;
-      	margin-right: 10px;
-      }
-      
-      .label {
-      	float: left;
-      	margin-top: 10px;
-      }
+    <ui:style>
+        .formLine {
+            margin-top: 10px;
+        }
 
-      .launch {
-      	font-weight: bold;
-      }
-   </ui:style>
-   <f:Border margin="10" borderColor="transparent">
-      <f:layer>
-         <g:FlowPanel ui:field="awsPanel" stylePrimaryName="{style.innerBox}">
-            <g:FlowPanel styleName="{style.title}">
-               <g:Image resource="{resource.elasticBeanstalk32}" styleName="{style.image}"></g:Image>
-               <g:Label text="Deploy project to AWS Elastic Beanstalk" styleName="{style.label}"></g:Label>
+        .cancelBbutton {
+            position: absolute;
+            right: 200px;
+        }
+
+        .innerBox {
+            display: block;
+            margin: 0 8px;
+        }
+
+        .title {
+            height: 45px;
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid #ACACAC;
+            margin-bottom: 30px;
+            font-size: 14;
+            font-weight: bold;
+        }
+
+        .image {
+            float: left;
+            width: 66px;
+            height: 36px;
+            margin-right: 10px;
+        }
+
+        .label {
+            float: left;
+            margin-top: 10px;
+        }
+
+        .launch {
+            font-weight: bold;
+        }
+    </ui:style>
+    <f:Border margin="10" borderColor="transparent">
+        <f:layer>
+            <g:FlowPanel ui:field="awsPanel" stylePrimaryName="{style.innerBox}">
+                <g:FlowPanel styleName="{style.title}">
+                    <g:Image resource="{resource.elasticBeanstalk32}" styleName="{style.image}"></g:Image>
+                    <g:Label text="Deploy project to AWS Elastic Beanstalk" styleName="{style.label}"></g:Label>
+                </g:FlowPanel>
+                <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
+                    <g:west size="115">
+                        <g:Label text="Application Name:" height="18px"></g:Label>
+                    </g:west>
+                    <g:center>
+                        <f:TextInput ui:field="nameField" width="100%" height="22px"></f:TextInput>
+                    </g:center>
+                </g:DockLayoutPanel>
+                <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
+                    <g:west size="115">
+                        <g:Label text="Environment Name:" height="18px"></g:Label>
+                    </g:west>
+                    <g:center>
+                        <f:TextInput ui:field="envNameField" width="100%" height="22px"></f:TextInput>
+                    </g:center>
+                </g:DockLayoutPanel>
+                <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
+                    <g:west size="115">
+                        <g:Label text="Solution Stack:" height="18px"></g:Label>
+                    </g:west>
+                    <g:center>
+                        <f:SelectItem ui:field="solutionStackField" width="100%" height="22px"></f:SelectItem>
+                    </g:center>
+                </g:DockLayoutPanel>
             </g:FlowPanel>
-            <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-               <g:west size="115">
-                  <g:Label text="Application Name:" height="18px"></g:Label>
-               </g:west>
-               <g:center>
-                  <f:TextInput ui:field="nameField" width="100%" height="22px"></f:TextInput>
-               </g:center>
-            </g:DockLayoutPanel>
-            <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-               <g:west size="115">
-                  <g:Label text="Environment Name:" height="18px"></g:Label>
-               </g:west>
-               <g:center>
-                  <f:TextInput ui:field="envNameField" width="100%" height="22px"></f:TextInput>
-               </g:center>
-            </g:DockLayoutPanel>
-            <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">
-               <g:west size="115">
-                  <g:Label text="Solution Stack:" height="18px"></g:Label>
-               </g:west>
-               <g:center>
-                  <f:SelectItem ui:field="solutionStackField" width="100%" height="22px"></f:SelectItem>
-               </g:center>
-            </g:DockLayoutPanel>
-         </g:FlowPanel>
-      </f:layer>
+        </f:layer>
 
-   </f:Border>
+    </f:Border>
 </ui:UiBinder> 

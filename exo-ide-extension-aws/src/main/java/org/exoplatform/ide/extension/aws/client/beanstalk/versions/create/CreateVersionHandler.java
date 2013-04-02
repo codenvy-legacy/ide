@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateVersionEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 21, 2012 11:45:14 AM anya $
- * 
  */
-public interface CreateVersionHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to create new version.
-    * 
-    * @param event
-    */
-   void onCreateVersion(CreateVersionEvent event);
+public interface CreateVersionHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to create new version.
+     *
+     * @param event
+     */
+    void onCreateVersion(CreateVersionEvent event);
 }

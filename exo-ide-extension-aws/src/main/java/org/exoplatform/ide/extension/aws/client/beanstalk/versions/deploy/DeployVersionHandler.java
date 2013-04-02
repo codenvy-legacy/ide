@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link DeployVersionEvent} event.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: DeployVersionHandler.java Sep 27, 2012 6:03:55 PM azatsarynnyy $
- *
  */
-public interface DeployVersionHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to deploy application's version.
-    * 
-    * @param event
-    */
-   void onDeployVersion(DeployVersionEvent event);
+public interface DeployVersionHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to deploy application's version.
+     *
+     * @param event
+     */
+    void onDeployVersion(DeployVersionEvent event);
 }

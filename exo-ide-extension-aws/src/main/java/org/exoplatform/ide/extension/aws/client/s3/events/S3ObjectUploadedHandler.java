@@ -23,12 +23,8 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: S3ObjectUploadedHandler.java Sep 26, 2012 vetal $
- *
  */
-public interface S3ObjectUploadedHandler extends EventHandler
-{
-   /**
-    * @param event
-    */
-   void onS3ObjectUploaded(S3ObjectUploadedEvent event);
+public interface S3ObjectUploadedHandler extends EventHandler {
+    /** @param event */
+    void onS3ObjectUploaded(S3ObjectUploadedEvent event);
 }

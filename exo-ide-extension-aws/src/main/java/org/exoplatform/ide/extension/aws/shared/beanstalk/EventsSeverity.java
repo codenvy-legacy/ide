@@ -25,32 +25,26 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum EventsSeverity
-{
-   TRACE("TRACE"), DEBUG("DEBUG"), INFO("INFO"), WARN("WARN"), ERROR("ERROR"), FATAL("FATAL");
+public enum EventsSeverity {
+    TRACE("TRACE"), DEBUG("DEBUG"), INFO("INFO"), WARN("WARN"), ERROR("ERROR"), FATAL("FATAL");
 
-   private final String value;
+    private final String value;
 
-   private EventsSeverity(String value)
-   {
-      this.value = value;
-   }
+    private EventsSeverity(String value) {
+        this.value = value;
+    }
 
-   @Override
-   public String toString()
-   {
-      return value;
-   }
+    @Override
+    public String toString() {
+        return value;
+    }
 
-   public static EventsSeverity fromValue(String value)
-   {
-      for (EventsSeverity v : EventsSeverity.values())
-      {
-         if (v.value.equals(value))
-         {
-            return v;
-         }
-      }
-      throw new IllegalArgumentException("Invalid value '" + value + "' ");
-   }
+    public static EventsSeverity fromValue(String value) {
+        for (EventsSeverity v : EventsSeverity.values()) {
+            if (v.value.equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("Invalid value '" + value + "' ");
+    }
 }

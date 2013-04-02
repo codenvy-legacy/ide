@@ -24,52 +24,51 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface UpdateApplicationVersionRequest
-{
-   /**
-    * Get name of application.
-    *
-    * @return application name
-    */
-   String getApplicationName();
+public interface UpdateApplicationVersionRequest {
+    /**
+     * Get name of application.
+     *
+     * @return application name
+     */
+    String getApplicationName();
 
-   /**
-    * Set name of application.
-    *
-    * @param name
-    *    application name
-    * @see #getApplicationName()
-    */
-   void setApplicationName(String name);
+    /**
+     * Set name of application.
+     *
+     * @param name
+     *         application name
+     * @see #getApplicationName()
+     */
+    void setApplicationName(String name);
 
-   /**
-    * Get label of the version to update.
-    *
-    * @return label of the version to update
-    */
-   String getVersionLabel();
+    /**
+     * Get label of the version to update.
+     *
+     * @return label of the version to update
+     */
+    String getVersionLabel();
 
-   /**
-    * Set label of the version to update.
-    *
-    * @param versionLabel
-    *    label of the version to update
-    */
-   void setVersionLabel(String versionLabel);
+    /**
+     * Set label of the version to update.
+     *
+     * @param versionLabel
+     *         label of the version to update
+     */
+    void setVersionLabel(String versionLabel);
 
-   /**
-    * Get new description of application version. Length: 0 - 200 characters.
-    *
-    * @return application version description
-    */
-   String getDescription();
+    /**
+     * Get new description of application version. Length: 0 - 200 characters.
+     *
+     * @return application version description
+     */
+    String getDescription();
 
-   /**
-    * Set new application description version. Length: 0 - 200 characters.
-    *
-    * @param description
-    *    application version description
-    * @see #getDescription()
-    */
-   void setDescription(String description);
+    /**
+     * Set new application description version. Length: 0 - 200 characters.
+     *
+     * @param description
+     *         application version description
+     * @see #getDescription()
+     */
+    void setDescription(String description);
 }

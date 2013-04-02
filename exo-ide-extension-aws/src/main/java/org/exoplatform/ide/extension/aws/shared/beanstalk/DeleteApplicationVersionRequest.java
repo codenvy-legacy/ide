@@ -24,52 +24,51 @@ package org.exoplatform.ide.extension.aws.shared.beanstalk;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DeleteApplicationVersionRequest
-{
-   /**
-    * Get name of application.
-    *
-    * @return application name
-    */
-   String getApplicationName();
+public interface DeleteApplicationVersionRequest {
+    /**
+     * Get name of application.
+     *
+     * @return application name
+     */
+    String getApplicationName();
 
-   /**
-    * Set name of application.
-    *
-    * @param name
-    *    application name
-    * @see #getApplicationName()
-    */
-   void setApplicationName(String name);
+    /**
+     * Set name of application.
+     *
+     * @param name
+     *         application name
+     * @see #getApplicationName()
+     */
+    void setApplicationName(String name);
 
-   /**
-    * Get label of the version to delete.
-    *
-    * @return label of the version to delete
-    */
-   String getVersionLabel();
+    /**
+     * Get label of the version to delete.
+     *
+     * @return label of the version to delete
+     */
+    String getVersionLabel();
 
-   /**
-    * Set label of the version to delete.
-    *
-    * @param versionLabel
-    *    label of the version to delete
-    */
-   void setVersionLabel(String versionLabel);
+    /**
+     * Set label of the version to delete.
+     *
+     * @param versionLabel
+     *         label of the version to delete
+     */
+    void setVersionLabel(String versionLabel);
 
-   /**
-    * Delete or not S3 bundle associated with this version.
-    *
-    * @return <code>true</code> if need to delete S3 bundle associated with this version and <code>false</code>
-    *         otherwise
-    */
-   boolean isDeleteS3Bundle();
+    /**
+     * Delete or not S3 bundle associated with this version.
+     *
+     * @return <code>true</code> if need to delete S3 bundle associated with this version and <code>false</code>
+     *         otherwise
+     */
+    boolean isDeleteS3Bundle();
 
-   /**
-    * Delete or not S3 bundle associated with this version.
-    *
-    * @param deleteS3Bundle
-    *    <code>true</code> if need to delete S3 bundle associated with this version and <code>false</code> otherwise
-    */
-   void setDeleteS3Bundle(boolean deleteS3Bundle);
+    /**
+     * Delete or not S3 bundle associated with this version.
+     *
+     * @param deleteS3Bundle
+     *         <code>true</code> if need to delete S3 bundle associated with this version and <code>false</code> otherwise
+     */
+    void setDeleteS3Bundle(boolean deleteS3Bundle);
 }

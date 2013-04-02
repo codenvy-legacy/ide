@@ -27,172 +27,146 @@ import java.util.Date;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ApplicationVersionInfoImpl implements ApplicationVersionInfo
-{
-   private String name;
-   private String description;
-   private String versionLabel;
-   private S3Item s3Location;
-   private long created;
-   private long updated;
+public class ApplicationVersionInfoImpl implements ApplicationVersionInfo {
+    private String name;
+    private String description;
+    private String versionLabel;
+    private S3Item s3Location;
+    private long   created;
+    private long   updated;
 
-   public static class Builder
-   {
-      private String name;
-      private String description;
-      private String versionLabel;
-      private S3Item s3Location;
-      private long created;
-      private long updated;
+    public static class Builder {
+        private String name;
+        private String description;
+        private String versionLabel;
+        private S3Item s3Location;
+        private long   created;
+        private long   updated;
 
-      public Builder name(String name)
-      {
-         this.name = name;
-         return this;
-      }
-
-      public Builder description(String description)
-      {
-         this.description = description;
-         return this;
-      }
-
-      public Builder versionLabel(String versionLabel)
-      {
-         this.versionLabel = versionLabel;
-         return this;
-      }
-
-      public Builder s3Location(String s3Bucket, String s3Key)
-      {
-         this.s3Location = new S3ItemImpl(s3Bucket, s3Key);
-         return this;
-      }
-
-      public Builder created(Date created)
-      {
-         if (created == null)
-         {
-            this.created = -1;
+        public Builder name(String name) {
+            this.name = name;
             return this;
-         }
-         this.created = created.getTime();
-         return this;
-      }
+        }
 
-      public Builder updated(Date updated)
-      {
-         if (updated == null)
-         {
-            this.updated = -1;
+        public Builder description(String description) {
+            this.description = description;
             return this;
-         }
-         this.updated = updated.getTime();
-         return this;
-      }
+        }
 
-      public ApplicationVersionInfo build()
-      {
-         return new ApplicationVersionInfoImpl(this);
-      }
-   }
+        public Builder versionLabel(String versionLabel) {
+            this.versionLabel = versionLabel;
+            return this;
+        }
 
-   private ApplicationVersionInfoImpl(Builder builder)
-   {
-      this.name = builder.name;
-      this.description = builder.description;
-      this.versionLabel = builder.versionLabel;
-      this.s3Location = builder.s3Location;
-      this.created = builder.created;
-      this.updated = builder.updated;
-   }
+        public Builder s3Location(String s3Bucket, String s3Key) {
+            this.s3Location = new S3ItemImpl(s3Bucket, s3Key);
+            return this;
+        }
 
-   public ApplicationVersionInfoImpl()
-   {
-   }
+        public Builder created(Date created) {
+            if (created == null) {
+                this.created = -1;
+                return this;
+            }
+            this.created = created.getTime();
+            return this;
+        }
 
-   @Override
-   public String getApplicationName()
-   {
-      return name;
-   }
+        public Builder updated(Date updated) {
+            if (updated == null) {
+                this.updated = -1;
+                return this;
+            }
+            this.updated = updated.getTime();
+            return this;
+        }
 
-   @Override
-   public void setApplicationName(String name)
-   {
-      this.name = name;
-   }
+        public ApplicationVersionInfo build() {
+            return new ApplicationVersionInfoImpl(this);
+        }
+    }
 
-   @Override
-   public String getDescription()
-   {
-      return description;
-   }
+    private ApplicationVersionInfoImpl(Builder builder) {
+        this.name = builder.name;
+        this.description = builder.description;
+        this.versionLabel = builder.versionLabel;
+        this.s3Location = builder.s3Location;
+        this.created = builder.created;
+        this.updated = builder.updated;
+    }
 
-   @Override
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    public ApplicationVersionInfoImpl() {
+    }
 
-   @Override
-   public String getVersionLabel()
-   {
-      return versionLabel;
-   }
+    @Override
+    public String getApplicationName() {
+        return name;
+    }
 
-   @Override
-   public void setVersionLabel(String versionLabel)
-   {
-      this.versionLabel = versionLabel;
-   }
+    @Override
+    public void setApplicationName(String name) {
+        this.name = name;
+    }
 
-   @Override
-   public S3Item getS3Location()
-   {
-      return s3Location;
-   }
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-   @Override
-   public void setS3Location(S3Item s3Location)
-   {
-      this.s3Location = s3Location;
-   }
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-   @Override
-   public long getCreated()
-   {
-      return created;
-   }
+    @Override
+    public String getVersionLabel() {
+        return versionLabel;
+    }
 
-   @Override
-   public void setCreated(long created)
-   {
-      this.created = created;
-   }
+    @Override
+    public void setVersionLabel(String versionLabel) {
+        this.versionLabel = versionLabel;
+    }
 
-   @Override
-   public long getUpdated()
-   {
-      return updated;
-   }
+    @Override
+    public S3Item getS3Location() {
+        return s3Location;
+    }
 
-   @Override
-   public void setUpdated(long updated)
-   {
-      this.updated = updated;
-   }
+    @Override
+    public void setS3Location(S3Item s3Location) {
+        this.s3Location = s3Location;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "ApplicationVersionInfoImpl{" +
-         "name='" + name + '\'' +
-         ", description='" + description + '\'' +
-         ", versionLabel='" + versionLabel + '\'' +
-         ", s3Location=" + s3Location +
-         ", created=" + created +
-         ", updated=" + updated +
-         '}';
-   }
+    @Override
+    public long getCreated() {
+        return created;
+    }
+
+    @Override
+    public void setCreated(long created) {
+        this.created = created;
+    }
+
+    @Override
+    public long getUpdated() {
+        return updated;
+    }
+
+    @Override
+    public void setUpdated(long updated) {
+        this.updated = updated;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationVersionInfoImpl{" +
+               "name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               ", versionLabel='" + versionLabel + '\'' +
+               ", s3Location=" + s3Location +
+               ", created=" + created +
+               ", updated=" + updated +
+               '}';
+    }
 }

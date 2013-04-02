@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when object uploaded to the AWS S3.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: S3ObjectUploadedEvent.java Sep 26, 2012 vetal $
- *
  */
-public class S3ObjectUploadedEvent extends GwtEvent<S3ObjectUploadedHandler>
-{
+public class S3ObjectUploadedEvent extends GwtEvent<S3ObjectUploadedHandler> {
 
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<S3ObjectUploadedHandler> TYPE = new GwtEvent.Type<S3ObjectUploadedHandler>();
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<S3ObjectUploadedHandler> TYPE = new GwtEvent.Type<S3ObjectUploadedHandler>();
 
-  
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<S3ObjectUploadedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(S3ObjectUploadedHandler handler)
-   {
-      handler.onS3ObjectUploaded(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<S3ObjectUploadedHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(S3ObjectUploadedHandler handler) {
+        handler.onS3ObjectUploaded(this);
+    }
 }

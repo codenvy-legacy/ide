@@ -21,17 +21,14 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminat
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: TerminateEnvironmentStartedHandler.java Oct 1, 2012 4:59:27 PM azatsarynnyy $
- *
  */
-public interface TerminateEnvironmentStartedHandler
-{
-   /**
-    * Perform actions, when terminate of environment is started.
-    * 
-    * @param environmentInfo
-    */
-   void onTerminateEnvironmentStarted(EnvironmentInfo environmentInfo);
+public interface TerminateEnvironmentStartedHandler {
+    /**
+     * Perform actions, when terminate of environment is started.
+     *
+     * @param environmentInfo
+     */
+    void onTerminateEnvironmentStarted(EnvironmentInfo environmentInfo);
 }
