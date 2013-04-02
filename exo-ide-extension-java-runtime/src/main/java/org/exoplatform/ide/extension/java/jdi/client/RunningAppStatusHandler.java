@@ -26,38 +26,33 @@ import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class RunningAppStatusHandler extends RequestStatusHandlerBase
-{
+ */
+public class RunningAppStatusHandler extends RequestStatusHandlerBase {
 
 
-   public RunningAppStatusHandler(String projectName)
-   {
-      super(projectName);
-   }
+    public RunningAppStatusHandler(String projectName) {
+        super(projectName);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestInProgress(java.lang.String)
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(DebuggerExtension.LOCALIZATION_CONSTANT.starting(projectName));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestInProgress
+     * (java.lang.String) */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(DebuggerExtension.LOCALIZATION_CONSTANT.starting(projectName));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestFinished(java.lang.String)
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(DebuggerExtension.LOCALIZATION_CONSTANT.started(projectName));
-      IDE.fireEvent(new JobChangeEvent(job));
-   }
+    /** @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestFinished(java
+     * .lang.String) */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(DebuggerExtension.LOCALIZATION_CONSTANT.started(projectName));
+        IDE.fireEvent(new JobChangeEvent(job));
+    }
 
 }

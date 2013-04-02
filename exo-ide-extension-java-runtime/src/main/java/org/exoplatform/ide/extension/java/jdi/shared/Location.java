@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Location
-{
-   String getClassName();
+public interface Location {
+    String getClassName();
 
-   int getLineNumber();
+    int getLineNumber();
 
-   void setClassName(String className);
+    void setClassName(String className);
 
-   void setLineNumber(int lineNumber);
+    void setLineNumber(int lineNumber);
 }

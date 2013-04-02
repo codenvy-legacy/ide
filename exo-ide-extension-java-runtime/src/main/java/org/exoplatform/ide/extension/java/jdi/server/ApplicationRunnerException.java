@@ -25,30 +25,25 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class ApplicationRunnerException extends Exception
-{
-   private final String logs;
+public class ApplicationRunnerException extends Exception {
+    private final String logs;
 
-   public ApplicationRunnerException(String message, Throwable cause, String logs)
-   {
-      super(message, cause);
-      this.logs = logs;
-   }
+    public ApplicationRunnerException(String message, Throwable cause, String logs) {
+        super(message, cause);
+        this.logs = logs;
+    }
 
-   public ApplicationRunnerException(String message, Throwable cause)
-   {
-      super(message, cause);
-      this.logs = null;
-   }
+    public ApplicationRunnerException(String message, Throwable cause) {
+        super(message, cause);
+        this.logs = null;
+    }
 
-   public ApplicationRunnerException(String message)
-   {
-      super(message);
-      this.logs = null;
-   }
+    public ApplicationRunnerException(String message) {
+        super(message);
+        this.logs = null;
+    }
 
-   public String getLogs()
-   {
-      return logs;
-   }
+    public String getLogs() {
+        return logs;
+    }
 }

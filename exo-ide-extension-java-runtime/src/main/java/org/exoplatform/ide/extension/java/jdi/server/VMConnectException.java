@@ -25,15 +25,12 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public final class VMConnectException extends DebuggerException
-{
-   public VMConnectException(String message)
-   {
-      super(message);
-   }
+public final class VMConnectException extends DebuggerException {
+    public VMConnectException(String message) {
+        super(message);
+    }
 
-   public VMConnectException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public VMConnectException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

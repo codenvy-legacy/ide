@@ -22,15 +22,12 @@ package org.exoplatform.ide.extension.java.jdi.server.expression;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ExpressionException extends RuntimeException
-{
-   public ExpressionException(String message)
-   {
-      super(message);
-   }
+public class ExpressionException extends RuntimeException {
+    public ExpressionException(String message) {
+        super(message);
+    }
 
-   public ExpressionException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+    public ExpressionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

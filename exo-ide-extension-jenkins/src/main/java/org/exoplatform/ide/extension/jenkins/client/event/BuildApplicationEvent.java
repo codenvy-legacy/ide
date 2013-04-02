@@ -18,56 +18,45 @@
  */
 package org.exoplatform.ide.extension.jenkins.client.event;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class BuildApplicationEvent extends GwtEvent<BuildApplicationHandler>
-{
-   private ProjectModel project;
+public class BuildApplicationEvent extends GwtEvent<BuildApplicationHandler> {
+    private ProjectModel project;
 
-   public BuildApplicationEvent()
-   {
-      this.project = null;
-   }
+    public BuildApplicationEvent() {
+        this.project = null;
+    }
 
-   public BuildApplicationEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+    public BuildApplicationEvent(ProjectModel project) {
+        this.project = project;
+    }
 
-   public static final GwtEvent.Type<BuildApplicationHandler> TYPE = new Type<BuildApplicationHandler>();
+    public static final GwtEvent.Type<BuildApplicationHandler> TYPE = new Type<BuildApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BuildApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BuildApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(BuildApplicationHandler handler)
-   {
-      handler.onBuildApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(BuildApplicationHandler handler) {
+        handler.onBuildApplication(this);
+    }
 
-   /**
-    * Get the project for build.
-    * 
-    * @return the project
-    */
-   public ProjectModel getProject()
-   {
-      return project;
-   }
+    /**
+     * Get the project for build.
+     *
+     * @return the project
+     */
+    public ProjectModel getProject() {
+        return project;
+    }
 }

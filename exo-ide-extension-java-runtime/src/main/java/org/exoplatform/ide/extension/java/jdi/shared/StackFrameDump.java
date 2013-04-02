@@ -24,13 +24,12 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface StackFrameDump
-{
-   List<Field> getFields();
+public interface StackFrameDump {
+    List<Field> getFields();
 
-   List<Variable> getLocalVariables();
+    List<Variable> getLocalVariables();
 
-   void setFields(List<Field> fields);
+    void setFields(List<Field> fields);
 
-   void setLocalVariables(List<Variable> localVariables);
+    void setLocalVariables(List<Variable> localVariables);
 }

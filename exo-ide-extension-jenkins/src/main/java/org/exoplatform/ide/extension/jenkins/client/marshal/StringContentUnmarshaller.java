@@ -26,36 +26,25 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class StringContentUnmarshaller implements Unmarshallable<StringBuilder>
-{
+public class StringContentUnmarshaller implements Unmarshallable<StringBuilder> {
 
-   private StringBuilder content;
+    private StringBuilder content;
 
-   /**
-    * @param callback
-    */
-   public StringContentUnmarshaller(StringBuilder content)
-   {
-      this.content = content;
-   }
+    /** @param callback */
+    public StringContentUnmarshaller(StringBuilder content) {
+        this.content = content;
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      content.append(response.getText());
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        content.append(response.getText());
+    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public StringBuilder getPayload()
-   {
-      return content;
-   }
+    /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
+    @Override
+    public StringBuilder getPayload() {
+        return content;
+    }
 }

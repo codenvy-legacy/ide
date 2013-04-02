@@ -19,46 +19,48 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
-   <ui:with field='resource' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle' />
-   <ui:with field="locale" type="org.exoplatform.ide.extension.java.jdi.client.DebuggerLocalizationConstant"></ui:with>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+    <ui:with field='resource' type='org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle'/>
+    <ui:with field="locale" type="org.exoplatform.ide.extension.java.jdi.client.DebuggerLocalizationConstant"></ui:with>
 
-   <ui:style>
+    <ui:style>
 
-      .center {
-      	text-align: center;
-      	margin-bottom: 7px;
-        padding: 7px;
-      }
-      
-      .centerButton {
-        width: 90px;
-        margin: 0px auto;
-        padding-top: 7px;
-      }
-      
-      .label {
-      	margin-bottom: 5px;
-      	margin-top: 10px;
-      	cursor: default;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-size: 11px;
-      	font-style: normal;
-      	font-weight: normal;
-      }
-   </ui:style>
+        .center {
+            text-align: center;
+            margin-bottom: 7px;
+            padding: 7px;
+        }
 
-   <f:Border margin="7" borderColor="transparent" >
-      <f:layer>
-         <g:FlowPanel styleName="{style.center}">
-            <g:Label horizontalAlignment="center" text="{locale.notStartedYet}" styleName="{style.label}"></g:Label>
-            <g:Image resource="{resource.loader}"></g:Image>
-            <g:FlowPanel styleName="{style.centerButton}">
-               <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancelButton}"
-                  disabledImageResource="{resource.cancelButton}"></f:ImageButton>
+        .centerButton {
+            width: 90px;
+            margin: 0px auto;
+            padding-top: 7px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            margin-top: 10px;
+            cursor: default;
+            font-family: Verdana, Bitstream Vera Sans, sans-serif;
+            font-size: 11px;
+            font-style: normal;
+            font-weight: normal;
+        }
+    </ui:style>
+
+    <f:Border margin="7" borderColor="transparent">
+        <f:layer>
+            <g:FlowPanel styleName="{style.center}">
+                <g:Label horizontalAlignment="center" text="{locale.notStartedYet}" styleName="{style.label}"></g:Label>
+                <g:Image resource="{resource.loader}"></g:Image>
+                <g:FlowPanel styleName="{style.centerButton}">
+                    <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}"
+                                   imageResource="{resource.cancelButton}"
+                                   disabledImageResource="{resource.cancelButton}"></f:ImageButton>
+                </g:FlowPanel>
             </g:FlowPanel>
-         </g:FlowPanel>
-      </f:layer>
-   </f:Border>
+        </f:layer>
+    </f:Border>
 </ui:UiBinder>
   

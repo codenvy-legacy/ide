@@ -23,33 +23,32 @@ package org.exoplatform.ide.extension.jenkins.server;
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class JenkinsException extends Exception
-{
-   /** HTTP status of response from Jenkins. */
-   private final int responseStatus;
+public class JenkinsException extends Exception {
+    /** HTTP status of response from Jenkins. */
+    private final int responseStatus;
 
-   /** Content type of response from Jenkins. */
-   private final String contentType;
+    /** Content type of response from Jenkins. */
+    private final String contentType;
 
-   /**
-    * @param responseStatus HTTP status of response from Jenkins
-    * @param message text message
-    * @param contentType content type of response from Jenkins
-    */
-   public JenkinsException(int responseStatus, String message, String contentType)
-   {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.contentType = contentType;
-   }
+    /**
+     * @param responseStatus
+     *         HTTP status of response from Jenkins
+     * @param message
+     *         text message
+     * @param contentType
+     *         content type of response from Jenkins
+     */
+    public JenkinsException(int responseStatus, String message, String contentType) {
+        super(message);
+        this.responseStatus = responseStatus;
+        this.contentType = contentType;
+    }
 
-   public int getResponseStatus()
-   {
-      return responseStatus;
-   }
+    public int getResponseStatus() {
+        return responseStatus;
+    }
 
-   public String getContentType()
-   {
-      return contentType;
-   }
+    public String getContentType() {
+        return contentType;
+    }
 }

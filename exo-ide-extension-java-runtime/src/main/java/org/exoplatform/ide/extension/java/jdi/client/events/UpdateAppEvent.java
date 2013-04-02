@@ -21,25 +21,20 @@ package org.exoplatform.ide.extension.java.jdi.client.events;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateAppEvent.java Oct 30, 2012 3:15:38 PM azatsarynnyy $
- *
  */
-public class UpdateAppEvent extends GwtEvent<UpdateAppHandler>
-{
-   public static final GwtEvent.Type<UpdateAppHandler> TYPE = new GwtEvent.Type<UpdateAppHandler>();
+public class UpdateAppEvent extends GwtEvent<UpdateAppHandler> {
+    public static final GwtEvent.Type<UpdateAppHandler> TYPE = new GwtEvent.Type<UpdateAppHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateAppHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateAppHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(UpdateAppHandler handler)
-   {
-      handler.onUpdateApp(this);
-   }
+    @Override
+    protected void dispatch(UpdateAppHandler handler) {
+        handler.onUpdateApp(this);
+    }
 
 }

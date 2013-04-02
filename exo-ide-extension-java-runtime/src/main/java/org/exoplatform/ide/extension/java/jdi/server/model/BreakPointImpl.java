@@ -25,93 +25,78 @@ import org.exoplatform.ide.extension.java.jdi.shared.Location;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class BreakPointImpl implements BreakPoint
-{
-   private Location location;
-   // Always enable at the moment. Managing states of breakpoint is not supported for now.
-   private boolean enabled = true;
-   private String expression;
+public class BreakPointImpl implements BreakPoint {
+    private Location location;
+    // Always enable at the moment. Managing states of breakpoint is not supported for now.
+    private boolean enabled = true;
+    private String expression;
 
-   public BreakPointImpl(Location location, String expression)
-   {
-      this.location = location;
-      this.expression = expression;
-   }
+    public BreakPointImpl(Location location, String expression) {
+        this.location = location;
+        this.expression = expression;
+    }
 
-   public BreakPointImpl(Location location)
-   {
-      this.location = location;
-   }
+    public BreakPointImpl(Location location) {
+        this.location = location;
+    }
 
-   public BreakPointImpl()
-   {
-   }
+    public BreakPointImpl() {
+    }
 
-   @Override
-   public Location getLocation()
-   {
-      return location;
-   }
+    @Override
+    public Location getLocation() {
+        return location;
+    }
 
-   @Override
-   public void setLocation(Location location)
-   {
-      this.location = location;
-   }
+    @Override
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
-   @Override
-   public boolean isEnabled()
-   {
-      return enabled;
-   }
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-   @Override
-   public void setEnabled(boolean enabled)
-   {
-      this.enabled = enabled;
-   }
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-   @Override
-   public String getCondition()
-   {
-      return expression;
-   }
+    @Override
+    public String getCondition() {
+        return expression;
+    }
 
-   @Override
-   public void setCondition(String expression)
-   {
-      this.expression = expression;
-   }
+    @Override
+    public void setCondition(String expression) {
+        this.expression = expression;
+    }
 
-   @Override
-   public boolean equals(Object o)
-   {
-      if (this == o)
-      {
-         return true;
-      }
-      if (o == null || getClass() != o.getClass())
-      {
-         return false;
-      }
-      BreakPointImpl other = (BreakPointImpl)o;
-      return location == null ? other.location == null : location.equals(other.location);
-   }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BreakPointImpl other = (BreakPointImpl)o;
+        return location == null ? other.location == null : location.equals(other.location);
+    }
 
-   @Override
-   public int hashCode()
-   {
-      int hash = 7;
-      hash = 31 * hash + (location == null ? 0 : location.hashCode());
-      return hash;
-   }
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + (location == null ? 0 : location.hashCode());
+        return hash;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "BreakPointImpl{" +
-         "location=" + location +
-         ", enabled=" + enabled +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "BreakPointImpl{" +
+               "location=" + location +
+               ", enabled=" + enabled +
+               '}';
+    }
 }

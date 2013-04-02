@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  3:42:51 PM Mar 28, 2012 evgen $
- *
  */
-public interface BreakPointsUpdatedHandler extends EventHandler
-{
+public interface BreakPointsUpdatedHandler extends EventHandler {
 
-   void onBreakPointsUpdated(BreakPointsUpdatedEvent event);
-   
+    void onBreakPointsUpdated(BreakPointsUpdatedEvent event);
+
 }

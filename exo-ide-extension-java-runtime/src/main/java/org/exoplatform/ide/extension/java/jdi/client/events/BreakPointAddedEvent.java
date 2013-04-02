@@ -18,42 +18,38 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class BreakPointAddedEvent extends GwtEvent<BreakPointAddedHandler>
-{
+ */
+public class BreakPointAddedEvent extends GwtEvent<BreakPointAddedHandler> {
 
-   private BreakPoint breakPoint;
+    private BreakPoint breakPoint;
 
-   public BreakPointAddedEvent(BreakPoint breakPoint)
-   {
-      this.breakPoint = breakPoint;
-   }
+    public BreakPointAddedEvent(BreakPoint breakPoint) {
+        this.breakPoint = breakPoint;
+    }
 
-   public static final GwtEvent.Type<BreakPointAddedHandler> TYPE = new GwtEvent.Type<BreakPointAddedHandler>();
+    public static final GwtEvent.Type<BreakPointAddedHandler> TYPE = new GwtEvent.Type<BreakPointAddedHandler>();
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BreakPointAddedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BreakPointAddedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   @Override
-   protected void dispatch(BreakPointAddedHandler handler)
-   {
-      handler.onAddBreakPoint(this);
-   }
+    @Override
+    protected void dispatch(BreakPointAddedHandler handler) {
+        handler.onAddBreakPoint(this);
+    }
 
-   public BreakPoint getBreakPoint()
-   {
-      return breakPoint;
-   }
+    public BreakPoint getBreakPoint() {
+        return breakPoint;
+    }
 
 }

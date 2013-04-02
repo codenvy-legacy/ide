@@ -29,15 +29,11 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class JenkinsExceptionMapper implements ExceptionMapper<JenkinsException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(JenkinsException exception)
-   {
-      return Response.status(exception.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
-         .entity(exception.getMessage()).type(exception.getContentType()).build();
-   }
+public class JenkinsExceptionMapper implements ExceptionMapper<JenkinsException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(JenkinsException exception) {
+        return Response.status(exception.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+                       .entity(exception.getMessage()).type(exception.getContentType()).build();
+    }
 }

@@ -24,7 +24,6 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface DebuggerActivityHandler extends EventHandler
-{
-   void onDebuggerActivityChanged(DebuggerActivityEvent event);
+public interface DebuggerActivityHandler extends EventHandler {
+    void onDebuggerActivityChanged(DebuggerActivityEvent event);
 }

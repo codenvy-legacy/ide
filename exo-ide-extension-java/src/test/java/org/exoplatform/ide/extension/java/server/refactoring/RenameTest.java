@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.extension.java.server.refactoring;
 
-import com.codenvy.eclipse.resources.WorkspaceResource;
-
 import com.codenvy.eclipse.core.resources.ResourcesPlugin;
 import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.resources.WorkspaceResource;
 
 import org.apache.commons.io.IOUtils;
 import org.exoplatform.ide.extension.java.server.JavaDocBuilderVfsTest;
@@ -40,42 +39,35 @@ import java.io.IOException;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class RenameTest extends ResourcesBaseTest
-{
+public class RenameTest extends ResourcesBaseTest {
 
 
-   private Folder project;
+    private Folder project;
 
-   @Before
-   public void before() throws VirtualFileSystemException, IOException
-   {
-      if (ResourcesPlugin.getDefaultWorkspace() == null)
-      {
-         ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
-      }
-      try
-      {
-         project = (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null,
-            PropertyFilter.NONE_FILTER);
-         vfs.delete(project.getId(), null);
-         project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
-      }
-      catch (ItemNotFoundException e)
-      {
-         project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
-      }
-      vfs.importZip(project.getId(),
-         Thread.currentThread().getContextClassLoader().getResourceAsStream("exo-ide-client.zip"), true);
-   }
+    @Before
+    public void before() throws VirtualFileSystemException, IOException {
+        if (ResourcesPlugin.getDefaultWorkspace() == null) {
+            ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
+        }
+        try {
+            project = (Folder)vfs.getItemByPath(JavaDocBuilderVfsTest.class.getSimpleName(), null,
+                                                PropertyFilter.NONE_FILTER);
+            vfs.delete(project.getId(), null);
+            project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
+        } catch (ItemNotFoundException e) {
+            project = vfs.createFolder(vfs.getInfo().getRoot().getId(), JavaDocBuilderVfsTest.class.getSimpleName());
+        }
+        vfs.importZip(project.getId(),
+                      Thread.currentThread().getContextClassLoader().getResourceAsStream("exo-ide-client.zip"), true);
+    }
 
-   @Test
-   public void renameTypeTest() throws VirtualFileSystemException, IOException, CoreException
-   {
-      RefactoringService r = new RefactoringService();
-      r.rename(ID, project.getId(), "org.exoplatform.ide.client.IDE", 1046, "MyIde");
-      ContentStream content = vfs.getContent(
-         project.getPath() + "/src/main/java2/org/exoplatform/ide/client/MyIde.java", null);
-      String c = IOUtils.toString(content.getStream());
-      System.out.println(c);
-   }
+    @Test
+    public void renameTypeTest() throws VirtualFileSystemException, IOException, CoreException {
+        RefactoringService r = new RefactoringService();
+        r.rename(ID, project.getId(), "org.exoplatform.ide.client.IDE", 1046, "MyIde");
+        ContentStream content = vfs.getContent(
+                project.getPath() + "/src/main/java2/org/exoplatform/ide/client/MyIde.java", null);
+        String c = IOUtils.toString(content.getStream());
+        System.out.println(c);
+    }
 }

@@ -34,104 +34,82 @@ import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 
 /**
  * View for breakpoint properties.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BreakpointPropertiesView.java May 8, 2012 13:47:19 PM azatsarynnyy $
- *
  */
-public class BreakpointPropertiesView extends ViewImpl implements BreakpointPropertiesPresenter.Display
-{
+public class BreakpointPropertiesView extends ViewImpl implements BreakpointPropertiesPresenter.Display {
 
-   public static final int HEIGHT = 240;
+    public static final int HEIGHT = 240;
 
-   public static final int WIDTH = 460;
+    public static final int WIDTH = 460;
 
-   public static final String ID = "ideBreakpointPropertiesView";
+    public static final String ID = "ideBreakpointPropertiesView";
 
-   private static final String OK_BUTTON_ID = "ideBreakpointPropertiesViewOKButton";
+    private static final String OK_BUTTON_ID = "ideBreakpointPropertiesViewOKButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideBreakpointPropertiesViewCancelButton";
+    private static final String CANCEL_BUTTON_ID = "ideBreakpointPropertiesViewCancelButton";
 
-   private static final String CONDITION_FIELD_ID = "ideBreakpointPropertiesViewConditionField";
+    private static final String CONDITION_FIELD_ID = "ideBreakpointPropertiesViewConditionField";
 
-   @UiField
-   ImageButton okButton;
+    @UiField
+    ImageButton okButton;
 
-   @UiField
-   ImageButton cancelButton;
+    @UiField
+    ImageButton cancelButton;
 
-   @UiField
-   TextAreaInput conditionField;
+    @UiField
+    TextAreaInput conditionField;
 
-   interface BreakpointPropertiesViewUiBinder extends UiBinder<Widget, BreakpointPropertiesView>
-   {
-   }
+    interface BreakpointPropertiesViewUiBinder extends UiBinder<Widget, BreakpointPropertiesView> {
+    }
 
-   private static BreakpointPropertiesViewUiBinder uiBinder = GWT.create(BreakpointPropertiesViewUiBinder.class);
+    private static BreakpointPropertiesViewUiBinder uiBinder = GWT.create(BreakpointPropertiesViewUiBinder.class);
 
-   public BreakpointPropertiesView()
-   {
-      super(ID, ViewType.MODAL, DebuggerExtension.LOCALIZATION_CONSTANT.breakpointPropertiesViewTitle(), null, WIDTH, HEIGHT);
-      setCloseOnEscape(true);
-      add(uiBinder.createAndBindUi(this));
+    public BreakpointPropertiesView() {
+        super(ID, ViewType.MODAL, DebuggerExtension.LOCALIZATION_CONSTANT.breakpointPropertiesViewTitle(), null, WIDTH, HEIGHT);
+        setCloseOnEscape(true);
+        add(uiBinder.createAndBindUi(this));
 
-      conditionField.setName(CONDITION_FIELD_ID);
-      okButton.setButtonId(OK_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
-   }
+        conditionField.setName(CONDITION_FIELD_ID);
+        okButton.setButtonId(OK_BUTTON_ID);
+        cancelButton.setButtonId(CANCEL_BUTTON_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getOKButton()
-    */
-   @Override
-   public HasClickHandlers getOKButton()
-   {
-      return okButton;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getOKButton() */
+    @Override
+    public HasClickHandlers getOKButton() {
+        return okButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getCancelButton() */
+    @Override
+    public HasClickHandlers getCancelButton() {
+        return cancelButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getCondition()
-    */
-   @Override
-   public HasValue<String> getCondition()
-   {
-      return conditionField;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getCondition() */
+    @Override
+    public HasValue<String> getCondition() {
+        return conditionField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#focusInConditionField()
-    */
-   @Override
-   public void focusInConditionField()
-   {
-      conditionField.focus();
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#focusInConditionField() */
+    @Override
+    public void focusInConditionField() {
+        conditionField.focus();
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#setCondition(java.lang.String)
-    */
-   @Override
-   public void setCondition(String expression)
-   {
-      conditionField.setText(expression);
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#setCondition(java.lang.String) */
+    @Override
+    public void setCondition(String expression) {
+        conditionField.setText(expression);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#setOkButtonEnable(boolean)
-    */
-   @Override
-   public void setOkButtonEnable(boolean isEnable)
-   {
-      okButton.setEnabled(isEnable);
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#setOkButtonEnable(boolean) */
+    @Override
+    public void setOkButtonEnable(boolean isEnable) {
+        okButton.setEnabled(isEnable);
+    }
 
 }

@@ -24,6 +24,5 @@ package org.exoplatform.ide.extension.java.jdi.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface JdiLocalVariable extends JdiVariable
-{
+public interface JdiLocalVariable extends JdiVariable {
 }

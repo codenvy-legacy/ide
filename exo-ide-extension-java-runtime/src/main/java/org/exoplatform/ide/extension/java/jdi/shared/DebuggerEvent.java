@@ -22,10 +22,9 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface DebuggerEvent
-{
-   int BREAKPOINT = 1;
-   int STEP = 2;
+public interface DebuggerEvent {
+    int BREAKPOINT = 1;
+    int STEP       = 2;
 
-   int getType();
+    int getType();
 }

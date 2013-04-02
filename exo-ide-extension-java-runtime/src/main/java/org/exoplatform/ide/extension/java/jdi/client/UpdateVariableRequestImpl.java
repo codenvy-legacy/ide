@@ -23,62 +23,47 @@ import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 
 /**
  * Implementation of {@link UpdateVariableRequest} interface.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: UpdateVarImpl.java Apr 27, 2012 5:30:48 PM azatsarynnyy $
- *
  */
-public class UpdateVariableRequestImpl implements UpdateVariableRequest
-{
+public class UpdateVariableRequestImpl implements UpdateVariableRequest {
 
-   private String expression;
+    private String expression;
 
-   private VariablePath variablePath;
+    private VariablePath variablePath;
 
-   public UpdateVariableRequestImpl(VariablePath variablePath, String expression)
-   {
-      this.variablePath = variablePath;
-      this.expression = expression;
-   }
+    public UpdateVariableRequestImpl(VariablePath variablePath, String expression) {
+        this.variablePath = variablePath;
+        this.expression = expression;
+    }
 
-   public UpdateVariableRequestImpl()
-   {
-   }
+    public UpdateVariableRequestImpl() {
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getVariablePath()
-    */
-   @Override
-   public VariablePath getVariablePath()
-   {
-      return variablePath;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getVariablePath() */
+    @Override
+    public VariablePath getVariablePath() {
+        return variablePath;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setVariablePath(org.exoplatform.ide.extension.java.jdi.shared.VariablePath)
-    */
-   @Override
-   public void setVariablePath(VariablePath variablePath)
-   {
-      this.variablePath = variablePath;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setVariablePath(org.exoplatform.ide.extension.java.jdi
+     * .shared.VariablePath) */
+    @Override
+    public void setVariablePath(VariablePath variablePath) {
+        this.variablePath = variablePath;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getExpression()
-    */
-   @Override
-   public String getExpression()
-   {
-      return expression;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getExpression() */
+    @Override
+    public String getExpression() {
+        return expression;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setExpression(java.lang.String)
-    */
-   @Override
-   public void setExpression(String expression)
-   {
-      this.expression = expression;
-   }
+    /** @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setExpression(java.lang.String) */
+    @Override
+    public void setExpression(String expression) {
+        this.expression = expression;
+    }
 
 }

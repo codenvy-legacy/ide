@@ -24,26 +24,21 @@ import java.util.Map;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 5:00:18 PM Mar 28, 2012 evgen $
- * 
  */
-public class FqnResolverFactory
-{
+public class FqnResolverFactory {
 
-   private Map<String, FqnResolver> resolvers = new HashMap<String, FqnResolver>();
+    private Map<String, FqnResolver> resolvers = new HashMap<String, FqnResolver>();
 
-   public void addResolver(String mimeType, FqnResolver resolver)
-   {
-      resolvers.put(mimeType, resolver);
-   }
+    public void addResolver(String mimeType, FqnResolver resolver) {
+        resolvers.put(mimeType, resolver);
+    }
 
-   public FqnResolver getResolver(String mimeType)
-   {
-      return resolvers.get(mimeType);
-   }
+    public FqnResolver getResolver(String mimeType) {
+        return resolvers.get(mimeType);
+    }
 
-   public boolean isResolverExist(String mimeType)
-   {
-      return resolvers.containsKey(mimeType);
-   }
+    public boolean isResolverExist(String mimeType) {
+        return resolvers.containsKey(mimeType);
+    }
 
 }

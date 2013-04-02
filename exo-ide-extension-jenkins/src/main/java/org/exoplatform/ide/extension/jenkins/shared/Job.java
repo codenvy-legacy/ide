@@ -20,53 +20,54 @@ package org.exoplatform.ide.extension.jenkins.shared;
 
 /**
  * Build job info.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Job.java Mar 15, 2012 3:14:27 PM azatsarynnyy $
- *
  */
-public interface Job
-{
-   /**
-    * Get name of the job.
-    * 
-    * @return name of the job.
-    */
-   public String getName();
+public interface Job {
+    /**
+     * Get name of the job.
+     *
+     * @return name of the job.
+     */
+    public String getName();
 
-   /**
-    * Set the job name.
-    * 
-    * @param name name of the job.
-    */
-   public void setName(String name);
+    /**
+     * Set the job name.
+     *
+     * @param name
+     *         name of the job.
+     */
+    public void setName(String name);
 
-   /**
-    * Get the url of the build job.
-    * 
-    * @return url of the build job.
-    */
-   public String getBuildUrl();
+    /**
+     * Get the url of the build job.
+     *
+     * @return url of the build job.
+     */
+    public String getBuildUrl();
 
-   /**
-    * Set the url for build job.
-    * 
-    * @param buildUrl of the build job.
-    */
-   public void setBuildUrl(String buildUrl);
+    /**
+     * Set the url for build job.
+     *
+     * @param buildUrl
+     *         of the build job.
+     */
+    public void setBuildUrl(String buildUrl);
 
-   /**
-    * Get the url for check status of the build job.
-    * 
-    * @return url for check status of the build job.
-    */
-   public String getStatusUrl();
+    /**
+     * Get the url for check status of the build job.
+     *
+     * @return url for check status of the build job.
+     */
+    public String getStatusUrl();
 
-   /**
-    * Set the url for check status of the build job.
-    * 
-    * @param statusUrl url for check status of the build job.
-    */
-   public void setStatusUrl(String statusUrl);
+    /**
+     * Set the url for check status of the build job.
+     *
+     * @param statusUrl
+     *         url for check status of the build job.
+     */
+    public void setStatusUrl(String statusUrl);
 
 }

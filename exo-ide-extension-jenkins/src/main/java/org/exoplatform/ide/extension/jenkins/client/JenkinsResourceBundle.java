@@ -24,39 +24,37 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public interface JenkinsResourceBundle extends ClientBundle
-{
+public interface JenkinsResourceBundle extends ClientBundle {
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/build_Disabled.png")
-   ImageResource build_Disabled();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/build_Disabled.png")
+    ImageResource build_Disabled();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/build.png")
-   ImageResource build();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/build.png")
+    ImageResource build();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/blue_anime.gif")
-   ImageResource blue_anime();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/blue_anime.gif")
+    ImageResource blue_anime();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/blue.png")
-   ImageResource blue();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/blue.png")
+    ImageResource blue();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/grey_anime.gif")
-   ImageResource grey_anime();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/grey_anime.gif")
+    ImageResource grey_anime();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/grey.png")
-   ImageResource grey();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/grey.png")
+    ImageResource grey();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/red_anime.gif")
-   ImageResource red_anime();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/red_anime.gif")
+    ImageResource red_anime();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/red.png")
-   ImageResource red();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/red.png")
+    ImageResource red();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/yellow.png")
-   ImageResource yellow();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/yellow.png")
+    ImageResource yellow();
 
-   @Source("org/exoplatform/ide/extension/jenkins/client/images/transparent.png")
-   ImageResource transparent();
+    @Source("org/exoplatform/ide/extension/jenkins/client/images/transparent.png")
+    ImageResource transparent();
 
 }

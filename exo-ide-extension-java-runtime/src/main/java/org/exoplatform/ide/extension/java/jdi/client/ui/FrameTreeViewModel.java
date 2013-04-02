@@ -18,63 +18,57 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.ui;
 
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
-import org.exoplatform.ide.extension.java.jdi.shared.Field;
-import org.exoplatform.ide.extension.java.jdi.shared.Variable;
-
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
 
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
+import org.exoplatform.ide.extension.java.jdi.shared.Field;
+import org.exoplatform.ide.extension.java.jdi.shared.Variable;
+
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class FrameTreeViewModel implements TreeViewModel
-{
-   private SingleSelectionModel<Variable> selectionModel;
+ */
+public class FrameTreeViewModel implements TreeViewModel {
+    private SingleSelectionModel<Variable> selectionModel;
 
-   private ListDataProvider<Variable> dataProvider = new ListDataProvider<Variable>();
+    private ListDataProvider<Variable> dataProvider = new ListDataProvider<Variable>();
 
-   private DebuggerInfo debuggerInfo;
-   
-   public FrameTreeViewModel(SingleSelectionModel<Variable> selectionModel, DebuggerInfo debuggerInfo)
-   {
-      this.selectionModel = selectionModel;
-      this.debuggerInfo = debuggerInfo;
-   }
+    private DebuggerInfo debuggerInfo;
 
-   @Override
-   public <T> NodeInfo<?> getNodeInfo(T value)
-   {
-      if (value == null)
-      {
-         return new DefaultNodeInfo<Variable>(dataProvider, new VariableCell(), selectionModel, null);
-      }
+    public FrameTreeViewModel(SingleSelectionModel<Variable> selectionModel, DebuggerInfo debuggerInfo) {
+        this.selectionModel = selectionModel;
+        this.debuggerInfo = debuggerInfo;
+    }
 
-      if (value instanceof Field)
-      {
-         return new DefaultNodeInfo<Variable>(new ValueDataProvider((Field)value, debuggerInfo), new VariableCell(), selectionModel, null);
-      }
-      else
-      {
-         return new DefaultNodeInfo<Variable>(new ValueDataProvider((Variable)value, debuggerInfo), new VariableCell(), selectionModel, null);
-      }
+    @Override
+    public <T> NodeInfo<?> getNodeInfo(T value) {
+        if (value == null) {
+            return new DefaultNodeInfo<Variable>(dataProvider, new VariableCell(), selectionModel, null);
+        }
 
-   }
+        if (value instanceof Field) {
+            return new DefaultNodeInfo<Variable>(new ValueDataProvider((Field)value, debuggerInfo), new VariableCell(), selectionModel,
+                                                 null);
+        } else {
+            return new DefaultNodeInfo<Variable>(new ValueDataProvider((Variable)value, debuggerInfo), new VariableCell(), selectionModel,
+                                                 null);
+        }
 
-   @Override
-   public boolean isLeaf(Object value)
-   {
-      if (value != null && value instanceof Variable)
-         return ((Variable)value).isPrimitive();
-      return false;
-   }
+    }
 
-   public ListDataProvider<Variable> getDataProvider()
-   {
-      return dataProvider;
-   }
+    @Override
+    public boolean isLeaf(Object value) {
+        if (value != null && value instanceof Variable)
+            return ((Variable)value).isPrimitive();
+        return false;
+    }
+
+    public ListDataProvider<Variable> getDataProvider() {
+        return dataProvider;
+    }
 
 }

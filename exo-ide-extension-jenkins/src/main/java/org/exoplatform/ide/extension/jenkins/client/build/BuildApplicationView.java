@@ -35,181 +35,159 @@ import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
 public class BuildApplicationView extends ViewImpl implements
-   org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresenter.Display
-{
+                                                   org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationPresenter.Display {
 
-   private static final String ID = "ide.jenkins.build.view";
+    private static final String ID = "ide.jenkins.build.view";
 
-   public static final int WIDTH = 450;
+    public static final int WIDTH = 450;
 
-   public static final int HEIGHT = 250;
+    public static final int HEIGHT = 250;
 
-   private boolean animationEnabled = false;
+    private boolean animationEnabled = false;
 
-   @UiField
-   HTMLPanel buildOutputPanel;
+    @UiField
+    HTMLPanel buildOutputPanel;
 
-   private static BuildApplicationViewUiBinder uiBinder = GWT.create(BuildApplicationViewUiBinder.class);
+    private static BuildApplicationViewUiBinder uiBinder = GWT.create(BuildApplicationViewUiBinder.class);
 
-   interface BuildApplicationViewUiBinder extends UiBinder<Widget, BuildApplicationView>
-   {
-   }
+    interface BuildApplicationViewUiBinder extends UiBinder<Widget, BuildApplicationView> {
+    }
 
-   public BuildApplicationView()
-   {
-      super(ID, ViewType.OPERATION, "Building", new Image(JenkinsExtension.RESOURCES.grey()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-   }
+    public BuildApplicationView() {
+        super(ID, ViewType.OPERATION, "Building", new Image(JenkinsExtension.RESOURCES.grey()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public final native void output(String text) /*-{
-                                                var pre = $doc.getElementById('ide.jenkins.buildOutput');
-                                                if (pre == null || pre == undefined) {
-                                                return;
-                                                }
-                                                
-                                                var curText = pre.textContent;
-                                                if (curText != null && curText != undefined && curText != "") {
-                                                pre.textContent += "\r\n";      
-                                                }
-                                                pre.innerHTML += text;
-                                                
-                                                this.@org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationView::scrollToBottom()();
-                                                }-*/;
+    @Override
+    public final native void output(String text) /*-{
+        var pre = $doc.getElementById('ide.jenkins.buildOutput');
+        if (pre == null || pre == undefined) {
+            return;
+        }
 
-   private void scrollToBottom()
-   {
-      int scrollHeight = DOM.getElementPropertyInt(buildOutputPanel.getElement(), "scrollHeight");
-      DOM.setElementPropertyInt(buildOutputPanel.getElement(), "scrollTop", scrollHeight);
-   }
+        var curText = pre.textContent;
+        if (curText != null && curText != undefined && curText != "") {
+            pre.textContent += "\r\n";
+        }
+        pre.innerHTML += text;
 
-   @Override
-   public final native void clearOutput() /*-{
-                                          var pre = $doc.getElementById('ide.jenkins.buildOutput');
-                                          if (pre == null || pre == undefined) {
-                                          return;
-                                          }
-                                          pre.textContent = ""; 
-                                          }-*/;
+        this.@org.exoplatform.ide.extension.jenkins.client.build.BuildApplicationView::scrollToBottom()();
+    }-*/;
 
-   @Override
-   public void startAnimation()
-   {
-      animationCharIndex = 1;
-      Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
-      if (animationElement == null)
-      {
-         return;
-      }
-      animationElement.getStyle().setDisplay(Display.BLOCK);
-      animationTimer.scheduleRepeating(150);
-   }
+    private void scrollToBottom() {
+        int scrollHeight = DOM.getElementPropertyInt(buildOutputPanel.getElement(), "scrollHeight");
+        DOM.setElementPropertyInt(buildOutputPanel.getElement(), "scrollTop", scrollHeight);
+    }
 
-   @Override
-   public void stopAnimation()
-   {
-      animationTimer.cancel();
+    @Override
+    public final native void clearOutput() /*-{
+        var pre = $doc.getElementById('ide.jenkins.buildOutput');
+        if (pre == null || pre == undefined) {
+            return;
+        }
+        pre.textContent = "";
+    }-*/;
 
-      Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
-      if (animationElement == null)
-      {
-         return;
-      }
+    @Override
+    public void startAnimation() {
+        animationCharIndex = 1;
+        Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
+        if (animationElement == null) {
+            return;
+        }
+        animationElement.getStyle().setDisplay(Display.BLOCK);
+        animationTimer.scheduleRepeating(150);
+    }
 
-      animationElement.getStyle().setDisplay(Display.NONE);
-      animationElement.setInnerHTML("");
-   }
+    @Override
+    public void stopAnimation() {
+        animationTimer.cancel();
 
-   private int animationCharIndex = 1;
+        Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
+        if (animationElement == null) {
+            return;
+        }
 
-   private Timer animationTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         String c = "";
-         switch (animationCharIndex)
-         {
-            case 1 :
-               c = "/";
-               break;
+        animationElement.getStyle().setDisplay(Display.NONE);
+        animationElement.setInnerHTML("");
+    }
 
-            case 2 :
-               c = "-";
-               break;
+    private int animationCharIndex = 1;
 
-            case 3 :
-               c = "\\";
-               break;
+    private Timer animationTimer = new Timer() {
+        @Override
+        public void run() {
+            String c = "";
+            switch (animationCharIndex) {
+                case 1:
+                    c = "/";
+                    break;
 
-            case 4 :
-               c = "|";
-               break;
-         }
+                case 2:
+                    c = "-";
+                    break;
 
-         Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
-         if (animationElement != null)
-         {
-            animationElement.setInnerHTML(c);
-         }
+                case 3:
+                    c = "\\";
+                    break;
 
-         animationCharIndex++;
-         if (animationCharIndex > 4)
-         {
-            animationCharIndex = 1;
-         }
-      }
-   };
+                case 4:
+                    c = "|";
+                    break;
+            }
 
-   private Image blinkIcon;
+            Element animationElement = DOM.getElementById("ide.jenkins.buildingAnimation");
+            if (animationElement != null) {
+                animationElement.setInnerHTML(c);
+            }
 
-   private Image transparentIcon = new Image(JenkinsExtension.RESOURCES.transparent());
+            animationCharIndex++;
+            if (animationCharIndex > 4) {
+                animationCharIndex = 1;
+            }
+        }
+    };
 
-   private boolean iconTransparent = false;
+    private Image blinkIcon;
 
-   private boolean blinking;
+    private Image transparentIcon = new Image(JenkinsExtension.RESOURCES.transparent());
 
-   @Override
-   public void setBlinkIcon(Image blinkIcon, boolean blinking)
-   {
-      this.blinkIcon = blinkIcon;
-      this.blinking = blinking;
+    private boolean iconTransparent = false;
 
-      setIcon(blinkIcon);
-      if (blinking)
-      {
-         iconTransparent = false;
-         iconBlinkingTimer.scheduleRepeating(700);
-      }
-      else
-      {
-         iconBlinkingTimer.cancel();
-         iconTransparent = false;
-      }
-   }
+    private boolean blinking;
 
-   private Timer iconBlinkingTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         if (iconTransparent)
-         {
+    @Override
+    public void setBlinkIcon(Image blinkIcon, boolean blinking) {
+        this.blinkIcon = blinkIcon;
+        this.blinking = blinking;
+
+        setIcon(blinkIcon);
+        if (blinking) {
             iconTransparent = false;
-            setIcon(blinkIcon);
-         }
-         else
-         {
-            iconTransparent = true;
-            setIcon(transparentIcon);
-         }
-      }
-   };
+            iconBlinkingTimer.scheduleRepeating(700);
+        } else {
+            iconBlinkingTimer.cancel();
+            iconTransparent = false;
+        }
+    }
+
+    private Timer iconBlinkingTimer = new Timer() {
+        @Override
+        public void run() {
+            if (iconTransparent) {
+                iconTransparent = false;
+                setIcon(blinkIcon);
+            } else {
+                iconTransparent = true;
+                setIcon(transparentIcon);
+            }
+        }
+    };
 
 }

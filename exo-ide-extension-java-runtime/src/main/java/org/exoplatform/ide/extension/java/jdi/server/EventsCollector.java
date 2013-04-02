@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.java.jdi.server;
 
 import com.sun.jdi.VMDisconnectedException;
 import com.sun.jdi.event.EventQueue;
+
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -27,55 +28,43 @@ import org.exoplatform.services.log.Log;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-final class EventsCollector implements Runnable
-{
-   private static final Log LOG = ExoLogger.getLogger(EventsCollector.class);
+final class EventsCollector implements Runnable {
+    private static final Log LOG = ExoLogger.getLogger(EventsCollector.class);
 
-   private final EventsHandler handler;
-   private final EventQueue queue;
+    private final EventsHandler handler;
+    private final EventQueue    queue;
 
-   private final Thread thread;
-   private volatile boolean running;
+    private final    Thread  thread;
+    private volatile boolean running;
 
-   EventsCollector(EventQueue queue, EventsHandler handler)
-   {
-      this.queue = queue;
-      this.handler = handler;
+    EventsCollector(EventQueue queue, EventsHandler handler) {
+        this.queue = queue;
+        this.handler = handler;
 
-      thread = new Thread(this);
-      running = true;
-      thread.start();
-   }
+        thread = new Thread(this);
+        running = true;
+        thread.start();
+    }
 
-   @Override
-   public void run()
-   {
-      while (running)
-      {
-         try
-         {
-            handler.handleEvents(queue.remove());
-         }
-         catch (DebuggerException e)
-         {
-            LOG.error(e.getMessage(), e);
-         }
-         catch (VMDisconnectedException e)
-         {
-            break;
-         }
-         catch (InterruptedException e)
-         {
-            // Thread interrupted with method stop().
-            LOG.debug("EventsCollector terminated");
-         }
-      }
-      LOG.debug("EventsCollector stopped");
-   }
+    @Override
+    public void run() {
+        while (running) {
+            try {
+                handler.handleEvents(queue.remove());
+            } catch (DebuggerException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (VMDisconnectedException e) {
+                break;
+            } catch (InterruptedException e) {
+                // Thread interrupted with method stop().
+                LOG.debug("EventsCollector terminated");
+            }
+        }
+        LOG.debug("EventsCollector stopped");
+    }
 
-   void stop()
-   {
-      running = false;
-      thread.interrupt();
-   }
+    void stop() {
+        running = false;
+        thread.interrupt();
+    }
 }

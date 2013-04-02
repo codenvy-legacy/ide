@@ -35,39 +35,35 @@ import java.util.HashSet;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 5:34:24 PM Mar 13, 2012 evgen $
- * 
  */
-public class SignatureBase
-{
+public class SignatureBase {
 
-   protected JavaDocBuilderVfs javaDocBuilderVfs;
+    protected JavaDocBuilderVfs javaDocBuilderVfs;
 
-   @Mock
-   private VirtualFileSystem vfs;
-   
-   @Mock
-   protected CodeAssistantStorage storage;
+    @Mock
+    private VirtualFileSystem vfs;
 
-   @Before
-   public void createParser()
-   {
-      VfsClassLibrary vfsClassLibrary = new VfsClassLibrary(vfs);
-      vfsClassLibrary.addClassLoader(ClassLoader.getSystemClassLoader());
-      javaDocBuilderVfs = new JavaDocBuilderVfs(vfs, vfsClassLibrary);
+    @Mock
+    protected CodeAssistantStorage storage;
 
-   }
+    @Before
+    public void createParser() {
+        VfsClassLibrary vfsClassLibrary = new VfsClassLibrary(vfs);
+        vfsClassLibrary.addClassLoader(ClassLoader.getSystemClassLoader());
+        javaDocBuilderVfs = new JavaDocBuilderVfs(vfs, vfsClassLibrary);
 
-   /**
-    * @param b
-    * @return
-    */
-   protected TypeInfo getTypeInfo(StringBuilder b, String classFqn)
-   {
-      StringReader reader = new StringReader(b.toString());
-      javaDocBuilderVfs.addSource(reader);
-      JavaClass clazz = javaDocBuilderVfs.getClassByName(classFqn);
-      TypeInfo typeInfo = new JavaTypeToTypeInfoConverter(storage, new HashSet<String>()).convert(clazz);
-      return typeInfo;
-   }
+    }
+
+    /**
+     * @param b
+     * @return
+     */
+    protected TypeInfo getTypeInfo(StringBuilder b, String classFqn) {
+        StringReader reader = new StringReader(b.toString());
+        javaDocBuilderVfs.addSource(reader);
+        JavaClass clazz = javaDocBuilderVfs.getClassByName(classFqn);
+        TypeInfo typeInfo = new JavaTypeToTypeInfoConverter(storage, new HashSet<String>()).convert(clazz);
+        return typeInfo;
+    }
 
 }

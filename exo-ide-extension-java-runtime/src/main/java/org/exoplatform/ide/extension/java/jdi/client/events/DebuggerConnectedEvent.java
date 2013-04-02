@@ -18,57 +18,43 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public class DebuggerConnectedEvent extends GwtEvent<DebuggerConnectedHandler>
-{
+ */
+public class DebuggerConnectedEvent extends GwtEvent<DebuggerConnectedHandler> {
 
-   /**
-    * Type used to register event.
-    */
-   public static final GwtEvent.Type<DebuggerConnectedHandler> TYPE = new GwtEvent.Type<DebuggerConnectedHandler>();
+    /** Type used to register event. */
+    public static final GwtEvent.Type<DebuggerConnectedHandler> TYPE = new GwtEvent.Type<DebuggerConnectedHandler>();
 
-   /**
-    * VFS id.
-    */
-   private DebuggerInfo debuggerInfo;
+    /** VFS id. */
+    private DebuggerInfo debuggerInfo;
 
-   /**
-    * @param debuggerInfo
-    */
-   public DebuggerConnectedEvent(DebuggerInfo debuggerInfo)
-   {
-      this.debuggerInfo = debuggerInfo;
-   }
+    /** @param debuggerInfo */
+    public DebuggerConnectedEvent(DebuggerInfo debuggerInfo) {
+        this.debuggerInfo = debuggerInfo;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DebuggerConnectedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DebuggerConnectedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DebuggerConnectedHandler handler)
-   {
-      handler.onDebuggerConnected(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(DebuggerConnectedHandler handler) {
+        handler.onDebuggerConnected(this);
+    }
 
-   public DebuggerInfo getDebuggerInfo()
-   {
-      return debuggerInfo;
-   }
+    public DebuggerInfo getDebuggerInfo() {
+        return debuggerInfo;
+    }
 
 }

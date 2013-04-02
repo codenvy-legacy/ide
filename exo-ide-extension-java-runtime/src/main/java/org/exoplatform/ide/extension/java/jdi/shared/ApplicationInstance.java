@@ -22,41 +22,40 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationInstance
-{
-   String getName();
+public interface ApplicationInstance {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getHost();
+    String getHost();
 
-   void setHost(String host);
+    void setHost(String host);
 
-   int getPort();
+    int getPort();
 
-   void setPort(int port);
+    void setPort(int port);
 
-   String getStopURL();
+    String getStopURL();
 
-   void setStopURL(String url);
+    void setStopURL(String url);
 
-   /**
-    * Lifetime of application instance in minutes. After this time instance may be stopped.
-    * Method may return -1 if lifetime of instance is unknown.
-    *
-    * @return application instance lifetime in minutes
-    */
-   int getLifetime();
+    /**
+     * Lifetime of application instance in minutes. After this time instance may be stopped.
+     * Method may return -1 if lifetime of instance is unknown.
+     *
+     * @return application instance lifetime in minutes
+     */
+    int getLifetime();
 
-   void setLifetime(int lifetime);
+    void setLifetime(int lifetime);
 
-   // when application started under debug.
+    // when application started under debug.
 
-   String getDebugHost();
+    String getDebugHost();
 
-   void setDebugHost(String debugHost);
+    void setDebugHost(String debugHost);
 
-   int getDebugPort();
+    int getDebugPort();
 
-   void setDebugPort(int debugPort);
+    void setDebugPort(int debugPort);
 }

@@ -18,43 +18,34 @@
  */
 package org.exoplatform.ide.extension.jenkins.server.rest;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class JenkinsApplication extends Application
-{
-   private Set<Class<?>> classes;
-   private Set<Object> singletons;
+public class JenkinsApplication extends Application {
+    private Set<Class<?>> classes;
+    private Set<Object>   singletons;
 
-   public JenkinsApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(JenkinsService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new JenkinsExceptionMapper());
-   }
+    public JenkinsApplication() {
+        classes = new HashSet<Class<?>>(1);
+        classes.add(JenkinsService.class);
+        singletons = new HashSet<Object>(1);
+        singletons.add(new JenkinsExceptionMapper());
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
-   }
+    /** @see javax.ws.rs.core.Application#getSingletons() */
+    @Override
+    public Set<Object> getSingletons() {
+        return singletons;
+    }
 }

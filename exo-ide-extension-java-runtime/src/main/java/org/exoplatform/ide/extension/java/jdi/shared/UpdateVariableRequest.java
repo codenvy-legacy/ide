@@ -22,13 +22,12 @@ package org.exoplatform.ide.extension.java.jdi.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface UpdateVariableRequest
-{
-   VariablePath getVariablePath();
+public interface UpdateVariableRequest {
+    VariablePath getVariablePath();
 
-   void setVariablePath(VariablePath path);
+    void setVariablePath(VariablePath path);
 
-   String getExpression();
+    String getExpression();
 
-   void setExpression(String expression);
+    void setExpression(String expression);
 }

@@ -22,10 +22,10 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface BreakPointAddedHandler extends EventHandler
-{
-   void onAddBreakPoint(BreakPointAddedEvent event);
+ */
+public interface BreakPointAddedHandler extends EventHandler {
+    void onAddBreakPoint(BreakPointAddedEvent event);
 }
