@@ -26,24 +26,21 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * CSS editor based on {@link CollabEditor}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: CssEditor.java Feb 4, 2013 1:09:50 PM azatsarynnyy $
- *
  */
-public class CssEditor extends CollabEditor
-{
-   /**
-    * Constructs new editor for the provided MIME-type.
-    * 
-    * @param mimeType
-    */
-   public CssEditor(String mimeType)
-   {
-      super(mimeType);
-      CssAutocompleter autocompleter = CssAutocompleter.create();
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(autocompleter);
-      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
-         new CssContentAssistProcessor(autocompleter));
-   }
+public class CssEditor extends CollabEditor {
+    /**
+     * Constructs new editor for the provided MIME-type.
+     *
+     * @param mimeType
+     */
+    public CssEditor(String mimeType) {
+        super(mimeType);
+        CssAutocompleter autocompleter = CssAutocompleter.create();
+        editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(autocompleter);
+        editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
+                                                                 new CssContentAssistProcessor(autocompleter));
+    }
 }

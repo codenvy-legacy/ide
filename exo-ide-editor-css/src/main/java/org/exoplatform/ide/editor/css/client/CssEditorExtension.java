@@ -35,28 +35,23 @@ import org.exoplatform.ide.editor.css.client.outline.CssOutlineItemCreator;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
  */
-public class CssEditorExtension extends Extension
-{
+public class CssEditorExtension extends Extension {
 
-   private static final String CSS_ICON = UIHelper.getGadgetImagesURL() + "css/css.png";
+    private static final String CSS_ICON = UIHelper.getGadgetImagesURL() + "css/css.png";
 
-   public static final CssMessages MESSAGES = GWT.create(CssMessages.class);
+    public static final CssMessages MESSAGES = GWT.create(CssMessages.class);
 
-   public static final CssBundle RESOURCES = GWT.create(CssBundle.class);
+    public static final CssBundle RESOURCES = GWT.create(CssBundle.class);
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      RESOURCES.css().ensureInjected();
+    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
+    @Override
+    public void initialize() {
+        RESOURCES.css().ensureInjected();
 
-      IDE.getInstance().addControl(
-         new NewItemControl("File/New/New CSS", MESSAGES.controlNewCssTitle(), MESSAGES.controlNewCssPrompt(),
-            CSS_ICON, MimeType.TEXT_CSS).setGroupName(GroupNames.NEW_FILE));
+        IDE.getInstance().addControl(
+                new NewItemControl("File/New/New CSS", MESSAGES.controlNewCssTitle(), MESSAGES.controlNewCssPrompt(),
+                                   CSS_ICON, MimeType.TEXT_CSS).setGroupName(GroupNames.NEW_FILE));
 
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css", 
 //         new CodeMirrorConfiguration()
@@ -65,23 +60,21 @@ public class CssEditorExtension extends Extension
 //            .setParser(new CssParser())
 //            .setCodeAssistant(new CssCodeAssistant())));
 //
-      IDE.getInstance().getFileTypeRegistry()
-         .addFileType(new FileType(MimeType.TEXT_CSS, "css", RESOURCES.cssImage()), new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
+        IDE.getInstance().getFileTypeRegistry()
+           .addFileType(new FileType(MimeType.TEXT_CSS, "css", RESOURCES.cssImage()), new EditorCreator() {
+               @Override
+               public Editor createEditor() {
 //               return new CodeMirror(MimeType.TEXT_CSS, new CodeMirrorConfiguration()
 //               .setGenericParsers("['parsecss.js']")
 //               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
 //               .setParser(new CssParser())
 //               .setCodeAssistant(new CssCodeAssistant()));
-               return new CssEditor(MimeType.TEXT_CSS);
-            }
-         });
+                   return new CssEditor(MimeType.TEXT_CSS);
+               }
+           });
 
-      IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_CSS, new CssCommentsModifier()));
-   }
+        IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
+        IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_CSS, new CssCommentsModifier()));
+    }
 
 }
