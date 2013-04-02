@@ -59,7 +59,8 @@
 //      String javaDoc =
 //         javaCa
 //            .getMemberJavaDocFromProject(
-//               "org.exoplatform.ide.client.autocompletion.AutoCompletionManager.onEditorAutoCompleteCalled(EditorAutoCompleteCalledEvent)",
+//               "org.exoplatform.ide.client.autocompletion.AutoCompletionManager.onEditorAutoCompleteCalled
+// (EditorAutoCompleteCalledEvent)",
 //               project.getId(), VFS_ID);
 //      Assert.assertFalse(javaDoc.contains("null"));
 //   }

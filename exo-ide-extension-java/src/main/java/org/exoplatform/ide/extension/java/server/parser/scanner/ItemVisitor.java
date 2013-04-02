@@ -23,9 +23,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Nov 28, 2011 4:16:46 PM evgen $
- * 
  */
-public interface ItemVisitor
-{
-   void visit(Item item);
+public interface ItemVisitor {
+    void visit(Item item);
 }

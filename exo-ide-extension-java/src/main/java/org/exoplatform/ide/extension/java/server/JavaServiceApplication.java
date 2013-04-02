@@ -18,37 +18,31 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.ws.rs.core.Application;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JavaServiceApplication Mar 30, 2011 10:34:04 AM evgen $
  */
-public class JavaServiceApplication extends Application
-{
+public class JavaServiceApplication extends Application {
 
-   private final Set<Class<?>> classes;
-   
-   private final Set<Object> singletons;
+    private final Set<Class<?>> classes;
 
-   public JavaServiceApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      singletons = new HashSet<Object>(1);
-      classes.add(RestCodeAssistantJava.class);
-      classes.add(RefactoringService.class);
-      singletons.add(new RefactoringExceptionMapper());
-   }
+    private final Set<Object> singletons;
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      return classes;
-   }
+    public JavaServiceApplication() {
+        classes = new HashSet<Class<?>>(1);
+        singletons = new HashSet<Object>(1);
+        classes.add(RestCodeAssistantJava.class);
+        classes.add(RefactoringService.class);
+        singletons.add(new RefactoringExceptionMapper());
+    }
+
+    /** @see javax.ws.rs.core.Application#getClasses() */
+    @Override
+    public Set<Class<?>> getClasses() {
+        return classes;
+    }
 }
