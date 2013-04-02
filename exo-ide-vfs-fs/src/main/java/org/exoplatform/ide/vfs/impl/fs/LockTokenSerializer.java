@@ -23,20 +23,17 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
-* @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
-* @version $Id: $
-*/
-public class LockTokenSerializer implements DataSerializer<String>
-{
-   @Override
-   public void write(DataOutput output, String value) throws IOException
-   {
-      output.writeUTF(value);
-   }
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+public class LockTokenSerializer implements DataSerializer<String> {
+    @Override
+    public void write(DataOutput output, String value) throws IOException {
+        output.writeUTF(value);
+    }
 
-   @Override
-   public String read(DataInput input) throws IOException
-   {
-      return input.readUTF();
-   }
+    @Override
+    public String read(DataInput input) throws IOException {
+        return input.readUTF();
+    }
 }

@@ -27,10 +27,8 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeExcepti
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public final class FileLockTimeoutException extends VirtualFileSystemRuntimeException
-{
-   public FileLockTimeoutException(String message)
-   {
-      super(message);
-   }
+public final class FileLockTimeoutException extends VirtualFileSystemRuntimeException {
+    public FileLockTimeoutException(String message) {
+        super(message);
+    }
 }

@@ -29,35 +29,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GetVFSInfoTest extends LocalFileSystemTest
-{
-   public void testVFSInfo() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      ContainerResponse response = launcher.service("GET", SERVICE_URI, BASE_URI, null, null, writer, null);
-      assertNotNull(response.getEntity());
-      assertEquals(response.getEntity().toString(), 200, response.getStatus());
-      //log.info(new String(writer.getBody()));
-      VirtualFileSystemInfo vfsInfo = (VirtualFileSystemInfo)response.getEntity();
-      assertNotNull(vfsInfo);
-      assertEquals(false, vfsInfo.isVersioningSupported());
-      assertEquals(true, vfsInfo.isLockSupported());
-      assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());
-      assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability()); // TODO : update when implement search
-      assertEquals(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, vfsInfo.getAnonymousPrincipal());
-      assertEquals(VirtualFileSystemInfo.ANY_PRINCIPAL, vfsInfo.getAnyPrincipal());
-      assertEquals(MY_WORKSPACE_ID, vfsInfo.getId());
-      BasicPermissions[] basicPermissions = BasicPermissions.values();
-      List<String> expectedPermissions = new ArrayList<String>(basicPermissions.length);
-      for (BasicPermissions bp : basicPermissions)
-      {
-         expectedPermissions.add(bp.value());
-      }
-      Collection<String> permissions = vfsInfo.getPermissions();
-      assertTrue(permissions.containsAll(expectedPermissions));
-      assertNotNull(vfsInfo.getRoot());
-      assertEquals("/", vfsInfo.getRoot().getPath());
-      validateLinks(vfsInfo.getRoot());
-      validateUrlTemplates(vfsInfo);
-   }
+public class GetVFSInfoTest extends LocalFileSystemTest {
+    public void testVFSInfo() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        ContainerResponse response = launcher.service("GET", SERVICE_URI, BASE_URI, null, null, writer, null);
+        assertNotNull(response.getEntity());
+        assertEquals(response.getEntity().toString(), 200, response.getStatus());
+        //log.info(new String(writer.getBody()));
+        VirtualFileSystemInfo vfsInfo = (VirtualFileSystemInfo)response.getEntity();
+        assertNotNull(vfsInfo);
+        assertEquals(false, vfsInfo.isVersioningSupported());
+        assertEquals(true, vfsInfo.isLockSupported());
+        assertEquals(ACLCapability.MANAGE, vfsInfo.getAclCapability());
+        assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability()); // TODO : update when implement search
+        assertEquals(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, vfsInfo.getAnonymousPrincipal());
+        assertEquals(VirtualFileSystemInfo.ANY_PRINCIPAL, vfsInfo.getAnyPrincipal());
+        assertEquals(MY_WORKSPACE_ID, vfsInfo.getId());
+        BasicPermissions[] basicPermissions = BasicPermissions.values();
+        List<String> expectedPermissions = new ArrayList<String>(basicPermissions.length);
+        for (BasicPermissions bp : basicPermissions) {
+            expectedPermissions.add(bp.value());
+        }
+        Collection<String> permissions = vfsInfo.getPermissions();
+        assertTrue(permissions.containsAll(expectedPermissions));
+        assertNotNull(vfsInfo.getRoot());
+        assertEquals("/", vfsInfo.getRoot().getPath());
+        validateLinks(vfsInfo.getRoot());
+        validateUrlTemplates(vfsInfo);
+    }
 }

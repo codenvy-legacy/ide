@@ -22,65 +22,55 @@ package org.exoplatform.ide.vfs.impl.fs;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class QueryExpression
-{
-   private String name;
-   private String path;
-   private String mediaType;
-   private String text;
+public class QueryExpression {
+    private String name;
+    private String path;
+    private String mediaType;
+    private String text;
 
-   public String getPath()
-   {
-      return path;
-   }
+    public String getPath() {
+        return path;
+    }
 
-   public QueryExpression setPath(String path)
-   {
-      this.path = path;
-      return this;
-   }
+    public QueryExpression setPath(String path) {
+        this.path = path;
+        return this;
+    }
 
-   public String getName()
-   {
-      return name;
-   }
+    public String getName() {
+        return name;
+    }
 
-   public QueryExpression setName(String name)
-   {
-      this.name = name;
-      return this;
-   }
+    public QueryExpression setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-   public String getMediaType()
-   {
-      return mediaType;
-   }
+    public String getMediaType() {
+        return mediaType;
+    }
 
-   public QueryExpression setMediaType(String mediaType)
-   {
-      this.mediaType = mediaType;
-      return this;
-   }
+    public QueryExpression setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+        return this;
+    }
 
-   public String getText()
-   {
-      return text;
-   }
+    public String getText() {
+        return text;
+    }
 
-   public QueryExpression setText(String text)
-   {
-      this.text = text;
-      return this;
-   }
+    public QueryExpression setText(String text) {
+        this.text = text;
+        return this;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "QueryExpression{" +
-         "name='" + name + '\'' +
-         ", path='" + path + '\'' +
-         ", mediaType='" + mediaType + '\'' +
-         ", text='" + text + '\'' +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "QueryExpression{" +
+               "name='" + name + '\'' +
+               ", path='" + path + '\'' +
+               ", mediaType='" + mediaType + '\'' +
+               ", text='" + text + '\'' +
+               '}';
+    }
 }

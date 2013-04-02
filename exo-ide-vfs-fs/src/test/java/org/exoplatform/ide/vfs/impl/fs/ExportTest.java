@@ -31,252 +31,215 @@ import org.exoplatform.services.security.Identity;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 
-public class ExportTest extends LocalFileSystemTest
-{
-   private String fileId;
-   private String filePath;
+public class ExportTest extends LocalFileSystemTest {
+    private String fileId;
+    private String filePath;
 
-   private String folderId;
-   private String folderPath;
+    private String folderId;
+    private String folderPath;
 
-   private String protectedFolderId;
-   private String protectedFolderPath;
+    private String protectedFolderId;
+    private String protectedFolderPath;
 
-   private String projectId;
-   private String projectPath;
+    private String projectId;
+    private String projectPath;
 
-   @Override
-   protected void setUp() throws Exception
-   {
-      super.setUp();
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
 
-      folderPath = createDirectory(testRootPath, "ExportTest_Folder");
-      createTree(folderPath, 6, 4, null);
-      projectPath = createDirectory(testRootPath, "ExportTest_Project");
-      createTree(projectPath, 6, 4, null);
-      Map<String, String[]> projectProperties = new HashMap<String, String[]>(2);
-      projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-      projectProperties.put("vfs:projectType", new String[]{"java"});
-      writeProperties(projectPath, projectProperties);
-      filePath = createFile(testRootPath, "ExportTest_File", null);
-      protectedFolderPath = createDirectory(testRootPath, "ExportTest_ProtectedFolder");
-      createTree(protectedFolderPath, 6, 4, null);
+        folderPath = createDirectory(testRootPath, "ExportTest_Folder");
+        createTree(folderPath, 6, 4, null);
+        projectPath = createDirectory(testRootPath, "ExportTest_Project");
+        createTree(projectPath, 6, 4, null);
+        Map<String, String[]> projectProperties = new HashMap<String, String[]>(2);
+        projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
+        projectProperties.put("vfs:projectType", new String[]{"java"});
+        writeProperties(projectPath, projectProperties);
+        filePath = createFile(testRootPath, "ExportTest_File", null);
+        protectedFolderPath = createDirectory(testRootPath, "ExportTest_ProtectedFolder");
+        createTree(protectedFolderPath, 6, 4, null);
 
-      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      writePermissions(protectedFolderPath, permissions);
+        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        writePermissions(protectedFolderPath, permissions);
 
-      folderId = pathToId(folderPath);
-      projectId = pathToId(projectPath);
-      fileId = pathToId(filePath);
-      protectedFolderId = pathToId(protectedFolderPath);
-   }
+        folderId = pathToId(folderPath);
+        projectId = pathToId(projectPath);
+        fileId = pathToId(filePath);
+        protectedFolderId = pathToId(protectedFolderPath);
+    }
 
-   public void testExportFolder() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "export/" + folderId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
+    public void testExportFolder() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "export/" + folderId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
-      java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-      ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
-      compareDirectories(getIoFile(folderPath), unzip);
-   }
+        java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
+        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        compareDirectories(getIoFile(folderPath), unzip);
+    }
 
-   public void testExportFolderHavePermissions() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "export/" + protectedFolderId;
-      // Replace default principal by principal who has read permission.
-      ConversationState user = new ConversationState(new Identity("andrew"));
-      user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
-      ConversationState.setCurrent(user);
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
+    public void testExportFolderHavePermissions() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "export/" + protectedFolderId;
+        // Replace default principal by principal who has read permission.
+        ConversationState user = new ConversationState(new Identity("andrew"));
+        user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
+        ConversationState.setCurrent(user);
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
-      java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-      ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
-      compareDirectories(getIoFile(protectedFolderPath), unzip);
-   }
+        java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
+        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        compareDirectories(getIoFile(protectedFolderPath), unzip);
+    }
 
-   public void testExportFolderNoPermissions() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "export/" + protectedFolderId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals(403, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
+    public void testExportFolderNoPermissions() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "export/" + protectedFolderId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals(403, response.getStatus());
+        log.info(new String(writer.getBody()));
+    }
 
-   public void testExportFolderNoPermissions2() throws Exception
-   {
-      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
-      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      List<String> l = flattenDirectory(folderPath);
-      // Find one child in the list and remove write permission for 'admin'.
-      writePermissions(folderPath + '/' + l.get(new Random().nextInt(l.size())), permissions);
+    public void testExportFolderNoPermissions2() throws Exception {
+        Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+        permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+        List<String> l = flattenDirectory(folderPath);
+        // Find one child in the list and remove write permission for 'admin'.
+        writePermissions(folderPath + '/' + l.get(new Random().nextInt(l.size())), permissions);
 
-      // From now have permission to read folder but have not permission to read any child of folder.
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "export/" + folderId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals(403, response.getStatus());
-      log.info(new String(writer.getBody()));
-   }
+        // From now have permission to read folder but have not permission to read any child of folder.
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "export/" + folderId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals(403, response.getStatus());
+        log.info(new String(writer.getBody()));
+    }
 
-   public void testExportProject() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "export/" + projectId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
+    public void testExportProject() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "export/" + projectId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
-      java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-      ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
-      java.io.File dotProject = new java.io.File(unzip, ".project");
-      Property[] properties = parseDotProjectFile(dotProject);
-      assertEquals(2, properties.length);
-      for (Property property : properties)
-      {
-         if ("vfs:mimeType".equals(property.getName()))
-         {
-            assertEquals(1, property.getValue().size());
-            assertEquals(Project.PROJECT_MIME_TYPE, property.getValue().get(0));
-         }
-         else if ("vfs:projectType".equals(property.getName()))
-         {
-            assertEquals(1, property.getValue().size());
-            assertEquals("java", property.getValue().get(0));
-         }
-         else
-         {
-            fail("Unexpected property " + property);
-         }
-      }
+        java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
+        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        java.io.File dotProject = new java.io.File(unzip, ".project");
+        Property[] properties = parseDotProjectFile(dotProject);
+        assertEquals(2, properties.length);
+        for (Property property : properties) {
+            if ("vfs:mimeType".equals(property.getName())) {
+                assertEquals(1, property.getValue().size());
+                assertEquals(Project.PROJECT_MIME_TYPE, property.getValue().get(0));
+            } else if ("vfs:projectType".equals(property.getName())) {
+                assertEquals(1, property.getValue().size());
+                assertEquals("java", property.getValue().get(0));
+            } else {
+                fail("Unexpected property " + property);
+            }
+        }
 
 
-      assertTrue(dotProject.delete());
-      // now compare directories as usual
-      compareDirectories(getIoFile(projectPath), unzip);
-   }
+        assertTrue(dotProject.delete());
+        // now compare directories as usual
+        compareDirectories(getIoFile(projectPath), unzip);
+    }
 
-   public void testExportMultiProject() throws Exception
-   {
-      // create one more project inside existed one.
-      String nestedProjectPath = createDirectory(projectPath, "Nested_Project");
-      createTree(nestedProjectPath, 6, 4, null);
-      Map<String, String[]> props = new HashMap<String, String[]>(2);
-      props.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
-      props.put("vfs:projectType", new String[]{"my_project"});
-      writeProperties(nestedProjectPath, props);
+    public void testExportMultiProject() throws Exception {
+        // create one more project inside existed one.
+        String nestedProjectPath = createDirectory(projectPath, "Nested_Project");
+        createTree(nestedProjectPath, 6, 4, null);
+        Map<String, String[]> props = new HashMap<String, String[]>(2);
+        props.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
+        props.put("vfs:projectType", new String[]{"my_project"});
+        writeProperties(nestedProjectPath, props);
 
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "export/" + projectId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "export/" + projectId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
 
-      java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
-      ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
+        java.io.File unzip = getIoFile(createDirectory(testRootPath, "__unzip__"));
+        ZipUtils.unzip(new ByteArrayInputStream(writer.getBody()), unzip);
 
-      // properties of parent project
-      java.io.File dotProject = new java.io.File(unzip, ".project");
-      Property[] properties = parseDotProjectFile(dotProject);
-      assertEquals(2, properties.length);
-      for (Property property : properties)
-      {
-         if ("vfs:mimeType".equals(property.getName()))
-         {
-            assertEquals(1, property.getValue().size());
-            assertEquals(Project.PROJECT_MIME_TYPE, property.getValue().get(0));
-         }
-         else if ("vfs:projectType".equals(property.getName()))
-         {
-            assertEquals(1, property.getValue().size());
-            assertEquals("java", property.getValue().get(0));
-         }
-         else
-         {
-            fail("Unexpected property " + property);
-         }
-      }
+        // properties of parent project
+        java.io.File dotProject = new java.io.File(unzip, ".project");
+        Property[] properties = parseDotProjectFile(dotProject);
+        assertEquals(2, properties.length);
+        for (Property property : properties) {
+            if ("vfs:mimeType".equals(property.getName())) {
+                assertEquals(1, property.getValue().size());
+                assertEquals(Project.PROJECT_MIME_TYPE, property.getValue().get(0));
+            } else if ("vfs:projectType".equals(property.getName())) {
+                assertEquals(1, property.getValue().size());
+                assertEquals("java", property.getValue().get(0));
+            } else {
+                fail("Unexpected property " + property);
+            }
+        }
 
 
-      // properties of nested project
-      java.io.File nestedDotProject = new java.io.File(new java.io.File(unzip, "Nested_Project"), ".project");
-      properties = parseDotProjectFile(nestedDotProject);
-      assertEquals(2, properties.length);
-      for (Property property : properties)
-      {
-         if ("vfs:mimeType".equals(property.getName()))
-         {
-            assertEquals(1, property.getValue().size());
-            assertEquals(Project.PROJECT_MIME_TYPE, property.getValue().get(0));
-         }
-         else if ("vfs:projectType".equals(property.getName()))
-         {
-            assertEquals(1, property.getValue().size());
-            assertEquals("my_project", property.getValue().get(0));
-         }
-         else
-         {
-            fail("Unexpected property " + property);
-         }
-      }
+        // properties of nested project
+        java.io.File nestedDotProject = new java.io.File(new java.io.File(unzip, "Nested_Project"), ".project");
+        properties = parseDotProjectFile(nestedDotProject);
+        assertEquals(2, properties.length);
+        for (Property property : properties) {
+            if ("vfs:mimeType".equals(property.getName())) {
+                assertEquals(1, property.getValue().size());
+                assertEquals(Project.PROJECT_MIME_TYPE, property.getValue().get(0));
+            } else if ("vfs:projectType".equals(property.getName())) {
+                assertEquals(1, property.getValue().size());
+                assertEquals("my_project", property.getValue().get(0));
+            } else {
+                fail("Unexpected property " + property);
+            }
+        }
 
-      assertTrue(dotProject.delete());
-      assertTrue(nestedDotProject.delete());
-      // now compare directories as usual
-      compareDirectories(getIoFile(projectPath), unzip);
-   }
+        assertTrue(dotProject.delete());
+        assertTrue(nestedDotProject.delete());
+        // now compare directories as usual
+        compareDirectories(getIoFile(projectPath), unzip);
+    }
 
-   private Property[] parseDotProjectFile(java.io.File dotProject) throws Exception
-   {
-      FileInputStream fIn = new FileInputStream(dotProject);
-      try
-      {
-         JsonParser parser = new JsonParser();
-         parser.parse(fIn);
-         JsonValue json = parser.getJsonObject();
-         return (Property[])ObjectBuilder.createArray(Property[].class, json);
-      }
-      finally
-      {
-         fIn.close();
-      }
-   }
+    private Property[] parseDotProjectFile(java.io.File dotProject) throws Exception {
+        FileInputStream fIn = new FileInputStream(dotProject);
+        try {
+            JsonParser parser = new JsonParser();
+            parser.parse(fIn);
+            JsonValue json = parser.getJsonObject();
+            return (Property[])ObjectBuilder.createArray(Property[].class, json);
+        } finally {
+            fIn.close();
+        }
+    }
 
-   public void testDownloadZip() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "downloadzip/" + folderId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
-      assertEquals("attachment; filename=\"" + getIoFile(folderPath).getName() + ".zip" + '"',
-         writer.getHeaders().getFirst("Content-Disposition"));
-   }
+    public void testDownloadZip() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "downloadzip/" + folderId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+        assertEquals("application/zip", writer.getHeaders().getFirst("Content-Type"));
+        assertEquals("attachment; filename=\"" + getIoFile(folderPath).getName() + ".zip" + '"',
+                     writer.getHeaders().getFirst("Content-Disposition"));
+    }
 
-   public void testExportFile() throws Exception
-   {
-      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "export/" + fileId;
-      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
-      assertEquals(400, response.getStatus());
-      log.info(new String(writer.getBody()));
-      assertTrue(exists(filePath));
-   }
+    public void testExportFile() throws Exception {
+        ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+        String path = SERVICE_URI + "export/" + fileId;
+        ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+        assertEquals(400, response.getStatus());
+        log.info(new String(writer.getBody()));
+        assertTrue(exists(filePath));
+    }
 }
