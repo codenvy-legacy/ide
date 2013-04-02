@@ -24,67 +24,52 @@ import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class AnnotationParamerBean implements AnnotationParameter
-{
+public class AnnotationParamerBean implements AnnotationParameter {
 
-   private String name;
+    private String name;
 
-   private AnnotationValue value;
+    private AnnotationValue value;
 
-   /**
-    * 
-    */
-   public AnnotationParamerBean()
-   {
-   }
+    /**
+     *
+     */
+    public AnnotationParamerBean() {
+    }
 
-   /**
-    * @param name
-    * @param value
-    */
-   public AnnotationParamerBean(String name, AnnotationValue value)
-   {
-      super();
-      this.name = name;
-      this.value = value;
-   }
+    /**
+     * @param name
+     * @param value
+     */
+    public AnnotationParamerBean(String name, AnnotationValue value) {
+        super();
+        this.name = name;
+        this.value = value;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getName()
-    */
-   @Override
-   public String getName()
-   {
-      return name;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getName() */
+    @Override
+    public String getName() {
+        return name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getValue()
-    */
-   @Override
-   public AnnotationValue getValue()
-   {
-      return value;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#getValue() */
+    @Override
+    public AnnotationValue getValue() {
+        return value;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setName(java.lang.String)
-    */
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setName(java.lang.String) */
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-   /**
-    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setValue(org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue)
-    */
-   @Override
-   public void setValue(AnnotationValue value)
-   {
-      this.value = value;
-   }
+    /** @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter#setValue(org.exoplatform.ide.codeassistant.jvm.shared
+     * .AnnotationValue) */
+    @Override
+    public void setValue(AnnotationValue value) {
+        this.value = value;
+    }
 
 }

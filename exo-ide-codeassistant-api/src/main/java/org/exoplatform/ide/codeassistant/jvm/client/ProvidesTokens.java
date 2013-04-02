@@ -20,20 +20,18 @@
 package org.exoplatform.ide.codeassistant.jvm.client;
 
 /**
- * 
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface ProvidesTokens
-{
+public interface ProvidesTokens {
 
-   /**
-    * If editor supports autocompletion and outline feature,
-    * this method starts parsing of tokens asynchronously (without freezing of browser).
-    */
-   void getTokens(TokensReceivedHandler handler);
+    /**
+     * If editor supports autocompletion and outline feature,
+     * this method starts parsing of tokens asynchronously (without freezing of browser).
+     */
+    void getTokens(TokensReceivedHandler handler);
 
 }

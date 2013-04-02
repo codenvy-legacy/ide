@@ -21,21 +21,18 @@ package org.exoplatform.ide.codeassistant.jvm.client;
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id
- * 
  */
 public enum Modifier {
-   STATIC(0x00000008), FINAL(0x00000010), PRIVATE(0x00000002), PUBLIC(0x00000001), PROTECTED(0x00000004), ABSTRACT(
-      0x00000400), STRICTFP(0x00000800), SYNCHRONIZED(0x00000020), THREADSAFE(0), TRANSIENT(0x00000080), VOLATILE(
-      0x00000040);
-   private final int mod;
+    STATIC(0x00000008), FINAL(0x00000010), PRIVATE(0x00000002), PUBLIC(0x00000001), PROTECTED(0x00000004), ABSTRACT(
+            0x00000400), STRICTFP(0x00000800), SYNCHRONIZED(0x00000020), THREADSAFE(0), TRANSIENT(0x00000080), VOLATILE(
+            0x00000040);
+    private final int mod;
 
-   Modifier(int i)
-   {
-      this.mod = i;
-   }
+    Modifier(int i) {
+        this.mod = i;
+    }
 
-   public int value()
-   {
-      return mod;
-   }
+    public int value() {
+        return mod;
+    }
 }

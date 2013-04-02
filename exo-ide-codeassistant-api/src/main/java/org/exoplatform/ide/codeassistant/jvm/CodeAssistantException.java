@@ -19,35 +19,31 @@
 package org.exoplatform.ide.codeassistant.jvm;
 
 /**
- * 
+ *
  */
-public class CodeAssistantException extends Exception
-{
-   /**
-    * 
-    */
-   private static final long serialVersionUID = -2413708596186268688L;
+public class CodeAssistantException extends Exception {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2413708596186268688L;
 
-   private int status;
+    private int status;
 
-   public CodeAssistantException(int status, String message)
-   {
-      super(message);
-      this.setStatus(status);
-   }
+    public CodeAssistantException(int status, String message) {
+        super(message);
+        this.setStatus(status);
+    }
 
-   public int getStatus()
-   {
-      return status;
-   }
+    public int getStatus() {
+        return status;
+    }
 
-   /**
-    * @param status
-    *           the status to set
-    */
-   public void setStatus(int status)
-   {
-      this.status = status;
-   }
+    /**
+     * @param status
+     *         the status to set
+     */
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
 }
