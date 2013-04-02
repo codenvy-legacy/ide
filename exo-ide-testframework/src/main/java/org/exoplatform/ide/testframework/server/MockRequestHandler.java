@@ -23,14 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public interface MockRequestHandler
-{
+public interface MockRequestHandler {
 
-   void handleRequest(String path, HttpServletRequest request, HttpServletResponse response);
+    void handleRequest(String path, HttpServletRequest request, HttpServletResponse response);
 
 }

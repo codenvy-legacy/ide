@@ -22,39 +22,32 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryServices
-{
-   private SystemService[] system;
+public class CloudfoundryServices {
+    private SystemService[] system;
 
-   private ProvisionedService[] provisioned;
+    private ProvisionedService[] provisioned;
 
-   public CloudfoundryServices(SystemService[] system, ProvisionedService[] provisioned)
-   {
-      this.system = system;
-      this.provisioned = provisioned;
-   }
+    public CloudfoundryServices(SystemService[] system, ProvisionedService[] provisioned) {
+        this.system = system;
+        this.provisioned = provisioned;
+    }
 
-   public CloudfoundryServices()
-   {
-   }
+    public CloudfoundryServices() {
+    }
 
-   public SystemService[] getSystem()
-   {
-      return system;
-   }
+    public SystemService[] getSystem() {
+        return system;
+    }
 
-   public void setSystem(SystemService[] system)
-   {
-      this.system = system;
-   }
+    public void setSystem(SystemService[] system) {
+        this.system = system;
+    }
 
-   public ProvisionedService[] getProvisioned()
-   {
-      return provisioned;
-   }
+    public ProvisionedService[] getProvisioned() {
+        return provisioned;
+    }
 
-   public void setProvisioned(ProvisionedService[] provisioned)
-   {
-      this.provisioned = provisioned;
-   }
+    public void setProvisioned(ProvisionedService[] provisioned) {
+        this.provisioned = provisioned;
+    }
 }

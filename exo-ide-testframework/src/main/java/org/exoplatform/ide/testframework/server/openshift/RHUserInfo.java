@@ -22,89 +22,75 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class RHUserInfo
-{
-   private String rhcDomain;
+public class RHUserInfo {
+    private String rhcDomain;
 
-   private String uuid;
+    private String uuid;
 
-   private String rhlogin;
+    private String rhlogin;
 
-   private String namespace;
+    private String namespace;
 
-   private List<AppInfo> apps;
+    private List<AppInfo> apps;
 
-   public RHUserInfo(String rhcDomain, String uuid, String rhlogin, String namespace)
-   {
-      this.rhcDomain = rhcDomain;
-      this.uuid = uuid;
-      this.rhlogin = rhlogin;
-      this.namespace = namespace;
-   }
+    public RHUserInfo(String rhcDomain, String uuid, String rhlogin, String namespace) {
+        this.rhcDomain = rhcDomain;
+        this.uuid = uuid;
+        this.rhlogin = rhlogin;
+        this.namespace = namespace;
+    }
 
-   public RHUserInfo()
-   {
-   }
+    public RHUserInfo() {
+    }
 
-   public String getRhcDomain()
-   {
-      return rhcDomain;
-   }
+    public String getRhcDomain() {
+        return rhcDomain;
+    }
 
-   public void setRhcDomain(String rhcDomain)
-   {
-      this.rhcDomain = rhcDomain;
-   }
+    public void setRhcDomain(String rhcDomain) {
+        this.rhcDomain = rhcDomain;
+    }
 
-   public String getUuid()
-   {
-      return uuid;
-   }
+    public String getUuid() {
+        return uuid;
+    }
 
-   public void setUuid(String uuid)
-   {
-      this.uuid = uuid;
-   }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-   public String getRhlogin()
-   {
-      return rhlogin;
-   }
+    public String getRhlogin() {
+        return rhlogin;
+    }
 
-   public void setRhlogin(String rhlogin)
-   {
-      this.rhlogin = rhlogin;
-   }
+    public void setRhlogin(String rhlogin) {
+        this.rhlogin = rhlogin;
+    }
 
-   public String getNamespace()
-   {
-      return namespace;
-   }
+    public String getNamespace() {
+        return namespace;
+    }
 
-   public void setNamespace(String namespace)
-   {
-      this.namespace = namespace;
-   }
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
 
-   public List<AppInfo> getApps()
-   {
-      return apps;
-   }
+    public List<AppInfo> getApps() {
+        return apps;
+    }
 
-   public void setApps(List<AppInfo> apps)
-   {
-      this.apps = apps;
-   }
+    public void setApps(List<AppInfo> apps) {
+        this.apps = apps;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "RHUserInfo [rhcDomain=" + rhcDomain + ", uuid=" + uuid + ", rhlogin=" + rhlogin + ", namespace="
-         + namespace + "]";
-   }
+    @Override
+    public String toString() {
+        return "RHUserInfo [rhcDomain=" + rhcDomain + ", uuid=" + uuid + ", rhlogin=" + rhlogin + ", namespace="
+               + namespace + "]";
+    }
 }

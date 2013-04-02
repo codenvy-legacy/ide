@@ -22,66 +22,55 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class Framework
-{
-   private String displayName;
+public class Framework {
+    private String displayName;
 
-   private String type;
+    private String type;
 
-   /** Default memory size in megabytes. */
-   private int memory;
+    /** Default memory size in megabytes. */
+    private int memory;
 
-   private String description;
+    private String description;
 
-   public Framework(String type, String displayName, int memory, String description)
-   {
-      this.type = type;
-      this.displayName = displayName;
-      this.memory = memory;
-      this.description = description;
-   }
+    public Framework(String type, String displayName, int memory, String description) {
+        this.type = type;
+        this.displayName = displayName;
+        this.memory = memory;
+        this.description = description;
+    }
 
-   public Framework()
-   {
-   }
+    public Framework() {
+    }
 
-   public String getType()
-   {
-      return type;
-   }
+    public String getType() {
+        return type;
+    }
 
-   public void setType(String type)
-   {
-      this.type = type;
-   }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-   public String getDisplayName()
-   {
-      return displayName;
-   }
+    public String getDisplayName() {
+        return displayName;
+    }
 
-   public void setDisplayName(String displayName)
-   {
-      this.displayName = displayName;
-   }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-   public int getMemory()
-   {
-      return memory;
-   }
+    public int getMemory() {
+        return memory;
+    }
 
-   public void setMemory(int memory)
-   {
-      this.memory = memory;
-   }
+    public void setMemory(int memory) {
+        this.memory = memory;
+    }
 
-   public String getDescription()
-   {
-      return description;
-   }
+    public String getDescription() {
+        return description;
+    }
 
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

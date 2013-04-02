@@ -22,29 +22,24 @@ package org.exoplatform.ide.testframework.server.cloudfoundry.bean;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class Staging
-{
-   private String model;
+public class Staging {
+    private String model;
 
-   private String stack;
+    private String stack;
 
-   public String getModel()
-   {
-      return model;
-   }
+    public String getModel() {
+        return model;
+    }
 
-   public void setModel(String model)
-   {
-      this.model = model;
-   }
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-   public String getStack()
-   {
-      return stack;
-   }
+    public String getStack() {
+        return stack;
+    }
 
-   public void setStack(String stack)
-   {
-      this.stack = stack;
-   }
+    public void setStack(String stack) {
+        this.stack = stack;
+    }
 }
