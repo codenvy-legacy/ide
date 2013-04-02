@@ -48,139 +48,109 @@ import java.util.List;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2011 evgen $
- * 
  */
-public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicationListHandler, OutputHandler
-{
-   public interface Display extends IsView
-   {
-      String ID = "ideCloudBeesAppListView";
+public class ApplicationListPresenter implements ViewClosedHandler, ShowApplicationListHandler, OutputHandler {
+    public interface Display extends IsView {
+        String ID = "ideCloudBeesAppListView";
 
-      HasClickHandlers getOkButton();
+        HasClickHandlers getOkButton();
 
-      HasApplicationListActions getAppListGrid();
-   }
+        HasApplicationListActions getAppListGrid();
+    }
 
-   private Display display;
+    private Display display;
 
-   private HandlerRegistration outputHandler;
+    private HandlerRegistration outputHandler;
 
-   /**
-    *
-    */
-   public ApplicationListPresenter()
-   {
-      super();
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ShowApplicationListEvent.TYPE, this);
-   }
+    /**
+     *
+     */
+    public ApplicationListPresenter() {
+        super();
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+        IDE.addHandler(ShowApplicationListEvent.TYPE, this);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
-   private void bind()
-   {
-      display.getOkButton().addClickHandler(new ClickHandler()
-      {
+    private void bind() {
+        display.getOkButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(Display.ID);
-         }
-      });
-      display.getAppListGrid().addInfoHandler(new SelectionHandler<ApplicationInfo>()
-      {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(Display.ID);
+            }
+        });
+        display.getAppListGrid().addInfoHandler(new SelectionHandler<ApplicationInfo>() {
 
-         @Override
-         public void onSelection(SelectionEvent<ApplicationInfo> event)
-         {
-            IDE.fireEvent(new ApplicationInfoEvent(event.getSelectedItem()));
-         }
-      });
+            @Override
+            public void onSelection(SelectionEvent<ApplicationInfo> event) {
+                IDE.fireEvent(new ApplicationInfoEvent(event.getSelectedItem()));
+            }
+        });
 
-      display.getAppListGrid().addDeleteHandler(new SelectionHandler<ApplicationInfo>()
-      {
+        display.getAppListGrid().addDeleteHandler(new SelectionHandler<ApplicationInfo>() {
 
-         @Override
-         public void onSelection(SelectionEvent<ApplicationInfo> event)
-         {
-            outputHandler = IDE.addHandler(OutputEvent.TYPE, ApplicationListPresenter.this);
-            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getId(), event.getSelectedItem()
-               .getTitle()));
-         }
-      });
+            @Override
+            public void onSelection(SelectionEvent<ApplicationInfo> event) {
+                outputHandler = IDE.addHandler(OutputEvent.TYPE, ApplicationListPresenter.this);
+                IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getId(), event.getSelectedItem()
+                                                                                               .getTitle()));
+            }
+        });
 
-      getOrUpdateAppList();
-   }
+        getOrUpdateAppList();
+    }
 
-   /**
-    * 
-    */
-   private void getOrUpdateAppList()
-   {
-      try
-      {
-         CloudBeesClientService.getInstance().applicationList(
-            new CloudBeesAsyncRequestCallback<List<ApplicationInfo>>(new ApplicationListUnmarshaller(
-               new ArrayList<ApplicationInfo>()), new LoggedInHandler()
-            {
+    /**
+     *
+     */
+    private void getOrUpdateAppList() {
+        try {
+            CloudBeesClientService.getInstance().applicationList(
+                    new CloudBeesAsyncRequestCallback<List<ApplicationInfo>>(new ApplicationListUnmarshaller(
+                            new ArrayList<ApplicationInfo>()), new LoggedInHandler() {
 
-               @Override
-               public void onLoggedIn()
-               {
-                  getOrUpdateAppList();
-               }
-            }, null)
-            {
+                        @Override
+                        public void onLoggedIn() {
+                            getOrUpdateAppList();
+                        }
+                    }, null) {
 
-               @Override
-               protected void onSuccess(List<ApplicationInfo> result)
-               {
-                  display.getAppListGrid().setValue(result);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+                        @Override
+                        protected void onSuccess(List<ApplicationInfo> result) {
+                            display.getAppListGrid().setValue(result);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.list.ShowApplicationListHandler#onShowApplicationList(org.exoplatform.ide.extension.cloudbees.client.list.ShowApplicationListEvent)
-    */
-   @Override
-   public void onShowApplicationList(ShowApplicationListEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bind();
-      }
-      else
-      {
-         display.asView().activate();
-      }
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.list.ShowApplicationListHandler#onShowApplicationList(org.exoplatform.ide
+     * .extension.cloudbees.client.list.ShowApplicationListEvent) */
+    @Override
+    public void onShowApplicationList(ShowApplicationListEvent event) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bind();
+        } else {
+            display.asView().activate();
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.output.event.OutputHandler#onOutput(org.exoplatform.ide.client.framework.output.event.OutputEvent)
-    */
-   @Override
-   public void onOutput(OutputEvent event)
-   {
-      outputHandler.removeHandler();
-      getOrUpdateAppList();
-   }
+    /** @see org.exoplatform.ide.client.framework.output.event.OutputHandler#onOutput(org.exoplatform.ide.client.framework.output.event.OutputEvent) */
+    @Override
+    public void onOutput(OutputEvent event) {
+        outputHandler.removeHandler();
+        getOrUpdateAppList();
+    }
 }

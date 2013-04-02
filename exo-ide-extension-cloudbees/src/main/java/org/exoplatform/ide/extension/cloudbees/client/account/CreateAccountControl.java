@@ -25,35 +25,29 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 
 /**
  * Control for creating new CloudBees account.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 10, 2012 4:32:40 PM anya $
- * 
  */
-public class CreateAccountControl extends SimpleControl implements IDEControl
-{
-   private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.controlCreateAccountId();
+public class CreateAccountControl extends SimpleControl implements IDEControl {
+    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.controlCreateAccountId();
 
-   private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.controlCreateAccountTitle();
+    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.controlCreateAccountTitle();
 
-   private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.controlCreateAccountPrompt();
+    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.controlCreateAccountPrompt();
 
-   public CreateAccountControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudBeesClientBundle.INSTANCE.createAccount(), CloudBeesClientBundle.INSTANCE.createAccountDisabled());
-      setEvent(new CreateAccountEvent());
-   }
+    public CreateAccountControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudBeesClientBundle.INSTANCE.createAccount(), CloudBeesClientBundle.INSTANCE.createAccountDisabled());
+        setEvent(new CreateAccountEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 }

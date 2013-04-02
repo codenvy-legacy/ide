@@ -24,47 +24,46 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface CloudBeesUser
-{
-   String getEmail();
+public interface CloudBeesUser {
+    String getEmail();
 
-   void setEmail(String email);
+    void setEmail(String email);
 
-   String getFirst_name();
+    String getFirst_name();
 
-   void setFirst_name(String name);
+    void setFirst_name(String name);
 
-   String getLast_name();
+    String getLast_name();
 
-   void setLast_name(String name);
+    void setLast_name(String name);
 
-   String getName();
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   String getPassword();
+    String getPassword();
 
-   void setPassword(String password);
+    void setPassword(String password);
 
-   String getRole();
+    String getRole();
 
-   void setRole(String role);
+    void setRole(String role);
 
-   //
+    //
 
-   String getId();
+    String getId();
 
-   void setId(String id);
+    void setId(String id);
 
-   //
+    //
 
-   List<CloudBeesAccount> getAccounts();
+    List<CloudBeesAccount> getAccounts();
 
-   void setAccounts(List<CloudBeesAccount> accounts);
+    void setAccounts(List<CloudBeesAccount> accounts);
 
-   //
+    //
 
-   List<CloudBeesSshKey> getSsh_keys();
+    List<CloudBeesSshKey> getSsh_keys();
 
-   void setSsh_keys(List<CloudBeesSshKey> keys);
+    void setSsh_keys(List<CloudBeesSshKey> keys);
 }

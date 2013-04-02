@@ -46,11 +46,7 @@ import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
-import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
-import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
-import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
-import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
-import org.exoplatform.ide.extension.cloudbees.client.CloudBeesRESTfulRequestCallback;
+import org.exoplatform.ide.extension.cloudbees.client.*;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
@@ -67,343 +63,281 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
- * 
  */
-public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasPaaSActions, VfsChangedHandler
-{
-   interface Display
-   {
-      HasValue<String> getNameField();
+public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasPaaSActions, VfsChangedHandler {
+    interface Display {
+        HasValue<String> getNameField();
 
-      HasValue<String> getUrlField();
+        HasValue<String> getUrlField();
 
-      HasValue<String> getDomainsField();
+        HasValue<String> getDomainsField();
 
-      /**
-       * Set the list of domains.
-       * 
-       * @param domains
-       */
-      void setDomainValues(String[] domains);
+        /**
+         * Set the list of domains.
+         *
+         * @param domains
+         */
+        void setDomainValues(String[] domains);
 
-      Composite getView();
-   }
+        Composite getView();
+    }
 
-   private static final CloudBeesLocalizationConstant lb = CloudBeesExtension.LOCALIZATION_CONSTANT;
+    private static final CloudBeesLocalizationConstant lb = CloudBeesExtension.LOCALIZATION_CONSTANT;
 
-   private VirtualFileSystemInfo vfs;
+    private VirtualFileSystemInfo vfs;
 
-   private Display display;
+    private Display display;
 
-   private String domain;
+    private String domain;
 
-   private String name;
+    private String name;
 
-   /**
-    * Public url to war file of application.
-    */
-   private String warUrl;
+    /** Public url to war file of application. */
+    private String warUrl;
 
-   private String projectName;
+    private String projectName;
 
-   private ProjectModel project;
+    private ProjectModel project;
 
-   private DeployResultHandler deployResultHandler;
+    private DeployResultHandler deployResultHandler;
 
-   public DeployApplicationPresenter()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-   }
+    public DeployApplicationPresenter() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
+    public void bindDisplay() {
+        display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>() {
 
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            name = event.getValue();
-            display.getUrlField().setValue(domain + "/" + name);
-         }
-      });
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                name = event.getValue();
+                display.getUrlField().setValue(domain + "/" + name);
+            }
+        });
 
-      display.getDomainsField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            domain = display.getDomainsField().getValue();
-            display.getUrlField().setValue(domain + "/" + name);
-         }
-      });
+        display.getDomainsField().addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                domain = display.getDomainsField().getValue();
+                display.getUrlField().setValue(domain + "/" + name);
+            }
+        });
 
-   }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent)
-    */
-   @Override
-   public void onApplicationBuilt(ApplicationBuiltEvent event)
-   {
-      IDE.removeHandler(event.getAssociatedType(), this);
-      if (event.getJobStatus().getArtifactUrl() != null)
-      {
-         warUrl = event.getJobStatus().getArtifactUrl();
-         createApplication();
-      }
-   }
-
-   // ----Implementation------------------------
-
-   private void buildApplication()
-   {
-      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
-      IDE.fireEvent(new BuildApplicationEvent(project));
-   }
-
-   private void getDomains()
-   {
-      try
-      {
-         CloudBeesClientService.getInstance().getDomains(
-            new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
-               new LoggedInHandler()
-               {
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     getDomains();
-                  }
-               }, null)
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  display.setDomainValues(result.toArray(new String[result.size()]));
-                  domain = display.getDomainsField().getValue();
-                  display.getNameField().setValue(projectName);
-                  name = display.getNameField().getValue();
-                  display.getUrlField().setValue(domain + "/" + name);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Create application on Cloud Bees by sending request over WebSocket or HTTP.
-    */
-   private void createApplication()
-   {
-      LoggedInHandler loggedInHandler = new LoggedInHandler()
-      {
-         @Override
-         public void onLoggedIn()
-         {
+    /** @see org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler#onApplicationBuilt(org.exoplatform.ide.extension
+     * .jenkins.client.event.ApplicationBuiltEvent) */
+    @Override
+    public void onApplicationBuilt(ApplicationBuiltEvent event) {
+        IDE.removeHandler(event.getAssociatedType(), this);
+        if (event.getJobStatus().getArtifactUrl() != null) {
+            warUrl = event.getJobStatus().getArtifactUrl();
             createApplication();
-         }
-      };
-      JobManager.get().showJobSeparated();
-      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+        }
+    }
 
-      try
-      {
-         CloudBeesClientService.getInstance().initializeApplicationWS(
-            domain + "/" + name,
-            vfs.getId(),
-            project.getId(),
-            warUrl,
-            null,
-            new CloudBeesRESTfulRequestCallback<ApplicationInfo>(new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean),
-               loggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(ApplicationInfo appInfo)
-               {
-                  onCreatedSuccess(appInfo);
-               }
+    // ----Implementation------------------------
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
-                     .deployApplicationFailureMessage(), Type.INFO));
-                  deployResultHandler.onDeployFinished(false);
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         createApplicationREST(loggedInHandler);
-      }
-   }
+    private void buildApplication() {
+        IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
+        IDE.fireEvent(new BuildApplicationEvent(project));
+    }
 
-   /**
-    * Create application on Cloud Bees by sending request over HTTP.
-    */
-   private void createApplicationREST(LoggedInHandler loggedInHandler)
-   {
-      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
-      try
-      {
-         CloudBeesClientService.getInstance().initializeApplication(
-            domain + "/" + name,
-            vfs.getId(),
-            project.getId(),
-            warUrl,
-            null,
-            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
-               loggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(ApplicationInfo appInfo)
-               {
-                  onCreatedSuccess(appInfo);
-               }
+    private void getDomains() {
+        try {
+            CloudBeesClientService.getInstance().getDomains(
+                    new CloudBeesAsyncRequestCallback<List<String>>(new DomainsUnmarshaller(new ArrayList<String>()),
+                                                                    new LoggedInHandler() {
+                                                                        @Override
+                                                                        public void onLoggedIn() {
+                                                                            getDomains();
+                                                                        }
+                                                                    }, null) {
+                        @Override
+                        protected void onSuccess(List<String> result) {
+                            display.setDomainValues(result.toArray(new String[result.size()]));
+                            domain = display.getDomainsField().getValue();
+                            display.getNameField().setValue(projectName);
+                            name = display.getNameField().getValue();
+                            display.getUrlField().setValue(domain + "/" + name);
+                        }
+                    });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
-                     .deployApplicationFailureMessage(), Type.INFO));
-                  deployResultHandler.onDeployFinished(false);
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         deployResultHandler.onDeployFinished(false);
-         IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(),
-            Type.INFO));
-      }
-   }
+    /** Create application on Cloud Bees by sending request over WebSocket or HTTP. */
+    private void createApplication() {
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                createApplication();
+            }
+        };
+        JobManager.get().showJobSeparated();
+        AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
 
-   private void onCreatedSuccess(ApplicationInfo appInfo)
-   {
-      StringBuilder output =
-         new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
-         .append(appInfo.getId()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
-         .append(appInfo.getTitle()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool()).append(" : ")
-         .append(appInfo.getServerPool()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
-         .append(appInfo.getStatus()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer()).append(" : ")
-         .append(appInfo.getContainer()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout()).append(" : ")
-         .append(appInfo.getIdleTimeout()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory()).append(" : ")
-         .append(appInfo.getMaxMemory()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode()).append(" : ")
-         .append(appInfo.getSecurityMode()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize()).append(" : ")
-         .append(appInfo.getClusterSize()).append("<br>");
-      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
-         .append("<a href='").append(appInfo.getUrl()).append("' target='_blank'>").append(appInfo.getUrl())
-         .append("</a>").append("<br>");
+        try {
+            CloudBeesClientService.getInstance().initializeApplicationWS(
+                    domain + "/" + name,
+                    vfs.getId(),
+                    project.getId(),
+                    warUrl,
+                    null,
+                    new CloudBeesRESTfulRequestCallback<ApplicationInfo>(new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean),
+                                                                         loggedInHandler, null) {
+                        @Override
+                        protected void onSuccess(ApplicationInfo appInfo) {
+                            onCreatedSuccess(appInfo);
+                        }
 
-      IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
-      IDE.fireEvent(new RefreshBrowserEvent(project));
-      deployResultHandler.onDeployFinished(true);
-   }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                                                                            .deployApplicationFailureMessage(), Type.INFO));
+                            deployResultHandler.onDeployFinished(false);
+                            super.onFailure(exception);
+                        }
+                    });
+        } catch (WebSocketException e) {
+            createApplicationREST(loggedInHandler);
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
-   }
+    /** Create application on Cloud Bees by sending request over HTTP. */
+    private void createApplicationREST(LoggedInHandler loggedInHandler) {
+        AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+        try {
+            CloudBeesClientService.getInstance().initializeApplication(
+                    domain + "/" + name,
+                    vfs.getId(),
+                    project.getId(),
+                    warUrl,
+                    null,
+                    new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+                                                                       loggedInHandler, null) {
+                        @Override
+                        protected void onSuccess(ApplicationInfo appInfo) {
+                            onCreatedSuccess(appInfo);
+                        }
 
-   @Override
-   public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
-   {
-      this.deployResultHandler = deployResultHandler;
-      name = display.getNameField().getValue();
-      if (name == null || name.isEmpty())
-      {
-         Dialogs.getInstance().showError("Name field must be not empty");
-      }
-      else
-      {
-         createProject(projectTemplate);
-      }
-   }
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                                                                            .deployApplicationFailureMessage(), Type.INFO));
+                            deployResultHandler.onDeployFinished(false);
+                            super.onFailure(exception);
+                        }
+                    });
+        } catch (RequestException e) {
+            deployResultHandler.onDeployFinished(false);
+            IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(),
+                                          Type.INFO));
+        }
+    }
 
-   @Override
-   public Composite getDeployView(String projectName, ProjectType projectType)
-   {
-      this.projectName = projectName;
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-      bindDisplay();
-      getDomains();
-      return display.getView();
-   }
+    private void onCreatedSuccess(ApplicationInfo appInfo) {
+        StringBuilder output =
+                new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
+              .append(appInfo.getId()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
+              .append(appInfo.getTitle()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool()).append(" : ")
+              .append(appInfo.getServerPool()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
+              .append(appInfo.getStatus()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer()).append(" : ")
+              .append(appInfo.getContainer()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout()).append(" : ")
+              .append(appInfo.getIdleTimeout()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory()).append(" : ")
+              .append(appInfo.getMaxMemory()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode()).append(" : ")
+              .append(appInfo.getSecurityMode()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize()).append(" : ")
+              .append(appInfo.getClusterSize()).append("<br>");
+        output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
+              .append("<a href='").append(appInfo.getUrl()).append("' target='_blank'>").append(appInfo.getUrl())
+              .append("</a>").append("<br>");
 
-   private void createProject(ProjectTemplate projectTemplate)
-   {
-      final Loader loader = new GWTLoader();
-      loader.setMessage(lb.creatingProject());
-      loader.show();
-      try
-      {
-         TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
-            projectTemplate.getName(),
-            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
-            {
+        IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
+        IDE.fireEvent(new RefreshBrowserEvent(project));
+        deployResultHandler.onDeployFinished(true);
+    }
 
-               @Override
-               protected void onSuccess(ProjectModel result)
-               {
-                  loader.hide();
-                  project = result;
-                  deployResultHandler.onProjectCreated(project);
-                  buildApplication();
-               }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        this.vfs = event.getVfsInfo();
+    }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  loader.hide();
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         loader.hide();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    @Override
+    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler) {
+        this.deployResultHandler = deployResultHandler;
+        name = display.getNameField().getValue();
+        if (name == null || name.isEmpty()) {
+            Dialogs.getInstance().showError("Name field must be not empty");
+        } else {
+            createProject(projectTemplate);
+        }
+    }
 
-   @Override
-   public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
-   {
-      this.project = project;
-      this.deployResultHandler = deployResultHandler;
-      buildApplication();
-   }
+    @Override
+    public Composite getDeployView(String projectName, ProjectType projectType) {
+        this.projectName = projectName;
+        if (display == null) {
+            display = GWT.create(Display.class);
+        }
+        bindDisplay();
+        getDomains();
+        return display.getView();
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
-    */
-   @Override
-   public boolean validate()
-   {
-      return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
-         && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
-   }
+    private void createProject(ProjectTemplate projectTemplate) {
+        final Loader loader = new GWTLoader();
+        loader.setMessage(lb.creatingProject());
+        loader.show();
+        try {
+            TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+                                                                    projectTemplate.getName(),
+                                                                    new AsyncRequestCallback<ProjectModel>(
+                                                                            new ProjectUnmarshaller(new ProjectModel())) {
+
+                                                                        @Override
+                                                                        protected void onSuccess(ProjectModel result) {
+                                                                            loader.hide();
+                                                                            project = result;
+                                                                            deployResultHandler.onProjectCreated(project);
+                                                                            buildApplication();
+                                                                        }
+
+                                                                        @Override
+                                                                        protected void onFailure(Throwable exception) {
+                                                                            loader.hide();
+                                                                            IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                                                        }
+                                                                    });
+        } catch (RequestException e) {
+            loader.hide();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    @Override
+    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler) {
+        this.project = project;
+        this.deployResultHandler = deployResultHandler;
+        buildApplication();
+    }
+
+    /** @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate() */
+    @Override
+    public boolean validate() {
+        return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
+               && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
+    }
 }

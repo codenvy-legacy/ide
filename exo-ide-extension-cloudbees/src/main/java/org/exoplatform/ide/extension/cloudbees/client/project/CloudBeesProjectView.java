@@ -22,11 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
@@ -38,150 +34,123 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 
 /**
  * View for managing project, deployed on CloudBees. View must be pointed in <b>Views.gwt.xml</b>.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 12:33:20 PM anya $
  */
-public class CloudBeesProjectView extends ViewImpl implements CloudBeesProjectPresenter.Display
-{
-   private static final int WIDTH = 610;
+public class CloudBeesProjectView extends ViewImpl implements CloudBeesProjectPresenter.Display {
+    private static final int WIDTH = 610;
 
-   private static final int HEIGHT = 260;
+    private static final int HEIGHT = 260;
 
-   private static final String ID = "ideCloudBeesProjectView";
+    private static final String ID = "ideCloudBeesProjectView";
 
-   private static final String DELETE_BUTTON_ID = "ideCloudBeesProjectViewDeleteButton";
+    private static final String DELETE_BUTTON_ID = "ideCloudBeesProjectViewDeleteButton";
 
-   private static final String UPDATE_BUTTON_ID = "ideCloudBeesProjectViewUpdateButton";
+    private static final String UPDATE_BUTTON_ID = "ideCloudBeesProjectViewUpdateButton";
 
-   private static final String INFO_BUTTON_ID = "ideCloudBeesProjectViewInfoButton";
+    private static final String INFO_BUTTON_ID = "ideCloudBeesProjectViewInfoButton";
 
-   private static final String CLOSE_BUTTON_ID = "ideCloudBeesProjectViewCloseButton";
+    private static final String CLOSE_BUTTON_ID = "ideCloudBeesProjectViewCloseButton";
 
-   private static final String NAME_FIELD_ID = "ideCloudBeesProjectViewNameField";
+    private static final String NAME_FIELD_ID = "ideCloudBeesProjectViewNameField";
 
-   private static final String URL_FIELD_ID = "ideCloudBeesProjectViewUrlField";
+    private static final String URL_FIELD_ID = "ideCloudBeesProjectViewUrlField";
 
-   private static final String STATUS_FIELD_ID = "ideCloudBeesProjectViewStatusField";
+    private static final String STATUS_FIELD_ID = "ideCloudBeesProjectViewStatusField";
 
-   private static final String INSTANCES_FIELD_ID = "ideCloudBeesProjectViewInstancesField";
+    private static final String INSTANCES_FIELD_ID = "ideCloudBeesProjectViewInstancesField";
 
-   private static CloudBeesProjectViewUiBinder uiBinder = GWT.create(CloudBeesProjectViewUiBinder.class);
+    private static CloudBeesProjectViewUiBinder uiBinder = GWT.create(CloudBeesProjectViewUiBinder.class);
 
-   @UiField
-   Button deleteButton;
+    @UiField
+    Button deleteButton;
 
-   @UiField
-   Button updateButton;
+    @UiField
+    Button updateButton;
 
-   @UiField
-   ImageButton infoButton;
+    @UiField
+    ImageButton infoButton;
 
-   @UiField
-   ImageButton closeButton;
+    @UiField
+    ImageButton closeButton;
 
-   @UiField
-   TextInput nameField;
+    @UiField
+    TextInput nameField;
 
-   @UiField
-   Anchor urlField;
+    @UiField
+    Anchor urlField;
 
-   @UiField
-   Label statusField;
+    @UiField
+    Label statusField;
 
-   @UiField
-   Label instancesField;
+    @UiField
+    Label instancesField;
 
-   interface CloudBeesProjectViewUiBinder extends UiBinder<Widget, CloudBeesProjectView>
-   {
-   }
+    interface CloudBeesProjectViewUiBinder extends UiBinder<Widget, CloudBeesProjectView> {
+    }
 
-   public CloudBeesProjectView()
-   {
-      super(ID, ViewType.MODAL, CloudBeesExtension.LOCALIZATION_CONSTANT.manageProjectTitle(), new Image(
-         CloudBeesClientBundle.INSTANCE.cloudBees()), WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
+    public CloudBeesProjectView() {
+        super(ID, ViewType.MODAL, CloudBeesExtension.LOCALIZATION_CONSTANT.manageProjectTitle(), new Image(
+                CloudBeesClientBundle.INSTANCE.cloudBees()), WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
 
-      deleteButton.getElement().setId(DELETE_BUTTON_ID);
-      updateButton.getElement().setId(UPDATE_BUTTON_ID);
-      closeButton.setButtonId(CLOSE_BUTTON_ID);
-      infoButton.setButtonId(INFO_BUTTON_ID);
-      nameField.setName(NAME_FIELD_ID);
-      urlField.setName(URL_FIELD_ID);
-      statusField.setID(STATUS_FIELD_ID);
-      instancesField.setID(INSTANCES_FIELD_ID);
-   }
+        deleteButton.getElement().setId(DELETE_BUTTON_ID);
+        updateButton.getElement().setId(UPDATE_BUTTON_ID);
+        closeButton.setButtonId(CLOSE_BUTTON_ID);
+        infoButton.setButtonId(INFO_BUTTON_ID);
+        nameField.setName(NAME_FIELD_ID);
+        urlField.setName(URL_FIELD_ID);
+        statusField.setID(STATUS_FIELD_ID);
+        instancesField.setID(INSTANCES_FIELD_ID);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getUpdateButton()
-    */
-   @Override
-   public HasClickHandlers getUpdateButton()
-   {
-      return updateButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getUpdateButton() */
+    @Override
+    public HasClickHandlers getUpdateButton() {
+        return updateButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getDeleteButton()
-    */
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getDeleteButton() */
+    @Override
+    public HasClickHandlers getDeleteButton() {
+        return deleteButton;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getApplicationName()
-    */
-   @Override
-   public HasValue<String> getApplicationName()
-   {
-      return nameField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getApplicationName() */
+    @Override
+    public HasValue<String> getApplicationName() {
+        return nameField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getApplicationStatus()
-    */
-   @Override
-   public HasValue<String> getApplicationStatus()
-   {
-      return statusField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getApplicationStatus() */
+    @Override
+    public HasValue<String> getApplicationStatus() {
+        return statusField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getApplicationInstances()
-    */
-   @Override
-   public HasValue<String> getApplicationInstances()
-   {
-      return instancesField;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getApplicationInstances() */
+    @Override
+    public HasValue<String> getApplicationInstances() {
+        return instancesField;
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#setApplicationURL(java.lang.String)
-    */
-   @Override
-   public void setApplicationURL(String URL)
-   {
-      urlField.setHref(URL);
-      urlField.setText(URL);
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#setApplicationURL(java.lang.String) */
+    @Override
+    public void setApplicationURL(String URL) {
+        urlField.setHref(URL);
+        urlField.setText(URL);
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getInfoButton()
-    */
-   @Override
-   public HasClickHandlers getInfoButton()
-   {
-      return infoButton;
-   }
+    /** @see org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display#getInfoButton() */
+    @Override
+    public HasClickHandlers getInfoButton() {
+        return infoButton;
+    }
 }

@@ -22,34 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event, occurs after pressing Initialize Application button (initialize java web application).
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationEvent.java Jun 23, 2011 12:44:46 PM vereshchaka $
  */
-public class InitializeApplicationEvent extends GwtEvent<InitializeApplicationHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<InitializeApplicationHandler> TYPE =
-      new GwtEvent.Type<InitializeApplicationHandler>();
+public class InitializeApplicationEvent extends GwtEvent<InitializeApplicationHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<InitializeApplicationHandler> TYPE =
+            new GwtEvent.Type<InitializeApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InitializeApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<InitializeApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(InitializeApplicationHandler handler)
-   {
-      handler.onInitializeApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(InitializeApplicationHandler handler) {
+        handler.onInitializeApplication(this);
+    }
 
 }

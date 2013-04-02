@@ -23,333 +23,332 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBeesLocalizationConstant.java Jun 23, 2011 10:12:47 AM vereshchaka $
- * 
  */
-public interface CloudBeesLocalizationConstant extends Messages
-{
-   /*
-    * Buttons.
-    */
-   @Key("button.create")
-   String createButton();
+public interface CloudBeesLocalizationConstant extends Messages {
+    /*
+     * Buttons.
+     */
+    @Key("button.create")
+    String createButton();
 
-   @Key("button.cancel")
-   String cancelButton();
+    @Key("button.cancel")
+    String cancelButton();
 
-   @Key("button.ok")
-   String okButton();
+    @Key("button.ok")
+    String okButton();
 
-   @Key("button.close")
-   String closeButton();
+    @Key("button.close")
+    String closeButton();
 
-   /*
-    * Controls.
-    */
-   @Key("control.cloudbees.id")
-   String cloudBeesControlId();
+    /*
+     * Controls.
+     */
+    @Key("control.cloudbees.id")
+    String cloudBeesControlId();
 
-   @Key("control.cloudbees.title")
-   String cloudBeesControlTitle();
+    @Key("control.cloudbees.title")
+    String cloudBeesControlTitle();
 
-   @Key("control.cloudbees.prompt")
-   String cloudBeesControlPrompt();
+    @Key("control.cloudbees.prompt")
+    String cloudBeesControlPrompt();
 
-   @Key("control.initializeApp.id")
-   String initializeAppControlId();
+    @Key("control.initializeApp.id")
+    String initializeAppControlId();
 
-   @Key("control.initializeApp.title")
-   String initializeAppControlTitle();
+    @Key("control.initializeApp.title")
+    String initializeAppControlTitle();
 
-   @Key("control.initializeApp.prompt")
-   String initializeAppControlPrompt();
+    @Key("control.initializeApp.prompt")
+    String initializeAppControlPrompt();
 
-   @Key("control.appInfo.id")
-   String applicationInfoControlId();
+    @Key("control.appInfo.id")
+    String applicationInfoControlId();
 
-   @Key("control.appInfo.title")
-   String applicationInfoControlTitle();
+    @Key("control.appInfo.title")
+    String applicationInfoControlTitle();
 
-   @Key("control.appInfo.prompt")
-   String applicationInfoControlPrompt();
+    @Key("control.appInfo.prompt")
+    String applicationInfoControlPrompt();
 
-   @Key("control.deleteApp.id")
-   String deleteApplicationControlId();
+    @Key("control.deleteApp.id")
+    String deleteApplicationControlId();
 
-   @Key("control.deleteApp.title")
-   String deleteApplicationControlTitle();
+    @Key("control.deleteApp.title")
+    String deleteApplicationControlTitle();
 
-   @Key("control.deleteApp.prompt")
-   String deleteApplicationControlPrompt();
+    @Key("control.deleteApp.prompt")
+    String deleteApplicationControlPrompt();
 
-   @Key("control.updateApp.id")
-   String updateApplicationControlId();
+    @Key("control.updateApp.id")
+    String updateApplicationControlId();
 
-   @Key("control.updateApp.title")
-   String updateApplicationControlTitle();
+    @Key("control.updateApp.title")
+    String updateApplicationControlTitle();
 
-   @Key("control.updateApp.prompt")
-   String updateApplicationControlPrompt();
+    @Key("control.updateApp.prompt")
+    String updateApplicationControlPrompt();
 
-   @Key("control.appList.id")
-   String controlAppListId();
+    @Key("control.appList.id")
+    String controlAppListId();
 
-   @Key("control.appList.title")
-   String controlAppListTitle();
+    @Key("control.appList.title")
+    String controlAppListTitle();
 
-   @Key("control.appList.prompt")
-   String controlAppListPrompt();
+    @Key("control.appList.prompt")
+    String controlAppListPrompt();
 
-   @Key("control.createAccount.id")
-   String controlCreateAccountId();
+    @Key("control.createAccount.id")
+    String controlCreateAccountId();
 
-   @Key("control.createAccount.title")
-   String controlCreateAccountTitle();
+    @Key("control.createAccount.title")
+    String controlCreateAccountTitle();
 
-   @Key("control.createAccount.prompt")
-   String controlCreateAccountPrompt();
-   
-   @Key("control.switchAccount.id")
-   String controlSwitchAccountId();
-   
-   @Key("control.switchAccount.title")
-   String controlSwitchAccountTitle();
-   
-   @Key("control.switchAccount.prompt")
-   String controlSwitchAccountPrompt();
-   /*
-    * LoginView.
-    */
-   @Key("login.title")
-   String loginViewTitle();
+    @Key("control.createAccount.prompt")
+    String controlCreateAccountPrompt();
 
-   @Key("login.field.email")
-   String loginViewEmailField();
+    @Key("control.switchAccount.id")
+    String controlSwitchAccountId();
 
-   @Key("login.field.password")
-   String loginViewPasswordField();
+    @Key("control.switchAccount.title")
+    String controlSwitchAccountTitle();
 
-   /*
-    * ApplicationNameView.
-    */
-   @Key("appName.title")
-   String appNameTitle();
+    @Key("control.switchAccount.prompt")
+    String controlSwitchAccountPrompt();
 
-   @Key("appName.field.domain")
-   String appNameDomainField();
+    /*
+     * LoginView.
+     */
+    @Key("login.title")
+    String loginViewTitle();
 
-   @Key("appName.field.name")
-   String appNameFieldName();
+    @Key("login.field.email")
+    String loginViewEmailField();
 
-   @Key("appName.field.id")
-   String appNameIdField();
+    @Key("login.field.password")
+    String loginViewPasswordField();
 
-   /*
-    * Messages
-    */
-   @Key("loginSuccess")
-   String loginSuccess();
+    /*
+     * ApplicationNameView.
+     */
+    @Key("appName.title")
+    String appNameTitle();
 
-   @Key("loginFailed")
-   String loginFailed();
+    @Key("appName.field.domain")
+    String appNameDomainField();
 
-   @Key("creatingProject")
-   String creatingProject();
+    @Key("appName.field.name")
+    String appNameFieldName();
 
-   @Key("deployToCloudBees")
-   String deployToCloudBees();
+    @Key("appName.field.id")
+    String appNameIdField();
 
-   @Key("creatingApplication")
-   String creatingApplication();
+    /*
+     * Messages
+     */
+    @Key("loginSuccess")
+    String loginSuccess();
 
-   @Key("creatingApplicationFinished")
-   String creatingApplicationFinished(String application);
+    @Key("loginFailed")
+    String loginFailed();
 
-   /*
-    * DeployApplicationPresenter
-    */
-   @Key("deployApplication.deployedSuccess")
-   String deployApplicationSuccess();
+    @Key("creatingProject")
+    String creatingProject();
 
-   @Key("deployApplication.appInfo")
-   String deployApplicationInfo();
+    @Key("deployToCloudBees")
+    String deployToCloudBees();
 
-   @Key("deployApplication.failure")
-   String deployApplicationFailureMessage();
+    @Key("creatingApplication")
+    String creatingApplication();
 
-   /*
-    * ApplicationInfoView
-    */
-   @Key("appInfo.title")
-   String applicationInfoTitle();
+    @Key("creatingApplicationFinished")
+    String creatingApplicationFinished(String application);
 
-   /*
-    * ApplicationInfoPresenter
-    */
-   @Key("appInfo.listGrid.id")
-   String applicationInfoListGridId();
+    /*
+     * DeployApplicationPresenter
+     */
+    @Key("deployApplication.deployedSuccess")
+    String deployApplicationSuccess();
 
-   @Key("appInfo.listGrid.title")
-   String applicationInfoListGridTitle();
+    @Key("deployApplication.appInfo")
+    String deployApplicationInfo();
 
-   @Key("appInfo.listGrid.serverPool")
-   String applicationInfoListGridServerPool();
+    @Key("deployApplication.failure")
+    String deployApplicationFailureMessage();
 
-   @Key("appInfo.listGrid.status")
-   String applicationInfoListGridStatus();
+    /*
+     * ApplicationInfoView
+     */
+    @Key("appInfo.title")
+    String applicationInfoTitle();
 
-   @Key("appInfo.listGrid.container")
-   String applicationInfoListGridContainer();
+    /*
+     * ApplicationInfoPresenter
+     */
+    @Key("appInfo.listGrid.id")
+    String applicationInfoListGridId();
 
-   @Key("appInfo.listGrid.idleTimeout")
-   String applicationInfoListGridIdleTimeout();
+    @Key("appInfo.listGrid.title")
+    String applicationInfoListGridTitle();
 
-   @Key("appInfo.listGrid.maxMemory")
-   String applicationInfoListGridMaxMemory();
+    @Key("appInfo.listGrid.serverPool")
+    String applicationInfoListGridServerPool();
 
-   @Key("appInfo.listGrid.securityMode")
-   String applicationInfoListGridSecurityMode();
+    @Key("appInfo.listGrid.status")
+    String applicationInfoListGridStatus();
 
-   @Key("appInfo.listGrid.clusterSize")
-   String applicationInfoListGridClusterSize();
+    @Key("appInfo.listGrid.container")
+    String applicationInfoListGridContainer();
 
-   @Key("appInfo.listGrid.url")
-   String applicationInfoListGridUrl();
+    @Key("appInfo.listGrid.idleTimeout")
+    String applicationInfoListGridIdleTimeout();
 
-   /*
-    * ApplicationInfoGrid
-    */
-   @Key("appInfo.listGrid.field.name")
-   String applicationInfoListGridNameField();
+    @Key("appInfo.listGrid.maxMemory")
+    String applicationInfoListGridMaxMemory();
 
-   @Key("appInfo.listGrid.field.value")
-   String applicationInfoListGridValueField();
+    @Key("appInfo.listGrid.securityMode")
+    String applicationInfoListGridSecurityMode();
 
-   /*
-    * DeleteApplicationEvent
-    */
-   @Key("deleteApplication.title")
-   String deleteApplicationTitle();
+    @Key("appInfo.listGrid.clusterSize")
+    String applicationInfoListGridClusterSize();
 
-   @Key("askForDeleteApplication")
-   String deleteApplicationQuestion(String applicationTitle);
+    @Key("appInfo.listGrid.url")
+    String applicationInfoListGridUrl();
 
-   @Key("applicationDeleted")
-   String applicationDeletedMsg(String applicationTitle);
+    /*
+     * ApplicationInfoGrid
+     */
+    @Key("appInfo.listGrid.field.name")
+    String applicationInfoListGridNameField();
 
-   /*
-    * UpdateApplicationPresenter
-    */
-   @Key("applicationUpdated")
-   String applicationUpdatedMsg(String applicationTitle);
+    @Key("appInfo.listGrid.field.value")
+    String applicationInfoListGridValueField();
 
-   @Key("appUpdate.askForMsg.title")
-   String updateAppAskForMsgTitle();
+    /*
+     * DeleteApplicationEvent
+     */
+    @Key("deleteApplication.title")
+    String deleteApplicationTitle();
 
-   @Key("appUpdate.askForMsg.text")
-   String updateAppAskForMsgText();
+    @Key("askForDeleteApplication")
+    String deleteApplicationQuestion(String applicationTitle);
 
-   @Key("appUpdate.selectFolderToUpdate")
-   String selectFolderToUpdate();
+    @Key("applicationDeleted")
+    String applicationDeletedMsg(String applicationTitle);
 
-   /*
-    * AppListView
-    */
-   @Key("appList.title")
-   String appListViewTitle();
+    /*
+     * UpdateApplicationPresenter
+     */
+    @Key("applicationUpdated")
+    String applicationUpdatedMsg(String applicationTitle);
 
-   @Key("appList.grid.name")
-   String appListName();
+    @Key("appUpdate.askForMsg.title")
+    String updateAppAskForMsgTitle();
 
-   @Key("appList.grid.status")
-   String appListStatus();
+    @Key("appUpdate.askForMsg.text")
+    String updateAppAskForMsgText();
 
-   @Key("appList.grid.url")
-   String appListUrl();
+    @Key("appUpdate.selectFolderToUpdate")
+    String selectFolderToUpdate();
 
-   @Key("appList.grid.instance")
-   String appListInstance();
+    /*
+     * AppListView
+     */
+    @Key("appList.title")
+    String appListViewTitle();
 
-   @Key("appList.grid.info")
-   String appListInfo();
+    @Key("appList.grid.name")
+    String appListName();
 
-   @Key("appList.grid.delete")
-   String appListDelete();
+    @Key("appList.grid.status")
+    String appListStatus();
 
-   /*
-    * Manage Project View
-    */
-   @Key("manageProject.title")
-   String manageProjectTitle();
+    @Key("appList.grid.url")
+    String appListUrl();
 
-   @Key("manageProject.update")
-   String manageProjectUpdateButton();
+    @Key("appList.grid.instance")
+    String appListInstance();
 
-   @Key("manageProject.delete")
-   String manageProjectDeleteButton();
+    @Key("appList.grid.info")
+    String appListInfo();
 
-   @Key("manageProject.application.url")
-   String manageProjectApplicationUrl();
+    @Key("appList.grid.delete")
+    String appListDelete();
 
-   @Key("manageProject.application.status")
-   String manageProjectApplicationStatus();
+    /*
+     * Manage Project View
+     */
+    @Key("manageProject.title")
+    String manageProjectTitle();
 
-   @Key("manageProject.application.instances")
-   String manageProjectApplicationInstances();
+    @Key("manageProject.update")
+    String manageProjectUpdateButton();
 
-   @Key("manageProject.application.actions")
-   String manageProjectApplicationActions();
+    @Key("manageProject.delete")
+    String manageProjectDeleteButton();
 
-   /*
-    * Create account view.
-    */
-   @Key("create.account.view.title")
-   String createAccountViewTitle();
+    @Key("manageProject.application.url")
+    String manageProjectApplicationUrl();
 
-   @Key("create.account.email.field")
-   String createAccountEmailField();
+    @Key("manageProject.application.status")
+    String manageProjectApplicationStatus();
 
-   @Key("create.account.company.field")
-   String createAccountCompanyField();
+    @Key("manageProject.application.instances")
+    String manageProjectApplicationInstances();
 
-   @Key("create.account.first.name.field")
-   String createAccountFirstNameField();
+    @Key("manageProject.application.actions")
+    String manageProjectApplicationActions();
 
-   @Key("create.account.last.name.field")
-   String createAccountLastNameField();
+    /*
+     * Create account view.
+     */
+    @Key("create.account.view.title")
+    String createAccountViewTitle();
 
-   @Key("create.account.password.field")
-   String createAccountPasswordField();
+    @Key("create.account.email.field")
+    String createAccountEmailField();
 
-   @Key("create.account.confirm.password.field")
-   String createAccountConfirmPasswordField();
+    @Key("create.account.company.field")
+    String createAccountCompanyField();
 
-   @Key("create.account.domain.field")
-   String createAccountDomainField();
+    @Key("create.account.first.name.field")
+    String createAccountFirstNameField();
 
-   @Key("create.account.user.name.field")
-   String createAccountUserNameField();
+    @Key("create.account.last.name.field")
+    String createAccountLastNameField();
 
-   @Key("create.account.optional")
-   String createAccountOptional();
+    @Key("create.account.password.field")
+    String createAccountPasswordField();
 
-   @Key("create.account.passwords.do.not.match")
-   String createAccountPasswordsDoNotMatch();
+    @Key("create.account.confirm.password.field")
+    String createAccountConfirmPasswordField();
 
-   @Key("create.account.short.password")
-   String createAccountShortPassword();
+    @Key("create.account.domain.field")
+    String createAccountDomainField();
 
-   @Key("create.account.short.domain")
-   String createAccountShortDomain();
+    @Key("create.account.user.name.field")
+    String createAccountUserNameField();
 
-   @Key("create.account.empty.required.fields")
-   String createAccountEmptyRequiredFields();
+    @Key("create.account.optional")
+    String createAccountOptional();
 
-   @Key("create.account.success")
-   String createAccountSuccess(String account);
-   
-   @Key("add.user.success")
-   String addUserSuccess(String user);
-   
-   @Key("create.account.create.new.user")
-   String createAccountCreateNewUser();
+    @Key("create.account.passwords.do.not.match")
+    String createAccountPasswordsDoNotMatch();
+
+    @Key("create.account.short.password")
+    String createAccountShortPassword();
+
+    @Key("create.account.short.domain")
+    String createAccountShortDomain();
+
+    @Key("create.account.empty.required.fields")
+    String createAccountEmptyRequiredFields();
+
+    @Key("create.account.success")
+    String createAccountSuccess(String account);
+
+    @Key("add.user.success")
+    String addUserSuccess(String user);
+
+    @Key("create.account.create.new.user")
+    String createAccountCreateNewUser();
 }

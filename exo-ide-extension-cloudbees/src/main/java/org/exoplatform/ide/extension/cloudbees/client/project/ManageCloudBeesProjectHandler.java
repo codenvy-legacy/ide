@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link ManageCloudBeesProjectEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 12:34:43 PM anya $
- * 
  */
-public interface ManageCloudBeesProjectHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to manage project deployed to CloudBees.
-    * 
-    * @param event
-    */
-   void onManageCloudBeesProject(ManageCloudBeesProjectEvent event);
+public interface ManageCloudBeesProjectHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to manage project deployed to CloudBees.
+     *
+     * @param event
+     */
+    void onManageCloudBeesProject(ManageCloudBeesProjectEvent event);
 }

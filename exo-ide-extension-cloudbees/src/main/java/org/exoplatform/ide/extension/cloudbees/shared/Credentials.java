@@ -24,35 +24,34 @@ package org.exoplatform.ide.extension.cloudbees.shared;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Credentials.java Mar 20, 2012 9:17:20 AM azatsarynnyy $
  */
-public interface Credentials
-{
+public interface Credentials {
 
-   /**
-    * Returns the e-mail.
-    *
-    * @return e-mail.
-    */
-   String getEmail();
+    /**
+     * Returns the e-mail.
+     *
+     * @return e-mail.
+     */
+    String getEmail();
 
-   /**
-    * Set the e-mail.
-    *
-    * @param email
-    */
-   void setEmail(String email);
+    /**
+     * Set the e-mail.
+     *
+     * @param email
+     */
+    void setEmail(String email);
 
-   /**
-    * Returns the password.
-    *
-    * @return password.
-    */
-   String getPassword();
+    /**
+     * Returns the password.
+     *
+     * @return password.
+     */
+    String getPassword();
 
-   /**
-    * Set the password.
-    *
-    * @param password
-    *    password.
-    */
-   void setPassword(String password);
+    /**
+     * Set the password.
+     *
+     * @param password
+     *         password.
+     */
+    void setPassword(String password);
 }

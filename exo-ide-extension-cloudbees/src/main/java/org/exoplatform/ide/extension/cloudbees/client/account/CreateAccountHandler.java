@@ -22,17 +22,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link CreateAccountEvent} event.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 10, 2012 4:39:10 PM anya $
- * 
  */
-public interface CreateAccountHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to create new account on CloudBees.
-    * 
-    * @param event
-    */
-   void onCreateAccount(CreateAccountEvent event);
+public interface CreateAccountHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to create new account on CloudBees.
+     *
+     * @param event
+     */
+    void onCreateAccount(CreateAccountEvent event);
 }

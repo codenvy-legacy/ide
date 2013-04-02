@@ -22,35 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to manage project, deployed to CloudBees.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 5, 2011 12:34:34 PM anya $
- * 
  */
-public class ManageCloudBeesProjectEvent extends GwtEvent<ManageCloudBeesProjectHandler>
-{
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<ManageCloudBeesProjectHandler> TYPE =
-      new GwtEvent.Type<ManageCloudBeesProjectHandler>();
+public class ManageCloudBeesProjectEvent extends GwtEvent<ManageCloudBeesProjectHandler> {
+    /** Type used to register the event. */
+    public static final GwtEvent.Type<ManageCloudBeesProjectHandler> TYPE =
+            new GwtEvent.Type<ManageCloudBeesProjectHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ManageCloudBeesProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ManageCloudBeesProjectHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ManageCloudBeesProjectHandler handler)
-   {
-      handler.onManageCloudBeesProject(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ManageCloudBeesProjectHandler handler) {
+        handler.onManageCloudBeesProject(this);
+    }
 
 }

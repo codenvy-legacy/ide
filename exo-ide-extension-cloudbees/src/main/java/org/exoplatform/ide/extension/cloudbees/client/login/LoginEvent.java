@@ -22,57 +22,42 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to log in OpenShift. Implement {@link LoginHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 7, 2011 12:32:53 PM anya $
- * 
  */
-public class LoginEvent extends GwtEvent<LoginHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<LoginHandler> TYPE = new GwtEvent.Type<LoginHandler>();
+public class LoginEvent extends GwtEvent<LoginHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<LoginHandler> TYPE = new GwtEvent.Type<LoginHandler>();
 
-   private LoggedInHandler loggedIn;
+    private LoggedInHandler loggedIn;
 
-   private LoginCanceledHandler loginCanceled;
+    private LoginCanceledHandler loginCanceled;
 
-   public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
-   {
-      this.loggedIn = loggedIn;
-      this.loginCanceled = loginCanceled;
-   }
+    public LoginEvent(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled) {
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
+    }
 
-   public LoggedInHandler getLoggedIn()
-   {
-      return loggedIn;
-   }
+    public LoggedInHandler getLoggedIn() {
+        return loggedIn;
+    }
 
-   /**
-    * @return the loginCanceled
-    */
-   public LoginCanceledHandler getLoginCanceled()
-   {
-      return loginCanceled;
-   }
+    /** @return the loginCanceled */
+    public LoginCanceledHandler getLoginCanceled() {
+        return loginCanceled;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<LoginHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<LoginHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(LoginHandler handler)
-   {
-      handler.onLogin(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(LoginHandler handler) {
+        handler.onLogin(this);
+    }
 
 }

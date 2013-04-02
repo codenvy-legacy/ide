@@ -23,55 +23,55 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-   
-   <!-- Cloudbees -->
-   <component>
-      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
-   </component>
-   
-   <component>
-      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
-      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
-         </value-param>
-         <value-param>
-            <name>jenkins-user</name>
-            <value>vparfonov@codenvy.com</value>
-         </value-param>
-         <value-param>
-            <name>jenkins-password</name>
-            <value>1z4hWHxoIr</value>
-         </value-param>
-         <value-param>
-            <name>jenkins-base-url</name>
-            <value>https://codenvy.ci.cloudbees.com</value>
-         </value-param>
-         <value-param>
-            <name>api-url</name>
-            <value>http://api.cloudbees.com/v2</value>
-         </value-param>
-         <value-param>
-            <name>api-user</name>
-            <value>8DBB01389373805D97597CB8C0A1CAAEF1982E95</value>
-         </value-param>
-          <value-param>
-            <name>api-key</name>
-            <value>E57D932D13BE6FC0C4495230EECA2C28CD608BB6</value>
-         </value-param>
-         <value-param>
-            <name>api-secret</name>
-            <value>RJXGVL1HYWWM7W7TZB/LXOCJ2CIAVEPQMMFXHKM+ZTI=</value>
-         </value-param>
-      </init-params>
-   </component>
 
-   <!-- End Cloudbees -->
-   
+    <!-- Cloudbees -->
+    <component>
+        <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
+    </component>
+
+    <component>
+        <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
+        <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
+        <init-params>
+            <value-param>
+                <name>workspace</name>
+                <value>production</value>
+            </value-param>
+            <value-param>
+                <name>user-config</name>
+                <value>/ide-home/users/</value>
+            </value-param>
+            <value-param>
+                <name>jenkins-user</name>
+                <value>vparfonov@codenvy.com</value>
+            </value-param>
+            <value-param>
+                <name>jenkins-password</name>
+                <value>1z4hWHxoIr</value>
+            </value-param>
+            <value-param>
+                <name>jenkins-base-url</name>
+                <value>https://codenvy.ci.cloudbees.com</value>
+            </value-param>
+            <value-param>
+                <name>api-url</name>
+                <value>http://api.cloudbees.com/v2</value>
+            </value-param>
+            <value-param>
+                <name>api-user</name>
+                <value>8DBB01389373805D97597CB8C0A1CAAEF1982E95</value>
+            </value-param>
+            <value-param>
+                <name>api-key</name>
+                <value>E57D932D13BE6FC0C4495230EECA2C28CD608BB6</value>
+            </value-param>
+            <value-param>
+                <name>api-secret</name>
+                <value>RJXGVL1HYWWM7W7TZB/LXOCJ2CIAVEPQMMFXHKM+ZTI=</value>
+            </value-param>
+        </init-params>
+    </component>
+
+    <!-- End Cloudbees -->
+
 </configuration>

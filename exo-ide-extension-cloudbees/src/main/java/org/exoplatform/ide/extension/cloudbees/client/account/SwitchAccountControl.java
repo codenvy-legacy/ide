@@ -29,49 +29,39 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
 
 /**
  * Control for switching between CloudBees accounts.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 5, 2012 5:02:29 PM anya $
- * 
  */
-public class SwitchAccountControl extends SimpleControl implements IDEControl, VfsChangedHandler
-{
-   private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountId();
+public class SwitchAccountControl extends SimpleControl implements IDEControl, VfsChangedHandler {
+    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountId();
 
-   private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountTitle();
+    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountTitle();
 
-   private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountPrompt();
+    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.controlSwitchAccountPrompt();
 
-   /**
-    * @param id
-    */
-   public SwitchAccountControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudBeesClientBundle.INSTANCE.switchAccount(), CloudBeesClientBundle.INSTANCE.switchAccountDisabled());
-      setEvent(new LoginEvent(null, null));
-   }
+    /** @param id */
+    public SwitchAccountControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudBeesClientBundle.INSTANCE.switchAccount(), CloudBeesClientBundle.INSTANCE.switchAccountDisabled());
+        setEvent(new LoginEvent(null, null));
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      setVisible(true);
-   }
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      setEnabled(event.getVfsInfo() != null);
-   }
+    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     * .application.event.VfsChangedEvent) */
+    @Override
+    public void onVfsChanged(VfsChangedEvent event) {
+        setEnabled(event.getVfsInfo() != null);
+    }
 
 }

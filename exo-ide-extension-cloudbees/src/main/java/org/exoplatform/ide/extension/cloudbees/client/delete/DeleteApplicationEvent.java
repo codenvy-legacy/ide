@@ -22,73 +22,55 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event, which set to control to delete application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationEvent.java Jul 1, 2011 12:56:44 PM vereshchaka $
- * 
  */
-public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
-{
+public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler> {
 
-   private String appId;
+    private String appId;
 
-   private String appTitle;
+    private String appTitle;
 
-   /**
-    * 
-    */
-   public DeleteApplicationEvent()
-   {
-   }
+    /**
+     *
+     */
+    public DeleteApplicationEvent() {
+    }
 
-   /**
-    * @param appId
-    * @param appTitle
-    */
-   public DeleteApplicationEvent(String appId, String appTitle)
-   {
-      super();
-      this.appId = appId;
-      this.appTitle = appTitle;
-   }
+    /**
+     * @param appId
+     * @param appTitle
+     */
+    public DeleteApplicationEvent(String appId, String appTitle) {
+        super();
+        this.appId = appId;
+        this.appTitle = appTitle;
+    }
 
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<DeleteApplicationHandler> TYPE = new GwtEvent.Type<DeleteApplicationHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<DeleteApplicationHandler> TYPE = new GwtEvent.Type<DeleteApplicationHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<DeleteApplicationHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<DeleteApplicationHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(DeleteApplicationHandler handler)
-   {
-      handler.onDeleteApplication(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(DeleteApplicationHandler handler) {
+        handler.onDeleteApplication(this);
+    }
 
-   /**
-    * @return the appId
-    */
-   public String getAppId()
-   {
-      return appId;
-   }
+    /** @return the appId */
+    public String getAppId() {
+        return appId;
+    }
 
-   /**
-    * @return the appTitle
-    */
-   public String getAppTitle()
-   {
-      return appTitle;
-   }
+    /** @return the appTitle */
+    public String getAppTitle() {
+        return appTitle;
+    }
 
 }

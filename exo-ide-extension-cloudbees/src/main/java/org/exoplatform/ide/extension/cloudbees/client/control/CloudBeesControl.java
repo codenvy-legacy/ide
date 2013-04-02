@@ -25,39 +25,31 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 
 /**
  * Control for submenu for CloudBees.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 11:01:19 AM vereshchaka $
- * 
  */
-public class CloudBeesControl extends SimpleControl implements IDEControl
-{
+public class CloudBeesControl extends SimpleControl implements IDEControl {
 
-   private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlId();
+    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlId();
 
-   private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlTitle();
+    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlTitle();
 
-   private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlPrompt();
+    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.cloudBeesControlPrompt();
 
-   /**
-    * @param id
-    */
-   public CloudBeesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudBeesClientBundle.INSTANCE.cloudBees(), CloudBeesClientBundle.INSTANCE.cloudBeesDisabled());
-   }
+    /** @param id */
+    public CloudBeesControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudBeesClientBundle.INSTANCE.cloudBees(), CloudBeesClientBundle.INSTANCE.cloudBeesDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

@@ -30,16 +30,12 @@ import javax.ws.rs.ext.Provider;
  * @version $Id: $
  */
 @Provider
-public class BeesClientExceptionMapper implements ExceptionMapper<BeesClientException>
-{
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(BeesClientException bce)
-   {
-      // TODO Get correct HTTP status from BeesClientException ??? 
-      return Response.status(500).header("JAXRS-Body-Provided", "Error-Message").entity(bce.getMessage())
-         .type(MediaType.TEXT_PLAIN).build();
-   }
+public class BeesClientExceptionMapper implements ExceptionMapper<BeesClientException> {
+    /** @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable) */
+    @Override
+    public Response toResponse(BeesClientException bce) {
+        // TODO Get correct HTTP status from BeesClientException ???
+        return Response.status(500).header("JAXRS-Body-Provided", "Error-Message").entity(bce.getMessage())
+                       .type(MediaType.TEXT_PLAIN).build();
+    }
 }
