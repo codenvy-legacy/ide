@@ -559,7 +559,7 @@ public class FoldingManager implements Document.TextListener
     */
    public void ensureLineVisibility(int lineNumber)
    {
-      if (buffer.modelLine2VisibleLine(lineNumber) == -1)
+      if (isFoldingModeEnabled() && buffer.modelLine2VisibleLine(lineNumber) == -1)
       {
          FoldMarker foldMarker = getFoldMarkerOfLine(lineNumber, false);
          if (foldMarker != null && foldMarker.isCollapsed())
@@ -757,6 +757,16 @@ public class FoldingManager implements Document.TextListener
    public void setFoldFinder(FoldOccurrencesFinder foldOccurrencesFinder)
    {
       this.foldOccurrencesFinder = foldOccurrencesFinder;
+   }
+
+   /**
+    * Checks whether folding mode enabled.
+    * 
+    * @return <code>true</code> if folding mode is enabled, <code>false</code> otherwise
+    */
+   public boolean isFoldingModeEnabled()
+   {
+      return informationMapping != null;
    }
 
 }
