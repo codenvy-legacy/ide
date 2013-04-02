@@ -24,31 +24,28 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationE
 
 /**
  * Control to start application on CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
- *
  */
-public class StartApplicationControl extends AbstractCloudFoundryControl
-{
+public class StartApplicationControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.startAppControlPrompt();
 
-   /**
-    * 
-    */
-   public StartApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.startApp(), CloudFoundryClientBundle.INSTANCE.startAppDisabled());
-      setEvent(new StartApplicationEvent());
-      setDelimiterBefore(true);
-   }
+    /**
+     *
+     */
+    public StartApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.startApp(), CloudFoundryClientBundle.INSTANCE.startAppDisabled());
+        setEvent(new StartApplicationEvent());
+        setDelimiterBefore(true);
+    }
 
 }

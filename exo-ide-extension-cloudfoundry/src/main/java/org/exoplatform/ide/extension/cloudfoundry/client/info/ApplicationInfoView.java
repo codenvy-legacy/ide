@@ -33,184 +33,144 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 
 /**
  * Application information view.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationInfoView.java Jul 13, 2011 3:00:15 PM vereshchaka $
- *
  */
-public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPresenter.Display
-{
-   public static final String ID = "ideCloudFoundryApplicationInfoView";
-   
-   public static final String APPLICATION_URIS_ID = "ideCloudFoundryAppUrisGridView";
-   
-   public static final String APPLICATION_SERVICES_ID = "ideCloudFoundryAppServicesGridView";
-   
-   public static final String APPLICATION_ENVIRONMENTS_ID = "ideCloudFoundryAppEnvironmentsGridView";
+public class ApplicationInfoView extends ViewImpl implements ApplicationInfoPresenter.Display {
+    public static final String ID = "ideCloudFoundryApplicationInfoView";
 
-   private static final int HEIGHT = 390;
+    public static final String APPLICATION_URIS_ID = "ideCloudFoundryAppUrisGridView";
 
-   private static final int WIDTH = 500;
+    public static final String APPLICATION_SERVICES_ID = "ideCloudFoundryAppServicesGridView";
 
-   private static ApplicationInfoViewUiBinder uiBinder = GWT.create(ApplicationInfoViewUiBinder.class);
+    public static final String APPLICATION_ENVIRONMENTS_ID = "ideCloudFoundryAppEnvironmentsGridView";
 
-   /**
-    * Ok button.
-    */
-   @UiField
-   ImageButton okButton;
-   
-   @UiField
-   Label nameLabel;
-   
-   @UiField
-   Label stateLabel;
-   
-   @UiField
-   Label instancesLabel;
-   
-   @UiField
-   Label versionLabel;
-   
-   @UiField
-   ApplicationStringGrid applicationUrisGrid;
-   
-   @UiField
-   ApplicationStringGrid applicationServicesGrid;
-   
-   @UiField
-   ApplicationStringGrid applicationEnvironmentsGrid;
-   
-   @UiField
-   Label diskLabel;
-   
-   @UiField
-   Label memoryLabel;
-   
-   @UiField
-   Label stackLabel;
-   
-   @UiField
-   Label modelLabel;
-   
-   interface ApplicationInfoViewUiBinder extends UiBinder<Widget, ApplicationInfoView>
-   {
-   }
+    private static final int HEIGHT = 390;
 
-   public ApplicationInfoView()
-   {
-      super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      applicationUrisGrid.setID(APPLICATION_URIS_ID);
-      applicationUrisGrid.addColumn(CloudFoundryExtension.LOCALIZATION_CONSTANT.appInfoUris());
-      applicationServicesGrid.setID(APPLICATION_SERVICES_ID);
-      applicationServicesGrid.addColumn(CloudFoundryExtension.LOCALIZATION_CONSTANT.appInfoServices());
-      applicationEnvironmentsGrid.setID(APPLICATION_ENVIRONMENTS_ID);
-      applicationEnvironmentsGrid.addColumn(CloudFoundryExtension.LOCALIZATION_CONSTANT.appInfoEnvironments());
-   }
+    private static final int WIDTH = 500;
 
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter.Display#getOkButton()
-    */
-   @Override
-   public HasClickHandlers getOkButton()
-   {
-      return okButton;
-   }
+    private static ApplicationInfoViewUiBinder uiBinder = GWT.create(ApplicationInfoViewUiBinder.class);
 
-   @Override
-   public void setName(String text)
-   {
-      nameLabel.setText(text);
-   }
+    /** Ok button. */
+    @UiField
+    ImageButton okButton;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setState(java.lang.String)
-    */
-   @Override
-   public void setState(String text)
-   {
-      stateLabel.setText(text);
-   }
+    @UiField
+    Label nameLabel;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setInstances(java.lang.String)
-    */
-   @Override
-   public void setInstances(String text)
-   {
-      instancesLabel.setText(text);
-   }
+    @UiField
+    Label stateLabel;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setVersion(java.lang.String)
-    */
-   @Override
-   public void setVersion(String text)
-   {
-      versionLabel.setText(text);
-   }
+    @UiField
+    Label instancesLabel;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#getApplicationUrisGrid()
-    */
-   @Override
-   public ListGridItem<String> getApplicationUrisGrid()
-   {
-      return applicationUrisGrid;
-   }
+    @UiField
+    Label versionLabel;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#getApplicationServicesGrid()
-    */
-   @Override
-   public ListGridItem<String> getApplicationServicesGrid()
-   {
-      return applicationServicesGrid;
-   }
+    @UiField
+    ApplicationStringGrid applicationUrisGrid;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#getApplicationEnvironmentsGrid()
-    */
-   @Override
-   public ListGridItem<String> getApplicationEnvironmentsGrid()
-   {
-      return applicationEnvironmentsGrid;
-   }
+    @UiField
+    ApplicationStringGrid applicationServicesGrid;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setDisk(java.lang.String)
-    */
-   @Override
-   public void setDisk(String text)
-   {
-      diskLabel.setText(text);
-   }
+    @UiField
+    ApplicationStringGrid applicationEnvironmentsGrid;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setMemory(java.lang.String)
-    */
-   @Override
-   public void setMemory(String text)
-   {
-      memoryLabel.setText(text);
-   }
+    @UiField
+    Label diskLabel;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setStack(java.lang.String)
-    */
-   @Override
-   public void setStack(String text)
-   {
-      stackLabel.setText(text);
-   }
+    @UiField
+    Label memoryLabel;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setModel(java.lang.String)
-    */
-   @Override
-   public void setModel(String text)
-   {
-      modelLabel.setText(text);
-   }
+    @UiField
+    Label stackLabel;
+
+    @UiField
+    Label modelLabel;
+
+    interface ApplicationInfoViewUiBinder extends UiBinder<Widget, ApplicationInfoView> {
+    }
+
+    public ApplicationInfoView() {
+        super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        applicationUrisGrid.setID(APPLICATION_URIS_ID);
+        applicationUrisGrid.addColumn(CloudFoundryExtension.LOCALIZATION_CONSTANT.appInfoUris());
+        applicationServicesGrid.setID(APPLICATION_SERVICES_ID);
+        applicationServicesGrid.addColumn(CloudFoundryExtension.LOCALIZATION_CONSTANT.appInfoServices());
+        applicationEnvironmentsGrid.setID(APPLICATION_ENVIRONMENTS_ID);
+        applicationEnvironmentsGrid.addColumn(CloudFoundryExtension.LOCALIZATION_CONSTANT.appInfoEnvironments());
+    }
+
+    /** @see org.exoplatform.ide.extension.heroku.client.info.ApplicationInfoPresenter.Display#getOkButton() */
+    @Override
+    public HasClickHandlers getOkButton() {
+        return okButton;
+    }
+
+    @Override
+    public void setName(String text) {
+        nameLabel.setText(text);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setState(java.lang.String) */
+    @Override
+    public void setState(String text) {
+        stateLabel.setText(text);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setInstances(java.lang.String) */
+    @Override
+    public void setInstances(String text) {
+        instancesLabel.setText(text);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setVersion(java.lang.String) */
+    @Override
+    public void setVersion(String text) {
+        versionLabel.setText(text);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#getApplicationUrisGrid() */
+    @Override
+    public ListGridItem<String> getApplicationUrisGrid() {
+        return applicationUrisGrid;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#getApplicationServicesGrid() */
+    @Override
+    public ListGridItem<String> getApplicationServicesGrid() {
+        return applicationServicesGrid;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#getApplicationEnvironmentsGrid() */
+    @Override
+    public ListGridItem<String> getApplicationEnvironmentsGrid() {
+        return applicationEnvironmentsGrid;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setDisk(java.lang.String) */
+    @Override
+    public void setDisk(String text) {
+        diskLabel.setText(text);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setMemory(java.lang.String) */
+    @Override
+    public void setMemory(String text) {
+        memoryLabel.setText(text);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setStack(java.lang.String) */
+    @Override
+    public void setStack(String text) {
+        stackLabel.setText(text);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display#setModel(java.lang.String) */
+    @Override
+    public void setModel(String text) {
+        modelLabel.setText(text);
+    }
 }

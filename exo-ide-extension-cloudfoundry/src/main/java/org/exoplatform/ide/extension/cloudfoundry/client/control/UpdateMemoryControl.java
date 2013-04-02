@@ -24,30 +24,27 @@ import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEven
 
 /**
  * Control to update amount of memory for application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UpdateMemoryControl.java Jul 18, 2011 10:19:19 AM vereshchaka $
- *
  */
-public class UpdateMemoryControl extends AbstractCloudFoundryControl
-{
+public class UpdateMemoryControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryPrompt();
 
-   /**
-    * 
-    */
-   public UpdateMemoryControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.appMemory(), CloudFoundryClientBundle.INSTANCE.appMemoryDisabled());
-      setEvent(new UpdateMemoryEvent());
-   }
+    /**
+     *
+     */
+    public UpdateMemoryControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.appMemory(), CloudFoundryClientBundle.INSTANCE.appMemoryDisabled());
+        setEvent(new UpdateMemoryEvent());
+    }
 
 }

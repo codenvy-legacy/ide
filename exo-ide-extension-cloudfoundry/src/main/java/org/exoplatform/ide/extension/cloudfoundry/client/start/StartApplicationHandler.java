@@ -22,18 +22,16 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handler for {@link StartApplicationEvent} event.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: StartApplicationHandler.java Jul 12, 2011 3:51:51 PM vereshchaka $
- *
  */
-public interface StartApplicationHandler extends EventHandler
-{
-   /**
-    * Perform actions, when user tries to start application.
-    * 
-    * @param event
-    */
-   void onStartApplication(StartApplicationEvent event);
+public interface StartApplicationHandler extends EventHandler {
+    /**
+     * Perform actions, when user tries to start application.
+     *
+     * @param event
+     */
+    void onStartApplication(StartApplicationEvent event);
 
 }

@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -35,101 +34,79 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 
 /**
  * Unmap URL view.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UnmapUrlsView.java Jul 19, 2011 2:43:28 PM vereshchaka $
- *
  */
-public class UnmapUrlView extends ViewImpl implements UnmapUrlPresenter.Display
-{
-   public static final String ID = "ideCloudFoundryApplicationInfoView";
-   
-   public static final String LISTGRID_ID = "ideCloudFoundryRegisteredUrlsGridView";
-   
-   private static final String MAP_URL_FIELD_ID = "applicationURLsURLField";
-   
-   private static final int HEIGHT = 305;
+public class UnmapUrlView extends ViewImpl implements UnmapUrlPresenter.Display {
+    public static final String ID = "ideCloudFoundryApplicationInfoView";
 
-   private static final int WIDTH = 450;
+    public static final String LISTGRID_ID = "ideCloudFoundryRegisteredUrlsGridView";
 
-   private static UnmapUrlViewUiBinder uiBinder = GWT.create(UnmapUrlViewUiBinder.class);
-   
-   @UiField
-   TextInput mapUrlField;
-   
-   @UiField
-   ImageButton mapUrlButton;
-   
-   @UiField
-   ImageButton closeButton;
-   
-   @UiField
-   RegisteredUrlsGrid registeredUrlsGrid;
-   
-   interface UnmapUrlViewUiBinder extends UiBinder<Widget, UnmapUrlView>
-   {
-   }
+    private static final String MAP_URL_FIELD_ID = "applicationURLsURLField";
 
-   public UnmapUrlView()
-   {
-      super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlViewTitle(), null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-      registeredUrlsGrid.setID(LISTGRID_ID);
-      mapUrlField.setName(MAP_URL_FIELD_ID);
-   }
+    private static final int HEIGHT = 305;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
-   }
+    private static final int WIDTH = 450;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getRegisteredUrlsGrid()
-    */
-   @Override
-   public ListGridItem<String> getRegisteredUrlsGrid()
-   {
-      return registeredUrlsGrid;
-   }
+    private static UnmapUrlViewUiBinder uiBinder = GWT.create(UnmapUrlViewUiBinder.class);
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getUnmapUrlListGridButton()
-    */
-   @Override
-   public HasUnmapClickHandler getUnmapUrlListGridButton()
-   {
-      return registeredUrlsGrid;
-   }
+    @UiField
+    TextInput mapUrlField;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlField()
-    */
-   @Override
-   public HasValue<String> getMapUrlField()
-   {
-      return mapUrlField;
-   }
+    @UiField
+    ImageButton mapUrlButton;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlButton()
-    */
-   @Override
-   public HasClickHandlers getMapUrlButton()
-   {
-      return mapUrlButton;
-   }
+    @UiField
+    ImageButton closeButton;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#enableMapUrlButton(boolean)
-    */
-   @Override
-   public void enableMapUrlButton(boolean enable)
-   {
-      mapUrlButton.setEnabled(enable);
-   }
+    @UiField
+    RegisteredUrlsGrid registeredUrlsGrid;
+
+    interface UnmapUrlViewUiBinder extends UiBinder<Widget, UnmapUrlView> {
+    }
+
+    public UnmapUrlView() {
+        super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlViewTitle(), null, WIDTH, HEIGHT);
+        add(uiBinder.createAndBindUi(this));
+        registeredUrlsGrid.setID(LISTGRID_ID);
+        mapUrlField.setName(MAP_URL_FIELD_ID);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getCloseButton() */
+    @Override
+    public HasClickHandlers getCloseButton() {
+        return closeButton;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getRegisteredUrlsGrid() */
+    @Override
+    public ListGridItem<String> getRegisteredUrlsGrid() {
+        return registeredUrlsGrid;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getUnmapUrlListGridButton() */
+    @Override
+    public HasUnmapClickHandler getUnmapUrlListGridButton() {
+        return registeredUrlsGrid;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlField() */
+    @Override
+    public HasValue<String> getMapUrlField() {
+        return mapUrlField;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#getMapUrlButton() */
+    @Override
+    public HasClickHandlers getMapUrlButton() {
+        return mapUrlButton;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display#enableMapUrlButton(boolean) */
+    @Override
+    public void enableMapUrlButton(boolean enable) {
+        mapUrlButton.setEnabled(enable);
+    }
 
 }

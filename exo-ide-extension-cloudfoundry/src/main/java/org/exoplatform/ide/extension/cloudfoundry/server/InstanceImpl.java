@@ -24,81 +24,69 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class InstanceImpl implements Instance
-{
-   private String debugHost;
-   private int debugPort;
-   private String consoleHost;
-   private int consolePort;
+public class InstanceImpl implements Instance {
+    private String debugHost;
+    private int    debugPort;
+    private String consoleHost;
+    private int    consolePort;
 
-   public InstanceImpl(String debugHost, int debugPort, String consoleHost, int consolePort)
-   {
-      this.debugHost = debugHost;
-      this.debugPort = debugPort;
-      this.consoleHost = consoleHost;
-      this.consolePort = consolePort;
-   }
+    public InstanceImpl(String debugHost, int debugPort, String consoleHost, int consolePort) {
+        this.debugHost = debugHost;
+        this.debugPort = debugPort;
+        this.consoleHost = consoleHost;
+        this.consolePort = consolePort;
+    }
 
-   public InstanceImpl()
-   {
-   }
+    public InstanceImpl() {
+    }
 
-   @Override
-   public String getDebugHost()
-   {
-      return debugHost;
-   }
+    @Override
+    public String getDebugHost() {
+        return debugHost;
+    }
 
-   @Override
-   public void setDebugHost(String host)
-   {
-      debugHost = host;
-   }
+    @Override
+    public void setDebugHost(String host) {
+        debugHost = host;
+    }
 
-   @Override
-   public int getDebugPort()
-   {
-      return debugPort;
-   }
+    @Override
+    public int getDebugPort() {
+        return debugPort;
+    }
 
-   @Override
-   public void setDebugPort(int port)
-   {
-      debugPort = port;
-   }
+    @Override
+    public void setDebugPort(int port) {
+        debugPort = port;
+    }
 
-   @Override
-   public String getConsoleHost()
-   {
-      return consoleHost;
-   }
+    @Override
+    public String getConsoleHost() {
+        return consoleHost;
+    }
 
-   @Override
-   public void setConsoleHost(String host)
-   {
-      consoleHost = host;
-   }
+    @Override
+    public void setConsoleHost(String host) {
+        consoleHost = host;
+    }
 
-   @Override
-   public int getConsolePort()
-   {
-      return consolePort;
-   }
+    @Override
+    public int getConsolePort() {
+        return consolePort;
+    }
 
-   @Override
-   public void setConsolePort(int port)
-   {
-      consolePort = port;
-   }
+    @Override
+    public void setConsolePort(int port) {
+        consolePort = port;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "InstanceImpl{" +
-         "debugHost='" + debugHost + '\'' +
-         ", debugPort=" + debugPort +
-         ", consoleHost='" + consoleHost + '\'' +
-         ", consolePort=" + consolePort +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "InstanceImpl{" +
+               "debugHost='" + debugHost + '\'' +
+               ", debugPort=" + debugPort +
+               ", consoleHost='" + consoleHost + '\'' +
+               ", consolePort=" + consolePort +
+               '}';
+    }
 }

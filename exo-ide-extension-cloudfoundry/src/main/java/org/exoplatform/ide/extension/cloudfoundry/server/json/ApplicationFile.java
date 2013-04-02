@@ -22,56 +22,46 @@ package org.exoplatform.ide.extension.cloudfoundry.server.json;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ApplicationFile
-{
-   private long size;
-   private String sha1;
-   private String fn;
+public class ApplicationFile {
+    private long   size;
+    private String sha1;
+    private String fn;
 
-   public ApplicationFile(long size, String sha1, String fn)
-   {
-      this.size = size;
-      this.sha1 = sha1;
-      this.fn = fn;
-   }
+    public ApplicationFile(long size, String sha1, String fn) {
+        this.size = size;
+        this.sha1 = sha1;
+        this.fn = fn;
+    }
 
-   public ApplicationFile()
-   {
-   }
+    public ApplicationFile() {
+    }
 
-   public long getSize()
-   {
-      return size;
-   }
+    public long getSize() {
+        return size;
+    }
 
-   public void setSize(long size)
-   {
-      this.size = size;
-   }
+    public void setSize(long size) {
+        this.size = size;
+    }
 
-   public String getSha1()
-   {
-      return sha1;
-   }
+    public String getSha1() {
+        return sha1;
+    }
 
-   public void setSha1(String sha1)
-   {
-      this.sha1 = sha1;
-   }
+    public void setSha1(String sha1) {
+        this.sha1 = sha1;
+    }
 
-   public String getFn()
-   {
-      return fn;
-   }
+    public String getFn() {
+        return fn;
+    }
 
-   public void setFn(String fn)
-   {
-      this.fn = fn;
-   }
+    public void setFn(String fn) {
+        this.fn = fn;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "ApplicationFile [size=" + size + ", sha1=" + sha1 + ", fn=" + fn + "]";
-   }
+    @Override
+    public String toString() {
+        return "ApplicationFile [size=" + size + ", sha1=" + sha1 + ", fn=" + fn + "]";
+    }
 }

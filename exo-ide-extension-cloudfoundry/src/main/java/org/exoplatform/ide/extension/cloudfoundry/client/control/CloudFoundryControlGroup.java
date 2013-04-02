@@ -25,40 +25,34 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 
 /**
  * Control for submenu for CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryControl.java Jul 8, 2011 3:25:33 PM vereshchaka $
- *
  */
-public class CloudFoundryControlGroup extends SimpleControl implements IDEControl
-{
+public class CloudFoundryControlGroup extends SimpleControl implements IDEControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.cloudFoundryControlPrompt();
 
-   /**
-    * 
-    */
-   public CloudFoundryControlGroup()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.cloudFoundry(),
-         CloudFoundryClientBundle.INSTANCE.cloudFoundryDisabled());
-   }
+    /**
+     *
+     */
+    public CloudFoundryControlGroup() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.cloudFoundry(),
+                  CloudFoundryClientBundle.INSTANCE.cloudFoundryDisabled());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+    /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */
+    @Override
+    public void initialize() {
+        setVisible(true);
+        setEnabled(true);
+    }
 
 }

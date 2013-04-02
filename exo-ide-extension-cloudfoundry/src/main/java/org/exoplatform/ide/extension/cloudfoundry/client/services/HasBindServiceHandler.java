@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.services;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
-
 import com.google.gwt.event.logical.shared.SelectionHandler;
+
+import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id:  Jul 17, 2012 11:36:49 AM anya $
- *
  */
-public interface HasBindServiceHandler
-{
-   void addBindServiceHandler(SelectionHandler<ProvisionedService> handler);
+public interface HasBindServiceHandler {
+    void addBindServiceHandler(SelectionHandler<ProvisionedService> handler);
 }

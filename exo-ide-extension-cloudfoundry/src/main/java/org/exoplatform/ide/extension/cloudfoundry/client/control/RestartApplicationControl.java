@@ -24,30 +24,27 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicatio
 
 /**
  * Control to restart application on CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
- *
  */
-public class RestartApplicationControl extends AbstractCloudFoundryControl
-{
+public class RestartApplicationControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.restartAppControlPrompt();
 
-   /**
-    * 
-    */
-   public RestartApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.restartApp(), CloudFoundryClientBundle.INSTANCE.restartAppDisabled());
-      setEvent(new RestartApplicationEvent());
-   }
+    /**
+     *
+     */
+    public RestartApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.restartApp(), CloudFoundryClientBundle.INSTANCE.restartAppDisabled());
+        setEvent(new RestartApplicationEvent());
+    }
 
 }

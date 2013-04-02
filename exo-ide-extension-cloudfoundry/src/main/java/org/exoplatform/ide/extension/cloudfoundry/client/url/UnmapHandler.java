@@ -20,12 +20,10 @@ package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
 /**
  * Handler for unmaping URL from application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UnmapHandler.java Aug 19, 2011 12:03:55 PM vereshchaka $
- *
  */
-public interface UnmapHandler
-{
-   void onUnmapUrl(String url);
+public interface UnmapHandler {
+    void onUnmapUrl(String url);
 }

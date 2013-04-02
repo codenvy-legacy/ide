@@ -22,34 +22,24 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event, occurs after pressing Update Memory command.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: MapUrlEvent.java Jul 18, 2011 9:22:33 AM vereshchaka $
- *
  */
-public class UpdateMemoryEvent extends GwtEvent<UpdateMemoryHandler>
-{
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<UpdateMemoryHandler> TYPE = new GwtEvent.Type<UpdateMemoryHandler>();
+public class UpdateMemoryEvent extends GwtEvent<UpdateMemoryHandler> {
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<UpdateMemoryHandler> TYPE = new GwtEvent.Type<UpdateMemoryHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UpdateMemoryHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<UpdateMemoryHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(UpdateMemoryHandler handler)
-   {
-      handler.onUpdateMemory(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(UpdateMemoryHandler handler) {
+        handler.onUpdateMemory(this);
+    }
 
 }

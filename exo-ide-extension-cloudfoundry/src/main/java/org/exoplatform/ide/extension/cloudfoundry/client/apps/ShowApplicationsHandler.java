@@ -23,11 +23,9 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
- *
  */
-public interface ShowApplicationsHandler extends EventHandler
-{
+public interface ShowApplicationsHandler extends EventHandler {
 
-   void onShowApplications(ShowApplicationsEvent event);
+    void onShowApplications(ShowApplicationsEvent event);
 
 }

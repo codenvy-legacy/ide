@@ -24,30 +24,27 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEv
 
 /**
  * Control to stop application on CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
- *
  */
-public class StopApplicationControl extends AbstractCloudFoundryControl
-{
+public class StopApplicationControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.stopAppControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.stopAppControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.stopAppControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.stopAppControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.stopAppControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.stopAppControlPrompt();
 
-   /**
-    * 
-    */
-   public StopApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.stopApp(), CloudFoundryClientBundle.INSTANCE.stopAppDisabled());
-      setEvent(new StopApplicationEvent());
-   }
+    /**
+     *
+     */
+    public StopApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.stopApp(), CloudFoundryClientBundle.INSTANCE.stopAppDisabled());
+        setEvent(new StopApplicationEvent());
+    }
 
 }

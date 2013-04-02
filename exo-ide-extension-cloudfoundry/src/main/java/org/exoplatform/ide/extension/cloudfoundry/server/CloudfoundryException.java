@@ -20,64 +20,62 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
 
 /**
  * If Cloudfoundry server return unexpected or error status for request.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 @SuppressWarnings("serial")
-public class CloudfoundryException extends Exception
-{
-   /** HTTP status of response from Cloudfoundry server. */
-   private final int responseStatus;
+public class CloudfoundryException extends Exception {
+    /** HTTP status of response from Cloudfoundry server. */
+    private final int responseStatus;
 
-   /** Content type of response from Cloudfoundry server. */
-   private final String contentType;
-   
-   /** Exit code of command execution at Cloudfoundry server. May be -1 if cannot get exit code from Cloudfoundry
-    * response. */
-   private final int exitCode;
+    /** Content type of response from Cloudfoundry server. */
+    private final String contentType;
 
-   /**
-    * @param responseStatus HTTP status of response from Cloudfoundry server
-    * @param message text message
-    * @param contentType content type of response from Cloudfoundry server
-    */
-   public CloudfoundryException(int responseStatus, String message, String contentType)
-   {
-      this(responseStatus, -1, message, contentType);
-   }
-   
-   public CloudfoundryException(int responseStatus, int exitCode, String message, String contentType)
-   {
-      super(message);
-      this.responseStatus = responseStatus;
-      this.exitCode = exitCode;
-      this.contentType = contentType;
-   }
+    /**
+     * Exit code of command execution at Cloudfoundry server. May be -1 if cannot get exit code from Cloudfoundry
+     * response.
+     */
+    private final int exitCode;
 
-   public int getResponseStatus()
-   {
-      return responseStatus;
-   }
+    /**
+     * @param responseStatus
+     *         HTTP status of response from Cloudfoundry server
+     * @param message
+     *         text message
+     * @param contentType
+     *         content type of response from Cloudfoundry server
+     */
+    public CloudfoundryException(int responseStatus, String message, String contentType) {
+        this(responseStatus, -1, message, contentType);
+    }
 
-   public String getContentType()
-   {
-      return contentType;
-   }
-   
-   public int getExitCode()
-   {
-      return exitCode;
-   }
+    public CloudfoundryException(int responseStatus, int exitCode, String message, String contentType) {
+        super(message);
+        this.responseStatus = responseStatus;
+        this.exitCode = exitCode;
+        this.contentType = contentType;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "CloudfoundryException{" +
-         "responseStatus=" + responseStatus +
-         ", message='" + getMessage() + '\'' +
-         ", contentType='" + contentType + '\'' +
-         ", exitCode=" + exitCode +
-         '}';
-   }
+    public int getResponseStatus() {
+        return responseStatus;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public int getExitCode() {
+        return exitCode;
+    }
+
+    @Override
+    public String toString() {
+        return "CloudfoundryException{" +
+               "responseStatus=" + responseStatus +
+               ", message='" + getMessage() + '\'' +
+               ", contentType='" + contentType + '\'' +
+               ", exitCode=" + exitCode +
+               '}';
+    }
 }

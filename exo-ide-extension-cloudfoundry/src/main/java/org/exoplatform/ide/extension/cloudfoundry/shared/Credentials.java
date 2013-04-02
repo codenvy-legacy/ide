@@ -24,47 +24,48 @@ package org.exoplatform.ide.extension.cloudfoundry.shared;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: Credentials.java Mar 20, 2012 9:17:20 AM azatsarynnyy $
  */
-public interface Credentials
-{
-   /**
-    * Returns the server name.
-    *
-    * @return the server name.
-    */
-   String getServer();
+public interface Credentials {
+    /**
+     * Returns the server name.
+     *
+     * @return the server name.
+     */
+    String getServer();
 
-   /**
-    * Set the server name.
-    *
-    * @param server the server name
-    */
-   void setServer(String server);
+    /**
+     * Set the server name.
+     *
+     * @param server
+     *         the server name
+     */
+    void setServer(String server);
 
-   /**
-    * Returns the e-mail.
-    *
-    * @return e-mail.
-    */
-   String getEmail();
+    /**
+     * Returns the e-mail.
+     *
+     * @return e-mail.
+     */
+    String getEmail();
 
-   /**
-    * Set the e-mail.
-    *
-    * @param email
-    */
-   void setEmail(String email);
+    /**
+     * Set the e-mail.
+     *
+     * @param email
+     */
+    void setEmail(String email);
 
-   /**
-    * Returns the password.
-    *
-    * @return password.
-    */
-   String getPassword();
+    /**
+     * Returns the password.
+     *
+     * @return password.
+     */
+    String getPassword();
 
-   /**
-    * Set the password.
-    *
-    * @param password password.
-    */
-   void setPassword(String password);
+    /**
+     * Set the password.
+     *
+     * @param password
+     *         password.
+     */
+    void setPassword(String password);
 }

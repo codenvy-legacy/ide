@@ -24,25 +24,21 @@ import java.util.Arrays;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class InstancesInfo
-{
-   private InstanceInfo[] instances;
+public class InstancesInfo {
+    private InstanceInfo[] instances;
 
-   public InstanceInfo[] getInstances()
-   {
-      return instances;
-   }
+    public InstanceInfo[] getInstances() {
+        return instances;
+    }
 
-   public void setInstances(InstanceInfo[] instances)
-   {
-      this.instances = instances;
-   }
+    public void setInstances(InstanceInfo[] instances) {
+        this.instances = instances;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "InstancesInfo{" +
-         "instances=" + (instances == null ? null : Arrays.asList(instances)) +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "InstancesInfo{" +
+               "instances=" + (instances == null ? null : Arrays.asList(instances)) +
+               '}';
+    }
 }

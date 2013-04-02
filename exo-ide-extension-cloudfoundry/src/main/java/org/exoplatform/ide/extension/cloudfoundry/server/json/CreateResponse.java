@@ -22,34 +22,28 @@ package org.exoplatform.ide.extension.cloudfoundry.server.json;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CreateResponse
-{
-   private String result;
-   private String redirect;
+public class CreateResponse {
+    private String result;
+    private String redirect;
 
-   public String getResult()
-   {
-      return result;
-   }
+    public String getResult() {
+        return result;
+    }
 
-   public void setResult(String result)
-   {
-      this.result = result;
-   }
+    public void setResult(String result) {
+        this.result = result;
+    }
 
-   public String getRedirect()
-   {
-      return redirect;
-   }
+    public String getRedirect() {
+        return redirect;
+    }
 
-   public void setRedirect(String redirect)
-   {
-      this.redirect = redirect;
-   }
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "CreateResponse [result=" + result + ", redirect=" + redirect + "]";
-   }
+    @Override
+    public String toString() {
+        return "CreateResponse [result=" + result + ", redirect=" + redirect + "]";
+    }
 }

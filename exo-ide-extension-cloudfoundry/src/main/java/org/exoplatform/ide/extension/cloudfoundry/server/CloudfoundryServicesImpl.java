@@ -28,51 +28,43 @@ import java.util.Arrays;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryServicesImpl implements CloudfoundryServices
-{
-   private SystemService[] system;
-   private ProvisionedService[] provisioned;
+public class CloudfoundryServicesImpl implements CloudfoundryServices {
+    private SystemService[]      system;
+    private ProvisionedService[] provisioned;
 
-   public CloudfoundryServicesImpl(SystemService[] system, ProvisionedService[] provisioned)
-   {
-      this.system = system;
-      this.provisioned = provisioned;
-   }
+    public CloudfoundryServicesImpl(SystemService[] system, ProvisionedService[] provisioned) {
+        this.system = system;
+        this.provisioned = provisioned;
+    }
 
-   public CloudfoundryServicesImpl()
-   {
-   }
+    public CloudfoundryServicesImpl() {
+    }
 
-   @Override
-   public SystemService[] getSystem()
-   {
-      return system;
-   }
+    @Override
+    public SystemService[] getSystem() {
+        return system;
+    }
 
-   @Override
-   public void setSystem(SystemService[] system)
-   {
-      this.system = system;
-   }
+    @Override
+    public void setSystem(SystemService[] system) {
+        this.system = system;
+    }
 
-   @Override
-   public ProvisionedService[] getProvisioned()
-   {
-      return provisioned;
-   }
+    @Override
+    public ProvisionedService[] getProvisioned() {
+        return provisioned;
+    }
 
-   @Override
-   public void setProvisioned(ProvisionedService[] provisioned)
-   {
-      this.provisioned = provisioned;
-   }
+    @Override
+    public void setProvisioned(ProvisionedService[] provisioned) {
+        this.provisioned = provisioned;
+    }
 
-   @Override
-   public String toString()
-   {
-      return "CloudfoundryServicesImpl{" +
-         "system=" + (system == null ? null : Arrays.asList(system)) +
-         ", provisioned=" + (provisioned == null ? null : Arrays.asList(provisioned)) +
-         '}';
-   }
+    @Override
+    public String toString() {
+        return "CloudfoundryServicesImpl{" +
+               "system=" + (system == null ? null : Arrays.asList(system)) +
+               ", provisioned=" + (provisioned == null ? null : Arrays.asList(provisioned)) +
+               '}';
+    }
 }

@@ -22,34 +22,25 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event, which set to control to show application info.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationInfoEvent.java Jun 30, 2011 4:57:08 PM vereshchaka $
  */
-public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler>
-{
-   
-   /**
-    * Type used to register this event.
-    */
-   public static final GwtEvent.Type<ApplicationInfoHandler> TYPE = new GwtEvent.Type<ApplicationInfoHandler>();
+public class ApplicationInfoEvent extends GwtEvent<ApplicationInfoHandler> {
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ApplicationInfoHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<ApplicationInfoHandler> TYPE = new GwtEvent.Type<ApplicationInfoHandler>();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ApplicationInfoHandler handler)
-   {
-      handler.onShowApplicationInfo(this);
-   }
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<ApplicationInfoHandler> getAssociatedType() {
+        return TYPE;
+    }
+
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(ApplicationInfoHandler handler) {
+        handler.onShowApplicationInfo(this);
+    }
 
 }

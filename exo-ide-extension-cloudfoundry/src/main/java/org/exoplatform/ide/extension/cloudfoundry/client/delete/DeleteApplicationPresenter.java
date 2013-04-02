@@ -45,154 +45,129 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for delete application operation.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
-public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler, ViewClosedHandler
-{
-   interface Display extends IsView
-   {
-      /**
-       * Get delete services checkbox field.
-       * 
-       * @return {@link TextFieldItem}
-       */
-      HasValue<Boolean> getDeleteServicesCheckbox();
+public class DeleteApplicationPresenter extends GitPresenter implements DeleteApplicationHandler, ViewClosedHandler {
+    interface Display extends IsView {
+        /**
+         * Get delete services checkbox field.
+         *
+         * @return {@link TextFieldItem}
+         */
+        HasValue<Boolean> getDeleteServicesCheckbox();
 
-      /**
-       * Get delete button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getDeleteButton();
+        /**
+         * Get delete button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getDeleteButton();
 
-      /**
-       * Get cancel button's click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+        /**
+         * Get cancel button's click handler.
+         *
+         * @return {@link HasClickHandlers} click handler
+         */
+        HasClickHandlers getCancelButton();
 
-      /**
-       * Set the ask message to delete application.
-       * 
-       * @param message
-       */
-      void setAskMessage(String message);
+        /**
+         * Set the ask message to delete application.
+         *
+         * @param message
+         */
+        void setAskMessage(String message);
 
-      void setAskDeleteServices(String text);
-   }
+        void setAskDeleteServices(String text);
+    }
 
-   private Display display;
+    private Display display;
 
-   /**
-    * The name of application.
-    */
-   private String appName;
+    /** The name of application. */
+    private String appName;
 
-   /**
-    * Name of the server.
-    */
-   private String serverName;
+    /** Name of the server. */
+    private String serverName;
 
-   public DeleteApplicationPresenter()
-   {
-      IDE.addHandler(DeleteApplicationEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    public DeleteApplicationPresenter() {
+        IDE.addHandler(DeleteApplicationEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-   public void bindDisplay()
-   {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
+    public void bindDisplay() {
+        display.getCancelButton().addClickHandler(new ClickHandler() {
 
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            closeView();
-         }
-      });
+            @Override
+            public void onClick(ClickEvent event) {
+                closeView();
+            }
+        });
 
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            deleteApplication();
-         }
-      });
-   }
+        display.getDeleteButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteApplication();
+            }
+        });
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationHandler#onDeleteApplication(org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent)
-    */
-   @Override
-   public void onDeleteApplication(DeleteApplicationEvent event)
-   {
-      serverName = event.getServer();
-      if (event.getApplicationName() == null && makeSelectionCheck())
-         getApplicationInfo();
-      else
-      {
-         appName = event.getApplicationName();
-         showDeleteDialog(appName);
-      }
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationHandler#onDeleteApplication(org.exoplatform.ide
+     * .extension.cloudfoundry.client.delete.DeleteApplicationEvent) */
+    @Override
+    public void onDeleteApplication(DeleteApplicationEvent event) {
+        serverName = event.getServer();
+        if (event.getApplicationName() == null && makeSelectionCheck())
+            getApplicationInfo();
+        else {
+            appName = event.getApplicationName();
+            showDeleteDialog(appName);
+        }
+    }
 
-   private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getApplicationInfo();
-      }
-   };
+    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getApplicationInfo();
+        }
+    };
 
-   private void getApplicationInfo()
-   {
+    private void getApplicationInfo() {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+        String projectId = getSelectedProject().getId();
 
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+        try {
+            AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  appName = result.getName();
-                  showDeleteDialog(appName);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-   private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         deleteApplication();
-      }
-   };
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, appInfoLoggedInHandler, null) {
+                                                                           @Override
+                                                                           protected void onSuccess(CloudFoundryApplication result) {
+                                                                               appName = result.getName();
+                                                                               showDeleteDialog(appName);
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   private void deleteApplication()
-   {
-      boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
-      String projectId = null;
-      
+    private LoggedInHandler deleteAppLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            deleteApplication();
+        }
+    };
+
+    private void deleteApplication() {
+        boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
+        String projectId = null;
+
 //      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
 //      {
 //         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
@@ -203,64 +178,62 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 //         }
 //      }
 
-      if (selectedItem != null)
-      {
-         ProjectModel project = getSelectedProject();
-         if (project != null && project.getPropertyValue("cloudfoundry-application") != null
-            && appName.equals((String)project.getPropertyValue("cloudfoundry-application")))
-         {
-            projectId = project.getId();
-         }
-      }      
-      
-      try
-      {
-         CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, serverName,
-            isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  closeView();
-                  IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
-                     .applicationDeletedMsg(appName), Type.INFO));
-                  IDE.fireEvent(new ApplicationDeletedEvent(appName));
-               }
+        if (selectedItem != null) {
+            ProjectModel project = getSelectedProject();
+            if (project != null && project.getPropertyValue("cloudfoundry-application") != null
+                && appName.equals((String)project.getPropertyValue("cloudfoundry-application"))) {
+                projectId = project.getId();
+            }
+        }
+
+        try {
+            CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, serverName,
+                                                                      isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(null,
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                     deleteAppLoggedInHandler,
+                                                                                                                                     null) {
+                @Override
+                protected void onSuccess(String result) {
+                    closeView();
+                    IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+                                                                       .applicationDeletedMsg(appName), Type.INFO));
+                    IDE.fireEvent(new ApplicationDeletedEvent(appName));
+                }
             });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   private void showDeleteDialog(String appName)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-         display.setAskMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(appName));
-         display.setAskDeleteServices(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationAskDeleteServices());
-      }
-   }
+    private void showDeleteDialog(String appName) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());
+            display.setAskMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(appName));
+            display.setAskDeleteServices(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationAskDeleteServices());
+        }
+    }
 
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
-   }
+    private void closeView() {
+        IDE.getInstance().closeView(display.asView().getId());
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+        }
+    }
 
 }

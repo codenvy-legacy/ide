@@ -24,31 +24,28 @@ import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesE
 
 /**
  * Control to update number of instances of application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UpdateInstancesControl.java Jul 18, 2011 10:19:37 AM vereshchaka $
- *
  */
-public class UpdateInstancesControl extends AbstractCloudFoundryControl
-{
+public class UpdateInstancesControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesControlPrompt();
 
-   /**
-    * 
-    */
-   public UpdateInstancesControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.appInstances(),
-         CloudFoundryClientBundle.INSTANCE.appInstancesDisabled());
-      setEvent(new UpdateInstancesEvent());
-   }
+    /**
+     *
+     */
+    public UpdateInstancesControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.appInstances(),
+                  CloudFoundryClientBundle.INSTANCE.appInstancesDisabled());
+        setEvent(new UpdateInstancesEvent());
+    }
 
 }

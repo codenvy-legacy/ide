@@ -22,44 +22,37 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class Auth extends CloudfoundryAuthenticator
-{
-   private String target;
-   private String username;
-   private String password;
+class Auth extends CloudfoundryAuthenticator {
+    private String target;
+    private String username;
+    private String password;
 
-   @Override
-   public String getTarget()
-   {
-      return target;
-   }
+    @Override
+    public String getTarget() {
+        return target;
+    }
 
-   @Override
-   public String getEmail()
-   {
-      return username;
-   }
+    @Override
+    public String getEmail() {
+        return username;
+    }
 
-   @Override
-   public String getPassword()
-   {
-      return password;
-   }
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
    /* ======================= */
 
-   public void setUsername(String username)
-   {
-      this.username = username;
-   }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-   public void setPassword(String password)
-   {
-      this.password = password;
-   }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-   public void setTarget(String target)
-   {
-      this.target = target;
-   }
+    public void setTarget(String target) {
+        this.target = target;
+    }
 }

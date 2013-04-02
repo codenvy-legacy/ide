@@ -19,75 +19,59 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.*;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundle;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent;
 
 /**
  * Control for creating application on CloudFoundry.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateApplicationControl.java Jul 7, 2011 5:32:27 PM vereshchaka $
- * 
  */
 public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
-   ProjectClosedHandler,  ActiveProjectChangedHandler
-{
+                                                                                     ProjectClosedHandler, ActiveProjectChangedHandler {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlPrompt();
 
-   public CreateApplicationControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.createApp(), CloudFoundryClientBundle.INSTANCE.createAppDisabled());
-      setEvent(new CreateApplicationEvent());
-   }
+    public CreateApplicationControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.createApp(), CloudFoundryClientBundle.INSTANCE.createAppDisabled());
+        setEvent(new CreateApplicationEvent());
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      setVisible(true);
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.control.AbstractCloudFoundryControl#initialize() */
+    @Override
+    public void initialize() {
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
+        IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+        setVisible(true);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
+     * .project.ProjectClosedEvent) */
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        setEnabled(false);
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
-   }
+    /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
+     * .project.ProjectOpenedEvent) */
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
+    }
+
+    @Override
+    public void onActiveProjectChanged(ActiveProjectChangedEvent event) {
+        setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
+    }
 }

@@ -20,18 +20,18 @@ package org.exoplatform.ide.extension.cloudfoundry.client.marshaller;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface IMethodInfo extends IRoutineInfo
-{
+ */
+public interface IMethodInfo extends IRoutineInfo {
 
-   String getGenericReturnType();
+    String getGenericReturnType();
 
-   void setGenericReturnType(String genericReturnType);
+    void setGenericReturnType(String genericReturnType);
 
-   void setReturnType(String returnType);
+    void setReturnType(String returnType);
 
-   String getReturnType();
+    String getReturnType();
 
 }

@@ -51,286 +51,234 @@ import java.util.List;
 
 /**
  * Presenter for unmaping (unregistering) URLs from application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: UnmapUrlPresenter.java Jul 19, 2011 2:31:19 PM vereshchaka $
- * 
  */
-public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, ViewClosedHandler
-{
-   
-   interface Display extends IsView
-   {
-      HasValue<String> getMapUrlField();
+public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, ViewClosedHandler {
 
-      HasClickHandlers getMapUrlButton();
+    interface Display extends IsView {
+        HasValue<String> getMapUrlField();
 
-      HasClickHandlers getCloseButton();
+        HasClickHandlers getMapUrlButton();
 
-      ListGridItem<String> getRegisteredUrlsGrid();
+        HasClickHandlers getCloseButton();
 
-      HasUnmapClickHandler getUnmapUrlListGridButton();
+        ListGridItem<String> getRegisteredUrlsGrid();
 
-      void enableMapUrlButton(boolean enable);
-   }
+        HasUnmapClickHandler getUnmapUrlListGridButton();
 
-   private CloudFoundryLocalizationConstant localeBundle = CloudFoundryExtension.LOCALIZATION_CONSTANT;
+        void enableMapUrlButton(boolean enable);
+    }
 
-   private Display display;
+    private CloudFoundryLocalizationConstant localeBundle = CloudFoundryExtension.LOCALIZATION_CONSTANT;
 
-   private List<String> registeredUrls;
+    private Display display;
 
-   private String unregisterUrl;
+    private List<String> registeredUrls;
 
-   private String urlToMap;
+    private String unregisterUrl;
 
-   private boolean isBindingChanged = false;
+    private String urlToMap;
 
-   public UnmapUrlPresenter()
-   {
-      IDE.addHandler(UnmapUrlEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-   }
+    private boolean isBindingChanged = false;
 
-   public void bindDisplay(List<String> urls)
-   {
-      registeredUrls = urls;
+    public UnmapUrlPresenter() {
+        IDE.addHandler(UnmapUrlEvent.TYPE, this);
+        IDE.addHandler(ViewClosedEvent.TYPE, this);
+    }
 
-      display.getMapUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableMapUrlButton((event.getValue() != null && !event.getValue().isEmpty()));
-         }
-      });
+    public void bindDisplay(List<String> urls) {
+        registeredUrls = urls;
 
-      display.getMapUrlButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            urlToMap = display.getMapUrlField().getValue();
-            for (String url : registeredUrls)
-            {
-               if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap))
-               {
-                  Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
-                  return;
-               }
-            }
-            if (urlToMap.startsWith("http://"))
-            {
-               urlToMap = urlToMap.substring(7);
-            }
-            mapUrl(urlToMap);
-         }
-      });
-
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getUnmapUrlListGridButton().addUnmapClickHandler(new UnmapHandler()
-      {
-
-         @Override
-         public void onUnmapUrl(String url)
-         {
-            askForUnmapUrl(url);
-         }
-      });
-
-      display.getRegisteredUrlsGrid().setValue(registeredUrls);
-   }
-
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler mapUrlLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         mapUrl(urlToMap);
-      }
-   };
-
-   private void mapUrl(final String url)
-   {
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-
-      try
-      {
-         CloudFoundryClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, url,
-            new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  isBindingChanged = true;
-                  String registeredUrl = url;
-                  if (!url.startsWith("http"))
-                  {
-                     registeredUrl = "http://" + url;
-                  }
-                  registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
-                  String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
-                  IDE.fireEvent(new OutputEvent(msg));
-                  registeredUrls.add(url);
-                  display.getRegisteredUrlsGrid().setValue(registeredUrls);
-                  display.getMapUrlField().setValue("");
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void askForUnmapUrl(final String url)
-   {
-      Dialogs.getInstance().ask(localeBundle.unmapUrlConfirmationDialogTitle(),
-         localeBundle.unmapUrlConfirmationDialogMessage(), new BooleanValueReceivedHandler()
-         {
+        display.getMapUrlField().addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value == null || !value)
-                  return;
-
-               unregisterUrl = url;
-               unregisterUrl(unregisterUrl);
+            public void onValueChange(ValueChangeEvent<String> event) {
+                display.enableMapUrlButton((event.getValue() != null && !event.getValue().isEmpty()));
             }
-         });
-   }
+        });
 
-   LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         unregisterUrl(unregisterUrl);
-      }
-   };
+        display.getMapUrlButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                urlToMap = display.getMapUrlField().getValue();
+                for (String url : registeredUrls) {
+                    if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap)) {
+                        Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
+                        return;
+                    }
+                }
+                if (urlToMap.startsWith("http://")) {
+                    urlToMap = urlToMap.substring(7);
+                }
+                mapUrl(urlToMap);
+            }
+        });
 
-   private void unregisterUrl(final String url)
-   {
+        display.getCloseButton().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                IDE.getInstance().closeView(display.asView().getId());
+            }
+        });
+
+        display.getUnmapUrlListGridButton().addUnmapClickHandler(new UnmapHandler() {
+
+            @Override
+            public void onUnmapUrl(String url) {
+                askForUnmapUrl(url);
+            }
+        });
+
+        display.getRegisteredUrlsGrid().setValue(registeredUrls);
+    }
+
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler mapUrlLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            mapUrl(urlToMap);
+        }
+    };
+
+    private void mapUrl(final String url) {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
-      
-      try
-      {
-         CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
-            new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(Object result)
-               {
-                  isBindingChanged = true;
-                  registeredUrls.remove(url);
-                  display.getRegisteredUrlsGrid().setValue(registeredUrls);
-                  String unmappedUrl = url;
-                  if (!unmappedUrl.startsWith("http"))
-                  {
-                     unmappedUrl = "http://" + unmappedUrl;
-                  }
-                  String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
-                  IDE.fireEvent(new OutputEvent(msg));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+        String projectId = getSelectedProject().getId();
 
-   LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getAppRegisteredUrls();
-      }
-   };
+        try {
+            CloudFoundryClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, url,
+                                                           new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null) {
+                                                               @Override
+                                                               protected void onSuccess(String result) {
+                                                                   isBindingChanged = true;
+                                                                   String registeredUrl = url;
+                                                                   if (!url.startsWith("http")) {
+                                                                       registeredUrl = "http://" + url;
+                                                                   }
+                                                                   registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" +
+                                                                                   registeredUrl + "</a>";
+                                                                   String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
+                                                                   IDE.fireEvent(new OutputEvent(msg));
+                                                                   registeredUrls.add(url);
+                                                                   display.getRegisteredUrlsGrid().setValue(registeredUrls);
+                                                                   display.getMapUrlField().setValue("");
+                                                               }
+                                                           });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent)
-    */
-   @Override
-   public void onUnmapUrl(UnmapUrlEvent event)
-   {
-      isBindingChanged = false;
-      if (makeSelectionCheck())
-      {
-         getAppRegisteredUrls();
-      }
-   }
+    private void askForUnmapUrl(final String url) {
+        Dialogs.getInstance().ask(localeBundle.unmapUrlConfirmationDialogTitle(),
+                                  localeBundle.unmapUrlConfirmationDialogMessage(), new BooleanValueReceivedHandler() {
+            @Override
+            public void booleanValueReceived(Boolean value) {
+                if (value == null || !value)
+                    return;
 
-   private void getAppRegisteredUrls()
-   {
+                unregisterUrl = url;
+                unregisterUrl(unregisterUrl);
+            }
+        });
+    }
+
+    LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            unregisterUrl(unregisterUrl);
+        }
+    };
+
+    private void unregisterUrl(final String url) {
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectId = getSelectedProject().getId();
+        String projectId = getSelectedProject().getId();
 
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+        try {
+            CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
+                                                             new CloudFoundryAsyncRequestCallback<Object>(null,
+                                                                                                          unregisterUrlLoggedInHandler,
+                                                                                                          null) {
+                                                                 @Override
+                                                                 protected void onSuccess(Object result) {
+                                                                     isBindingChanged = true;
+                                                                     registeredUrls.remove(url);
+                                                                     display.getRegisteredUrlsGrid().setValue(registeredUrls);
+                                                                     String unmappedUrl = url;
+                                                                     if (!unmappedUrl.startsWith("http")) {
+                                                                         unmappedUrl = "http://" + unmappedUrl;
+                                                                     }
+                                                                     String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
+                                                                     IDE.fireEvent(new OutputEvent(msg));
+                                                                 }
+                                                             });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
 
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+    LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getAppRegisteredUrls();
+        }
+    };
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  openView(result.getUris());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(org.exoplatform.ide
+     * .extension.cloudfoundry.client.start.RestartApplicationEvent) */
+    @Override
+    public void onUnmapUrl(UnmapUrlEvent event) {
+        isBindingChanged = false;
+        if (makeSelectionCheck()) {
+            getAppRegisteredUrls();
+        }
+    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-         if (isBindingChanged)
-         {
+    private void getAppRegisteredUrls() {
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+        String projectId = getSelectedProject().getId();
+
+        try {
+            AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+                    CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+            CloudFoundryClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, null, null) {
+                                                                           @Override
+                                                                           protected void onSuccess(CloudFoundryApplication result) {
+                                                                               openView(result.getUris());
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+        }
+    }
+
+    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     * .event.ViewClosedEvent) */
+    @Override
+    public void onViewClosed(ViewClosedEvent event) {
+        if (event.getView() instanceof Display) {
+            display = null;
+            if (isBindingChanged) {
 //            String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-            String projectId = getSelectedProject().getId();
-            IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
-         }
-      }
-   }
+                String projectId = getSelectedProject().getId();
+                IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+            }
+        }
+    }
 
-   private void openView(List<String> registeredUrls)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay(registeredUrls);
-         IDE.getInstance().openView(display.asView());
-         display.enableMapUrlButton(false);
-      }
-   }
+    private void openView(List<String> registeredUrls) {
+        if (display == null) {
+            display = GWT.create(Display.class);
+            bindDisplay(registeredUrls);
+            IDE.getInstance().openView(display.asView());
+            display.enableMapUrlButton(false);
+        }
+    }
 
 }

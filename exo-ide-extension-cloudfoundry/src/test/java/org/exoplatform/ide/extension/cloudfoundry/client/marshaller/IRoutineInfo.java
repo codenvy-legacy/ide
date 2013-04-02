@@ -22,30 +22,30 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
-public interface IRoutineInfo
-{
+ */
+public interface IRoutineInfo {
 
-   String getGenericParameterTypes();
+    String getGenericParameterTypes();
 
-   void setGenericParameterTypes(String genericParameterTypes);
+    void setGenericParameterTypes(String genericParameterTypes);
 
-   void setGeneric(String generic);
+    void setGeneric(String generic);
 
-   String getGeneric();
+    String getGeneric();
 
-   String getDeclaringClass();
+    String getDeclaringClass();
 
-   void setDeclaringClass(String declaringClass);
+    void setDeclaringClass(String declaringClass);
 
-   List<String> getGenericExceptionTypes();
+    List<String> getGenericExceptionTypes();
 
-   void setGenericExceptionTypes(List<String> genericExceptionTypes);
+    void setGenericExceptionTypes(List<String> genericExceptionTypes);
 
-   String getParameterTypes();
+    String getParameterTypes();
 
-   void setParameterTypes(String parameterTypes);
+    void setParameterTypes(String parameterTypes);
 
 }

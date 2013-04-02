@@ -22,60 +22,58 @@ import java.util.List;
 
 /**
  * Cloud Foundry application info.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInfo.java Mar 16, 2012 12:21:15 AM azatsarynnyy $
- *
  */
-public interface CloudFoundryApplication
-{
-   String getName();
+public interface CloudFoundryApplication {
+    String getName();
 
-   void setName(String name);
+    void setName(String name);
 
-   List<String> getUris();
+    List<String> getUris();
 
-   void setUris(List<String> uris);
+    void setUris(List<String> uris);
 
-   int getInstances();
+    int getInstances();
 
-   void setInstances(int instances);
+    void setInstances(int instances);
 
-   int getRunningInstances();
+    int getRunningInstances();
 
-   void setRunningInstances(int runningInstances);
+    void setRunningInstances(int runningInstances);
 
-   String getState();
+    String getState();
 
-   void setState(String state);
+    void setState(String state);
 
-   List<String> getServices();
+    List<String> getServices();
 
-   void setServices(List<String> services);
+    void setServices(List<String> services);
 
-   String getVersion();
+    String getVersion();
 
-   void setVersion(String version);
+    void setVersion(String version);
 
-   List<String> getEnv();
+    List<String> getEnv();
 
-   void setEnv(List<String> env);
+    void setEnv(List<String> env);
 
-   CloudFoundryApplicationResources getResources();
+    CloudFoundryApplicationResources getResources();
 
-   void setResources(CloudFoundryApplicationResources resources);
+    void setResources(CloudFoundryApplicationResources resources);
 
-   Staging getStaging();
+    Staging getStaging();
 
-   void setStaging(Staging staging);
+    void setStaging(Staging staging);
 
-   // Switch debug mode.
-   String getDebug();
+    // Switch debug mode.
+    String getDebug();
 
-   void setDebug(String debug);
-   // ------------------
+    void setDebug(String debug);
+    // ------------------
 
-   ApplicationMetaInfo getMeta();
+    ApplicationMetaInfo getMeta();
 
-   void setMeta(ApplicationMetaInfo mi);
+    void setMeta(ApplicationMetaInfo mi);
 }

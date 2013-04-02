@@ -24,27 +24,24 @@ import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoEve
 
 /**
  * Control to get application information.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ApplicationInfoControl.java Jul 13, 2011 12:54:25 PM vereshchaka $
- *
  */
-public class ApplicationInfoControl extends AbstractCloudFoundryControl
-{
+public class ApplicationInfoControl extends AbstractCloudFoundryControl {
 
-   private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlId();
+    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlId();
 
-   private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlTitle();
+    private static final String TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlTitle();
 
-   private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlPrompt();
+    private static final String PROMPT = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationInfoControlPrompt();
 
-   public ApplicationInfoControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-      setImages(CloudFoundryClientBundle.INSTANCE.applicationInfo(), CloudFoundryClientBundle.INSTANCE.applicationInfoDisabled());
-      setEvent(new ApplicationInfoEvent());
-   }
+    public ApplicationInfoControl() {
+        super(ID);
+        setTitle(TITLE);
+        setPrompt(PROMPT);
+        setImages(CloudFoundryClientBundle.INSTANCE.applicationInfo(), CloudFoundryClientBundle.INSTANCE.applicationInfoDisabled());
+        setEvent(new ApplicationInfoEvent());
+    }
 
 }

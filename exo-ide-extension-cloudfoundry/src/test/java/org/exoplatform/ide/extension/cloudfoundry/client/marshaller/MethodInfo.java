@@ -23,82 +23,63 @@ import java.util.List;
 
 /**
  * Represent information about class method. Can be transform to JSON. <code>
- *  {
- *     "generic": "public boolean java.lang.String.equals(java.lang.Object)",
- *     "genericExceptionTypes": [],
- *     "declaringClass": "java.lang.String",
- *     "name": "equals",
- *     "genericParameterTypes": "(java.lang.Object)",
- *     "modifiers": 1,
- *     "returnType": "boolean",
- *     "parameterTypes": "(Object)",
- *     "genericReturnType": "boolean"
- *   }
+ * {
+ * "generic": "public boolean java.lang.String.equals(java.lang.Object)",
+ * "genericExceptionTypes": [],
+ * "declaringClass": "java.lang.String",
+ * "name": "equals",
+ * "genericParameterTypes": "(java.lang.Object)",
+ * "modifiers": 1,
+ * "returnType": "boolean",
+ * "parameterTypes": "(Object)",
+ * "genericReturnType": "boolean"
+ * }
  * </code>
- * 
+ * <p/>
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class MethodInfo extends RoutineInfo implements IMethodInfo
-{
-   /**
-    * Full Qualified Class Name that method return <code>java.lang.String</code>
-    */
-   private String genericReturnType;
+public class MethodInfo extends RoutineInfo implements IMethodInfo {
+    /** Full Qualified Class Name that method return <code>java.lang.String</code> */
+    private String genericReturnType;
 
-   /**
-    * Short Class Name that method return <code>String</code>
-    */
-   private String returnType;
+    /** Short Class Name that method return <code>String</code> */
+    private String returnType;
 
-   public MethodInfo()
-   {
-   }
+    public MethodInfo() {
+    }
 
-   public MethodInfo(Integer modifiers, String name, List<String> genericExceptionTypes, String genericParameterTypes,
-      String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType)
-   {
-      super(modifiers, name, genericExceptionTypes, genericParameterTypes, parameterTypes, generic, declaringClass);
-      this.genericReturnType = genericReturnType;
-      this.returnType = returnType;
-   }
+    public MethodInfo(Integer modifiers, String name, List<String> genericExceptionTypes, String genericParameterTypes,
+                      String parameterTypes, String generic, String declaringClass, String genericReturnType, String returnType) {
+        super(modifiers, name, genericExceptionTypes, genericParameterTypes, parameterTypes, generic, declaringClass);
+        this.genericReturnType = genericReturnType;
+        this.returnType = returnType;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getGenericReturnType()
-   {
-      return genericReturnType;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getGenericReturnType() {
+        return genericReturnType;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setGenericReturnType(String genericReturnType)
-   {
-      this.genericReturnType = genericReturnType;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setGenericReturnType(String genericReturnType) {
+        this.genericReturnType = genericReturnType;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setReturnType(String returnType)
-   {
-      this.returnType = returnType;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setReturnType(String returnType) {
+        this.returnType = returnType;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getReturnType()
-   {
-      return returnType;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getReturnType() {
+        return returnType;
+    }
 
 }

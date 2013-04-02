@@ -31,78 +31,58 @@ import org.exoplatform.gwtframework.ui.client.component.TextInput;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationView.java Dec 2, 2011 10:19:26 AM vereshchaka $
- *
  */
-public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display
-{
-   interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView>
-   {
-   }
-   
-   private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
-   
-   @UiField
-   ComboBoxField targetField;
-   
-   @UiField
-   TextInput nameField;
-   
-   /**
-    * Application URL field.
-    */
-   @UiField
-   TextInput urlField;
-   
-   public DeployApplicationView()
-   {
-      super();
-      initWidget(uiBinder.createAndBindUi(this));
-      setHeight("180px");
-   }
+public class DeployApplicationView extends Composite implements DeployApplicationPresenter.Display {
+    interface DeployApplicationViewUiBinder extends UiBinder<Widget, DeployApplicationView> {
+    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getNameField()
-    */
-   @Override
-   public HasValue<String> getNameField()
-   {
-      return nameField;
-   }
+    private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getUrlField()
-    */
-   @Override
-   public HasValue<String> getUrlField()
-   {
-      return urlField;
-   }
+    @UiField
+    ComboBoxField targetField;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getServerField()
-    */
-   @Override
-   public HasValue<String> getServerField()
-   {
-      return targetField;
-   }
+    @UiField
+    TextInput nameField;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#setServerValues(java.lang.String[])
-    */
-   @Override
-   public void setServerValues(String[] servers)
-   {
-      targetField.setValueMap(servers);
-   }
+    /** Application URL field. */
+    @UiField
+    TextInput urlField;
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getView()
-    */
-   @Override
-   public Composite getView()
-   {
-      return this;
-   }
+    public DeployApplicationView() {
+        super();
+        initWidget(uiBinder.createAndBindUi(this));
+        setHeight("180px");
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getNameField() */
+    @Override
+    public HasValue<String> getNameField() {
+        return nameField;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getUrlField() */
+    @Override
+    public HasValue<String> getUrlField() {
+        return urlField;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getServerField() */
+    @Override
+    public HasValue<String> getServerField() {
+        return targetField;
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#setServerValues(java.lang
+     * .String[]) */
+    @Override
+    public void setServerValues(String[] servers) {
+        targetField.setValueMap(servers);
+    }
+
+    /** @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#getView() */
+    @Override
+    public Composite getView() {
+        return this;
+    }
 
 }
