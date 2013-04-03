@@ -131,8 +131,6 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
             return;
         }
 
-        project.dump();
-
         JavaProjectTreeItem treeItem = new JavaProjectTreeItem(project);
         tree.addItem(treeItem);
         treeItem.setState(true);
@@ -140,11 +138,6 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     }
 
     public void refresh() {
-        if (project != null)
-        {
-            project.dump();
-        }
-
         try
         {
             if (tree.getItemCount() == 1) {
