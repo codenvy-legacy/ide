@@ -35,6 +35,7 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IDocumentInformationMapping;
 import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.editor.shared.text.ISlaveDocumentManager;
+import org.exoplatform.ide.editor.shared.text.Position;
 import org.exoplatform.ide.editor.shared.text.Region;
 import org.exoplatform.ide.editor.shared.text.projection.IProjectionPosition;
 import org.exoplatform.ide.editor.shared.text.projection.ProjectionDocument;
@@ -45,6 +46,7 @@ import org.exoplatform.ide.shared.util.ListenerManager;
 import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -338,10 +340,25 @@ public class FoldingManager implements Document.TextListener {
 
                 if (foldMarker.isCollapsed()) {
                     slaveDocument.removeMasterDocumentRange(startOffset, length);
-                    internalCollapse(firstLineNumber, linesArray);
+                    processAnchorsInColapsedRange(firstLineNumber, linesArray);
+                    dispatchCollapse(firstLineNumber/* + linesToCollapse.size() */, linesArray);
                 } else {
                     slaveDocument.addMasterDocumentRange(startOffset, length);
-                    internalExpand(firstLineNumber, linesArray);
+                    // collapse nested folds
+                    FoldMarker[] collapsedFolds = computeCollapsedNestedFolds(startOffset, length);
+                    if (collapsedFolds != null) {
+                        for (int m = 0; m < collapsedFolds.length; m++) {
+                            IProjectionPosition positionToCollapse = markerToPositionMap.get(collapsedFolds[m]);
+                            IRegion[] regionsToCollapse = positionToCollapse.computeProjectionRegions(getMasterDocument());
+                            if (regionsToCollapse != null) {
+                                for (int n = 0; n < regionsToCollapse.length; n++) {
+                                    slaveDocument.removeMasterDocumentRange(regionsToCollapse[n].getOffset(),
+                                                                            regionsToCollapse[n].getLength());
+                                }
+                            }
+                        }
+                    }
+                    dispatchExpand(firstLineNumber, linesArray);
                 }
             }
         } catch (BadLocationException e) {
@@ -349,18 +366,38 @@ public class FoldingManager implements Document.TextListener {
         }
     }
 
-    private void internalCollapse(int lineNumber, JsonArray<Line> linesToCollapse) {
-        if (linesToCollapse.isEmpty()) {
-            return;
+    private FoldMarker[] computeCollapsedNestedFolds(int offset, int length) {
+        List<FoldMarker> folds = new ArrayList<FoldMarker>(5);
+        for (Entry<FoldMarker, AbstractFoldRange> entry : markerToPositionMap.entrySet()) {
+            FoldMarker fold = entry.getKey();
+            if (fold.isCollapsed()) {
+                Position position = entry.getValue();
+                // if (position == null) {
+                // // annotation might already be deleted, we will be informed later on about this deletion
+                // continue;
+                // }
+                if (covers(offset, length, position)) {
+                    folds.add(fold);
+                }
+            }
         }
-        processAnchorsInColapsedRange(lineNumber, linesToCollapse);
-        dispatchCollapse(lineNumber/* + linesToCollapse.size() */, linesToCollapse);
+
+        if (folds.size() > 0) {
+            FoldMarker[] result = new FoldMarker[folds.size()];
+            folds.toArray(result);
+            return result;
+        }
+
+        return null;
     }
 
-    /**
-     * @param lineNumber
-     * @param linesToCollapse
-     */
+    private boolean covers(int offset, int length, Position position) {
+        if (!(position.offset == offset && position.length == length) && !position.isDeleted()) {
+            return offset <= position.getOffset() && position.getOffset() + position.getLength() <= offset + length;
+        }
+        return false;
+    }
+
     private void processAnchorsInColapsedRange(int lineNumber, JsonArray<Line> linesToCollapse) {
         for (Line line : linesToCollapse.asIterable()) {
             final int deleteCountForLine = line.getText().length();
@@ -374,17 +411,9 @@ public class FoldingManager implements Document.TextListener {
         final int numberOfLinesDeleted = 0; // pass '0' because there is no need to change the anchor's line number
         final int lastLineFirstUntouchedColumn = linesToCollapse.peek().getText().length();
 
-        anchorManager
-                     .handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
+        anchorManager.handleTextDeletionFinished(anchorsInCollapsedRangeToRemove, anchorsInCollapsedRangeToShift,
                                                  anchorsLeftoverFromLastLine, firstLine, firstLineNumber, 0, numberOfLinesDeleted,
                                                  lastLineFirstUntouchedColumn);
-    }
-
-    private void internalExpand(int lineNumber, JsonArray<Line> linesToExpand) {
-        if (linesToExpand.isEmpty()) {
-            return;
-        }
-        dispatchExpand(lineNumber, linesToExpand);
     }
 
     private void dispatchCollapse(final int lineNumber, final JsonArray<Line> linesToCollapse) {
