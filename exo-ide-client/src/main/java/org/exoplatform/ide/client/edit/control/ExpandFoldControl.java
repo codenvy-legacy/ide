@@ -46,6 +46,7 @@ public class ExpandFoldControl extends SimpleControl implements IDEControl, Edit
         setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
         setEvent(new EditorExpandFoldEvent());
         setHotKey("Ctrl+Numpad +");
+        setShowInContextMenu(true);
     }
 
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */

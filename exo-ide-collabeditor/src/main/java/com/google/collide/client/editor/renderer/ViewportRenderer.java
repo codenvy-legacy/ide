@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.renderer;
 
+import elemental.dom.NodeList;
+
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
@@ -436,7 +438,8 @@ public class ViewportRenderer {
             lineRendererController.renderLine(line, lineNumber, element, true);
             line.putTag(LINE_TAG_LINE_ELEMENT, element);
         } else {
-            createOrRemoveExpandElement(line, lineNumber, element);
+            Element contentElement = element.getFirstChildElement();
+            createOrRemoveExpandElement(line, lineNumber, contentElement);
         }
         new DebugAttributeSetter().add("lineNum", Integer.toString(lineNumber)).on(element);
 

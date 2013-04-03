@@ -57,27 +57,26 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
     public void refresh(boolean expand) {
         render();
 
-      /*
-       * Does not refresh children if tree item closed
-       */
+        /*
+         * Does not refresh children if tree item closed
+         */
         if (!getState() && !expand) {
             return;
         }
 
-      /*
-       * Remove nonexistent
-       */
+        /*
+         * Remove nonexistent
+         */
         removeNonexistendTreeItems();
 
-      /*
-       * Add missing
-       */
-
+        /*
+         * Add missing
+         */
         JavaProject javaProject = (JavaProject)getUserObject();
         int index = 0;
-      /*
-       * Modules
-       */
+        /*
+         * Modules
+         */
         for (ProjectModel module : javaProject.getModules()) {
             PackageExplorerTreeItem child = getChildByItemId(module.getId());
             if (child == null) {
@@ -91,9 +90,9 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
             index++;
         }
 
-      /*
-       * Source Directories
-       */
+        /*
+         * Source Directories
+         */
         for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories()) {
             PackageExplorerTreeItem child = getChildByItemId(sourceDirectory.getId());
             if (child == null) {
@@ -107,9 +106,26 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
             index++;
         }
 
-      /*
-       * Folders and files
-       */
+        // /*
+        // * Dependencies
+        // */
+        // for (ClasspathFolder classpathFolder : javaProject.getClasspathFolders())
+        // {
+        // PackageExplorerTreeItem child = getChildByItemId(classpathFolder.getId());
+        // if (child == null) {
+        // child = new DependenciesTreeItem(classpathFolder);
+        // insertItem(index, child);
+        // } else {
+        // child.setUserObject(classpathFolder);
+        // child.refresh(false);
+        // }
+        //
+        // index++;
+        // }
+
+        /*
+         * Folders and files
+         */
 
         Collections.sort(javaProject.getChildren().getItems(), COMPARATOR);
 
@@ -167,7 +183,7 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
         items.addAll(project.getModules());
         items.addAll(project.getSourceDirectories());
-        items.addAll(project.getClasspathFolders());
+        // items.addAll(project.getClasspathFolders());
 
         for (Item item : project.getChildren().getItems()) {
             if (DirectoryFilter.get().matchWithPattern(item.getName())) {

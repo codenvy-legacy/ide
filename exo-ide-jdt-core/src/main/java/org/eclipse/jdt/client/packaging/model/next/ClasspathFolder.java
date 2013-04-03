@@ -33,6 +33,8 @@ public class ClasspathFolder extends ItemImpl {
 
     public ClasspathFolder(String name) {
         super(null);
+        setId("classpath-folder-" + name);
+        setPath("");
         setName(name);
     }
 

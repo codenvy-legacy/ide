@@ -46,6 +46,7 @@ public class CollapseAllFoldsControl extends SimpleControl implements IDEControl
         setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
         setEvent(new EditorCollapseFoldEvent(true));
         setHotKey("Ctrl+Shift+Numpad -");
+        setShowInContextMenu(true);
     }
 
     /** @see org.exoplatform.ide.client.framework.control.IDEControl#initialize() */

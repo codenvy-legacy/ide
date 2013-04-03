@@ -36,6 +36,7 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +45,9 @@ import java.util.Map;
  * @version $
  */
 public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item> implements
-                                                                                                         OpenHandler<TreeItem> {
+                                                                                                        OpenHandler<TreeItem> {
 
-    private String id;
+    private String      id;
 
     private JavaProject project;
 
@@ -74,10 +75,11 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     public void onBrowserEvent(Event event) {
         if (Event.ONCONTEXTMENU == DOM.eventGetType(event)) {
             NativeEvent nativeEvent =
-                    Document.get().createMouseDownEvent(-1, event.getScreenX(), event.getScreenY(), event.getClientX(),
-                                                        event.getClientY(), event.getCtrlKey(), event.getAltKey(), event.getShiftKey(),
-                                                        event.getMetaKey(),
-                                                        NativeEvent.BUTTON_LEFT);
+                                      Document.get().createMouseDownEvent(-1, event.getScreenX(), event.getScreenY(), event.getClientX(),
+                                                                          event.getClientY(), event.getCtrlKey(), event.getAltKey(),
+                                                                          event.getShiftKey(),
+                                                                          event.getMetaKey(),
+                                                                          NativeEvent.BUTTON_LEFT);
             DOM.eventGetTarget(event).dispatchEvent(nativeEvent);
         }
         super.onBrowserEvent(event);
@@ -98,7 +100,6 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     }
 
     public boolean selectItem(Item item) {
-        System.out.println("PackageExplorerItemTree.selectItem()");
         if (tree.getItemCount() == 0) {
             return false;
         }
@@ -123,13 +124,14 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
         if (this.project != null && project != null && this.project.getId().equals(project.getId())) {
             return;
         }
-
         tree.removeItems();
-        this.project = project;
 
+        this.project = project;
         if (project == null) {
             return;
         }
+
+        project.dump();
 
         JavaProjectTreeItem treeItem = new JavaProjectTreeItem(project);
         tree.addItem(treeItem);
@@ -138,60 +140,65 @@ public class PackageExplorerItemTree extends org.exoplatform.gwtframework.ui.cli
     }
 
     public void refresh() {
-        if (tree.getItemCount() == 1) {
-            PackageExplorerTreeItem packageExplorerTreeItem = (JavaProjectTreeItem)tree.getItem(0);
-            packageExplorerTreeItem.refresh(false);
-            updateHighlighter();
+        if (project != null)
+        {
+            project.dump();
+        }
+
+        try
+        {
+            if (tree.getItemCount() == 1) {
+                PackageExplorerTreeItem packageExplorerTreeItem = (JavaProjectTreeItem)tree.getItem(0);
+
+                packageExplorerTreeItem.refresh(false);
+                updateHighlighter();
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
     /**
      * Add info icons to Item main icon
-     *
-     * @param itemsIcons
-     *         Map of Item, info icon position and info icon URL
+     * 
+     * @param itemsIcons Map of Item, info icon position and info icon URL
      */
     public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons) {
-        System.out.println("PackageExplorerItemTree.addItemsIcons()");
+        if (tree.getItemCount() == 0)
+        {
+            return;
+        }
 
-        //      for (Item item : itemsIcons.keySet())
-        //      {
-        //         TreeItem node = treeItems.get(item.getId());
-        //         if (node == null)
-        //         {
-        //            continue;
-        //         }
-        //         Grid grid = (Grid)node.getWidget();
-        //         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-        //         Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);
-        //         for (TreeIconPosition position : map.keySet())
-        //         {
-        //            treeIcon.addIcon(position, map.get(position));
-        //         }
-        //      }
+        Map<String, Map<TreeIconPosition, ImageResource>> icons = new HashMap<String, Map<TreeIconPosition, ImageResource>>();
+        for (Item item : itemsIcons.keySet())
+        {
+            Map<TreeIconPosition, ImageResource> iconMap = itemsIcons.get(item);
+            icons.put(item.getId(), iconMap);
+        }
+
+        ((PackageExplorerTreeItem)tree.getItem(0)).setIcons(icons);
     }
 
     /**
      * Remove info icon from Item main icon
-     *
-     * @param itemsIcons
-     *         Map of item and position of info icon
+     * 
+     * @param itemsIcons Map of item and position of info icon
      */
     public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons) {
-        System.out.println("PackageExplorerItemTree.removeItemIcons()");
+        if (tree.getItemCount() == 0)
+        {
+            return;
+        }
 
-        //      for (Item item : itemsIcons.keySet())
-        //      {
-        //         TreeItem node = treeItems.get(item.getId());
-        //         if (node == null)
-        //         {
-        //            continue;
-        //         }
-        //
-        //         Grid grid = (Grid)node.getWidget();
-        //         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-        //         treeIcon.removeIcon(itemsIcons.get(item));
-        //      }
+        Map<String, TreeIconPosition> icons = new HashMap<String, TreeIconPosition>();
+        for (Item item : itemsIcons.keySet())
+        {
+            TreeIconPosition iconPosition = itemsIcons.get(item);
+            icons.put(item.getId(), iconPosition);
+        }
+
+        ((PackageExplorerTreeItem)tree.getItem(0)).removeIcons(icons);
     }
 
     public List<Item> getTreeChildren(FolderModel folder) {
