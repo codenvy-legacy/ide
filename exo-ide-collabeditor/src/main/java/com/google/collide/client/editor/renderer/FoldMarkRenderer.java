@@ -64,50 +64,50 @@ public class FoldMarkRenderer {
     void renderImpl(int updateBeginLineNumber) {
         int topLineNumber = viewport.getTopLineNumber();
         int bottomLineNumber = viewport.getBottomLineNumber();
-        fillOrUpdateLines(topLineNumber, bottomLineNumber);
-//        if (previousBottomLineNumber == -1 || topLineNumber > previousBottomLineNumber
-//            || bottomLineNumber < previousTopLineNumber) {
-//
-//            if (previousBottomLineNumber > -1) {
-//                garbageCollectLines(previousTopLineNumber, previousBottomLineNumber);
-//            }
-//
-//            fillOrUpdateLines(topLineNumber, bottomLineNumber);
-//        } else {
-//         /*
-//          * The viewport was shifted and part of the old viewport will be in the
-//          * new viewport.
-//          */
-//            // first garbage collect any lines that have gone off the screen
-//            if (previousTopLineNumber < topLineNumber) {
-//                // off the top
-//                garbageCollectLines(previousTopLineNumber, topLineNumber - 1);
-//            }
-//
-//            if (previousBottomLineNumber > bottomLineNumber) {
-//                // off the bottom
-//                garbageCollectLines(bottomLineNumber + 1, previousBottomLineNumber);
-//            }
-//
-//         /*
-//          * Re-create any line numbers that are now visible or have had their
-//          * positions shifted.
-//          */
-//            if (previousTopLineNumber > topLineNumber) {
-//                // new lines at the top
-//                fillOrUpdateLines(topLineNumber, previousTopLineNumber - 1);
-//            }
-//
-//            if (updateBeginLineNumber >= 0 && updateBeginLineNumber <= bottomLineNumber) {
-//                // lines updated in the middle; redraw everything below
-//                fillOrUpdateLines(updateBeginLineNumber, bottomLineNumber);
-//            } else {
-//                // only check new lines scrolled in from the bottom
-//                if (previousBottomLineNumber < bottomLineNumber) {
-//                    fillOrUpdateLines(previousBottomLineNumber, bottomLineNumber);
-//                }
-//            }
-//        }
+
+        if (previousBottomLineNumber == -1 || topLineNumber > previousBottomLineNumber
+            || bottomLineNumber < previousTopLineNumber) {
+
+            if (previousBottomLineNumber > -1) {
+                garbageCollectLines(previousTopLineNumber, previousBottomLineNumber);
+            }
+
+            fillOrUpdateLines(topLineNumber, bottomLineNumber);
+        } else {
+         /*
+          * The viewport was shifted and part of the old viewport will be in the
+          * new viewport.
+          */
+            // first garbage collect any lines that have gone off the screen
+            if (previousTopLineNumber < topLineNumber) {
+                // off the top
+                garbageCollectLines(previousTopLineNumber, topLineNumber - 1);
+            }
+
+            if (previousBottomLineNumber > bottomLineNumber) {
+                // off the bottom
+                garbageCollectLines(bottomLineNumber + 1, previousBottomLineNumber);
+            }
+
+         /*
+          * Re-create any line numbers that are now visible or have had their
+          * positions shifted.
+          */
+            if (previousTopLineNumber > topLineNumber) {
+                // new lines at the top
+                fillOrUpdateLines(topLineNumber, previousTopLineNumber - 1);
+            }
+
+            if (updateBeginLineNumber >= 0 && updateBeginLineNumber <= bottomLineNumber) {
+                // lines updated in the middle; redraw everything below
+                fillOrUpdateLines(updateBeginLineNumber, bottomLineNumber);
+            } else {
+                // only check new lines scrolled in from the bottom
+                if (previousBottomLineNumber < bottomLineNumber) {
+                    fillOrUpdateLines(previousBottomLineNumber, bottomLineNumber);
+                }
+            }
+        }
 
         previousTopLineNumber = viewport.getTopLineNumber();
         previousBottomLineNumber = viewport.getBottomLineNumber();

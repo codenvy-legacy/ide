@@ -607,7 +607,9 @@ public class FoldingManager implements Document.TextListener {
         try {
             IRegion originRegion = new Region(range.getOffset(), range.getLength());
             IRegion imageRegion = informationMapping.toImageRegion(originRegion);
-            collapsed = originRegion.getLength() != imageRegion.getLength();
+            if (imageRegion != null) {
+                collapsed = originRegion.getLength() != imageRegion.getLength();
+            }
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
         }
