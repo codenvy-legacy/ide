@@ -120,6 +120,8 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
         IDE.addHandler(ClosingViewEvent.TYPE, this);
         IDE.addHandler(EditorFocusReceivedEvent.TYPE, this);
 
+        IDE.addHandler(EditorCollapseFoldEvent.TYPE, this);
+        IDE.addHandler(EditorExpandFoldEvent.TYPE, this);
         IDE.addHandler(EditorFoldSelectionEvent.TYPE, this);
     }
 

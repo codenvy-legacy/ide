@@ -182,7 +182,7 @@ class LineRendererController {
             }
         }
 
-        final FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(lineNumber, true);
+        FoldMarker foldMarker = foldingManager.getFoldMarkerOfLine(lineNumber, true);
         if (foldMarker != null && foldMarker.isCollapsed()) {
             Element expandElement = createFoldingSignElement(contentElement, foldMarker, lineNumber);
             line.putTag(ViewportRenderer.LINE_TAG_EXPAND_ELEMENT, expandElement);

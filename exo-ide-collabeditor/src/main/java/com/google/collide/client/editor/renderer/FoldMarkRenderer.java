@@ -167,9 +167,9 @@ public class FoldMarkRenderer {
         for (int i = 0; i < childNodes.getLength(); i++) {
             foldMarkElement.removeChild(childNodes.item(i));
         }
-        setId(foldMarkElement, lineNumber, foldMarker);
-
         foldMarkElement.appendChild((Node)foldMarker.getImage().getElement());
+
+        setId(foldMarkElement, lineNumber, foldMarker);
     }
 
     private Element createElement(int lineNumber, FoldMarker foldMarker) {

@@ -45,7 +45,6 @@ public class FoldSelectionControl extends SimpleControl implements IDEControl, E
         setPrompt(TITLE);
         setImages(IDEImageBundle.INSTANCE.blankImage(), IDEImageBundle.INSTANCE.blankImage());
         setEvent(new EditorFoldSelectionEvent());
-        setHotKey("Ctrl+.");
         setShowInContextMenu(true);
     }
 
