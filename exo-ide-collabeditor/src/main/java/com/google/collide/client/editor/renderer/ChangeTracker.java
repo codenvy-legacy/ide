@@ -311,7 +311,7 @@ class ChangeTracker
     }
 
     @Override
-    public void onFoldsStateChage() {
+    public void onFoldsStateChange() {
         scheduleRender(ChangeType.VIEWPORT_FOLD_MARK);
     }
 

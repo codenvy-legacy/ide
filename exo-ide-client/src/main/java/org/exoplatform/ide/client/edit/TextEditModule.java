@@ -64,8 +64,8 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
 
         IDE.getInstance().addControl(new ShowLineNumbersControl());
         IDE.getInstance().addControl(new DeleteCurrentLineControl());
-        IDE.getInstance().addControl(new CollapseFoldControl());
-        IDE.getInstance().addControl(new ExpandFoldControl());
+//        IDE.getInstance().addControl(new CollapseFoldControl());
+//        IDE.getInstance().addControl(new ExpandFoldControl());
         // IDE.getInstance().addControl(new CollapseAllFoldsControl());
         // IDE.getInstance().addControl(new ExpandAllFoldsControl());
         IDE.getInstance().addControl(new FoldSelectionControl());
