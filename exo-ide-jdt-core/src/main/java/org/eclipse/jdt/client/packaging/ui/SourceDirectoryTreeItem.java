@@ -78,27 +78,27 @@ public class SourceDirectoryTreeItem extends PackageExplorerTreeItem {
     public void refresh(boolean expand) {
         render();
 
-      /*
-       * Does not refresh children if tree item closed
-       */
+        /*
+         * Does not refresh children if tree item closed
+         */
         if (!getState() && !expand) {
             return;
         }
 
-      /*
-       * Remove nonexistent
-       */
+        /*
+         * Remove nonexistent
+         */
         removeNonexistendTreeItems();
 
-      /*
-       * Add missing
-       */
+        /*
+         * Add missing
+         */
         SourceDirectory sourceDirectory = (SourceDirectory)getUserObject();
         int index = 0;
 
-      /*
-       * Packages
-       */
+        /*
+         * Packages
+         */
         Package defaultPackage = null;
         for (Package p : sourceDirectory.getPackages()) {
             if (p.getPackageName().isEmpty()) {
@@ -122,9 +122,9 @@ public class SourceDirectoryTreeItem extends PackageExplorerTreeItem {
             index++;
         }
 
-      /*
-       * Files
-       */
+        /*
+         * Files
+         */
         Collections.sort(defaultPackage.getFiles(), COMPARATOR);
         for (FileModel file : defaultPackage.getFiles()) {
             if (DirectoryFilter.get().matchWithPattern(file.getName())) {

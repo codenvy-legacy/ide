@@ -37,77 +37,86 @@ import java.util.Map;
  */
 public interface PackageExplorerDisplay extends IsView {
 
-//   /**
-//    * Change tree visibility.
-//    * 
-//    * @param visible <code>true</code> if visible
-//    */
-//   void setPackageExplorerTreeVisible(boolean visible);
+    /**
+     * @return
+     */
+    TreeGridItem<Item> getBrowserTree();
 
+    /**
+     * Set new project in Package Explorer tree.
+     * 
+     * @param project project
+     */
     void setProject(IDEProject project);
 
-   /**
-    * @return {@link TreeGridItem}
-    */
-   TreeGridItem<Item> getBrowserTree();
-
+    /**
+     * Search and select specified item in Project Explorer tree.
+     * 
+     * @param item
+     * @return
+     */
     boolean selectItem(Item item);
 
+    /**
+     * Returns selected item in Project Explorer tree.
+     * 
+     * @return
+     */
     Item getSelectedItem();
 
-//   void goToItem(List<Object> itemList, boolean collapseBranches);
-
+    /**
+     * Returns children of specified filder.
+     * 
+     * @param folder folder
+     * @return folder's children
+     */
     List<Item> getTreeChildren(FolderModel folder);
 
+    /**
+     * Returns all visible items from Project Explorer tree.
+     * 
+     * @return
+     */
     List<Item> getVisibleItems();
 
+    /**
+     * Refreshes Package Explorer tree.
+     */
     void refreshTree();
-
-   /*
-    * Link with Editor
-    */
 
     /**
      * Returns Link with Editor button.
-     *
+     * 
      * @return Link with Editor button
      */
     HasClickHandlers getLinkWithEditorButton();
 
     /**
      * Enables or disables Link with Editor button.
-     *
-     * @param enabled
-     *         <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
+     * 
+     * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
      */
     void setLinkWithEditorButtonEnabled(boolean enabled);
 
     /**
      * Adds or removes selection of Link with Editor button.
-     *
-     * @param selected
-     *         <b>true</b> makes button selected, <b>false</b> otherwise
+     * 
+     * @param selected <b>true</b> makes button selected, <b>false</b> otherwise
      */
     void setLinkWithEditorButtonSelected(boolean selected);
 
-//   /**
-//    * Update the state of the item in the tree.
-//    * 
-//    * @param file
-//    */
-//   void updateItemState(FileModel file);   
-
-//   /**
-//    * Set lock tokens to the items in the tree.
-//    * 
-//    * @param locktokens
-//    */
-//   void setLockTokens(Map<String, String> locktokens);
-
-    /** Add info icons to main item icon. */
+    /**
+     * Add additional icons to tree items.
+     * 
+     * @param itemsIcons
+     */
     void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
 
-    /** Remove additional icons from items. */
+    /**
+     * Remove additional icons from tree items.
+     * 
+     * @param itemsIcons
+     */
     void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
 
 }
