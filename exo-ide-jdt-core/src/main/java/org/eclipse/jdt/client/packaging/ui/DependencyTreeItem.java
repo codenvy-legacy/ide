@@ -16,21 +16,50 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model.next;
+package org.eclipse.jdt.client.packaging.ui;
 
-import org.exoplatform.ide.vfs.shared.ItemImpl;
+import com.google.gwt.resources.client.ImageResource;
+
+import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.packaging.model.next.Classpath;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class Classpath extends ItemImpl {
+public class DependencyTreeItem extends PackageExplorerTreeItem
+{
 
-    public Classpath(String name) {
-        super(null);
-        setId("classpath-" + name);
-        setPath("");
-        setName(name);
+    public DependencyTreeItem(Classpath classpath)
+    {
+        super(classpath);
+    }
+
+    @Override
+    protected ImageResource getItemIcon()
+    {
+        return JdtClientBundle.INSTANCE.jarReference();
+    }
+
+    @Override
+    protected String getItemTitle()
+    {
+        return ((Classpath)getUserObject()).getName();
+    }
+
+    @Override
+    public List<Item> getItems()
+    {
+        return null;
+    }
+
+    @Override
+    public void refresh(boolean expand)
+    {
+        render();
     }
 
 }

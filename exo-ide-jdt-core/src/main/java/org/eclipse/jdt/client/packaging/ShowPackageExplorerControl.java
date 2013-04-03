@@ -41,22 +41,6 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
                                                                          ViewOpenedHandler, ViewClosedHandler, ProjectClosedHandler,
                                                                          ProjectOpenedHandler {
 
-//   @Key("control.packageExplorer.view")
-//   String packageExplorerViewTitle();
-//
-//   @Key("control.packageExplorer.title")
-//   String packageExplorerControlTitle();
-//
-//   @Key("control.packageExplorer.prompt")
-//   String packageExplorerControlPrompt();
-
-
-//   #Package Explorer
-//   control.packageExplorer.view=Package Explorer
-//   control.packageExplorer.title=Package Explorer
-//   control.packageExplorer.prompt=Package Explorer
-
-
     public static final String ID = "Window/Show View/Package Explorer";
 
     private static final String TITLE = "Package Explorer";
@@ -109,7 +93,6 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
         }
     }
 
-
     /** @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
      * .project.ProjectClosedEvent) */
     @Override
@@ -118,14 +101,12 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
         setEnabled(false);
     }
 
-
     /** @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
      * .project.ProjectOpenedEvent) */
     @Override
     public void onProjectOpened(ProjectOpenedEvent event) {
         project = event.getProject();
         setEnabled(JavaProjects.contains(project));
-        //setEnabled(isAvailableForProject());
     }
 
 }

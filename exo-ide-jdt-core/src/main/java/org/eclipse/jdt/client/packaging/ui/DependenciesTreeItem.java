@@ -21,57 +21,49 @@ package org.eclipse.jdt.client.packaging.ui;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.packaging.model.next.Package;
-import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
-import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.eclipse.jdt.client.packaging.model.next.Classpath;
+import org.eclipse.jdt.client.packaging.model.next.ClasspathFolder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class PackageTreeItem extends PackageExplorerTreeItem {
+public class DependenciesTreeItem extends PackageExplorerTreeItem
+{
 
-    public PackageTreeItem(Package p) {
-        super(p);
+    public DependenciesTreeItem(ClasspathFolder classpathFolder)
+    {
+        super(classpathFolder);
     }
 
     @Override
-    protected ImageResource getItemIcon() {
-        for (FileModel file : ((Package)getUserObject()).getFiles()) {
-            if (!DirectoryFilter.get().matchWithPattern(file.getName())) {
-                return JdtClientBundle.INSTANCE.packageFolder();
-            }
-        }
-
-        return JdtClientBundle.INSTANCE.packageEmptyFolder();
+    protected ImageResource getItemIcon()
+    {
+        return JdtClientBundle.INSTANCE.jarReferences();
     }
 
     @Override
-    protected String getItemTitle() {
-        return ((Package)getUserObject()).getPackageName();
+    protected String getItemTitle()
+    {
+        return ((ClasspathFolder)getUserObject()).getName();
     }
 
     @Override
-    public List<Item> getItems() {
-        List<Item> items = new ArrayList<Item>();
-
-        List<FileModel> files = ((Package)getUserObject()).getFiles();
-        for (FileModel file : files) {
-            if (!DirectoryFilter.get().matchWithPattern(file.getName())) {
-                items.add(file);
-            }
-        }
-
-        return items;
+    public List<Item> getItems()
+    {
+        ClasspathFolder classpathFolder = ((ClasspathFolder)getUserObject());
+        List<Item> classPathItems = new ArrayList<Item>();
+        classPathItems.addAll(classpathFolder.getClasspathList());
+        return classPathItems;
     }
 
     @Override
-    public void refresh(boolean expand) {
+    public void refresh(boolean expand)
+    {
         render();
 
         /*
@@ -86,28 +78,35 @@ public class PackageTreeItem extends PackageExplorerTreeItem {
          */
         removeNonexistendTreeItems();
 
-        Package p = (Package)getUserObject();
-        Collections.sort(p.getFiles(), COMPARATOR);
+        /*
+         * Add missing
+         */
 
+        ClasspathFolder classpathFolder = ((ClasspathFolder)getUserObject());
         int index = 0;
-        for (FileModel file : p.getFiles()) {
-            if (DirectoryFilter.get().matchWithPattern(file.getName())) {
-                continue;
-            }
 
-            PackageExplorerTreeItem child = getChildByItemId(file.getId());
-            if (child == null) {
-                child = new FileTreeItem(file);
+        /*
+         * Classpath items
+         */
+        for (Classpath classpath : classpathFolder.getClasspathList())
+        {
+            PackageExplorerTreeItem child = getChildByItemId(classpath.getId());
+            if (child == null)
+            {
+                child = new DependencyTreeItem(classpath);
                 insertItem(index, child);
-            } else {
-                child.setUserObject(file);
+            }
+            else
+            {
+                child.setUserObject(classpath);
                 child.refresh(false);
             }
 
             index++;
         }
 
-        if (expand) {
+        if (expand)
+        {
             setState(true);
         }
     }
