@@ -24,29 +24,9 @@
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-    <!-- Amazon Web Services -->
-
     <component>
-        <type>org.exoplatform.ide.extension.aws.server.rest.AWSApplication</type>
+        <key>org.exoplatform.ide.security.paas.CredentialStore</key>
+        <type>org.exoplatform.ide.security.paas.UserProfileCredentialStore</type>
     </component>
-
-    <!--  Beanstalk -->
-    <component>
-        <type>org.exoplatform.ide.extension.aws.server.beanstalk.Beanstalk</type>
-    </component>
-
-    <!--  Beanstalk End -->
-
-    <!--  S3 -->
-    <component>
-        <type>org.exoplatform.ide.extension.aws.server.s3.S3</type>
-    </component>
-    <!--  S3 End -->
-
-    <!-- EC2 -->
-    <component>
-        <type>org.exoplatform.ide.extension.aws.server.ec2.EC2</type>
-    </component>
-    <!-- End EC2 -->
 
 </configuration>

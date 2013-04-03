@@ -124,14 +124,12 @@ public class TestQDoxJavaDocExtractor {
         Assert.assertEquals("Method with generics",
                             javaDocs.get("test.javadoc.ClassWithGenerics#method@(Ljava/lang/Object;)Ljava/lang/Object;"));
 
-        Assert.assertTrue(javaDocs
-                                  .containsKey("test.javadoc.ClassWithGenerics#method@(Ljava/util/List;)Ljava/lang/Object;"));
+        Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method@(Ljava/util/List;)Ljava/lang/Object;"));
         Assert.assertEquals("Method with list as parameter {@link asdf}",
                             javaDocs.get("test.javadoc.ClassWithGenerics#method@(Ljava/util/List;)Ljava/lang/Object;"));
 
         Assert.assertTrue(javaDocs.containsKey("test.javadoc.ClassWithGenerics#method@()V"));
-        Assert.assertEquals(
-                "Begin\n@see PrivateClass asdf Middle\n@see ClassWithGenerics#method(List)\n@author Author End",
+        Assert.assertEquals("Begin\n@see PrivateClass asdf Middle\n@see ClassWithGenerics#method(List)\n@author Author End",
                 javaDocs.get("test.javadoc.ClassWithGenerics#method@()V"));
     }
 

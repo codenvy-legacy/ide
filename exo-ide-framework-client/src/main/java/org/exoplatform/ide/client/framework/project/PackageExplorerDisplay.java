@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.framework.project;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -45,10 +46,10 @@ public interface PackageExplorerDisplay extends IsView {
 
     void setProject(IDEProject project);
 
-//   /**
-//    * @return {@link TreeGridItem}
-//    */
-//   TreeGridItem<Item> getBrowserTree();
+   /**
+    * @return {@link TreeGridItem}
+    */
+   TreeGridItem<Item> getBrowserTree();
 
     boolean selectItem(Item item);
 

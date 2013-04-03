@@ -47,23 +47,20 @@ public class GitHub {
 
     private final SshKeyStore        sshKeyStore;
     private final OAuthTokenProvider oauthTokenProvider;
-    private final InvitationService  invitationService;
+    
 
     public GitHub(InitParams initParams,
                   OAuthTokenProvider oauthTokenProvider,
-                  InvitationService invitationService,
                   SshKeyStore sshKeyStore) {
-        this(ContainerUtils.readValueParam(initParams, "github-user"), oauthTokenProvider, invitationService, sshKeyStore);
+        this(ContainerUtils.readValueParam(initParams, "github-user"), oauthTokenProvider, sshKeyStore);
     }
 
     public GitHub(String myGitHubUser,
                   OAuthTokenProvider oauthTokenProvider,
-                  InvitationService invitationService,
                   SshKeyStore sshKeyStore) {
         this.myGitHubUser = myGitHubUser;
         this.oauthTokenProvider = oauthTokenProvider;
         this.sshKeyStore = sshKeyStore;
-        this.invitationService = invitationService;
     }
 
     /**

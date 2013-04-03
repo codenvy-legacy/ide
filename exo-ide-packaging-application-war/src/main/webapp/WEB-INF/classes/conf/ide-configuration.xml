@@ -259,40 +259,6 @@
 
     <!-- End Google AppEngine  -->
 
-    <!-- Amazon Web Services -->
-
-    <component>
-        <type>org.exoplatform.ide.extension.aws.server.rest.AWSApplication</type>
-    </component>
-
-    <component>
-        <key>org.exoplatform.ide.extension.aws.server.AWSAuthenticator</key>
-        <type>org.exoplatform.ide.extension.aws.server.AWSAuthenticatorImpl</type>
-    </component>
-
-    <!--  Beanstalk -->
-    <component>
-        <type>org.exoplatform.ide.extension.aws.server.beanstalk.Beanstalk</type>
-    </component>
-
-    <!--  Beanstalk End -->
-
-    <!--  S3 -->
-    <component>
-        <type>org.exoplatform.ide.extension.aws.server.s3.S3</type>
-    </component>
-
-    <!--  S3 End -->
-
-    <!-- EC2 -->
-    <component>
-        <type>org.exoplatform.ide.extension.aws.server.ec2.EC2</type>
-    </component>
-
-    <!-- End EC2 -->
-
-    <!-- End Amazon Web Services -->
-
 
     <!--
     ***************************************************************************************

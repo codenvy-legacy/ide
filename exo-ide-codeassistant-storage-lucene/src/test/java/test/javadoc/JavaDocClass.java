@@ -113,9 +113,9 @@ class ClassWithGenerics<T extends Number> {
     /**
      * Begin
      *
-     * @author Author End
      * @see PrivateClass asdf Middle
      * @see ClassWithGenerics#method(List)
+     * @author Author End
      */
     public void method() {
     }
