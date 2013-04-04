@@ -20,6 +20,8 @@ package com.codenvy.ide.texteditor;
 
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentCommand;
+import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.edits.DeleteEdit;
 import com.codenvy.ide.text.edits.InsertEdit;
 import com.codenvy.ide.text.store.Line;
@@ -34,6 +36,7 @@ import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 import com.codenvy.ide.util.ListenerRegistrar;
+import com.codenvy.ide.util.loging.Log;
 
 
 /**
@@ -47,6 +50,8 @@ public class EditorTextStoreMutator implements TextStoreMutator {
     private final ListenerManager<BeforeTextListener> beforeTextListenerManager = ListenerManager.create();
 
     private final ListenerManager<TextListener> textListenerManager = ListenerManager.create();
+
+    private final DocumentCommand documentCommand = new DocumentCommand();
 
     /** @param editor */
     public EditorTextStoreMutator(TextEditorViewImpl editor) {
@@ -68,12 +73,13 @@ public class EditorTextStoreMutator implements TextStoreMutator {
         Document document = editor.getDocument();
         try {
             int lineOffset = document.getLineOffset(lineNumber);
-            DeleteEdit delete = new DeleteEdit(lineOffset + column, deleteCount);
+            documentCommand.initialize(lineOffset + column, deleteCount, "");
+            editor.customizeDocumentCommand(documentCommand);
+            DeleteEdit delete = new DeleteEdit(documentCommand.offset, documentCommand.length);
             delete.apply(document);
 
         } catch (BadLocationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(EditorTextStoreMutator.class, e);
         }
         return null;
     }
@@ -120,14 +126,15 @@ public class EditorTextStoreMutator implements TextStoreMutator {
         Document document = editor.getDocument();
         try {
             int lineOffset = document.getLineOffset(lineNumber);
-            InsertEdit insert = new InsertEdit(lineOffset + column, text);
+            documentCommand.initialize(lineOffset + column, 0, text);
+            editor.customizeDocumentCommand(documentCommand);
+            InsertEdit insert = new InsertEdit(documentCommand.offset, documentCommand.text);
             insert.apply(document);
             textChange = TextChange.createInsertion(line, lineNumber, column, line, lineNumber, text);
             dispatchTextChange(textChange);
 
         } catch (BadLocationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(EditorTextStoreMutator.class, e);
         }
         return null;
     }

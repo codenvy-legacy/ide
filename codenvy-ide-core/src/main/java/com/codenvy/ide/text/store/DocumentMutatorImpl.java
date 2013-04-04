@@ -31,141 +31,9 @@ import com.codenvy.ide.util.StringUtils;
  */
 class DocumentMutatorImpl implements TextStoreMutator {
 
-    private class TextDeleter {
-        private final JsonArray<Anchor> anchorsInDeletedRangeToRemove = JsonCollections.createArray();
-
-        private final JsonArray<Anchor> anchorsInDeletedRangeToShift = JsonCollections.createArray();
-
-        private final JsonArray<Anchor> anchorsLeftoverFromLastLine = JsonCollections.createArray();
-
-        private int column;
-
-        private int deleteCountForCurLine;
-
-        private final int firstLineColumn;
-
-        private final Line firstLine;
-
-        private final int firstLineNumber;
-
-        private final String firstLineChunk;
-
-        private Line curLine;
-
-        private int curLineNumber;
-
-        private int remainingDeleteCount;
-
-        private TextDeleter(Line line, int lineNumber, int column, String deletedText) {
-            firstLine = this.curLine = line;
-            firstLineNumber = this.curLineNumber = lineNumber;
-            firstLineColumn = this.column = column;
-            this.remainingDeleteCount = deletedText.length();
-
-            firstLineChunk = line.getText().substring(0, column);
-        }
-
-        void delete() {
-            JsonArray<Line> removedLines = JsonCollections.createArray();
-
-            boolean wasNewlineCharDeleted = deleteFromCurLine(true);
-
-            // All deletes on subsequent lines will start at column 0
-            if (remainingDeleteCount > 0) {
-                column = 0;
-
-                do {
-                    iterateToNextLine();
-                    wasNewlineCharDeleted = deleteFromCurLine(false);
-                    removedLines.add(curLine);
-                }
-                while (remainingDeleteCount > 0);
-            }
-
-            if (wasNewlineCharDeleted) {
-            /*
-             * Must join the next line with the current line. Setting
-             * deleteCountForLine = 0 will have a nice effect of naturally joining
-             * the line.
-             */
-                iterateToNextLine();
-                column = 0;
-                deleteCountForCurLine = 0;
-                removeLineImpl(curLine);
-                removedLines.add(curLine);
-            }
-
-            // Move any leftover text on the last line to the first line
-            boolean lastLineIsEmpty = curLine.getText().length() == 0;
-            boolean lastLineWillHaveLeftoverText = deleteCountForCurLine < curLine.getText().length();
-            int lastLineFirstUntouchedColumn = column + deleteCountForCurLine;
-            if (lastLineWillHaveLeftoverText || lastLineIsEmpty) {
-                anchorManager.handleTextDeletionLastLineLeftover(anchorsLeftoverFromLastLine, firstLine, curLine,
-                                                                 lastLineFirstUntouchedColumn);
-            }
-
-            String lastLineChunk = curLine.getText().substring(lastLineFirstUntouchedColumn);
-            firstLine.setText(firstLineChunk + lastLineChunk);
-
-            int numberOfDeletedLines = curLineNumber - firstLineNumber;
-
-            anchorManager.handleTextDeletionFinished(anchorsInDeletedRangeToRemove, anchorsInDeletedRangeToShift,
-                                                     anchorsLeftoverFromLastLine, firstLine, firstLineNumber, firstLineColumn,
-                                                     numberOfDeletedLines,
-                                                     lastLineFirstUntouchedColumn);
-
-            if (numberOfDeletedLines > 0) {
-                document.commitLineCountChange(-numberOfDeletedLines);
-                document.dispatchLineRemoved(firstLineNumber + 1, removedLines);
-            }
-        }
-
-        /**
-         * Deletes the current line's text to be deleted.
-         *
-         * @return whether a newline character was deleted
-         */
-        private boolean deleteFromCurLine(boolean isFirstLine) {
-            int maxDeleteCountForCurLine = curLine.getText().length() - column;
-            deleteCountForCurLine = Math.min(maxDeleteCountForCurLine, remainingDeleteCount);
-
-            anchorManager.handleTextPredeletionForLine(curLine, column, deleteCountForCurLine,
-                                                       anchorsInDeletedRangeToRemove, anchorsInDeletedRangeToShift, isFirstLine);
-
-         /*
-          * All lines but the first should be removed from the document (either
-          * they have no text remaining, or in the case of a partial selection on
-          * the last line, the leftover text will be moved to the first line.)
-          */
-            if (!isFirstLine) {
-                removeLineImpl(curLine);
-            }
-
-            remainingDeleteCount -= deleteCountForCurLine;
-
-            int lastCharDeletedIndex = column + deleteCountForCurLine - 1;
-            return lastCharDeletedIndex >= 0 ? curLine.getText().charAt(lastCharDeletedIndex) == '\n' : false;
-        }
-
-        private void iterateToNextLine() {
-            curLine = curLine.getNextLine();
-            curLineNumber++;
-            ensureCurLine();
-        }
-
-        private void ensureCurLine() {
-            if (curLine == null) {
-                throw new IndexOutOfBoundsException("Reached end of document so could not delete the requested remaining "
-                                                    + remainingDeleteCount + " characters");
-            }
-        }
-    }
-
-    private AnchorManager anchorManager;
-
-    private final DocumentModel document;
-
+    private final DocumentModel         document;
     private final JsonArray<TextChange> textChanges;
+    private       AnchorManager         anchorManager;
 
     DocumentMutatorImpl(DocumentModel document) {
         this.document = document;
@@ -190,8 +58,7 @@ class DocumentMutatorImpl implements TextStoreMutator {
         if (column >= line.getText().length()) {
             throw new IndexOutOfBoundsException("Attempt to delete text at column " + column
                                                 + " which is greater than line length " + line.getText().length() + "(line text is: " +
-                                                line.getText()
-                                                + ")");
+                                                line.getText()+ ")");
         }
 
         String deletedText = document.getText(line, column, deleteCount);
@@ -216,8 +83,7 @@ class DocumentMutatorImpl implements TextStoreMutator {
         if (column > LineUtils.getLastCursorColumn(line)) {
             throw new IndexOutOfBoundsException("Attempt to insert text at column " + column
                                                 + " which is greater than line length " + line.getText().length() + "(line text is: " +
-                                                line.getText()
-                                                + ")");
+                                                line.getText() + ")");
         }
 
         beginHighLevelModification(TextChange.Type.INSERT, line, lineNumber, column, text);
@@ -398,5 +264,123 @@ class DocumentMutatorImpl implements TextStoreMutator {
     public UndoManager getUndoManager() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    private class TextDeleter {
+        private final JsonArray<Anchor> anchorsInDeletedRangeToRemove = JsonCollections.createArray();
+        private final JsonArray<Anchor> anchorsInDeletedRangeToShift  = JsonCollections.createArray();
+        private final JsonArray<Anchor> anchorsLeftoverFromLastLine   = JsonCollections.createArray();
+        private final int    firstLineColumn;
+        private final Line   firstLine;
+        private final int    firstLineNumber;
+        private final String firstLineChunk;
+        private       int    column;
+        private       int    deleteCountForCurLine;
+        private       Line   curLine;
+        private       int    curLineNumber;
+        private       int    remainingDeleteCount;
+
+        private TextDeleter(Line line, int lineNumber, int column, String deletedText) {
+            firstLine = this.curLine = line;
+            firstLineNumber = this.curLineNumber = lineNumber;
+            firstLineColumn = this.column = column;
+            this.remainingDeleteCount = deletedText.length();
+
+            firstLineChunk = line.getText().substring(0, column);
+        }
+
+        void delete() {
+            JsonArray<Line> removedLines = JsonCollections.createArray();
+
+            boolean wasNewlineCharDeleted = deleteFromCurLine(true);
+
+            // All deletes on subsequent lines will start at column 0
+            if (remainingDeleteCount > 0) {
+                column = 0;
+
+                do {
+                    iterateToNextLine();
+                    wasNewlineCharDeleted = deleteFromCurLine(false);
+                    removedLines.add(curLine);
+                }
+                while (remainingDeleteCount > 0);
+            }
+
+            if (wasNewlineCharDeleted) {
+            /*
+             * Must join the next line with the current line. Setting
+             * deleteCountForLine = 0 will have a nice effect of naturally joining
+             * the line.
+             */
+                iterateToNextLine();
+                column = 0;
+                deleteCountForCurLine = 0;
+                removeLineImpl(curLine);
+                removedLines.add(curLine);
+            }
+
+            // Move any leftover text on the last line to the first line
+            boolean lastLineIsEmpty = curLine.getText().length() == 0;
+            boolean lastLineWillHaveLeftoverText = deleteCountForCurLine < curLine.getText().length();
+            int lastLineFirstUntouchedColumn = column + deleteCountForCurLine;
+            if (lastLineWillHaveLeftoverText || lastLineIsEmpty) {
+                anchorManager.handleTextDeletionLastLineLeftover(anchorsLeftoverFromLastLine, firstLine, curLine,
+                                                                 lastLineFirstUntouchedColumn);
+            }
+
+            String lastLineChunk = curLine.getText().substring(lastLineFirstUntouchedColumn);
+            firstLine.setText(firstLineChunk + lastLineChunk);
+
+            int numberOfDeletedLines = curLineNumber - firstLineNumber;
+
+            anchorManager.handleTextDeletionFinished(anchorsInDeletedRangeToRemove, anchorsInDeletedRangeToShift,
+                                                     anchorsLeftoverFromLastLine, firstLine, firstLineNumber, firstLineColumn,
+                                                     numberOfDeletedLines, lastLineFirstUntouchedColumn);
+
+            if (numberOfDeletedLines > 0) {
+                document.commitLineCountChange(-numberOfDeletedLines);
+                document.dispatchLineRemoved(firstLineNumber + 1, removedLines);
+            }
+        }
+
+        /**
+         * Deletes the current line's text to be deleted.
+         *
+         * @return whether a newline character was deleted
+         */
+        private boolean deleteFromCurLine(boolean isFirstLine) {
+            int maxDeleteCountForCurLine = curLine.getText().length() - column;
+            deleteCountForCurLine = Math.min(maxDeleteCountForCurLine, remainingDeleteCount);
+
+            anchorManager.handleTextPredeletionForLine(curLine, column, deleteCountForCurLine,
+                                                       anchorsInDeletedRangeToRemove, anchorsInDeletedRangeToShift, isFirstLine);
+
+         /*
+          * All lines but the first should be removed from the document (either
+          * they have no text remaining, or in the case of a partial selection on
+          * the last line, the leftover text will be moved to the first line.)
+          */
+            if (!isFirstLine) {
+                removeLineImpl(curLine);
+            }
+
+            remainingDeleteCount -= deleteCountForCurLine;
+
+            int lastCharDeletedIndex = column + deleteCountForCurLine - 1;
+            return lastCharDeletedIndex >= 0 ? curLine.getText().charAt(lastCharDeletedIndex) == '\n' : false;
+        }
+
+        private void iterateToNextLine() {
+            curLine = curLine.getNextLine();
+            curLineNumber++;
+            ensureCurLine();
+        }
+
+        private void ensureCurLine() {
+            if (curLine == null) {
+                throw new IndexOutOfBoundsException("Reached end of document so could not delete the requested remaining "
+                                                    + remainingDeleteCount + " characters");
+            }
+        }
     }
 }

@@ -214,16 +214,16 @@ public class InputController {
         inputElement.setAttribute("autocapitalize", "off");
 
         // Attach listeners
-      /*
-       * For text events, call inputHandler.handleInput(event, text) if the text
-       * entered was > 1 character -> from a paste event. This gets fed directly
-       * into the document. Single keypresses all get captured by signalEventListener
-       * and passed through the shortcut system.
-       *
-       * TODO: This isn't actually true, there could be paste events
-       * of only one character. Change this to check if the event was a clipboard
-       * event.
-       */
+        /*
+         * For text events, call inputHandler.handleInput(event, text) if the text
+         * entered was > 1 character -> from a paste event. This gets fed directly
+         * into the document. Single keypresses all get captured by signalEventListener
+         * and passed through the shortcut system.
+         *
+         * TODO: This isn't actually true, there could be paste events
+         * of only one character. Change this to check if the event was a clipboard
+         * event.
+         */
         inputElement.addEventListener(EVENT_TEXTINPUT, new EventListener() {
             @Override
             public void handleEvent(Event event) {

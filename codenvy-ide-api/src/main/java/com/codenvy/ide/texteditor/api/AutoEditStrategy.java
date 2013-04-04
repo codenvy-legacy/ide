@@ -18,6 +18,9 @@
  */
 package com.codenvy.ide.texteditor.api;
 
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentCommand;
+
 /**
  * An auto edit strategy can adapt changes that will be applied to
  * a text display document. The strategy is informed by the text display
@@ -29,5 +32,13 @@ package com.codenvy.ide.texteditor.api;
  * @version $Id:
  */
 public interface AutoEditStrategy {
-    //TODO
+    /**
+     * Allows the strategy to manipulate the document command.
+     *
+     * @param document
+     *         the document that will be changed
+     * @param command
+     *         the document command describing the change
+     */
+    void customizeDocumentCommand(Document document, DocumentCommand command);
 }
