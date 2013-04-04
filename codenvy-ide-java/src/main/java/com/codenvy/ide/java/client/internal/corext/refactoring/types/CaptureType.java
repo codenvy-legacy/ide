@@ -11,117 +11,102 @@
 package com.codenvy.ide.java.client.internal.corext.refactoring.types;
 
 import com.codenvy.ide.java.client.core.dom.ITypeBinding;
-
 import com.codenvy.ide.runtime.Assert;
 
 
-public final class CaptureType extends AbstractTypeVariable
-{
+public final class CaptureType extends AbstractTypeVariable {
 
-   private WildcardType fWildcard;
+    private WildcardType fWildcard;
 
-   //	private IJavaProject fJavaProject;
+    //	private IJavaProject fJavaProject;
 
-   protected CaptureType(TypeEnvironment environment)
-   {
-      super(environment);
-   }
+    protected CaptureType(TypeEnvironment environment) {
+        super(environment);
+    }
 
-   protected void initialize(ITypeBinding binding)
-   {
-      Assert.isTrue(binding.isCapture());
-      super.initialize(binding);
-      fWildcard = (WildcardType)getEnvironment().create(binding.getWildcard());
-      //		fJavaProject= javaProject;
-   }
+    protected void initialize(ITypeBinding binding) {
+        Assert.isTrue(binding.isCapture());
+        super.initialize(binding);
+        fWildcard = (WildcardType)getEnvironment().create(binding.getWildcard());
+        //		fJavaProject= javaProject;
+    }
 
-   @Override
-   public int getKind()
-   {
-      return CAPTURE_TYPE;
-   }
+    @Override
+    public int getKind() {
+        return CAPTURE_TYPE;
+    }
 
-   public WildcardType getWildcard()
-   {
-      return fWildcard;
-   }
+    public WildcardType getWildcard() {
+        return fWildcard;
+    }
 
-   @Override
-   public boolean doEquals(TType type)
-   {
-      return getBindingKey().equals(((CaptureType)type).getBindingKey());
-      //&& fJavaProject.equals(((CaptureType)type).fJavaProject);
-   }
+    @Override
+    public boolean doEquals(TType type) {
+        return getBindingKey().equals(((CaptureType)type).getBindingKey());
+        //&& fJavaProject.equals(((CaptureType)type).fJavaProject);
+    }
 
-   @Override
-   public int hashCode()
-   {
-      return getBindingKey().hashCode();
-   }
+    @Override
+    public int hashCode() {
+        return getBindingKey().hashCode();
+    }
 
-   @Override
-   protected boolean doCanAssignTo(TType lhs)
-   {
-      switch (lhs.getKind())
-      {
-         case NULL_TYPE :
-         case VOID_TYPE :
-         case PRIMITIVE_TYPE :
+    @Override
+    protected boolean doCanAssignTo(TType lhs) {
+        switch (lhs.getKind()) {
+            case NULL_TYPE:
+            case VOID_TYPE:
+            case PRIMITIVE_TYPE:
+                return false;
+
+            case ARRAY_TYPE:
+                return canAssignFirstBoundTo(lhs);
+
+            case GENERIC_TYPE:
+                return false;
+
+            case STANDARD_TYPE:
+            case PARAMETERIZED_TYPE:
+            case RAW_TYPE:
+                return canAssignOneBoundTo(lhs);
+
+            case UNBOUND_WILDCARD_TYPE:
+            case EXTENDS_WILDCARD_TYPE:
+            case SUPER_WILDCARD_TYPE:
+                return ((WildcardType)lhs).checkAssignmentBound(this);
+
+            case TYPE_VARIABLE:
+                return false; //fWildcard.doCanAssignTo(lhs);
+
+            case CAPTURE_TYPE:
+                return ((CaptureType)lhs).checkLowerBound(this.getWildcard());
+
+        }
+        return false;
+    }
+
+    protected boolean checkLowerBound(TType rhs) {
+        if (!getWildcard().isSuperWildcardType())
             return false;
 
-         case ARRAY_TYPE :
-            return canAssignFirstBoundTo(lhs);
+        return rhs.canAssignTo(getWildcard().getBound());
+    }
 
-         case GENERIC_TYPE :
-            return false;
+    private boolean canAssignFirstBoundTo(TType lhs) {
+        if (fBounds.length > 0 && fBounds[0].isArrayType()) {
+            // capture of ? extends X[]
+            return fBounds[0].canAssignTo(lhs);
+        }
+        return false;
+    }
 
-         case STANDARD_TYPE :
-         case PARAMETERIZED_TYPE :
-         case RAW_TYPE :
-            return canAssignOneBoundTo(lhs);
+    @Override
+    public String getName() {
+        return ""; //$NON-NLS-1$
+    }
 
-         case UNBOUND_WILDCARD_TYPE :
-         case EXTENDS_WILDCARD_TYPE :
-         case SUPER_WILDCARD_TYPE :
-            return ((WildcardType)lhs).checkAssignmentBound(this);
-
-         case TYPE_VARIABLE :
-            return false; //fWildcard.doCanAssignTo(lhs);
-
-         case CAPTURE_TYPE :
-            return ((CaptureType)lhs).checkLowerBound(this.getWildcard());
-
-      }
-      return false;
-   }
-
-   protected boolean checkLowerBound(TType rhs)
-   {
-      if (!getWildcard().isSuperWildcardType())
-         return false;
-
-      return rhs.canAssignTo(getWildcard().getBound());
-   }
-
-   private boolean canAssignFirstBoundTo(TType lhs)
-   {
-      if (fBounds.length > 0 && fBounds[0].isArrayType())
-      {
-         // capture of ? extends X[]
-         return fBounds[0].canAssignTo(lhs);
-      }
-      return false;
-   }
-
-   @Override
-   public String getName()
-   {
-      return ""; //$NON-NLS-1$
-   }
-
-   @Override
-   protected String getPlainPrettySignature()
-   {
-      return "capture-of " + fWildcard.getPrettySignature(); //$NON-NLS-1$
-   }
+    @Override
+    protected String getPlainPrettySignature() {
+        return "capture-of " + fWildcard.getPrettySignature(); //$NON-NLS-1$
+    }
 }

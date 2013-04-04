@@ -18,16 +18,13 @@
  */
 package com.codenvy.ide.command;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
-import com.codenvy.ide.Resources;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.WizardPresenter;
 import com.codenvy.ide.wizard.newresource.NewResourcePagePresenter;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,71 +36,54 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowNewResourceWizardCommand implements ExtendedCommand
-{
-   private final Resources resources;
+public class ShowNewResourceWizardCommand implements ExtendedCommand {
+    private final Resources resources;
 
-   private final WizardAgentImpl wizardAgent;
+    private final WizardAgentImpl wizardAgent;
 
-   private final ProjectOpenedExpression expression;
+    private final ProjectOpenedExpression expression;
 
-   /**
-    * Create command.
-    *
-    * @param resources
-    * @param wizardAgent
-    * @param expression
-    */
-   @Inject
-   public ShowNewResourceWizardCommand(Resources resources, WizardAgentImpl wizardAgent,
-      ProjectOpenedExpression expression)
-   {
-      this.resources = resources;
-      this.wizardAgent = wizardAgent;
-      this.expression = expression;
-   }
+    /**
+     * Create command.
+     *
+     * @param resources
+     * @param wizardAgent
+     * @param expression
+     */
+    @Inject
+    public ShowNewResourceWizardCommand(Resources resources, WizardAgentImpl wizardAgent,
+                                        ProjectOpenedExpression expression) {
+        this.resources = resources;
+        this.wizardAgent = wizardAgent;
+        this.expression = expression;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void execute()
-   {
-      NewResourcePagePresenter page = new NewResourcePagePresenter(resources, wizardAgent);
-      WizardPresenter wizardDialog = new WizardPresenter(page, "Create resource");
-      wizardDialog.showWizard();
-   }
+    /** {@inheritDoc} */
+    public void execute() {
+        NewResourcePagePresenter page = new NewResourcePagePresenter(resources, wizardAgent);
+        WizardPresenter wizardDialog = new WizardPresenter(page, "Create resource");
+        wizardDialog.showWizard();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public ImageResource getIcon()
-   {
-      return resources.file();
-   }
+    /** {@inheritDoc} */
+    public ImageResource getIcon() {
+        return resources.file();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Expression inContext()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
+    /** {@inheritDoc} */
+    public Expression inContext() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public Expression canExecute()
-   {
-      return expression;
-   }
+    /** {@inheritDoc} */
+    public Expression canExecute() {
+        return expression;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "Create new resource";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "Create new resource";
+    }
 }

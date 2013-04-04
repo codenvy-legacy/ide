@@ -24,28 +24,25 @@ import com.codenvy.ide.rest.AsyncRequestLoader;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public abstract class Loader implements AsyncRequestLoader
-{
+public abstract class Loader implements AsyncRequestLoader {
 
-   protected final String DEFAULT_MESSAGE = "Loading data...";
+    protected final String DEFAULT_MESSAGE = "Loading data...";
 
-   private String message = DEFAULT_MESSAGE;
+    private String message = DEFAULT_MESSAGE;
 
-   protected String getMessage()
-   {
-      String m = message;
-      message = DEFAULT_MESSAGE;
-      return m;
-   }
+    protected String getMessage() {
+        String m = message;
+        message = DEFAULT_MESSAGE;
+        return m;
+    }
 
-   public void setMessage(String message)
-   {
-      this.message = message;
-   }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
 }

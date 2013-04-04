@@ -21,17 +21,15 @@ package com.codenvy.ide.util.loging;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-interface Logger
-{
-   void debug(Class<?> clazz, Object... args);
+interface Logger {
+    void debug(Class<?> clazz, Object... args);
 
-   void error(Class<?> clazz, Object... args);
+    void error(Class<?> clazz, Object... args);
 
-   void info(Class<?> clazz, Object... args);
+    void info(Class<?> clazz, Object... args);
 
-   void warn(Class<?> clazz, Object... args);
+    void warn(Class<?> clazz, Object... args);
 
-   boolean isLoggingEnabled();
+    boolean isLoggingEnabled();
 }

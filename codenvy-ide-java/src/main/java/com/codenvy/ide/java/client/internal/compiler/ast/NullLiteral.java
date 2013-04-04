@@ -16,64 +16,57 @@ import com.codenvy.ide.java.client.internal.compiler.impl.Constant;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 import com.codenvy.ide.java.client.internal.compiler.lookup.TypeBinding;
 
-public class NullLiteral extends MagicLiteral
-{
+public class NullLiteral extends MagicLiteral {
 
-   static final char[] source = {'n', 'u', 'l', 'l'};
+    static final char[] source = {'n', 'u', 'l', 'l'};
 
-   public NullLiteral(int s, int e)
-   {
+    public NullLiteral(int s, int e) {
 
-      super(s, e);
-   }
+        super(s, e);
+    }
 
-   @Override
-   public void computeConstant()
-   {
+    @Override
+    public void computeConstant() {
 
-      this.constant = Constant.NotAConstant;
-   }
+        this.constant = Constant.NotAConstant;
+    }
 
-   /**
-    * Code generation for the null literal
-    *
-    * @param currentScope com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope
-    * @param valueRequired boolean
-    */
-   @Override
-   public void generateCode(BlockScope currentScope, boolean valueRequired)
-   {
+    /**
+     * Code generation for the null literal
+     *
+     * @param currentScope
+     *         com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope
+     * @param valueRequired
+     *         boolean
+     */
+    @Override
+    public void generateCode(BlockScope currentScope, boolean valueRequired) {
 
-   }
+    }
 
-   @Override
-   public TypeBinding literalType(BlockScope scope)
-   {
-      return TypeBinding.NULL;
-   }
+    @Override
+    public TypeBinding literalType(BlockScope scope) {
+        return TypeBinding.NULL;
+    }
 
-   @Override
-   public int nullStatus(FlowInfo flowInfo)
-   {
-      return FlowInfo.NULL;
-   }
+    @Override
+    public int nullStatus(FlowInfo flowInfo) {
+        return FlowInfo.NULL;
+    }
 
-   @Override
-   public Object reusableJSRTarget()
-   {
-      return TypeBinding.NULL;
-   }
+    @Override
+    public Object reusableJSRTarget() {
+        return TypeBinding.NULL;
+    }
 
-   @Override
-   public char[] source()
-   {
-      return source;
-   }
+    @Override
+    public char[] source() {
+        return source;
+    }
 
-   @Override
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      visitor.visit(this, scope);
-      visitor.endVisit(this, scope);
-   }
+    @Override
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        visitor.visit(this, scope);
+        visitor.endVisit(this, scope);
+    }
 }

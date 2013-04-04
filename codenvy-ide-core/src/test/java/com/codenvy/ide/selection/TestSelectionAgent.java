@@ -16,10 +16,6 @@
  */
 package com.codenvy.ide.selection;
 
-import static junit.framework.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.event.ActivePartChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedEvent;
 import com.codenvy.ide.api.event.SelectionChangedHandler;
@@ -39,158 +35,141 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
 /**
  * Test covers {@link SelectionAgentImpl} functionality.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestSelectionAgent
-{
+public class TestSelectionAgent {
 
-   private EventBus eventBus = new SimpleEventBus();
+    private EventBus eventBus = new SimpleEventBus();
 
-   private SelectionAgentImpl agent = new SelectionAgentImpl(eventBus);
+    private SelectionAgentImpl agent = new SelectionAgentImpl(eventBus);
 
-   @Mock
-   private PartPresenter part;
+    @Mock
+    private PartPresenter part;
 
-   @Mock
-   private Selection selection;
+    @Mock
+    private Selection selection;
 
-   @Before
-   public void disarm()
-   {
-      // don't throw an exception if GWT.create() invoked
-      GWTMockUtilities.disarm();
-   }
+    @Before
+    public void disarm() {
+        // don't throw an exception if GWT.create() invoked
+        GWTMockUtilities.disarm();
+    }
 
-   @After
-   public void restore()
-   {
-      GWTMockUtilities.restore();
-   }
+    @After
+    public void restore() {
+        GWTMockUtilities.restore();
+    }
 
-   /**
-    * Check proper Selection returned when part changed
-    */
-   @Test
-   public void shouldChangeSelectionAfterPartGetsActivated()
-   {
-      when(part.getSelection()).thenReturn(selection);
+    /** Check proper Selection returned when part changed */
+    @Test
+    public void shouldChangeSelectionAfterPartGetsActivated() {
+        when(part.getSelection()).thenReturn(selection);
 
-      // fire event, for agent to get information about active part
-      eventBus.fireEvent(new ActivePartChangedEvent(part));
+        // fire event, for agent to get information about active part
+        eventBus.fireEvent(new ActivePartChangedEvent(part));
 
-      assertEquals("Agent should return proper Selection", selection, agent.getSelection());
-   }
+        assertEquals("Agent should return proper Selection", selection, agent.getSelection());
+    }
 
-   /**
-    * Event should be fired, when active part changed
-    */
-   @Test
-   public void shouldFireEventWhenPartChanged()
-   {
-      when(part.getSelection()).thenReturn(selection);
-      SelectionChangedHandler handler = mock(SelectionChangedHandler.class);
-      eventBus.addHandler(SelectionChangedEvent.TYPE, handler);
+    /** Event should be fired, when active part changed */
+    @Test
+    public void shouldFireEventWhenPartChanged() {
+        when(part.getSelection()).thenReturn(selection);
+        SelectionChangedHandler handler = mock(SelectionChangedHandler.class);
+        eventBus.addHandler(SelectionChangedEvent.TYPE, handler);
 
-      // fire event, for agent to get information about active part
-      eventBus.fireEvent(new ActivePartChangedEvent(part));
+        // fire event, for agent to get information about active part
+        eventBus.fireEvent(new ActivePartChangedEvent(part));
 
-      verify(handler).onSelectionChanged((SelectionChangedEvent)any());
-   }
+        verify(handler).onSelectionChanged((SelectionChangedEvent)any());
+    }
 
-   /**
-    * If selection chang in active part, Selection Agent should fire
-    * an Event
-    */
-   @Test
-   public void shouldFireEventWhenSelectionInActivePartChanged()
-   {
+    /**
+     * If selection chang in active part, Selection Agent should fire
+     * an Event
+     */
+    @Test
+    public void shouldFireEventWhenSelectionInActivePartChanged() {
 
-      AbstractPartPresenter part = new AbstractPartPresenter()
-      {
-         @Override
-         public void go(AcceptsOneWidget container)
-         {
-         }
+        AbstractPartPresenter part = new AbstractPartPresenter() {
+            @Override
+            public void go(AcceptsOneWidget container) {
+            }
 
-         @Override
-         public String getTitleToolTip()
-         {
-            return null;
-         }
+            @Override
+            public String getTitleToolTip() {
+                return null;
+            }
 
-         @Override
-         public ImageResource getTitleImage()
-         {
-            return null;
-         }
+            @Override
+            public ImageResource getTitleImage() {
+                return null;
+            }
 
-         @Override
-         public String getTitle()
-         {
-            return null;
-         }
-      };
+            @Override
+            public String getTitle() {
+                return null;
+            }
+        };
 
-      // fire event, for agent to get information about active part
-      eventBus.fireEvent(new ActivePartChangedEvent(part));
-      SelectionChangedHandler handler = mock(SelectionChangedHandler.class);
-      eventBus.addHandler(SelectionChangedEvent.TYPE, handler);
+        // fire event, for agent to get information about active part
+        eventBus.fireEvent(new ActivePartChangedEvent(part));
+        SelectionChangedHandler handler = mock(SelectionChangedHandler.class);
+        eventBus.addHandler(SelectionChangedEvent.TYPE, handler);
 
-      part.setSelection(mock(Selection.class));
+        part.setSelection(mock(Selection.class));
 
-      verify(handler).onSelectionChanged((SelectionChangedEvent)any());
-   }
+        verify(handler).onSelectionChanged((SelectionChangedEvent)any());
+    }
 
-   /**
-    * If selection chang in non-active part, no events should be fired by 
-    * Selection Agent
-    */
-   @Test
-   public void shouldNOTFireEventWhenSelectionInNONActivePartChanged()
-   {
+    /**
+     * If selection chang in non-active part, no events should be fired by
+     * Selection Agent
+     */
+    @Test
+    public void shouldNOTFireEventWhenSelectionInNONActivePartChanged() {
 
-      AbstractPartPresenter firstPart = new AbstractPartPresenter()
-      {
-         @Override
-         public void go(AcceptsOneWidget container)
-         {
-         }
+        AbstractPartPresenter firstPart = new AbstractPartPresenter() {
+            @Override
+            public void go(AcceptsOneWidget container) {
+            }
 
-         @Override
-         public String getTitleToolTip()
-         {
-            return null;
-         }
+            @Override
+            public String getTitleToolTip() {
+                return null;
+            }
 
-         @Override
-         public ImageResource getTitleImage()
-         {
-            return null;
-         }
+            @Override
+            public ImageResource getTitleImage() {
+                return null;
+            }
 
-         @Override
-         public String getTitle()
-         {
-            return null;
-         }
-      };
+            @Override
+            public String getTitle() {
+                return null;
+            }
+        };
 
-      // fire event, for agent to get information about active part
-      eventBus.fireEvent(new ActivePartChangedEvent(firstPart));
-      // change part
-      eventBus.fireEvent(new ActivePartChangedEvent(mock(PartPresenter.class)));
+        // fire event, for agent to get information about active part
+        eventBus.fireEvent(new ActivePartChangedEvent(firstPart));
+        // change part
+        eventBus.fireEvent(new ActivePartChangedEvent(mock(PartPresenter.class)));
 
-      SelectionChangedHandler handler = mock(SelectionChangedHandler.class);
-      eventBus.addHandler(SelectionChangedEvent.TYPE, handler);
+        SelectionChangedHandler handler = mock(SelectionChangedHandler.class);
+        eventBus.addHandler(SelectionChangedEvent.TYPE, handler);
 
-      // call setSelection on the first Part.
-      firstPart.setSelection(mock(Selection.class));
+        // call setSelection on the first Part.
+        firstPart.setSelection(mock(Selection.class));
 
-      verifyZeroInteractions(handler);
-   }
+        verifyZeroInteractions(handler);
+    }
 
 }

@@ -34,22 +34,7 @@ import com.codenvy.ide.java.client.perspective.DebugPerspectivePresenter;
 import com.codenvy.ide.java.client.perspective.JavaPerspectivePresenter;
 import com.codenvy.ide.java.client.projectmodel.JavaProject;
 import com.codenvy.ide.java.client.projectmodel.JavaProjectModelProvider;
-import com.codenvy.ide.java.client.templates.CodeTemplateContextType;
-import com.codenvy.ide.java.client.templates.ContextTypeRegistry;
-import com.codenvy.ide.java.client.templates.ElementTypeResolver;
-import com.codenvy.ide.java.client.templates.ExceptionVariableNameResolver;
-import com.codenvy.ide.java.client.templates.FieldResolver;
-import com.codenvy.ide.java.client.templates.ImportsResolver;
-import com.codenvy.ide.java.client.templates.JavaContextType;
-import com.codenvy.ide.java.client.templates.JavaDocContextType;
-import com.codenvy.ide.java.client.templates.LinkResolver;
-import com.codenvy.ide.java.client.templates.LocalVarResolver;
-import com.codenvy.ide.java.client.templates.NameResolver;
-import com.codenvy.ide.java.client.templates.StaticImportResolver;
-import com.codenvy.ide.java.client.templates.TemplateStore;
-import com.codenvy.ide.java.client.templates.TypeResolver;
-import com.codenvy.ide.java.client.templates.TypeVariableResolver;
-import com.codenvy.ide.java.client.templates.VarResolver;
+import com.codenvy.ide.java.client.templates.*;
 import com.codenvy.ide.java.client.wizard.CreateJavaProjectPresenter;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPagePresenter;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPagePresenter;
@@ -66,190 +51,164 @@ import java.util.HashMap;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "3.0.0")
-public class JavaExtension
-{
-   private static final String JAVA_PERSPECTIVE = "Java";
+public class JavaExtension {
+    private static final String JAVA_PERSPECTIVE = "Java";
 
-   private static final String JAVA_DEBUG_PERSPECTIVE = "Java Debug";
+    private static final String JAVA_DEBUG_PERSPECTIVE = "Java Debug";
 
-   private static JavaExtension instance;
+    private static JavaExtension instance;
 
-   private HashMap<String, String> options;
+    private HashMap<String, String> options;
 
-   private ContextTypeRegistry codeTemplateContextTypeRegistry;
+    private ContextTypeRegistry codeTemplateContextTypeRegistry;
 
-   private TemplateStore templateStore;
+    private TemplateStore templateStore;
 
-   private ContentAssistHistory contentAssistHistory;
+    private ContentAssistHistory contentAssistHistory;
 
-   /**
-    *
-    */
-   @Inject
-   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry,
-      final WorkspaceAgent workspace, JavaEditorProvider javaEditorProvider, EventBus eventBus,
-      WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider, MainMenuAgent mainMenu,
-      Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider,
-      Provider<JavaPerspectivePresenter> javaPerspProvider, Provider<DebugPerspectivePresenter> debugPerspProvider,
-      CreateJavaProjectPresenter createJavaProjectPresenter)
-   {
-      this();
-      FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
-      editorRegistry.register(javaFile, javaEditorProvider);
-      resourceProvider.registerFileType(javaFile);
-      resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
-      JavaClientBundle.INSTANCE.css().ensureInjected();
-      wizardAgent.registerNewProjectWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
-         JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, createJavaProjectPresenter,
-         JsonCollections.<String> createArray());
+    /**
+     *
+     */
+    @Inject
+    public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry,
+                         final WorkspaceAgent workspace, JavaEditorProvider javaEditorProvider, EventBus eventBus,
+                         WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider, MainMenuAgent mainMenu,
+                         Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider,
+                         Provider<JavaPerspectivePresenter> javaPerspProvider, Provider<DebugPerspectivePresenter> debugPerspProvider,
+                         CreateJavaProjectPresenter createJavaProjectPresenter) {
+        this();
+        FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
+        editorRegistry.register(javaFile, javaEditorProvider);
+        resourceProvider.registerFileType(javaFile);
+        resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
+        JavaClientBundle.INSTANCE.css().ensureInjected();
+        wizardAgent.registerNewProjectWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
+                                             JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, createJavaProjectPresenter,
+                                             JsonCollections.<String>createArray());
 
-      wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(),
-         packageProvider);
-      wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(),
-         classProvider);
+        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(),
+                                              packageProvider);
+        wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(),
+                                              classProvider);
 
-      // register Perspectives
-      workspace.registerPerspective(JAVA_PERSPECTIVE, null, javaPerspProvider);
-      workspace.registerPerspective(JAVA_DEBUG_PERSPECTIVE, null, debugPerspProvider);
-   }
+        // register Perspectives
+        workspace.registerPerspective(JAVA_PERSPECTIVE, null, javaPerspProvider);
+        workspace.registerPerspective(JAVA_DEBUG_PERSPECTIVE, null, debugPerspProvider);
+    }
 
-   /**
-    * For test use only. 
-    */
-   public JavaExtension()
-   {
-      options = new HashMap<String, String>();
-      instance = this;
-      initOptions();
-   }
+    /** For test use only. */
+    public JavaExtension() {
+        options = new HashMap<String, String>();
+        instance = this;
+        initOptions();
+    }
 
-   /**
-    * @return
-    */
-   public static JavaExtension get()
-   {
-      return instance;
-   }
+    /** @return  */
+    public static JavaExtension get() {
+        return instance;
+    }
 
-   private void initOptions()
-   {
-      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-      options.put(JavaCore.CORE_ENCODING, "UTF-8");
-      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-      options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
-      options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
-      options.put(CompilerOptions.OPTION_ReportUnusedLocal, CompilerOptions.WARNING);
-      options.put(CompilerOptions.OPTION_TaskTags, CompilerOptions.WARNING);
-      options.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, CompilerOptions.WARNING);
-      options.put(CompilerOptions.OPTION_SuppressWarnings, CompilerOptions.DISABLED);
-      options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
-      options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
-      options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
-      options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
+    private void initOptions() {
+        options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+        options.put(JavaCore.CORE_ENCODING, "UTF-8");
+        options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+        options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
+        options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
+        options.put(CompilerOptions.OPTION_ReportUnusedLocal, CompilerOptions.WARNING);
+        options.put(CompilerOptions.OPTION_TaskTags, CompilerOptions.WARNING);
+        options.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, CompilerOptions.WARNING);
+        options.put(CompilerOptions.OPTION_SuppressWarnings, CompilerOptions.DISABLED);
+        options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
+        options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
+        options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
+        options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
 
-   }
+    }
 
-   /**
-    * @return
-    */
-   public HashMap<String, String> getOptions()
-   {
-      return options;
-   }
+    /** @return  */
+    public HashMap<String, String> getOptions() {
+        return options;
+    }
 
-   /**
-    * @return
-    */
-   public TemplateStore getTemplateStore()
-   {
-      if (templateStore == null)
-      {
-         templateStore = new TemplateStore();
-      }
-      return templateStore;
-   }
+    /** @return  */
+    public TemplateStore getTemplateStore() {
+        if (templateStore == null) {
+            templateStore = new TemplateStore();
+        }
+        return templateStore;
+    }
 
-   /**
-    * @return
-    */
-   public ContextTypeRegistry getTemplateContextRegistry()
-   {
-      if (codeTemplateContextTypeRegistry == null)
-      {
-         codeTemplateContextTypeRegistry = new ContextTypeRegistry();
+    /** @return  */
+    public ContextTypeRegistry getTemplateContextRegistry() {
+        if (codeTemplateContextTypeRegistry == null) {
+            codeTemplateContextTypeRegistry = new ContextTypeRegistry();
 
-         CodeTemplateContextType.registerContextTypes(codeTemplateContextTypeRegistry);
-         JavaContextType contextTypeAll = new JavaContextType(JavaContextType.ID_ALL);
+            CodeTemplateContextType.registerContextTypes(codeTemplateContextTypeRegistry);
+            JavaContextType contextTypeAll = new JavaContextType(JavaContextType.ID_ALL);
 
-         contextTypeAll.initializeContextTypeResolvers();
+            contextTypeAll.initializeContextTypeResolvers();
 
-         FieldResolver fieldResolver = new FieldResolver();
-         fieldResolver.setType("field");
-         contextTypeAll.addResolver(fieldResolver);
+            FieldResolver fieldResolver = new FieldResolver();
+            fieldResolver.setType("field");
+            contextTypeAll.addResolver(fieldResolver);
 
-         LocalVarResolver localVarResolver = new LocalVarResolver();
-         localVarResolver.setType("localVar");
-         contextTypeAll.addResolver(localVarResolver);
-         VarResolver varResolver = new VarResolver();
-         varResolver.setType("var");
-         contextTypeAll.addResolver(varResolver);
-         NameResolver nameResolver = new NameResolver();
-         nameResolver.setType("newName");
-         contextTypeAll.addResolver(nameResolver);
-         TypeResolver typeResolver = new TypeResolver();
-         typeResolver.setType("newType");
-         contextTypeAll.addResolver(typeResolver);
-         ElementTypeResolver elementTypeResolver = new ElementTypeResolver();
-         elementTypeResolver.setType("elemType");
-         contextTypeAll.addResolver(elementTypeResolver);
-         TypeVariableResolver typeVariableResolver = new TypeVariableResolver();
-         typeVariableResolver.setType("argType");
-         contextTypeAll.addResolver(typeVariableResolver);
-         LinkResolver linkResolver = new LinkResolver();
-         linkResolver.setType("link");
-         contextTypeAll.addResolver(linkResolver);
-         ImportsResolver importsResolver = new ImportsResolver();
-         importsResolver.setType("import");
-         StaticImportResolver staticImportResolver = new StaticImportResolver();
-         staticImportResolver.setType("importStatic");
-         contextTypeAll.addResolver(staticImportResolver);
-         ExceptionVariableNameResolver exceptionVariableNameResolver = new ExceptionVariableNameResolver();
-         exceptionVariableNameResolver.setType("exception_variable_name");
-         contextTypeAll.addResolver(exceptionVariableNameResolver);
-         codeTemplateContextTypeRegistry.addContextType(contextTypeAll);
-         codeTemplateContextTypeRegistry.addContextType(new JavaDocContextType());
-         JavaContextType contextTypeMembers = new JavaContextType(JavaContextType.ID_MEMBERS);
-         JavaContextType contextTypeStatements = new JavaContextType(JavaContextType.ID_STATEMENTS);
-         contextTypeMembers.initializeResolvers(contextTypeAll);
-         contextTypeStatements.initializeResolvers(contextTypeAll);
-         codeTemplateContextTypeRegistry.addContextType(contextTypeMembers);
-         codeTemplateContextTypeRegistry.addContextType(contextTypeStatements);
-      }
+            LocalVarResolver localVarResolver = new LocalVarResolver();
+            localVarResolver.setType("localVar");
+            contextTypeAll.addResolver(localVarResolver);
+            VarResolver varResolver = new VarResolver();
+            varResolver.setType("var");
+            contextTypeAll.addResolver(varResolver);
+            NameResolver nameResolver = new NameResolver();
+            nameResolver.setType("newName");
+            contextTypeAll.addResolver(nameResolver);
+            TypeResolver typeResolver = new TypeResolver();
+            typeResolver.setType("newType");
+            contextTypeAll.addResolver(typeResolver);
+            ElementTypeResolver elementTypeResolver = new ElementTypeResolver();
+            elementTypeResolver.setType("elemType");
+            contextTypeAll.addResolver(elementTypeResolver);
+            TypeVariableResolver typeVariableResolver = new TypeVariableResolver();
+            typeVariableResolver.setType("argType");
+            contextTypeAll.addResolver(typeVariableResolver);
+            LinkResolver linkResolver = new LinkResolver();
+            linkResolver.setType("link");
+            contextTypeAll.addResolver(linkResolver);
+            ImportsResolver importsResolver = new ImportsResolver();
+            importsResolver.setType("import");
+            StaticImportResolver staticImportResolver = new StaticImportResolver();
+            staticImportResolver.setType("importStatic");
+            contextTypeAll.addResolver(staticImportResolver);
+            ExceptionVariableNameResolver exceptionVariableNameResolver = new ExceptionVariableNameResolver();
+            exceptionVariableNameResolver.setType("exception_variable_name");
+            contextTypeAll.addResolver(exceptionVariableNameResolver);
+            codeTemplateContextTypeRegistry.addContextType(contextTypeAll);
+            codeTemplateContextTypeRegistry.addContextType(new JavaDocContextType());
+            JavaContextType contextTypeMembers = new JavaContextType(JavaContextType.ID_MEMBERS);
+            JavaContextType contextTypeStatements = new JavaContextType(JavaContextType.ID_STATEMENTS);
+            contextTypeMembers.initializeResolvers(contextTypeAll);
+            contextTypeStatements.initializeResolvers(contextTypeAll);
+            codeTemplateContextTypeRegistry.addContextType(contextTypeMembers);
+            codeTemplateContextTypeRegistry.addContextType(contextTypeStatements);
+        }
 
-      return codeTemplateContextTypeRegistry;
-   }
+        return codeTemplateContextTypeRegistry;
+    }
 
-   /**
-    * @return
-    */
-   public ContentAssistHistory getContentAssistHistory()
-   {
-      if (contentAssistHistory == null)
-      {
-         Preferences preferences = GWT.create(Preferences.class);
-         contentAssistHistory =
-         //TODO get user name
-            ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + "todo");
+    /** @return  */
+    public ContentAssistHistory getContentAssistHistory() {
+        if (contentAssistHistory == null) {
+            Preferences preferences = GWT.create(Preferences.class);
+            contentAssistHistory =
+                    //TODO get user name
+                    ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + "todo");
 
-         if (contentAssistHistory == null)
-         {
-            contentAssistHistory = new ContentAssistHistory();
-         }
-      }
+            if (contentAssistHistory == null) {
+                contentAssistHistory = new ContentAssistHistory();
+            }
+        }
 
-      return contentAssistHistory;
-   }
+        return contentAssistHistory;
+    }
 }

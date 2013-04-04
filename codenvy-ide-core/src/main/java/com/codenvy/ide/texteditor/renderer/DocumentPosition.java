@@ -21,40 +21,31 @@ package com.codenvy.ide.texteditor.renderer;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-class DocumentPosition
-{
+class DocumentPosition {
 
-   private int line;
+    private int line;
 
-   private int column;
+    private int column;
 
-   /**
-    * @param line
-    * @param column
-    */
-   public DocumentPosition(int line, int column)
-   {
-      super();
-      this.line = line;
-      this.column = column;
-   }
+    /**
+     * @param line
+     * @param column
+     */
+    public DocumentPosition(int line, int column) {
+        super();
+        this.line = line;
+        this.column = column;
+    }
 
-   /**
-    * @return line number starting from 0
-    */
-   public int getLineNumber()
-   {
-      return line;
-   }
+    /** @return line number starting from 0 */
+    public int getLineNumber() {
+        return line;
+    }
 
-   /**
-    * @return column number starting from 0
-    */
-   public int getColumn()
-   {
-      return column;
-   }
+    /** @return column number starting from 0 */
+    public int getColumn() {
+        return column;
+    }
 
 }

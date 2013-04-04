@@ -24,45 +24,35 @@ import java.util.Random;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class NameGenerator
-{
-   private static final Random RANDOM = new Random();
+public class NameGenerator {
+    private static final Random RANDOM = new Random();
 
-   private static final char[] CHARS = new char[36];
+    private static final char[] CHARS = new char[36];
 
-   static
-   {
-      int i = 0;
-      for (int c = 48; c <= 57; c++)
-      {
-         CHARS[i++] = (char)c;
-      }
-      for (int c = 97; c <= 122; c++)
-      {
-         CHARS[i++] = (char)c;
-      }
-   }
+    static {
+        int i = 0;
+        for (int c = 48; c <= 57; c++) {
+            CHARS[i++] = (char)c;
+        }
+        for (int c = 97; c <= 122; c++) {
+            CHARS[i++] = (char)c;
+        }
+    }
 
-   public static String generate(String prefix, int length)
-   {
-      StringBuilder b;
-      if (prefix == null || prefix.isEmpty())
-      {
-         b = new StringBuilder(length);
-      }
-      else
-      {
-         b = new StringBuilder(length + prefix.length());
-         b.append(prefix);
-      }
-      for (int i = 0; i < length; i++)
-      {
-         b.append(CHARS[RANDOM.nextInt(CHARS.length)]);
-      }
-      return b.toString();
-   }
+    public static String generate(String prefix, int length) {
+        StringBuilder b;
+        if (prefix == null || prefix.isEmpty()) {
+            b = new StringBuilder(length);
+        } else {
+            b = new StringBuilder(length + prefix.length());
+            b.append(prefix);
+        }
+        for (int i = 0; i < length; i++) {
+            b.append(CHARS[RANDOM.nextInt(CHARS.length)]);
+        }
+        return b.toString();
+    }
 
-   private NameGenerator()
-   {
-   }
+    private NameGenerator() {
+    }
 }

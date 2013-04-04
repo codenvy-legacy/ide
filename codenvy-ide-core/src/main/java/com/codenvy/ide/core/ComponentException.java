@@ -17,34 +17,29 @@
 package com.codenvy.ide.core;
 
 /**
- * Encapsulates Component Error 
+ * Encapsulates Component Error
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ComponentException extends Exception
-{
-   private static final long serialVersionUID = 1L;
+public class ComponentException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-   private Component component;
-   
-   /**
-    * @return the instance of failed component
-    */
-   public Component getComponent()
-   {
-      return component;
-   }
+    private Component component;
 
-   /**
-    * Construct Component Exception instance with message and instance of failed component
-    * 
-    * @param message
-    * @param component
-    */
-   public ComponentException(String message, Component component)
-   {
-      super(message);
-      this.component = component;
-      
-   }
+    /** @return the instance of failed component */
+    public Component getComponent() {
+        return component;
+    }
+
+    /**
+     * Construct Component Exception instance with message and instance of failed component
+     *
+     * @param message
+     * @param component
+     */
+    public ComponentException(String message, Component component) {
+        super(message);
+        this.component = component;
+
+    }
 }

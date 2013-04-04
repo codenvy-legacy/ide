@@ -38,42 +38,43 @@ import com.codenvy.ide.texteditor.api.TextEditorPartView;
  * </p>
  * <p>
  * The interface can be implemented by clients. By default, clients use
- *  <b>CodeAssistantImpl</b> as the standard
+ * <b>CodeAssistantImpl</b> as the standard
  * implementer of this interface.
  * </p>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface CodeAssistant
-{
-   /**
-    * Installs content assist support on the given text view.
-    *
-    * @param view the text view on which content assist will work
-    */
-   void install(TextEditorPartView view);
+public interface CodeAssistant {
+    /**
+     * Installs content assist support on the given text view.
+     *
+     * @param view
+     *         the text view on which content assist will work
+     */
+    void install(TextEditorPartView view);
 
-   /**
-    * Uninstalls content assist support from the text view it has
-    * previously be installed on.
-    */
-   void uninstall();
+    /**
+     * Uninstalls content assist support from the text view it has
+     * previously be installed on.
+     */
+    void uninstall();
 
-   /**
-    * Shows all possible completions of the content at the display's cursor position.
-    *
-    * @return an optional error message if no proposals can be computed
-    */
-   String showPossibleCompletions();
+    /**
+     * Shows all possible completions of the content at the display's cursor position.
+     *
+     * @return an optional error message if no proposals can be computed
+     */
+    String showPossibleCompletions();
 
-   /**
-    * Returns the code assist processor to be used for the given content type.
-    *
-    * @param contentType the type of the content for which this
-    *        content assistant is to be requested
-    * @return an instance code assist processor or
-    *         <code>null</code> if none exists for the specified content type
-    */
-   CodeAssistProcessor getCodeAssistProcessor(String contentType);
+    /**
+     * Returns the code assist processor to be used for the given content type.
+     *
+     * @param contentType
+     *         the type of the content for which this
+     *         content assistant is to be requested
+     * @return an instance code assist processor or
+     *         <code>null</code> if none exists for the specified content type
+     */
+    CodeAssistProcessor getCodeAssistProcessor(String contentType);
 }

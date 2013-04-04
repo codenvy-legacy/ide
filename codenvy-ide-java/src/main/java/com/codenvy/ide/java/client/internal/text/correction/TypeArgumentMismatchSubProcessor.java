@@ -19,64 +19,56 @@ import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.internal.corext.dom.ASTNodes;
 import com.codenvy.ide.java.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
 import com.codenvy.ide.java.client.quickassist.api.InvocationContext;
-
 import com.google.gwt.user.client.ui.Image;
-
 
 import java.util.Collection;
 
-public class TypeArgumentMismatchSubProcessor
-{
+public class TypeArgumentMismatchSubProcessor {
 
-   //	public static void getTypeParameterMismatchProposals(IInvocationContext context, IProblemLocation problem, Collection proposals) {
-   //	CompilationUnit astRoot= context.getASTRoot();
-   //	ASTNode selectedNode= problem.getCoveredNode(astRoot);
-   //	if (!(selectedNode instanceof SimpleName)) {
-   //	return;
-   //	}
+    //	public static void getTypeParameterMismatchProposals(IInvocationContext context, IProblemLocation problem, Collection proposals) {
+    //	CompilationUnit astRoot= context.getASTRoot();
+    //	ASTNode selectedNode= problem.getCoveredNode(astRoot);
+    //	if (!(selectedNode instanceof SimpleName)) {
+    //	return;
+    //	}
 
-   //	ASTNode normalizedNode= ASTNodes.getNormalizedNode(selectedNode);
-   //	if (!(normalizedNode instanceof ParameterizedType)) {
-   //	return;
-   //	}
-   //	// waiting for result of https://bugs.eclipse.org/bugs/show_bug.cgi?id=81544
+    //	ASTNode normalizedNode= ASTNodes.getNormalizedNode(selectedNode);
+    //	if (!(normalizedNode instanceof ParameterizedType)) {
+    //	return;
+    //	}
+    //	// waiting for result of https://bugs.eclipse.org/bugs/show_bug.cgi?id=81544
 
-   //	}
+    //	}
 
-   public static void removeMismatchedArguments(InvocationContext context, IProblemLocation problem,
-      Collection<ICommandAccess> proposals)
-   {
-      ASTNode selectedNode = problem.getCoveredNode(context.getASTRoot());
-      if (!(selectedNode instanceof SimpleName))
-      {
-         return;
-      }
+    public static void removeMismatchedArguments(InvocationContext context, IProblemLocation problem,
+                                                 Collection<ICommandAccess> proposals) {
+        ASTNode selectedNode = problem.getCoveredNode(context.getASTRoot());
+        if (!(selectedNode instanceof SimpleName)) {
+            return;
+        }
 
-      ASTNode normalizedNode = ASTNodes.getNormalizedNode(selectedNode);
-      if (normalizedNode instanceof ParameterizedType)
-      {
-         ASTRewrite rewrite = ASTRewrite.create(normalizedNode.getAST());
-         ParameterizedType pt = (ParameterizedType)normalizedNode;
-         ASTNode mt = rewrite.createMoveTarget(pt.getType());
-         rewrite.replace(pt, mt, null);
-         String label = CorrectionMessages.INSTANCE.TypeArgumentMismatchSubProcessor_removeTypeArguments();
-         Image image = new Image(JavaClientBundle.INSTANCE.correction_change());
-         ASTRewriteCorrectionProposal proposal =
-            new ASTRewriteCorrectionProposal(label, rewrite, 6, context.getDocument(), image);
-         proposals.add(proposal);
-      }
-   }
+        ASTNode normalizedNode = ASTNodes.getNormalizedNode(selectedNode);
+        if (normalizedNode instanceof ParameterizedType) {
+            ASTRewrite rewrite = ASTRewrite.create(normalizedNode.getAST());
+            ParameterizedType pt = (ParameterizedType)normalizedNode;
+            ASTNode mt = rewrite.createMoveTarget(pt.getType());
+            rewrite.replace(pt, mt, null);
+            String label = CorrectionMessages.INSTANCE.TypeArgumentMismatchSubProcessor_removeTypeArguments();
+            Image image = new Image(JavaClientBundle.INSTANCE.correction_change());
+            ASTRewriteCorrectionProposal proposal =
+                    new ASTRewriteCorrectionProposal(label, rewrite, 6, context.getDocument(), image);
+            proposals.add(proposal);
+        }
+    }
 
-   public static void getInferDiamondArgumentsProposal(InvocationContext context, IProblemLocation problem,
-      Collection<ICommandAccess> proposals)
-   {
-      ASTNode selectedNode = problem.getCoveredNode(context.getASTRoot());
-      if (!(selectedNode instanceof SimpleName))
-      {
-         return;
-      }
+    public static void getInferDiamondArgumentsProposal(InvocationContext context, IProblemLocation problem,
+                                                        Collection<ICommandAccess> proposals) {
+        ASTNode selectedNode = problem.getCoveredNode(context.getASTRoot());
+        if (!(selectedNode instanceof SimpleName)) {
+            return;
+        }
 
-      QuickAssistProcessorImpl.getInferDiamondArgumentsProposal(context, selectedNode, null, proposals);
-   }
+        QuickAssistProcessorImpl.getInferDiamondArgumentsProposal(context, selectedNode, null, proposals);
+    }
 
 }

@@ -19,44 +19,32 @@
 package com.codenvy.ide.java.client.env;
 
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair;
-
 import com.google.gwt.json.client.JSONObject;
 
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class BinaryElementValuePairImpl implements IBinaryElementValuePair
-{
+public class BinaryElementValuePairImpl implements IBinaryElementValuePair {
 
-   private final JSONObject val;
+    private final JSONObject val;
 
-   /**
-    * @param val
-    */
-   public BinaryElementValuePairImpl(JSONObject val)
-   {
-      this.val = val;
-   }
+    /** @param val */
+    public BinaryElementValuePairImpl(JSONObject val) {
+        this.val = val;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair#getName()
-    */
-   @Override
-   public char[] getName()
-   {
-      return val.get("name").isString().stringValue().toCharArray();
-   }
+    /** @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair#getName() */
+    @Override
+    public char[] getName() {
+        return val.get("name").isString().stringValue().toCharArray();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair#getValue()
-    */
-   @Override
-   public Object getValue()
-   {
-      return AnnotationParseUtil.getValue(val.get("value").isObject());
-   }
+    /** @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair#getValue() */
+    @Override
+    public Object getValue() {
+        return AnnotationParseUtil.getValue(val.get("value").isObject());
+    }
 
 }

@@ -13,10 +13,7 @@
 // limitations under the License.
 package com.codenvy.ide.extension.css.editor;
 
-/**
- * An enumeration of css types of code assistant.
- *
- */
+/** An enumeration of css types of code assistant. */
 public enum CompletionType {
-   CLASS, PROPERTY, VALUE, NONE
+    CLASS, PROPERTY, VALUE, NONE
 }

@@ -14,210 +14,167 @@ import com.codenvy.ide.java.client.JavaPreferencesSettings;
 import com.codenvy.ide.java.client.codeassistant.ui.StyledString;
 import com.codenvy.ide.java.client.core.JavaCore;
 import com.codenvy.ide.java.client.core.compiler.CharOperation;
-import com.codenvy.ide.java.client.core.dom.AST;
-import com.codenvy.ide.java.client.core.dom.ASTNode;
-import com.codenvy.ide.java.client.core.dom.ASTParser;
-import com.codenvy.ide.java.client.core.dom.AbstractTypeDeclaration;
-import com.codenvy.ide.java.client.core.dom.AnonymousClassDeclaration;
-import com.codenvy.ide.java.client.core.dom.ChildListPropertyDescriptor;
-import com.codenvy.ide.java.client.core.dom.CompilationUnit;
-import com.codenvy.ide.java.client.core.dom.IMethodBinding;
-import com.codenvy.ide.java.client.core.dom.ITypeBinding;
-import com.codenvy.ide.java.client.core.dom.MethodDeclaration;
-import com.codenvy.ide.java.client.core.dom.NodeFinder;
+import com.codenvy.ide.java.client.core.dom.*;
 import com.codenvy.ide.java.client.core.dom.rewrite.ASTRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ITrackedNodePosition;
 import com.codenvy.ide.java.client.core.dom.rewrite.ImportRewrite;
-import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
+import com.codenvy.ide.java.client.core.dom.rewrite.ListRewrite;
 import com.codenvy.ide.java.client.core.formatter.IndentManipulation;
 import com.codenvy.ide.java.client.internal.corext.codemanipulation.CodeGenerationSettings;
 import com.codenvy.ide.java.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import com.codenvy.ide.java.client.internal.corext.codemanipulation.StubUtility;
 import com.codenvy.ide.java.client.internal.corext.codemanipulation.StubUtility2;
 import com.codenvy.ide.java.client.internal.corext.dom.Bindings;
-
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.runtime.CoreException;
-import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
-import com.codenvy.ide.text.Region;
-import com.codenvy.ide.text.TextUtilities;
+import com.codenvy.ide.text.*;
 import com.codenvy.ide.text.edits.MalformedTreeException;
 
-import com.codenvy.ide.runtime.Assert;
 
+public class OverrideCompletionProposal extends JavaTypeCompletionProposal {
 
-public class OverrideCompletionProposal extends JavaTypeCompletionProposal
-{
+    private String fMethodName;
 
-   private String fMethodName;
+    private String[] fParamTypes;
 
-   private String[] fParamTypes;
+    public OverrideCompletionProposal(String methodName, String[] paramTypes, int start, int length,
+                                      StyledString displayName, String completionProposal, JavaContentAssistInvocationContext context) {
+        super(completionProposal, start, length, null, displayName, 0, null, context);
+        Assert.isNotNull(methodName);
+        Assert.isNotNull(paramTypes);
 
-   public OverrideCompletionProposal(String methodName, String[] paramTypes, int start, int length,
-      StyledString displayName, String completionProposal, JavaContentAssistInvocationContext context)
-   {
-      super(completionProposal, start, length, null, displayName, 0, null, context);
-      Assert.isNotNull(methodName);
-      Assert.isNotNull(paramTypes);
+        fParamTypes = paramTypes;
+        fMethodName = methodName;
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(completionProposal);
+        buffer.append(" {};"); //$NON-NLS-1$
 
-      fParamTypes = paramTypes;
-      fMethodName = methodName;
-      StringBuffer buffer = new StringBuffer();
-      buffer.append(completionProposal);
-      buffer.append(" {};"); //$NON-NLS-1$
+        setReplacementString(buffer.toString());
+    }
 
-      setReplacementString(buffer.toString());
-   }
+    /*
+     * @see
+     * org.eclipse.jface.text.contentassist.ICompletionProposalExtension3#getPrefixCompletionText(org.eclipse.jface.text.IDocument
+     * ,int)
+     */
+    @Override
+    public CharSequence getPrefixCompletionText(Document document, int completionOffset) {
+        return fMethodName;
+    }
 
-   /*
-    * @see
-    * org.eclipse.jface.text.contentassist.ICompletionProposalExtension3#getPrefixCompletionText(org.eclipse.jface.text.IDocument
-    * ,int)
-    */
-   @Override
-   public CharSequence getPrefixCompletionText(Document document, int completionOffset)
-   {
-      return fMethodName;
-   }
+    private CompilationUnit getRecoveredAST(Document document, int offset, Document recoveredDocument) {
+        CompilationUnit ast = fInvocationContext.getCompilationUnit();
+        if (ast != null) {
+            recoveredDocument.set(document.get());
+            return ast;
+        }
 
-   private CompilationUnit getRecoveredAST(Document document, int offset, Document recoveredDocument)
-   {
-      CompilationUnit ast = fInvocationContext.getCompilationUnit();
-      if (ast != null)
-      {
-         recoveredDocument.set(document.get());
-         return ast;
-      }
+        char[] content = document.get().toCharArray();
 
-      char[] content = document.get().toCharArray();
+        // clear prefix to avoid compile errors
+        int index = offset - 1;
+        while (index >= 0 && CharOperation.isJavaIdentifierPart(content[index])) {
+            content[index] = ' ';
+            index--;
+        }
 
-      // clear prefix to avoid compile errors
-      int index = offset - 1;
-      while (index >= 0 && CharOperation.isJavaIdentifierPart(content[index]))
-      {
-         content[index] = ' ';
-         index--;
-      }
+        recoveredDocument.set(new String(content));
 
-      recoveredDocument.set(new String(content));
+        final ASTParser parser = ASTParser.newParser(AST.JLS3);
+        parser.setResolveBindings(true);
+        parser.setStatementsRecovery(true);
+        parser.setSource(content);
+        return (CompilationUnit)parser.createAST();
+    }
 
-      final ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setResolveBindings(true);
-      parser.setStatementsRecovery(true);
-      parser.setSource(content);
-      return (CompilationUnit)parser.createAST();
-   }
-
-   /*
-    * @see JavaTypeCompletionProposal#updateReplacementString(IDocument,char,int,ImportRewrite)
-    */
-   @Override
-   protected boolean updateReplacementString(Document document, char trigger, int offset, ImportRewrite importRewrite)
-      throws CoreException, BadLocationException
-   {
-      Document recoveredDocument = new DocumentImpl();
-      CompilationUnit unit = getRecoveredAST(document, offset, recoveredDocument);
-      ImportRewriteContext context;
-      if (importRewrite != null)
-      {
-         context = new ContextSensitiveImportRewriteContext(unit, offset, importRewrite);
-      }
-      else
-      {
-         importRewrite = StubUtility.createImportRewrite(document, unit, true); // create a dummy import rewriter to have one
-         context = new ImportRewriteContext()
-         { // forces that all imports are fully qualified
-               @Override
-               public int findInContext(String qualifier, String name, int kind)
-               {
-                  return RES_NAME_CONFLICT;
-               }
+    /*
+     * @see JavaTypeCompletionProposal#updateReplacementString(IDocument,char,int,ImportRewrite)
+     */
+    @Override
+    protected boolean updateReplacementString(Document document, char trigger, int offset, ImportRewrite importRewrite)
+            throws CoreException, BadLocationException {
+        Document recoveredDocument = new DocumentImpl();
+        CompilationUnit unit = getRecoveredAST(document, offset, recoveredDocument);
+        ImportRewriteContext context;
+        if (importRewrite != null) {
+            context = new ContextSensitiveImportRewriteContext(unit, offset, importRewrite);
+        } else {
+            importRewrite = StubUtility.createImportRewrite(document, unit, true); // create a dummy import rewriter to have one
+            context = new ImportRewriteContext() { // forces that all imports are fully qualified
+                @Override
+                public int findInContext(String qualifier, String name, int kind) {
+                    return RES_NAME_CONFLICT;
+                }
             };
-      }
+        }
 
-      ITypeBinding declaringType = null;
-      ChildListPropertyDescriptor descriptor = null;
-      ASTNode node = NodeFinder.perform(unit, offset, 1);
-      if (node instanceof AnonymousClassDeclaration)
-      {
-         declaringType = ((AnonymousClassDeclaration)node).resolveBinding();
-         descriptor = AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY;
-      }
-      else if (node instanceof AbstractTypeDeclaration)
-      {
-         AbstractTypeDeclaration declaration = (AbstractTypeDeclaration)node;
-         descriptor = declaration.getBodyDeclarationsProperty();
-         declaringType = declaration.resolveBinding();
-      }
-      if (declaringType != null)
-      {
-         ASTRewrite rewrite = ASTRewrite.create(unit.getAST());
-         IMethodBinding methodToOverride = Bindings.findMethodInHierarchy(declaringType, fMethodName, fParamTypes);
-         if (methodToOverride == null && declaringType.isInterface())
-         {
-            methodToOverride =
-               Bindings.findMethodInType(
-                  node.getAST().resolveWellKnownType("java.lang.Object"), fMethodName, fParamTypes); //$NON-NLS-1$
-         }
-         if (methodToOverride != null)
-         {
-            CodeGenerationSettings settings = JavaPreferencesSettings.getCodeGenerationSettings();
-            MethodDeclaration stub =
-               StubUtility2.createImplementationStub(rewrite, importRewrite, context, methodToOverride,
-                  declaringType.getName(), settings, declaringType.isInterface());
-            ListRewrite rewriter = rewrite.getListRewrite(node, descriptor);
-            rewriter.insertFirst(stub, null);
-
-            ITrackedNodePosition position = rewrite.track(stub);
-            try
-            {
-               rewrite.rewriteAST(recoveredDocument, JavaCore.getOptions()).apply(recoveredDocument);
-
-               String generatedCode = recoveredDocument.get(position.getStartPosition(), position.getLength());
-               int generatedIndent =
-                  IndentManipulation.measureIndentUnits(
-                     getIndentAt(recoveredDocument, position.getStartPosition(), settings), settings.tabWidth,
-                     settings.indentWidth);
-
-               String indent = getIndentAt(document, getReplacementOffset(), settings);
-               setReplacementString(IndentManipulation.changeIndent(generatedCode, generatedIndent, settings.tabWidth,
-                  settings.indentWidth, indent, TextUtilities.getDefaultLineDelimiter(document)));
-
+        ITypeBinding declaringType = null;
+        ChildListPropertyDescriptor descriptor = null;
+        ASTNode node = NodeFinder.perform(unit, offset, 1);
+        if (node instanceof AnonymousClassDeclaration) {
+            declaringType = ((AnonymousClassDeclaration)node).resolveBinding();
+            descriptor = AnonymousClassDeclaration.BODY_DECLARATIONS_PROPERTY;
+        } else if (node instanceof AbstractTypeDeclaration) {
+            AbstractTypeDeclaration declaration = (AbstractTypeDeclaration)node;
+            descriptor = declaration.getBodyDeclarationsProperty();
+            declaringType = declaration.resolveBinding();
+        }
+        if (declaringType != null) {
+            ASTRewrite rewrite = ASTRewrite.create(unit.getAST());
+            IMethodBinding methodToOverride = Bindings.findMethodInHierarchy(declaringType, fMethodName, fParamTypes);
+            if (methodToOverride == null && declaringType.isInterface()) {
+                methodToOverride =
+                        Bindings.findMethodInType(
+                                node.getAST().resolveWellKnownType("java.lang.Object"), fMethodName, fParamTypes); //$NON-NLS-1$
             }
-            catch (MalformedTreeException e)
-            {
-               e.printStackTrace(); //NOSONAR
-            }
-            catch (BadLocationException e)
-            {
-               e.printStackTrace();//NOSONAHR
-            }
-         }
-      }
-      return true;
-   }
+            if (methodToOverride != null) {
+                CodeGenerationSettings settings = JavaPreferencesSettings.getCodeGenerationSettings();
+                MethodDeclaration stub =
+                        StubUtility2.createImplementationStub(rewrite, importRewrite, context, methodToOverride,
+                                                              declaringType.getName(), settings, declaringType.isInterface());
+                ListRewrite rewriter = rewrite.getListRewrite(node, descriptor);
+                rewriter.insertFirst(stub, null);
 
-   private static String getIndentAt(Document document, int offset, CodeGenerationSettings settings)
-   {
-      try
-      {
-         Region region = document.getLineInformationOfOffset(offset);
-         return IndentManipulation.extractIndentString(document.get(region.getOffset(), region.getLength()),
-            settings.tabWidth, settings.indentWidth);
-      }
-      catch (BadLocationException e)
-      {
-         return ""; //$NON-NLS-1$
-      }
-   }
+                ITrackedNodePosition position = rewrite.track(stub);
+                try {
+                    rewrite.rewriteAST(recoveredDocument, JavaCore.getOptions()).apply(recoveredDocument);
 
-   /*
-    * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension4#isAutoInsertable()
-    */
-   public boolean isAutoInsertable()
-   {
-      return false;
-   }
+                    String generatedCode = recoveredDocument.get(position.getStartPosition(), position.getLength());
+                    int generatedIndent =
+                            IndentManipulation.measureIndentUnits(
+                                    getIndentAt(recoveredDocument, position.getStartPosition(), settings), settings.tabWidth,
+                                    settings.indentWidth);
+
+                    String indent = getIndentAt(document, getReplacementOffset(), settings);
+                    setReplacementString(IndentManipulation.changeIndent(generatedCode, generatedIndent, settings.tabWidth,
+                                                                         settings.indentWidth, indent,
+                                                                         TextUtilities.getDefaultLineDelimiter(document)));
+
+                } catch (MalformedTreeException e) {
+                    e.printStackTrace(); //NOSONAR
+                } catch (BadLocationException e) {
+                    e.printStackTrace();//NOSONAHR
+                }
+            }
+        }
+        return true;
+    }
+
+    private static String getIndentAt(Document document, int offset, CodeGenerationSettings settings) {
+        try {
+            Region region = document.getLineInformationOfOffset(offset);
+            return IndentManipulation.extractIndentString(document.get(region.getOffset(), region.getLength()),
+                                                          settings.tabWidth, settings.indentWidth);
+        } catch (BadLocationException e) {
+            return ""; //$NON-NLS-1$
+        }
+    }
+
+    /*
+     * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension4#isAutoInsertable()
+     */
+    public boolean isAutoInsertable() {
+        return false;
+    }
 }

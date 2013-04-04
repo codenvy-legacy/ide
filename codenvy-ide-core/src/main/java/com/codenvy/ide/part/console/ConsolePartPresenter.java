@@ -16,12 +16,8 @@
  */
 package com.codenvy.ide.part.console;
 
-import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-
 import com.codenvy.ide.api.parts.ConsolePart;
-
-
-
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
@@ -34,64 +30,45 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class ConsolePartPresenter extends AbstractPartPresenter implements ConsolePartView.ActionDelegate, ConsolePart
-{
-   private static final String TITLE = "Console";
+public class ConsolePartPresenter extends AbstractPartPresenter implements ConsolePartView.ActionDelegate, ConsolePart {
+    private static final String TITLE = "Console";
 
-   private ConsolePartView view;
+    private ConsolePartView view;
 
-   /**
-    * Construct empty Part
-    */
-   @Inject
-   public ConsolePartPresenter(ConsolePartView view)
-   {
-      this.view = view;
-      this.view.setDelegate(this);
-   }
+    /** Construct empty Part */
+    @Inject
+    public ConsolePartPresenter(ConsolePartView view) {
+        this.view = view;
+        this.view.setDelegate(this);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getTitle()
-   {
-      return TITLE;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return TITLE;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public ImageResource getTitleImage()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getTitleImage() {
+        return null;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public String getTitleToolTip()
-   {
-      return "Displays console output";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitleToolTip() {
+        return "Displays console output";
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(view);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void print(String message)
-   {
-      view.print(message);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void print(String message) {
+        view.print(message);
+    }
 }

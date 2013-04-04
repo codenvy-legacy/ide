@@ -14,17 +14,16 @@
 
 package com.codenvy.ide.texteditor.api.parser;
 
-/**
- * Interface that represents Parser state.
- */
+/** Interface that represents Parser state. */
 public interface State {
 
-  /**
-   * Clones the object.
-   *
-   * <p>Parser parameter is used by native Parser implementation.
-   *
-   * @param parser parser that created this instance
-   */
-  State copy(Parser parser);
+    /**
+     * Clones the object.
+     * <p/>
+     * <p>Parser parameter is used by native Parser implementation.
+     *
+     * @param parser
+     *         parser that created this instance
+     */
+    State copy(Parser parser);
 }

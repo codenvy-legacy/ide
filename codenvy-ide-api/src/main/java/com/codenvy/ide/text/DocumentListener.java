@@ -25,23 +25,24 @@ package com.codenvy.ide.text;
  * <p>
  * Clients may implement this interface.
  * </p>
- * 
+ *
  * @see Document
  */
-public interface DocumentListener
-{
+public interface DocumentListener {
 
-   /**
-    * The manipulation described by the document event will be performed.
-    * 
-    * @param event the document event describing the document change
-    */
-   void documentAboutToBeChanged(DocumentEvent event);
+    /**
+     * The manipulation described by the document event will be performed.
+     *
+     * @param event
+     *         the document event describing the document change
+     */
+    void documentAboutToBeChanged(DocumentEvent event);
 
-   /**
-    * The manipulation described by the document event has been performed.
-    * 
-    * @param event the document event describing the document change
-    */
-   void documentChanged(DocumentEvent event);
+    /**
+     * The manipulation described by the document event has been performed.
+     *
+     * @param event
+     *         the document event describing the document change
+     */
+    void documentChanged(DocumentEvent event);
 }

@@ -19,35 +19,24 @@
 package com.codenvy.ide.java.shared;
 
 
-/**
- * Created by The eXo Platform SAS.
- * 
- */
+/** Created by The eXo Platform SAS. */
 public enum JavaType {
-   CLASS, INTERFACE, ANNOTATION, ENUM;
+    CLASS, INTERFACE, ANNOTATION, ENUM;
 
-   /**
-    * Return JavaType depends on the value of the class attribute. See private
-    * constants in class Modifier and Class.
-    */
-   public static JavaType fromClassAttribute(int attr)
-   {
+    /**
+     * Return JavaType depends on the value of the class attribute. See private
+     * constants in class Modifier and Class.
+     */
+    public static JavaType fromClassAttribute(int attr) {
 
-      if ((0x00002000 & attr) != 0)
-      {
-         return ANNOTATION;
-      }
-      else if ((0x00000200 & attr) != 0)
-      {
-         return INTERFACE;
-      }
-      else if ((0x00004000 & attr) != 0)
-      {
-         return ENUM;
-      }
-      else
-      {
-         return CLASS;
-      }
-   }
+        if ((0x00002000 & attr) != 0) {
+            return ANNOTATION;
+        } else if ((0x00000200 & attr) != 0) {
+            return INTERFACE;
+        } else if ((0x00004000 & attr) != 0) {
+            return ENUM;
+        } else {
+            return CLASS;
+        }
+    }
 }

@@ -14,13 +14,9 @@
 
 package com.codenvy.ide.texteditor.api.parser;
 
-/**
- * Abstraction of Parser StringStream object.
- */
+/** Abstraction of Parser StringStream object. */
 public interface Stream {
 
-  /**
-   * @return {@code true} if all data has been consumed
-   */
-  boolean isEnd();
+    /** @return {@code true} if all data has been consumed */
+    boolean isEnd();
 }

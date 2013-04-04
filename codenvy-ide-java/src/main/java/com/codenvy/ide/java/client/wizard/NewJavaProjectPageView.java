@@ -22,31 +22,28 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * View for new Java project wizard.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * @version $Id:
  */
-public interface NewJavaProjectPageView extends View<NewJavaProjectPageView.ActionDelegate>
-{
-   /**
-    *Action delegate for new Java project wizard
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Checks whether project's name is complete or not and updates navigation buttons.
-       */
-      void checkProjectInput();
-   }
+public interface NewJavaProjectPageView extends View<NewJavaProjectPageView.ActionDelegate> {
+    /** Action delegate for new Java project wizard */
+    public interface ActionDelegate {
+        /** Checks whether project's name is complete or not and updates navigation buttons. */
+        void checkProjectInput();
+    }
 
-   /**
-    * Get new Project name
-    * @return the new project name.
-    */
-   String getProjectName();
+    /**
+     * Get new Project name
+     *
+     * @return the new project name.
+     */
+    String getProjectName();
 
-   /**
-    * Get Source folder name
-    * @return the source folder name
-    */
-   String getSourceFolder();
+    /**
+     * Get Source folder name
+     *
+     * @return the source folder name
+     */
+    String getSourceFolder();
 }

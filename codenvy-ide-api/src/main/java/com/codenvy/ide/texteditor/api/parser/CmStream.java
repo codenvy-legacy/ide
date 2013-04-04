@@ -16,18 +16,14 @@ package com.codenvy.ide.texteditor.api.parser;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-/**
- * Native CodeMirror {@link Stream} wrapper.
- */
-public class CmStream extends JavaScriptObject implements Stream
-{
+/** Native CodeMirror {@link Stream} wrapper. */
+public class CmStream extends JavaScriptObject implements Stream {
 
-   protected CmStream()
-   {
-   }
+    protected CmStream() {
+    }
 
-   @Override
-   public final native boolean isEnd() /*-{
-		return this.eol();
-   }-*/;
+    @Override
+    public final native boolean isEnd() /*-{
+        return this.eol();
+    }-*/;
 }

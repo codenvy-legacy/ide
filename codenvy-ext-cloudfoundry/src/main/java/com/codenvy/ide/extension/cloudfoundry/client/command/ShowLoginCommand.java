@@ -19,9 +19,7 @@
 package com.codenvy.ide.extension.cloudfoundry.client.command;
 
 import com.codenvy.ide.api.expressions.Expression;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginPresenter;
 import com.google.gwt.resources.client.ImageResource;
@@ -30,71 +28,54 @@ import com.google.inject.Singleton;
 
 /**
  * Command for "PaaS/CloudFoudry/Switch Account" action.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowLoginCommand implements ExtendedCommand
-{
-   private final LoginPresenter presenter;
+public class ShowLoginCommand implements ExtendedCommand {
+    private final LoginPresenter presenter;
 
-   private final CloudFoundryResources resources;
+    private final CloudFoundryResources resources;
 
-   /**
-    * Create command.
-    * 
-    * @param presenter
-    * @param resources
-    */
-   @Inject
-   public ShowLoginCommand(LoginPresenter presenter, CloudFoundryResources resources)
-   {
-      this.presenter = presenter;
-      this.resources = resources;
-   }
+    /**
+     * Create command.
+     *
+     * @param presenter
+     * @param resources
+     */
+    @Inject
+    public ShowLoginCommand(LoginPresenter presenter, CloudFoundryResources resources) {
+        this.presenter = presenter;
+        this.resources = resources;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void execute()
-   {
-      presenter.showDialog();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void execute() {
+        presenter.showDialog();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      return resources.switchAccount();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        return resources.switchAccount();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "Login on cloudfoundry.com";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "Login on cloudfoundry.com";
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression inContext()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression inContext() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression canExecute()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression canExecute() {
+        return null;
+    }
 }

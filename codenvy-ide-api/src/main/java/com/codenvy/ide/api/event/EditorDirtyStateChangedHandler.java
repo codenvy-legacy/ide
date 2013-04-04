@@ -22,18 +22,17 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handle {@link EditorDirtyStateChangedEvent}
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface EditorDirtyStateChangedHandler extends EventHandler
-{
+public interface EditorDirtyStateChangedHandler extends EventHandler {
 
-   /**
-    * Iditor became dirty, containing unsaved changes, or got saved
-    * 
-    * @param event
-    */
-   void onEditorDirtyStateChanged(EditorDirtyStateChangedEvent event);
+    /**
+     * Iditor became dirty, containing unsaved changes, or got saved
+     *
+     * @param event
+     */
+    void onEditorDirtyStateChanged(EditorDirtyStateChangedEvent event);
 
 }

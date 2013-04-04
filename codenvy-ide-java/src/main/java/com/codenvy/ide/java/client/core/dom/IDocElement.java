@@ -14,10 +14,9 @@ package com.codenvy.ide.java.client.core.dom;
 /**
  * Internal marker-type interface used to tag node types that can legitimately be included in {@link TagElement#fragments()
  * TagElement.fragments()}.
- * 
+ *
  * @since 3.0
  */
-interface IDocElement
-{
-   // marker-type interfaces have no members
+interface IDocElement {
+    // marker-type interfaces have no members
 }

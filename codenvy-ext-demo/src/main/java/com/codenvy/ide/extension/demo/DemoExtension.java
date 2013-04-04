@@ -17,16 +17,12 @@
 package com.codenvy.ide.extension.demo;
 
 import com.codenvy.ide.api.editor.EditorAgent;
-
 import com.codenvy.ide.api.expressions.Expression;
 import com.codenvy.ide.api.expressions.ProjectOpenedExpression;
-
 import com.codenvy.ide.api.extension.Extension;
-
-import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 import com.codenvy.ide.api.ui.menu.MainMenuAgent;
+import com.codenvy.ide.api.ui.perspective.WorkspaceAgent;
 import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectivePresenter;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
@@ -36,61 +32,53 @@ import com.google.inject.Singleton;
 
 /**
  * Extension used to demonstrate the IDE 2.0 SDK fetures
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
 @Extension(title = "Demo extension", version = "3.0.0")
-public class DemoExtension
-{
+public class DemoExtension {
 
-   /**
-    * 
-    */
-   private static final String EXTENDED_PERSPECTIVE = "Extended Perspective";
+    /**
+     *
+     */
+    private static final String EXTENDED_PERSPECTIVE = "Extended Perspective";
 
-   @Inject
-   public DemoExtension(final WorkspaceAgent workspace,
-      Provider<ExtendedPerspectivePresenter> extendedPerspectivePresenter, MainMenuAgent menu,
-      EditorAgent editorAgent, final ProjectOpenedExpression projectOpenedExpression,
-      CreateDemoCommand createDemoCommand)
-   {
-      workspace.registerPerspective(EXTENDED_PERSPECTIVE, null, extendedPerspectivePresenter);
+    @Inject
+    public DemoExtension(final WorkspaceAgent workspace,
+                         Provider<ExtendedPerspectivePresenter> extendedPerspectivePresenter, MainMenuAgent menu,
+                         EditorAgent editorAgent, final ProjectOpenedExpression projectOpenedExpression,
+                         CreateDemoCommand createDemoCommand) {
+        workspace.registerPerspective(EXTENDED_PERSPECTIVE, null, extendedPerspectivePresenter);
 
-      // CREATE DYNAMIC MENU CONTENT
-      menu.addMenuItem("File/Create Demo Content", createDemoCommand);
-      menu.addMenuItem("Project/Some Project Operation", new ExtendedCommand()
-      {
-         @Override
-         public Expression inContext()
-         {
-            return projectOpenedExpression;
-         }
+        // CREATE DYNAMIC MENU CONTENT
+        menu.addMenuItem("File/Create Demo Content", createDemoCommand);
+        menu.addMenuItem("Project/Some Project Operation", new ExtendedCommand() {
+            @Override
+            public Expression inContext() {
+                return projectOpenedExpression;
+            }
 
-         @Override
-         public ImageResource getIcon()
-         {
-            return null;
-         }
+            @Override
+            public ImageResource getIcon() {
+                return null;
+            }
 
-         @Override
-         public void execute()
-         {
-            Window
-               .alert("This is test item. The item changes enable/disable state when something happend(project was opened).");
-         }
+            @Override
+            public void execute() {
+                Window
+                        .alert("This is test item. The item changes enable/disable state when something happend(project was opened).");
+            }
 
-         @Override
-         public Expression canExecute()
-         {
-            return null;
-         }
+            @Override
+            public Expression canExecute() {
+                return null;
+            }
 
-         @Override
-         public String getToolTip()
-         {
-            return null;
-         }
-      });
-   }
+            @Override
+            public String getToolTip() {
+                return null;
+            }
+        });
+    }
 }

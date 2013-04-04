@@ -21,31 +21,26 @@ package com.codenvy.ide.java.client.editor.outline;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 public enum BlockTypes {
-   PACKAGE("Package"), //
-   IMPORTS("Imports"), //
-   IMPORT("Import"), //
-   CLASS("Class"), //
-   INTERFACE("Interface"), // 
-   ENUM("Enum"), //
-   ANNOTATION("Annotation"), //
-   FIELD("Field"), //
-   METHOD("Method");
+    PACKAGE("Package"), //
+    IMPORTS("Imports"), //
+    IMPORT("Import"), //
+    CLASS("Class"), //
+    INTERFACE("Interface"), //
+    ENUM("Enum"), //
+    ANNOTATION("Annotation"), //
+    FIELD("Field"), //
+    METHOD("Method");
 
-   private String type;
+    private String type;
 
-   BlockTypes(String type)
-   {
-      this.type = type;
-   }
+    BlockTypes(String type) {
+        this.type = type;
+    }
 
-   /**
-    * @return the type
-    */
-   public String getType()
-   {
-      return type;
-   }
+    /** @return the type */
+    public String getType() {
+        return type;
+    }
 }

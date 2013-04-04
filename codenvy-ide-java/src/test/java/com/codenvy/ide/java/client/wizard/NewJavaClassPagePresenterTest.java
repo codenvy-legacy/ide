@@ -18,10 +18,6 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.selection.SelectionAgent;
 import com.codenvy.ide.java.client.projectmodel.CompilationUnit;
@@ -31,55 +27,55 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * @version $Id:
  */
-public class NewJavaClassPagePresenterTest extends WizardsBaseTest
-{
+public class NewJavaClassPagePresenterTest extends WizardsBaseTest {
 
-   @Mock
-   private NewJavaClassPageView view;
+    @Mock
+    private NewJavaClassPageView view;
 
-   @Mock
-   private EditorAgent editorAgent;
+    @Mock
+    private EditorAgent editorAgent;
 
-   @Mock
-   private SelectionAgent selectionAgent;
+    @Mock
+    private SelectionAgent selectionAgent;
 
-   private NewJavaClassPagePresenter presenter;
+    private NewJavaClassPagePresenter presenter;
 
-   @Before
-   public void setUp()
-   {
-      presenter = new NewJavaClassPagePresenter(view, resourceProvider, editorAgent, selectionAgent);
-      presenter.setUpdateDelegate(updateDelegate);
-      when(view.getClassName()).thenReturn("MyClass");
-      when(view.getClassType()).thenReturn("Class");
-   }
+    @Before
+    public void setUp() {
+        presenter = new NewJavaClassPagePresenter(view, resourceProvider, editorAgent, selectionAgent);
+        presenter.setUpdateDelegate(updateDelegate);
+        when(view.getClassName()).thenReturn("MyClass");
+        when(view.getClassType()).thenReturn("Class");
+    }
 
-   @Test
-   public void testIsCompleted() throws Exception
-   {
-      presenter.checkTypeName();
-      assertThat(presenter.isCompleted()).isTrue();
-   }
+    @Test
+    public void testIsCompleted() throws Exception {
+        presenter.checkTypeName();
+        assertThat(presenter.isCompleted()).isTrue();
+    }
 
-   @Test
-   public void testCheckTypeName() throws Exception
-   {
-      when(view.getClassName()).thenReturn("@$@#$@!!!");
-      presenter.checkTypeName();
-      assertThat(presenter.canFinish()).isFalse();
-   }
+    @Test
+    public void testCheckTypeName() throws Exception {
+        when(view.getClassName()).thenReturn("@$@#$@!!!");
+        presenter.checkTypeName();
+        assertThat(presenter.canFinish()).isFalse();
+    }
 
-   @SuppressWarnings("unchecked")
-   @Test
-   public void testDoFinish() throws Exception
-   {
-      presenter.checkTypeName();
-      presenter.doFinish();
-      verify(project).createCompilationUnit(eq(sourceFolder), eq("MyClass.java"), contains("class MyClass"),
-         (AsyncCallback<CompilationUnit>)any());
-   }
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testDoFinish() throws Exception {
+        presenter.checkTypeName();
+        presenter.doFinish();
+        verify(project).createCompilationUnit(eq(sourceFolder), eq("MyClass.java"), contains("class MyClass"),
+                                              (AsyncCallback<CompilationUnit>)any());
+    }
 }

@@ -21,53 +21,43 @@ import com.codenvy.ide.json.JsonStringSet;
 
 /**
  * Desription of the project containing nature set and it's specific properties
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ProjectDescription
-{
+public class ProjectDescription {
 
-   public static final String PROPERTY_PRIMARY_NATURE = "nature.primary";
+    public static final String PROPERTY_PRIMARY_NATURE = "nature.primary";
 
-   public static final String PROPERTY_MIXIN_NATURES = "nature.mixin";
+    public static final String PROPERTY_MIXIN_NATURES = "nature.mixin";
 
-   /** Properties. */
-   protected Project project;
+    /** Properties. */
+    protected Project project;
 
-   public ProjectDescription(Project project)
-   {
-      this.project = project;
-   }
+    public ProjectDescription(Project project) {
+        this.project = project;
+    }
 
-   /**
-    * @return primary nature
-    */
-   public String getPrimaryNature()
-   {
-      return (String)project.getPropertyValue(PROPERTY_PRIMARY_NATURE);
-   }
+    /** @return primary nature */
+    public String getPrimaryNature() {
+        return (String)project.getPropertyValue(PROPERTY_PRIMARY_NATURE);
+    }
 
-   /**
-    * @return The set of Mixin natures or empty set 
-    */
-   public JsonStringSet getNatures()
-   {
-      return asStringSet(PROPERTY_MIXIN_NATURES);
-   }
+    /** @return The set of Mixin natures or empty set */
+    public JsonStringSet getNatures() {
+        return asStringSet(PROPERTY_MIXIN_NATURES);
+    }
 
-   /**
-    * @param property
-    * @return
-    */
-   protected JsonStringSet asStringSet(String propertyName)
-   {
-      Property property = project.getProperty(propertyName);
-      JsonStringSet natures = JsonCollections.createStringSet();
-      if (property != null)
-      {
-         natures.addAll(property.getValue());
-      }
-      return natures;
-   }
+    /**
+     * @param property
+     * @return
+     */
+    protected JsonStringSet asStringSet(String propertyName) {
+        Property property = project.getProperty(propertyName);
+        JsonStringSet natures = JsonCollections.createStringSet();
+        if (property != null) {
+            natures.addAll(property.getValue());
+        }
+        return natures;
+    }
 
 }

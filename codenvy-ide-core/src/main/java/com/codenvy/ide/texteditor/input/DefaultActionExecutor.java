@@ -18,28 +18,21 @@ import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.util.input.SignalEvent;
 
-/**
- * Default implementation that executed actions placed in map.
- *
- */
-public class DefaultActionExecutor implements ActionExecutor
-{
+/** Default implementation that executed actions placed in map. */
+public class DefaultActionExecutor implements ActionExecutor {
 
-   private final JsonStringMap<Shortcut> actions = JsonCollections.createStringMap();
+    private final JsonStringMap<Shortcut> actions = JsonCollections.createStringMap();
 
-   @Override
-   public boolean execute(String actionName, InputScheme scheme, SignalEvent event)
-   {
-      Shortcut shortcut = actions.get(actionName);
-      if (shortcut == null)
-      {
-         return false;
-      }
-      return shortcut.event(scheme, event);
-   }
+    @Override
+    public boolean execute(String actionName, InputScheme scheme, SignalEvent event) {
+        Shortcut shortcut = actions.get(actionName);
+        if (shortcut == null) {
+            return false;
+        }
+        return shortcut.event(scheme, event);
+    }
 
-   protected void addAction(String actionName, Shortcut executor)
-   {
-      actions.put(actionName, executor);
-   }
+    protected void addAction(String actionName, Shortcut executor) {
+        actions.put(actionName, executor);
+    }
 }

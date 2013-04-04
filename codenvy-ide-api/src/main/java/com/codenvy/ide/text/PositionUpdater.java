@@ -27,17 +27,16 @@ package com.codenvy.ide.text;
  * <p>
  * Clients may implement this interface or use the standard implementation {@link DefaultPositionUpdater}.
  * </p>
- * 
  */
-public interface PositionUpdater
-{
+public interface PositionUpdater {
 
-   /**
-    * Adapts positions to the change specified by the document event. It is ensured that the document's partitioning has been
-    * adapted to this document change and that all the position updaters which have a smaller index in the document's position
-    * updater list have been called.
-    * 
-    * @param event the document event describing the document change
-    */
-   void update(DocumentEvent event);
+    /**
+     * Adapts positions to the change specified by the document event. It is ensured that the document's partitioning has been
+     * adapted to this document change and that all the position updaters which have a smaller index in the document's position
+     * updater list have been called.
+     *
+     * @param event
+     *         the document event describing the document change
+     */
+    void update(DocumentEvent event);
 }

@@ -17,31 +17,31 @@ package com.codenvy.ide.json;
 /**
  * Integer Map interface.
  *
- * @param <T> the type contained as value in the map
+ * @param <T>
+ *         the type contained as value in the map
  */
 public interface JsonIntegerMap<T> {
 
-  /**
-   * Callback interface for int,double key value pairs.
-   */
-  public interface IterationCallback<T> {
-    void onIteration(int key, T val);
-  }
+    /** Callback interface for int,double key value pairs. */
+    public interface IterationCallback<T> {
+        void onIteration(int key, T val);
+    }
 
-  boolean hasKey(int key);
+    boolean hasKey(int key);
 
-  T get(int key);
+    T get(int key);
 
-  void put(int key, T val);
-  
-  boolean isEmpty();
-  
-  void erase(int key);
-  
-  /**
-   * Iterates through the contents and calls back out to a callback.
-   *
-   * @param cb callback object
-   */
-  void iterate(IterationCallback<T> cb);
+    void put(int key, T val);
+
+    boolean isEmpty();
+
+    void erase(int key);
+
+    /**
+     * Iterates through the contents and calls back out to a callback.
+     *
+     * @param cb
+     *         callback object
+     */
+    void iterate(IterationCallback<T> cb);
 }

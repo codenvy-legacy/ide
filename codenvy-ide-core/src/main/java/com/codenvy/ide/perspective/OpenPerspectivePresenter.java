@@ -22,89 +22,71 @@ import com.codenvy.ide.Resources;
 
 /**
  * Provides opening perspective.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class OpenPerspectivePresenter implements OpenPerspectiveView.ActionDelegate
-{
-   private OpenPerspectiveView view;
+public class OpenPerspectivePresenter implements OpenPerspectiveView.ActionDelegate {
+    private OpenPerspectiveView view;
 
-   private WorkspacePresenter workspacePresenter;
+    private WorkspacePresenter workspacePresenter;
 
-   private String selectedPerspective = null;
+    private String selectedPerspective = null;
 
-   /**
-    * Create OpenPerspectivePresenter.
-    * 
-    * @param workspacePresenter
-    * @param resources
-    */
-   public OpenPerspectivePresenter(WorkspacePresenter workspacePresenter, Resources resources)
-   {
-      this(workspacePresenter, new OpenPerspectiveViewImpl(workspacePresenter.getPerspectives(), resources));
-   }
+    /**
+     * Create OpenPerspectivePresenter.
+     *
+     * @param workspacePresenter
+     * @param resources
+     */
+    public OpenPerspectivePresenter(WorkspacePresenter workspacePresenter, Resources resources) {
+        this(workspacePresenter, new OpenPerspectiveViewImpl(workspacePresenter.getPerspectives(), resources));
+    }
 
-   /**
-    * Creates OpenPerspectivePresenter with given instance of view.
-    * 
-    * For Unit Tests.
-    * 
-    * @param workspacePresenter
-    * @param view
-    */
-   protected OpenPerspectivePresenter(WorkspacePresenter workspacePresenter, OpenPerspectiveView view)
-   {
-      this.view = view;
-      this.view.setDelegate(this);
-      this.workspacePresenter = workspacePresenter;
+    /**
+     * Creates OpenPerspectivePresenter with given instance of view.
+     * <p/>
+     * For Unit Tests.
+     *
+     * @param workspacePresenter
+     * @param view
+     */
+    protected OpenPerspectivePresenter(WorkspacePresenter workspacePresenter, OpenPerspectiveView view) {
+        this.view = view;
+        this.view.setDelegate(this);
+        this.workspacePresenter = workspacePresenter;
 
-      updateComponents();
-   }
+        updateComponents();
+    }
 
-   /**
-    * Updates change perspective view components. 
-    */
-   private void updateComponents()
-   {
-      view.setOpenButtonEnabled(selectedPerspective != null);
-   }
+    /** Updates change perspective view components. */
+    private void updateComponents() {
+        view.setOpenButtonEnabled(selectedPerspective != null);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onOpenClicked()
-   {
-      workspacePresenter.openPerspective(selectedPerspective);
+    /** {@inheritDoc} */
+    @Override
+    public void onOpenClicked() {
+        workspacePresenter.openPerspective(selectedPerspective);
 
-      view.close();
-   }
+        view.close();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onCancelClicked()
-   {
-      view.close();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onCancelClicked() {
+        view.close();
+    }
 
-   /**
-    * Show dialog.
-    */
-   public void show()
-   {
-      view.showDialog();
-   }
+    /** Show dialog. */
+    public void show() {
+        view.showDialog();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void selectedPerspective(String perspectiveName)
-   {
-      this.selectedPerspective = perspectiveName;
+    /** {@inheritDoc} */
+    @Override
+    public void selectedPerspective(String perspectiveName) {
+        this.selectedPerspective = perspectiveName;
 
-      updateComponents();
-   }
+        updateComponents();
+    }
 }

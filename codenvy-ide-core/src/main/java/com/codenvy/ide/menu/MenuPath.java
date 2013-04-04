@@ -19,74 +19,58 @@ package com.codenvy.ide.menu;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.util.StringUtils;
 
-/**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
- */
-public class MenuPath
-{
-   public static final String PATH_SEPARATOR = "/";
+/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+public class MenuPath {
+    public static final String PATH_SEPARATOR = "/";
 
-   JsonArray<String> pathElemetns;
+    JsonArray<String> pathElemetns;
 
-   /**
-    * Constructs MenuPath from String 
-    */
-   public MenuPath(String path)
-   {
-      // trim "/" at the beginning and at the end
-      if (path.startsWith(PATH_SEPARATOR))
-      {
-         path = path.substring(1);
-      }
-      if (path.endsWith(PATH_SEPARATOR))
-      {
-         path = path.substring(0, path.length() - 1);
-      }
-      pathElemetns = StringUtils.split(path, PATH_SEPARATOR);
-   }
+    /** Constructs MenuPath from String */
+    public MenuPath(String path) {
+        // trim "/" at the beginning and at the end
+        if (path.startsWith(PATH_SEPARATOR)) {
+            path = path.substring(1);
+        }
+        if (path.endsWith(PATH_SEPARATOR)) {
+            path = path.substring(0, path.length() - 1);
+        }
+        pathElemetns = StringUtils.split(path, PATH_SEPARATOR);
+    }
 
-   /**
-    * @return number of Path Elements
-    */
-   public int getSize()
-   {
-      return pathElemetns.size();
-   }
+    /** @return number of Path Elements */
+    public int getSize() {
+        return pathElemetns.size();
+    }
 
-   /**
-    * The String representation of Parent's path. Having a Path "a/b/c"
-    * and calling getParentPath(2) will produce "a/b" and calling with 
-    * argument (1) will return "a"
-    * 
-    * @param depth
-    * @return
-    */
-   public String getParentPath(int depth)
-   {
-      if (depth > pathElemetns.size())
-      {
-         depth = pathElemetns.size();
-      }
-      return pathElemetns.slice(0, depth).join(PATH_SEPARATOR);
-   }
-   
-   /**
-    * Retrieves path Element at given level. I.e. for a/b/c
-    * calling getPathElementAt(0) returns "a"<br>
-    * calling getPathElementAt(1) returns "b"<br>
-    * calling getPathElementAt(2) returns "c"<br>
-    * 
-    * @param level
-    * @return
-    */
-   public String getPathElementAt(int level)
-   {
-      if (level >= pathElemetns.size())
-      {
-         level = pathElemetns.size()-1;
-      }
-      return pathElemetns.get(level);
-   }
+    /**
+     * The String representation of Parent's path. Having a Path "a/b/c"
+     * and calling getParentPath(2) will produce "a/b" and calling with
+     * argument (1) will return "a"
+     *
+     * @param depth
+     * @return
+     */
+    public String getParentPath(int depth) {
+        if (depth > pathElemetns.size()) {
+            depth = pathElemetns.size();
+        }
+        return pathElemetns.slice(0, depth).join(PATH_SEPARATOR);
+    }
+
+    /**
+     * Retrieves path Element at given level. I.e. for a/b/c
+     * calling getPathElementAt(0) returns "a"<br>
+     * calling getPathElementAt(1) returns "b"<br>
+     * calling getPathElementAt(2) returns "c"<br>
+     *
+     * @param level
+     * @return
+     */
+    public String getPathElementAt(int level) {
+        if (level >= pathElemetns.size()) {
+            level = pathElemetns.size() - 1;
+        }
+        return pathElemetns.get(level);
+    }
 
 }

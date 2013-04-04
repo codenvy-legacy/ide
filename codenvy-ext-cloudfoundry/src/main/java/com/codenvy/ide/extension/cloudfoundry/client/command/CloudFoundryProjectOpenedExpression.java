@@ -31,27 +31,22 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
-{
+public class CloudFoundryProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
 
-   /**
-    * Create expression.
-    * 
-    * @param expressionManager
-    */
-   @Inject
-   public CloudFoundryProjectOpenedExpression(ExpressionManager expressionManager)
-   {
-      super(expressionManager, false);
-   }
+    /**
+     * Create expression.
+     *
+     * @param expressionManager
+     */
+    @Inject
+    public CloudFoundryProjectOpenedExpression(ExpressionManager expressionManager) {
+        super(expressionManager, false);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean onProjectChanged(Project project)
-   {
-      value = project.getProperty("cloudfoundry-application") != null;
-      return value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean onProjectChanged(Project project) {
+        value = project.getProperty("cloudfoundry-application") != null;
+        return value;
+    }
 }

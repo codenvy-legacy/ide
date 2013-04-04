@@ -22,49 +22,40 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * The view of {@link OpenPerspectivePresenter}.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface OpenPerspectiveView extends View<OpenPerspectiveView.ActionDelegate>
-{
-   /**
-    * Needs for delegate some function into ChangePerspective view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Open button.
-       */
-      void onOpenClicked();
+public interface OpenPerspectiveView extends View<OpenPerspectiveView.ActionDelegate> {
+    /** Needs for delegate some function into ChangePerspective view. */
+    public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Open button.
+         */
+        void onOpenClicked();
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the Cancel button.
-       */
-      void onCancelClicked();
+        /**
+         * Performs any actions appropriate in response to the user
+         * having pressed the Cancel button.
+         */
+        void onCancelClicked();
 
-      /**
-       * Returns selected perspective.
-       */
-      void selectedPerspective(String perspectiveName);
-   }
+        /** Returns selected perspective. */
+        void selectedPerspective(String perspectiveName);
+    }
 
-   /**
-    * Sets whether Open button is enabled.
-    * 
-    * @param isEnabled <code>true</code> to enable the button, <code>false</code>
-    * to disable it
-    */
-   void setOpenButtonEnabled(boolean isEnabled);
+    /**
+     * Sets whether Open button is enabled.
+     *
+     * @param isEnabled
+     *         <code>true</code> to enable the button, <code>false</code>
+     *         to disable it
+     */
+    void setOpenButtonEnabled(boolean isEnabled);
 
-   /**
-    * Close dialog.
-    */
-   void close();
+    /** Close dialog. */
+    void close();
 
-   /**
-    * Show dialog.
-    */
-   void showDialog();
+    /** Show dialog. */
+    void showDialog();
 }

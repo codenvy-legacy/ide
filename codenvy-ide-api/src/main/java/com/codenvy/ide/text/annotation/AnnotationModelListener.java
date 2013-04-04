@@ -22,16 +22,16 @@ package com.codenvy.ide.text.annotation;
  * Interface for objects interested in getting informed about annotation model
  * changes. Changes are the addition or removal of annotations managed by the
  * model. Clients may implement this interface.
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface AnnotationModelListener
-{
-   /**
-    * Called if a model change occurred on the given model.
-    *
-    * @param event the event to be sent out
-    */
-   void modelChanged(AnnotationModelEvent event);
+public interface AnnotationModelListener {
+    /**
+     * Called if a model change occurred on the given model.
+     *
+     * @param event
+     *         the event to be sent out
+     */
+    void modelChanged(AnnotationModelEvent event);
 }

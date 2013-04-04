@@ -11,9 +11,7 @@
 package com.codenvy.ide.java.client.codeassistant;
 
 import com.codenvy.ide.java.client.codeassistant.api.JavaCompletionProposal;
-
 import com.codenvy.ide.texteditor.api.codeassistant.CompletionProposal;
-
 
 import java.util.Comparator;
 
@@ -22,74 +20,62 @@ import java.util.Comparator;
  * <p>
  * Note: this comparator imposes orderings that are inconsistent with equals.
  * </p>
- * 
+ *
  * @since 3.1
  */
-public final class CompletionProposalComparator implements Comparator<CompletionProposal>
-{
+public final class CompletionProposalComparator implements Comparator<CompletionProposal> {
 
-   private boolean fOrderAlphabetically;
+    private boolean fOrderAlphabetically;
 
-   /**
-    * Creates a comparator that sorts by relevance.
-    */
-   public CompletionProposalComparator()
-   {
-      fOrderAlphabetically = false;
-   }
+    /** Creates a comparator that sorts by relevance. */
+    public CompletionProposalComparator() {
+        fOrderAlphabetically = false;
+    }
 
-   /**
-    * Sets the sort order. Default is <code>false</code>, i.e. order by relevance.
-    * 
-    * @param orderAlphabetically <code>true</code> to order alphabetically, <code>false</code> to order by relevance
-    */
-   public void setOrderAlphabetically(boolean orderAlphabetically)
-   {
-      fOrderAlphabetically = orderAlphabetically;
-   }
+    /**
+     * Sets the sort order. Default is <code>false</code>, i.e. order by relevance.
+     *
+     * @param orderAlphabetically
+     *         <code>true</code> to order alphabetically, <code>false</code> to order by relevance
+     */
+    public void setOrderAlphabetically(boolean orderAlphabetically) {
+        fOrderAlphabetically = orderAlphabetically;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   public int compare(CompletionProposal p1, CompletionProposal p2)
-   {
-      if (!fOrderAlphabetically)
-      {
-         int r1 = getRelevance(p1);
-         int r2 = getRelevance(p2);
-         int relevanceDif = r2 - r1;
-         if (relevanceDif != 0)
-         {
-            return relevanceDif;
-         }
-      }
+    /** {@inheritDoc} */
+    public int compare(CompletionProposal p1, CompletionProposal p2) {
+        if (!fOrderAlphabetically) {
+            int r1 = getRelevance(p1);
+            int r2 = getRelevance(p2);
+            int relevanceDif = r2 - r1;
+            if (relevanceDif != 0) {
+                return relevanceDif;
+            }
+        }
       /*
        * TODO the correct (but possibly much slower) sorting would use a collator.
        */
-      // fix for bug 67468
-      return getSortKey(p1).compareToIgnoreCase(getSortKey(p2));
-   }
+        // fix for bug 67468
+        return getSortKey(p1).compareToIgnoreCase(getSortKey(p2));
+    }
 
-   private String getSortKey(CompletionProposal p)
-   {
-      if (p instanceof AbstractJavaCompletionProposal)
-         return ((AbstractJavaCompletionProposal)p).getSortString();
-      return p.getDisplayString();
-   }
+    private String getSortKey(CompletionProposal p) {
+        if (p instanceof AbstractJavaCompletionProposal)
+            return ((AbstractJavaCompletionProposal)p).getSortString();
+        return p.getDisplayString();
+    }
 
-   private int getRelevance(CompletionProposal obj)
-   {
-      if (obj instanceof JavaCompletionProposal)
-      {
-         JavaCompletionProposal jcp = (JavaCompletionProposal)obj;
-         return jcp.getRelevance();
-      }
-      // else if (obj instanceof TemplateProposal) {
-      // TemplateProposal tp= (TemplateProposal) obj;
-      // return tp.getRelevance();
-      // }
-      // catch all
-      return 0;
-   }
+    private int getRelevance(CompletionProposal obj) {
+        if (obj instanceof JavaCompletionProposal) {
+            JavaCompletionProposal jcp = (JavaCompletionProposal)obj;
+            return jcp.getRelevance();
+        }
+        // else if (obj instanceof TemplateProposal) {
+        // TemplateProposal tp= (TemplateProposal) obj;
+        // return tp.getRelevance();
+        // }
+        // catch all
+        return 0;
+    }
 
 }

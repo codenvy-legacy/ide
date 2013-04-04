@@ -17,66 +17,62 @@
 package com.codenvy.ide.menu;
 
 import com.codenvy.ide.api.mvp.View;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
 
 
-/**
- * Main Menu View 
- */
-public interface MainMenuView extends View<MainMenuView.ActionDelegate>
-{
-   /**
-    * Needs for delegate some function into MainMenu view.
-    */
-   public interface ActionDelegate
-   {
-   }
+/** Main Menu View */
+public interface MainMenuView extends View<MainMenuView.ActionDelegate> {
+    /** Needs for delegate some function into MainMenu view. */
+    public interface ActionDelegate {
+    }
 
-   /**
-    * Set Menu Item by given path visible or invisible.
-    * 
-    * @param path menuItem path
-    * @param visible state
-    */
-   void setVisible(String path, boolean visible);
+    /**
+     * Set Menu Item by given path visible or invisible.
+     *
+     * @param path
+     *         menuItem path
+     * @param visible
+     *         state
+     */
+    void setVisible(String path, boolean visible);
 
-   /**
-    * Set Menu Item by given path enabled or disabled.
-    * 
-    * @param path menuItem path
-    * @param enabled
-    */
-   void setEnabled(String path, boolean enabled);
+    /**
+     * Set Menu Item by given path enabled or disabled.
+     *
+     * @param path
+     *         menuItem path
+     * @param enabled
+     */
+    void setEnabled(String path, boolean enabled);
 
-   /**
-    * Sets Menu Item by given path selected or unselected.
-    * 
-    * @param path
-    * @param enabled
-    */
-   void setSelected(String path, boolean enabled);
+    /**
+     * Sets Menu Item by given path selected or unselected.
+     *
+     * @param path
+     * @param enabled
+     */
+    void setSelected(String path, boolean enabled);
 
-   /**
-    * Add menu item with the following path, icon, command, visible and enabled states
-    * 
-    * @param path
-    * @param icon
-    * @param command
-    * @param visible
-    * @param enabled
-    */
-   void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled);
+    /**
+     * Add menu item with the following path, icon, command, visible and enabled states
+     *
+     * @param path
+     * @param icon
+     * @param command
+     * @param visible
+     * @param enabled
+     */
+    void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled);
 
-   /**
-    * Adds toggle menu item with the following path, command with expression, visible, enabled
-    * and selected states.
-    * 
-    * @param path
-    * @param command
-    * @param visible
-    * @param enabled
-    * @param selected
-    */
-   void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected);
+    /**
+     * Adds toggle menu item with the following path, command with expression, visible, enabled
+     * and selected states.
+     *
+     * @param path
+     * @param command
+     * @param visible
+     * @param enabled
+     * @param selected
+     */
+    void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected);
 }

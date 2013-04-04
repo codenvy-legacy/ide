@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import static org.mockito.Mockito.when;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
 import com.codenvy.ide.java.client.BaseTest;
@@ -31,34 +29,34 @@ import com.codenvy.ide.resources.model.Resource;
 import org.junit.Before;
 import org.mockito.Mock;
 
+import static org.mockito.Mockito.when;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * @version $Id:
  */
-public abstract class WizardsBaseTest extends BaseTest
-{
-   @Mock
-   protected ResourceProvider resourceProvider;
+public abstract class WizardsBaseTest extends BaseTest {
+    @Mock
+    protected ResourceProvider resourceProvider;
 
-   @Mock
-   protected JavaProject project;
+    @Mock
+    protected JavaProject project;
 
-   @Mock
-   protected SourceFolder sourceFolder;
+    @Mock
+    protected SourceFolder sourceFolder;
 
-   @Mock
-   protected com.codenvy.ide.java.client.projectmodel.Package aPackage;
+    @Mock
+    protected com.codenvy.ide.java.client.projectmodel.Package aPackage;
 
-   @Mock
-   protected WizardPagePresenter.WizardUpdateDelegate updateDelegate;
+    @Mock
+    protected WizardPagePresenter.WizardUpdateDelegate updateDelegate;
 
-   @Before
-   public void init()
-   {
-      when(resourceProvider.getActiveProject()).thenReturn(project);
-      when(project.getSourceFolders()).thenReturn(JsonCollections.createArray(sourceFolder));
-      when(sourceFolder.getChildren()).thenReturn(JsonCollections.<Resource>createArray(aPackage));
-      when(sourceFolder.getName()).thenReturn("src");
-      when(aPackage.getName()).thenReturn("com.ide");
-   }
+    @Before
+    public void init() {
+        when(resourceProvider.getActiveProject()).thenReturn(project);
+        when(project.getSourceFolders()).thenReturn(JsonCollections.createArray(sourceFolder));
+        when(sourceFolder.getChildren()).thenReturn(JsonCollections.<Resource>createArray(aPackage));
+        when(sourceFolder.getName()).thenReturn("src");
+        when(aPackage.getName()).thenReturn("com.ide");
+    }
 }

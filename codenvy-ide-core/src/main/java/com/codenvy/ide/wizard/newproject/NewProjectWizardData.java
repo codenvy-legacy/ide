@@ -20,7 +20,6 @@ package com.codenvy.ide.wizard.newproject;
 
 import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
 import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
-
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
@@ -31,104 +30,96 @@ import com.google.inject.Provider;
  *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewProjectWizardData
-{
-   private String title;
+public class NewProjectWizardData {
+    private String title;
 
-   private String description;
+    private String description;
 
-   private String primaryNature;
+    private String primaryNature;
 
-   private ImageResource icon;
+    private ImageResource icon;
 
-   private Provider<? extends AbstractNewProjectWizardPage> wizardPage;
+    private Provider<? extends AbstractNewProjectWizardPage> wizardPage;
 
-   private CreateProjectHandler createProjectHandler;
+    private CreateProjectHandler createProjectHandler;
 
-   private JsonArray<String> natures;
+    private JsonArray<String> natures;
 
-   /**
-    * Create wizard's data
-    *
-    * @param title
-    * @param description
-    * @param primaryNature
-    * @param icon
-    * @param wizardPage
-    * @param natures
-    */
-   public NewProjectWizardData(String title, String description, String primaryNature, ImageResource icon,
-      Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
-      JsonArray<String> natures)
-   {
-      this.title = title;
-      this.description = description;
-      this.primaryNature = primaryNature;
-      this.icon = icon;
-      this.wizardPage = wizardPage;
-      this.createProjectHandler = createProjectHandler;
-      this.natures = natures;
-   }
+    /**
+     * Create wizard's data
+     *
+     * @param title
+     * @param description
+     * @param primaryNature
+     * @param icon
+     * @param wizardPage
+     * @param natures
+     */
+    public NewProjectWizardData(String title, String description, String primaryNature, ImageResource icon,
+                                Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
+                                JsonArray<String> natures) {
+        this.title = title;
+        this.description = description;
+        this.primaryNature = primaryNature;
+        this.icon = icon;
+        this.wizardPage = wizardPage;
+        this.createProjectHandler = createProjectHandler;
+        this.natures = natures;
+    }
 
-   /**
-    * Returns wizard's title.
-    *
-    * @return
-    */
-   public String getTitle()
-   {
-      return title;
-   }
+    /**
+     * Returns wizard's title.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return title;
+    }
 
-   /**
-    * Returns wizard's description.
-    *
-    * @return
-    */
-   public String getDescription()
-   {
-      return description;
-   }
+    /**
+     * Returns wizard's description.
+     *
+     * @return
+     */
+    public String getDescription() {
+        return description;
+    }
 
-   /**
-    * Returns wizard's primary nature.
-    *
-    * @return
-    */
-   public String getPrimaryNature()
-   {
-      return primaryNature;
-   }
+    /**
+     * Returns wizard's primary nature.
+     *
+     * @return
+     */
+    public String getPrimaryNature() {
+        return primaryNature;
+    }
 
-   /**
-    * Returns wizard's page presenter.
-    *
-    * @return
-    */
-   public AbstractNewProjectWizardPage getWizardPage()
-   {
-      AbstractNewProjectWizardPage page = wizardPage.get();
-      page.setCreateProjectHandler(createProjectHandler);
-      return page;
-   }
+    /**
+     * Returns wizard's page presenter.
+     *
+     * @return
+     */
+    public AbstractNewProjectWizardPage getWizardPage() {
+        AbstractNewProjectWizardPage page = wizardPage.get();
+        page.setCreateProjectHandler(createProjectHandler);
+        return page;
+    }
 
-   /**
-    * Returns wizard's icon.
-    *
-    * @return the wizard's icon, or <code>null</code> if none
-    */
-   public Image getIcon()
-   {
-      return icon == null ? null : new Image(icon);
-   }
+    /**
+     * Returns wizard's icon.
+     *
+     * @return the wizard's icon, or <code>null</code> if none
+     */
+    public Image getIcon() {
+        return icon == null ? null : new Image(icon);
+    }
 
-   /**
-    * Returns natures.
-    *
-    * @return
-    */
-   public JsonArray<String> getNatures()
-   {
-      return natures;
-   }
+    /**
+     * Returns natures.
+     *
+     * @return
+     */
+    public JsonArray<String> getNatures() {
+        return natures;
+    }
 }

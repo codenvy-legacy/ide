@@ -20,38 +20,38 @@ package com.codenvy.ide.extension.cloudfoundry.shared;
 
 /**
  * Cloud Foundry application resources info.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: CloudFoundryApplicationResources.java Mar 16, 2012 2:14:15 PM azatsarynnyy $
- *
  */
-public interface CloudFoundryApplicationResources
-{
-   /**
-    * Get amount of memory available for application (in MB).
-    * 
-    * @return amount of memory.
-    */
+public interface CloudFoundryApplicationResources {
+    /**
+     * Get amount of memory available for application (in MB).
+     *
+     * @return amount of memory.
+     */
     int getMemory();
 
-   /**
-    * Set amount of memory available for application (in MB).
-    * 
-    * @param memory amount of memory.
-    */
+    /**
+     * Set amount of memory available for application (in MB).
+     *
+     * @param memory
+     *         amount of memory.
+     */
     void setMemory(int memory);
 
-   /**
-    * Get amount disk space available for application (in MB).
-    * 
-    * @return amount of disk space.
-    */
+    /**
+     * Get amount disk space available for application (in MB).
+     *
+     * @return amount of disk space.
+     */
     int getDisk();
 
-   /**
-    * Set amount disk space available for application (in MB).
-    * 
-    * @param disk amount of disk space.
-    */
+    /**
+     * Set amount disk space available for application (in MB).
+     *
+     * @param disk
+     *         amount of disk space.
+     */
     void setDisk(int disk);
 }

@@ -20,62 +20,46 @@ package com.codenvy.ide.api.expressions;
 
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-
-
 import com.google.inject.Inject;
-
 import com.google.inject.Singleton;
 
 
 /**
  * Expression that chages it's state depending on dirty flag of current Editor
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
 public class EditorDirtyExpression extends AbstractExpression
-   implements EditorDirtyConstraintExpression, ActivePartConstraintExpression
-{
+        implements EditorDirtyConstraintExpression, ActivePartConstraintExpression {
 
-   private EditorPartPresenter activeEditor;
+    private EditorPartPresenter activeEditor;
 
-   /**
-    * @param expressionManager
-    */
-   @Inject
-   public EditorDirtyExpression(ExpressionManager expressionManager)
-   {
-      super(expressionManager, false);
-   }
+    /** @param expressionManager */
+    @Inject
+    public EditorDirtyExpression(ExpressionManager expressionManager) {
+        super(expressionManager, false);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean onEditorDirtyChanged(EditorPartPresenter editor)
-   {
-      value = editor == activeEditor && editor.isDirty();
-      return value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean onEditorDirtyChanged(EditorPartPresenter editor) {
+        value = editor == activeEditor && editor.isDirty();
+        return value;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean onActivePartChanged(PartPresenter part)
-   {
-      if (part instanceof EditorPartPresenter)
-      {
-         activeEditor = (EditorPartPresenter)part;
-      }
-      value = calculateValue();
-      return value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean onActivePartChanged(PartPresenter part) {
+        if (part instanceof EditorPartPresenter) {
+            activeEditor = (EditorPartPresenter)part;
+        }
+        value = calculateValue();
+        return value;
+    }
 
-   private boolean calculateValue()
-   {
-      return activeEditor!=null && activeEditor.isDirty();
-   }
+    private boolean calculateValue() {
+        return activeEditor != null && activeEditor.isDirty();
+    }
 }

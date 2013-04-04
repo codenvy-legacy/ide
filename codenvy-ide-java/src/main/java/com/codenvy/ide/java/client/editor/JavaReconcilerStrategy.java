@@ -19,7 +19,6 @@
 package com.codenvy.ide.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-
 import com.codenvy.ide.java.client.JavaAutoBeanFactory;
 import com.codenvy.ide.java.client.NameEnvironment;
 import com.codenvy.ide.java.client.TypeInfoStorage;
@@ -49,162 +48,124 @@ import com.google.gwt.core.shared.GWT;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider
-{
+public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider {
 
-   private Document document;
+    private Document document;
 
-   private INameEnvironment nameEnvironment;
+    private INameEnvironment nameEnvironment;
 
-   private final TextEditorPartPresenter editor;
+    private final TextEditorPartPresenter editor;
 
-   private File file;
+    private File file;
 
-   private ListenerManager<AstListener> astListeners;
+    private ListenerManager<AstListener> astListeners;
 
-   private static JavaReconcilerStrategy instance;
+    private static JavaReconcilerStrategy instance;
 
-   public static JavaReconcilerStrategy get()
-   {
-      return instance;
-   }
+    public static JavaReconcilerStrategy get() {
+        return instance;
+    }
 
-   /**
-    * @param editor
-    * 
-    */
-   public JavaReconcilerStrategy(TextEditorPartPresenter editor)
-   {
-      this.editor = editor;
-      instance = this;
-      astListeners = ListenerManager.create();
-   }
+    /** @param editor */
+    public JavaReconcilerStrategy(TextEditorPartPresenter editor) {
+        this.editor = editor;
+        instance = this;
+        astListeners = ListenerManager.create();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDocument(Document document)
-   {
-      this.document = document;
-      file = editor.getEditorInput().getFile();
-      nameEnvironment =
-         new NameEnvironment(file.getProject().getId(), GWT.<JavaAutoBeanFactory> create(JavaAutoBeanFactory.class),
-            "/rest");
-      TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDocument(Document document) {
+        this.document = document;
+        file = editor.getEditorInput().getFile();
+        nameEnvironment =
+                new NameEnvironment(file.getProject().getId(), GWT.<JavaAutoBeanFactory>create(JavaAutoBeanFactory.class),
+                                    "/rest");
+        TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void reconcile(DirtyRegion dirtyRegion, Region subRegion)
-   {
-      parse();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void reconcile(DirtyRegion dirtyRegion, Region subRegion) {
+        parse();
+    }
 
-   /**
-    * 
-    */
-   private void parse()
-   {
-      AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
-      if (annotationModel == null)
-         return;
-      IProblemRequestor problemRequestor = null;
-      if (annotationModel instanceof IProblemRequestor)
-      {
-         problemRequestor = (IProblemRequestor)annotationModel;
-         problemRequestor.beginReporting();
-      }
-      try
-      {
-         ASTParser parser = ASTParser.newParser(AST.JLS3);
-         parser.setSource(document.get());
-         parser.setKind(ASTParser.K_COMPILATION_UNIT);
-         parser.setUnitName(file.getName().substring(0, file.getName().lastIndexOf('.')));
-         parser.setResolveBindings(true);
-         parser.setNameEnvironment(nameEnvironment);
-         ASTNode ast = parser.createAST();
-         CompilationUnit unit = (CompilationUnit)ast;
-         sheduleAstChanged(unit);
-         IProblem[] problems = unit.getProblems();
-         for (IProblem p : problems)
-         {
-            problemRequestor.acceptProblem(p);
-         }
-         IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
-         if (tasks != null)
-         {
-            for (IProblem p : tasks)
-            {
-               problemRequestor.acceptProblem(p);
+    /**
+     *
+     */
+    private void parse() {
+        AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
+        if (annotationModel == null)
+            return;
+        IProblemRequestor problemRequestor = null;
+        if (annotationModel instanceof IProblemRequestor) {
+            problemRequestor = (IProblemRequestor)annotationModel;
+            problemRequestor.beginReporting();
+        }
+        try {
+            ASTParser parser = ASTParser.newParser(AST.JLS3);
+            parser.setSource(document.get());
+            parser.setKind(ASTParser.K_COMPILATION_UNIT);
+            parser.setUnitName(file.getName().substring(0, file.getName().lastIndexOf('.')));
+            parser.setResolveBindings(true);
+            parser.setNameEnvironment(nameEnvironment);
+            ASTNode ast = parser.createAST();
+            CompilationUnit unit = (CompilationUnit)ast;
+            sheduleAstChanged(unit);
+            IProblem[] problems = unit.getProblems();
+            for (IProblem p : problems) {
+                problemRequestor.acceptProblem(p);
             }
-         }
-      }
-      catch (Exception e)
-      {
-         Log.error(getClass(), e);
-      }
-      finally
-      {
-         if (problemRequestor != null)
-            problemRequestor.endReporting();
-      }
-   }
-   
+            IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
+            if (tasks != null) {
+                for (IProblem p : tasks) {
+                    problemRequestor.acceptProblem(p);
+                }
+            }
+        } catch (Exception e) {
+            Log.error(getClass(), e);
+        } finally {
+            if (problemRequestor != null)
+                problemRequestor.endReporting();
+        }
+    }
 
-   private void sheduleAstChanged(final CompilationUnit unit)
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         
-         @Override
-         public void execute()
-         {
-            astListeners.dispatch(new Dispatcher<AstProvider.AstListener>()
-            {
 
-               @Override
-               public void dispatch(AstListener listener)
-               {
-                  listener.onCompilationUnitChanged(unit);
-               }
-            });
-         }
-      });
-   }
+    private void sheduleAstChanged(final CompilationUnit unit) {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void reconcile(Region partition)
-   {
-      parse();
-   }
+            @Override
+            public void execute() {
+                astListeners.dispatch(new Dispatcher<AstProvider.AstListener>() {
 
-   /**
-    * @return the file
-    */
-   public File getFile()
-   {
-      return file;
-   }
+                    @Override
+                    public void dispatch(AstListener listener) {
+                        listener.onCompilationUnitChanged(unit);
+                    }
+                });
+            }
+        });
+    }
 
-   /**
-    * @return the nameEnvironment
-    */
-   public INameEnvironment getNameEnvironment()
-   {
-      return nameEnvironment;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void reconcile(Region partition) {
+        parse();
+    }
 
-   public Remover addAstListener(AstListener listener)
-   {
-      return astListeners.add(listener);
-   }
+    /** @return the file */
+    public File getFile() {
+        return file;
+    }
+
+    /** @return the nameEnvironment */
+    public INameEnvironment getNameEnvironment() {
+        return nameEnvironment;
+    }
+
+    public Remover addAstListener(AstListener listener) {
+        return astListeners.add(listener);
+    }
 
 }

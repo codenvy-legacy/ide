@@ -14,9 +14,7 @@
 
 package com.codenvy.ide.util.dom;
 
-/**
- * Interface defining a handle to an object for releasing Capture.
- */
+/** Interface defining a handle to an object for releasing Capture. */
 interface CaptureReleaser {
-  void release();
+    void release();
 }

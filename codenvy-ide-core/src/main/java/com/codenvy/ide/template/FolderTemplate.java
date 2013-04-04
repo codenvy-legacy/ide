@@ -25,21 +25,15 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 26, 2012 12:51:08 PM anya $
- * 
  */
-public interface FolderTemplate extends Template
-{
+public interface FolderTemplate extends Template {
 
-   /**
-    * @return children on template
-    */
-   List<AbstractTemplate> getChildren();
+    /** @return children on template */
+    List<AbstractTemplate> getChildren();
 
-   void setChildren(List<AbstractTemplate> children);
+    void setChildren(List<AbstractTemplate> children);
 
-   /**
-    * {@inheritDoc}
-    */
-   ImageResource getIcon();
+    /** {@inheritDoc} */
+    ImageResource getIcon();
 
 }

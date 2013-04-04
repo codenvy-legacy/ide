@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client;
 
 import com.codenvy.ide.api.parts.ConsolePart;
-
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
@@ -34,121 +33,103 @@ import com.google.web.bindery.event.shared.EventBus;
 /**
  * Asynchronous CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
  * exception, in this case - showDialog method calls on {@link LoginPresenter}.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryAsyncRequestCallback.java Jul 8, 2011 3:36:01 PM vereshchaka $
- * 
  * @see CloudFoundryRESTfulRequestCallback
  */
-public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T>
-{
-   private LoggedInHandler loggedIn;
+public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T> {
+    private LoggedInHandler loggedIn;
 
-   private LoginCanceledHandler loginCanceled;
+    private LoginCanceledHandler loginCanceled;
 
-   private String loginUrl;
+    private String loginUrl;
 
-   private EventBus eventBus;
+    private EventBus eventBus;
 
-   private ConsolePart console;
+    private ConsolePart console;
 
-   private CloudFoundryLocalizationConstant constant;
+    private CloudFoundryLocalizationConstant constant;
 
-   private LoginPresenter loginPresenter;
+    private LoginPresenter loginPresenter;
 
-   private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
+    private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
 
-   /**
-    * Create callback.
-    * 
-    * @param unmarshaller
-    * @param loggedIn
-    * @param loginCanceled
-    * @param eventBus
-    * @param console
-    * @param constant
-    * @param loginPresenter
-    */
-   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, EventBus eventBus, ConsolePart console,
-      CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter)
-   {
-      this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant, loginPresenter);
-   }
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param loggedIn
+     * @param loginCanceled
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param loginPresenter
+     */
+    public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                            LoginCanceledHandler loginCanceled, EventBus eventBus, ConsolePart console,
+                                            CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter) {
+        this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant, loginPresenter);
+    }
 
-   /**
-    * Create callback.
-    * 
-    * @param unmarshaller
-    * @param loggedIn
-    * @param loginCanceled
-    * @param loginUrl
-    * @param eventBus
-    * @param console
-    * @param constant
-    * @param loginPresenter
-    */
-   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus, ConsolePart console,
-      CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter)
-   {
-      super(unmarshaller);
-      this.loggedIn = loggedIn;
-      this.loginCanceled = loginCanceled;
-      this.loginUrl = loginUrl;
-      this.eventBus = eventBus;
-      this.console = console;
-      this.constant = constant;
-      this.loginPresenter = loginPresenter;
-   }
+    /**
+     * Create callback.
+     *
+     * @param unmarshaller
+     * @param loggedIn
+     * @param loginCanceled
+     * @param loginUrl
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param loginPresenter
+     */
+    public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+                                            LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus, ConsolePart console,
+                                            CloudFoundryLocalizationConstant constant, LoginPresenter loginPresenter) {
+        super(unmarshaller);
+        this.loggedIn = loggedIn;
+        this.loginCanceled = loginCanceled;
+        this.loginUrl = loginUrl;
+        this.eventBus = eventBus;
+        this.console = console;
+        this.constant = constant;
+        this.loginPresenter = loginPresenter;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void onFailure(Throwable exception)
-   {
-      if (exception instanceof ServerException)
-      {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
-            && serverException.getMessage().contains("Authentication required."))
-         {
-            loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
-            return;
-         }
-         else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
-            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
-            && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
-         {
-            loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
-            return;
-         }
-         else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
-            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
-            && "301".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
-         {
-            Window.alert(constant.applicationNotFound());
-            return;
-         }
-         else
-         {
-            String msg = "";
-            if (serverException.isErrorMessageProvided())
-            {
-               msg = serverException.getLocalizedMessage();
+    /** {@inheritDoc} */
+    @Override
+    protected void onFailure(Throwable exception) {
+        if (exception instanceof ServerException) {
+            ServerException serverException = (ServerException)exception;
+            if (HTTPStatus.OK == serverException.getHTTPStatus() && serverException.getMessage() != null
+                && serverException.getMessage().contains("Authentication required.")) {
+                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
+                return;
+            } else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
+                       && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
+                       && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE))) {
+                loginPresenter.showDialog(loggedIn, loginCanceled, loginUrl);
+                return;
+            } else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
+                       && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
+                       && "301".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE))) {
+                Window.alert(constant.applicationNotFound());
+                return;
+            } else {
+                String msg = "";
+                if (serverException.isErrorMessageProvided()) {
+                    msg = serverException.getLocalizedMessage();
+                } else {
+                    msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+                }
+
+                Window.alert(msg);
+                return;
             }
-            else
-            {
-               msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-            }
+        }
 
-            Window.alert(msg);
-            return;
-         }
-      }
-
-      eventBus.fireEvent(new ExceptionThrownEvent(exception));
-      console.print(exception.getMessage());
-   }
+        eventBus.fireEvent(new ExceptionThrownEvent(exception));
+        console.print(exception.getMessage());
+    }
 }

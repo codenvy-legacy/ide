@@ -22,47 +22,39 @@ import com.codenvy.ide.api.editor.CodenvyTextEditor;
 import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 
 /**
  * EditorProvider for Css file type
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CssEditorProvider implements EditorProvider
-{
+public class CssEditorProvider implements EditorProvider {
 
-   private final DocumentProvider documentProvider;
+    private final DocumentProvider documentProvider;
 
-   private Provider<CodenvyTextEditor> editorProvider;
+    private Provider<CodenvyTextEditor> editorProvider;
 
-   private final CssResources cssRes;
+    private final CssResources cssRes;
 
-   /**
-    * @param documentProvider
-    */
-   @Inject
-   public CssEditorProvider(DocumentProvider documentProvider, CssResources cssRes, Provider<CodenvyTextEditor> editorProvider)
-   {
-      super();
-      this.documentProvider = documentProvider;
-      this.editorProvider = editorProvider;
-      this.cssRes = cssRes;
-   }
+    /** @param documentProvider */
+    @Inject
+    public CssEditorProvider(DocumentProvider documentProvider, CssResources cssRes, Provider<CodenvyTextEditor> editorProvider) {
+        super();
+        this.documentProvider = documentProvider;
+        this.editorProvider = editorProvider;
+        this.cssRes = cssRes;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.EditorProvider#getEditor()
-    */
-   @Override
-   public EditorPartPresenter getEditor()
-   {
-      CodenvyTextEditor textEditor = editorProvider.get();
-      textEditor.initialize(new CssEditorConfiguration(cssRes), documentProvider);
-      return textEditor;
-   }
+    /** @see com.codenvy.ide.api.editor.EditorProvider#getEditor() */
+    @Override
+    public EditorPartPresenter getEditor() {
+        CodenvyTextEditor textEditor = editorProvider.get();
+        textEditor.initialize(new CssEditorConfiguration(cssRes), documentProvider);
+        return textEditor;
+    }
 
 }

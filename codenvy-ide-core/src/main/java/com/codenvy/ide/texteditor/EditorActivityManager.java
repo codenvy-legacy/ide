@@ -27,42 +27,33 @@ import com.codenvy.ide.util.input.SignalEvent;
 /**
  * A class that listens to editor events to update the user activity manager on
  * the user's status.
- *
  */
-public class EditorActivityManager
-{
+public class EditorActivityManager {
 
-   private JsonArray<Remover> listenerRemovers = JsonCollections.createArray();
+    private JsonArray<Remover> listenerRemovers = JsonCollections.createArray();
 
-   EditorActivityManager(final UserActivityManager userActivityManager,
-      ListenerRegistrar<ScrollListener> scrollListenerRegistrar, ListenerRegistrar<KeyListener> keyListenerRegistrar)
-   {
+    EditorActivityManager(final UserActivityManager userActivityManager,
+                          ListenerRegistrar<ScrollListener> scrollListenerRegistrar, ListenerRegistrar<KeyListener> keyListenerRegistrar) {
 
-      listenerRemovers.add(scrollListenerRegistrar.add(new ScrollListener()
-      {
-         @Override
-         public void onScroll(Buffer buffer, int scrollTop)
-         {
-            userActivityManager.markUserActive();
-         }
-      }));
+        listenerRemovers.add(scrollListenerRegistrar.add(new ScrollListener() {
+            @Override
+            public void onScroll(Buffer buffer, int scrollTop) {
+                userActivityManager.markUserActive();
+            }
+        }));
 
-      listenerRemovers.add(keyListenerRegistrar.add(new KeyListener()
-      {
-         @Override
-         public boolean onKeyPress(SignalEvent event)
-         {
-            userActivityManager.markUserActive();
-            return false;
-         }
-      }));
-   }
+        listenerRemovers.add(keyListenerRegistrar.add(new KeyListener() {
+            @Override
+            public boolean onKeyPress(SignalEvent event) {
+                userActivityManager.markUserActive();
+                return false;
+            }
+        }));
+    }
 
-   void teardown()
-   {
-      for (int i = 0, n = listenerRemovers.size(); i < n; i++)
-      {
-         listenerRemovers.get(i).remove();
-      }
-   }
+    void teardown() {
+        for (int i = 0, n = listenerRemovers.size(); i < n; i++) {
+            listenerRemovers.get(i).remove();
+        }
+    }
 }

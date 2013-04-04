@@ -22,13 +22,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * Common interface for Views
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface View<T> extends IsWidget
-{
-   /**
-    * Sets the delegate to receive events from this view.
-    */
-   public void setDelegate(T delegate);
+public interface View<T> extends IsWidget {
+    /** Sets the delegate to receive events from this view. */
+    public void setDelegate(T delegate);
 }

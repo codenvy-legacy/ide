@@ -20,7 +20,6 @@ package com.codenvy.ide.websocket.rest;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.HTTPStatus;
-
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
@@ -28,40 +27,30 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 
 /**
- * 
+ * @param <T>
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: AutoBeanUnmarshallerWS.java Nov 19, 2012 11:44:19 AM azatsarynnyy $
- *
- * @param <T>
  */
-public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T>
-{
-   private AutoBean<T> bean;
+public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T> {
+    private AutoBean<T> bean;
 
-   public AutoBeanUnmarshallerWS(AutoBean<T> autoBean)
-   {
-      this.bean = autoBean;
-   }
+    public AutoBeanUnmarshallerWS(AutoBean<T> autoBean) {
+        this.bean = autoBean;
+    }
 
-   /**
-    * @see com.codenvy.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(com.codenvy.ide.client.framework.websocket.rest.ResponseMessage)
-    */
-   @Override
-   public void unmarshal(ResponseMessage response) throws UnmarshallerException
-   {
-      if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null)
-      {
-         Splittable data = StringQuoter.split(response.getBody());
-         AutoBeanCodex.decodeInto(data, bean);
-      }
-   }
+    /** @see com.codenvy.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(com.codenvy.ide.client.framework.websocket.rest
+     * .ResponseMessage) */
+    @Override
+    public void unmarshal(ResponseMessage response) throws UnmarshallerException {
+        if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null) {
+            Splittable data = StringQuoter.split(response.getBody());
+            AutoBeanCodex.decodeInto(data, bean);
+        }
+    }
 
-   /**
-    * @see com.codenvy.ide.client.framework.websocket.rest.Unmarshallable#getPayload()
-    */
-   @Override
-   public T getPayload()
-   {
-      return bean.as();
-   }
+    /** @see com.codenvy.ide.client.framework.websocket.rest.Unmarshallable#getPayload() */
+    @Override
+    public T getPayload() {
+        return bean.as();
+    }
 }

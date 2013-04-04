@@ -23,35 +23,32 @@ package com.codenvy.ide.texteditor.api.historymanager;
  * application models, or may be associated with UI objects that are providing
  * undo and redo support.
  * </p>
- * <p>
+ * <p/>
  * An undo context may be defined as "matching" another context. This allows
  * applications to provide specialized implementations of an undo context that
  * will appear in the operation history for their matching context.
- * 
  */
 
-public interface IUndoContext
-{
+public interface IUndoContext {
 
-   /**
-    * Get the label that describes the undo context.
-    * 
-    * @return the label for the context.
-    */
-   public String getLabel();
+    /**
+     * Get the label that describes the undo context.
+     *
+     * @return the label for the context.
+     */
+    public String getLabel();
 
-   /**
-    * Return whether the specified context is considered a match for the
-    * receiving context. When a context matches another context, operations
-    * that have the context are considered to also have the matching context.
-    * 
-    * @param context 
-    *            the context to be checked against the receiving context.
-    * 
-    * @return <code>true</code> if the receiving context can be considered a
-    *         match for the specified context, and <code>false</code> if it
-    *         cannot.
-    */
-   public boolean matches(IUndoContext context);
+    /**
+     * Return whether the specified context is considered a match for the
+     * receiving context. When a context matches another context, operations
+     * that have the context are considered to also have the matching context.
+     *
+     * @param context
+     *         the context to be checked against the receiving context.
+     * @return <code>true</code> if the receiving context can be considered a
+     *         match for the specified context, and <code>false</code> if it
+     *         cannot.
+     */
+    public boolean matches(IUndoContext context);
 
 }

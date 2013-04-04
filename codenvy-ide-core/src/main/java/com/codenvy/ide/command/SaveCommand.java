@@ -18,16 +18,11 @@
  */
 package com.codenvy.ide.command;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
-
 import com.codenvy.ide.api.expressions.EditorDirtyExpression;
 import com.codenvy.ide.api.expressions.Expression;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
-
-import com.codenvy.ide.Resources;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -40,69 +35,52 @@ import com.google.inject.Singleton;
  * @version $Id:
  */
 @Singleton
-public class SaveCommand implements ExtendedCommand
-{
+public class SaveCommand implements ExtendedCommand {
 
-   private final EditorDirtyExpression expression;
+    private final EditorDirtyExpression expression;
 
-   private EditorAgent editorAgent;
+    private EditorAgent editorAgent;
 
-   private final Resources resources;
+    private final Resources resources;
 
-   /**
-    *
-    */
-   @Inject
-   public SaveCommand(EditorAgent editorAgent, EditorDirtyExpression expression, Resources resources)
-   {
-      this.editorAgent = editorAgent;
-      this.expression = expression;
-      this.resources = resources;
-   }
+    /**
+     *
+     */
+    @Inject
+    public SaveCommand(EditorAgent editorAgent, EditorDirtyExpression expression, Resources resources) {
+        this.editorAgent = editorAgent;
+        this.expression = expression;
+        this.resources = resources;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void execute()
-   {
-      editorAgent.getActiveEditor().doSave();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void execute() {
+        editorAgent.getActiveEditor().doSave();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      // TODO need correct image
-      return resources.file();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        // TODO need correct image
+        return resources.file();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression inContext()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression inContext() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression canExecute()
-   {
-      return expression;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression canExecute() {
+        return expression;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "Save changes for current file";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "Save changes for current file";
+    }
 }

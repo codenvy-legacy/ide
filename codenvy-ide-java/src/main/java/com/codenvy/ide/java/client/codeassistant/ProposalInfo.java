@@ -11,23 +11,18 @@
 package com.codenvy.ide.java.client.codeassistant;
 
 import com.codenvy.ide.java.client.core.IJavaElement;
-
 import com.google.gwt.user.client.ui.Widget;
 
-public abstract class ProposalInfo
-{
+public abstract class ProposalInfo {
 
-   /**
-    * Gets the text for this proposal info formatted as HTML, or <code>null</code> if no text is available.
-    * 
-    * @return the additional info text
-    */
-   public abstract Widget getInfo();
+    /**
+     * Gets the text for this proposal info formatted as HTML, or <code>null</code> if no text is available.
+     *
+     * @return the additional info text
+     */
+    public abstract Widget getInfo();
 
-   /**
-    * Returns the Java element.
-    * 
-    */
-   public abstract IJavaElement getJavaElement();
+    /** Returns the Java element. */
+    public abstract IJavaElement getJavaElement();
 
 }

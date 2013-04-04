@@ -22,30 +22,28 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of new project page view.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewProjectPageView extends View<NewProjectPageView.ActionDelegate>
-{
-   /**
-    * Needs for delegate some function into NewProjectPage view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having selected project type
-       * 
-       * @param id button's id
-       */
-      void onProjectTypeSelected(int id);
+public interface NewProjectPageView extends View<NewProjectPageView.ActionDelegate> {
+    /** Needs for delegate some function into NewProjectPage view. */
+    public interface ActionDelegate {
+        /**
+         * Performs any actions appropriate in response to the user
+         * having selected project type
+         *
+         * @param id
+         *         button's id
+         */
+        void onProjectTypeSelected(int id);
 
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having selected paas
-       * 
-       * @param id button's id
-       */
-      void onPaaSSelected(int id);
-   }
+        /**
+         * Performs any actions appropriate in response to the user
+         * having selected paas
+         *
+         * @param id
+         *         button's id
+         */
+        void onPaaSSelected(int id);
+    }
 }

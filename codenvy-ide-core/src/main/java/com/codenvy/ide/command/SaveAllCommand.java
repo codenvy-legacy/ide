@@ -18,19 +18,13 @@
  */
 package com.codenvy.ide.command;
 
+import com.codenvy.ide.Resources;
 import com.codenvy.ide.api.editor.EditorAgent;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-
 import com.codenvy.ide.api.expressions.EditorsDirtyExpression;
 import com.codenvy.ide.api.expressions.Expression;
-
 import com.codenvy.ide.api.ui.menu.ExtendedCommand;
-
-
-import com.codenvy.ide.Resources;
-
 import com.codenvy.ide.json.JsonStringMap;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -41,83 +35,63 @@ import com.google.inject.Singleton;
  * @version $Id:
  */
 @Singleton
-public class SaveAllCommand implements ExtendedCommand
-{
+public class SaveAllCommand implements ExtendedCommand {
 
-   private EditorAgent editorAgent;
+    private EditorAgent editorAgent;
 
-   private EditorsDirtyExpression expression;
+    private EditorsDirtyExpression expression;
 
-   private final Resources resources;
+    private final Resources resources;
 
-   /**
-    * Create command.
-    * 
-    * @param editorAgent
-    * @param expression
-    */
-   @Inject
-   public SaveAllCommand(EditorAgent editorAgent, EditorsDirtyExpression expression, Resources resources)
-   {
-      this.editorAgent = editorAgent;
-      this.expression = expression;
-      this.resources = resources;
-   }
+    /**
+     * Create command.
+     *
+     * @param editorAgent
+     * @param expression
+     */
+    @Inject
+    public SaveAllCommand(EditorAgent editorAgent, EditorsDirtyExpression expression, Resources resources) {
+        this.editorAgent = editorAgent;
+        this.expression = expression;
+        this.resources = resources;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void execute()
-   {
-      JsonStringMap<EditorPartPresenter> editors = editorAgent.getOpenedEditors();
-      editors.iterate(new JsonStringMap.IterationCallback<EditorPartPresenter>()
-      {
-         @Override
-         public void onIteration(String key, EditorPartPresenter value)
-         {
-            if (value.isDirty())
-            {
-               value.doSave();
+    /** {@inheritDoc} */
+    @Override
+    public void execute() {
+        JsonStringMap<EditorPartPresenter> editors = editorAgent.getOpenedEditors();
+        editors.iterate(new JsonStringMap.IterationCallback<EditorPartPresenter>() {
+            @Override
+            public void onIteration(String key, EditorPartPresenter value) {
+                if (value.isDirty()) {
+                    value.doSave();
+                }
             }
-         }
-      });
-   }
+        });
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      // TODO need correct image
-      return resources.file();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        // TODO need correct image
+        return resources.file();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression inContext()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression inContext() {
+        return null;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Expression canExecute()
-   {
-      return expression;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Expression canExecute() {
+        return expression;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getToolTip()
-   {
-      return "Save all changes for project";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getToolTip() {
+        return "Save all changes for project";
+    }
 }

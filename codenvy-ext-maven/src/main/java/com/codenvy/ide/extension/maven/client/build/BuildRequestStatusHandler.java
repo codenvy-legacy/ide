@@ -29,52 +29,42 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildRequestStatusHandler.java Feb 28, 2012 13:03:10 PM azatsarynnyy $
  */
-public class BuildRequestStatusHandler implements RequestStatusHandler
-{
-   private String projectName;
+public class BuildRequestStatusHandler implements RequestStatusHandler {
+    private String projectName;
 
-   private EventBus eventBus;
+    private EventBus eventBus;
 
-   /**
-    * @param projectName project's name
-    */
-   public BuildRequestStatusHandler(String projectName, EventBus eventBus)
-   {
-      super();
-      this.projectName = projectName;
-      this.eventBus = eventBus;
-   }
+    /**
+     * @param projectName
+     *         project's name
+     */
+    public BuildRequestStatusHandler(String projectName, EventBus eventBus) {
+        super();
+        this.projectName = projectName;
+        this.eventBus = eventBus;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void requestInProgress(String id)
-   {
-      Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(BuilderExtension.LOCALIZATION_CONSTANT.buildStarted(projectName));
-      eventBus.fireEvent(new JobChangeEvent(job));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void requestInProgress(String id) {
+        Job job = new Job(id, JobStatus.STARTED);
+        job.setStartMessage(BuilderExtension.LOCALIZATION_CONSTANT.buildStarted(projectName));
+        eventBus.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void requestFinished(String id)
-   {
-      Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(BuilderExtension.LOCALIZATION_CONSTANT.buildFinished(projectName));
-      eventBus.fireEvent(new JobChangeEvent(job));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void requestFinished(String id) {
+        Job job = new Job(id, JobStatus.FINISHED);
+        job.setFinishMessage(BuilderExtension.LOCALIZATION_CONSTANT.buildFinished(projectName));
+        eventBus.fireEvent(new JobChangeEvent(job));
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void requestError(String id, Throwable exception)
-   {
-      Job job = new Job(id, JobStatus.ERROR);
-      job.setError(exception);
-      eventBus.fireEvent(new JobChangeEvent(job));
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void requestError(String id, Throwable exception) {
+        Job job = new Job(id, JobStatus.ERROR);
+        job.setError(exception);
+        eventBus.fireEvent(new JobChangeEvent(job));
+    }
 }

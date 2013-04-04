@@ -13,72 +13,65 @@ package com.codenvy.ide.java.client.internal.compiler.ast;
 import com.codenvy.ide.java.client.internal.compiler.ASTVisitor;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 
-public class PostfixExpression extends CompoundAssignment
-{
+public class PostfixExpression extends CompoundAssignment {
 
-   public PostfixExpression(Expression lhs, Expression expression, int operator, int pos)
-   {
-      super(lhs, expression, operator, pos);
-      this.sourceStart = lhs.sourceStart;
-      this.sourceEnd = pos;
-   }
+    public PostfixExpression(Expression lhs, Expression expression, int operator, int pos) {
+        super(lhs, expression, operator, pos);
+        this.sourceStart = lhs.sourceStart;
+        this.sourceEnd = pos;
+    }
 
-   @Override
-   public boolean checkCastCompatibility()
-   {
-      return false;
-   }
+    @Override
+    public boolean checkCastCompatibility() {
+        return false;
+    }
 
-   /**
-    * Code generation for PostfixExpression
-    *
-    * @param currentScope com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope
-    * @param codeStream com.codenvy.ide.java.client.internal.compiler.codegen.CodeStream
-    * @param valueRequired boolean
-    */
-   @Override
-   public void generateCode(BlockScope currentScope, boolean valueRequired)
-   {
-      // various scenarii are possible, setting an array reference,
-      // a field reference, a blank final field reference, a field of an enclosing instance or
-      // just a local variable.
+    /**
+     * Code generation for PostfixExpression
+     *
+     * @param currentScope
+     *         com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope
+     * @param codeStream
+     *         com.codenvy.ide.java.client.internal.compiler.codegen.CodeStream
+     * @param valueRequired
+     *         boolean
+     */
+    @Override
+    public void generateCode(BlockScope currentScope, boolean valueRequired) {
+        // various scenarii are possible, setting an array reference,
+        // a field reference, a blank final field reference, a field of an enclosing instance or
+        // just a local variable.
 
-      ((Reference)this.lhs).generatePostIncrement(currentScope, this, valueRequired);
-   }
+        ((Reference)this.lhs).generatePostIncrement(currentScope, this, valueRequired);
+    }
 
-   @Override
-   public String operatorToString()
-   {
-      switch (this.operator)
-      {
-         case PLUS :
-            return "++"; //$NON-NLS-1$
-         case MINUS :
-            return "--"; //$NON-NLS-1$
-      }
-      return "unknown operator"; //$NON-NLS-1$
-   }
+    @Override
+    public String operatorToString() {
+        switch (this.operator) {
+            case PLUS:
+                return "++"; //$NON-NLS-1$
+            case MINUS:
+                return "--"; //$NON-NLS-1$
+        }
+        return "unknown operator"; //$NON-NLS-1$
+    }
 
-   @Override
-   public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
-   {
-      return this.lhs.printExpression(indent, output).append(' ').append(operatorToString());
-   }
+    @Override
+    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output) {
+        return this.lhs.printExpression(indent, output).append(' ').append(operatorToString());
+    }
 
-   @Override
-   public boolean restrainUsageToNumericTypes()
-   {
-      return true;
-   }
+    @Override
+    public boolean restrainUsageToNumericTypes() {
+        return true;
+    }
 
-   @Override
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
+    @Override
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
 
-      if (visitor.visit(this, scope))
-      {
-         this.lhs.traverse(visitor, scope);
-      }
-      visitor.endVisit(this, scope);
-   }
+        if (visitor.visit(this, scope)) {
+            this.lhs.traverse(visitor, scope);
+        }
+        visitor.endVisit(this, scope);
+    }
 }

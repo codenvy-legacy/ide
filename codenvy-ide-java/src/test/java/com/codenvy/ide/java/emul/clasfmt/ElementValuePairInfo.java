@@ -18,67 +18,72 @@ import java.util.Arrays;
 
 public class ElementValuePairInfo implements com.codenvy.ide.java.client.internal.compiler.env.IBinaryElementValuePair {
 
-	static final ElementValuePairInfo[] NoMembers = new ElementValuePairInfo[0];
+    static final ElementValuePairInfo[] NoMembers = new ElementValuePairInfo[0];
 
-	private char[] name;
-	private Object value;
+    private char[] name;
+    private Object value;
 
-ElementValuePairInfo(char[] name, Object value) {
-	this.name = name;
-	this.value = value;
-}
-public char[] getName() {
-	return this.name;
-}
-public Object getValue() {
-	return this.value;
-}
-public String toString() {
-	StringBuffer buffer = new StringBuffer();
-	buffer.append(this.name);
-	buffer.append('=');
-	if (this.value instanceof Object[]) {
-		final Object[] values = (Object[]) this.value;
-		buffer.append('{');
-		for (int i = 0, l = values.length; i < l; i++) {
-			if (i > 0)
-				buffer.append(", "); //$NON-NLS-1$
-			buffer.append(values[i]);
-		}
-		buffer.append('}');
-	} else {
-		buffer.append(this.value);
-	}
-	return buffer.toString();
-}
-public int hashCode() {
-	final int prime = 31;
-	int result = 1;
-	result = prime * result + CharOperation.hashCode(this.name);
-	result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
-	return result;
-}
-public boolean equals(Object obj) {
-	if (this == obj) {
-		return true;
-	}
-	if (obj == null) {
-		return false;
-	}
-	if (getClass() != obj.getClass()) {
-		return false;
-	}
-	ElementValuePairInfo other = (ElementValuePairInfo) obj;
-	if (!Arrays.equals(this.name, other.name)) {
-		return false;
-	}
-	if (this.value == null) {
-		if (other.value != null) {
-			return false;
-		}
-	} else if (!this.value.equals(other.value)) {
-		return false;
-	}
-	return true;
-}
+    ElementValuePairInfo(char[] name, Object value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public char[] getName() {
+        return this.name;
+    }
+
+    public Object getValue() {
+        return this.value;
+    }
+
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(this.name);
+        buffer.append('=');
+        if (this.value instanceof Object[]) {
+            final Object[] values = (Object[])this.value;
+            buffer.append('{');
+            for (int i = 0, l = values.length; i < l; i++) {
+                if (i > 0)
+                    buffer.append(", "); //$NON-NLS-1$
+                buffer.append(values[i]);
+            }
+            buffer.append('}');
+        } else {
+            buffer.append(this.value);
+        }
+        return buffer.toString();
+    }
+
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + CharOperation.hashCode(this.name);
+        result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
+        return result;
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ElementValuePairInfo other = (ElementValuePairInfo)obj;
+        if (!Arrays.equals(this.name, other.name)) {
+            return false;
+        }
+        if (this.value == null) {
+            if (other.value != null) {
+                return false;
+            }
+        } else if (!this.value.equals(other.value)) {
+            return false;
+        }
+        return true;
+    }
 }

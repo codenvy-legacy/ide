@@ -15,51 +15,44 @@
 package com.codenvy.ide.util.loging;
 
 import com.codenvy.ide.util.loging.LogConfig.LogLevel;
-
 import com.google.gwt.core.client.GWT;
 
 
 /**
  * Simple Logging class that logs to the browser's console and to the DevMode
  * console (if you are in DevMode).
- *
- *  So long as generating the parameters to pass to the logging methods is free
+ * <p/>
+ * So long as generating the parameters to pass to the logging methods is free
  * of side effects, all Logging code should compile out of your application if
  * logging is disabled.
  */
-public class Log
-{
+public class Log {
 
-   private static final Logger delegate;
-   static
-   {
-      LogConfig.setLogLevel(LogLevel.INFO);
-      delegate = GWT.isClient() ? new DevModeLogger() : new DummyLogger();
-   }
+    private static final Logger delegate;
 
-   public static void debug(Class<?> clazz, Object... args)
-   {
-      delegate.debug(clazz, args);
-   }
+    static {
+        LogConfig.setLogLevel(LogLevel.INFO);
+        delegate = GWT.isClient() ? new DevModeLogger() : new DummyLogger();
+    }
 
-   public static void error(Class<?> clazz, Object... args)
-   {
-      delegate.error(clazz, args);
-   }
+    public static void debug(Class<?> clazz, Object... args) {
+        delegate.debug(clazz, args);
+    }
 
-   public static void info(Class<?> clazz, Object... args)
-   {
-      delegate.info(clazz, args);
-   }
+    public static void error(Class<?> clazz, Object... args) {
+        delegate.error(clazz, args);
+    }
 
-   public static void warn(Class<?> clazz, Object... args)
-   {
-      delegate.warn(clazz, args);
-   }
-   
-   public static boolean isLoggingEnabled()
-   {
-      return delegate.isLoggingEnabled();
-   }
+    public static void info(Class<?> clazz, Object... args) {
+        delegate.info(clazz, args);
+    }
+
+    public static void warn(Class<?> clazz, Object... args) {
+        delegate.warn(clazz, args);
+    }
+
+    public static boolean isLoggingEnabled() {
+        return delegate.isLoggingEnabled();
+    }
 
 }

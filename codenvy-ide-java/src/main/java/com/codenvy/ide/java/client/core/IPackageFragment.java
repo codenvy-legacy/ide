@@ -21,9 +21,7 @@ package com.codenvy.ide.java.client.core;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface IPackageFragment extends IJavaElement
-{
+public interface IPackageFragment extends IJavaElement {
 
 }

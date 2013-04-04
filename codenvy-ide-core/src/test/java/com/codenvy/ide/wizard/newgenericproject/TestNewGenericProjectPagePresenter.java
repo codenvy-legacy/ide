@@ -18,10 +18,6 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
@@ -40,178 +36,160 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+
 /**
  * Testing {@link NewGenericProjectPagePresenter} functionality
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestNewGenericProjectPagePresenter
-{
-   private static final boolean CAN_FINISH = true;
+public class TestNewGenericProjectPagePresenter {
+    private static final boolean CAN_FINISH = true;
 
-   @Mock
-   private NewGenericProjectPageView view;
+    @Mock
+    private NewGenericProjectPageView view;
 
-   @Mock
-   private ResourceProvider resourceProvider;
+    @Mock
+    private ResourceProvider resourceProvider;
 
-   @Mock
-   private NewGenericProjectWizardResource resources;
+    @Mock
+    private NewGenericProjectWizardResource resources;
 
-   @Mock
-   private CreateProjectHandler createProjecthandler;
+    @Mock
+    private CreateProjectHandler createProjecthandler;
 
-   private NewGenericProjectPagePresenter presenter;
+    private NewGenericProjectPagePresenter presenter;
 
-   @Before
-   public void disarm()
-   {
-      // don't throw an exception if GWT.create() invoked
-      GWTMockUtilities.disarm();
-   }
+    @Before
+    public void disarm() {
+        // don't throw an exception if GWT.create() invoked
+        GWTMockUtilities.disarm();
+    }
 
-   @After
-   public void restore()
-   {
-      GWTMockUtilities.restore();
-   }
+    @After
+    public void restore() {
+        GWTMockUtilities.restore();
+    }
 
-   /**
-    * If creates project with name what already exists then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeSameProjectException()
-   {
-      String projectName = "Test";
-      JsonArray<String> projects = JsonCollections.createArray();
-      projects.add(projectName);
-      
-      createPresenter(projects);
+    /** If creates project with name what already exists then must be showed message about this situation. */
+    @Test
+    public void shouldBeSameProjectException() {
+        String projectName = "Test";
+        JsonArray<String> projects = JsonCollections.createArray();
+        projects.add(projectName);
 
-      when(view.getProjectName()).thenReturn(projectName);
+        createPresenter(projects);
 
-      presenter.checkProjectName();
+        when(view.getProjectName()).thenReturn(projectName);
 
-      assertEquals(presenter.getNotice(), "Project with this name already exists.");
-      assertEquals(presenter.isCompleted(), !CAN_FINISH);
-   }
+        presenter.checkProjectName();
 
-   /**
-    * Creates presenter with given instance of view, resource provider and list of available projects.  
-    * 
-    * @param projects available projects
-    */
-   @SuppressWarnings("unchecked")
-   private void createPresenter(final JsonArray<String> projects)
-   {
-      // create answer in response for calls get all available projects.
-      doAnswer(new Answer<JsonArray<String>>()
-      {
-         @Override
-         public JsonArray<String> answer(InvocationOnMock invocation) throws Throwable
-         {
-            AsyncCallback<JsonArray<String>> callback = (AsyncCallback<JsonArray<String>>)invocation.getArguments()[0];
-            // returns available projects
-            callback.onSuccess(projects);
-            return projects;
-         }
-      }).when(resourceProvider).listProjects((AsyncCallback<JsonArray<String>>)any());
+        assertEquals(presenter.getNotice(), "Project with this name already exists.");
+        assertEquals(presenter.isCompleted(), !CAN_FINISH);
+    }
 
-      presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
-      presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
-      presenter.setCreateProjectHandler(createProjecthandler);
-   }
+    /**
+     * Creates presenter with given instance of view, resource provider and list of available projects.
+     *
+     * @param projects
+     *         available projects
+     */
+    @SuppressWarnings("unchecked")
+    private void createPresenter(final JsonArray<String> projects) {
+        // create answer in response for calls get all available projects.
+        doAnswer(new Answer<JsonArray<String>>() {
+            @Override
+            public JsonArray<String> answer(InvocationOnMock invocation) throws Throwable {
+                AsyncCallback<JsonArray<String>> callback = (AsyncCallback<JsonArray<String>>)invocation.getArguments()[0];
+                // returns available projects
+                callback.onSuccess(projects);
+                return projects;
+            }
+        }).when(resourceProvider).listProjects((AsyncCallback<JsonArray<String>>)any());
 
-   /**
-    * If project's name is empty then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeEnterProjectNameMessage()
-   {
-      String projectName = "";
+        presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
+        presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
+        presenter.setCreateProjectHandler(createProjecthandler);
+    }
 
-      // available projects are absent
-      createPresenter(JsonCollections.<String> createArray());
+    /** If project's name is empty then must be showed message about this situation. */
+    @Test
+    public void shouldBeEnterProjectNameMessage() {
+        String projectName = "";
 
-      when(view.getProjectName()).thenReturn(projectName);
+        // available projects are absent
+        createPresenter(JsonCollections.<String>createArray());
 
-      presenter.checkProjectName();
+        when(view.getProjectName()).thenReturn(projectName);
 
-      assertEquals(presenter.getNotice(), "Please, enter a project name.");
-      assertEquals(presenter.isCompleted(), !CAN_FINISH);
-   }
+        presenter.checkProjectName();
 
-   /**
-    * If project's name has incorrect symbol then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeIncorrectNameMessage()
-   {
-      String projectName = "Test/";
+        assertEquals(presenter.getNotice(), "Please, enter a project name.");
+        assertEquals(presenter.isCompleted(), !CAN_FINISH);
+    }
 
-      // available projects are absent
-      createPresenter(JsonCollections.<String> createArray());
+    /** If project's name has incorrect symbol then must be showed message about this situation. */
+    @Test
+    public void shouldBeIncorrectNameMessage() {
+        String projectName = "Test/";
 
-      when(view.getProjectName()).thenReturn(projectName);
+        // available projects are absent
+        createPresenter(JsonCollections.<String>createArray());
 
-      presenter.checkProjectName();
+        when(view.getProjectName()).thenReturn(projectName);
 
-      assertEquals(presenter.getNotice(), "Incorrect project name.");
-      assertEquals(presenter.isCompleted(), !CAN_FINISH);
-   }
+        presenter.checkProjectName();
 
-   /**
-    * If project's name is correct then must be not showing any message.
-    */
-   @Test
-   public void shouldBeCorrectProjectName()
-   {
-      String projectName = "Test";
+        assertEquals(presenter.getNotice(), "Incorrect project name.");
+        assertEquals(presenter.isCompleted(), !CAN_FINISH);
+    }
 
-      // available projects are absent
-      createPresenter(JsonCollections.<String> createArray());
+    /** If project's name is correct then must be not showing any message. */
+    @Test
+    public void shouldBeCorrectProjectName() {
+        String projectName = "Test";
 
-      when(view.getProjectName()).thenReturn(projectName);
+        // available projects are absent
+        createPresenter(JsonCollections.<String>createArray());
 
-      presenter.checkProjectName();
+        when(view.getProjectName()).thenReturn(projectName);
 
-      assertEquals(presenter.getNotice(), null);
-      assertEquals(presenter.isCompleted(), CAN_FINISH);
-   }
+        presenter.checkProjectName();
 
-   /**
-    * If the presenter don't receive list of projects then must be showed message about this situation.
-    */
-   @Test
-   public void shouldBeWaitProjectListMessage()
-   {
-      String projectName = "Test";
+        assertEquals(presenter.getNotice(), null);
+        assertEquals(presenter.isCompleted(), CAN_FINISH);
+    }
 
-      // create presenter
-      presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
-      presenter.setCreateProjectHandler(createProjecthandler);
+    /** If the presenter don't receive list of projects then must be showed message about this situation. */
+    @Test
+    public void shouldBeWaitProjectListMessage() {
+        String projectName = "Test";
 
-      when(view.getProjectName()).thenReturn(projectName);
+        // create presenter
+        presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
+        presenter.setCreateProjectHandler(createProjecthandler);
 
-      assertEquals(presenter.getNotice(), "Please wait, checking project list");
-      assertEquals(presenter.isCompleted(), !CAN_FINISH);
-   }
+        when(view.getProjectName()).thenReturn(projectName);
 
-   /**
-    * If calls doFinish method then must be call createProject method.
-    */
-   @Test
-   @SuppressWarnings("unchecked")
-   public void shouldBeCallCreateProject()
-   {
-      // create presenter
-      presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
-      presenter.setCreateProjectHandler(createProjecthandler);
+        assertEquals(presenter.getNotice(), "Please wait, checking project list");
+        assertEquals(presenter.isCompleted(), !CAN_FINISH);
+    }
 
-      presenter.doFinish();
+    /** If calls doFinish method then must be call createProject method. */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void shouldBeCallCreateProject() {
+        // create presenter
+        presenter = new NewGenericProjectPagePresenter(resources, view, resourceProvider);
+        presenter.setCreateProjectHandler(createProjecthandler);
 
-      verify(createProjecthandler).setProjectName(anyString());
-      verify(createProjecthandler).create((AsyncCallback<Project>)any());
-   }
+        presenter.doFinish();
+
+        verify(createProjecthandler).setProjectName(anyString());
+        verify(createProjecthandler).create((AsyncCallback<Project>)any());
+    }
 }

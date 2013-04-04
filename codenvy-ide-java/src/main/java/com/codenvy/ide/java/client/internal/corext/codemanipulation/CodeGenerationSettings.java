@@ -10,29 +10,27 @@
  *******************************************************************************/
 package com.codenvy.ide.java.client.internal.corext.codemanipulation;
 
-public class CodeGenerationSettings
-{
+public class CodeGenerationSettings {
 
-   public boolean createComments = true;
+    public boolean createComments = true;
 
-   public boolean useKeywordThis = false;
+    public boolean useKeywordThis = false;
 
-   public boolean importIgnoreLowercase = true;
+    public boolean importIgnoreLowercase = true;
 
-   public boolean overrideAnnotation = false;
+    public boolean overrideAnnotation = false;
 
-   public int tabWidth;
+    public int tabWidth;
 
-   public int indentWidth;
+    public int indentWidth;
 
-   public void setSettings(CodeGenerationSettings settings)
-   {
-      settings.createComments = createComments;
-      settings.useKeywordThis = useKeywordThis;
-      settings.importIgnoreLowercase = importIgnoreLowercase;
-      settings.overrideAnnotation = overrideAnnotation;
-      settings.tabWidth = tabWidth;
-      settings.indentWidth = indentWidth;
-   }
+    public void setSettings(CodeGenerationSettings settings) {
+        settings.createComments = createComments;
+        settings.useKeywordThis = useKeywordThis;
+        settings.importIgnoreLowercase = importIgnoreLowercase;
+        settings.overrideAnnotation = overrideAnnotation;
+        settings.tabWidth = tabWidth;
+        settings.indentWidth = indentWidth;
+    }
 
 }

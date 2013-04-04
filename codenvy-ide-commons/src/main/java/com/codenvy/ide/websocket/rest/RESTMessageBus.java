@@ -24,7 +24,6 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.events.MessageReceivedEvent;
 import com.codenvy.ide.websocket.events.ReplyHandler;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -34,141 +33,118 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 /**
  * Extension of {@link MessageBus} to communicate with EverREST over WebSocket.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RESTMessageBus.java Dec 5, 2012 2:29:06 PM azatsarynnyy $
- *
  */
-public class RESTMessageBus extends MessageBus
-{
-   public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
+public class RESTMessageBus extends MessageBus {
+    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
 
-   private static final String MESSAGE_TYPE_HEADER_NAME = "x-everrest-websocket-message-type";
+    private static final String MESSAGE_TYPE_HEADER_NAME = "x-everrest-websocket-message-type";
 
-   /**
-    * Creates new {@link RESTMessageBus} instance.
-    * 
-    * @param url WebSocket server URL
-    */
-   public RESTMessageBus(String url)
-   {
-      super(url);
-   }
+    /**
+     * Creates new {@link RESTMessageBus} instance.
+     *
+     * @param url
+     *         WebSocket server URL
+     */
+    public RESTMessageBus(String url) {
+        super(url);
+    }
 
-   /**
-    * @see com.codenvy.ide.client.framework.websocket.MessageBus#onMessageReceived(com.codenvy.ide.client.framework.websocket.events.MessageReceivedEvent)
-    */
-   @Override
-   public void onMessageReceived(MessageReceivedEvent event)
-   {
-      Message message = parseMessage(event.getMessage());
+    /** @see com.codenvy.ide.client.framework.websocket.MessageBus#onMessageReceived(com.codenvy.ide.client.framework.websocket.events
+     * .MessageReceivedEvent) */
+    @Override
+    public void onMessageReceived(MessageReceivedEvent event) {
+        Message message = parseMessage(event.getMessage());
 
-      // TODO temporary ignore the confirmation message
-      if (message instanceof ResponseMessage)
-      {
-         ResponseMessage response = (ResponseMessage)message;
-         for (Pair header : response.getHeaders())
-         {
-            if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/"))
-            {
-               return;
+        // TODO temporary ignore the confirmation message
+        if (message instanceof ResponseMessage) {
+            ResponseMessage response = (ResponseMessage)message;
+            for (Pair header : response.getHeaders()) {
+                if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/")) {
+                    return;
+                }
             }
-         }
-      }
+        }
 
-      super.onMessageReceived(event);
-   }
+        super.onMessageReceived(event);
+    }
 
-   /**
-    * @see com.codenvy.ide.client.framework.websocket.MessageBus#parseMessage(java.lang.String)
-    */
-   @Override
-   protected Message parseMessage(String message)
-   {
-      return AutoBeanCodex.decode(AUTO_BEAN_FACTORY, ResponseMessage.class, message).as();
-   }
+    /** @see com.codenvy.ide.client.framework.websocket.MessageBus#parseMessage(java.lang.String) */
+    @Override
+    protected Message parseMessage(String message) {
+        return AutoBeanCodex.decode(AUTO_BEAN_FACTORY, ResponseMessage.class, message).as();
+    }
 
-   /**
-    * @see com.codenvy.ide.client.framework.websocket.MessageBus#getChannel(com.codenvy.ide.client.framework.websocket.Message)
-    */
-   @Override
-   protected String getChannel(Message message)
-   {
-      if (!(message instanceof ResponseMessage))
-      {
-         return null;
-      }
+    /** @see com.codenvy.ide.client.framework.websocket.MessageBus#getChannel(com.codenvy.ide.client.framework.websocket.Message) */
+    @Override
+    protected String getChannel(Message message) {
+        if (!(message instanceof ResponseMessage)) {
+            return null;
+        }
 
-      ResponseMessage restMessage = (ResponseMessage)message;
-      for (Pair header : restMessage.getHeaders())
-      {
-         if ("x-everrest-websocket-channel".equals(header.getName()))
-         {
-            return header.getValue();
-         }
-      }
+        ResponseMessage restMessage = (ResponseMessage)message;
+        for (Pair header : restMessage.getHeaders()) {
+            if ("x-everrest-websocket-channel".equals(header.getName())) {
+                return header.getValue();
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   /**
-    * @throws WebSocketException
-    * @see com.codenvy.ide.client.framework.websocket.MessageBus#send(com.codenvy.ide.client.framework.websocket.Message,
-    *       com.codenvy.ide.client.framework.websocket.events.ReplyHandler)
-    */
-   @Override
-   public void send(Message message, ReplyHandler callback) throws WebSocketException
-   {
-      checkWebSocketConnectionState();
+    /**
+     * @throws WebSocketException
+     * @see com.codenvy.ide.client.framework.websocket.MessageBus#send(com.codenvy.ide.client.framework.websocket.Message,
+     *      com.codenvy.ide.client.framework.websocket.events.ReplyHandler)
+     */
+    @Override
+    public void send(Message message, ReplyHandler callback) throws WebSocketException {
+        checkWebSocketConnectionState();
 
-      AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(message);
-      if (autoBean == null)
-      {
-         throw new NullPointerException("Failed to marshall message");
-      }
+        AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(message);
+        if (autoBean == null) {
+            throw new NullPointerException("Failed to marshall message");
+        }
 
-      RequestCallback<?> requestCallback = null;
-      if (callback != null)
-      {
-         requestCallback = (RequestCallback<?>)callback;
-      }
+        RequestCallback<?> requestCallback = null;
+        if (callback != null) {
+            requestCallback = (RequestCallback<?>)callback;
+        }
 
-      String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
-      send(message.getUuid(), textMessage, callback);
+        String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
+        send(message.getUuid(), textMessage, callback);
 
-      if (requestCallback != null)
-      {
-         requestCallback.getLoader().show();
-         if (requestCallback.getStatusHandler() != null)
-         {
-            requestCallback.getStatusHandler().requestInProgress(message.getUuid());
-         }
-      }
-   }
+        if (requestCallback != null) {
+            requestCallback.getLoader().show();
+            if (requestCallback.getStatusHandler() != null) {
+                requestCallback.getStatusHandler().requestInProgress(message.getUuid());
+            }
+        }
+    }
 
-   /**
-    * @throws WebSocketException 
-    * @see com.codenvy.ide.client.framework.websocket.MessageBus#sendSubscribeMessage(java.lang.String)
-    */
-   @Override
-   protected void sendSubscribeMessage(String channel) throws WebSocketException
-   {
-      RequestMessage message =
-         RequestMessageBuilder.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
-            .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
-      send(message, null);
-   }
+    /**
+     * @throws WebSocketException
+     * @see com.codenvy.ide.client.framework.websocket.MessageBus#sendSubscribeMessage(java.lang.String)
+     */
+    @Override
+    protected void sendSubscribeMessage(String channel) throws WebSocketException {
+        RequestMessage message =
+                RequestMessageBuilder.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
+                                     .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
+        send(message, null);
+    }
 
-   /**
-    * @throws WebSocketException 
-    * @see com.codenvy.ide.client.framework.websocket.MessageBus#sendUnsubscribeMessage(java.lang.String)
-    */
-   @Override
-   protected void sendUnsubscribeMessage(String channel) throws WebSocketException
-   {
-      RequestMessage message =
-         RequestMessageBuilder.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
-            .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
-      send(message, null);
-   }
+    /**
+     * @throws WebSocketException
+     * @see com.codenvy.ide.client.framework.websocket.MessageBus#sendUnsubscribeMessage(java.lang.String)
+     */
+    @Override
+    protected void sendUnsubscribeMessage(String channel) throws WebSocketException {
+        RequestMessage message =
+                RequestMessageBuilder.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
+                                     .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
+        send(message, null);
+    }
 }

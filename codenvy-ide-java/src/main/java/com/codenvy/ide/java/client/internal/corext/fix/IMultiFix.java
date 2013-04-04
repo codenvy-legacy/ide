@@ -12,56 +12,49 @@ package com.codenvy.ide.java.client.internal.corext.fix;
 
 import com.codenvy.ide.java.client.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
-
 import com.codenvy.ide.text.Document;
 
 
-public interface IMultiFix extends ICleanUp
-{
+public interface IMultiFix extends ICleanUp {
 
-   public class MultiFixContext extends CleanUpContext
-   {
+    public class MultiFixContext extends CleanUpContext {
 
-      private final IProblemLocation[] fLocations;
+        private final IProblemLocation[] fLocations;
 
-      public MultiFixContext(CompilationUnit ast, Document document, IProblemLocation[] locations)
-      {
-         super(ast, document);
-         fLocations = locations;
-      }
+        public MultiFixContext(CompilationUnit ast, Document document, IProblemLocation[] locations) {
+            super(ast, document);
+            fLocations = locations;
+        }
 
-      /**
-       * @return locations of problems to fix.
-       */
-      public IProblemLocation[] getProblemLocations()
-      {
-         return fLocations;
-      }
-   }
+        /** @return locations of problems to fix. */
+        public IProblemLocation[] getProblemLocations() {
+            return fLocations;
+        }
+    }
 
-   /**
-    * True if <code>problem</code> in <code>ICompilationUnit</code> can be
-    * fixed by this CleanUp.
-    * <p>
-    * <strong>This must be a fast operation, the result can be a guess.</strong>
-    * </p>
-    *
-    * @param compilationUnit
-    *            The compilation unit to fix not null
-    * @param problem
-    *            The location of the problem to fix
-    * @return True if problem can be fixed
-    */
-   public boolean canFix(IProblemLocation problem);
+    /**
+     * True if <code>problem</code> in <code>ICompilationUnit</code> can be
+     * fixed by this CleanUp.
+     * <p>
+     * <strong>This must be a fast operation, the result can be a guess.</strong>
+     * </p>
+     *
+     * @param compilationUnit
+     *         The compilation unit to fix not null
+     * @param problem
+     *         The location of the problem to fix
+     * @return True if problem can be fixed
+     */
+    public boolean canFix(IProblemLocation problem);
 
-   /**
-    * Maximal number of problems this clean up will fix in compilation unit.
-    * There may be less then the returned number but never more.
-    *
-    * @param compilationUnit
-    *            The compilation unit to fix, not null
-    * @return The maximal number of fixes or -1 if unknown.
-    */
-   public abstract int computeNumberOfFixes(CompilationUnit compilationUnit);
+    /**
+     * Maximal number of problems this clean up will fix in compilation unit.
+     * There may be less then the returned number but never more.
+     *
+     * @param compilationUnit
+     *         The compilation unit to fix, not null
+     * @return The maximal number of fixes or -1 if unknown.
+     */
+    public abstract int computeNumberOfFixes(CompilationUnit compilationUnit);
 
 }

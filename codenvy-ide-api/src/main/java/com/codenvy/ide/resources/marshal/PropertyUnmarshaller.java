@@ -28,45 +28,30 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 
 
-/**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
- */
-public class PropertyUnmarshaller implements Unmarshallable<JsonArray<Property>>
-{
-   protected JsonArray<Property> properties = JsonCollections.createArray();
+/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+public class PropertyUnmarshaller implements Unmarshallable<JsonArray<Property>> {
+    protected JsonArray<Property> properties = JsonCollections.createArray();
 
-   public PropertyUnmarshaller()
-   {
-   }
+    public PropertyUnmarshaller() {
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         JSONObject itemObject = JSONParser.parseLenient(response.getText()).isObject();
-         JsonArray<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-         this.properties.addAll(properties);
-      }
-      catch (Exception exc)
-      {
-         String message = "Can't parse item's properties " + response.getText();
-         throw new UnmarshallerException(message, exc);
-      }
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            JSONObject itemObject = JSONParser.parseLenient(response.getText()).isObject();
+            JsonArray<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+            this.properties.addAll(properties);
+        } catch (Exception exc) {
+            String message = "Can't parse item's properties " + response.getText();
+            throw new UnmarshallerException(message, exc);
+        }
 
-   }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonArray<Property> getPayload()
-   {
-      return this.properties;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<Property> getPayload() {
+        return this.properties;
+    }
 }

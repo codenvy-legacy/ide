@@ -18,15 +18,16 @@
  */
 package com.codenvy.ide.preferences;
 
-import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
+import elemental.html.Element;
+import elemental.html.TableCellElement;
+import elemental.html.TableElement;
 
 import com.codenvy.ide.Resources;
-
+import com.codenvy.ide.api.ui.preferences.PreferencesPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.ui.list.SimpleList;
 import com.codenvy.ide.ui.list.SimpleList.View;
 import com.codenvy.ide.util.dom.Elements;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
@@ -34,15 +35,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
-import elemental.html.Element;
-import elemental.html.TableCellElement;
-import elemental.html.TableElement;
+import com.google.gwt.user.client.ui.*;
 
 
 /**
@@ -50,188 +43,156 @@ import elemental.html.TableElement;
  * The view shows preference pages to the end user. It has an area at the bottom containing
  * OK, Apply and Close buttons, on the left hand side of page is list of available preferences,
  * on the right hand side of page is current preference page.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class PreferencesViewImpl extends DialogBox implements PreferencesView
-{
-   private static PreferenceViewImplUiBinder uiBinder = GWT.create(PreferenceViewImplUiBinder.class);
+public class PreferencesViewImpl extends DialogBox implements PreferencesView {
+    private static PreferenceViewImplUiBinder uiBinder = GWT.create(PreferenceViewImplUiBinder.class);
 
-   @UiField
-   Button btnClose;
+    @UiField
+    Button btnClose;
 
-   @UiField
-   Button btnOk;
+    @UiField
+    Button btnOk;
 
-   @UiField
-   Button btnApply;
+    @UiField
+    Button btnApply;
 
-   @UiField
-   ScrollPanel preferences;
+    @UiField
+    ScrollPanel preferences;
 
-   @UiField
-   SimplePanel contentPanel;
+    @UiField
+    SimplePanel contentPanel;
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   private PreferencesPagePresenter firstPage;
+    private PreferencesPagePresenter firstPage;
 
-   private SimpleList<PreferencesPagePresenter> list;
+    private SimpleList<PreferencesPagePresenter> list;
 
-   private SimpleList.ListItemRenderer<PreferencesPagePresenter> listItemRenderer =
-      new SimpleList.ListItemRenderer<PreferencesPagePresenter>()
-      {
-         @Override
-         public void render(Element itemElement, PreferencesPagePresenter itemData)
-         {
-            TableCellElement label = Elements.createTDElement();
+    private SimpleList.ListItemRenderer<PreferencesPagePresenter> listItemRenderer =
+            new SimpleList.ListItemRenderer<PreferencesPagePresenter>() {
+                @Override
+                public void render(Element itemElement, PreferencesPagePresenter itemData) {
+                    TableCellElement label = Elements.createTDElement();
 
-            SafeHtmlBuilder sb = new SafeHtmlBuilder();
-            // Add icon
-            sb.appendHtmlConstant("<table><tr><td>");
-            ImageResource icon = itemData.getIcon();
-            if (icon != null)
-            {
-               sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-            }
-            sb.appendHtmlConstant("</td>");
+                    SafeHtmlBuilder sb = new SafeHtmlBuilder();
+                    // Add icon
+                    sb.appendHtmlConstant("<table><tr><td>");
+                    ImageResource icon = itemData.getIcon();
+                    if (icon != null) {
+                        sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
+                    }
+                    sb.appendHtmlConstant("</td>");
 
-            // Add title
-            sb.appendHtmlConstant("<td>");
-            sb.appendEscaped(itemData.getTitle());
-            sb.appendHtmlConstant("</td></tr></table>");
+                    // Add title
+                    sb.appendHtmlConstant("<td>");
+                    sb.appendEscaped(itemData.getTitle());
+                    sb.appendHtmlConstant("</td></tr></table>");
 
-            label.setInnerHTML(sb.toSafeHtml().asString());
+                    label.setInnerHTML(sb.toSafeHtml().asString());
 
-            itemElement.appendChild(label);
-         }
+                    itemElement.appendChild(label);
+                }
 
-         @Override
-         public Element createElement()
-         {
-            return Elements.createTRElement();
-         }
-      };
+                @Override
+                public Element createElement() {
+                    return Elements.createTRElement();
+                }
+            };
 
-   private SimpleList.ListEventDelegate<PreferencesPagePresenter> listDelegate =
-      new SimpleList.ListEventDelegate<PreferencesPagePresenter>()
-      {
-         public void onListItemClicked(Element itemElement, PreferencesPagePresenter itemData)
-         {
-            list.getSelectionModel().setSelectedItem(itemData);
-            delegate.selectedPreference(itemData);
-         }
+    private SimpleList.ListEventDelegate<PreferencesPagePresenter> listDelegate =
+            new SimpleList.ListEventDelegate<PreferencesPagePresenter>() {
+                public void onListItemClicked(Element itemElement, PreferencesPagePresenter itemData) {
+                    list.getSelectionModel().setSelectedItem(itemData);
+                    delegate.selectedPreference(itemData);
+                }
 
-         public void onListItemDoubleClicked(Element listItemBase, PreferencesPagePresenter itemData)
-         {
-         }
-      };
+                public void onListItemDoubleClicked(Element listItemBase, PreferencesPagePresenter itemData) {
+                }
+            };
 
-   interface PreferenceViewImplUiBinder extends UiBinder<Widget, PreferencesViewImpl>
-   {
-   }
+    interface PreferenceViewImplUiBinder extends UiBinder<Widget, PreferencesViewImpl> {
+    }
 
-   /**
-    * Create view.
-    * 
-    * @param resources
-    * @param preferences
-    */
-   public PreferencesViewImpl(Resources resources, JsonArray<PreferencesPagePresenter> preferences)
-   {
-      Widget widget = uiBinder.createAndBindUi(this);
+    /**
+     * Create view.
+     *
+     * @param resources
+     * @param preferences
+     */
+    public PreferencesViewImpl(Resources resources, JsonArray<PreferencesPagePresenter> preferences) {
+        Widget widget = uiBinder.createAndBindUi(this);
 
-      this.setText("Preferences");
-      //adds widget into DialogBox
-      this.setWidget(widget);
+        this.setText("Preferences");
+        //adds widget into DialogBox
+        this.setWidget(widget);
 
-      //create list of preferences
-      TableElement tableElement = Elements.createTableElement();
-      tableElement.setAttribute("style", "width: 100%");
-      list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
+        //create list of preferences
+        TableElement tableElement = Elements.createTableElement();
+        tableElement.setAttribute("style", "width: 100%");
+        list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
 
-      this.preferences.setStyleName(resources.coreCss().simpleListContainer());
-      this.preferences.add(list);
+        this.preferences.setStyleName(resources.coreCss().simpleListContainer());
+        this.preferences.add(list);
 
-      list.render(preferences);
+        list.render(preferences);
 
-      if (preferences.size() > 0)
-      {
-         firstPage = preferences.get(0);
-      }
-   }
+        if (preferences.size() > 0) {
+            firstPage = preferences.get(0);
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-      
-      //show first page if page is exist
-      if (firstPage != null)
-      {
-         listDelegate.onListItemClicked(null, firstPage);
-      }
-      else
-      {
-         btnApply.setEnabled(false);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
 
-   @UiHandler("btnApply")
-   void onBtnApplyClick(ClickEvent event)
-   {
-      delegate.onApplyClicked();
-   }
+        //show first page if page is exist
+        if (firstPage != null) {
+            listDelegate.onListItemClicked(null, firstPage);
+        } else {
+            btnApply.setEnabled(false);
+        }
+    }
 
-   @UiHandler("btnOk")
-   void onBtnOkClick(ClickEvent event)
-   {
-      delegate.onOkClicked();
-   }
+    @UiHandler("btnApply")
+    void onBtnApplyClick(ClickEvent event) {
+        delegate.onApplyClicked();
+    }
 
-   @UiHandler("btnClose")
-   void onBtnCloseClick(ClickEvent event)
-   {
-      delegate.onCloseClicked();
-   }
+    @UiHandler("btnOk")
+    void onBtnOkClick(ClickEvent event) {
+        delegate.onOkClicked();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void close()
-   {
-      this.hide();
-   }
+    @UiHandler("btnClose")
+    void onBtnCloseClick(ClickEvent event) {
+        delegate.onCloseClicked();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void showPreferences()
-   {
-      this.center();
-      this.show();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void close() {
+        this.hide();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public AcceptsOneWidget getContentPanel()
-   {
-      return contentPanel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void showPreferences() {
+        this.center();
+        this.show();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setApplyButtonEnabled(boolean isEnabled)
-   {
-      btnApply.setEnabled(isEnabled);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getContentPanel() {
+        return contentPanel;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setApplyButtonEnabled(boolean isEnabled) {
+        btnApply.setEnabled(isEnabled);
+    }
 }

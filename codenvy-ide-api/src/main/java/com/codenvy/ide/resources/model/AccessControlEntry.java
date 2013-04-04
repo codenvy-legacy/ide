@@ -27,63 +27,62 @@ import com.codenvy.ide.json.JsonCollections;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: AccessControlEntry.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
-public class AccessControlEntry
-{
-   /** Principal name. */
-   private String principal;
+public class AccessControlEntry {
+    /** Principal name. */
+    private String principal;
 
-   /** Permissions. */
-   private JsonArray<String> permissions;
+    /** Permissions. */
+    private JsonArray<String> permissions;
 
-   /** Empty AccessControlEntry instance. Both principal and permissions are not set. */
-   public AccessControlEntry()
-   {
-   }
+    /** Empty AccessControlEntry instance. Both principal and permissions are not set. */
+    public AccessControlEntry() {
+    }
 
-   /**
-    * AccessControlEntry instance with specified principal and permissions.
-    *
-    * @param principal principal
-    * @param permissions permissions
-    */
-   public AccessControlEntry(String principal, JsonArray<String> permissions)
-   {
-      this.principal = principal;
-      this.permissions = permissions;
-   }
+    /**
+     * AccessControlEntry instance with specified principal and permissions.
+     *
+     * @param principal
+     *         principal
+     * @param permissions
+     *         permissions
+     */
+    public AccessControlEntry(String principal, JsonArray<String> permissions) {
+        this.principal = principal;
+        this.permissions = permissions;
+    }
 
-   /** @return principal's permissions */
-   public JsonArray<String> getPermissions()
-   {
-      if (permissions == null)
-      {
-         permissions = JsonCollections.<String>createArray();
-      }
-      return permissions;
-   }
+    /** @return principal's permissions */
+    public JsonArray<String> getPermissions() {
+        if (permissions == null) {
+            permissions = JsonCollections.<String>createArray();
+        }
+        return permissions;
+    }
 
-   /** @param permissions new set of permissions */
-   public void setPermissions(JsonArray<String> permissions)
-   {
-      this.permissions = permissions;
-   }
+    /**
+     * @param permissions
+     *         new set of permissions
+     */
+    public void setPermissions(JsonArray<String> permissions) {
+        this.permissions = permissions;
+    }
 
-   /** @return principal name */
-   public String getPrincipal()
-   {
-      return principal;
-   }
+    /** @return principal name */
+    public String getPrincipal() {
+        return principal;
+    }
 
-   /** @param principal principal name */
-   public void setPrincipal(String principal)
-   {
-      this.principal = principal;
-   }
+    /**
+     * @param principal
+     *         principal name
+     */
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
 
-   /** @see java.lang.Object#toString() */
-   @Override
-   public String toString()
-   {
-      return "AccessControlEntry [principal=" + principal + ", permissions=" + permissions + ']';
-   }
+    /** @see java.lang.Object#toString() */
+    @Override
+    public String toString() {
+        return "AccessControlEntry [principal=" + principal + ", permissions=" + permissions + ']';
+    }
 }

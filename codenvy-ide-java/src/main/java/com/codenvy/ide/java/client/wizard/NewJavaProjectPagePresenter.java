@@ -18,13 +18,11 @@
  */
 package com.codenvy.ide.java.client.wizard;
 
-import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
-import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
-
 import com.codenvy.ide.api.paas.AbstractPaasWizardPagePresenter;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPageView.ActionDelegate;
 import com.codenvy.ide.json.JsonArray;
@@ -37,179 +35,147 @@ import com.google.inject.Inject;
 
 /**
  * Presenter of wizard for creating java project
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * @version $Id:
  */
-public class NewJavaProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate
-{
-   private NewJavaProjectPageView view;
+public class NewJavaProjectPagePresenter extends AbstractNewProjectWizardPage implements ActionDelegate {
+    private NewJavaProjectPageView view;
 
-   private boolean hasProjectList;
+    private boolean hasProjectList;
 
-   private JsonArray<String> projectList;
+    private JsonArray<String> projectList;
 
-   private boolean hasProjectIncorrectSymbol;
+    private boolean hasProjectIncorrectSymbol;
 
-   private boolean hasSameProject;
+    private boolean hasSameProject;
 
-   private boolean hasResourceFolderIncorrectSymbol;
+    private boolean hasResourceFolderIncorrectSymbol;
 
-   /**
-    * Create new java project wizard page presenter.
-    * 
-    * @param resources
-    * @param view
-    * @param resourceProvider
-    */
-   @Inject
-   public NewJavaProjectPagePresenter(JavaClientBundle resources, NewJavaProjectPageView view,
-      ResourceProvider resourceProvider)
-   {
-      super("Java Project", resources.javaProject());
-      this.view = view;
-      this.view.setDelegate(this);
-      resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
-      {
-         @Override
-         public void onSuccess(JsonArray<String> result)
-         {
-            projectList = result;
-            hasProjectList = true;
-         }
-
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Log.error(NewJavaProjectPagePresenter.class, caught);
-         }
-      });
-   }
-
-   /**{@inheritDoc}*/
-   @Override
-   public WizardPagePresenter flipToNext()
-   {
-      AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
-      paasWizardPage.setCreateProjectHandler(getCreateProjectHandler());
-      paasWizardPage.setPrevious(this);
-      paasWizardPage.setUpdateDelegate(delegate);
-
-      return paasWizardPage;
-   }
-
-   /**{@inheritDoc}*/
-   @Override
-   public boolean canFinish()
-   {
-      return isCompleted() && !hasNext();
-   }
-
-   /**{@inheritDoc}*/
-   @Override
-   public boolean hasNext()
-   {
-      return getPaaSWizardPage() != null;
-   }
-
-   /**{@inheritDoc}*/
-   @Override
-   public boolean isCompleted()
-   {
-      return !view.getProjectName().isEmpty() && !hasProjectIncorrectSymbol && hasProjectList && !hasSameProject
-         && !hasResourceFolderIncorrectSymbol && !view.getSourceFolder().isEmpty();
-   }
-
-   /**{@inheritDoc}*/
-   @Override
-   public String getNotice()
-   {
-      if (view.getProjectName().isEmpty())
-      {
-         return "Please, enter a project name.";
-      }
-      else
-      {
-         if (hasProjectList)
-         {
-            if (hasSameProject)
-            {
-               return "Project with this name already exists.";
+    /**
+     * Create new java project wizard page presenter.
+     *
+     * @param resources
+     * @param view
+     * @param resourceProvider
+     */
+    @Inject
+    public NewJavaProjectPagePresenter(JavaClientBundle resources, NewJavaProjectPageView view,
+                                       ResourceProvider resourceProvider) {
+        super("Java Project", resources.javaProject());
+        this.view = view;
+        this.view.setDelegate(this);
+        resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>() {
+            @Override
+            public void onSuccess(JsonArray<String> result) {
+                projectList = result;
+                hasProjectList = true;
             }
-            else
-            {
-               if (view.getSourceFolder().isEmpty())
-               {
-                  return "Please, enter a source folder name.";
-               }
-               else if (hasProjectIncorrectSymbol)
-               {
-                  return "Incorrect project name.";
-               }
-               else if (hasResourceFolderIncorrectSymbol)
-               {
-                  return "Incorrect source folder name.";
-               }
-               else
-               {
-                  return null;
-               }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(NewJavaProjectPagePresenter.class, caught);
             }
-         }
-         else
-         {
-            return "Please wait, checking project list";
-         }
-      }
-   }
+        });
+    }
 
-   /**{@inheritDoc}*/
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      container.setWidget(view);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public WizardPagePresenter flipToNext() {
+        AbstractPaasWizardPagePresenter paasWizardPage = getPaaSWizardPage();
+        paasWizardPage.setCreateProjectHandler(getCreateProjectHandler());
+        paasWizardPage.setPrevious(this);
+        paasWizardPage.setUpdateDelegate(delegate);
 
-   /**{@inheritDoc}*/
-   @Override
-   public void checkProjectInput()
-   {
+        return paasWizardPage;
+    }
 
-      hasProjectIncorrectSymbol = false;
-      String projectName = view.getProjectName();
-      String resourceFolder = view.getSourceFolder();
-      hasProjectIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName);
-      hasResourceFolderIncorrectSymbol = !ResourceNameValidator.isFolderNameValid(resourceFolder);
+    /** {@inheritDoc} */
+    @Override
+    public boolean canFinish() {
+        return isCompleted() && !hasNext();
+    }
 
-      hasSameProject = false;
-      for (int i = 0; i < projectList.size() && !hasSameProject; i++)
-      {
-         String name = projectList.get(i);
-         hasSameProject = projectName.compareTo(name) == 0;
-      }
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasNext() {
+        return getPaaSWizardPage() != null;
+    }
 
-      delegate.updateControls();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean isCompleted() {
+        return !view.getProjectName().isEmpty() && !hasProjectIncorrectSymbol && hasProjectList && !hasSameProject
+               && !hasResourceFolderIncorrectSymbol && !view.getSourceFolder().isEmpty();
+    }
 
-   /**{@inheritDoc}*/
-   @Override
-   public void doFinish()
-   {
-      CreateProjectHandler createProjectHandler = getCreateProjectHandler();
-      createProjectHandler.setProjectName(view.getProjectName());
-      createProjectHandler.addParam(CreateJavaProjectPresenter.SOURCE_FOLDER, view.getSourceFolder());
-      createProjectHandler.create(new AsyncCallback<Project>()
-      {
-         @Override
-         public void onSuccess(Project result)
-         {
-            // do nothing
-         }
+    /** {@inheritDoc} */
+    @Override
+    public String getNotice() {
+        if (view.getProjectName().isEmpty()) {
+            return "Please, enter a project name.";
+        } else {
+            if (hasProjectList) {
+                if (hasSameProject) {
+                    return "Project with this name already exists.";
+                } else {
+                    if (view.getSourceFolder().isEmpty()) {
+                        return "Please, enter a source folder name.";
+                    } else if (hasProjectIncorrectSymbol) {
+                        return "Incorrect project name.";
+                    } else if (hasResourceFolderIncorrectSymbol) {
+                        return "Incorrect source folder name.";
+                    } else {
+                        return null;
+                    }
+                }
+            } else {
+                return "Please wait, checking project list";
+            }
+        }
+    }
 
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            // do nothing
-         }
-      });
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        container.setWidget(view);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void checkProjectInput() {
+
+        hasProjectIncorrectSymbol = false;
+        String projectName = view.getProjectName();
+        String resourceFolder = view.getSourceFolder();
+        hasProjectIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName);
+        hasResourceFolderIncorrectSymbol = !ResourceNameValidator.isFolderNameValid(resourceFolder);
+
+        hasSameProject = false;
+        for (int i = 0; i < projectList.size() && !hasSameProject; i++) {
+            String name = projectList.get(i);
+            hasSameProject = projectName.compareTo(name) == 0;
+        }
+
+        delegate.updateControls();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void doFinish() {
+        CreateProjectHandler createProjectHandler = getCreateProjectHandler();
+        createProjectHandler.setProjectName(view.getProjectName());
+        createProjectHandler.addParam(CreateJavaProjectPresenter.SOURCE_FOLDER, view.getSourceFolder());
+        createProjectHandler.create(new AsyncCallback<Project>() {
+            @Override
+            public void onSuccess(Project result) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                // do nothing
+            }
+        });
+    }
 }

@@ -26,45 +26,32 @@ import com.codenvy.ide.json.JsonStringMap;
  *
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
-public abstract class AbstractCreateProjectPresenter implements CreateProjectHandler
-{
-   private JsonStringMap<String> params = JsonCollections.createStringMap();
+public abstract class AbstractCreateProjectPresenter implements CreateProjectHandler {
+    private JsonStringMap<String> params = JsonCollections.createStringMap();
 
-   private String projectName;
+    private String projectName;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void addParam(String name, String value)
-   {
-      params.put(name, value);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void addParam(String name, String value) {
+        params.put(name, value);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getParam(String name)
-   {
-      return params.get(name);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getParam(String name) {
+        return params.get(name);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getProjectName()
-   {
-      return projectName;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getProjectName() {
+        return projectName;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setProjectName(String name)
-   {
-      projectName = name;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setProjectName(String name) {
+        projectName = name;
+    }
 }

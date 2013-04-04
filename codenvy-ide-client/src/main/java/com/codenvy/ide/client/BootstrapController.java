@@ -29,49 +29,44 @@ import com.google.inject.Inject;
 
 /**
  * Performs initial application startup
- * 
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class BootstrapController
-{
+public class BootstrapController {
 
-   /**
-    * @param componentRegistry
-    * @param workspacePeresenter
-    * @param styleInjector
-    * @param extensionInitializer
-    */
-   @Inject
-   public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
-      StyleInjector styleInjector, final ExtensionInitializer extensionInitializer, final ExtensionsPage extensionsPage)
-   {
-      styleInjector.inject();
+    /**
+     * @param componentRegistry
+     * @param workspacePeresenter
+     * @param styleInjector
+     * @param extensionInitializer
+     */
+    @Inject
+    public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
+                               StyleInjector styleInjector, final ExtensionInitializer extensionInitializer,
+                               final ExtensionsPage extensionsPage) {
+        styleInjector.inject();
 
-      // initialize components
-      componentRegistry.start(new Callback<Void, ComponentException>()
-      {
-         @Override
-         public void onSuccess(Void result)
-         {
-            // instantiate extensions
-            extensionInitializer.startExtensions();
-            // Start UI
-            SimplePanel mainPanel = new SimplePanel();
-            RootLayoutPanel.get().add(mainPanel);
-            // Display IDE 
-            workspacePeresenter.go(mainPanel);
-            // TODO FOR DEMO
-            workspacePeresenter.showPart(extensionsPage, PartStackType.EDITING);
-         }
+        // initialize components
+        componentRegistry.start(new Callback<Void, ComponentException>() {
+            @Override
+            public void onSuccess(Void result) {
+                // instantiate extensions
+                extensionInitializer.startExtensions();
+                // Start UI
+                SimplePanel mainPanel = new SimplePanel();
+                RootLayoutPanel.get().add(mainPanel);
+                // Display IDE
+                workspacePeresenter.go(mainPanel);
+                // TODO FOR DEMO
+                workspacePeresenter.showPart(extensionsPage, PartStackType.EDITING);
+            }
 
-         @Override
-         public void onFailure(ComponentException caught)
-         {
-            GWT.log("FAILED to start service:" + caught.getComponent());
-         }
-      });
+            @Override
+            public void onFailure(ComponentException caught) {
+                GWT.log("FAILED to start service:" + caught.getComponent());
+            }
+        });
 
-   }
+    }
 
 }

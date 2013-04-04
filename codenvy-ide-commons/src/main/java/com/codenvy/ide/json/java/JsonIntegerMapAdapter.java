@@ -24,44 +24,45 @@ import java.util.Map.Entry;
  * Server wrapper for a {@link java.util.Map} that implements
  * {@link JsonIntegerMap}.
  *
- * @param <T> the type contained as value in the map
+ * @param <T>
+ *         the type contained as value in the map
  */
 public class JsonIntegerMapAdapter<T> implements JsonIntegerMap<T> {
-  private final Map<Integer, T> delegate;
+    private final Map<Integer, T> delegate;
 
-  public JsonIntegerMapAdapter(Map<Integer, T> delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public boolean hasKey(int key) {
-    return delegate.containsKey(key);
-  }
-
-  @Override
-  public T get(int key) {
-    return delegate.get(key);
-  }
-
-  @Override
-  public void put(int key, T value) {
-    delegate.put(key, value);
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return delegate.isEmpty();
-  }
-
-  @Override
-  public void erase(int key) {
-    delegate.remove(key);
-  }
-
-  @Override
-  public void iterate(JsonIntegerMap.IterationCallback<T> cb) {
-    for (Entry<Integer, T> entry : delegate.entrySet()) {
-      cb.onIteration(entry.getKey().intValue(), entry.getValue());
+    public JsonIntegerMapAdapter(Map<Integer, T> delegate) {
+        this.delegate = delegate;
     }
-  }
+
+    @Override
+    public boolean hasKey(int key) {
+        return delegate.containsKey(key);
+    }
+
+    @Override
+    public T get(int key) {
+        return delegate.get(key);
+    }
+
+    @Override
+    public void put(int key, T value) {
+        delegate.put(key, value);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
+
+    @Override
+    public void erase(int key) {
+        delegate.remove(key);
+    }
+
+    @Override
+    public void iterate(JsonIntegerMap.IterationCallback<T> cb) {
+        for (Entry<Integer, T> entry : delegate.entrySet()) {
+            cb.onIteration(entry.getKey().intValue(), entry.getValue());
+        }
+    }
 }

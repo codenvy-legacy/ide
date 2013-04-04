@@ -22,26 +22,20 @@ import com.codenvy.ide.api.mvp.View;
 
 /**
  * Interface of new generic project wizard view.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewGenericProjectPageView extends View<NewGenericProjectPageView.ActionDelegate>
-{
-   /**
-    * Returns entered project's name.
-    * 
-    * @return
-    */
-   String getProjectName();
-   
-   /**
-    * Needs for delegate some function into GenericProjectPage view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Checks whether project's name is complete or not and updates navigation buttons.
-       */
-      void checkProjectName();
-   }
+public interface NewGenericProjectPageView extends View<NewGenericProjectPageView.ActionDelegate> {
+    /**
+     * Returns entered project's name.
+     *
+     * @return
+     */
+    String getProjectName();
+
+    /** Needs for delegate some function into GenericProjectPage view. */
+    public interface ActionDelegate {
+        /** Checks whether project's name is complete or not and updates navigation buttons. */
+        void checkProjectName();
+    }
 }

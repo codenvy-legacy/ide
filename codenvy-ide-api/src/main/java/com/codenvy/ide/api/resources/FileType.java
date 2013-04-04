@@ -20,7 +20,6 @@ package com.codenvy.ide.api.resources;
 
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-
 import com.google.gwt.resources.client.ImageResource;
 
 
@@ -29,92 +28,74 @@ import com.google.gwt.resources.client.ImageResource;
  * It's contains
  * <ul>
  * <li> <code>image</code> - image resource associated with file
- * <li> <code>mimeTypes</code> - array of mime types associated with file 
+ * <li> <code>mimeTypes</code> - array of mime types associated with file
  * <li> <code>extension</code> - extension associated with file
  * <li> <code>namePattern</code> - name pattern
  * </ul>
  * <p>Mime types is array in case when one file type can describe several mime types.(For example JavaScript file can have:
  * "application/javascript", "application/x-javascript", "text/javascript" mime types)
- * <p>
+ * <p/>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class FileType
-{
-   
-   private static int ID = 0;
-   
-   private int id;
-   
-   private ImageResource image;
+public class FileType {
 
-   private JsonArray<String> mimeTypes;
+    private static int ID = 0;
 
-   private String extension;
+    private int id;
 
-   private String namePattern;
-   
+    private ImageResource image;
 
-   public FileType(ImageResource image, String mimeType, String extension)
-   {
-      this(image, JsonCollections.createArray(mimeType), extension);
-   }
+    private JsonArray<String> mimeTypes;
 
-   public FileType(ImageResource image, JsonArray<String> mimeTypes, String extension)
-   {
-      this(image, mimeTypes, extension, null);
-   }
+    private String extension;
 
-   public FileType(ImageResource image, String namePattern)
-   {
-      this(image, null, null, namePattern);
-   }
+    private String namePattern;
 
-   private FileType(ImageResource image, JsonArray<String> mimeTypes, String extension, String namePattern)
-   {
-      super();
-      this.image = image;
-      this.mimeTypes = mimeTypes;
-      this.extension = extension;
-      this.namePattern = namePattern;
-      id = ++ID;
-   }
 
-   /**
-    * @return the mimeTypes
-    */
-   public JsonArray<String> getMimeTypes()
-   {
-      return mimeTypes;
-   }
+    public FileType(ImageResource image, String mimeType, String extension) {
+        this(image, JsonCollections.createArray(mimeType), extension);
+    }
 
-   /**
-    * @return the extension
-    */
-   public String getExtension()
-   {
-      return extension;
-   }
+    public FileType(ImageResource image, JsonArray<String> mimeTypes, String extension) {
+        this(image, mimeTypes, extension, null);
+    }
 
-   /**
-    * @return the namePatterns
-    */
-   public String getNamePattern()
-   {
-      return namePattern;
-   }
+    public FileType(ImageResource image, String namePattern) {
+        this(image, null, null, namePattern);
+    }
 
-   /**
-    * @return the image
-    */
-   public ImageResource getImage()
-   {
-      return image;
-   }
+    private FileType(ImageResource image, JsonArray<String> mimeTypes, String extension, String namePattern) {
+        super();
+        this.image = image;
+        this.mimeTypes = mimeTypes;
+        this.extension = extension;
+        this.namePattern = namePattern;
+        id = ++ID;
+    }
 
-   public int getId()
-   {
-      return id;
-   }
+    /** @return the mimeTypes */
+    public JsonArray<String> getMimeTypes() {
+        return mimeTypes;
+    }
+
+    /** @return the extension */
+    public String getExtension() {
+        return extension;
+    }
+
+    /** @return the namePatterns */
+    public String getNamePattern() {
+        return namePattern;
+    }
+
+    /** @return the image */
+    public ImageResource getImage() {
+        return image;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

@@ -12,75 +12,65 @@ package com.codenvy.ide.java.client.codeassistant;
 
 import com.codenvy.ide.java.client.core.CompletionProposal;
 import com.codenvy.ide.java.client.core.IJavaElement;
-
 import com.codenvy.ide.runtime.Assert;
-
 import com.google.gwt.dom.client.Style.Unit;
-
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
 
-/**
- * Proposal info that computes the javadoc lazily when it is queried.
- */
-public abstract class MemberProposalInfo extends ProposalInfo
-{
+/** Proposal info that computes the javadoc lazily when it is queried. */
+public abstract class MemberProposalInfo extends ProposalInfo {
 
-   protected CompletionProposal fProposal;
+    protected CompletionProposal fProposal;
 
-   protected final String projectId;
+    protected final String projectId;
 
-   protected final String docContext;
+    protected final String docContext;
 
-   private boolean isResolved = false;
+    private boolean isResolved = false;
 
-   private Frame frame;
+    private Frame frame;
 
-   protected final String vfsId;
+    protected final String vfsId;
 
-   /**
-    * Creates a new proposal info.
-    * 
-    * @param project the java project to reference when resolving types
-    * @param proposal the proposal to generate information for
-    */
-   public MemberProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
-   {
-      this.projectId = projectId;
-      this.docContext = docContext;
-      this.vfsId = vfsId;
-      Assert.isNotNull(proposal);
-      this.fProposal = proposal;
-   }
+    /**
+     * Creates a new proposal info.
+     *
+     * @param project
+     *         the java project to reference when resolving types
+     * @param proposal
+     *         the proposal to generate information for
+     */
+    public MemberProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId) {
+        this.projectId = projectId;
+        this.docContext = docContext;
+        this.vfsId = vfsId;
+        Assert.isNotNull(proposal);
+        this.fProposal = proposal;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.codeassistant.ProposalInfo#getInfo()
-    */
-   @Override
-   public Widget getInfo()
-   {
-      if (isResolved)
-         return frame;
+    /** @see com.codenvy.ide.java.client.codeassistant.ProposalInfo#getInfo() */
+    @Override
+    public Widget getInfo() {
+        if (isResolved)
+            return frame;
 
-      String url = getURL();
-      isResolved = true;
-      if (url != null)
-      {
-         frame = new Frame(url);
-         frame.setSize("100%", "100%");
-         frame.removeStyleName("gwt-Frame");
-         frame.getElement().getStyle().setBorderWidth(0, Unit.PX);
-      }
-      return frame;
-   }
+        String url = getURL();
+        isResolved = true;
+        if (url != null) {
+            frame = new Frame(url);
+            frame.setSize("100%", "100%");
+            frame.removeStyleName("gwt-Frame");
+            frame.getElement().getStyle().setBorderWidth(0, Unit.PX);
+        }
+        return frame;
+    }
 
-   @Override
-   public IJavaElement getJavaElement()
-   {
-      return null;
-   }
+    @Override
+    public IJavaElement getJavaElement() {
+        return null;
+    }
 
-   protected abstract String getURL();
+    protected abstract String getURL();
 
 }

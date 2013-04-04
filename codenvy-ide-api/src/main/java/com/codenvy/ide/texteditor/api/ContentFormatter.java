@@ -33,22 +33,23 @@ import com.codenvy.ide.text.RegionImpl;
  * formatted. It is assumed that a strategy must be finished before the next strategy
  * can be activated. After the last strategy has been finished, all strategies are
  * informed about the termination of the formatting process.</p>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface ContentFormatter
-{
-   /**
-    * Formats the given region of the specified document.The formatter may safely
-    * assume that it is the only subject that modifies the document at this point in time.
-    *
-    * @param document the document to be formatted
-    * @param region the region within the document to be formatted
-    */
-   void format(Document document, RegionImpl region);
+public interface ContentFormatter {
+    /**
+     * Formats the given region of the specified document.The formatter may safely
+     * assume that it is the only subject that modifies the document at this point in time.
+     *
+     * @param document
+     *         the document to be formatted
+     * @param region
+     *         the region within the document to be formatted
+     */
+    void format(Document document, RegionImpl region);
 
-   //TODO
+    //TODO
 //   /**
 //    * Returns the formatting strategy registered for the given content type.
 //    *

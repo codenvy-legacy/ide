@@ -11,26 +11,25 @@
 package com.codenvy.ide.java.client.internal.corext.fix;
 
 import com.codenvy.ide.java.client.internal.corext.refactoring.code.CompilationUnitChange;
-
 import com.codenvy.ide.runtime.CoreException;
 
 
 /**
  * A clean up fix calculates a {@link CompilationUnitChange} which can be applied on a document to
  * fix one or more problems in a compilation unit.
- * 
+ *
  * @since 3.5
  */
-public interface ICleanUpFix
-{
+public interface ICleanUpFix {
 
-   /**
-    * Calculates and returns a {@link CompilationUnitChange} which can be applied on a document to
-    * fix one or more problems in a compilation unit.
-    * 
-    * @return a compilation unit change change which should not be empty
-    * @throws CoreException if something went wrong while calculating the change
-    */
-   public CompilationUnitChange createChange() throws CoreException;
+    /**
+     * Calculates and returns a {@link CompilationUnitChange} which can be applied on a document to
+     * fix one or more problems in a compilation unit.
+     *
+     * @return a compilation unit change change which should not be empty
+     * @throws CoreException
+     *         if something went wrong while calculating the change
+     */
+    public CompilationUnitChange createChange() throws CoreException;
 
 }

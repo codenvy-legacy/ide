@@ -22,15 +22,14 @@ import com.codenvy.ide.api.expressions.ToggleStateExpression;
 
 /**
  * The command's interface include toggle state expression.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface ToggleCommand extends ExtendedCommand
-{
-   /**
-    * @return a Expression, it's result will be used
-    *         to determine item state. In UI this expression 
-    *         used for show selected/unselected item.
-    */
-   public ToggleStateExpression getState();
+public interface ToggleCommand extends ExtendedCommand {
+    /**
+     * @return a Expression, it's result will be used
+     *         to determine item state. In UI this expression
+     *         used for show selected/unselected item.
+     */
+    public ToggleStateExpression getState();
 }

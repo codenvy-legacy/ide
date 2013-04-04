@@ -22,114 +22,109 @@ import org.junit.Test;
 /**
  *
  */
-public class SourceModifierTest extends ASTRewritingTest
-{
+public class SourceModifierTest extends ASTRewritingTest {
 
-   @Test
-   public void testRemoveIndents() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        while (i == 0) {\n");
-      buf.append("            foo();\n");
-      buf.append("            i++; // comment\n");
-      buf.append("            i++;\n");
-      buf.append("        }\n");
-      buf.append("        return;\n");
-      buf.append("    }\n");
-      buf.append("}\n");
+    @Test
+    public void testRemoveIndents() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        while (i == 0) {\n");
+        buf.append("            foo();\n");
+        buf.append("            i++; // comment\n");
+        buf.append("            i++;\n");
+        buf.append("        }\n");
+        buf.append("        return;\n");
+        buf.append("    }\n");
+        buf.append("}\n");
 
-      Document buffer = new DocumentImpl(buf.toString());
+        Document buffer = new DocumentImpl(buf.toString());
 
-      int offset = buf.toString().indexOf("while");
-      int length = buf.toString().indexOf("return;") + "return;".length() - offset;
+        int offset = buf.toString().indexOf("while");
+        int length = buf.toString().indexOf("return;") + "return;".length() - offset;
 
-      String content = buffer.get(offset, length);
-      SourceModifier modifier = new SourceModifierImpl(2, "    ", 4, 4);
-      MultiTextEdit edit = new MultiTextEdit(0, content.length());
-      ReplaceEdit[] replaces = modifier.getModifications(content);
-      for (int i = 0; i < replaces.length; i++)
-      {
-         edit.addChild(replaces[i]);
-      }
+        String content = buffer.get(offset, length);
+        SourceModifier modifier = new SourceModifierImpl(2, "    ", 4, 4);
+        MultiTextEdit edit = new MultiTextEdit(0, content.length());
+        ReplaceEdit[] replaces = modifier.getModifications(content);
+        for (int i = 0; i < replaces.length; i++) {
+            edit.addChild(replaces[i]);
+        }
 
-      Document innerBuffer = new DocumentImpl(content);
-      edit.apply(innerBuffer);
+        Document innerBuffer = new DocumentImpl(content);
+        edit.apply(innerBuffer);
 
-      buffer.replace(offset, length, innerBuffer.get());
+        buffer.replace(offset, length, innerBuffer.get());
 
-      String preview = buffer.get();
+        String preview = buffer.get();
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        while (i == 0) {\n");
-      buf.append("        foo();\n");
-      buf.append("        i++; // comment\n");
-      buf.append("        i++;\n");
-      buf.append("    }\n");
-      buf.append("    return;\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      String expected = buf.toString();
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        while (i == 0) {\n");
+        buf.append("        foo();\n");
+        buf.append("        i++; // comment\n");
+        buf.append("        i++;\n");
+        buf.append("    }\n");
+        buf.append("    return;\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        String expected = buf.toString();
 
-      assertEqualString(preview, expected);
-   }
+        assertEqualString(preview, expected);
+    }
 
-   @Test
-   public void testAddIndents() throws Exception
-   {
-      StringBuffer buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        while (i == 0) {\n");
-      buf.append("            foo();\n");
-      buf.append("            i++; // comment\n");
-      buf.append("            i++;\n");
-      buf.append("        }\n");
-      buf.append("        return;\n");
-      buf.append("    }\n");
-      buf.append("}\n");
+    @Test
+    public void testAddIndents() throws Exception {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        while (i == 0) {\n");
+        buf.append("            foo();\n");
+        buf.append("            i++; // comment\n");
+        buf.append("            i++;\n");
+        buf.append("        }\n");
+        buf.append("        return;\n");
+        buf.append("    }\n");
+        buf.append("}\n");
 
-      Document buffer = new DocumentImpl(buf.toString());
+        Document buffer = new DocumentImpl(buf.toString());
 
-      int offset = buf.toString().indexOf("while");
-      int length = buf.toString().indexOf("return;") + "return;".length() - offset;
+        int offset = buf.toString().indexOf("while");
+        int length = buf.toString().indexOf("return;") + "return;".length() - offset;
 
-      String content = buffer.get(offset, length);
-      SourceModifier modifier = new SourceModifierImpl(2, "            ", 4, 4);
-      MultiTextEdit edit = new MultiTextEdit(0, content.length());
-      ReplaceEdit[] replaces = modifier.getModifications(content);
-      for (int i = 0; i < replaces.length; i++)
-      {
-         edit.addChild(replaces[i]);
-      }
+        String content = buffer.get(offset, length);
+        SourceModifier modifier = new SourceModifierImpl(2, "            ", 4, 4);
+        MultiTextEdit edit = new MultiTextEdit(0, content.length());
+        ReplaceEdit[] replaces = modifier.getModifications(content);
+        for (int i = 0; i < replaces.length; i++) {
+            edit.addChild(replaces[i]);
+        }
 
-      Document innerBuffer = new DocumentImpl(content);
-      edit.apply(innerBuffer);
+        Document innerBuffer = new DocumentImpl(content);
+        edit.apply(innerBuffer);
 
-      buffer.replace(offset, length, innerBuffer.get());
+        buffer.replace(offset, length, innerBuffer.get());
 
-      String preview = buffer.get();
+        String preview = buffer.get();
 
-      buf = new StringBuffer();
-      buf.append("package test1;\n");
-      buf.append("public class E {\n");
-      buf.append("    public void foo() {\n");
-      buf.append("        while (i == 0) {\n");
-      buf.append("                foo();\n");
-      buf.append("                i++; // comment\n");
-      buf.append("                i++;\n");
-      buf.append("            }\n");
-      buf.append("            return;\n");
-      buf.append("    }\n");
-      buf.append("}\n");
-      String expected = buf.toString();
+        buf = new StringBuffer();
+        buf.append("package test1;\n");
+        buf.append("public class E {\n");
+        buf.append("    public void foo() {\n");
+        buf.append("        while (i == 0) {\n");
+        buf.append("                foo();\n");
+        buf.append("                i++; // comment\n");
+        buf.append("                i++;\n");
+        buf.append("            }\n");
+        buf.append("            return;\n");
+        buf.append("    }\n");
+        buf.append("}\n");
+        String expected = buf.toString();
 
-      assertEqualString(preview, expected);
-   }
+        assertEqualString(preview, expected);
+    }
 }

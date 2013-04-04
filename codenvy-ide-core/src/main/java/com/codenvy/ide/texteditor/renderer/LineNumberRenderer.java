@@ -14,6 +14,9 @@
 
 package com.codenvy.ide.texteditor.renderer;
 
+import elemental.css.CSSStyleDeclaration;
+import elemental.html.Element;
+
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.js.JsoIntegerMap;
@@ -26,273 +29,221 @@ import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.ListenerRegistrar;
 import com.codenvy.ide.util.dom.Elements;
 import com.google.gwt.resources.client.ClientBundle;
-import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
 
 
-/**
- * A renderer for the line numbers in the left gutter.
- */
-public class LineNumberRenderer
-{
+/** A renderer for the line numbers in the left gutter. */
+public class LineNumberRenderer {
 
-   private static final int NONE = -1;
+    private static final int NONE = -1;
 
-   private final Buffer buffer;
+    private final Buffer buffer;
 
-   private final Gutter leftGutter;
+    private final Gutter leftGutter;
 
-   /**
-    * Current editor instance.
-    *
-    * Used to track if current file can be edited (i.e. is not readonly).
-    *
-    * TODO: add new abstraction to avoid editor passing.
-    */
-   private final TextEditorViewImpl editor;
+    /**
+     * Current editor instance.
+     * <p/>
+     * Used to track if current file can be edited (i.e. is not readonly).
+     * <p/>
+     * TODO: add new abstraction to avoid editor passing.
+     */
+    private final TextEditorViewImpl editor;
 
-   private int previousBottomLineNumber = -1;
+    private int previousBottomLineNumber = -1;
 
-   private int previousTopLineNumber = -1;
+    private int previousTopLineNumber = -1;
 
-   private JsoIntegerMap<Element> lineNumberToElementCache;
+    private JsoIntegerMap<Element> lineNumberToElementCache;
 
-   private final ViewportModel viewport;
+    private final ViewportModel viewport;
 
-   private final Css css;
+    private final Css css;
 
-   private int activeLineNumber = NONE;
+    private int activeLineNumber = NONE;
 
-   private int renderedActiveLineNumber = NONE;
+    private int renderedActiveLineNumber = NONE;
 
-   private final JsonArray<ListenerRegistrar.Remover> listenerRemovers = JsonCollections.createArray();
+    private final JsonArray<ListenerRegistrar.Remover> listenerRemovers = JsonCollections.createArray();
 
-   private final SelectionModel.CursorListener cursorListener = new SelectionModel.CursorListener()
-   {
-      @Override
-      public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
-      {
-         activeLineNumber = lineInfo.number();
-         updateActiveLine();
-      }
-   };
+    private final SelectionModel.CursorListener cursorListener = new SelectionModel.CursorListener() {
+        @Override
+        public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
+            activeLineNumber = lineInfo.number();
+            updateActiveLine();
+        }
+    };
 
-   private TextEditorViewImpl.ReadOnlyListener readonlyListener = new TextEditorViewImpl.ReadOnlyListener()
-   {
-      @Override
-      public void onReadOnlyChanged(boolean isReadOnly)
-      {
-         updateActiveLine();
-      }
-   };
+    private TextEditorViewImpl.ReadOnlyListener readonlyListener = new TextEditorViewImpl.ReadOnlyListener() {
+        @Override
+        public void onReadOnlyChanged(boolean isReadOnly) {
+            updateActiveLine();
+        }
+    };
 
-   private void updateActiveLine()
-   {
-      int lineNumber = this.activeLineNumber;
-      if (editor.isReadOnly())
-      {
-         lineNumber = NONE;
-      }
-      if (lineNumber == renderedActiveLineNumber)
-      {
-         return;
-      }
+    private void updateActiveLine() {
+        int lineNumber = this.activeLineNumber;
+        if (editor.isReadOnly()) {
+            lineNumber = NONE;
+        }
+        if (lineNumber == renderedActiveLineNumber) {
+            return;
+        }
 
-      if (renderedActiveLineNumber != NONE)
-      {
-         Element renderedActiveLine = lineNumberToElementCache.get(renderedActiveLineNumber);
-         if (renderedActiveLine != null)
-         {
-            renderedActiveLine.removeClassName(css.activeLineNumber());
-            renderedActiveLineNumber = NONE;
-         }
-      }
-      Element newActiveLine = lineNumberToElementCache.get(lineNumber);
-      // Add class if it's in the viewport.
-      if (newActiveLine != null)
-      {
-         newActiveLine.addClassName(css.activeLineNumber());
-         renderedActiveLineNumber = lineNumber;
-      }
-   }
+        if (renderedActiveLineNumber != NONE) {
+            Element renderedActiveLine = lineNumberToElementCache.get(renderedActiveLineNumber);
+            if (renderedActiveLine != null) {
+                renderedActiveLine.removeClassName(css.activeLineNumber());
+                renderedActiveLineNumber = NONE;
+            }
+        }
+        Element newActiveLine = lineNumberToElementCache.get(lineNumber);
+        // Add class if it's in the viewport.
+        if (newActiveLine != null) {
+            newActiveLine.addClassName(css.activeLineNumber());
+            renderedActiveLineNumber = lineNumber;
+        }
+    }
 
-   public void teardown()
-   {
-      for (int i = 0, n = listenerRemovers.size(); i < n; i++)
-      {
-         listenerRemovers.get(i).remove();
-      }
-   }
+    public void teardown() {
+        for (int i = 0, n = listenerRemovers.size(); i < n; i++) {
+            listenerRemovers.get(i).remove();
+        }
+    }
 
-   /**
-    * Line number CSS.
-    */
-   public interface Css extends TextEditorViewImpl.EditorSharedCss
-   {
-      String lineNumber();
+    /** Line number CSS. */
+    public interface Css extends TextEditorViewImpl.EditorSharedCss {
+        String lineNumber();
 
-      String activeLineNumber();
+        String activeLineNumber();
 
-      String activeline();
-   }
+        String activeline();
+    }
 
-   /**
-    * Line number resources.
-    */
-   public interface Resources extends ClientBundle
-   {
-      @Source({"com/codenvy/ide/common/constants.css", "LineNumberRenderer.css"})
-      Css lineNumberRendererCss();
-   }
+    /** Line number resources. */
+    public interface Resources extends ClientBundle {
+        @Source({"com/codenvy/ide/common/constants.css", "LineNumberRenderer.css"})
+        Css lineNumberRendererCss();
+    }
 
-   LineNumberRenderer(Buffer buffer, Resources res, Gutter leftGutter, ViewportModel viewport,
-      SelectionModel selection, TextEditorViewImpl editor)
-   {
-      this.buffer = buffer;
-      this.leftGutter = leftGutter;
-      this.editor = editor;
-      this.lineNumberToElementCache = JsoIntegerMap.create();
-      this.viewport = viewport;
-      this.css = res.lineNumberRendererCss();
-      listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
-      listenerRemovers.add(editor.getReadOnlyListenerRegistrar().add(readonlyListener));
-   }
+    LineNumberRenderer(Buffer buffer, Resources res, Gutter leftGutter, ViewportModel viewport,
+                       SelectionModel selection, TextEditorViewImpl editor) {
+        this.buffer = buffer;
+        this.leftGutter = leftGutter;
+        this.editor = editor;
+        this.lineNumberToElementCache = JsoIntegerMap.create();
+        this.viewport = viewport;
+        this.css = res.lineNumberRendererCss();
+        listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
+        listenerRemovers.add(editor.getReadOnlyListenerRegistrar().add(readonlyListener));
+    }
 
-   void renderImpl(int updateBeginLineNumber)
-   {
-      int topLineNumber = viewport.getTopLineNumber();
-      int bottomLineNumber = viewport.getBottomLineNumber();
+    void renderImpl(int updateBeginLineNumber) {
+        int topLineNumber = viewport.getTopLineNumber();
+        int bottomLineNumber = viewport.getBottomLineNumber();
 
-      if (previousBottomLineNumber == -1 || topLineNumber > previousBottomLineNumber
-         || bottomLineNumber < previousTopLineNumber)
-      {
+        if (previousBottomLineNumber == -1 || topLineNumber > previousBottomLineNumber
+            || bottomLineNumber < previousTopLineNumber) {
 
-         if (previousBottomLineNumber > -1)
-         {
-            garbageCollectLines(previousTopLineNumber, previousBottomLineNumber);
-         }
+            if (previousBottomLineNumber > -1) {
+                garbageCollectLines(previousTopLineNumber, previousBottomLineNumber);
+            }
 
-         fillOrUpdateLines(topLineNumber, bottomLineNumber);
+            fillOrUpdateLines(topLineNumber, bottomLineNumber);
 
-      }
-      else
-      {
+        } else {
          /*
           * The viewport was shifted and part of the old viewport will be in the
           * new viewport.
           */
-         // first garbage collect any lines that have gone off the screen
-         if (previousTopLineNumber < topLineNumber)
-         {
-            // off the top
-            garbageCollectLines(previousTopLineNumber, topLineNumber - 1);
-         }
+            // first garbage collect any lines that have gone off the screen
+            if (previousTopLineNumber < topLineNumber) {
+                // off the top
+                garbageCollectLines(previousTopLineNumber, topLineNumber - 1);
+            }
 
-         if (previousBottomLineNumber > bottomLineNumber)
-         {
-            // off the bottom
-            garbageCollectLines(bottomLineNumber + 1, previousBottomLineNumber);
-         }
+            if (previousBottomLineNumber > bottomLineNumber) {
+                // off the bottom
+                garbageCollectLines(bottomLineNumber + 1, previousBottomLineNumber);
+            }
 
          /*
           * Re-create any line numbers that are now visible or have had their
           * positions shifted.
           */
-         if (previousTopLineNumber > topLineNumber)
-         {
-            // new lines at the top
-            fillOrUpdateLines(topLineNumber, previousTopLineNumber - 1);
-         }
-
-         if (updateBeginLineNumber >= 0 && updateBeginLineNumber <= bottomLineNumber)
-         {
-            // lines updated in the middle; redraw everything below
-            fillOrUpdateLines(updateBeginLineNumber, bottomLineNumber);
-         }
-         else
-         {
-            // only check new lines scrolled in from the bottom
-            if (previousBottomLineNumber < bottomLineNumber)
-            {
-               fillOrUpdateLines(previousBottomLineNumber, bottomLineNumber);
+            if (previousTopLineNumber > topLineNumber) {
+                // new lines at the top
+                fillOrUpdateLines(topLineNumber, previousTopLineNumber - 1);
             }
-         }
-      }
 
-      previousTopLineNumber = viewport.getTopLineNumber();
-      previousBottomLineNumber = viewport.getBottomLineNumber();
-   }
+            if (updateBeginLineNumber >= 0 && updateBeginLineNumber <= bottomLineNumber) {
+                // lines updated in the middle; redraw everything below
+                fillOrUpdateLines(updateBeginLineNumber, bottomLineNumber);
+            } else {
+                // only check new lines scrolled in from the bottom
+                if (previousBottomLineNumber < bottomLineNumber) {
+                    fillOrUpdateLines(previousBottomLineNumber, bottomLineNumber);
+                }
+            }
+        }
 
-   void render()
-   {
-      renderImpl(-1);
-   }
+        previousTopLineNumber = viewport.getTopLineNumber();
+        previousBottomLineNumber = viewport.getBottomLineNumber();
+    }
 
-   /**
-    * Re-render all line numbers including and after lineNumber to account for
-    * spacer movement.
-    */
-   void renderLineAndFollowing(int lineNumber)
-   {
-      renderImpl(lineNumber);
-   }
+    void render() {
+        renderImpl(-1);
+    }
 
-   private void fillOrUpdateLines(int beginLineNumber, int endLineNumber)
-   {
-      for (int i = beginLineNumber; i <= endLineNumber; i++)
-      {
-         Element lineElement = lineNumberToElementCache.get(i);
-         if (lineElement != null)
-         {
-            updateElementPosition(lineElement, i);
-         }
-         else
-         {
-            Element element = createElement(i);
-            lineNumberToElementCache.put(i, element);
-            leftGutter.addUnmanagedElement(element);
-         }
-      }
-   }
+    /**
+     * Re-render all line numbers including and after lineNumber to account for
+     * spacer movement.
+     */
+    void renderLineAndFollowing(int lineNumber) {
+        renderImpl(lineNumber);
+    }
 
-   private void updateElementPosition(Element lineNumberElement, int lineNumber)
-   {
-      lineNumberElement.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
-   }
+    private void fillOrUpdateLines(int beginLineNumber, int endLineNumber) {
+        for (int i = beginLineNumber; i <= endLineNumber; i++) {
+            Element lineElement = lineNumberToElementCache.get(i);
+            if (lineElement != null) {
+                updateElementPosition(lineElement, i);
+            } else {
+                Element element = createElement(i);
+                lineNumberToElementCache.put(i, element);
+                leftGutter.addUnmanagedElement(element);
+            }
+        }
+    }
 
-   private Element createElement(int lineNumber)
-   {
-      Element element = Elements.createDivElement(css.lineNumber());
-      // Line 0 will be rendered as Line 1
-      element.setTextContent(String.valueOf(lineNumber + 1));
-      element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
-      if (lineNumber == activeLineNumber)
-      {
-         element.addClassName(css.activeLineNumber());
-         renderedActiveLineNumber = activeLineNumber;
-      }
-      return element;
-   }
+    private void updateElementPosition(Element lineNumberElement, int lineNumber) {
+        lineNumberElement.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
+    }
 
-   private void garbageCollectLines(int beginLineNumber, int endLineNumber)
-   {
-      for (int i = beginLineNumber; i <= endLineNumber; i++)
-      {
-         Element lineElement = lineNumberToElementCache.get(i);
-         if (lineElement != null)
-         {
-            leftGutter.removeUnmanagedElement(lineElement);
-            lineNumberToElementCache.erase(i);
-         }
-         else
-         {
-            throw new IndexOutOfBoundsException("Tried to garbage collect line number " + i
-               + " when it does not exist.");
-         }
-      }
-      if (beginLineNumber <= renderedActiveLineNumber && renderedActiveLineNumber <= endLineNumber)
-      {
-         renderedActiveLineNumber = NONE;
-      }
-   }
+    private Element createElement(int lineNumber) {
+        Element element = Elements.createDivElement(css.lineNumber());
+        // Line 0 will be rendered as Line 1
+        element.setTextContent(String.valueOf(lineNumber + 1));
+        element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
+        if (lineNumber == activeLineNumber) {
+            element.addClassName(css.activeLineNumber());
+            renderedActiveLineNumber = activeLineNumber;
+        }
+        return element;
+    }
+
+    private void garbageCollectLines(int beginLineNumber, int endLineNumber) {
+        for (int i = beginLineNumber; i <= endLineNumber; i++) {
+            Element lineElement = lineNumberToElementCache.get(i);
+            if (lineElement != null) {
+                leftGutter.removeUnmanagedElement(lineElement);
+                lineNumberToElementCache.erase(i);
+            } else {
+                throw new IndexOutOfBoundsException("Tried to garbage collect line number " + i
+                                                    + " when it does not exist.");
+            }
+        }
+        if (beginLineNumber <= renderedActiveLineNumber && renderedActiveLineNumber <= endLineNumber) {
+            renderedActiveLineNumber = NONE;
+        }
+    }
 }

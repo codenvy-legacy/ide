@@ -24,36 +24,30 @@ import com.codenvy.ide.util.ListenerRegistrar;
  */
 public interface ShowableComponent {
 
-  /**
-   * An indicating indicating the show state of a component.
-   */
-  public enum ShowState {
-    SHOWING, SHOWN, HIDDEN, HIDING
-  }
+    /** An indicating indicating the show state of a component. */
+    public enum ShowState {
+        SHOWING, SHOWN, HIDDEN, HIDING
+    }
 
-  /**
-   * A listener which is notified of changes in the components
-   * {@link ShowState}.
-   */
-  public interface ShowStateChangedListener {
-    void onShowStateChanged(ShowState showState);
-  }
-  
-  /**
-   * Displays a component.
-   */
-  public void show();
+    /**
+     * A listener which is notified of changes in the components
+     * {@link ShowState}.
+     */
+    public interface ShowStateChangedListener {
+        void onShowStateChanged(ShowState showState);
+    }
 
-  /**
-   * Hides a component.
-   */
-  public void hide();
+    /** Displays a component. */
+    public void show();
 
-  /**
-   * @return true if the state of the component is logically
-   *         {@link ShowState#SHOWING} or {@link ShowState#SHOWN}.
-   */
-  public boolean isShowing();
+    /** Hides a component. */
+    public void hide();
 
-  public ListenerRegistrar<ShowStateChangedListener> getShowStateChangedListenerRegistrar();
+    /**
+     * @return true if the state of the component is logically
+     *         {@link ShowState#SHOWING} or {@link ShowState#SHOWN}.
+     */
+    public boolean isShowing();
+
+    public ListenerRegistrar<ShowStateChangedListener> getShowStateChangedListenerRegistrar();
 }

@@ -19,32 +19,37 @@
 package com.codenvy.ide.rest;
 
 
-
 /**
- * Callback interface, this interface needs to {@link AsyncRequest} can tell the application execution state async REST Service 
+ * Callback interface, this interface needs to {@link AsyncRequest} can tell the application execution state async REST Service
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Sep 16, 2011 evgen $
- *
  */
-public interface RequestStatusHandler
-{
+public interface RequestStatusHandler {
 
-   /**
-    * Calls when service started or in progress.
-    * @param id the Async REST Service id 
-    */
-   void requestInProgress(String id);
-   
-   /**
-    * Calls when service work done.
-    * @param id the Async REST Service id
-    */
-   void requestFinished(String id);
-   
-   /**
-    * Calls when service return error
-    * @param id the Async REST Service id
-    * @param exception the exception received from service
-    */
-   void requestError(String id, Throwable exception);
+    /**
+     * Calls when service started or in progress.
+     *
+     * @param id
+     *         the Async REST Service id
+     */
+    void requestInProgress(String id);
+
+    /**
+     * Calls when service work done.
+     *
+     * @param id
+     *         the Async REST Service id
+     */
+    void requestFinished(String id);
+
+    /**
+     * Calls when service return error
+     *
+     * @param id
+     *         the Async REST Service id
+     * @param exception
+     *         the exception received from service
+     */
+    void requestError(String id, Throwable exception);
 }

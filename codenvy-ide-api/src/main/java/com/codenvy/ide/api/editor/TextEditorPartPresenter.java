@@ -31,52 +31,53 @@ import com.codenvy.ide.api.outline.OutlinePresenter;
  * The provider also delivers the input's annotation model which is used by the editor's vertical
  * ruler.
  * </p>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface TextEditorPartPresenter extends EditorPartPresenter
-{
-   /**
-    * Returns this text editor's document provider.
-    *
-    * @return the document provider or <code>null</code> if none, e.g. after closing the editor
-    */
-   DocumentProvider getDocumentProvider();
-   
-   /**
-    * Closes this text editor after optionally saving changes.
-    *
-    * @param save <code>true</code> if unsaved changed should be saved, and
-    *   <code>false</code> if unsaved changed should be discarded
-    */
-   void close(boolean save);
+public interface TextEditorPartPresenter extends EditorPartPresenter {
+    /**
+     * Returns this text editor's document provider.
+     *
+     * @return the document provider or <code>null</code> if none, e.g. after closing the editor
+     */
+    DocumentProvider getDocumentProvider();
 
-   /**
-    * Returns whether the text in this text editor can be changed by the user.
-    *
-    * @return <code>true</code> if it can be edited, and <code>false</code> if it is read-only
-    */
-   boolean isEditable();
+    /**
+     * Closes this text editor after optionally saving changes.
+     *
+     * @param save
+     *         <code>true</code> if unsaved changed should be saved, and
+     *         <code>false</code> if unsaved changed should be discarded
+     */
+    void close(boolean save);
 
-   /**
-    * Abandons all modifications applied to this text editor's input element's
-    * textual presentation since the last save operation.
-    */
-   void doRevertToSaved();
-   
-   /**
-    * Returns this text editor's selection provider. Repeated calls to this
-    * method return the same selection provider.
-    *
-    * @return the selection provider
-    */
-   SelectionProvider getSelectionProvider();
-   
-   /**
-    * Return Outline presenter.
-    * If editor not support Outline return <code>null</code>
-    * @return the outline presenter.
-    */
-   OutlinePresenter getOutline();
+    /**
+     * Returns whether the text in this text editor can be changed by the user.
+     *
+     * @return <code>true</code> if it can be edited, and <code>false</code> if it is read-only
+     */
+    boolean isEditable();
+
+    /**
+     * Abandons all modifications applied to this text editor's input element's
+     * textual presentation since the last save operation.
+     */
+    void doRevertToSaved();
+
+    /**
+     * Returns this text editor's selection provider. Repeated calls to this
+     * method return the same selection provider.
+     *
+     * @return the selection provider
+     */
+    SelectionProvider getSelectionProvider();
+
+    /**
+     * Return Outline presenter.
+     * If editor not support Outline return <code>null</code>
+     *
+     * @return the outline presenter.
+     */
+    OutlinePresenter getOutline();
 }

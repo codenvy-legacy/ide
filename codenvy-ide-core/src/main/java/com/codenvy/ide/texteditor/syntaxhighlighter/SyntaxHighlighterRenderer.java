@@ -26,85 +26,75 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
 
-/**
- * A {@link LineRenderer} to render the syntax highlighting.
- *
- */
-public class SyntaxHighlighterRenderer implements LineRenderer
-{
+/** A {@link LineRenderer} to render the syntax highlighting. */
+public class SyntaxHighlighterRenderer implements LineRenderer {
 
-   /**
-    * ClientBundle for the syntax highlighter renderer.
-    */
-   public interface Resources extends ClientBundle
-   {
-      @Source("SyntaxHighlighterRenderer.css")
-      CssResource syntaxHighlighterRendererCss();
-   }
-   static{
-      //TODO remove this;
-      Resources res = GWT.create(Resources.class);
-      res.syntaxHighlighterRendererCss().ensureInjected();
-   }
+    /** ClientBundle for the syntax highlighter renderer. */
+    public interface Resources extends ClientBundle {
+        @Source("SyntaxHighlighterRenderer.css")
+        CssResource syntaxHighlighterRendererCss();
+    }
 
-   private final com.codenvy.ide.texteditor.api.SelectionModel selection;
+    static {
+        //TODO remove this;
+        Resources res = GWT.create(Resources.class);
+        res.syntaxHighlighterRendererCss().ensureInjected();
+    }
 
-   private final SyntaxHighlighter syntaxHighlighter;
+    private final com.codenvy.ide.texteditor.api.SelectionModel selection;
 
-   private JsonArray<Token> tokens;
+    private final SyntaxHighlighter syntaxHighlighter;
 
-   private int tokenPos;
+    private JsonArray<Token> tokens;
 
-   private final Css editorCss;
+    private int tokenPos;
 
-   SyntaxHighlighterRenderer(SyntaxHighlighter syntaxHighlighter, com.codenvy.ide.texteditor.api.SelectionModel selection, TextEditorViewImpl.Css editorCss)
-   {
-      this.syntaxHighlighter = syntaxHighlighter;
-      this.selection = selection;
-      this.editorCss = editorCss;
-   }
+    private final Css editorCss;
 
-   @Override
-   public void renderNextChunk(Target target)
-   {
-      Token token = tokens.get(tokenPos++);
-      Assert.isNotNull(token, "Token was null");
+    SyntaxHighlighterRenderer(SyntaxHighlighter syntaxHighlighter, com.codenvy.ide.texteditor.api.SelectionModel selection,
+                              TextEditorViewImpl.Css editorCss) {
+        this.syntaxHighlighter = syntaxHighlighter;
+        this.selection = selection;
+        this.editorCss = editorCss;
+    }
 
-      String tokenValue = token.getValue();
+    @Override
+    public void renderNextChunk(Target target) {
+        Token token = tokens.get(tokenPos++);
+        Assert.isNotNull(token, "Token was null");
 
-      String style = "";
-      switch (token.getType())
-      {
-         case NEWLINE :
-            // we special case the NEWLINE token and do not append the default style.
-            style = null;
-            break;
+        String tokenValue = token.getValue();
 
-         case ERROR :
-            style = editorCss.lineRendererError() + " ";
-            // Fall through to add the external stable class name too (unofficial color API)
+        String style = "";
+        switch (token.getType()) {
+            case NEWLINE:
+                // we special case the NEWLINE token and do not append the default style.
+                style = null;
+                break;
 
-         default :
-            style += token.getStyle();
-      }
+            case ERROR:
+                style = editorCss.lineRendererError() + " ";
+                // Fall through to add the external stable class name too (unofficial color API)
 
-      target.render(tokenValue.length(), style);
-   }
+            default:
+                style += token.getStyle();
+        }
 
-   @Override
-   public boolean resetToBeginningOfLine(Line line, int lineNumber)
-   {
+        target.render(tokenValue.length(), style);
+    }
 
-      tokens = syntaxHighlighter.getTokens(line);
-      tokenPos = 0;
+    @Override
+    public boolean resetToBeginningOfLine(Line line, int lineNumber) {
 
-      // If we failed to get any tokens, don't try to render this line
-      return tokens != null;
-   }
+        tokens = syntaxHighlighter.getTokens(line);
+        tokenPos = 0;
 
-   @Override
-   public boolean shouldLastChunkFillToRight()
-   {
-      return false;
-   }
+        // If we failed to get any tokens, don't try to render this line
+        return tokens != null;
+    }
+
+    @Override
+    public boolean shouldLastChunkFillToRight() {
+        return false;
+    }
 }

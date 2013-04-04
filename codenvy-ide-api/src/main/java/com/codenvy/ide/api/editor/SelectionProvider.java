@@ -20,10 +20,9 @@ package com.codenvy.ide.api.editor;
 
 /**
  * Selection Provider marker interface
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
-public interface SelectionProvider
-{
+public interface SelectionProvider {
 
 }

@@ -20,54 +20,39 @@ package com.codenvy.ide.java.client.projectmodel;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
-
-import com.google.gwt.json.client.JSONParser;
-
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
 
 
 /**
  * Unmarshaller for {@link CompilationUnit}
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class CompilationUnitUnmarshaller implements Unmarshallable<CompilationUnit>
-{
+public class CompilationUnitUnmarshaller implements Unmarshallable<CompilationUnit> {
 
-   private final CompilationUnit compilationUnit;
+    private final CompilationUnit compilationUnit;
 
-   /**
-    * @param compilationUnit
-    */
-   public CompilationUnitUnmarshaller(CompilationUnit compilationUnit)
-   {
-      this.compilationUnit = compilationUnit;
-   }
+    /** @param compilationUnit */
+    public CompilationUnitUnmarshaller(CompilationUnit compilationUnit) {
+        this.compilationUnit = compilationUnit;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         compilationUnit.init(JSONParser.parseLenient(response.getText()).isObject());
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse compilation unit.", e);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            compilationUnit.init(JSONParser.parseLenient(response.getText()).isObject());
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't parse compilation unit.", e);
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public CompilationUnit getPayload()
-   {
-      return compilationUnit;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public CompilationUnit getPayload() {
+        return compilationUnit;
+    }
 
 }

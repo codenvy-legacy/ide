@@ -1,59 +1,59 @@
 @CHARSET "UTF-8";
 
 .createService .serviceLabel {
-	cursor: default;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-style: normal;
-	font-weight: normal;
+    cursor: default;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
 }
 
 .createService .optinalLabel {
-	color: #ACACAC;
+    color: #ACACAC;
 }
 
 .login .loginFont {
-	cursor: default;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-style: normal;
-	font-weight: normal;
+    cursor: default;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
 }
 
 .login .loginErrorFont {
-	cursor: default;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-size: 11px;
-	font-style: normal;
-	font-weight: normal;
-	color: #d21a1a;
-	height: 14px;
+    cursor: default;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: normal;
+    color: #d21a1a;
+    height: 14px;
 }
 
 .project .labelH {
-	font-size: 11px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	font-weight: bold;
+    font-size: 11px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-weight: bold;
 }
 
 .project .link {
-	font-size: 11px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	overflow-x: hidden;
-	white-space: nowrap;
+    font-size: 11px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    overflow-x: hidden;
+    white-space: nowrap;
 }
 
 .project .textinput {
-	background-color: #FFFFFF !important;
-	color: #000000 !important;
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
 }
 
 .manageService .manageLabel {
-	font-size: 11px;
-	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-	height: 22px;
+    font-size: 11px;
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    height: 22px;
 }
 
 .appInfo .event {
-	background: #f1f2f5;
+    background: #f1f2f5;
 }

@@ -19,33 +19,25 @@ package com.codenvy.ide.java.client.internal.compiler.ast;
 import com.codenvy.ide.java.client.internal.compiler.ASTVisitor;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 
-public class MarkerAnnotation extends Annotation
-{
+public class MarkerAnnotation extends Annotation {
 
-   public MarkerAnnotation(TypeReference type, int sourceStart)
-   {
-      this.type = type;
-      this.sourceStart = sourceStart;
-      this.sourceEnd = type.sourceEnd;
-   }
+    public MarkerAnnotation(TypeReference type, int sourceStart) {
+        this.type = type;
+        this.sourceStart = sourceStart;
+        this.sourceEnd = type.sourceEnd;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.internal.compiler.ast.Annotation#memberValuePairs()
-    */
-   public MemberValuePair[] memberValuePairs()
-   {
-      return NoValuePairs;
-   }
+    /** @see com.codenvy.ide.java.client.internal.compiler.ast.Annotation#memberValuePairs() */
+    public MemberValuePair[] memberValuePairs() {
+        return NoValuePairs;
+    }
 
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      if (visitor.visit(this, scope))
-      {
-         if (this.type != null)
-         {
-            this.type.traverse(visitor, scope);
-         }
-      }
-      visitor.endVisit(this, scope);
-   }
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        if (visitor.visit(this, scope)) {
+            if (this.type != null) {
+                this.type.traverse(visitor, scope);
+            }
+        }
+        visitor.endVisit(this, scope);
+    }
 }

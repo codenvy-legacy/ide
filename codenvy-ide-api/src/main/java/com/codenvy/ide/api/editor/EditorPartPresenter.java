@@ -22,81 +22,76 @@ import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 /**
  * An editor is a visual component.
- * It is typically used to edit or browse a document or input object. The input 
- * is identified using an <code>EditorInput</code>.  Modifications made 
+ * It is typically used to edit or browse a document or input object. The input
+ * is identified using an <code>EditorInput</code>.  Modifications made
  * in an editor part follow an open-save-close lifecycle model
  * <p>
  * An editor is document or input-centric.  Each editor has an input, and only
  * one editor can exist for each editor input within a page.
  * </p>
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface EditorPartPresenter extends PartPresenter
-{
+public interface EditorPartPresenter extends PartPresenter {
 
-   public interface EditorPartCloseHandler
-   {
-      public void onClose(EditorPartPresenter editor);
-   }
+    public interface EditorPartCloseHandler {
+        public void onClose(EditorPartPresenter editor);
+    }
 
-   /** 
-    * The property id for <code>isDirty</code>.
-    */
-   public static final int PROP_DIRTY = 0x101;
-   
-   /**
-    * The property id for editor input changed.
-    */
-   public static final int PROP_INPUT = 0x102;
+    /** The property id for <code>isDirty</code>. */
+    public static final int PROP_DIRTY = 0x101;
 
-   /**
-    * Initializes this editor with the given input.
-    * <p>
-    * This method is automatically called shortly after the part is instantiated.
-    * It marks the start of the part's lifecycle. 
-    * <p>
-    * Implementors of this method must examine the editor input object type to
-    * determine if it is understood.  If not, the implementor must throw
-    * a <code>PartInitException</code>
-    * </p>
-    * @param input the editor input
-    * @exception EditorInitException if this editor was not initialized successfully
-    */
-   public void init(EditorInput input) throws EditorInitException;
+    /** The property id for editor input changed. */
+    public static final int PROP_INPUT = 0x102;
 
-   /**
-    * Returns the input for this editor.  If this value changes the part must 
-    * fire a property listener event with <code>PROP_INPUT</code>.
-    *
-    * @return the editor input
-    */
-   public EditorInput getEditorInput();
-   
-   /**
-    * Saves the contents of this editor.
-    */
-   public void doSave();
+    /**
+     * Initializes this editor with the given input.
+     * <p>
+     * This method is automatically called shortly after the part is instantiated.
+     * It marks the start of the part's lifecycle.
+     * <p>
+     * Implementors of this method must examine the editor input object type to
+     * determine if it is understood.  If not, the implementor must throw
+     * a <code>PartInitException</code>
+     * </p>
+     *
+     * @param input
+     *         the editor input
+     * @throws EditorInitException
+     *         if this editor was not initialized successfully
+     */
+    public void init(EditorInput input) throws EditorInitException;
 
-   /**
-    * Saves the contents of this part to another object.
-    */
-   public void doSaveAs();
+    /**
+     * Returns the input for this editor.  If this value changes the part must
+     * fire a property listener event with <code>PROP_INPUT</code>.
+     *
+     * @return the editor input
+     */
+    public EditorInput getEditorInput();
 
-   /**
-    * Returns whether the contents of this part have changed since the last save
-    * operation. 
-    * @return <code>true</code> if the contents have been modified and need
-    *   saving, and <code>false</code> if they have not changed since the last
-    *   save
-    */
-   public boolean isDirty();
+    /** Saves the contents of this editor. */
+    public void doSave();
 
-   /**
-    * Add EditorPart close handler. 
-    * 
-    * @param closeHandler the instance of CloseHandler
-    */
-   public void addCloseHandler(EditorPartCloseHandler closeHandler);
+    /** Saves the contents of this part to another object. */
+    public void doSaveAs();
+
+    /**
+     * Returns whether the contents of this part have changed since the last save
+     * operation.
+     *
+     * @return <code>true</code> if the contents have been modified and need
+     *         saving, and <code>false</code> if they have not changed since the last
+     *         save
+     */
+    public boolean isDirty();
+
+    /**
+     * Add EditorPart close handler.
+     *
+     * @param closeHandler
+     *         the instance of CloseHandler
+     */
+    public void addCloseHandler(EditorPartCloseHandler closeHandler);
 }

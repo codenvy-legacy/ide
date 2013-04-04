@@ -26,61 +26,45 @@ import java.util.List;
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- * 
  */
-public class FolderTemplateImpl extends AbstractTemplate implements FolderTemplate
-{
-   private List<AbstractTemplate> children;
+public class FolderTemplateImpl extends AbstractTemplate implements FolderTemplate {
+    private List<AbstractTemplate> children;
 
-   public FolderTemplateImpl()
-   {
-   }
+    public FolderTemplateImpl() {
+    }
 
-   public FolderTemplateImpl(String name)
-   {
-      super(name);
-   }
+    public FolderTemplateImpl(String name) {
+        super(name);
+    }
 
-   public FolderTemplateImpl(String name, String description, String nodeName, List<AbstractTemplate> children)
-   {
-      super(name, description, nodeName);
-      this.children = children;
-   }
+    public FolderTemplateImpl(String name, String description, String nodeName, List<AbstractTemplate> children) {
+        super(name, description, nodeName);
+        this.children = children;
+    }
 
-   public FolderTemplateImpl(String name, String description, boolean isDefault)
-   {
-      super(name, description, isDefault);
-   }
+    public FolderTemplateImpl(String name, String description, boolean isDefault) {
+        super(name, description, isDefault);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public List<AbstractTemplate> getChildren()
-   {
-      if (children == null)
-      {
-         children = new ArrayList<AbstractTemplate>();
-      }
-      return children;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public List<AbstractTemplate> getChildren() {
+        if (children == null) {
+            children = new ArrayList<AbstractTemplate>();
+        }
+        return children;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setChildren(List<AbstractTemplate> children)
-   {
-      this.children = children;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setChildren(List<AbstractTemplate> children) {
+        this.children = children;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      //TODO
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        //TODO
+        return null;
+    }
 }

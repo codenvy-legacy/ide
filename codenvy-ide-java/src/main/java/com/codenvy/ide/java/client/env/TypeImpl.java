@@ -21,93 +21,66 @@ package com.codenvy.ide.java.client.env;
 import com.codenvy.ide.java.client.core.IJavaElement;
 import com.codenvy.ide.java.client.core.IPackageFragment;
 import com.codenvy.ide.java.client.core.IType;
-
 import com.google.gwt.json.client.JSONObject;
 
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:28:31 AM Mar 30, 2012 evgen $
- * 
  */
-public class TypeImpl implements IType
-{
+public class TypeImpl implements IType {
 
-   private JSONObject jsObj;
+    private JSONObject jsObj;
 
-   private PackageFragment packageFragment;
+    private PackageFragment packageFragment;
 
-   /**
-    * @param jsObj
-    */
-   public TypeImpl(JSONObject jsObj)
-   {
-      this.jsObj = jsObj;
-   }
+    /** @param jsObj */
+    public TypeImpl(JSONObject jsObj) {
+        this.jsObj = jsObj;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IJavaElement#getElementName()
-    */
-   @Override
-   public String getElementName()
-   {
-      return jsObj.get("name").isString().stringValue();
-   }
+    /** @see com.codenvy.ide.java.client.core.IJavaElement#getElementName() */
+    @Override
+    public String getElementName() {
+        return jsObj.get("name").isString().stringValue();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IJavaElement#getElementType()
-    */
-   @Override
-   public int getElementType()
-   {
-      return IJavaElement.TYPE;
-   }
+    /** @see com.codenvy.ide.java.client.core.IJavaElement#getElementType() */
+    @Override
+    public int getElementType() {
+        return IJavaElement.TYPE;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IType#getFlags()
-    */
-   @Override
-   public int getFlags()
-   {
-      return (int)jsObj.get("modifiers").isNumber().doubleValue();
-   }
+    /** @see com.codenvy.ide.java.client.core.IType#getFlags() */
+    @Override
+    public int getFlags() {
+        return (int)jsObj.get("modifiers").isNumber().doubleValue();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IType#getFullyQualifiedName()
-    */
-   @Override
-   public String getFullyQualifiedName()
-   {
-      return jsObj.get("name").isString().stringValue();
-   }
+    /** @see com.codenvy.ide.java.client.core.IType#getFullyQualifiedName() */
+    @Override
+    public String getFullyQualifiedName() {
+        return jsObj.get("name").isString().stringValue();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IType#getFullyQualifiedName(char)
-    */
-   @Override
-   public String getFullyQualifiedName(char c)
-   {
-      return getFullyQualifiedName();
-   }
+    /** @see com.codenvy.ide.java.client.core.IType#getFullyQualifiedName(char) */
+    @Override
+    public String getFullyQualifiedName(char c) {
+        return getFullyQualifiedName();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IType#getTypeQualifiedName(char)
-    */
-   @Override
-   public String getTypeQualifiedName(char c)
-   {
-      return getFullyQualifiedName();
-   }
+    /** @see com.codenvy.ide.java.client.core.IType#getTypeQualifiedName(char) */
+    @Override
+    public String getTypeQualifiedName(char c) {
+        return getFullyQualifiedName();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.core.IType#getPackageFragment()
-    */
-   @Override
-   public IPackageFragment getPackageFragment()
-   {
-      if (packageFragment == null)
-         packageFragment = new PackageFragment(getFullyQualifiedName());
-      return packageFragment;
-   }
+    /** @see com.codenvy.ide.java.client.core.IType#getPackageFragment() */
+    @Override
+    public IPackageFragment getPackageFragment() {
+        if (packageFragment == null)
+            packageFragment = new PackageFragment(getFullyQualifiedName());
+        return packageFragment;
+    }
 
 }

@@ -25,65 +25,52 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 
-/**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
- */
-public class ComponentRegistry
-{
-   private JsonArray<Component> pendingComponents;
-   private Provider<StandardComponentInitializer> componentInitializer;
+/** @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> */
+public class ComponentRegistry {
+    private JsonArray<Component>                   pendingComponents;
+    private Provider<StandardComponentInitializer> componentInitializer;
 
-   /**
-    * Instantiates Component Registry. All components should be listed in this constructor
-    */
-   @Inject
-   public ComponentRegistry(ResourceProviderComponent resourceManager, Provider<StandardComponentInitializer> componentInitializer)
-   {
-      this.componentInitializer = componentInitializer;
-      pendingComponents = JsonCollections.createArray();
-      pendingComponents.add(resourceManager);
-   }
+    /** Instantiates Component Registry. All components should be listed in this constructor */
+    @Inject
+    public ComponentRegistry(ResourceProviderComponent resourceManager, Provider<StandardComponentInitializer> componentInitializer) {
+        this.componentInitializer = componentInitializer;
+        pendingComponents = JsonCollections.createArray();
+        pendingComponents.add(resourceManager);
+    }
 
-   /**
-    * Starts all the components listed in reg
-    * 
-    * @param callback
-    */
-   public void start(final Callback<Void, ComponentException> callback)
-   {
-      Callback<Component, ComponentException> internalCallback = new Callback<Component, ComponentException>()
-      {
-         @Override
-         public void onSuccess(Component result)
-         {
-            pendingComponents.remove(result);
-            // all components started
-            if (pendingComponents.size() == 0)
-            {
-               Log.info(ComponentRegistry.class, "All services initialized. Starting.");
-               //initialize standard components
-               try {
-               componentInitializer.get();
-               } catch (Throwable e) {
-                  Log.error(ComponentRegistry.class, e);
-               }
-               callback.onSuccess(null);
+    /**
+     * Starts all the components listed in reg
+     *
+     * @param callback
+     */
+    public void start(final Callback<Void, ComponentException> callback) {
+        Callback<Component, ComponentException> internalCallback = new Callback<Component, ComponentException>() {
+            @Override
+            public void onSuccess(Component result) {
+                pendingComponents.remove(result);
+                // all components started
+                if (pendingComponents.size() == 0) {
+                    Log.info(ComponentRegistry.class, "All services initialized. Starting.");
+                    //initialize standard components
+                    try {
+                        componentInitializer.get();
+                    } catch (Throwable e) {
+                        Log.error(ComponentRegistry.class, e);
+                    }
+                    callback.onSuccess(null);
+                }
             }
-         }
 
-         @Override
-         public void onFailure(ComponentException reason)
-         {
-            callback.onFailure(new ComponentException("Failed to start component", reason.getComponent()));
-            Log.info(ComponentRegistry.class, "FAILED to start service:" + reason.getComponent());
-         }
-      };
+            @Override
+            public void onFailure(ComponentException reason) {
+                callback.onFailure(new ComponentException("Failed to start component", reason.getComponent()));
+                Log.info(ComponentRegistry.class, "FAILED to start service:" + reason.getComponent());
+            }
+        };
 
-      for (Component component : pendingComponents.asIterable())
-      {
-         component.start(internalCallback);
-      }
-   }
+        for (Component component : pendingComponents.asIterable()) {
+            component.start(internalCallback);
+        }
+    }
 
 }

@@ -1,4 +1,3 @@
-
 // Copyright 2012 Google Inc. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,18 +17,13 @@ import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.texteditor.api.parser.CmState;
 
 
-/**
- * Object that represents css-parser state.
- *
- */
-public class CssState extends CmState
-{
+/** Object that represents css-parser state. */
+public class CssState extends CmState {
 
-   protected CssState()
-   {
-   }
+    protected CssState() {
+    }
 
-   final native JsonArray<String> getStack() /*-{
-		return this.stack;
-   }-*/;
+    final native JsonArray<String> getStack() /*-{
+        return this.stack;
+    }-*/;
 }

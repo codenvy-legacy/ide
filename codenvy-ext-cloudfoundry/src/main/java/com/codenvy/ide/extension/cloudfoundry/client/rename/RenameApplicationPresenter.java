@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client.rename;
 
 import com.codenvy.ide.api.parts.ConsolePart;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -38,185 +37,151 @@ import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Presenter for rename operation with application.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: RenameApplicationPresenter.java Jul 15, 2011 11:32:02 AM vereshchaka $
  */
 @Singleton
-public class RenameApplicationPresenter implements RenameApplicationView.ActionDelegate
-{
-   private RenameApplicationView view;
+public class RenameApplicationPresenter implements RenameApplicationView.ActionDelegate {
+    private RenameApplicationView view;
 
-   private EventBus eventBus;
+    private EventBus eventBus;
 
-   private ResourceProvider resourceProvider;
+    private ResourceProvider resourceProvider;
 
-   private ConsolePart console;
+    private ConsolePart console;
 
-   /**
-    * The name of application.
-    */
-   private String applicationName;
+    /** The name of application. */
+    private String applicationName;
 
-   private CloudFoundryLocalizationConstant constant;
+    private CloudFoundryLocalizationConstant constant;
 
-   private CloudFoundryAutoBeanFactory autoBeanFactory;
+    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   private LoginPresenter loginPresenter;
+    private LoginPresenter loginPresenter;
 
-   /**
-    * Create presenter.
-    * 
-    * @param view
-    * @param eventBus
-    * @param resourceProvider
-    * @param console
-    * @param constant
-    * @param autoBeanFactory
-    * @param loginPresenter
-    */
-   @Inject
-   protected RenameApplicationPresenter(RenameApplicationView view, EventBus eventBus,
-      ResourceProvider resourceProvider, ConsolePart console, CloudFoundryLocalizationConstant constant,
-      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter)
-   {
-      this.view = view;
-      this.view.setDelegate(this);
-      this.resourceProvider = resourceProvider;
-      this.console = console;
-      this.eventBus = eventBus;
-      this.constant = constant;
-      this.autoBeanFactory = autoBeanFactory;
-      this.loginPresenter = loginPresenter;
-   }
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param resourceProvider
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param loginPresenter
+     */
+    @Inject
+    protected RenameApplicationPresenter(RenameApplicationView view, EventBus eventBus,
+                                         ResourceProvider resourceProvider, ConsolePart console, CloudFoundryLocalizationConstant constant,
+                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter) {
+        this.view = view;
+        this.view.setDelegate(this);
+        this.resourceProvider = resourceProvider;
+        this.console = console;
+        this.eventBus = eventBus;
+        this.constant = constant;
+        this.autoBeanFactory = autoBeanFactory;
+        this.loginPresenter = loginPresenter;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onNameChanged()
-   {
-      String newName = view.getName();
-      boolean enable = !applicationName.equals(newName) && newName != null && !newName.isEmpty();
-      view.setEnableRenameButton(enable);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onNameChanged() {
+        String newName = view.getName();
+        boolean enable = !applicationName.equals(newName) && newName != null && !newName.isEmpty();
+        view.setEnableRenameButton(enable);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onRenameClicked()
-   {
-      renameApplication();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onRenameClicked() {
+        renameApplication();
+    }
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         renameApplication();
-      }
-   };
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler renameAppLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            renameApplication();
+        }
+    };
 
-   /**
-    * Renames application.
-    */
-   private void renameApplication()
-   {
-      final String newName = view.getName();
-      String projectId = resourceProvider.getActiveProject().getId();
+    /** Renames application. */
+    private void renameApplication() {
+        final String newName = view.getName();
+        String projectId = resourceProvider.getActiveProject().getId();
 
-      try
-      {
-         CloudFoundryClientService.getInstance().renameApplication(resourceProvider.getVfsId(), projectId,
-            applicationName, null, newName,
-            new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null, eventBus, console,
-               constant, loginPresenter)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  view.close();
+        try {
+            CloudFoundryClientService.getInstance().renameApplication(resourceProvider.getVfsId(), projectId,
+                                                                      applicationName, null, newName,
+                                                                      new CloudFoundryAsyncRequestCallback<String>(null,
+                                                                                                                   renameAppLoggedInHandler,
+                                                                                                                   null, eventBus, console,
+                                                                                                                   constant,
+                                                                                                                   loginPresenter) {
+                                                                          @Override
+                                                                          protected void onSuccess(String result) {
+                                                                              view.close();
 
-                  console.print(constant.renameApplicationSuccess(applicationName, newName));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
+                                                                              console.print(
+                                                                                      constant.renameApplicationSuccess(applicationName,
+                                                                                                                        newName));
+                                                                          }
+                                                                      });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onCancelClicked()
-   {
-      view.close();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onCancelClicked() {
+        view.close();
+    }
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         getApplicationInfo();
-      }
-   };
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            getApplicationInfo();
+        }
+    };
 
-   /**
-    * Get the application's information.
-    */
-   private void getApplicationInfo()
-   {
-      String projectId = resourceProvider.getActiveProject().getId();
+    /** Get the application's information. */
+    private void getApplicationInfo() {
+        String projectId = resourceProvider.getActiveProject().getId();
 
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+        try {
+            AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
+            AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                    new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null,
-               eventBus, console, constant, loginPresenter)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  applicationName = result.getName();
-                  showDialog();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
+            CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                               unmarshaller, appInfoLoggedInHandler, null,
+                                                                               eventBus, console, constant, loginPresenter) {
+                                                                           @Override
+                                                                           protected void onSuccess(CloudFoundryApplication result) {
+                                                                               applicationName = result.getName();
+                                                                               showDialog();
+                                                                           }
+                                                                       });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
+    }
 
-   /**
-    * Shows dialog.
-    */
-   public void showDialog()
-   {
-      view.setName(applicationName);
-      view.selectValueInRenameField();
-      view.setEnableRenameButton(false);
+    /** Shows dialog. */
+    public void showDialog() {
+        view.setName(applicationName);
+        view.selectValueInRenameField();
+        view.setEnableRenameButton(false);
 
-      getApplicationInfo();
+        getApplicationInfo();
 
-      view.showDialog();
-   }
+        view.showDialog();
+    }
 }

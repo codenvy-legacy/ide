@@ -17,84 +17,79 @@ package com.codenvy.ide.json.js;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringSet;
 
-/**
- * Client implementation of a set of strings.
- *
- */
+/** Client implementation of a set of strings. */
 public class JsoStringSet implements JsonStringSet {
 
-  private static final String KEY_PREFIX = "#";
+    private static final String KEY_PREFIX = "#";
 
-  /**
-   * Convenience factory method.
-   */
-  public static JsoStringSet create() {
-    return new JsoStringSet();
-  }
-
-  private Jso delegate = Jso.create();
-
-  private JsoStringSet() {
-  }
-
-  @Override
-  public final boolean contains(String key) {
-    return delegate.hasOwnProperty(toInternalKey(key));
-  }
-
-  @Override
-  public final JsonArray<String> getKeys() {
-    JsonArray<String> result = delegate.getKeys();
-    for (int i = 0, n = result.size(); i < n; ++i) {
-      result.set(i, toPublicKey(result.get(i)));
+    /** Convenience factory method. */
+    public static JsoStringSet create() {
+        return new JsoStringSet();
     }
-    return result;
-  }
 
-  @Override
-  public boolean isEmpty() {
-    return delegate.isEmpty();
-  }
+    private Jso delegate = Jso.create();
 
-  @Override
-  public final void iterate(IterationCallback callback) {
-    JsonArray<String> keys = getKeys();
-    for (int i = 0, n = keys.size(); i < n; ++i) {
-      callback.onIteration(keys.get(i));
+    private JsoStringSet() {
     }
-  }
 
-  @Override
-  public final void add(String key) {
-    delegate.addField(toInternalKey(key), true);
-  }
-
-  @Override
-  public final void addAll(JsonArray<String> keys) {
-    for (int i = 0, n = keys.size(); i < n; ++i) {
-      add(keys.get(i));
+    @Override
+    public final boolean contains(String key) {
+        return delegate.hasOwnProperty(toInternalKey(key));
     }
-  }
 
-  @Override
-  public final boolean remove(String key) {
-    if (contains(key)) {
-      delegate.deleteField(toInternalKey(key));
-      return true;
+    @Override
+    public final JsonArray<String> getKeys() {
+        JsonArray<String> result = delegate.getKeys();
+        for (int i = 0, n = result.size(); i < n; ++i) {
+            result.set(i, toPublicKey(result.get(i)));
+        }
+        return result;
     }
-    return false;
-  }
 
-  @Override
-  public void clear() {
-    delegate = Jso.create();
-  }
+    @Override
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
 
-  private static String toInternalKey(String key) {
-    return KEY_PREFIX + key;
-  }
+    @Override
+    public final void iterate(IterationCallback callback) {
+        JsonArray<String> keys = getKeys();
+        for (int i = 0, n = keys.size(); i < n; ++i) {
+            callback.onIteration(keys.get(i));
+        }
+    }
 
-  private static String toPublicKey(String key) {
-    return key.substring(KEY_PREFIX.length());
-  }
+    @Override
+    public final void add(String key) {
+        delegate.addField(toInternalKey(key), true);
+    }
+
+    @Override
+    public final void addAll(JsonArray<String> keys) {
+        for (int i = 0, n = keys.size(); i < n; ++i) {
+            add(keys.get(i));
+        }
+    }
+
+    @Override
+    public final boolean remove(String key) {
+        if (contains(key)) {
+            delegate.deleteField(toInternalKey(key));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void clear() {
+        delegate = Jso.create();
+    }
+
+    private static String toInternalKey(String key) {
+        return KEY_PREFIX + key;
+    }
+
+    private static String toPublicKey(String key) {
+        return key.substring(KEY_PREFIX.length());
+    }
 }

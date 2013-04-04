@@ -23,61 +23,51 @@ import java.util.List;
 /**
  *
  */
-public interface TypeInfo extends ShortTypeInfo
-{
+public interface TypeInfo extends ShortTypeInfo {
 
-   /**
-    * @return the fields
-    */
-   List<FieldInfo> getFields();
+    /** @return the fields */
+    List<FieldInfo> getFields();
 
-   /**
-    * @return the interfaces
-    */
-   List<String> getInterfaces();
+    /** @return the interfaces */
+    List<String> getInterfaces();
 
-   /**
-    * @return the methods
-    */
-   List<MethodInfo> getMethods();
+    /** @return the methods */
+    List<MethodInfo> getMethods();
 
-   /**
-    * @return the superClass
-    */
-   String getSuperClass();
+    /** @return the superClass */
+    String getSuperClass();
 
-   /**
-    * @return type nested types or <code>null</code>
-    */
-   List<Member> getNestedTypes();
+    /** @return type nested types or <code>null</code> */
+    List<Member> getNestedTypes();
 
-   /**
-    * @param fields
-    *           the fields to set
-    */
-   void setFields(List<FieldInfo> fields);
+    /**
+     * @param fields
+     *         the fields to set
+     */
+    void setFields(List<FieldInfo> fields);
 
-   /**
-    * @param interfaces
-    *           the interfaces to set
-    */
-   void setInterfaces(List<String> interfaces);
+    /**
+     * @param interfaces
+     *         the interfaces to set
+     */
+    void setInterfaces(List<String> interfaces);
 
-   /**
-    * @param methods
-    *           the methods to set
-    */
-   void setMethods(List<MethodInfo> methods);
+    /**
+     * @param methods
+     *         the methods to set
+     */
+    void setMethods(List<MethodInfo> methods);
 
-   /**
-    * @param superClass
-    *           the superClass to set
-    */
-   void setSuperClass(String superClass);
+    /**
+     * @param superClass
+     *         the superClass to set
+     */
+    void setSuperClass(String superClass);
 
-   /**
-    * @param types the nested types to set
-    */
-   void setNestedTypes(List<Member> types);
+    /**
+     * @param types
+     *         the nested types to set
+     */
+    void setNestedTypes(List<Member> types);
 
 }

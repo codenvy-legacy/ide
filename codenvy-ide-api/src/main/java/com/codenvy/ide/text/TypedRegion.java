@@ -28,13 +28,12 @@ package com.codenvy.ide.text;
  * Clients may implement this interface or use the standard implementation {@link org.eclipse.TypedRegionImpl.text.TypedRegion}.
  * </p>
  */
-public interface TypedRegion extends Region
-{
+public interface TypedRegion extends Region {
 
-   /**
-    * Returns the content type of the region.
-    * 
-    * @return the content type of the region
-    */
-   String getType();
+    /**
+     * Returns the content type of the region.
+     *
+     * @return the content type of the region
+     */
+    String getType();
 }

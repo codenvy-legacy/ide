@@ -19,33 +19,27 @@
 package com.codenvy.ide.api.expressions;
 
 import com.codenvy.ide.api.editor.EditorPartPresenter;
-
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  * Expression that is set to true, when active Part is an Editor Part
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
-public final class EditorActiveExpression extends AbstractExpression implements ActivePartConstraintExpression
-{
-   @Inject
-   public EditorActiveExpression(ExpressionManager expressionManager)
-   {
-      super(expressionManager, false);
-   }
+public final class EditorActiveExpression extends AbstractExpression implements ActivePartConstraintExpression {
+    @Inject
+    public EditorActiveExpression(ExpressionManager expressionManager) {
+        super(expressionManager, false);
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public boolean onActivePartChanged(PartPresenter part)
-   {
-      value = (part instanceof EditorPartPresenter);
-      return value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean onActivePartChanged(PartPresenter part) {
+        value = (part instanceof EditorPartPresenter);
+        return value;
+    }
 
 }

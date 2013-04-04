@@ -28,50 +28,43 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 
-public class NewJavaProjectPageViewImpl extends Composite implements NewJavaProjectPageView
-{
+public class NewJavaProjectPageViewImpl extends Composite implements NewJavaProjectPageView {
 
-   interface JavaProjectPageViewImplUiBinder
-      extends UiBinder<Widget, NewJavaProjectPageViewImpl>
-   {
-   }
+    interface JavaProjectPageViewImplUiBinder
+            extends UiBinder<Widget, NewJavaProjectPageViewImpl> {
+    }
 
-   private static JavaProjectPageViewImplUiBinder ourUiBinder = GWT.create(JavaProjectPageViewImplUiBinder.class);
+    private static JavaProjectPageViewImplUiBinder ourUiBinder = GWT.create(JavaProjectPageViewImplUiBinder.class);
 
-   @UiField
-   TextBox projectName;
+    @UiField
+    TextBox projectName;
 
-   @UiField
-   TextBox sourceFolder;
+    @UiField
+    TextBox sourceFolder;
 
-   private ActionDelegate delegate;
+    private ActionDelegate delegate;
 
-   public NewJavaProjectPageViewImpl()
-   {
-      initWidget(ourUiBinder.createAndBindUi(this));
-   }
+    public NewJavaProjectPageViewImpl() {
+        initWidget(ourUiBinder.createAndBindUi(this));
+    }
 
-   @Override
-   public String getProjectName()
-   {
-      return projectName.getValue();
-   }
+    @Override
+    public String getProjectName() {
+        return projectName.getValue();
+    }
 
-   @Override
-   public String getSourceFolder()
-   {
-      return sourceFolder.getValue();
-   }
+    @Override
+    public String getSourceFolder() {
+        return sourceFolder.getValue();
+    }
 
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      this.delegate = delegate;
-   }
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        this.delegate = delegate;
+    }
 
-   @UiHandler(value = {"projectName", "sourceFolder"})
-   void handleKeyUpEvent(KeyUpEvent event)
-   {
-      delegate.checkProjectInput();
-   }
+    @UiHandler(value = {"projectName", "sourceFolder"})
+    void handleKeyUpEvent(KeyUpEvent event) {
+        delegate.checkProjectInput();
+    }
 }

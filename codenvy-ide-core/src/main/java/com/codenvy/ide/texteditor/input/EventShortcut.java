@@ -17,15 +17,12 @@ package com.codenvy.ide.texteditor.input;
 import com.codenvy.ide.util.input.CharCodeWithModifiers;
 
 /**
- * EventShortcuts are fired when the combination of modifiers and charcode value 
+ * EventShortcuts are fired when the combination of modifiers and charcode value
  * match the current SignalEvent.
- *
  */
-public abstract class EventShortcut extends CharCodeWithModifiers implements Shortcut
-{
+public abstract class EventShortcut extends CharCodeWithModifiers implements Shortcut {
 
-   public EventShortcut(int modifiers, int charCode)
-   {
-      super(modifiers, charCode);
-   }
+    public EventShortcut(int modifiers, int charCode) {
+        super(modifiers, charCode);
+    }
 }

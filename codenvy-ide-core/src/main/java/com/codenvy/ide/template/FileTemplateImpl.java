@@ -23,112 +23,84 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- * 
  */
-public class FileTemplateImpl extends AbstractTemplate implements FileTemplate
-{
-   private String mimeType;
+public class FileTemplateImpl extends AbstractTemplate implements FileTemplate {
+    private String mimeType;
 
-   private String content;
+    private String content;
 
-   private String fileName;
+    private String fileName;
 
-   public FileTemplateImpl(String mimeType, String name, String description, String content, String nodeName)
-   {
-      super(name, description, nodeName);
-      this.mimeType = mimeType;
-      this.content = content;
-   }
+    public FileTemplateImpl(String mimeType, String name, String description, String content, String nodeName) {
+        super(name, description, nodeName);
+        this.mimeType = mimeType;
+        this.content = content;
+    }
 
-   public FileTemplateImpl(String mimeType, String name, String description, String content, boolean isDefault)
-   {
-      super(name, description, isDefault);
-      this.mimeType = mimeType;
-      this.content = content;
-   }
+    public FileTemplateImpl(String mimeType, String name, String description, String content, boolean isDefault) {
+        super(name, description, isDefault);
+        this.mimeType = mimeType;
+        this.content = content;
+    }
 
-   public FileTemplateImpl(String name, String fileName, String mimeType)
-   {
-      super(name);
-      this.fileName = fileName;
-      this.mimeType = mimeType;
-   }
+    public FileTemplateImpl(String name, String fileName, String mimeType) {
+        super(name);
+        this.fileName = fileName;
+        this.mimeType = mimeType;
+    }
 
-   public FileTemplateImpl(String name, String fileName)
-   {
-      super(name);
-      this.fileName = fileName;
-   }
+    public FileTemplateImpl(String name, String fileName) {
+        super(name);
+        this.fileName = fileName;
+    }
 
-   public FileTemplateImpl(String name, String description, String mimeType, boolean isDefault)
-   {
-      super(name, description, isDefault);
-      this.mimeType = mimeType;
-   }
+    public FileTemplateImpl(String name, String description, String mimeType, boolean isDefault) {
+        super(name, description, isDefault);
+        this.mimeType = mimeType;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getContent()
-   {
-      return content;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getContent() {
+        return content;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setContent(String content)
-   {
-      this.content = content;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getMimeType()
-   {
-      return mimeType;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getMimeType() {
+        return mimeType;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setMimeType(String mimeType)
-   {
-      this.mimeType = mimeType;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getFileName()
-   {
-      return fileName;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getFileName() {
+        return fileName;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setFileName(String fileName)
-   {
-      this.fileName = fileName;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ImageResource getIcon()
-   {
-      // TODO
-      //      return ImageUtil.getIcon(getMimeType());
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getIcon() {
+        // TODO
+        //      return ImageUtil.getIcon(getMimeType());
+        return null;
+    }
 
 }

@@ -14,32 +14,30 @@
 
 package com.codenvy.ide.json;
 
-/**
- * Defines a simple, mutable JSON object.
- */
+/** Defines a simple, mutable JSON object. */
 public interface JsonObject {
 
-  JsonObject addField(String key, boolean value);
+    JsonObject addField(String key, boolean value);
 
-  JsonObject addField(String key, double value);
+    JsonObject addField(String key, double value);
 
-  JsonObject addField(String key, int value);
+    JsonObject addField(String key, int value);
 
-  JsonObject addField(String key, JsonArray<?> value);
+    JsonObject addField(String key, JsonArray<?> value);
 
-  JsonObject addField(String key, JsonObject value);
+    JsonObject addField(String key, JsonObject value);
 
-  JsonObject addField(String key, String value);
+    JsonObject addField(String key, String value);
 
-  boolean getBooleanField(String key);
+    boolean getBooleanField(String key);
 
-  int getIntField(String key);
+    int getIntField(String key);
 
-  JsonArray<String> getKeys();
+    JsonArray<String> getKeys();
 
-  JsonObject getObjectField(String key);
+    JsonObject getObjectField(String key);
 
-  JsonArray<?> getArrayField(String field);
+    JsonArray<?> getArrayField(String field);
 
-  String getStringField(String key);
+    String getStringField(String key);
 }

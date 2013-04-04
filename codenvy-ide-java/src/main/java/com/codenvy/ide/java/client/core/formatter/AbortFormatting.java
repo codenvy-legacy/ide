@@ -12,24 +12,21 @@ package com.codenvy.ide.java.client.core.formatter;
 
 /**
  * Unchecked exception wrapping invalid input checked exception which may occur when scanning original formatted source.
- * 
+ *
  * @since 2.1
  */
-public class AbortFormatting extends RuntimeException
-{
+public class AbortFormatting extends RuntimeException {
 
-   Throwable nestedException;
+    Throwable nestedException;
 
-   private static final long serialVersionUID = -5796507276311428526L; // backward compatible
+    private static final long serialVersionUID = -5796507276311428526L; // backward compatible
 
-   public AbortFormatting(String message)
-   {
-      super(message);
-   }
+    public AbortFormatting(String message) {
+        super(message);
+    }
 
-   public AbortFormatting(Throwable nestedException)
-   {
-      super(nestedException.getMessage());
-      this.nestedException = nestedException;
-   }
+    public AbortFormatting(Throwable nestedException) {
+        super(nestedException.getMessage());
+        this.nestedException = nestedException;
+    }
 }

@@ -22,16 +22,18 @@ import com.codenvy.ide.texteditor.api.TextEditorConfiguration;
 
 /**
  * CodenvyTextEditor is an embedded default fully featured Text Editor
- * 
+ *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  */
-public interface CodenvyTextEditor extends TextEditorPartPresenter
-{
+public interface CodenvyTextEditor extends TextEditorPartPresenter {
 
-   /**
-    * Initializes this editor with the configuration and document provider/
-    * @param configuration the configuration of this editor.
-    * @param documentProvider the document provider which used in this editor
-    */
-   void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider);
+    /**
+     * Initializes this editor with the configuration and document provider/
+     *
+     * @param configuration
+     *         the configuration of this editor.
+     * @param documentProvider
+     *         the document provider which used in this editor
+     */
+    void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider);
 }

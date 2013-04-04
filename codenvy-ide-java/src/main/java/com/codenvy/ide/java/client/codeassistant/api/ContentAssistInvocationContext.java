@@ -11,11 +11,9 @@
 package com.codenvy.ide.java.client.codeassistant.api;
 
 import com.codenvy.ide.java.client.core.compiler.CharOperation;
-
+import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
-
-import com.codenvy.ide.runtime.Assert;
 
 
 /**
@@ -28,181 +26,174 @@ import com.codenvy.ide.runtime.Assert;
  * <p>
  * Clients may instantiate and subclass.
  * </p>
- * 
  */
-public class ContentAssistInvocationContext
-{
+public class ContentAssistInvocationContext {
 
-   /* state */
-   private final Document fDocument;
+    /* state */
+    private final Document fDocument;
 
-   private final int fOffset;
+    private final int fOffset;
 
-   /* cached additional info */
-   private CharSequence fPrefix;
+    /* cached additional info */
+    private CharSequence fPrefix;
 
-   //
-   // /**
-   // * Equivalent to
-   // * {@linkplain #ContentAssistInvocationContext(ITextViewer, int) ContentAssistInvocationContext(viewer,
-   // viewer.getSelectedRange().x)}.
-   // *
-   // * @param viewer the text viewer that content assist is invoked in
-   // */
-   // public ContentAssistInvocationContext(ITextViewer viewer) {
-   // this(viewer, viewer.getSelectedRange().x);
-   // }
-   //
-   // /**
-   // * Creates a new context for the given viewer and offset.
-   // *
-   // * @param viewer the text viewer that content assist is invoked in
-   // * @param offset the offset into the viewer's document where content assist is invoked at
-   // */
-   // public ContentAssistInvocationContext(ITextViewer viewer, int offset) {
-   // Assert.isNotNull(viewer);
-   // fViewer= viewer;
-   // fDocument= null;
-   // fOffset= offset;
-   // }
+    //
+    // /**
+    // * Equivalent to
+    // * {@linkplain #ContentAssistInvocationContext(ITextViewer, int) ContentAssistInvocationContext(viewer,
+    // viewer.getSelectedRange().x)}.
+    // *
+    // * @param viewer the text viewer that content assist is invoked in
+    // */
+    // public ContentAssistInvocationContext(ITextViewer viewer) {
+    // this(viewer, viewer.getSelectedRange().x);
+    // }
+    //
+    // /**
+    // * Creates a new context for the given viewer and offset.
+    // *
+    // * @param viewer the text viewer that content assist is invoked in
+    // * @param offset the offset into the viewer's document where content assist is invoked at
+    // */
+    // public ContentAssistInvocationContext(ITextViewer viewer, int offset) {
+    // Assert.isNotNull(viewer);
+    // fViewer= viewer;
+    // fDocument= null;
+    // fOffset= offset;
+    // }
 
-   //   /**
-   //    * Creates a new context with no viewer or invocation offset set.
-   //    */
-   //   protected ContentAssistInvocationContext(int offset)
-   //   {
-   //      fDocument = null;
-   //      // fViewer= null;
-   //      fOffset = offset;
-   //   }
+    //   /**
+    //    * Creates a new context with no viewer or invocation offset set.
+    //    */
+    //   protected ContentAssistInvocationContext(int offset)
+    //   {
+    //      fDocument = null;
+    //      // fViewer= null;
+    //      fOffset = offset;
+    //   }
 
-   /**
-    * Creates a new context for the given document and offset.
-    * 
-    * @param document the document that content assist is invoked in
-    * @param offset the offset into the document where content assist is invoked at
-    */
-   public ContentAssistInvocationContext(Document document, int offset)
-   {
-      Assert.isNotNull(document);
-      Assert.isTrue(offset >= 0);
-      // fViewer= null;
-      fDocument = document;
-      fOffset = offset;
-   }
+    /**
+     * Creates a new context for the given document and offset.
+     *
+     * @param document
+     *         the document that content assist is invoked in
+     * @param offset
+     *         the offset into the document where content assist is invoked at
+     */
+    public ContentAssistInvocationContext(Document document, int offset) {
+        Assert.isNotNull(document);
+        Assert.isTrue(offset >= 0);
+        // fViewer= null;
+        fDocument = document;
+        fOffset = offset;
+    }
 
-   /**
-    * Returns the invocation offset.
-    * 
-    * @return the invocation offset
-    */
-   public final int getInvocationOffset()
-   {
-      return fOffset;
-   }
+    /**
+     * Returns the invocation offset.
+     *
+     * @return the invocation offset
+     */
+    public final int getInvocationOffset() {
+        return fOffset;
+    }
 
-   // /**
-   // * Returns the viewer, <code>null</code> if not available.
-   // *
-   // * @return the viewer, possibly <code>null</code>
-   // */
-   // public final ITextViewer getViewer() {
-   // return fViewer;
-   // }
+    // /**
+    // * Returns the viewer, <code>null</code> if not available.
+    // *
+    // * @return the viewer, possibly <code>null</code>
+    // */
+    // public final ITextViewer getViewer() {
+    // return fViewer;
+    // }
 
-   /**
-    * Returns the document that content assist is invoked on, or <code>null</code> if not known.
-    * 
-    * @return the document or <code>null</code>
-    */
-   public Document getDocument()
-   {
-      if (fDocument == null)
-      {
-         // if (fViewer == null)
-         return null;
-         // return fViewer.getDocument();
-      }
-      return fDocument;
-   }
-
-   /**
-    * Computes the identifier (as specified by {@link Character#isJavaIdentifierPart(char)}) that immediately precedes the
-    * invocation offset.
-    * 
-    * @return the prefix preceding the content assist invocation offset, <code>null</code> if there is no document
-    * @throws BadLocationException if accessing the document fails
-    */
-   public CharSequence computeIdentifierPrefix() throws BadLocationException
-   {
-      if (fPrefix == null)
-      {
-         Document document = getDocument();
-         if (document == null)
+    /**
+     * Returns the document that content assist is invoked on, or <code>null</code> if not known.
+     *
+     * @return the document or <code>null</code>
+     */
+    public Document getDocument() {
+        if (fDocument == null) {
+            // if (fViewer == null)
             return null;
-         int end = getInvocationOffset();
-         int start = end;
-         while (--start >= 0)
-         {
-            if (!CharOperation.isJavaIdentifierPart(document.getChar(start)))
-               break;
-         }
-         start++;
-         fPrefix = document.get(start, end - start);
-      }
+            // return fViewer.getDocument();
+        }
+        return fDocument;
+    }
 
-      return fPrefix;
-   }
+    /**
+     * Computes the identifier (as specified by {@link Character#isJavaIdentifierPart(char)}) that immediately precedes the
+     * invocation offset.
+     *
+     * @return the prefix preceding the content assist invocation offset, <code>null</code> if there is no document
+     * @throws BadLocationException
+     *         if accessing the document fails
+     */
+    public CharSequence computeIdentifierPrefix() throws BadLocationException {
+        if (fPrefix == null) {
+            Document document = getDocument();
+            if (document == null)
+                return null;
+            int end = getInvocationOffset();
+            int start = end;
+            while (--start >= 0) {
+                if (!CharOperation.isJavaIdentifierPart(document.getChar(start)))
+                    break;
+            }
+            start++;
+            fPrefix = document.get(start, end - start);
+        }
 
-   /**
-    * Invocation contexts are equal if they describe the same context and are of the same type. This implementation checks for
-    * <code>null</code> values and class equality. Subclasses should extend this method by adding checks for their context
-    * relevant fields (but not necessarily cached values).
-    * <p>
-    * Example:
-    * 
-    * <pre>
-    * class MyContext extends ContentAssistInvocationContext {
-    *    private final Object fState;
-    *    private Object fCachedInfo;
-    * 
-    *    ...
-    * 
-    *    public boolean equals(Object obj) {
-    *       if (!super.equals(obj))
-    *          return false;
-    *       MyContext other= (MyContext) obj;
-    *       return fState.equals(other.fState);
-    *    }
-    * }
-    * </pre>
-    * 
-    * </p>
-    * <p>
-    * Subclasses should also extend {@link Object#hashCode()}.
-    * </p>
-    * 
-    * @param obj {@inheritDoc}
-    * @return {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (obj == null)
-         return false;
-      if (!getClass().equals(obj.getClass()))
-         return false;
-      ContentAssistInvocationContext other = (ContentAssistInvocationContext)obj;
-      return fOffset == other.fOffset
-         && (fDocument == null && other.fDocument == null || fDocument != null && fDocument.equals(other.fDocument));
-   }
+        return fPrefix;
+    }
 
-   /*
-    * @see java.lang.Object#hashCode()
-    */
-   @Override
-   public int hashCode()
-   {
-      return 23459213 << 5 | 0 | fOffset;
-   }
+    /**
+     * Invocation contexts are equal if they describe the same context and are of the same type. This implementation checks for
+     * <code>null</code> values and class equality. Subclasses should extend this method by adding checks for their context
+     * relevant fields (but not necessarily cached values).
+     * <p>
+     * Example:
+     * <p/>
+     * <pre>
+     * class MyContext extends ContentAssistInvocationContext {
+     *    private final Object fState;
+     *    private Object fCachedInfo;
+     *
+     *    ...
+     *
+     *    public boolean equals(Object obj) {
+     *       if (!super.equals(obj))
+     *          return false;
+     *       MyContext other= (MyContext) obj;
+     *       return fState.equals(other.fState);
+     *    }
+     * }
+     * </pre>
+     * <p/>
+     * </p>
+     * <p>
+     * Subclasses should also extend {@link Object#hashCode()}.
+     * </p>
+     *
+     * @param obj
+     *         {@inheritDoc}
+     * @return {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (!getClass().equals(obj.getClass()))
+            return false;
+        ContentAssistInvocationContext other = (ContentAssistInvocationContext)obj;
+        return fOffset == other.fOffset
+               && (fDocument == null && other.fDocument == null || fDocument != null && fDocument.equals(other.fDocument));
+    }
+
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return 23459213 << 5 | 0 | fOffset;
+    }
 }

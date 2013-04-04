@@ -30,66 +30,48 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class OutlineViewImpl implements OutlineView
-{
+public class OutlineViewImpl implements OutlineView {
 
-   private Tree<CodeBlock> tree;
+    private Tree<CodeBlock> tree;
 
-   /**
-    * @param codeBlockDataAdapter 
-    * @param resources 
-    * @param renderer
-    */
-   public OutlineViewImpl(Resources resources, CodeBlockDataAdapter codeBlockDataAdapter, NodeRenderer<CodeBlock> renderer)
-   {
-      tree = Tree.create(resources, codeBlockDataAdapter, renderer);
-   }
+    /**
+     * @param codeBlockDataAdapter
+     * @param resources
+     * @param renderer
+     */
+    public OutlineViewImpl(Resources resources, CodeBlockDataAdapter codeBlockDataAdapter, NodeRenderer<CodeBlock> renderer) {
+        tree = Tree.create(resources, codeBlockDataAdapter, renderer);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Widget asWidget()
-   {
-      return tree.asWidget();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Widget asWidget() {
+        return tree.asWidget();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void renderTree()
-   {
-      tree.renderTree();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void renderTree() {
+        tree.renderTree();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void rootChanged(CodeBlock newRoot)
-   {
-      tree.replaceSubtree(tree.getModel().getRoot(), newRoot, false);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void rootChanged(CodeBlock newRoot) {
+        tree.replaceSubtree(tree.getModel().getRoot(), newRoot, false);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setTreeEventHandler(Listener<CodeBlock> listener)
-   {
-      tree.setTreeEventHandler(listener);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setTreeEventHandler(Listener<CodeBlock> listener) {
+        tree.setTreeEventHandler(listener);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void selectAndExpand(CodeBlock block)
-   {
-      tree.autoExpandAndSelectNode(block, false);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void selectAndExpand(CodeBlock block) {
+        tree.autoExpandAndSelectNode(block, false);
+    }
 
 }

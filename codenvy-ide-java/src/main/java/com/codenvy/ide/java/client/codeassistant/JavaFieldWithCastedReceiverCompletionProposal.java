@@ -12,38 +12,32 @@ package com.codenvy.ide.java.client.codeassistant;
 
 import com.codenvy.ide.java.client.codeassistant.ui.StyledString;
 import com.codenvy.ide.java.client.core.CompletionProposal;
-
 import com.codenvy.ide.runtime.Assert;
-
 import com.google.gwt.user.client.ui.Image;
 
 
-/**
- * Java completion proposal for {@link CompletionProposal#FIELD_REF_WITH_CASTED_RECEIVER}.
- */
-public class JavaFieldWithCastedReceiverCompletionProposal extends JavaCompletionProposalImpl
-{
+/** Java completion proposal for {@link CompletionProposal#FIELD_REF_WITH_CASTED_RECEIVER}. */
+public class JavaFieldWithCastedReceiverCompletionProposal extends JavaCompletionProposalImpl {
 
-   private CompletionProposal fProposal;
+    private CompletionProposal fProposal;
 
-   public JavaFieldWithCastedReceiverCompletionProposal(String completion, int start, int length, Image image,
-      StyledString label, int relevance, boolean inJavadoc, JavaContentAssistInvocationContext invocationContext,
-      CompletionProposal proposal)
-   {
-      super(completion, start, length, image, label, relevance, inJavadoc, invocationContext);
-      Assert.isNotNull(proposal);
-      fProposal = proposal;
-   }
+    public JavaFieldWithCastedReceiverCompletionProposal(String completion, int start, int length, Image image,
+                                                         StyledString label, int relevance, boolean inJavadoc,
+                                                         JavaContentAssistInvocationContext invocationContext,
+                                                         CompletionProposal proposal) {
+        super(completion, start, length, image, label, relevance, inJavadoc, invocationContext);
+        Assert.isNotNull(proposal);
+        fProposal = proposal;
+    }
 
-   /*
-    * @see org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal#isPrefix(java.lang.String, java.lang.String)
-    */
-   @Override
-   protected boolean isPrefix(String prefix, String string)
-   {
-      if (prefix != null)
-         prefix = prefix.substring(fProposal.getReceiverEnd() - fProposal.getReceiverStart() + 1);
-      return super.isPrefix(prefix, string);
-   }
+    /*
+     * @see org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal#isPrefix(java.lang.String, java.lang.String)
+     */
+    @Override
+    protected boolean isPrefix(String prefix, String string) {
+        if (prefix != null)
+            prefix = prefix.substring(fProposal.getReceiverEnd() - fProposal.getReceiverStart() + 1);
+        return super.isPrefix(prefix, string);
+    }
 
 }

@@ -19,58 +19,45 @@
 package com.codenvy.ide.java.client.env;
 
 import com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType;
-
 import com.google.gwt.json.client.JSONObject;
 
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class BinaryNestedTypeImpl implements IBinaryNestedType
-{
+public class BinaryNestedTypeImpl implements IBinaryNestedType {
 
-   private final JSONObject nestedType;
+    private final JSONObject nestedType;
 
-   private final char[] parentType;
+    private final char[] parentType;
 
-   /**
-    * @param parentType 
-    * @param nestedType
-    */
-   public BinaryNestedTypeImpl(char[] parentType, JSONObject nestedType)
-   {
-      super();
-      this.parentType = parentType;
-      this.nestedType = nestedType;
-   }
+    /**
+     * @param parentType
+     * @param nestedType
+     */
+    public BinaryNestedTypeImpl(char[] parentType, JSONObject nestedType) {
+        super();
+        this.parentType = parentType;
+        this.nestedType = nestedType;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType#getEnclosingTypeName()
-    */
-   @Override
-   public char[] getEnclosingTypeName()
-   {
-      return parentType;
-   }
+    /** @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType#getEnclosingTypeName() */
+    @Override
+    public char[] getEnclosingTypeName() {
+        return parentType;
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType#getModifiers()
-    */
-   @Override
-   public int getModifiers()
-   {
-      return (int)nestedType.get("modifiers").isNumber().doubleValue();
-   }
+    /** @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType#getModifiers() */
+    @Override
+    public int getModifiers() {
+        return (int)nestedType.get("modifiers").isNumber().doubleValue();
+    }
 
-   /**
-    * @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType#getName()
-    */
-   @Override
-   public char[] getName()
-   {
-      return nestedType.get("name").isString().stringValue().replaceAll("\\.", "/").toCharArray();
-   }
+    /** @see com.codenvy.ide.java.client.internal.compiler.env.IBinaryNestedType#getName() */
+    @Override
+    public char[] getName() {
+        return nestedType.get("name").isString().stringValue().replaceAll("\\.", "/").toCharArray();
+    }
 
 }

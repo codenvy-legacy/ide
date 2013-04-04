@@ -19,7 +19,6 @@
 package com.codenvy.ide.java.client.editor;
 
 import com.codenvy.ide.api.editor.TextEditorPartPresenter;
-
 import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.editor.outline.JavaNodeRenderer;
@@ -44,103 +43,83 @@ import com.codenvy.ide.util.executor.UserActivityManager;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class JavaEditorConfiguration extends TextEditorConfiguration
-{
+public class JavaEditorConfiguration extends TextEditorConfiguration {
 
-   private UserActivityManager manager;
+    private UserActivityManager manager;
 
-   private TextEditorPartPresenter javaEditor;
+    private TextEditorPartPresenter javaEditor;
 
-   private JavaCodeAssistProcessor codeAssistProcessor;
+    private JavaCodeAssistProcessor codeAssistProcessor;
 
-   private JavaReconcilerStrategy reconcilerStrategy;
+    private JavaReconcilerStrategy reconcilerStrategy;
 
-   private OutlineModel outlineModel;
-
-
-   public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor)
-   {
-      super();
-      this.manager = manager;
-      this.javaEditor = javaEditor;
-      outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
-      reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
-   }
-
-   private static native CmParser getParserForMime(String mime) /*-{
-      conf = $wnd.CodeMirror.defaults;
-      return $wnd.CodeMirror.getMode(conf, mime);
-   }-*/;
+    private OutlineModel outlineModel;
 
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Parser getParser(TextEditorPartView view)
-   {
-      CmParser parser = getParserForMime("text/x-java");
-      parser.setNameAndFactory("clike", new BasicTokenFactory());
-      return parser;
-   }
+    public JavaEditorConfiguration(UserActivityManager manager, JavaClientBundle resources, TextEditorPartPresenter javaEditor) {
+        super();
+        this.manager = manager;
+        this.javaEditor = javaEditor;
+        outlineModel = new OutlineModel(new JavaNodeRenderer(resources));
+        reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Reconciler getReconciler(TextEditorPartView view)
-   {
-      BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
-      ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
-      reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
-      return reconciler;
-   }
+    private static native CmParser getParserForMime(String mime) /*-{
+        conf = $wnd.CodeMirror.defaults;
+        return $wnd.CodeMirror.getMode(conf, mime);
+    }-*/;
 
 
-   private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor()
-   {
-      if (codeAssistProcessor == null)
-      {
-         codeAssistProcessor = new JavaCodeAssistProcessor(
-         //TODO configure doc context
-            "rest/ide/code-assistant/java/class-doc?fqn=", reconcilerStrategy);
-      }
-      return codeAssistProcessor;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Parser getParser(TextEditorPartView view) {
+        CmParser parser = getParserForMime("text/x-java");
+        parser.setNameAndFactory("clike", new BasicTokenFactory());
+        return parser;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view)
-   {
+    /** {@inheritDoc} */
+    @Override
+    public Reconciler getReconciler(TextEditorPartView view) {
+        BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
+        ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
+        reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
+        return reconciler;
+    }
 
-      JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
-      map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
-      return map;
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view)
-   {
-      JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
-      assistant.install(view);
-      ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
-      return null;
-   }
+    private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor() {
+        if (codeAssistProcessor == null) {
+            codeAssistProcessor = new JavaCodeAssistProcessor(
+                    //TODO configure doc context
+                    "rest/ide/code-assistant/java/class-doc?fqn=", reconcilerStrategy);
+        }
+        return codeAssistProcessor;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public OutlineModel getOutline(TextEditorPartView view)
-   {
-      new OutlineModelUpdater(outlineModel, reconcilerStrategy);
-      return outlineModel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public JsonStringMap<CodeAssistProcessor> getContentAssistantProcessors(TextEditorPartView view) {
+
+        JsonStringMap<CodeAssistProcessor> map = JsonCollections.createStringMap();
+        map.put(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
+        return map;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public QuickAssistProcessor getQuickAssistAssistant(TextEditorPartView view) {
+        JavaCorrectionAssistant assistant = new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
+        assistant.install(view);
+        ((TextEditorViewImpl)view).setQuickAssistAssistant(assistant);
+        return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public OutlineModel getOutline(TextEditorPartView view) {
+        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
+        return outlineModel;
+    }
 }

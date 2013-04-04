@@ -18,84 +18,72 @@ package com.codenvy.ide.java.client.projectmodel;
 
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
-
 import com.google.gwt.json.client.JSONObject;
 
 /**
  * Java Compilation unit is a .java file that contains top level class and can be compiled
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class CompilationUnit extends File
-{
-   public static final String TYPE = "java.compilationUnit";
+public class CompilationUnit extends File {
+    public static final String TYPE = "java.compilationUnit";
 
-   /**
-    * Internal default constructor
-    */
-   protected CompilationUnit()
-   {
-      super(TYPE);
-   }
+    /** Internal default constructor */
+    protected CompilationUnit() {
+        super(TYPE);
+    }
 
-   /**
-    * Constructor for unmarshalling
-    *
-    * @param itemObject
-    */
-   protected CompilationUnit(JSONObject itemObject)
-   {
-      this();
-      init(itemObject);
-   }
+    /**
+     * Constructor for unmarshalling
+     *
+     * @param itemObject
+     */
+    protected CompilationUnit(JSONObject itemObject) {
+        this();
+        init(itemObject);
+    }
 
-   /**
-    * Get Package containing this {@link CompilationUnit}.
-    *
-    * @return Parent Package
-    */
-   public Package getPackage()
-   {
-      Folder parent = getParent();
-      // check parent is Package
-      checkValidParent(parent);
+    /**
+     * Get Package containing this {@link CompilationUnit}.
+     *
+     * @return Parent Package
+     */
+    public Package getPackage() {
+        Folder parent = getParent();
+        // check parent is Package
+        checkValidParent(parent);
 
-      // return Parent package
-      return (Package)parent;
-   }
+        // return Parent package
+        return (Package)parent;
+    }
 
-   /**
-    * Set Parent Package
-    *
-    * @param parentPackage the parentPackage to set
-    */
-   public void setPackage(Package parentPackage)
-   {
-      setParent(parentPackage);
-   }
+    /**
+     * Set Parent Package
+     *
+     * @param parentPackage
+     *         the parentPackage to set
+     */
+    public void setPackage(Package parentPackage) {
+        setParent(parentPackage);
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setParent(Folder parent)
-   {
-      // check parent is Package
-      checkValidParent(parent);
-      // set Package as CompilationUnit's parent element
-      super.setParent(parent);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setParent(Folder parent) {
+        // check parent is Package
+        checkValidParent(parent);
+        // set Package as CompilationUnit's parent element
+        super.setParent(parent);
+    }
 
-   /**
-    * Check that given parent is an instance of {@link Package}
-    *
-    * @param parent
-    */
-   protected void checkValidParent(Folder parent)
-   {
-      if (!(parent instanceof Package) && !(parent instanceof SourceFolder))
-      {
-         throw new IllegalArgumentException("Invalid CompilationUnit parent. It must be an instance of Package or SourceFolder class");
-      }
-   }
+    /**
+     * Check that given parent is an instance of {@link Package}
+     *
+     * @param parent
+     */
+    protected void checkValidParent(Folder parent) {
+        if (!(parent instanceof Package) && !(parent instanceof SourceFolder)) {
+            throw new IllegalArgumentException("Invalid CompilationUnit parent. It must be an instance of Package or SourceFolder class");
+        }
+    }
 }

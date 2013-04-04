@@ -21,17 +21,15 @@ package com.codenvy.ide.java.shared;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface AnnotationParameter
-{
+public interface AnnotationParameter {
 
-   String getName();
-   
-   AnnotationValue getValue();
-   
-   void setName(String name);
-   
-   void setValue(AnnotationValue value);
-   
+    String getName();
+
+    AnnotationValue getValue();
+
+    void setName(String name);
+
+    void setValue(AnnotationValue value);
+
 }

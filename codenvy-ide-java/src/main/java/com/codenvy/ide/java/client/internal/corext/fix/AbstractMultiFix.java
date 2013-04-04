@@ -14,136 +14,119 @@ import com.codenvy.ide.java.client.codeassistant.api.IProblemLocation;
 import com.codenvy.ide.java.client.core.compiler.IProblem;
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.java.client.internal.text.correction.ProblemLocation;
-
 import com.codenvy.ide.runtime.CoreException;
 import com.codenvy.ide.text.Document;
-
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public abstract class AbstractMultiFix extends AbstractCleanUp implements IMultiFix
-{
+public abstract class AbstractMultiFix extends AbstractCleanUp implements IMultiFix {
 
-   protected AbstractMultiFix()
-   {
-   }
+    protected AbstractMultiFix() {
+    }
 
-   protected AbstractMultiFix(Map<String, String> settings)
-   {
-      super(settings);
-   }
+    protected AbstractMultiFix(Map<String, String> settings) {
+        super(settings);
+    }
 
-   @Override
-   public final ICleanUpFix createFix(CleanUpContext context) throws CoreException
-   {
-      CompilationUnit unit = context.getAST();
-      if (unit == null)
-         return null;
+    @Override
+    public final ICleanUpFix createFix(CleanUpContext context) throws CoreException {
+        CompilationUnit unit = context.getAST();
+        if (unit == null)
+            return null;
 
-      if (context instanceof MultiFixContext)
-      {
-         return createFix(unit, context.getDocument(), ((MultiFixContext)context).getProblemLocations());
-      }
-      else
-      {
-         return createFix(unit, context.getDocument());
-      }
-   }
+        if (context instanceof MultiFixContext) {
+            return createFix(unit, context.getDocument(), ((MultiFixContext)context).getProblemLocations());
+        } else {
+            return createFix(unit, context.getDocument());
+        }
+    }
 
-   protected abstract ICleanUpFix createFix(CompilationUnit unit, Document document) throws CoreException;
+    protected abstract ICleanUpFix createFix(CompilationUnit unit, Document document) throws CoreException;
 
-   protected abstract ICleanUpFix createFix(CompilationUnit unit, Document document, IProblemLocation[] problems)
-      throws CoreException;
+    protected abstract ICleanUpFix createFix(CompilationUnit unit, Document document, IProblemLocation[] problems)
+            throws CoreException;
 
-   /**
-    * {@inheritDoc}
-    */
-   public int computeNumberOfFixes(CompilationUnit compilationUnit)
-   {
-      return -1;
-   }
+    /** {@inheritDoc} */
+    public int computeNumberOfFixes(CompilationUnit compilationUnit) {
+        return -1;
+    }
 
-   /**
-    * Utility method to: count number of problems in <code>problems</code> with <code>problemId</code>
-    * @param problems the set of problems
-    * @param problemId the problem id to look for
-    * @return number of problems with problem id
-    */
-   protected static int getNumberOfProblems(IProblem[] problems, int problemId)
-   {
-      int result = 0;
-      for (int i = 0; i < problems.length; i++)
-      {
-         if (problems[i].getID() == problemId)
-            result++;
-      }
-      return result;
-   }
+    /**
+     * Utility method to: count number of problems in <code>problems</code> with <code>problemId</code>
+     *
+     * @param problems
+     *         the set of problems
+     * @param problemId
+     *         the problem id to look for
+     * @return number of problems with problem id
+     */
+    protected static int getNumberOfProblems(IProblem[] problems, int problemId) {
+        int result = 0;
+        for (int i = 0; i < problems.length; i++) {
+            if (problems[i].getID() == problemId)
+                result++;
+        }
+        return result;
+    }
 
-   /**
-    * Convert set of IProblems to IProblemLocations
-    * @param problems the problems to convert
-    * @return the converted set
-    */
-   protected static IProblemLocation[] convertProblems(IProblem[] problems)
-   {
-      IProblemLocation[] result = new IProblemLocation[problems.length];
+    /**
+     * Convert set of IProblems to IProblemLocations
+     *
+     * @param problems
+     *         the problems to convert
+     * @return the converted set
+     */
+    protected static IProblemLocation[] convertProblems(IProblem[] problems) {
+        IProblemLocation[] result = new IProblemLocation[problems.length];
 
-      for (int i = 0; i < problems.length; i++)
-      {
-         result[i] = new ProblemLocation(problems[i]);
-      }
+        for (int i = 0; i < problems.length; i++) {
+            result[i] = new ProblemLocation(problems[i]);
+        }
 
-      return result;
-   }
+        return result;
+    }
 
-   /**
-    * Returns unique problem locations. All locations in result
-    * have an id element <code>problemIds</code>.
-    *
-    * @param problems the problems to filter
-    * @param problemIds the ids of the resulting problem locations
-    * @return problem locations
-    */
-   protected static IProblemLocation[] filter(IProblemLocation[] problems, int[] problemIds)
-   {
-      ArrayList<IProblemLocation> result = new ArrayList<IProblemLocation>();
+    /**
+     * Returns unique problem locations. All locations in result
+     * have an id element <code>problemIds</code>.
+     *
+     * @param problems
+     *         the problems to filter
+     * @param problemIds
+     *         the ids of the resulting problem locations
+     * @return problem locations
+     */
+    protected static IProblemLocation[] filter(IProblemLocation[] problems, int[] problemIds) {
+        ArrayList<IProblemLocation> result = new ArrayList<IProblemLocation>();
 
-      for (int i = 0; i < problems.length; i++)
-      {
-         IProblemLocation problem = problems[i];
-         if (contains(problemIds, problem.getProblemId()) && !contains(result, problem))
-         {
-            result.add(problem);
-         }
-      }
+        for (int i = 0; i < problems.length; i++) {
+            IProblemLocation problem = problems[i];
+            if (contains(problemIds, problem.getProblemId()) && !contains(result, problem)) {
+                result.add(problem);
+            }
+        }
 
-      return result.toArray(new IProblemLocation[result.size()]);
-   }
+        return result.toArray(new IProblemLocation[result.size()]);
+    }
 
-   private static boolean contains(ArrayList<IProblemLocation> problems, IProblemLocation problem)
-   {
-      for (int i = 0; i < problems.size(); i++)
-      {
-         IProblemLocation existing = problems.get(i);
-         if (existing.getProblemId() == problem.getProblemId() && existing.getOffset() == problem.getOffset()
-            && existing.getLength() == problem.getLength())
-         {
-            return true;
-         }
-      }
+    private static boolean contains(ArrayList<IProblemLocation> problems, IProblemLocation problem) {
+        for (int i = 0; i < problems.size(); i++) {
+            IProblemLocation existing = problems.get(i);
+            if (existing.getProblemId() == problem.getProblemId() && existing.getOffset() == problem.getOffset()
+                && existing.getLength() == problem.getLength()) {
+                return true;
+            }
+        }
 
-      return false;
-   }
+        return false;
+    }
 
-   private static boolean contains(int[] ids, int id)
-   {
-      for (int i = 0; i < ids.length; i++)
-      {
-         if (ids[i] == id)
-            return true;
-      }
-      return false;
-   }
+    private static boolean contains(int[] ids, int id) {
+        for (int i = 0; i < ids.length; i++) {
+            if (ids[i] == id)
+                return true;
+        }
+        return false;
+    }
 }

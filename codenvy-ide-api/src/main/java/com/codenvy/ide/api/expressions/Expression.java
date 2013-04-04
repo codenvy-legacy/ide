@@ -17,20 +17,15 @@
 package com.codenvy.ide.api.expressions;
 
 /**
- * Expression is a dynamic boolean variable that changes it's state upon certain 
+ * Expression is a dynamic boolean variable that changes it's state upon certain
  * Events and Application state changes
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface Expression
-{
-   /**
-    * @return internal UUID of the Expression
-    */
-   public int getId();
+public interface Expression {
+    /** @return internal UUID of the Expression */
+    public int getId();
 
-   /**
-    * @return current Expression value
-    */
-   public boolean getValue();
+    /** @return current Expression value */
+    public boolean getValue();
 }

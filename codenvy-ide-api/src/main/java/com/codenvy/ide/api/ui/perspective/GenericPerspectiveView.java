@@ -16,106 +16,82 @@
  */
 package com.codenvy.ide.api.ui.perspective;
 
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
-
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 /**
  * General-purpose Perspective View
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class GenericPerspectiveView extends Composite implements PerspectiveView<PerspectiveView.ActionDelegate>
-{
+public class GenericPerspectiveView extends Composite implements PerspectiveView<PerspectiveView.ActionDelegate> {
 
-   private static GenericPerspectiveViewUiBinder uiBinder = GWT.create(GenericPerspectiveViewUiBinder.class);
+    private static GenericPerspectiveViewUiBinder uiBinder = GWT.create(GenericPerspectiveViewUiBinder.class);
 
-   interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, GenericPerspectiveView>
-   {
-   }
+    interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, GenericPerspectiveView> {
+    }
 
-   @UiField
-   SplitLayoutPanel splitPanel;
+    @UiField
+    SplitLayoutPanel splitPanel;
 
-   @UiField
-   SimplePanel editorPanel;
+    @UiField
+    SimplePanel editorPanel;
 
-   @UiField
-   SimplePanel navPanel;
+    @UiField
+    SimplePanel navPanel;
 
-   @UiField
-   SimplePanel infoPanel;
+    @UiField
+    SimplePanel infoPanel;
 
-   @UiField
-   SimplePanel toolPanel;
+    @UiField
+    SimplePanel toolPanel;
 
-   /**
-    * Because this class has a default constructor, it can
-    * be used as a binder template. In other words, it can be used in other
-    * *.ui.xml files as follows:
-    * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-     *   xmlns:g="urn:import:**user's package**">
-    *  <g:**UserClassName**>Hello!</g:**UserClassName>
-    * </ui:UiBinder>
-    * Note that depending on the widget that is used, it may be necessary to
-    * implement HasHTML instead of HasText.
-    */
-   public GenericPerspectiveView()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-      splitPanel.getWidgetContainerElement(editorPanel).addClassName("ide-editor-area");
-   }
+    /**
+     * Because this class has a default constructor, it can
+     * be used as a binder template. In other words, it can be used in other
+     * *.ui.xml files as follows:
+     * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+     * xmlns:g="urn:import:**user's package**">
+     * <g:**UserClassName**>Hello!</g:**UserClassName>
+     * </ui:UiBinder>
+     * Note that depending on the widget that is used, it may be necessary to
+     * implement HasHTML instead of HasText.
+     */
+    public GenericPerspectiveView() {
+        initWidget(uiBinder.createAndBindUi(this));
+        splitPanel.getWidgetContainerElement(editorPanel).addClassName("ide-editor-area");
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void setDelegate(ActionDelegate delegate)
-   {
-      // do nothing
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(ActionDelegate delegate) {
+        // do nothing
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public AcceptsOneWidget getEditorPanel()
-   {
-      return editorPanel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getEditorPanel() {
+        return editorPanel;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public AcceptsOneWidget getNavigationPanel()
-   {
-      return navPanel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getNavigationPanel() {
+        return navPanel;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public AcceptsOneWidget getInformationPanel()
-   {
-      return infoPanel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getInformationPanel() {
+        return infoPanel;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public AcceptsOneWidget getToolPanel()
-   {
-      return toolPanel;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public AcceptsOneWidget getToolPanel() {
+        return toolPanel;
+    }
 
 }

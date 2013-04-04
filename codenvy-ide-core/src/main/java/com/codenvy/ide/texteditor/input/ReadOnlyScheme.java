@@ -20,82 +20,69 @@ import com.codenvy.ide.util.input.ModifierKeys;
 import com.codenvy.ide.util.input.SignalEvent;
 
 
-/**
- * An input scheme to support the editor's read-only mode.
- */
-public class ReadOnlyScheme extends InputScheme
-{
+/** An input scheme to support the editor's read-only mode. */
+public class ReadOnlyScheme extends InputScheme {
 
-   private class ReadOnlyInputMode extends InputMode
-   {
-      @Override
-      public void setup()
-      {
-         addShortcut(new EventShortcut(ModifierKeys.ACTION, 'a')
-         {
-            @Override
-            public boolean event(InputScheme scheme, SignalEvent event)
-            {
-               getInputController().getSelection().selectAll();
-               return true;
+    private class ReadOnlyInputMode extends InputMode {
+        @Override
+        public void setup() {
+            addShortcut(new EventShortcut(ModifierKeys.ACTION, 'a') {
+                @Override
+                public boolean event(InputScheme scheme, SignalEvent event) {
+                    getInputController().getSelection().selectAll();
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public void teardown() {
+        }
+
+        @Override
+        public boolean onDefaultInput(SignalEvent event, char character) {
+            int key = KeyCodeMap.getKeyFromEvent(event);
+            ViewportModel viewport = getInputController().getViewportModel();
+
+            switch (key) {
+                case KeyCodeMap.ARROW_LEFT:
+                case KeyCodeMap.ARROW_RIGHT:
+                    viewport.shiftHorizontally(key == KeyCodeMap.ARROW_RIGHT);
+                    return true;
+
+                case KeyCodeMap.ARROW_UP:
+                case KeyCodeMap.ARROW_DOWN:
+                    viewport.shiftVertically(key == KeyCodeMap.ARROW_DOWN, false);
+                    return true;
+
+                case KeyCodeMap.PAGE_UP:
+                case KeyCodeMap.PAGE_DOWN:
+                    viewport.shiftVertically(key == KeyCodeMap.PAGE_DOWN, true);
+                    return true;
+
+                case KeyCodeMap.HOME:
+                case KeyCodeMap.END:
+                    viewport.jumpTo(key == KeyCodeMap.END);
+                    return true;
             }
-         });
-      }
 
-      @Override
-      public void teardown()
-      {
-      }
+            return false;
+        }
 
-      @Override
-      public boolean onDefaultInput(SignalEvent event, char character)
-      {
-         int key = KeyCodeMap.getKeyFromEvent(event);
-         ViewportModel viewport = getInputController().getViewportModel();
+        @Override
+        public boolean onDefaultPaste(SignalEvent signal, String text) {
+            return false;
+        }
+    }
 
-         switch (key)
-         {
-            case KeyCodeMap.ARROW_LEFT :
-            case KeyCodeMap.ARROW_RIGHT :
-               viewport.shiftHorizontally(key == KeyCodeMap.ARROW_RIGHT);
-               return true;
+    public ReadOnlyScheme(InputController input) {
+        super(input);
 
-            case KeyCodeMap.ARROW_UP :
-            case KeyCodeMap.ARROW_DOWN :
-               viewport.shiftVertically(key == KeyCodeMap.ARROW_DOWN, false);
-               return true;
+        addMode(1, new ReadOnlyInputMode());
+    }
 
-            case KeyCodeMap.PAGE_UP :
-            case KeyCodeMap.PAGE_DOWN :
-               viewport.shiftVertically(key == KeyCodeMap.PAGE_DOWN, true);
-               return true;
-
-            case KeyCodeMap.HOME :
-            case KeyCodeMap.END :
-               viewport.jumpTo(key == KeyCodeMap.END);
-               return true;
-         }
-
-         return false;
-      }
-
-      @Override
-      public boolean onDefaultPaste(SignalEvent signal, String text)
-      {
-         return false;
-      }
-   }
-
-   public ReadOnlyScheme(InputController input)
-   {
-      super(input);
-
-      addMode(1, new ReadOnlyInputMode());
-   }
-
-   @Override
-   public void setup()
-   {
-      switchMode(1);
-   }
+    @Override
+    public void setup() {
+        switchMode(1);
+    }
 }

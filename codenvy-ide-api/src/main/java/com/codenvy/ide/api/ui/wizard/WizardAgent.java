@@ -18,10 +18,9 @@
  */
 package com.codenvy.ide.api.ui.wizard;
 
+import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
 import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
-
-import com.codenvy.ide.api.extension.SDK;
 import com.codenvy.ide.json.JsonArray;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
@@ -33,31 +32,41 @@ import com.google.inject.Provider;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @SDK(title = "ide.api.ui.wizard.newresource")
-public interface WizardAgent
-{
-   /**
-    * Registers new wizard for creating new project.
-    *
-    * @param title the text what will be showed on wizard page
-    * @param description a few words about wizard
-    * @param primaryNature the type of technology what associate with this wizard
-    * @param icon the icon what will be showed on wizard page
-    * @param wizardPage first wizard page
-    * @param createProjectHandler handler what create project
-    * @param natures additional option for technology (example: available PaaS or etc)
-    */
-   void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
-      Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
-      JsonArray<String> natures);
+public interface WizardAgent {
+    /**
+     * Registers new wizard for creating new project.
+     *
+     * @param title
+     *         the text what will be showed on wizard page
+     * @param description
+     *         a few words about wizard
+     * @param primaryNature
+     *         the type of technology what associate with this wizard
+     * @param icon
+     *         the icon what will be showed on wizard page
+     * @param wizardPage
+     *         first wizard page
+     * @param createProjectHandler
+     *         handler what create project
+     * @param natures
+     *         additional option for technology (example: available PaaS or etc)
+     */
+    void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
+                                  Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
+                                  JsonArray<String> natures);
 
-   /**
-    * Registers new wizard for creating new resource.
-    * 
-    * @param category allows to show new resources wizard in tree view. it's name of parent node.
-    * @param title the text what will be showed on wizard page
-    * @param icon the icon what will be showed on wizard page
-    * @param wizardPage first wizard page
-    */
-   void registerNewResourceWizard(String category, String title, ImageResource icon,
-      Provider<? extends WizardPagePresenter> wizardPage);
+    /**
+     * Registers new wizard for creating new resource.
+     *
+     * @param category
+     *         allows to show new resources wizard in tree view. it's name of parent node.
+     * @param title
+     *         the text what will be showed on wizard page
+     * @param icon
+     *         the icon what will be showed on wizard page
+     * @param wizardPage
+     *         first wizard page
+     */
+    void registerNewResourceWizard(String category, String title, ImageResource icon,
+                                   Provider<? extends WizardPagePresenter> wizardPage);
 }

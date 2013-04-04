@@ -18,11 +18,10 @@
  */
 package com.codenvy.ide.wizard;
 
-import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
-import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
-
 import com.codenvy.ide.api.ui.wizard.WizardAgent;
 import com.codenvy.ide.api.ui.wizard.WizardPagePresenter;
+import com.codenvy.ide.api.wizard.newproject.AbstractNewProjectWizardPage;
+import com.codenvy.ide.api.wizard.newproject.CreateProjectHandler;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.wizard.newproject.NewProjectWizardData;
@@ -39,63 +38,52 @@ import javax.inject.Singleton;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class WizardAgentImpl implements WizardAgent
-{
-   private final JsonArray<NewProjectWizardData> newProjectWizardDatas;
+public class WizardAgentImpl implements WizardAgent {
+    private final JsonArray<NewProjectWizardData> newProjectWizardDatas;
 
-   private final JsonArray<NewResourceWizardData> newResourceWizardDatas;
+    private final JsonArray<NewResourceWizardData> newResourceWizardDatas;
 
-   /**
-    * Create WizardAgent
-    */
-   @Inject
-   public WizardAgentImpl()
-   {
-      newProjectWizardDatas = JsonCollections.createArray();
-      newResourceWizardDatas = JsonCollections.createArray();
-   }
+    /** Create WizardAgent */
+    @Inject
+    public WizardAgentImpl() {
+        newProjectWizardDatas = JsonCollections.createArray();
+        newResourceWizardDatas = JsonCollections.createArray();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
-      Provider<? extends AbstractNewProjectWizardPage> wizardPage, CreateProjectHandler createProjectHandler,
-      JsonArray<String> natures)
-   {
-      NewProjectWizardData newProjectWizardData =
-         new NewProjectWizardData(title, description, primaryNature, icon, wizardPage, createProjectHandler, natures);
-      newProjectWizardDatas.add(newProjectWizardData);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
+                                         Provider<? extends AbstractNewProjectWizardPage> wizardPage,
+                                         CreateProjectHandler createProjectHandler,
+                                         JsonArray<String> natures) {
+        NewProjectWizardData newProjectWizardData =
+                new NewProjectWizardData(title, description, primaryNature, icon, wizardPage, createProjectHandler, natures);
+        newProjectWizardDatas.add(newProjectWizardData);
+    }
 
-   /**
-    * Returns all registered wizards for creating new project.
-    *
-    * @return
-    */
-   public JsonArray<NewProjectWizardData> getNewProjectWizards()
-   {
-      return newProjectWizardDatas;
-   }
+    /**
+     * Returns all registered wizards for creating new project.
+     *
+     * @return
+     */
+    public JsonArray<NewProjectWizardData> getNewProjectWizards() {
+        return newProjectWizardDatas;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void registerNewResourceWizard(String category, String title, ImageResource icon,
-      Provider<? extends WizardPagePresenter> wizardPage)
-   {
-      NewResourceWizardData newResourceWizardData = new NewResourceWizardData(title, category, icon, wizardPage);
-      newResourceWizardDatas.add(newResourceWizardData);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void registerNewResourceWizard(String category, String title, ImageResource icon,
+                                          Provider<? extends WizardPagePresenter> wizardPage) {
+        NewResourceWizardData newResourceWizardData = new NewResourceWizardData(title, category, icon, wizardPage);
+        newResourceWizardDatas.add(newResourceWizardData);
+    }
 
-   /**
-    * Returns all registered wizards for creating new resource.
-    * 
-    * @return
-    */
-   public JsonArray<NewResourceWizardData> getNewResourceWizards()
-   {
-      return newResourceWizardDatas;
-   }
+    /**
+     * Returns all registered wizards for creating new resource.
+     *
+     * @return
+     */
+    public JsonArray<NewResourceWizardData> getNewResourceWizards() {
+        return newResourceWizardDatas;
+    }
 }

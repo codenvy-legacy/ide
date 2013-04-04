@@ -13,62 +13,57 @@ package com.codenvy.ide.java.client.internal.compiler.ast;
 import com.codenvy.ide.java.client.internal.compiler.ASTVisitor;
 import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
 
-public class PrefixExpression extends CompoundAssignment
-{
+public class PrefixExpression extends CompoundAssignment {
 
-   /**
-    * PrefixExpression constructor comment.
-    * @param lhs com.codenvy.ide.java.client.internal.compiler.ast.Expression
-    * @param expression com.codenvy.ide.java.client.internal.compiler.ast.Expression
-    * @param operator int
-    */
-   public PrefixExpression(Expression lhs, Expression expression, int operator, int pos)
-   {
-      super(lhs, expression, operator, lhs.sourceEnd);
-      this.sourceStart = pos;
-      this.sourceEnd = lhs.sourceEnd;
-   }
+    /**
+     * PrefixExpression constructor comment.
+     *
+     * @param lhs
+     *         com.codenvy.ide.java.client.internal.compiler.ast.Expression
+     * @param expression
+     *         com.codenvy.ide.java.client.internal.compiler.ast.Expression
+     * @param operator
+     *         int
+     */
+    public PrefixExpression(Expression lhs, Expression expression, int operator, int pos) {
+        super(lhs, expression, operator, lhs.sourceEnd);
+        this.sourceStart = pos;
+        this.sourceEnd = lhs.sourceEnd;
+    }
 
-   @Override
-   public boolean checkCastCompatibility()
-   {
-      return false;
-   }
+    @Override
+    public boolean checkCastCompatibility() {
+        return false;
+    }
 
-   @Override
-   public String operatorToString()
-   {
-      switch (this.operator)
-      {
-         case PLUS :
-            return "++"; //$NON-NLS-1$
-         case MINUS :
-            return "--"; //$NON-NLS-1$
-      }
-      return "unknown operator"; //$NON-NLS-1$
-   }
+    @Override
+    public String operatorToString() {
+        switch (this.operator) {
+            case PLUS:
+                return "++"; //$NON-NLS-1$
+            case MINUS:
+                return "--"; //$NON-NLS-1$
+        }
+        return "unknown operator"; //$NON-NLS-1$
+    }
 
-   @Override
-   public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
-   {
+    @Override
+    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output) {
 
-      output.append(operatorToString()).append(' ');
-      return this.lhs.printExpression(0, output);
-   }
+        output.append(operatorToString()).append(' ');
+        return this.lhs.printExpression(0, output);
+    }
 
-   @Override
-   public boolean restrainUsageToNumericTypes()
-   {
-      return true;
-   }
+    @Override
+    public boolean restrainUsageToNumericTypes() {
+        return true;
+    }
 
-   @Override
-   public void traverse(ASTVisitor visitor, BlockScope scope)
-   {
-      if (visitor.visit(this, scope))
-      {
-         this.lhs.traverse(visitor, scope);
-      }
-      visitor.endVisit(this, scope);
-   }
+    @Override
+    public void traverse(ASTVisitor visitor, BlockScope scope) {
+        if (visitor.visit(this, scope)) {
+            this.lhs.traverse(visitor, scope);
+        }
+        visitor.endVisit(this, scope);
+    }
 }

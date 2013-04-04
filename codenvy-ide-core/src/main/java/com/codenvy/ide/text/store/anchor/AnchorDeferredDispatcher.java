@@ -24,50 +24,50 @@ import com.codenvy.ide.json.JsonCollections;
  */
 class AnchorDeferredDispatcher {
 
-  private JsonArray<Anchor> shiftedAnchors;
-  private JsonArray<Anchor> removedAnchors;
-  
-  void deferDispatchShifted(Anchor anchor) {
-    if (removedAnchors != null && removedAnchors.contains(anchor)) {
-      // Anchor has been removed, don't dispatch shift
-      return;
+    private JsonArray<Anchor> shiftedAnchors;
+    private JsonArray<Anchor> removedAnchors;
+
+    void deferDispatchShifted(Anchor anchor) {
+        if (removedAnchors != null && removedAnchors.contains(anchor)) {
+            // Anchor has been removed, don't dispatch shift
+            return;
+        }
+
+        if (shiftedAnchors == null) {
+            shiftedAnchors = JsonCollections.createArray();
+        }
+
+        shiftedAnchors.add(anchor);
     }
-    
-    if (shiftedAnchors == null) {
-      shiftedAnchors = JsonCollections.createArray();
+
+    void deferDispatchRemoved(Anchor anchor) {
+        if (removedAnchors == null) {
+            removedAnchors = JsonCollections.createArray();
+        }
+
+        removedAnchors.add(anchor);
+
+        // Anchor has been removed, don't dispatch these
+        if (shiftedAnchors != null) {
+            shiftedAnchors.remove(anchor);
+        }
     }
-    
-    shiftedAnchors.add(anchor);
-  }
-  
-  void deferDispatchRemoved(Anchor anchor) {
-    if (removedAnchors == null) {
-      removedAnchors = JsonCollections.createArray();
+
+    JsonArray<Anchor> getShiftedAnchors() {
+        return shiftedAnchors;
     }
-   
-    removedAnchors.add(anchor);
-    
-    // Anchor has been removed, don't dispatch these
-    if (shiftedAnchors != null) {
-      shiftedAnchors.remove(anchor);
+
+    void dispatch() {
+        if (shiftedAnchors != null) {
+            for (int i = 0, n = shiftedAnchors.size(); i < n; i++) {
+                shiftedAnchors.get(i).dispatchShifted();
+            }
+        }
+
+        if (removedAnchors != null) {
+            for (int i = 0, n = removedAnchors.size(); i < n; i++) {
+                removedAnchors.get(i).dispatchRemoved();
+            }
+        }
     }
-  }
-  
-  JsonArray<Anchor> getShiftedAnchors() {
-    return shiftedAnchors;
-  }
-  
-  void dispatch() {
-    if (shiftedAnchors != null) {
-      for (int i = 0, n = shiftedAnchors.size(); i < n; i++) {
-        shiftedAnchors.get(i).dispatchShifted();
-      }
-    }
-    
-    if (removedAnchors != null) {
-      for (int i = 0, n = removedAnchors.size(); i < n; i++) {
-        removedAnchors.get(i).dispatchRemoved();
-      }
-    }
-  }
 }

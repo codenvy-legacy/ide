@@ -18,9 +18,6 @@
  */
 package com.codenvy.ide.java.client.projectmodel;
 
-import static org.fest.assertions.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.java.client.BaseTest;
 import com.codenvy.ide.json.JsonCollections;
@@ -43,123 +40,108 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class ModelUnmarshallerTest extends BaseTest
-{
+public class ModelUnmarshallerTest extends BaseTest {
 
-   private static String projectJs;
+    private static String projectJs;
 
-   @Spy
-   private JavaProject project = new JavaProject(null);
+    @Spy
+    private JavaProject project = new JavaProject(null);
 
-   @Mock
-   private JavaProjectDesctiprion projectDescription;
+    @Mock
+    private JavaProjectDesctiprion projectDescription;
 
-   @Mock
-   private Response response;
+    @Mock
+    private Response response;
 
-   @BeforeClass
-   public static void init()
-   {
-      InputStream stream =
-         Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream("com/codenvy/ide/java/client/projectmodel/project.js");
-      try
-      {
-         projectJs = IOUtils.toString(stream);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      finally
-      {
-         if (stream != null)
-         {
-            try
-            {
-               stream.close();
+    @BeforeClass
+    public static void init() {
+        InputStream stream =
+                Thread.currentThread().getContextClassLoader()
+                      .getResourceAsStream("com/codenvy/ide/java/client/projectmodel/project.js");
+        try {
+            projectJs = IOUtils.toString(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            catch (IOException e)
-            {
-               e.printStackTrace();
-            }
-         }
-      }
-   }
+        }
+    }
 
-   @Before
-   public void setUp()
-   {
-      when(project.getDescription()).thenReturn(projectDescription);
-      when(project.getPath()).thenReturn("/SpringProject");
-      when(projectDescription.getSourceFolders()).thenReturn(
-         JsonCollections.createStringSet("src/main/java", "src/main/resources", "src/test/java", "src/test/resources"));
-      when(response.getText()).thenReturn(projectJs);
-   }
+    @Before
+    public void setUp() {
+        when(project.getDescription()).thenReturn(projectDescription);
+        when(project.getPath()).thenReturn("/SpringProject");
+        when(projectDescription.getSourceFolders()).thenReturn(
+                JsonCollections.createStringSet("src/main/java", "src/main/resources", "src/test/java", "src/test/resources"));
+        when(response.getText()).thenReturn(projectJs);
+    }
 
-   @Test
-   public void sourceFoldersParse() throws UnmarshallerException
-   {
-      List<Resource> allValues = parseProject();
-      assertThat(allValues).onProperty("name").containsOnly("src/main/java", "src/test/java", "src/main/resources",
-         "src/test/java", "src/test/resources", "src", "pom.xml", ".project");
-   }
+    @Test
+    public void sourceFoldersParse() throws UnmarshallerException {
+        List<Resource> allValues = parseProject();
+        assertThat(allValues).onProperty("name").containsOnly("src/main/java", "src/test/java", "src/main/resources",
+                                                              "src/test/java", "src/test/resources", "src", "pom.xml", ".project");
+    }
 
-   @Test
-   public void packageParse() throws UnmarshallerException
-   {
-      List<Resource> allValues = parseProject();
-      SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
-      ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
-      assertThat(packages).onProperty("name"). //
-         containsOnly("org", // 
-            "org.springframework", //
-            "org.springframework.samples", //
-            "org.springframework.samples.mvc",//
-            "org.springframework.samples.mvc.ajax", //
-            "org.springframework.samples.mvc.ajax.json", //
-            "org.springframework.samples.mvc.ajax.account");
+    @Test
+    public void packageParse() throws UnmarshallerException {
+        List<Resource> allValues = parseProject();
+        SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
+        ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
+        assertThat(packages).onProperty("name"). //
+                containsOnly("org", //
+                             "org.springframework", //
+                             "org.springframework.samples", //
+                             "org.springframework.samples.mvc",//
+                             "org.springframework.samples.mvc.ajax", //
+                             "org.springframework.samples.mvc.ajax.json", //
+                             "org.springframework.samples.mvc.ajax.account");
 
-   }
+    }
 
-   @Test
-   public void addNotValidFolderNameAsChildrenToPackage() throws UnmarshallerException
-   {
-      List<Resource> allValues = parseProject();
-      SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
-      ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
-      Package pack = (Package)packages.get(5);
-      ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
-      assertThat(childrens).onProperty("name").contains("void");
-   }
+    @Test
+    public void addNotValidFolderNameAsChildrenToPackage() throws UnmarshallerException {
+        List<Resource> allValues = parseProject();
+        SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
+        ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
+        Package pack = (Package)packages.get(5);
+        ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
+        assertThat(childrens).onProperty("name").contains("void");
+    }
 
-   @Test
-   public void addCompilationUnit() throws UnmarshallerException
-   {
-      List<Resource> allValues = parseProject();
-      SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
-      ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
-      Package pack = (Package)packages.get(5);
-      ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
-      assertThat(childrens).onProperty("resourceType").containsOnly(File.TYPE, CompilationUnit.TYPE, Folder.TYPE);
-   }
-   
-   /**
-    * @return
-    * @throws UnmarshallerException
-    */
-   private List<Resource> parseProject() throws UnmarshallerException
-   {
-      JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project);
-      unmarshaller.unmarshal(response);
-      ArgumentCaptor<Resource> childrens = ArgumentCaptor.forClass(Resource.class);
-      verify(project, times(7)).addChild(childrens.capture());
-      List<Resource> allValues = childrens.getAllValues();
-      return allValues;
-   }
+    @Test
+    public void addCompilationUnit() throws UnmarshallerException {
+        List<Resource> allValues = parseProject();
+        SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
+        ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
+        Package pack = (Package)packages.get(5);
+        ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
+        assertThat(childrens).onProperty("resourceType").containsOnly(File.TYPE, CompilationUnit.TYPE, Folder.TYPE);
+    }
+
+    /**
+     * @return
+     * @throws UnmarshallerException
+     */
+    private List<Resource> parseProject() throws UnmarshallerException {
+        JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project);
+        unmarshaller.unmarshal(response);
+        ArgumentCaptor<Resource> childrens = ArgumentCaptor.forClass(Resource.class);
+        verify(project, times(7)).addChild(childrens.capture());
+        List<Resource> allValues = childrens.getAllValues();
+        return allValues;
+    }
 }

@@ -20,36 +20,29 @@ package com.codenvy.ide.resources.marshal;
 
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.rest.Unmarshallable;
-
 import com.google.gwt.http.client.Response;
-
 
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
- * 
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder>
-{
+public class StringUnmarshaller implements Unmarshallable<StringBuilder> {
 
-   private final StringBuilder string;
+    private final StringBuilder string;
 
-   public StringUnmarshaller()
-   {
-      this.string = new StringBuilder();
-   }
+    public StringUnmarshaller() {
+        this.string = new StringBuilder();
+    }
 
-   @Override
-   public StringBuilder getPayload()
-   {
-      return string;
-   }
+    @Override
+    public StringBuilder getPayload() {
+        return string;
+    }
 
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      string.append(response.getText());
-   }
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        string.append(response.getText());
+    }
 
 }

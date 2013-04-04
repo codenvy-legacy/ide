@@ -24,68 +24,67 @@ import java.util.Map;
 /**
  * Server wrapper for a {@link java.util.Map} that implements
  * {@link JsonStringMap}.
- *
  */
 public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
-  private final Map<String, T> delegate;
+    private final Map<String, T> delegate;
 
-  public JsonStringMapAdapter(Map<String, T> delegate) {
-    this.delegate = delegate;
-  }
-
-  @Override
-  public T get(String key) {
-    return delegate.get(key);
-  }
-
-  @Override
-  public JsonArray<String> getKeys() {
-    return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate.keySet()));
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return delegate.isEmpty();
-  }
-
-  @Override
-  public void iterate(IterationCallback<T> callback) {
-    for (String key : delegate.keySet()) {
-      callback.onIteration(key, delegate.get(key));
+    public JsonStringMapAdapter(Map<String, T> delegate) {
+        this.delegate = delegate;
     }
-  }
 
-  @Override
-  public void put(String key, T value) {
-    delegate.put(key, value);
-  }
-
-  @Override
-  public void putAll(JsonStringMap<T> otherMap) {
-    JsonArray<String> keys = otherMap.getKeys();
-    for (int i = 0, n = keys.size(); i < n; i++) {
-      String key = keys.get(i);
-      put(key, otherMap.get(key));
+    @Override
+    public T get(String key) {
+        return delegate.get(key);
     }
-  }
 
-  @Override
-  public T remove(String key) {
-    return delegate.remove(key);
-  }
+    @Override
+    public JsonArray<String> getKeys() {
+        return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate.keySet()));
+    }
 
-  @Override
-  public boolean containsKey(String key) {
-    return delegate.containsKey(key);
-  }
+    @Override
+    public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
 
-  @Override
-  public int size() {
-    return delegate.size();
-  }
-  
-  @Override
-  public String toString() {
-    return delegate.toString();
-  }
+    @Override
+    public void iterate(IterationCallback<T> callback) {
+        for (String key : delegate.keySet()) {
+            callback.onIteration(key, delegate.get(key));
+        }
+    }
+
+    @Override
+    public void put(String key, T value) {
+        delegate.put(key, value);
+    }
+
+    @Override
+    public void putAll(JsonStringMap<T> otherMap) {
+        JsonArray<String> keys = otherMap.getKeys();
+        for (int i = 0, n = keys.size(); i < n; i++) {
+            String key = keys.get(i);
+            put(key, otherMap.get(key));
+        }
+    }
+
+    @Override
+    public T remove(String key) {
+        return delegate.remove(key);
+    }
+
+    @Override
+    public boolean containsKey(String key) {
+        return delegate.containsKey(key);
+    }
+
+    @Override
+    public int size() {
+        return delegate.size();
+    }
+
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
 }

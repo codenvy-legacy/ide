@@ -20,14 +20,11 @@ package com.codenvy.ide.extension.cloudfoundry.client.login;
 
 /**
  * Handler to execute, when login to CloudFoundry was canceled.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: LoginCanceledHandler.java Jun 29, 2011 4:13:14 PM vereshchaka $
  */
-public interface LoginCanceledHandler
-{
-   /**
-    * Performs some actions when logged canceled.
-    */
-   void onLoginCanceled();
+public interface LoginCanceledHandler {
+    /** Performs some actions when logged canceled. */
+    void onLoginCanceled();
 }

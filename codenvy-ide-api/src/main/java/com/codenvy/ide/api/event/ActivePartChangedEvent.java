@@ -17,46 +17,39 @@
 package com.codenvy.ide.api.event;
 
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 
 /**
  * Event that notifies of changed Core Expressions
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ActivePartChangedEvent extends GwtEvent<ActivePartChangedHandler>
-{
-   public static Type<ActivePartChangedHandler> TYPE = new Type<ActivePartChangedHandler>();
+public class ActivePartChangedEvent extends GwtEvent<ActivePartChangedHandler> {
+    public static Type<ActivePartChangedHandler> TYPE = new Type<ActivePartChangedHandler>();
 
-   private final PartPresenter activePart;
+    private final PartPresenter activePart;
 
-   /**
-    * @param expressions the map of ID's and current values
-    */
-   public ActivePartChangedEvent(PartPresenter activePart)
-   {
-      this.activePart = activePart;
-   }
+    /**
+     * @param expressions
+     *         the map of ID's and current values
+     */
+    public ActivePartChangedEvent(PartPresenter activePart) {
+        this.activePart = activePart;
+    }
 
-   @Override
-   public Type<ActivePartChangedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public Type<ActivePartChangedHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   /**
-    * @return instance of Active Part
-    */
-   public PartPresenter getActivePart()
-   {
-      return activePart;
-   }
+    /** @return instance of Active Part */
+    public PartPresenter getActivePart() {
+        return activePart;
+    }
 
-   @Override
-   protected void dispatch(ActivePartChangedHandler handler)
-   {
-      handler.onActivePartChanged(this);
-   }
+    @Override
+    protected void dispatch(ActivePartChangedHandler handler) {
+        handler.onActivePartChanged(this);
+    }
 }

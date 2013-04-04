@@ -21,13 +21,11 @@ package com.codenvy.ide.texteditor.search;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface SearchProgressListener
-{
-   public void onSearchBegin();
+public interface SearchProgressListener {
+    public void onSearchBegin();
 
-   public void onSearchProgress();
+    public void onSearchProgress();
 
-   public void onSearchDone();
+    public void onSearchDone();
 }

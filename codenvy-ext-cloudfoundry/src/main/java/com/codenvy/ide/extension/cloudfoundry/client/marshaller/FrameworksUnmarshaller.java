@@ -32,69 +32,55 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for frameworks list.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FrameworksUnmarshaller.java Jul 8, 2011 11:12:16 AM vereshchaka $
  */
-public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framework>>
-{
-   private JsonArray<Framework> frameworks;
-   
-   private CloudFoundryAutoBeanFactory autoBeanFactory;
+public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framework>> {
+    private JsonArray<Framework> frameworks;
 
-   /**
-    * Create unmarshaller.
-    * 
-    * @param frameworks
-    * @param autoBeanFactory
-    */
-   public FrameworksUnmarshaller(JsonArray<Framework> frameworks, CloudFoundryAutoBeanFactory autoBeanFactory)
-   {
-      this.frameworks = frameworks;
-      this.autoBeanFactory = autoBeanFactory;
-   }
+    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         if (response.getText() == null || response.getText().isEmpty())
-         {
-            return;
-         }
+    /**
+     * Create unmarshaller.
+     *
+     * @param frameworks
+     * @param autoBeanFactory
+     */
+    public FrameworksUnmarshaller(JsonArray<Framework> frameworks, CloudFoundryAutoBeanFactory autoBeanFactory) {
+        this.frameworks = frameworks;
+        this.autoBeanFactory = autoBeanFactory;
+    }
 
-         JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            if (response.getText() == null || response.getText().isEmpty()) {
+                return;
+            }
 
-         if (array == null)
-         {
-            return;
-         }
+            JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
 
-         for (int i = 0; i < array.size(); i++)
-         {
-            JSONObject jsonObject = array.get(i).isObject();
-            String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
+            if (array == null) {
+                return;
+            }
 
-            AutoBean<Framework> framework = AutoBeanCodex.decode(autoBeanFactory, Framework.class, value);
-            frameworks.add(framework.as());
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse applications information.", e);
-      }
-   }
+            for (int i = 0; i < array.size(); i++) {
+                JSONObject jsonObject = array.get(i).isObject();
+                String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonArray<Framework> getPayload()
-   {
-      return frameworks;
-   }
+                AutoBean<Framework> framework = AutoBeanCodex.decode(autoBeanFactory, Framework.class, value);
+                frameworks.add(framework.as());
+            }
+        } catch (Exception e) {
+            throw new UnmarshallerException("Can't parse applications information.", e);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JsonArray<Framework> getPayload() {
+        return frameworks;
+    }
 }

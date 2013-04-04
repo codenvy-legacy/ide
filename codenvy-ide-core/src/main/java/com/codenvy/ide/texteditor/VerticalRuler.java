@@ -18,6 +18,8 @@
  */
 package com.codenvy.ide.texteditor;
 
+import elemental.html.Element;
+
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.mvp.CompositeView;
@@ -34,147 +36,117 @@ import com.codenvy.ide.texteditor.gutter.Gutter.ClickListener;
 import com.codenvy.ide.util.ListenerRegistrar.Remover;
 import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import elemental.html.Element;
 
 import java.util.Iterator;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class VerticalRuler
-{
+public class VerticalRuler {
 
-   class InternalListener implements AnnotationModelListener
-   {
+    class InternalListener implements AnnotationModelListener {
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public void modelChanged(AnnotationModelEvent event)
-      {
-         update();
-      }
+        /** {@inheritDoc} */
+        @Override
+        public void modelChanged(AnnotationModelEvent event) {
+            update();
+        }
 
-   }
+    }
 
-   class Mark extends CompositeView<Annotation>
-   {
-      /**
-       * 
-       */
-      public Mark(Annotation annotation)
-      {
-         setElement((Element)AbstractImagePrototype.create(annotation.getImage()).createElement());
-         getElement().getStyle().setZIndex(annotation.getLayer());
-         getElement().getStyle().setPosition("absolute");
-         getElement().getStyle().setWidth("15px");
-         getElement().getStyle().setLeft("0px");
-         getElement().setTitle(annotation.getText());
-      }
+    class Mark extends CompositeView<Annotation> {
+        /**
+         *
+         */
+        public Mark(Annotation annotation) {
+            setElement((Element)AbstractImagePrototype.create(annotation.getImage()).createElement());
+            getElement().getStyle().setZIndex(annotation.getLayer());
+            getElement().getStyle().setPosition("absolute");
+            getElement().getStyle().setWidth("15px");
+            getElement().getStyle().setLeft("0px");
+            getElement().setTitle(annotation.getText());
+        }
 
-      public void setTopPosition(int top, String unit)
-      {
-         getElement().getStyle().setTop(top, unit);
-      }
-   }
+        public void setTopPosition(int top, String unit) {
+            getElement().getStyle().setTop(top, unit);
+        }
+    }
 
-   private AnnotationModel model;
+    private AnnotationModel model;
 
-   private Remover remover;
+    private Remover remover;
 
-   private final Gutter view;
+    private final Gutter view;
 
-   private final TextEditorViewImpl editor;
+    private final TextEditorViewImpl editor;
 
-   private InternalListener listener;
+    private InternalListener listener;
 
-   private JsonArray<Element> elements;
+    private JsonArray<Element> elements;
 
-   /**
-    * @param leftNotificationGutter
-    */
-   public VerticalRuler(Gutter leftNotificationGutter, TextEditorViewImpl editor)
-   {
-      this.view = leftNotificationGutter;
-      this.editor = editor;
-      listener = new InternalListener();
-      elements = JsonCollections.createArray();
-      view.getClickListenerRegistrar().add(new ClickListener()
-      {
+    /** @param leftNotificationGutter */
+    public VerticalRuler(Gutter leftNotificationGutter, TextEditorViewImpl editor) {
+        this.view = leftNotificationGutter;
+        this.editor = editor;
+        listener = new InternalListener();
+        elements = JsonCollections.createArray();
+        view.getClickListenerRegistrar().add(new ClickListener() {
 
-         @Override
-         public void onClick(int y)
-         {
+            @Override
+            public void onClick(int y) {
 
-            TextEditorViewImpl editor = VerticalRuler.this.editor;
-            if (editor.canDoOperation(TextEditorOperations.QUICK_ASSIST))
-            {
-               int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);
-               try
-               {
-                  int offset = editor.getDocument().getLineOffset(lineNumber);
-                  editor.getSelection().setCursorPosition(offset);
-                  editor.doOperation(TextEditorOperations.QUICK_ASSIST);
-               }
-               catch (BadLocationException e)
-               {
-                  Log.error(getClass(), e);
-               }
+                TextEditorViewImpl editor = VerticalRuler.this.editor;
+                if (editor.canDoOperation(TextEditorOperations.QUICK_ASSIST)) {
+                    int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);
+                    try {
+                        int offset = editor.getDocument().getLineOffset(lineNumber);
+                        editor.getSelection().setCursorPosition(offset);
+                        editor.doOperation(TextEditorOperations.QUICK_ASSIST);
+                    } catch (BadLocationException e) {
+                        Log.error(getClass(), e);
+                    }
+                }
             }
-         }
-      });
-   }
+        });
+    }
 
-   /**
-    * 
-    */
-   private void update()
-   {
-      for (Element e : elements.asIterable())
-      {
-         view.removeUnmanagedElement(e);
-      }
-      elements.clear();
+    /**
+     *
+     */
+    private void update() {
+        for (Element e : elements.asIterable()) {
+            view.removeUnmanagedElement(e);
+        }
+        elements.clear();
 
-      for (Iterator<Annotation> iterator = model.getAnnotationIterator(); iterator.hasNext();)
-      {
-         Annotation annotation = iterator.next();
-         if (annotation.getImage() == null)
-            continue;
-         Mark m = new Mark(annotation);
-         Position position = model.getPosition(annotation);
-         int lineNumber = getLineNumberForPosition(position);
-         m.setTopPosition(editor.getBuffer().calculateLineTop(lineNumber), "px");
-         view.addUnmanagedElement(m.getElement());
-         elements.add(m.getElement());
-      }
-   }
+        for (Iterator<Annotation> iterator = model.getAnnotationIterator(); iterator.hasNext(); ) {
+            Annotation annotation = iterator.next();
+            if (annotation.getImage() == null)
+                continue;
+            Mark m = new Mark(annotation);
+            Position position = model.getPosition(annotation);
+            int lineNumber = getLineNumberForPosition(position);
+            m.setTopPosition(editor.getBuffer().calculateLineTop(lineNumber), "px");
+            view.addUnmanagedElement(m.getElement());
+            elements.add(m.getElement());
+        }
+    }
 
-   /**
-    * @param position
-    */
-   private int getLineNumberForPosition(Position position)
-   {
-      return TextUtilities.getLineLineNumber(editor.getDocument(), position.getOffset());
-   }
+    /** @param position */
+    private int getLineNumberForPosition(Position position) {
+        return TextUtilities.getLineLineNumber(editor.getDocument(), position.getOffset());
+    }
 
-   /**
-    * @param annotationModel
-    */
-   public void setModel(AnnotationModel annotationModel)
-   {
-      if (model != annotationModel)
-      {
-         if (remover != null)
-         {
-            remover.remove();
-         }
-         model = annotationModel;
-         remover = model.addAnnotationModelListener(listener);
-      }
-   }
+    /** @param annotationModel */
+    public void setModel(AnnotationModel annotationModel) {
+        if (model != annotationModel) {
+            if (remover != null) {
+                remover.remove();
+            }
+            model = annotationModel;
+            remover = model.addAnnotationModelListener(listener);
+        }
+    }
 
 }

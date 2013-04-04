@@ -26,57 +26,47 @@ import com.codenvy.ide.texteditor.selection.SelectionModel;
 import com.codenvy.ide.util.input.SignalEvent;
 
 
-/**
- * Implementation of some common textual actions.
- */
-public class TextActions extends DefaultActionExecutor
-{
+/** Implementation of some common textual actions. */
+public class TextActions extends DefaultActionExecutor {
 
-   public static final TextActions INSTANCE = new TextActions();
+    public static final TextActions INSTANCE = new TextActions();
 
-   private TextActions()
-   {
-      addAction(CommonActions.SPLIT_LINE, new Shortcut()
-      {
-         @Override
-         public boolean event(InputScheme scheme, SignalEvent event)
-         {
-            splitLine(scheme.getInputController().getEditor());
-            return true;
-         }
-      });
+    private TextActions() {
+        addAction(CommonActions.SPLIT_LINE, new Shortcut() {
+            @Override
+            public boolean event(InputScheme scheme, SignalEvent event) {
+                splitLine(scheme.getInputController().getEditor());
+                return true;
+            }
+        });
 
-      addAction(CommonActions.START_NEW_LINE, new Shortcut()
-      {
-         @Override
-         public boolean event(InputScheme scheme, SignalEvent event)
-         {
-            startNewLine(scheme.getInputController().getEditor());
-            return true;
-         }
-      });
-   }
+        addAction(CommonActions.START_NEW_LINE, new Shortcut() {
+            @Override
+            public boolean event(InputScheme scheme, SignalEvent event) {
+                startNewLine(scheme.getInputController().getEditor());
+                return true;
+            }
+        });
+    }
 
-   private void startNewLine(TextEditorViewImpl editor)
-   {
-      SelectionModel selection = editor.getSelection();
-      selection.deselect();
-      Line line = selection.getCursorLine();
-      int lineNumber = selection.getCursorLineNumber();
-      int lastCursorColumn = LineUtils.getLastCursorColumn(line);
-      selection.setCursorPosition(new LineInfo(line, lineNumber), lastCursorColumn);
-      editor.getEditorDocumentMutator().insertText(line, lineNumber, lastCursorColumn, "\n");
-   }
+    private void startNewLine(TextEditorViewImpl editor) {
+        SelectionModel selection = editor.getSelection();
+        selection.deselect();
+        Line line = selection.getCursorLine();
+        int lineNumber = selection.getCursorLineNumber();
+        int lastCursorColumn = LineUtils.getLastCursorColumn(line);
+        selection.setCursorPosition(new LineInfo(line, lineNumber), lastCursorColumn);
+        editor.getEditorDocumentMutator().insertText(line, lineNumber, lastCursorColumn, "\n");
+    }
 
-   private void splitLine(TextEditorViewImpl editor)
-   {
-      // TODO: Add language specific logic (i.e. string splitting).
-      SelectionModel selection = editor.getSelection();
-      Position[] selectionRange = selection.getSelectionRange(false);
-      Position cursor = selectionRange[0];
+    private void splitLine(TextEditorViewImpl editor) {
+        // TODO: Add language specific logic (i.e. string splitting).
+        SelectionModel selection = editor.getSelection();
+        Position[] selectionRange = selection.getSelectionRange(false);
+        Position cursor = selectionRange[0];
 
-      editor.getEditorDocumentMutator().insertText(cursor.getLine(), cursor.getLineNumber(), cursor.getColumn(), "\n",
-         true);
-      selection.setCursorPosition(cursor.getLineInfo(), cursor.getColumn());
-   }
+        editor.getEditorDocumentMutator().insertText(cursor.getLine(), cursor.getLineNumber(), cursor.getColumn(), "\n",
+                                                     true);
+        selection.setCursorPosition(cursor.getLineInfo(), cursor.getColumn());
+    }
 }

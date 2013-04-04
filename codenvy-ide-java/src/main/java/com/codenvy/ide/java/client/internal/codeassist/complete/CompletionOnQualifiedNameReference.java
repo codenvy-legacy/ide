@@ -34,68 +34,50 @@ package com.codenvy.ide.java.client.internal.codeassist.complete;
  */
 
 import com.codenvy.ide.java.client.internal.compiler.ast.QualifiedNameReference;
-import com.codenvy.ide.java.client.internal.compiler.lookup.BlockScope;
-import com.codenvy.ide.java.client.internal.compiler.lookup.FieldBinding;
-import com.codenvy.ide.java.client.internal.compiler.lookup.MissingTypeBinding;
-import com.codenvy.ide.java.client.internal.compiler.lookup.ProblemFieldBinding;
-import com.codenvy.ide.java.client.internal.compiler.lookup.ProblemReasons;
-import com.codenvy.ide.java.client.internal.compiler.lookup.ProblemReferenceBinding;
-import com.codenvy.ide.java.client.internal.compiler.lookup.TypeBinding;
+import com.codenvy.ide.java.client.internal.compiler.lookup.*;
 
-public class CompletionOnQualifiedNameReference extends QualifiedNameReference
-{
-   public char[] completionIdentifier;
+public class CompletionOnQualifiedNameReference extends QualifiedNameReference {
+    public char[] completionIdentifier;
 
-   public boolean isInsideAnnotationAttribute;
+    public boolean isInsideAnnotationAttribute;
 
-   public CompletionOnQualifiedNameReference(char[][] previousIdentifiers, char[] completionIdentifier,
-      long[] positions, boolean isInsideAnnotationAttribute)
-   {
-      super(previousIdentifiers, positions, (int)(positions[0] >>> 32), (int)positions[positions.length - 1]);
-      this.completionIdentifier = completionIdentifier;
-      this.isInsideAnnotationAttribute = isInsideAnnotationAttribute;
-   }
+    public CompletionOnQualifiedNameReference(char[][] previousIdentifiers, char[] completionIdentifier,
+                                              long[] positions, boolean isInsideAnnotationAttribute) {
+        super(previousIdentifiers, positions, (int)(positions[0] >>> 32), (int)positions[positions.length - 1]);
+        this.completionIdentifier = completionIdentifier;
+        this.isInsideAnnotationAttribute = isInsideAnnotationAttribute;
+    }
 
-   public StringBuffer printExpression(int indent, StringBuffer output)
-   {
+    public StringBuffer printExpression(int indent, StringBuffer output) {
 
-      output.append("<CompleteOnName:"); //$NON-NLS-1$
-      for (int i = 0; i < this.tokens.length; i++)
-      {
-         output.append(this.tokens[i]);
-         output.append('.');
-      }
-      output.append(this.completionIdentifier).append('>');
-      return output;
-   }
+        output.append("<CompleteOnName:"); //$NON-NLS-1$
+        for (int i = 0; i < this.tokens.length; i++) {
+            output.append(this.tokens[i]);
+            output.append('.');
+        }
+        output.append(this.completionIdentifier).append('>');
+        return output;
+    }
 
-   public TypeBinding resolveType(BlockScope scope)
-   {
-      // it can be a package, type, member type, local variable or field
-      this.binding = scope.getBinding(this.tokens, this);
-      if (!this.binding.isValidBinding())
-      {
-         if (this.binding instanceof ProblemFieldBinding)
-         {
-            scope.problemReporter().invalidField(this, (FieldBinding)this.binding);
-         }
-         else if (this.binding instanceof ProblemReferenceBinding || this.binding instanceof MissingTypeBinding)
-         {
-            scope.problemReporter().invalidType(this, (TypeBinding)this.binding);
-         }
-         else
-         {
-            scope.problemReporter().unresolvableReference(this, this.binding);
-         }
+    public TypeBinding resolveType(BlockScope scope) {
+        // it can be a package, type, member type, local variable or field
+        this.binding = scope.getBinding(this.tokens, this);
+        if (!this.binding.isValidBinding()) {
+            if (this.binding instanceof ProblemFieldBinding) {
+                scope.problemReporter().invalidField(this, (FieldBinding)this.binding);
+            } else if (this.binding instanceof ProblemReferenceBinding || this.binding instanceof MissingTypeBinding) {
+                scope.problemReporter().invalidType(this, (TypeBinding)this.binding);
+            } else {
+                scope.problemReporter().unresolvableReference(this, this.binding);
+            }
 
-         if (this.binding.problemId() == ProblemReasons.NotFound)
-         {
-            throw new CompletionNodeFound(this, this.binding, scope);
-         }
+            if (this.binding.problemId() == ProblemReasons.NotFound) {
+                throw new CompletionNodeFound(this, this.binding, scope);
+            }
 
-         throw new CompletionNodeFound();
-      }
+            throw new CompletionNodeFound();
+        }
 
-      throw new CompletionNodeFound(this, this.binding, scope);
-   }
+        throw new CompletionNodeFound(this, this.binding, scope);
+    }
 }

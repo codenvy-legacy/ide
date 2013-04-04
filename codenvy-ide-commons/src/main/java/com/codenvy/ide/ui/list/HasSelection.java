@@ -14,46 +14,41 @@
 
 package com.codenvy.ide.ui.list;
 
-/**
- * An interface which describes an object which maintains selection.
- */
-public interface HasSelection<M>
-{
+/** An interface which describes an object which maintains selection. */
+public interface HasSelection<M> {
 
-   public void clearSelection();
+    public void clearSelection();
 
-   /**
-    * Selects the next item in the list, returning false if selection cannot be
-    * moved for any reason.
-    */
-   public boolean selectNext();
+    /**
+     * Selects the next item in the list, returning false if selection cannot be
+     * moved for any reason.
+     */
+    public boolean selectNext();
 
-   /**
-    * Selects the previous item in the list, returning false if selection cannot
-    * be moved for any reason.
-    */
-   public boolean selectPrevious();
+    /**
+     * Selects the previous item in the list, returning false if selection cannot
+     * be moved for any reason.
+     */
+    public boolean selectPrevious();
 
-   public int size();
+    public int size();
 
-   public boolean setSelectedItem(int index);
+    public boolean setSelectedItem(int index);
 
-   public boolean setSelectedItem(M item);
+    public boolean setSelectedItem(M item);
 
-   public boolean selectNextPage();
+    public boolean selectNextPage();
 
-   public boolean selectPreviousPage();
+    public boolean selectPreviousPage();
 
-   /**
-    * Indicates that the currently selected item should be clicked and the
-    * appropriate action must be executed.
-    */
-   public void handleClick();
+    /**
+     * Indicates that the currently selected item should be clicked and the
+     * appropriate action must be executed.
+     */
+    public void handleClick();
 
-   /**
-    * Returns the selected item, or null.
-    */
-   public M getSelectedItem();
+    /** Returns the selected item, or null. */
+    public M getSelectedItem();
 
-   public int getSelectedIndex();
+    public int getSelectedIndex();
 }

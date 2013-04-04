@@ -21,8 +21,7 @@ package com.codenvy.ide.text;
 import com.codenvy.ide.text.store.DocumentTextStore;
 
 /**
- * Default document implementation. Uses a {@link org.eclipse.jface.text.GapTextStore} wrapped inside a
- * {@link org.eclipse.jface.text.CopyOnWriteTextStore} as text store.
+ * Default document implementation. Uses a {@link DocumentTextStore} as text store.
  * <p>
  * The used line tracker considers the following strings as line delimiters: "\n", "\r", "\r\n". In case of a text replacement
  * across line delimiter boundaries and with different line delimiters, the line tracker might have to be repaired. Use
@@ -41,113 +40,101 @@ import com.codenvy.ide.text.store.DocumentTextStore;
  * <p>
  * See {@link GapTextStore} and <code>TreeLineTracker</code> for algorithmic behavior of the used document structures.
  * </p>
- *
  */
-public class DocumentImpl extends AbstractDocument
-{
+public class DocumentImpl extends AbstractDocument {
 
-   private static final String[] delimeters = {"\n"};
+    private static final String[] delimeters = {"\n"};
 
-   private DocumentTextStore textStore;
+    private DocumentTextStore textStore;
 
-   /** Creates a new empty document. */
-   public DocumentImpl()
-   {
-      super();
-      ConfigurableLineTracker lineTracker = new ConfigurableLineTracker(delimeters);
-      textStore = new DocumentTextStore(lineTracker);
-      setTextStore(textStore);
-      setLineTracker(lineTracker);
-      completeInitialization();
-   }
+    /** Creates a new empty document. */
+    public DocumentImpl() {
+        super();
+        ConfigurableLineTracker lineTracker = new ConfigurableLineTracker(delimeters);
+        textStore = new DocumentTextStore(lineTracker);
+        setTextStore(textStore);
+        setLineTracker(lineTracker);
+        completeInitialization();
+    }
 
-   /**
-    * Creates a new document with the given initial content.
-    * 
-    * @param initialContent the document's initial content
-    */
-   public DocumentImpl(String initialContent)
-   {
-      super();
-      ConfigurableLineTracker lineTracker = new ConfigurableLineTracker(delimeters);
-      textStore = new DocumentTextStore(lineTracker);
-      setTextStore(textStore);
-      setLineTracker(lineTracker);
-      getStore().set(initialContent);
-      getTracker().set(initialContent);
-      completeInitialization();
-   }
+    /**
+     * Creates a new document with the given initial content.
+     *
+     * @param initialContent
+     *         the document's initial content
+     */
+    public DocumentImpl(String initialContent) {
+        super();
+        ConfigurableLineTracker lineTracker = new ConfigurableLineTracker(delimeters);
+        textStore = new DocumentTextStore(lineTracker);
+        setTextStore(textStore);
+        setLineTracker(lineTracker);
+        getStore().set(initialContent);
+        getTracker().set(initialContent);
+        completeInitialization();
+    }
 
-   /*
-    * @see org.eclipse.jface.text.IRepairableDocumentExtension# isLineInformationRepairNeeded(int, int, java.lang.String)
-    * @since 3.4
-    */
-   public boolean isLineInformationRepairNeeded(int offset, int length, String text) throws BadLocationException
-   {
-      if ((0 > offset) || (0 > length) || (offset + length > getLength()))
-         throw new BadLocationException();
+    /*
+     * @see org.eclipse.jface.text.IRepairableDocumentExtension# isLineInformationRepairNeeded(int, int, java.lang.String)
+     * @since 3.4
+     */
+    public boolean isLineInformationRepairNeeded(int offset, int length, String text) throws BadLocationException {
+        if ((0 > offset) || (0 > length) || (offset + length > getLength()))
+            throw new BadLocationException();
 
-      return isLineInformationRepairNeeded(text) || isLineInformationRepairNeeded(get(offset, length));
-   }
+        return isLineInformationRepairNeeded(text) || isLineInformationRepairNeeded(get(offset, length));
+    }
 
-   /**
-    * Checks whether the line information needs to be repaired.
-    * 
-    * @param text the text to check
-    * @return <code>true</code> if the line information must be repaired
-    * @since 3.4
-    */
-   private boolean isLineInformationRepairNeeded(String text)
-   {
-      if (text == null)
-         return false;
+    /**
+     * Checks whether the line information needs to be repaired.
+     *
+     * @param text
+     *         the text to check
+     * @return <code>true</code> if the line information must be repaired
+     * @since 3.4
+     */
+    private boolean isLineInformationRepairNeeded(String text) {
+        if (text == null)
+            return false;
 
-      int length = text.length();
-      if (length == 0)
-         return false;
+        int length = text.length();
+        if (length == 0)
+            return false;
 
-      int rIndex = text.indexOf('\r');
-      int nIndex = text.indexOf('\n');
-      if (rIndex == -1 && nIndex == -1)
-         return false;
+        int rIndex = text.indexOf('\r');
+        int nIndex = text.indexOf('\n');
+        if (rIndex == -1 && nIndex == -1)
+            return false;
 
-      if (rIndex > 0 && rIndex < length - 1 && nIndex > 1 && rIndex < length - 2)
-         return false;
+        if (rIndex > 0 && rIndex < length - 1 && nIndex > 1 && rIndex < length - 2)
+            return false;
 
-      String defaultLD = null;
-      try
-      {
-         defaultLD = getLineDelimiter(0);
-      }
-      catch (BadLocationException x)
-      {
-         return true;
-      }
-
-      if (defaultLD == null)
-         return false;
-
-      defaultLD = getDefaultLineDelimiter();
-
-      if (defaultLD.length() == 1)
-      {
-         if (rIndex != -1 && !"\r".equals(defaultLD)) //$NON-NLS-1$
+        String defaultLD = null;
+        try {
+            defaultLD = getLineDelimiter(0);
+        } catch (BadLocationException x) {
             return true;
-         if (nIndex != -1 && !"\n".equals(defaultLD)) //$NON-NLS-1$
-            return true;
-      }
-      else if (defaultLD.length() == 2)
-         return rIndex == -1 || nIndex - rIndex != 1;
+        }
 
-      return false;
-   }
+        if (defaultLD == null)
+            return false;
 
-   /**
-   * @return the textStore
-   */
-   public DocumentTextStore getTextStore()
-   {
-      return textStore;
-   }
+        defaultLD = getDefaultLineDelimiter();
+
+        if (defaultLD.length() == 1) {
+            if (rIndex != -1 && !"\r".equals(defaultLD)) //$NON-NLS-1$
+                return true;
+            if (nIndex != -1 && !"\n".equals(defaultLD)) //$NON-NLS-1$
+                return true;
+        } else if (defaultLD.length() == 2)
+            return rIndex == -1 || nIndex - rIndex != 1;
+
+        return false;
+    }
+
+    /** @return the textStore */
+    public DocumentTextStore getTextStore() {
+        return textStore;
+    }
 
 }

@@ -25,10 +25,8 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public interface CssResources extends ClientBundle
-{
-  @Source("com/codenvy/ide/texteditor/codeassistant/css-property-gray.png")
-  ImageResource property();
+public interface CssResources extends ClientBundle {
+    @Source("com/codenvy/ide/texteditor/codeassistant/css-property-gray.png")
+    ImageResource property();
 }

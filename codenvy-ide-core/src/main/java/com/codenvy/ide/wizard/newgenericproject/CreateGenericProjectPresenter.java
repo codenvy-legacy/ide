@@ -18,9 +18,8 @@
  */
 package com.codenvy.ide.wizard.newgenericproject;
 
-import com.codenvy.ide.api.wizard.newproject.AbstractCreateProjectPresenter;
-
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.wizard.newproject.AbstractCreateProjectPresenter;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Project;
@@ -37,53 +36,43 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateGenericProjectPresenter extends AbstractCreateProjectPresenter
-{
-   private ResourceProvider resourceProvider;
+public class CreateGenericProjectPresenter extends AbstractCreateProjectPresenter {
+    private ResourceProvider resourceProvider;
 
-   /**
-    * Create new generic project presenter.
-    * 
-    * @param resourceProvider
-    */
-   @Inject
-   public CreateGenericProjectPresenter(ResourceProvider resourceProvider)
-   {
-      this.resourceProvider = resourceProvider;
-   }
+    /**
+     * Create new generic project presenter.
+     *
+     * @param resourceProvider
+     */
+    @Inject
+    public CreateGenericProjectPresenter(ResourceProvider resourceProvider) {
+        this.resourceProvider = resourceProvider;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void create(final AsyncCallback<Project> callback)
-   {
-      final String projectName = getProjectName();
+    /** {@inheritDoc} */
+    @Override
+    public void create(final AsyncCallback<Project> callback) {
+        final String projectName = getProjectName();
 
-      resourceProvider.createProject(projectName, JsonCollections.<Property> createArray(),
-         new AsyncCallback<Project>()
-         {
-            public void onSuccess(final Project project)
-            {
-               project.createFile(project, "Readme.txt", "This file was auto created when you created this project.",
-                  MimeType.TEXT_PLAIN, new AsyncCallback<File>()
-                  {
-                     public void onFailure(Throwable caught)
-                     {
-                        Log.error(NewGenericProjectPagePresenter.class, caught);
-                     }
+        resourceProvider.createProject(projectName, JsonCollections.<Property>createArray(),
+                                       new AsyncCallback<Project>() {
+                                           public void onSuccess(final Project project) {
+                                               project.createFile(project, "Readme.txt",
+                                                                  "This file was auto created when you created this project.",
+                                                                  MimeType.TEXT_PLAIN, new AsyncCallback<File>() {
+                                                   public void onFailure(Throwable caught) {
+                                                       Log.error(NewGenericProjectPagePresenter.class, caught);
+                                                   }
 
-                     public void onSuccess(File result)
-                     {
-                        callback.onSuccess(project);
-                     }
-                  });
-            }
+                                                   public void onSuccess(File result) {
+                                                       callback.onSuccess(project);
+                                                   }
+                                               });
+                                           }
 
-            public void onFailure(Throwable caught)
-            {
-               Log.error(NewGenericProjectPagePresenter.class, caught);
-            }
-         });
-   }
+                                           public void onFailure(Throwable caught) {
+                                               Log.error(NewGenericProjectPagePresenter.class, caught);
+                                           }
+                                       });
+    }
 }

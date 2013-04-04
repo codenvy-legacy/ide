@@ -32,95 +32,73 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 /**
  * Unmarshaller for CloudFoundry services.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 13, 2012 2:07:24 PM anya $
  */
-public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFoundryServices>
-{
-   /**
-    * CloudFoundry services (system and provisioned).
-    */
-   private CloudFoundryServices cloudfoundryServices;
+public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFoundryServices> {
+    /** CloudFoundry services (system and provisioned). */
+    private CloudFoundryServices cloudfoundryServices;
 
-   private CloudFoundryAutoBeanFactory autoBeanFactory;
+    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   private final class Keys
-   {
-      public static final String SYSTEM = "system";
+    private final class Keys {
+        public static final String SYSTEM = "system";
 
-      public static final String PROVISIONED = "provisioned";
-   }
+        public static final String PROVISIONED = "provisioned";
+    }
 
-   /**
-    * Create unmarshaller.
-    * 
-    * @param autoBeanFactory
-    */
-   public CloudFoundryServicesUnmarshaller(CloudFoundryAutoBeanFactory autoBeanFactory)
-   {
-      this.autoBeanFactory = autoBeanFactory;
-      this.cloudfoundryServices = this.autoBeanFactory.services().as();
-   }
+    /**
+     * Create unmarshaller.
+     *
+     * @param autoBeanFactory
+     */
+    public CloudFoundryServicesUnmarshaller(CloudFoundryAutoBeanFactory autoBeanFactory) {
+        this.autoBeanFactory = autoBeanFactory;
+        this.cloudfoundryServices = this.autoBeanFactory.services().as();
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      if (response.getText() == null || response.getText().isEmpty())
-      {
-         return;
-      }
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        if (response.getText() == null || response.getText().isEmpty()) {
+            return;
+        }
 
-      JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
+        JSONObject jsonObject = JSONParser.parseStrict(response.getText()).isObject();
 
-      if (jsonObject.containsKey(Keys.SYSTEM))
-      {
-         JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();
-         if (systemServices.size() > 0)
-         {
-            SystemService[] services = new SystemService[systemServices.size()];
-            for (int i = 0; i < systemServices.size(); i++)
-            {
-               String value = systemServices.get(i).isObject().toString();
-               services[i] = AutoBeanCodex.decode(autoBeanFactory, SystemService.class, value).as();
+        if (jsonObject.containsKey(Keys.SYSTEM)) {
+            JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();
+            if (systemServices.size() > 0) {
+                SystemService[] services = new SystemService[systemServices.size()];
+                for (int i = 0; i < systemServices.size(); i++) {
+                    String value = systemServices.get(i).isObject().toString();
+                    services[i] = AutoBeanCodex.decode(autoBeanFactory, SystemService.class, value).as();
+                }
+                cloudfoundryServices.setSystem(services);
+            } else {
+                cloudfoundryServices.setSystem(new SystemService[0]);
             }
-            cloudfoundryServices.setSystem(services);
-         }
-         else
-         {
-            cloudfoundryServices.setSystem(new SystemService[0]);
-         }
-      }
+        }
 
-      if (jsonObject.containsKey(Keys.PROVISIONED))
-      {
-         JSONArray provisionedServices = jsonObject.get(Keys.PROVISIONED).isArray();
-         if (provisionedServices.size() > 0)
-         {
-            ProvisionedService[] services = new ProvisionedService[provisionedServices.size()];
-            for (int i = 0; i < provisionedServices.size(); i++)
-            {
-               String value = provisionedServices.get(i).isObject().toString();
-               services[i] = AutoBeanCodex.decode(autoBeanFactory, ProvisionedService.class, value).as();
+        if (jsonObject.containsKey(Keys.PROVISIONED)) {
+            JSONArray provisionedServices = jsonObject.get(Keys.PROVISIONED).isArray();
+            if (provisionedServices.size() > 0) {
+                ProvisionedService[] services = new ProvisionedService[provisionedServices.size()];
+                for (int i = 0; i < provisionedServices.size(); i++) {
+                    String value = provisionedServices.get(i).isObject().toString();
+                    services[i] = AutoBeanCodex.decode(autoBeanFactory, ProvisionedService.class, value).as();
+                }
+                cloudfoundryServices.setProvisioned(services);
+            } else {
+                cloudfoundryServices.setProvisioned(new ProvisionedService[0]);
             }
-            cloudfoundryServices.setProvisioned(services);
-         }
-         else
-         {
-            cloudfoundryServices.setProvisioned(new ProvisionedService[0]);
-         }
-      }
-   }
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public CloudFoundryServices getPayload()
-   {
-      return cloudfoundryServices;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public CloudFoundryServices getPayload() {
+        return cloudfoundryServices;
+    }
 }

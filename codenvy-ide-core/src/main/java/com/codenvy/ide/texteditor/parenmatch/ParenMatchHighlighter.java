@@ -46,406 +46,349 @@ import com.google.gwt.user.client.Timer;
  * TODO : Make this language specific and utilize code
  * understanding.
  */
+
 /**
  * Highlights matching character for (), {}, [], and <> when the cursor is next
  * to one of them.
  */
-public class ParenMatchHighlighter
-{
+public class ParenMatchHighlighter {
 
-   /** Opening paren characters. */
-   public static final String OPEN_PARENS = "(<[{";
+    /** Opening paren characters. */
+    public static final String OPEN_PARENS = "(<[{";
 
-   /**
-    * Closing paren characters. {@link #CLOSE_PARENS}[i] must be the closing
-    * match for {@link #OPEN_PARENS}[i].
-    */
-   public static final String CLOSE_PARENS = ")>]}";
+    /**
+     * Closing paren characters. {@link #CLOSE_PARENS}[i] must be the closing
+     * match for {@link #OPEN_PARENS}[i].
+     */
+    public static final String CLOSE_PARENS = ")>]}";
 
-   static final AnchorType MATCH_ANCHOR_TYPE = AnchorType.create(ParenMatchHighlighter.class, "matchAnchor");
+    static final AnchorType MATCH_ANCHOR_TYPE = AnchorType.create(ParenMatchHighlighter.class, "matchAnchor");
 
-   /**
-    * Paren match highlighting CSS.
-    */
-   public interface Css extends TextEditorViewImpl.EditorSharedCss
-   {
-      String match();
-   }
+    /** Paren match highlighting CSS. */
+    public interface Css extends TextEditorViewImpl.EditorSharedCss {
+        String match();
+    }
 
-   /**
-    * Paren match highlighting resources.
-    */
-   public interface Resources extends ClientBundle
-   {
-      @Source({"ParenMatchHighlighter.css", "com/codenvy/ide/texteditor/constants.css"})
-      Css parenMatchHighlighterCss();
-   }
+    /** Paren match highlighting resources. */
+    public interface Resources extends ClientBundle {
+        @Source({"ParenMatchHighlighter.css", "com/codenvy/ide/texteditor/constants.css"})
+        Css parenMatchHighlighterCss();
+    }
 
-   /**
-    * Handler for processing each line during the search.
-    */
-   private class SearchTaskHandler implements SearchTask.SearchTaskExecutor
-   {
+    /** Handler for processing each line during the search. */
+    private class SearchTaskHandler implements SearchTask.SearchTaskExecutor {
 
-      private Line startLine;
+        private Line startLine;
 
-      private int cursorColumn;
+        private int cursorColumn;
 
-      private SearchDirection direction;
+        private SearchDirection direction;
 
-      private char searchChar;
+        private char searchChar;
 
-      private char cancelChar;
+        private char cancelChar;
 
-      private int matchCount;
+        private int matchCount;
 
-      private RegExp regExp;
+        private RegExp regExp;
 
-      /**
-       * Initialize the search parameters.
-       *
-       * @param startLine the line the search will start at.
-       * @param cursorColumn the column where the paren character was found.
-       * @param direction the direction to search, depending on whether we're
-       *        looking for the closing or opening paren.
-       * @param searchChar the char we are looking for that opens or closes the
-       *        found paren
-       * @param cancelChar the char we found. If found again, we must find it's
-       *        match before we find the original paren's match.
-       */
-      public void initialize(Line startLine, int cursorColumn, SearchDirection direction, char searchChar,
-         char cancelChar)
-      {
-         this.startLine = startLine;
-         this.cursorColumn = cursorColumn;
-         this.direction = direction;
-         this.searchChar = searchChar;
-         this.cancelChar = cancelChar;
-         if (searchChar == '[' || searchChar == ']')
-         {
-            this.regExp = RegExp.compile("\\[|\\]", "g");
-         }
-         else
-         {
-            // searching ( or ) -> [(]|[)]
-            this.regExp = RegExp.compile("[" + this.searchChar + "]|[" + this.cancelChar + "]", "g");
-         }
-         // we start at 1 and try to get down to 0 by finding the actual match.
-         this.matchCount = 1;
-      }
+        /**
+         * Initialize the search parameters.
+         *
+         * @param startLine
+         *         the line the search will start at.
+         * @param cursorColumn
+         *         the column where the paren character was found.
+         * @param direction
+         *         the direction to search, depending on whether we're
+         *         looking for the closing or opening paren.
+         * @param searchChar
+         *         the char we are looking for that opens or closes the
+         *         found paren
+         * @param cancelChar
+         *         the char we found. If found again, we must find it's
+         *         match before we find the original paren's match.
+         */
+        public void initialize(Line startLine, int cursorColumn, SearchDirection direction, char searchChar,
+                               char cancelChar) {
+            this.startLine = startLine;
+            this.cursorColumn = cursorColumn;
+            this.direction = direction;
+            this.searchChar = searchChar;
+            this.cancelChar = cancelChar;
+            if (searchChar == '[' || searchChar == ']') {
+                this.regExp = RegExp.compile("\\[|\\]", "g");
+            } else {
+                // searching ( or ) -> [(]|[)]
+                this.regExp = RegExp.compile("[" + this.searchChar + "]|[" + this.cancelChar + "]", "g");
+            }
+            // we start at 1 and try to get down to 0 by finding the actual match.
+            this.matchCount = 1;
+        }
 
-      @Override
-      public boolean onSearchLine(Line line, int number, boolean shouldRenderLine)
-      {
-         String lineText = line.getText();
+        @Override
+        public boolean onSearchLine(Line line, int number, boolean shouldRenderLine) {
+            String lineText = line.getText();
          /*
           * Set match to -1 since we call getNextMatch with match + 1 to exclude a
           * found match from the next round.
           */
-         int match = -1;
-         if (direction == SearchDirection.DOWN)
-         {
-            if (line == startLine)
-            {
-               // the - 1 is to make sure we include the character at the cursor.
-               match = cursorColumn - 1;
-            }
-            MatchResult result;
-            while ((result = RegExpUtils.findMatchAfterIndex(regExp, lineText, match)) != null)
-            {
-               match = result.getIndex();
-               if (checkForMatch(line, number, match, shouldRenderLine))
-               {
-                  return false;
-               }
-            }
-         }
-         else
-         {
-            int endColumn = line.length() - 1;
-            if (line == startLine)
-            {
-               endColumn = cursorColumn - 2;
-            }
-            // first get all matches
-            JsonArray<Integer> matches = JsonCollections.createArray();
-            MatchResult result;
-            while ((result = RegExpUtils.findMatchAfterIndex(regExp, lineText, match)) != null)
-            {
-               match = result.getIndex();
-               if (match <= endColumn)
-               {
-                  matches.add(match);
-               }
-               else
-               {
-                  break;
-               }
-            }
-            // then iterate backwards through them
-            /**
-             * TODO : look for a faster way to do this such that we
-             * don't have to iterate back through them
-             */
-            for (int i = matches.size() - 1; i >= 0; i--)
-            {
-               if (checkForMatch(line, number, matches.get(i), shouldRenderLine))
-               {
-                  return false;
-               }
-            }
-         }
-         return true;
-      }
-
-      /**
-       * Check if this character is the match we are looking for.
-       */
-      private boolean checkForMatch(Line line, int number, int column, boolean shouldRenderLine)
-      {
-         char nextChar = line.getText().charAt(column);
-         if (nextChar == searchChar)
-         {
-            matchCount--;
-         }
-         else if (nextChar == cancelChar)
-         {
-            matchCount++;
-         }
-
-         if (matchCount == 0)
-         {
-            matchAnchor = anchorManager.createAnchor(MATCH_ANCHOR_TYPE, line, number, column);
-            // when testing, css is null
-            matchRenderer = SingleChunkLineRenderer.create(matchAnchor, matchAnchor, css.match());
-            renderer.addLineRenderer(matchRenderer);
-            if (shouldRenderLine)
-            {
-               renderer.requestRenderLine(line);
+            int match = -1;
+            if (direction == SearchDirection.DOWN) {
+                if (line == startLine) {
+                    // the - 1 is to make sure we include the character at the cursor.
+                    match = cursorColumn - 1;
+                }
+                MatchResult result;
+                while ((result = RegExpUtils.findMatchAfterIndex(regExp, lineText, match)) != null) {
+                    match = result.getIndex();
+                    if (checkForMatch(line, number, match, shouldRenderLine)) {
+                        return false;
+                    }
+                }
+            } else {
+                int endColumn = line.length() - 1;
+                if (line == startLine) {
+                    endColumn = cursorColumn - 2;
+                }
+                // first get all matches
+                JsonArray<Integer> matches = JsonCollections.createArray();
+                MatchResult result;
+                while ((result = RegExpUtils.findMatchAfterIndex(regExp, lineText, match)) != null) {
+                    match = result.getIndex();
+                    if (match <= endColumn) {
+                        matches.add(match);
+                    } else {
+                        break;
+                    }
+                }
+                // then iterate backwards through them
+                /**
+                 * TODO : look for a faster way to do this such that we
+                 * don't have to iterate back through them
+                 */
+                for (int i = matches.size() - 1; i >= 0; i--) {
+                    if (checkForMatch(line, number, matches.get(i), shouldRenderLine)) {
+                        return false;
+                    }
+                }
             }
             return true;
-         }
-         return false;
-      }
-   }
+        }
 
-   /**
-    * A helper class to handle client events and listeners. This allows all client and GWT
-    * functionality to be mocked out in the tests by hiding the implementation details of the
-    * {@link Timer}.
-    */
-   static class ParenMatchHelper implements ListenerRegistrar<CursorListener>
-   {
-
-      CursorListener cursorListener;
-
-      Remover remover;
-
-      final SelectionModel selectionModel;
-
-      final Timer timer = new Timer()
-      {
-         @Override
-         public void run()
-         {
-            if (cursorListener == null)
-            {
-               return;
+        /** Check if this character is the match we are looking for. */
+        private boolean checkForMatch(Line line, int number, int column, boolean shouldRenderLine) {
+            char nextChar = line.getText().charAt(column);
+            if (nextChar == searchChar) {
+                matchCount--;
+            } else if (nextChar == cancelChar) {
+                matchCount++;
             }
-            LineInfo cursorLine = new LineInfo(selectionModel.getCursorLine(), selectionModel.getCursorLineNumber());
-            int cursorColumn = selectionModel.getCursorColumn();
-            cursorListener.onCursorChange(cursorLine, cursorColumn, true);
-         }
-      };
 
-      public ParenMatchHelper(SelectionModel model)
-      {
-         this.selectionModel = model;
-      }
+            if (matchCount == 0) {
+                matchAnchor = anchorManager.createAnchor(MATCH_ANCHOR_TYPE, line, number, column);
+                // when testing, css is null
+                matchRenderer = SingleChunkLineRenderer.create(matchAnchor, matchAnchor, css.match());
+                renderer.addLineRenderer(matchRenderer);
+                if (shouldRenderLine) {
+                    renderer.requestRenderLine(line);
+                }
+                return true;
+            }
+            return false;
+        }
+    }
 
-      void register()
-      {
-         remover = selectionModel.getCursorListenerRegistrar().add(new CursorListener()
-         {
+    /**
+     * A helper class to handle client events and listeners. This allows all client and GWT
+     * functionality to be mocked out in the tests by hiding the implementation details of the
+     * {@link Timer}.
+     */
+    static class ParenMatchHelper implements ListenerRegistrar<CursorListener> {
+
+        CursorListener cursorListener;
+
+        Remover remover;
+
+        final SelectionModel selectionModel;
+
+        final Timer timer = new Timer() {
             @Override
-            public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
-            {
-               timer.schedule(50);
+            public void run() {
+                if (cursorListener == null) {
+                    return;
+                }
+                LineInfo cursorLine = new LineInfo(selectionModel.getCursorLine(), selectionModel.getCursorLineNumber());
+                int cursorColumn = selectionModel.getCursorColumn();
+                cursorListener.onCursorChange(cursorLine, cursorColumn, true);
             }
-         });
-      }
+        };
 
-      void cancelTimer()
-      {
-         timer.cancel();
-      }
+        public ParenMatchHelper(SelectionModel model) {
+            this.selectionModel = model;
+        }
 
-      @Override
-      public ListenerRegistrar.Remover add(CursorListener listener)
-      {
-         Assert.isLegal(this.cursorListener == null, "Can't register two listeners");
-         this.cursorListener = listener;
-         register();
+        void register() {
+            remover = selectionModel.getCursorListenerRegistrar().add(new CursorListener() {
+                @Override
+                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
+                    timer.schedule(50);
+                }
+            });
+        }
 
-         return new Remover()
-         {
+        void cancelTimer() {
+            timer.cancel();
+        }
 
+        @Override
+        public ListenerRegistrar.Remover add(CursorListener listener) {
+            Assert.isLegal(this.cursorListener == null, "Can't register two listeners");
+            this.cursorListener = listener;
+            register();
+
+            return new Remover() {
+
+                @Override
+                public void remove() {
+                    remover.remove();
+                    cursorListener = null;
+                }
+
+            };
+        }
+
+        @Override
+        public void remove(CursorListener listener) {
+            throw new UnsupportedOperationException("The remover must be used to remove the listener");
+        }
+    }
+
+    public static ParenMatchHighlighter create(DocumentModel document, ViewportModel viewportModel,
+                                               AnchorManager anchorManager, Resources res, Renderer renderer,
+                                               final SelectionModel selection) {
+
+        final IncrementalScheduler scheduler = new BasicIncrementalScheduler(100, 5000);
+
+        ParenMatchHelper helper = new ParenMatchHelper(selection);
+
+        return new ParenMatchHighlighter(document, viewportModel, anchorManager, res, renderer, scheduler, helper);
+    }
+
+    private final AnchorManager anchorManager;
+
+    private final Renderer renderer;
+
+    private final IncrementalScheduler scheduler;
+
+    private final SearchTask searchTask;
+
+    private final SearchTaskHandler searchTaskHandler;
+
+    private final Css css;
+
+    private final ListenerRegistrar<CursorListener> listenerRegistrar;
+
+    private final CursorListener cursorListener;
+
+    private ListenerRegistrar.Remover cursorListenerRemover;
+
+    private Anchor matchAnchor;
+
+    private LineRenderer matchRenderer;
+
+    ParenMatchHighlighter(DocumentModel document, ViewportModel viewportModel, AnchorManager anchorManager,
+                          Resources res, Renderer renderer, IncrementalScheduler scheduler,
+                          ListenerRegistrar<CursorListener> listenerRegistrar) {
+        this.anchorManager = anchorManager;
+        this.renderer = renderer;
+        this.scheduler = scheduler;
+        this.listenerRegistrar = listenerRegistrar;
+        searchTask = new SearchTask(document, viewportModel, scheduler);
+        searchTaskHandler = new SearchTaskHandler();
+        css = res.parenMatchHighlighterCss();
+
+        cursorListener = new CursorListener() {
             @Override
-            public void remove()
-            {
-               remover.remove();
-               cursorListener = null;
+            public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange) {
+                cancel();
+                maybeSearch(lineInfo, column);
             }
+        };
 
-         };
-      }
+        cursorListenerRemover = this.listenerRegistrar.add(cursorListener);
+    }
 
-      @Override
-      public void remove(CursorListener listener)
-      {
-         throw new UnsupportedOperationException("The remover must be used to remove the listener");
-      }
-   }
-
-   public static ParenMatchHighlighter create(DocumentModel document, ViewportModel viewportModel,
-      AnchorManager anchorManager, Resources res, Renderer renderer, final SelectionModel selection)
-   {
-
-      final IncrementalScheduler scheduler = new BasicIncrementalScheduler(100, 5000);
-
-      ParenMatchHelper helper = new ParenMatchHelper(selection);
-
-      return new ParenMatchHighlighter(document, viewportModel, anchorManager, res, renderer, scheduler, helper);
-   }
-
-   private final AnchorManager anchorManager;
-
-   private final Renderer renderer;
-
-   private final IncrementalScheduler scheduler;
-
-   private final SearchTask searchTask;
-
-   private final SearchTaskHandler searchTaskHandler;
-
-   private final Css css;
-
-   private final ListenerRegistrar<CursorListener> listenerRegistrar;
-
-   private final CursorListener cursorListener;
-
-   private ListenerRegistrar.Remover cursorListenerRemover;
-
-   private Anchor matchAnchor;
-
-   private LineRenderer matchRenderer;
-
-   ParenMatchHighlighter(DocumentModel document, ViewportModel viewportModel, AnchorManager anchorManager,
-      Resources res, Renderer renderer, IncrementalScheduler scheduler,
-      ListenerRegistrar<CursorListener> listenerRegistrar)
-   {
-      this.anchorManager = anchorManager;
-      this.renderer = renderer;
-      this.scheduler = scheduler;
-      this.listenerRegistrar = listenerRegistrar;
-      searchTask = new SearchTask(document, viewportModel, scheduler);
-      searchTaskHandler = new SearchTaskHandler();
-      css = res.parenMatchHighlighterCss();
-
-      cursorListener = new CursorListener()
-      {
-         @Override
-         public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
-         {
+    /** Enable or disable the match highlighter. By default it's enabled. */
+    public void setEnabled(boolean enabled) {
+        Assert.isNotNull(cursorListenerRemover, "can't enable when cursorListenerRemover is null");
+        if (enabled) {
+            cursorListenerRemover = listenerRegistrar.add(cursorListener);
+        } else {
             cancel();
-            maybeSearch(lineInfo, column);
-         }
-      };
+            cursorListenerRemover.remove();
+        }
+    }
 
-      cursorListenerRemover = this.listenerRegistrar.add(cursorListener);
-   }
+    /** Cancel the current matching - both the search and any displayed matches. */
+    public void cancel() {
+        scheduler.cancel();
+        searchTask.cancelTask();
+        if (matchRenderer != null) {
+            renderer.removeLineRenderer(matchRenderer);
+            renderer.requestRenderLine(matchAnchor.getLine());
+            anchorManager.removeAnchor(matchAnchor);
+            matchRenderer = null;
+        }
+    }
 
-   /**
-    * Enable or disable the match highlighter. By default it's enabled.
-    */
-   public void setEnabled(boolean enabled)
-   {
-      Assert.isNotNull(cursorListenerRemover, "can't enable when cursorListenerRemover is null");
-      if (enabled)
-      {
-         cursorListenerRemover = listenerRegistrar.add(cursorListener);
-      }
-      else
-      {
-         cancel();
-         cursorListenerRemover.remove();
-      }
-   }
+    public void teardown() {
+        cancel();
+        cursorListenerRemover.remove();
+    }
 
-   /**
-    * Cancel the current matching - both the search and any displayed matches.
-    */
-   public void cancel()
-   {
-      scheduler.cancel();
-      searchTask.cancelTask();
-      if (matchRenderer != null)
-      {
-         renderer.removeLineRenderer(matchRenderer);
-         renderer.requestRenderLine(matchAnchor.getLine());
-         anchorManager.removeAnchor(matchAnchor);
-         matchRenderer = null;
-      }
-   }
+    /**
+     * Checks if there is a paren to match at the cursor and starts a search if
+     * so.
+     *
+     * @param cursorLine
+     * @param cursorColumn
+     */
+    private void maybeSearch(LineInfo cursorLine, int cursorColumn) {
+        if (cursorColumn > 0) {
+            char cancelChar = cursorLine.line().getText().charAt(cursorColumn - 1);
 
-   public void teardown()
-   {
-      cancel();
-      cursorListenerRemover.remove();
-   }
+            int openIndex = OPEN_PARENS.indexOf(cancelChar);
+            if (openIndex >= 0) {
+                search(SearchDirection.DOWN, CLOSE_PARENS.charAt(openIndex), cancelChar, cursorLine, cursorColumn);
+                return;
+            }
+            int closeIndex = CLOSE_PARENS.indexOf(cancelChar);
+            if (closeIndex >= 0) {
+                search(SearchDirection.UP, OPEN_PARENS.charAt(closeIndex), cancelChar, cursorLine, cursorColumn);
+                return;
+            }
+        }
+    }
 
-   /**
-    * Checks if there is a paren to match at the cursor and starts a search if
-    * so.
-    * 
-    * @param cursorLine
-    * @param cursorColumn
-    */
-   private void maybeSearch(LineInfo cursorLine, int cursorColumn)
-   {
-      if (cursorColumn > 0)
-      {
-         char cancelChar = cursorLine.line().getText().charAt(cursorColumn - 1);
-
-         int openIndex = OPEN_PARENS.indexOf(cancelChar);
-         if (openIndex >= 0)
-         {
-            search(SearchDirection.DOWN, CLOSE_PARENS.charAt(openIndex), cancelChar, cursorLine, cursorColumn);
-            return;
-         }
-         int closeIndex = CLOSE_PARENS.indexOf(cancelChar);
-         if (closeIndex >= 0)
-         {
-            search(SearchDirection.UP, OPEN_PARENS.charAt(closeIndex), cancelChar, cursorLine, cursorColumn);
-            return;
-         }
-      }
-   }
-
-   /**
-    * Starts the search for the matching paren.
-    * 
-    * @param direction the direction to search in
-    * @param searchChar the character we want to match
-    * @param cancelChar the character we found, which if we find again we need to
-    *        find its match first.
-    * @param cursorLine the line where the to-be-matched character was found
-    * @param column the column to the right of the to-be-matched character
-    */
-   protected void search(final SearchDirection direction, final char searchChar, final char cancelChar,
-      final LineInfo cursorLine, final int column)
-   {
-      searchTaskHandler.initialize(cursorLine.line(), column, direction, searchChar, cancelChar);
-      searchTask.searchDocumentStartingAtLine(searchTaskHandler, null, direction, cursorLine);
-   }
+    /**
+     * Starts the search for the matching paren.
+     *
+     * @param direction
+     *         the direction to search in
+     * @param searchChar
+     *         the character we want to match
+     * @param cancelChar
+     *         the character we found, which if we find again we need to
+     *         find its match first.
+     * @param cursorLine
+     *         the line where the to-be-matched character was found
+     * @param column
+     *         the column to the right of the to-be-matched character
+     */
+    protected void search(final SearchDirection direction, final char searchChar, final char cancelChar,
+                          final LineInfo cursorLine, final int column) {
+        searchTaskHandler.initialize(cursorLine.line(), column, direction, searchChar, cancelChar);
+        searchTask.searchDocumentStartingAtLine(searchTaskHandler, null, direction, cursorLine);
+    }
 }

@@ -26,45 +26,34 @@ import com.codenvy.ide.java.client.core.dom.TypeDeclaration;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class TypeFinder extends ASTVisitor
-{
+public class TypeFinder extends ASTVisitor {
 
-   private int position;
-   
-   public AbstractTypeDeclaration type;
+    private int position;
 
-   /**
-    * @param position
-    */
-   public TypeFinder(int position)
-   {
-      super();
-      this.position = position;
-   }
+    public AbstractTypeDeclaration type;
 
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumDeclaration)
-    */
-   @Override
-   public boolean visit(EnumDeclaration node)
-   {
-      if(node.getStartPosition() < position && node.getStartPosition() + node.getLength() > position)
-         type = node;
-      return true;
-   }
-   
-   /**
-    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration)
-    */
-   @Override
-   public boolean visit(TypeDeclaration node)
-   {
-      if(node.getStartPosition() < position && node.getStartPosition() + node.getLength() > position)
-         type = node;
-      return true;
-   }
-   
-  
+    /** @param position */
+    public TypeFinder(int position) {
+        super();
+        this.position = position;
+    }
+
+    /** @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumDeclaration) */
+    @Override
+    public boolean visit(EnumDeclaration node) {
+        if (node.getStartPosition() < position && node.getStartPosition() + node.getLength() > position)
+            type = node;
+        return true;
+    }
+
+    /** @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration) */
+    @Override
+    public boolean visit(TypeDeclaration node) {
+        if (node.getStartPosition() < position && node.getStartPosition() + node.getLength() > position)
+            type = node;
+        return true;
+    }
+
+
 }

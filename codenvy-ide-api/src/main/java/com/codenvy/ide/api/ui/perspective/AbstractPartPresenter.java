@@ -19,102 +19,82 @@
 package com.codenvy.ide.api.ui.perspective;
 
 import com.codenvy.ide.api.selection.Selection;
-
 import com.codenvy.ide.util.ListenerManager;
 import com.codenvy.ide.util.ListenerManager.Dispatcher;
 
 
 /**
  * Abstract base implementation of all PartPresenter
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public abstract class AbstractPartPresenter implements PartPresenter
-{
+public abstract class AbstractPartPresenter implements PartPresenter {
 
-   private ListenerManager<PropertyListener> manager;
+    private ListenerManager<PropertyListener> manager;
 
-   private Selection<?> selection;
+    private Selection<?> selection;
 
-   /**
-    * 
-    */
-   public AbstractPartPresenter()
-   {
-      manager = ListenerManager.create();
-   }
+    /**
+     *
+     */
+    public AbstractPartPresenter() {
+        manager = ListenerManager.create();
+    }
 
-   /**
-   * @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose()
-   */
-   @Override
-   public boolean onClose()
-   {
-      return false;
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onClose() */
+    @Override
+    public boolean onClose() {
+        return false;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#onOpen()
-    */
-   @Override
-   public void onOpen()
-   {
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#onOpen() */
+    @Override
+    public void onOpen() {
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#addPropertyListener(com.codenvy.ide.api.ui.perspective.PropertyListener)
-    */
-   @Override
-   public void addPropertyListener(PropertyListener listener)
-   {
-      manager.add(listener);
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#addPropertyListener(com.codenvy.ide.api.ui.perspective.PropertyListener) */
+    @Override
+    public void addPropertyListener(PropertyListener listener) {
+        manager.add(listener);
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#removePropertyListener(com.codenvy.ide.api.ui.perspective.PropertyListener)
-    */
-   @Override
-   public void removePropertyListener(PropertyListener listener)
-   {
-      manager.remove(listener);
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#removePropertyListener(com.codenvy.ide.api.ui.perspective.PropertyListener) */
+    @Override
+    public void removePropertyListener(PropertyListener listener) {
+        manager.remove(listener);
+    }
 
-   /**
-    * Fires a property changed event.
-    *
-    * @param propId the id of the property that changed
-    */
-   protected void firePropertyChange(final int propId)
-   {
-      manager.dispatch(new Dispatcher<PropertyListener>()
-      {
+    /**
+     * Fires a property changed event.
+     *
+     * @param propId
+     *         the id of the property that changed
+     */
+    protected void firePropertyChange(final int propId) {
+        manager.dispatch(new Dispatcher<PropertyListener>() {
 
-         @Override
-         public void dispatch(PropertyListener listener)
-         {
-            listener.propertyChanged(AbstractPartPresenter.this, propId);
-         }
-      });
-   }
+            @Override
+            public void dispatch(PropertyListener listener) {
+                listener.propertyChanged(AbstractPartPresenter.this, propId);
+            }
+        });
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Selection<?> getSelection()
-   {
-      return this.selection;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Selection<?> getSelection() {
+        return this.selection;
+    }
 
-   /**
-    * Sets the Selection of the Part. It later can be accessible using {@link AbstractPartPresenter#getSelection()}
-    * 
-    * @param selection instance of Selection
-    */
-   public void setSelection(Selection<?> selection)
-   {
-      this.selection = selection;
-      firePropertyChange(SELECTION_PROPERTY);
-   }
+    /**
+     * Sets the Selection of the Part. It later can be accessible using {@link AbstractPartPresenter#getSelection()}
+     *
+     * @param selection
+     *         instance of Selection
+     */
+    public void setSelection(Selection<?> selection) {
+        this.selection = selection;
+        firePropertyChange(SELECTION_PROPERTY);
+    }
 }

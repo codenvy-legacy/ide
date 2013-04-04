@@ -24,42 +24,28 @@ import com.codenvy.ide.rest.Unmarshallable;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 
-/**
- * @version $Id:$
- * 
- */
-public class ProjectUnmarshaller implements Unmarshallable<Project>
-{
-   private final Project item;
+/** @version $Id:$ */
+public class ProjectUnmarshaller implements Unmarshallable<Project> {
+    private final Project item;
 
-   public ProjectUnmarshaller(Project item)
-   {
-      this.item = item;
-   }
+    public ProjectUnmarshaller(Project item) {
+        this.item = item;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         item.init(JSONParser.parseLenient(response.getText()).isObject());
-      }
-      catch (Exception exc)
-      {
-         String message = "Can't parse item " + response.getText();
-         throw new UnmarshallerException(message, exc);
-      }
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void unmarshal(Response response) throws UnmarshallerException {
+        try {
+            item.init(JSONParser.parseLenient(response.getText()).isObject());
+        } catch (Exception exc) {
+            String message = "Can't parse item " + response.getText();
+            throw new UnmarshallerException(message, exc);
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public Project getPayload()
-   {
-      return this.item;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public Project getPayload() {
+        return this.item;
+    }
 }

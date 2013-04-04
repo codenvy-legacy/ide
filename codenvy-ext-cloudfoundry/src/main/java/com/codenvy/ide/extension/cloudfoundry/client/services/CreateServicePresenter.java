@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.parts.ConsolePart;
-
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
@@ -45,165 +44,134 @@ import java.util.LinkedHashMap;
 
 /**
  * Presenter for creating new service.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 16, 2012 12:31:33 PM anya $
  */
 @Singleton
-public class CreateServicePresenter implements CreateServiceView.ActionDelegate
-{
-   private CreateServiceView view;
+public class CreateServicePresenter implements CreateServiceView.ActionDelegate {
+    private CreateServiceView view;
 
-   private EventBus eventBus;
+    private EventBus eventBus;
 
-   private ConsolePart console;
+    private ConsolePart console;
 
-   private CloudFoundryLocalizationConstant constant;
+    private CloudFoundryLocalizationConstant constant;
 
-   private CloudFoundryAutoBeanFactory autoBeanFactory;
+    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   private AsyncCallback<ProvisionedService> createServiceCallback;
+    private AsyncCallback<ProvisionedService> createServiceCallback;
 
-   private LoginPresenter loginPresenter;
+    private LoginPresenter loginPresenter;
 
-   /**
-    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
-    */
-   private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         doCreate();
-      }
-   };
+    /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
+    private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
+        @Override
+        public void onLoggedIn() {
+            doCreate();
+        }
+    };
 
-   /**
-    * Create presenter.
-    * 
-    * @param view
-    * @param eventBus
-    * @param console
-    * @param constant
-    * @param autoBeanFactory
-    * @param loginPresenter
-    */
-   @Inject
-   protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, ConsolePart console,
-      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-      LoginPresenter loginPresenter)
-   {
-      this.view = view;
-      this.view.setDelegate(this);
-      this.eventBus = eventBus;
-      this.console = console;
-      this.constant = constant;
-      this.autoBeanFactory = autoBeanFactory;
-      this.loginPresenter = loginPresenter;
-   }
+    /**
+     * Create presenter.
+     *
+     * @param view
+     * @param eventBus
+     * @param console
+     * @param constant
+     * @param autoBeanFactory
+     * @param loginPresenter
+     */
+    @Inject
+    protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, ConsolePart console,
+                                     CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+                                     LoginPresenter loginPresenter) {
+        this.view = view;
+        this.view.setDelegate(this);
+        this.eventBus = eventBus;
+        this.console = console;
+        this.constant = constant;
+        this.autoBeanFactory = autoBeanFactory;
+        this.loginPresenter = loginPresenter;
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onCreateClicked()
-   {
-      doCreate();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onCreateClicked() {
+        doCreate();
+    }
 
-   /**
-    * Create new provisioned service.
-    */
-   private void doCreate()
-   {
-      String name = view.getName();
-      String type = view.getSystemServices();
-      try
-      {
-         AutoBean<ProvisionedService> provisionedService = autoBeanFactory.provisionedService();
-         AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
-            new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
+    /** Create new provisioned service. */
+    private void doCreate() {
+        String name = view.getName();
+        String type = view.getSystemServices();
+        try {
+            AutoBean<ProvisionedService> provisionedService = autoBeanFactory.provisionedService();
+            AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
+                    new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
 
-         CloudFoundryClientService.getInstance().createService(
-            null,
-            type,
-            name,
-            null,
-            null,
-            null,
-            new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
-               eventBus, console, constant, loginPresenter)
-            {
-               @Override
-               protected void onSuccess(ProvisionedService result)
-               {
-                  createServiceCallback.onSuccess(result);
-                  view.close();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
+            CloudFoundryClientService.getInstance().createService(
+                    null,
+                    type,
+                    name,
+                    null,
+                    null,
+                    null,
+                    new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
+                                                                             eventBus, console, constant, loginPresenter) {
+                        @Override
+                        protected void onSuccess(ProvisionedService result) {
+                            createServiceCallback.onSuccess(result);
+                            view.close();
+                        }
+                    });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
+    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onCancelClicked()
-   {
-      view.close();
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void onCancelClicked() {
+        view.close();
+    }
 
-   /**
-    * Shows dialog.
-    */
-   public void showDialog(AsyncCallback<ProvisionedService> callback)
-   {
-      this.createServiceCallback = callback;
+    /** Shows dialog. */
+    public void showDialog(AsyncCallback<ProvisionedService> callback) {
+        this.createServiceCallback = callback;
 
-      getServices();
+        getServices();
 
-      view.setName("");
+        view.setName("");
 
-      view.showDialog();
-   }
+        view.showDialog();
+    }
 
-   /**
-    * Get the list of CloudFoundry services (provisioned and system).
-    */
-   private void getServices()
-   {
-      try
-      {
-         CloudFoundryClientService.getInstance().services(null,
-            new AsyncRequestCallback<CloudFoundryServices>(new CloudFoundryServicesUnmarshaller(autoBeanFactory))
-            {
-               @Override
-               protected void onSuccess(CloudFoundryServices result)
-               {
-                  LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
-                  for (SystemService service : result.getSystem())
-                  {
-                     values.put(service.getVendor(), service.getDescription());
-                  }
-                  view.setServices(values);
-               }
+    /** Get the list of CloudFoundry services (provisioned and system). */
+    private void getServices() {
+        try {
+            CloudFoundryClientService.getInstance().services(null,
+                                                             new AsyncRequestCallback<CloudFoundryServices>(
+                                                                     new CloudFoundryServicesUnmarshaller(autoBeanFactory)) {
+                                                                 @Override
+                                                                 protected void onSuccess(CloudFoundryServices result) {
+                                                                     LinkedHashMap<String, String> values =
+                                                                             new LinkedHashMap<String, String>();
+                                                                     for (SystemService service : result.getSystem()) {
+                                                                         values.put(service.getVendor(), service.getDescription());
+                                                                     }
+                                                                     view.setServices(values);
+                                                                 }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  Window.alert(constant.retrieveServicesFailed());
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
+                                                                 @Override
+                                                                 protected void onFailure(Throwable exception) {
+                                                                     Window.alert(constant.retrieveServicesFailed());
+                                                                 }
+                                                             });
+        } catch (RequestException e) {
+            eventBus.fireEvent(new ExceptionThrownEvent(e));
+            console.print(e.getMessage());
+        }
+    }
 }

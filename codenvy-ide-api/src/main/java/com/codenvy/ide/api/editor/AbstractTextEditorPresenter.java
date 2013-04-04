@@ -26,92 +26,67 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Abstract implementation of TextEditorPresenter
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
-public abstract class AbstractTextEditorPresenter extends AbstractEditorPresenter implements CodenvyTextEditor
-{
+public abstract class AbstractTextEditorPresenter extends AbstractEditorPresenter implements CodenvyTextEditor {
 
-   protected TextEditorConfiguration configuration;
+    protected TextEditorConfiguration configuration;
 
-   protected DocumentProvider documentProvider;
+    protected DocumentProvider documentProvider;
 
-   protected Document document;
+    protected Document document;
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider)
-   {
-      this.configuration = configuration;
-      this.documentProvider = documentProvider;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public void initialize(TextEditorConfiguration configuration, DocumentProvider documentProvider) {
+        this.configuration = configuration;
+        this.documentProvider = documentProvider;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getDocumentProvider()
-    */
-   @Override
-   public DocumentProvider getDocumentProvider()
-   {
-      return documentProvider;
-   }
+    /** @see com.codenvy.ide.api.editor.TextEditorPartPresenter#getDocumentProvider() */
+    @Override
+    public DocumentProvider getDocumentProvider() {
+        return documentProvider;
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage()
-    */
-   @Override
-   public ImageResource getTitleImage()
-   {
-      return input.getImageResource();
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitleImage() */
+    @Override
+    public ImageResource getTitleImage() {
+        return input.getImageResource();
+    }
 
-   /**
-    * @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle()
-    */
-   @Override
-   public String getTitle()
-   {
-      if (isDirty())
-      {
-         return "*" + input.getName();
-      }
-      else
-      {
-         return input.getName();
-      }
-   }
+    /** @see com.codenvy.ide.api.ui.perspective.PartPresenter#getTitle() */
+    @Override
+    public String getTitle() {
+        if (isDirty()) {
+            return "*" + input.getName();
+        } else {
+            return input.getName();
+        }
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.EditorPartPresenter#doSave()
-    */
-   @Override
-   public void doSave()
-   {
-      documentProvider.saveDocument(getEditorInput(), document, false, new AsyncCallback<EditorInput>()
-      {
+    /** @see com.codenvy.ide.api.editor.EditorPartPresenter#doSave() */
+    @Override
+    public void doSave() {
+        documentProvider.saveDocument(getEditorInput(), document, false, new AsyncCallback<EditorInput>() {
 
-         @Override
-         public void onSuccess(EditorInput result)
-         {
-            updateDirtyState(false);
-         }
+            @Override
+            public void onSuccess(EditorInput result) {
+                updateDirtyState(false);
+            }
 
-         @Override
-         public void onFailure(Throwable caught)
-         {
-            Log.error(AbstractTextEditorPresenter.class, caught);
-         }
-      });
-   }
+            @Override
+            public void onFailure(Throwable caught) {
+                Log.error(AbstractTextEditorPresenter.class, caught);
+            }
+        });
+    }
 
-   /**
-    * @see com.codenvy.ide.api.editor.EditorPartPresenter#doSaveAs()
-    */
-   @Override
-   public void doSaveAs()
-   {
-      // TODO Auto-generated method stub
+    /** @see com.codenvy.ide.api.editor.EditorPartPresenter#doSaveAs() */
+    @Override
+    public void doSaveAs() {
+        // TODO Auto-generated method stub
 
-   }
+    }
 }

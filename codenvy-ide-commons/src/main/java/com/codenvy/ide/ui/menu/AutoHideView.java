@@ -13,64 +13,52 @@
 // limitations under the License.
 package com.codenvy.ide.ui.menu;
 
+import elemental.html.Element;
+
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.util.AnimationController;
-
-import elemental.html.Element;
 
 
 /**
  * The View for AutoHideComponent.
- * 
- * @param <D> event delegate class
+ *
+ * @param <D>
+ *         event delegate class
  */
-public class AutoHideView<D> extends CompositeView<D>
-{
+public class AutoHideView<D> extends CompositeView<D> {
 
-   private AnimationController animationController = AnimationController.NO_ANIMATION_CONTROLLER;
+    private AnimationController animationController = AnimationController.NO_ANIMATION_CONTROLLER;
 
-   public AutoHideView(final Element elem)
-   {
-      super(elem);
-   }
+    public AutoHideView(final Element elem) {
+        super(elem);
+    }
 
-   /**
-    * Constructor to allow subclasses to use UiBinder.
-    */
-   protected AutoHideView()
-   {
-   }
+    /** Constructor to allow subclasses to use UiBinder. */
+    protected AutoHideView() {
+    }
 
-   /**
-    * Hides the view, using the animation controller.
-    */
-   public void hide()
-   {
-      animationController.hide(getElement());
-   }
+    /** Hides the view, using the animation controller. */
+    public void hide() {
+        animationController.hide(getElement());
+    }
 
-   /**
-    * Shows the view, using the animation controller.
-    */
-   public void show()
-   {
-      animationController.show(getElement());
-   }
+    /** Shows the view, using the animation controller. */
+    public void show() {
+        animationController.show(getElement());
+    }
 
-   public void setAnimationController(AnimationController controller)
-   {
-      this.animationController = controller;
-   }
+    public void setAnimationController(AnimationController controller) {
+        this.animationController = controller;
+    }
 
-   @Override
-   protected void setElement(Element element)
-   {
+    @Override
+    protected void setElement(Element element) {
       /*
        * Start in the hidden state. animationController may not be initialized if
        * this method is called from the constructor, so use the default animation
        * controller.
        */
-      AnimationController.NO_ANIMATION_CONTROLLER.hideWithoutAnimating(element);
-      super.setElement(element);
-   }
+        AnimationController.NO_ANIMATION_CONTROLLER.hideWithoutAnimating(element);
+        super.setElement(element);
+    }
 }

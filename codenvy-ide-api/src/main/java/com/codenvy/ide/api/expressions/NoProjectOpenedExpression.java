@@ -24,29 +24,22 @@ import com.google.inject.Singleton;
 
 /**
  * Expression has a true value until project opened
- * 
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  */
 @Singleton
-public class NoProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
-{
-   /**
-    * @param expressionManager
-    */
-   @Inject
-   public NoProjectOpenedExpression(ExpressionManager expressionManager)
-   {
-      super(expressionManager, true);
-   }
+public class NoProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression {
+    /** @param expressionManager */
+    @Inject
+    public NoProjectOpenedExpression(ExpressionManager expressionManager) {
+        super(expressionManager, true);
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public boolean onProjectChanged(Project project)
-   {
-      value = project == null;
-      return value;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public boolean onProjectChanged(Project project) {
+        value = project == null;
+        return value;
+    }
 
 }

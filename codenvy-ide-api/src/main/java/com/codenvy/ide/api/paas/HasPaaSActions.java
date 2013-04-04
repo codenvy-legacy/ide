@@ -22,22 +22,19 @@ import com.codenvy.ide.resources.model.Project;
 
 /**
  * PaaS Actions
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 12:44:17 PM anya $
  */
-public interface HasPaaSActions
-{
-   /**
-    * Deploys Project
-    * 
-    * @param project
-    * @param deployResultHandler
-    */
-   void deploy(Project project, DeployResultHandler deployResultHandler);
+public interface HasPaaSActions {
+    /**
+     * Deploys Project
+     *
+     * @param project
+     * @param deployResultHandler
+     */
+    void deploy(Project project, DeployResultHandler deployResultHandler);
 
-   /**
-    * @return
-    */
-   boolean validate();
+    /** @return  */
+    boolean validate();
 }

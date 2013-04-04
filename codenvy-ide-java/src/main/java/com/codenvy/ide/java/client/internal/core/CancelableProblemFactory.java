@@ -13,25 +13,23 @@ package com.codenvy.ide.java.client.internal.core;
 import com.codenvy.ide.java.client.core.compiler.CategorizedProblem;
 import com.codenvy.ide.java.client.internal.compiler.problem.DefaultProblemFactory;
 
-public class CancelableProblemFactory extends DefaultProblemFactory
-{
-   public CancelableProblemFactory()
-   {
-      super();
-   }
+public class CancelableProblemFactory extends DefaultProblemFactory {
+    public CancelableProblemFactory() {
+        super();
+    }
 
-   public CategorizedProblem createProblem(char[] originatingFileName, int problemId, String[] problemArguments,
-      String[] messageArguments, int severity, int startPosition, int endPosition, int lineNumber, int columnNumber)
-   {
-      return super.createProblem(originatingFileName, problemId, problemArguments, messageArguments, severity,
-         startPosition, endPosition, lineNumber, columnNumber);
-   }
+    public CategorizedProblem createProblem(char[] originatingFileName, int problemId, String[] problemArguments,
+                                            String[] messageArguments, int severity, int startPosition, int endPosition, int lineNumber,
+                                            int columnNumber) {
+        return super.createProblem(originatingFileName, problemId, problemArguments, messageArguments, severity,
+                                   startPosition, endPosition, lineNumber, columnNumber);
+    }
 
-   public CategorizedProblem createProblem(char[] originatingFileName, int problemId, String[] problemArguments,
-      int elaborationId, String[] messageArguments, int severity, int startPosition, int endPosition, int lineNumber,
-      int columnNumber)
-   {
-      return super.createProblem(originatingFileName, problemId, problemArguments, elaborationId, messageArguments,
-         severity, startPosition, endPosition, lineNumber, columnNumber);
-   }
+    public CategorizedProblem createProblem(char[] originatingFileName, int problemId, String[] problemArguments,
+                                            int elaborationId, String[] messageArguments, int severity, int startPosition, int endPosition,
+                                            int lineNumber,
+                                            int columnNumber) {
+        return super.createProblem(originatingFileName, problemId, problemArguments, elaborationId, messageArguments,
+                                   severity, startPosition, endPosition, lineNumber, columnNumber);
+    }
 }

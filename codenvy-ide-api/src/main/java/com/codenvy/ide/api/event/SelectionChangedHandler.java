@@ -20,16 +20,15 @@ import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Handles the Selection Changed Event
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface SelectionChangedHandler extends EventHandler
-{
-   /**
-    * Selection Changedх 
-    * 
-    * @param event
-    */
-   void onSelectionChanged(SelectionChangedEvent event);
+public interface SelectionChangedHandler extends EventHandler {
+    /**
+     * Selection Changedх
+     *
+     * @param event
+     */
+    void onSelectionChanged(SelectionChangedEvent event);
 
 }

@@ -16,41 +16,39 @@ package com.codenvy.ide.json;
 
 /**
  * String Map interface for use in DTOs.
- *
+ * <p/>
  * On the client it is safe to cast this to a
  * {@link com.codenvy.ide.json.js.collide.json.client.Jso}.
- *
+ * <p/>
  * On the server this is an instance of a wrapper object
  * {@link com.google.collide.json.server.JsonStringMapAdapter}.
  */
 public interface JsonStringMap<T> {
-  /**
-   * Callback to support iterating through the fields on this map.
-   *
-   * @param <T>
-   */
-  public interface IterationCallback<T> {
-    void onIteration(String key, T value);
-  }
+    /**
+     * Callback to support iterating through the fields on this map.
+     *
+     * @param <T>
+     */
+    public interface IterationCallback<T> {
+        void onIteration(String key, T value);
+    }
 
-  T get(String key);
+    T get(String key);
 
-  JsonArray<String> getKeys();
+    JsonArray<String> getKeys();
 
-  boolean isEmpty();
+    boolean isEmpty();
 
-  void iterate(IterationCallback<T> callback);
+    void iterate(IterationCallback<T> callback);
 
-  void put(String key, T value);
+    void put(String key, T value);
 
-  void putAll(JsonStringMap<T> otherMap);
+    void putAll(JsonStringMap<T> otherMap);
 
-  /**
-   * Removes the item with the given key, and returns it.
-   */
-  T remove(String key);
+    /** Removes the item with the given key, and returns it. */
+    T remove(String key);
 
-  boolean containsKey(String key);
+    boolean containsKey(String key);
 
-  int size();
+    int size();
 }

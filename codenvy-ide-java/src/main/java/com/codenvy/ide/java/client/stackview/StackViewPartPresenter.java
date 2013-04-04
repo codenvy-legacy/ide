@@ -17,7 +17,6 @@
 package com.codenvy.ide.java.client.stackview;
 
 import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
@@ -27,54 +26,40 @@ import com.google.inject.Singleton;
 
 /**
  * Dummy part for demo purposes. Can later be used as template for debug stack view
- * 
+ *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class StackViewPartPresenter extends AbstractPartPresenter
-{
-   private static final String TITLE = "Stack";
+public class StackViewPartPresenter extends AbstractPartPresenter {
+    private static final String TITLE = "Stack";
 
-   @Inject
-   public StackViewPartPresenter()
-   {
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getTitle()
-   {
-      return TITLE;
-   }
+    @Inject
+    public StackViewPartPresenter() {
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public ImageResource getTitleImage()
-   {
-      return null;
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return TITLE;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public String getTitleToolTip()
-   {
-      return "Displays Java Call Stack";
-   }
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getTitleImage() {
+        return null;
+    }
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void go(AcceptsOneWidget container)
-   {
-      Label label = new Label();
-      label.setText("To be implemented");
-      container.setWidget(label);
-   }
+    /** {@inheritDoc} */
+    @Override
+    public String getTitleToolTip() {
+        return "Displays Java Call Stack";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        Label label = new Label();
+        label.setText("To be implemented");
+        container.setWidget(label);
+    }
 }

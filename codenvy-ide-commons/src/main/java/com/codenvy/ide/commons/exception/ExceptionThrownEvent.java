@@ -24,49 +24,42 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
 
-public class ExceptionThrownEvent extends ServerExceptionEvent<ExceptionThrownHandler>
-{
+public class ExceptionThrownEvent extends ServerExceptionEvent<ExceptionThrownHandler> {
 
-   private String errorMessage;
+    private String errorMessage;
 
-   public static final GwtEvent.Type<ExceptionThrownHandler> TYPE = new GwtEvent.Type<ExceptionThrownHandler>();
+    public static final GwtEvent.Type<ExceptionThrownHandler> TYPE = new GwtEvent.Type<ExceptionThrownHandler>();
 
-   @Override
-   public GwtEvent.Type<ExceptionThrownHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+    @Override
+    public GwtEvent.Type<ExceptionThrownHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-   public ExceptionThrownEvent(Throwable throwable)
-   {
-      this(throwable, null);
-   }
+    public ExceptionThrownEvent(Throwable throwable) {
+        this(throwable, null);
+    }
 
-   public ExceptionThrownEvent(String errorMessage)
-   {
-      this(null, errorMessage);
-   }
+    public ExceptionThrownEvent(String errorMessage) {
+        this(null, errorMessage);
+    }
 
-   public ExceptionThrownEvent(Throwable throwable, String errorMesage)
-   {
-      super(throwable);
-      this.errorMessage = errorMesage;
-   }
+    public ExceptionThrownEvent(Throwable throwable, String errorMesage) {
+        super(throwable);
+        this.errorMessage = errorMesage;
+    }
 
-   @Override
-   protected void dispatch(ExceptionThrownHandler handler)
-   {
-      handler.onError(this);
-   }
+    @Override
+    protected void dispatch(ExceptionThrownHandler handler) {
+        handler.onError(this);
+    }
 
-   public String getErrorMessage()
-   {
-      return errorMessage;
-   }
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
 }
