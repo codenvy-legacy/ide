@@ -340,7 +340,7 @@ public class FoldingManager implements Document.TextListener {
 
                 if (foldMarker.isCollapsed()) {
                     slaveDocument.removeMasterDocumentRange(startOffset, length);
-                    processAnchorsInColapsedRange(firstLineNumber, linesArray);
+                    processAnchorsInCollapsedRange(firstLineNumber, linesArray);
                     dispatchCollapse(firstLineNumber/* + linesToCollapse.size() */, linesArray);
                 } else {
                     slaveDocument.addMasterDocumentRange(startOffset, length);
@@ -391,14 +391,35 @@ public class FoldingManager implements Document.TextListener {
         return null;
     }
 
+    private int computeCollapsedNestedRangesLength(int offset, int length) {
+        int summaryLength = 0;
+        try {
+            for (Entry<FoldMarker, AbstractFoldRange> entry : markerToPositionMap.entrySet()) {
+                FoldMarker fold = entry.getKey();
+                if (fold.isCollapsed()) {
+                    AbstractFoldRange range = entry.getValue();
+                    if (covers(offset, length, range)) {
+                        IRegion[] regions = range.computeProjectionRegions(getMasterDocument());
+                        for (IRegion iRegion : regions) {
+                            summaryLength += iRegion.getLength();
+                        }
+                    }
+                }
+            }
+        } catch (BadLocationException e) {
+            Log.error(getClass(), e);
+        }
+        return summaryLength;
+    }
+
     private boolean covers(int offset, int length, Position position) {
-        if (!(position.offset == offset && position.length == length) && !position.isDeleted()) {
+        if (/*!(position.offset == offset && position.length == length) && */!position.isDeleted()) {
             return offset <= position.getOffset() && position.getOffset() + position.getLength() <= offset + length;
         }
         return false;
     }
 
-    private void processAnchorsInColapsedRange(int lineNumber, JsonArray<Line> linesToCollapse) {
+    private void processAnchorsInCollapsedRange(int lineNumber, JsonArray<Line> linesToCollapse) {
         for (Line line : linesToCollapse.asIterable()) {
             final int deleteCountForLine = line.getText().length();
             boolean isFirstLine = linesToCollapse.indexOf(line) == 0;
@@ -544,7 +565,8 @@ public class FoldingManager implements Document.TextListener {
                     }
                     return line - startLine;
                 }
-            } catch (BadLocationException x) {
+            } catch (BadLocationException e) {
+                Log.error(getClass(), e);
             }
         }
         return -1;
@@ -560,13 +582,24 @@ public class FoldingManager implements Document.TextListener {
         markerToPositionMap.clear();
         for (AbstractFoldRange range : positions) {
             boolean isCollapsed = false;
-            if (restoreFoldsState) {
-                isCollapsed = isFoldRangeCollapsed(range);
-            }
+            // if (restoreFoldsState) {
+            // isCollapsed = isFoldRangeCollapsed(range);
+            // }
             markerToPositionMap.put(new FoldMarker(isCollapsed, resources), range);
         }
         cleanUpCustomFolds();
         restoreCustomFolds();
+
+        if (restoreFoldsState) {
+            Iterator<Entry<FoldMarker, AbstractFoldRange>> iterator = markerToPositionMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Entry<FoldMarker, AbstractFoldRange> entry = iterator.next();
+                if (isFoldRangeCollapsed(entry.getValue())) {
+                    entry.getKey().markCollapsed();
+                }
+            }
+        }
+
         dispatchFoldsStateChange();
     }
 
@@ -608,7 +641,10 @@ public class FoldingManager implements Document.TextListener {
             IRegion originRegion = new Region(range.getOffset(), range.getLength());
             IRegion imageRegion = informationMapping.toImageRegion(originRegion);
             if (imageRegion != null) {
-                collapsed = originRegion.getLength() != imageRegion.getLength();
+                collapsed =
+                            originRegion.getLength() != imageRegion.getLength()
+                                                        + computeCollapsedNestedRangesLength(originRegion.getOffset(),
+                                                                                             originRegion.getLength());
             }
         } catch (BadLocationException e) {
             Log.error(getClass(), e);
