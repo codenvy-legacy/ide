@@ -11,6 +11,7 @@
 package com.codenvy.ide.java.client.codeassistant;
 
 import com.codenvy.ide.java.client.JavaExtension;
+import com.codenvy.ide.java.client.JavaPartitions;
 import com.codenvy.ide.java.client.core.CompletionContext;
 import com.codenvy.ide.java.client.templates.ContextTypeRegistry;
 import com.codenvy.ide.java.client.templates.JavaContextType;
@@ -19,7 +20,6 @@ import com.codenvy.ide.java.client.templates.TemplateEngine;
 import com.codenvy.ide.java.client.templates.api.TemplateContextType;
 import com.codenvy.ide.runtime.Assert;
 import com.codenvy.ide.text.BadLocationException;
-import com.codenvy.ide.text.IJavaPartitions;
 import com.codenvy.ide.text.TextUtilities;
 
 
@@ -58,9 +58,9 @@ public class TemplateCompletionProposalComputer extends AbstractTemplateCompleti
     protected TemplateEngine computeCompletionEngine(JavaContentAssistInvocationContext context) {
         try {
             String partition =
-                    TextUtilities.getContentType(context.getDocument(), IJavaPartitions.JAVA_PARTITIONING,
+                    TextUtilities.getContentType(context.getDocument(), JavaPartitions.JAVA_PARTITIONING,
                                                  context.getInvocationOffset(), true);
-            if (partition.equals(IJavaPartitions.JAVA_DOC))
+            if (partition.equals(JavaPartitions.JAVA_DOC))
                 return fJavadocTemplateEngine;
             else {
                 CompletionContext coreContext = context.getCoreContext();

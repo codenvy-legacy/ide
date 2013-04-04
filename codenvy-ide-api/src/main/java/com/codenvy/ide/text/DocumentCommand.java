@@ -39,6 +39,9 @@ public class DocumentCommand {
     /** Indicates whether the caret should be shifted by this command. */
     public boolean shiftsCaret;
 
+    /** Must the command be updated */
+    public boolean doit = false;
+
     public DocumentCommand() {
     }
 
@@ -52,5 +55,6 @@ public class DocumentCommand {
         this.text = text;
         caretOffset = -1;
         shiftsCaret = true;
+        doit = true;
     }
 }

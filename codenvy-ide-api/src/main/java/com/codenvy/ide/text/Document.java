@@ -470,19 +470,23 @@ public interface Document {
      */
     boolean containsPosition(String category, int offset, int length);
 
-    // /**
-    // * Computes the index at which a <code>Position</code> with the
-    // * specified offset would be inserted into the given category. As the
-    // * ordering inside a category only depends on the offset, the index must be
-    // * chosen to be the first of all positions with the same offset.
-    // *
-    // * @param category the category in which would be added
-    // * @param offset the position offset to be considered
-    // * @return the index into the category
-    // * @exception BadLocationException if offset is invalid in this document
-    // * @exception BadPositionCategoryException if category is undefined in this document
-    // */
-    // int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException;
+    /**
+     * Computes the index at which a <code>Position</code> with the
+     * specified offset would be inserted into the given category. As the
+     * ordering inside a category only depends on the offset, the index must be
+     * chosen to be the first of all positions with the same offset.
+     *
+     * @param category
+     *         the category in which would be added
+     * @param offset
+     *         the position offset to be considered
+     * @return the index into the category
+     * @throws BadLocationException
+     *         if offset is invalid in this document
+     * @throws BadPositionCategoryException
+     *         if category is undefined in this document
+     */
+    int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException;
 
     /**
      * Appends a new position updater to the document's list of position updaters.

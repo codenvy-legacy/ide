@@ -18,7 +18,17 @@
  */
 package com.codenvy.ide.text.edits;
 
-import com.codenvy.ide.text.*;
+import com.codenvy.ide.text.BadLocationException;
+import com.codenvy.ide.text.BadPartitioningException;
+import com.codenvy.ide.text.BadPositionCategoryException;
+import com.codenvy.ide.text.Document;
+import com.codenvy.ide.text.DocumentListener;
+import com.codenvy.ide.text.DocumentPartitioner;
+import com.codenvy.ide.text.DocumentPartitioningListener;
+import com.codenvy.ide.text.Position;
+import com.codenvy.ide.text.PositionUpdater;
+import com.codenvy.ide.text.Region;
+import com.codenvy.ide.text.TypedRegion;
 
 class EditDocument implements Document {
 
@@ -61,6 +71,11 @@ class EditDocument implements Document {
     /** {@inheritDoc} */
     @Override
     public boolean containsPosition(String category, int offset, int length) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int computeIndexInCategory(String category, int offset) throws BadLocationException, BadPositionCategoryException {
         throw new UnsupportedOperationException();
     }
 

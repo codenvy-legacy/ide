@@ -24,6 +24,7 @@ import com.codenvy.ide.api.editor.DocumentProvider;
 import com.codenvy.ide.api.editor.EditorPartPresenter;
 import com.codenvy.ide.api.editor.EditorProvider;
 import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.java.client.JavaPartitions;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.google.inject.Inject;
@@ -37,13 +38,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class JavaEditorProvider implements EditorProvider {
 
-    private final DocumentProvider documentProvider;
-
-    private final Resources resources;
-
-    private final UserActivityManager activityManager;
-
-    private Provider<CodenvyTextEditor> editorProvider;
+    private final DocumentProvider            documentProvider;
+    private final Resources                   resources;
+    private final UserActivityManager         activityManager;
+    private       Provider<CodenvyTextEditor> editorProvider;
 
     /**
      * @param resources
@@ -63,8 +61,10 @@ public class JavaEditorProvider implements EditorProvider {
     @Override
     public EditorPartPresenter getEditor() {
         CodenvyTextEditor textEditor = editorProvider.get();
-        textEditor.initialize(new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE, textEditor),
-                              documentProvider);
+        JavaEditorConfiguration configuration =
+                new JavaEditorConfiguration(activityManager, JavaClientBundle.INSTANCE, textEditor, JavaPartitions.JAVA_PARTITIONING);
+
+        textEditor.initialize(configuration, documentProvider);
         return textEditor;
     }
 

@@ -21,7 +21,6 @@ package com.codenvy.ide.texteditor;
 import com.codenvy.ide.text.BadLocationException;
 import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentCommand;
-import com.codenvy.ide.text.Region;
 import com.codenvy.ide.text.edits.DeleteEdit;
 import com.codenvy.ide.text.edits.InsertEdit;
 import com.codenvy.ide.text.store.Line;
@@ -132,6 +131,9 @@ public class EditorTextStoreMutator implements TextStoreMutator {
             insert.apply(document);
             textChange = TextChange.createInsertion(line, lineNumber, column, line, lineNumber, text);
             dispatchTextChange(textChange);
+            if (documentCommand.caretOffset > 0) {
+                editor.getSelection().setCursorPosition(documentCommand.caretOffset);
+            }
 
         } catch (BadLocationException e) {
             Log.error(EditorTextStoreMutator.class, e);

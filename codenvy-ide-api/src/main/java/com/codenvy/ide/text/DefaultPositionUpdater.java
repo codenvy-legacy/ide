@@ -19,7 +19,7 @@
 package com.codenvy.ide.text;
 
 /**
- * Default implementation of {@link org.eclipse.PositionUpdater.text.IPositionUpdater}.
+ * Default implementation of {@link PositionUpdater}.
  * <p>
  * A default position updater must be configured with the position category whose positions it will update. Other position
  * categories are not affected by this updater.
