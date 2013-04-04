@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
     Copyright (C) 2010 eXo Platform SAS.
@@ -19,10 +18,14 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<Context path="/IDE-application" docBase="IDE-application" reloadable="true" crossContext="false" sessionCookiePath="/">
 
-    <import>cf-configuration.xml</import>
-    <import>ide-configuration.xml</import>
-</configuration>
+    <Logger className='org.apache.catalina.logger.SystemOutLogger'
+            prefix='localhost_portal_log.' suffix='.txt' timestamp='true'/>
+    <Manager className='org.apache.catalina.session.PersistentManager' saveOnRestart='false'/>
+    <Realm className='org.apache.catalina.realm.JAASRealm'
+           appName='exo-domain'
+           userClassNames="org.exoplatform.services.security.jaas.UserPrincipal"
+           roleClassNames="org.exoplatform.services.security.jaas.RolePrincipal"
+           debug='0' cache='false'/>
+</Context>
