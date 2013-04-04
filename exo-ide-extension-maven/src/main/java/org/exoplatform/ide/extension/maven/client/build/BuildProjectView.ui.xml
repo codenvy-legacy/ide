@@ -37,7 +37,7 @@
             font-size: 12px;
             font-style: normal;
             color: #007700;
-            padding: 0px;
+            padding: 5px;
             margin: 0px;
         }
     </ui:style>
