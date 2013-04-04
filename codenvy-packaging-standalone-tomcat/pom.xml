@@ -725,14 +725,6 @@
                                     <regex>${tomcat.version}</regex>
                                     <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
                                 </requireProperty>
-                                <requireFilesExist>
-                                    <files>
-                                        <file>${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/</file>
-                                    </files>
-                                    <message>The following Tomcat directory doesn't exist :
-                                        ${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}
-                                    </message>
-                                </requireFilesExist>
                             </rules>
                             <fail>true</fail>
                         </configuration>
