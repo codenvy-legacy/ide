@@ -22,8 +22,7 @@ import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.codenvy.ide.mvp.CompositeView;
 import com.codenvy.ide.mvp.UiComponent;
-import com.codenvy.ide.text.Document;
-import com.codenvy.ide.text.DocumentImpl;
+import com.codenvy.ide.text.*;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.store.DocumentModel;
 import com.codenvy.ide.text.store.LineInfo;
@@ -56,8 +55,11 @@ import com.codenvy.ide.util.dom.FontDimensionsCalculator;
 import com.codenvy.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import com.codenvy.ide.util.executor.UserActivityManager;
 import com.codenvy.ide.util.input.SignalEvent;
+import com.codenvy.ide.util.loging.Log;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
+
+import java.util.Iterator;
 
 
 /**
@@ -74,170 +76,44 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements TextEditorPartView {
 
-    /** Animation CSS. */
-    @CssResource.Shared
-    public interface EditorSharedCss extends CssResource {
-        String animationEnabled();
-
-        String scrollable();
-    }
-
-    /** CssResource for the editor. */
-    public interface Css extends EditorSharedCss {
-        String leftGutter();
-
-        String leftGutterNotification();
-
-        String editorFont();
-
-        String root();
-
-        String scrolled();
-
-        String gutter();
-
-        String lineRendererError();
-
-        String leftGutterBase();
-
-        String lineWarning();
-
-        String lineError();
-    }
-
-    /** ClientBundle for the editor. */
-    public interface Resources
-            extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources, ParenMatchHighlighter.Resources {
-        @Source({"Editor.css", "constants.css"})
-        Css workspaceEditorCss();
-
-        @Source("squiggle.gif")
-        ImageResource squiggle();
-
-        @Source("squiggle-warning.png")
-        ImageResource squiggleWarning();
-    }
-
-    /**
-     * A listener that is called when the editor becomes or is no longer
-     * read-only.
-     */
-    public interface ReadOnlyListener {
-        void onReadOnlyChanged(boolean isReadOnly);
-    }
-
-    /**
-     * The view for the editor, containing gutters and the buffer. This exposes
-     * only the ability to enable or disable animations.
-     */
-    public static class View extends CompositeView<Void> {
-        private final Element bufferElement;
-
-        final Css css;
-
-        final Resources res;
-
-        private View(Resources res, Element bufferElement, Element inputElement) {
-
-            this.res = res;
-            this.bufferElement = bufferElement;
-            this.css = res.workspaceEditorCss();
-
-            Element rootElement = Elements.createDivElement(css.root());
-            rootElement.appendChild(bufferElement);
-            rootElement.appendChild(inputElement);
-            setElement(rootElement);
-        }
-
-        private void addGutter(Element gutterElement) {
-            getElement().insertBefore(gutterElement, bufferElement);
-        }
-
-        private void removeGutter(Element gutterElement) {
-            getElement().removeChild(gutterElement);
-        }
-
-        public void setAnimationEnabled(boolean enabled) {
-            // TODO: Re-enable animations when they are stable.
-            if (enabled) {
-                // getElement().addClassName(css.animationEnabled());
-            } else {
-                // getElement().removeClassName(css.animationEnabled());
-            }
-        }
-
-        public Resources getResources() {
-            return res;
-        }
-    }
-
     public static final int ANIMATION_DURATION = 100;
-
-    private static int idCounter = 0;
-
-    private final Buffer buffer;
-
-    private DocumentModel textStore;
-
-    private final EditorTextStoreMutator editorDocumentMutator;
-
-    private final FontDimensionsCalculator editorFontDimensionsCalculator;
-
-    private UndoManager editorUndoManager;
-
+    private static      int idCounter          = 0;
+    private final Buffer                                      buffer;
+    private final EditorTextStoreMutator                      editorDocumentMutator;
+    private final FontDimensionsCalculator                    editorFontDimensionsCalculator;
     private final com.codenvy.ide.texteditor.api.FocusManager focusManager;
-
-    private final MouseHoverManager mouseHoverManager;
-
-    private final int id = idCounter++;
-
+    private final MouseHoverManager                           mouseHoverManager;
+    private final int                               id                            = idCounter++;
     private final FontDimensionsCalculator.Callback fontDimensionsChangedCallback = new FontDimensionsCalculator.Callback() {
         @Override
         public void onFontDimensionsChanged(FontDimensions fontDimensions) {
             handleFontDimensionsChanged();
         }
     };
-
-    private final JsonArray<Gutter> gutters = JsonCollections.createArray();
-
-    private final InputController input;
-
+    private final JsonArray<Gutter>                 gutters                       = JsonCollections.createArray();
+    private final InputController   input;
     private final LeftGutterManager leftGutterManager;
-
-    private LocalCursorController localCursorController;
-
-    private final ListenerManager<ReadOnlyListener> readOnlyListenerManager = ListenerManager.create();
-
+    private final ListenerManager<ReadOnlyListener>  readOnlyListenerManager  = ListenerManager.create();
     private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
-
-    private Renderer renderer;
-
-    //  private SearchModel searchModel;
-    private SelectionManager selectionManager;
-
-    private final EditorActivityManager editorActivityManager;
-
-    private ViewportModel viewport;
-
-    private boolean isReadOnly;
-
-    private final RenderTimeExecutor renderTimeExecutor;
-
-    private Document document;
-
-    private SyntaxHighlighter syntaxHighlighter;
-
-    private Parser parser;
-
-    private final com.codenvy.ide.Resources resources;
-
-    private final UserActivityManager userActivityManager;
-
-    private CodeAssistantImpl codeAssistant;
-
-    private VerticalRuler verticalRuler;
-
-    private QuickAssistAssistant quickAssistAssistant;
+    private final EditorActivityManager                      editorActivityManager;
+    private final RenderTimeExecutor                         renderTimeExecutor;
+    private final com.codenvy.ide.Resources                  resources;
+    private final UserActivityManager                        userActivityManager;
+    private       DocumentModel                              textStore;
+    private       UndoManager                                editorUndoManager;
+    private       LocalCursorController                      localCursorController;
+    private       Renderer                                   renderer;
+    private       SelectionManager                           selectionManager;
+    private       ViewportModel                              viewport;
+    private       boolean                                    isReadOnly;
+    private       Document                                   document;
+    private       SyntaxHighlighter                          syntaxHighlighter;
+    private       Parser                                     parser;
+    private       CodeAssistantImpl                          codeAssistant;
+    private       VerticalRuler                              verticalRuler;
+    private       QuickAssistAssistant                       quickAssistAssistant;
+    private       JsonStringMap<JsonArray<AutoEditStrategy>> autoEditStrategies;
+    private       String                                     documentPartitioning;
 
     public TextEditorViewImpl(com.codenvy.ide.Resources resources, UserActivityManager userActivityManager) {
         this.resources = resources;
@@ -273,6 +149,54 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         setAnimationEnabled(true);
         addBoxShadowOnScrollHandler();
         editorFontDimensionsCalculator.addCallback(fontDimensionsChangedCallback);
+    }
+
+    /**
+     * Hook called on receipt of a <code>EditorDocumentMutator</code>. The event has
+     * been translated into a <code>DocumentCommand</code> which can now be
+     * manipulated by interested parties. By default, the hook forwards the command
+     * to the installed instances of <code>AutoEditStrategy</code>.
+     *
+     * @param command
+     *         the document command representing the verify event
+     */
+    public void customizeDocumentCommand(DocumentCommand command) {
+//        if (isIgnoringAutoEditStrategies())
+//            return;
+
+        Document document = getDocument();
+
+//        if (fTabsToSpacesConverter != null)
+//            fTabsToSpacesConverter.customizeDocumentCommand(document, command);
+        JsonArray<AutoEditStrategy> strategies = null;
+        try {
+            String contentType = TextUtilities.getContentType(document, getDocumentPartitioning(), command.offset, true);
+            strategies = autoEditStrategies.get(contentType);
+        } catch (BadLocationException e) {
+            Log.debug(TextEditorViewImpl.class, e);
+        }
+
+
+        if (strategies == null)
+            return;
+
+        switch (strategies.size()) {
+            // optimization
+            case 0:
+                break;
+
+            case 1:
+                strategies.asIterable().iterator().next().customizeDocumentCommand(document, command);
+                break;
+
+            // make iterator robust against adding/removing strategies from within strategies
+            default:
+                strategies = JsonCollections.createArray(strategies.asIterable());
+                for (final Iterator<AutoEditStrategy> iterator = strategies.asIterable().iterator(); iterator.hasNext(); )
+                    iterator.next().customizeDocumentCommand(document, command);
+
+                break;
+        }
     }
 
     private void handleFontDimensionsChanged() {
@@ -425,6 +349,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         renderer.removeLineRenderer(lineRenderer);
     }
 
+    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getDocument() */
+    @Override
+    public Document getDocument() {
+        return document;
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -484,12 +413,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
 
     }
 
-    /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#getDocument() */
-    @Override
-    public Document getDocument() {
-        return document;
-    }
-
     public void undo() {
         editorUndoManager.undo();
     }
@@ -517,6 +440,11 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     }
 
     @Override
+    public boolean isReadOnly() {
+        return isReadOnly;
+    }
+
+    @Override
     public void setReadOnly(final boolean isReadOnly) {
 
         if (this.isReadOnly == isReadOnly) {
@@ -531,11 +459,6 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                 listener.onReadOnlyChanged(isReadOnly);
             }
         });
-    }
-
-    @Override
-    public boolean isReadOnly() {
-        return isReadOnly;
     }
 
     public ListenerRegistrar<ReadOnlyListener> getReadOnlyListenerRegistrar() {
@@ -559,15 +482,15 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         }
     }
 
+    /** @return the editorUndoManager */
+    public UndoManager getUndoManager() {
+        return editorUndoManager;
+    }
+
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#setUndoManager(com.codenvy.ide.texteditor.api.UndoManager) */
     @Override
     public void setUndoManager(UndoManager undoManager) {
         this.editorUndoManager = undoManager;
-    }
-
-    /** @return the editorUndoManager */
-    public UndoManager getUndoManager() {
-        return editorUndoManager;
     }
 
     /** @see com.codenvy.ide.texteditor.api.TextEditorPartView#configure(com.codenvy.ide.texteditor.api.TextEditorConfiguration) */
@@ -579,7 +502,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
         RootActionExecutor actionExecutor = getInput().getActionExecutor();
         actionExecutor.addDelegate(TextActions.INSTANCE);
         JsonStringMap<CodeAssistProcessor> processors = configuration.getContentAssistantProcessors(this);
-
+        setDocumentPartitioning(configuration.getConfiguredDocumentPartitioning(this));
         Reconciler reconciler = configuration.getReconciler(this);
         if (reconciler != null) {
             reconciler.install(this);
@@ -625,6 +548,59 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
                 return false;
             }
         });
+
+        String[] contentTypes = configuration.getConfiguredContentTypes(this);
+        for (String t : contentTypes) {
+            setAutoEditStrategies(configuration.getAutoEditStrategies(this, t), t);
+        }
+    }
+
+    /**
+     * Returns the document partitioning for this viewer.
+     *
+     * @return the document partitioning for this viewer
+     */
+    protected String getDocumentPartitioning() {
+        return documentPartitioning;
+    }
+
+    /**
+     * Sets the document partitioning of this viewer. The partitioning is used by this viewer to
+     * access partitioning information of the viewers input document.
+     */
+    private void setDocumentPartitioning(String documentPartitioning) {
+        this.documentPartitioning = documentPartitioning;
+    }
+
+    /**
+     * Sets the given edit strategy as the only strategy for the given content type.
+     *
+     * @param strategies
+     *         the auto edit strategies
+     * @param contentType
+     *         the content type
+     */
+    protected final void setAutoEditStrategies(AutoEditStrategy[] strategies, String contentType) {
+        if (autoEditStrategies == null)
+            autoEditStrategies = JsonCollections.createStringMap();
+
+        JsonArray<AutoEditStrategy> autoEditStrategies = this.autoEditStrategies.get(contentType);
+
+        if (strategies == null) {
+            if (autoEditStrategies == null)
+                return;
+
+            this.autoEditStrategies.put(contentType, null);
+
+        } else {
+            if (autoEditStrategies == null) {
+                autoEditStrategies = JsonCollections.createArray();
+                this.autoEditStrategies.put(contentType, autoEditStrategies);
+            }
+
+            autoEditStrategies.clear();
+            autoEditStrategies.addAll(JsonCollections.createArray(strategies));
+        }
     }
 
     /** @param parser */
@@ -704,6 +680,101 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
      */
     public void setQuickAssistAssistant(QuickAssistAssistant quickAssistAssistant) {
         this.quickAssistAssistant = quickAssistAssistant;
+    }
+
+    /** Animation CSS. */
+    @CssResource.Shared
+    public interface EditorSharedCss extends CssResource {
+        String animationEnabled();
+
+        String scrollable();
+    }
+
+    /** CssResource for the editor. */
+    public interface Css extends EditorSharedCss {
+        String leftGutter();
+
+        String leftGutterNotification();
+
+        String editorFont();
+
+        String root();
+
+        String scrolled();
+
+        String gutter();
+
+        String lineRendererError();
+
+        String leftGutterBase();
+
+        String lineWarning();
+
+        String lineError();
+    }
+
+    /** ClientBundle for the editor. */
+    public interface Resources
+            extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources, ParenMatchHighlighter.Resources {
+        @Source({"Editor.css", "constants.css"})
+        Css workspaceEditorCss();
+
+        @Source("squiggle.gif")
+        ImageResource squiggle();
+
+        @Source("squiggle-warning.png")
+        ImageResource squiggleWarning();
+    }
+
+    /**
+     * A listener that is called when the editor becomes or is no longer
+     * read-only.
+     */
+    public interface ReadOnlyListener {
+        void onReadOnlyChanged(boolean isReadOnly);
+    }
+
+    /**
+     * The view for the editor, containing gutters and the buffer. This exposes
+     * only the ability to enable or disable animations.
+     */
+    public static class View extends CompositeView<Void> {
+        final         Css       css;
+        final         Resources res;
+        private final Element   bufferElement;
+
+        private View(Resources res, Element bufferElement, Element inputElement) {
+
+            this.res = res;
+            this.bufferElement = bufferElement;
+            this.css = res.workspaceEditorCss();
+
+            Element rootElement = Elements.createDivElement(css.root());
+            rootElement.appendChild(bufferElement);
+            rootElement.appendChild(inputElement);
+            setElement(rootElement);
+        }
+
+        private void addGutter(Element gutterElement) {
+            getElement().insertBefore(gutterElement, bufferElement);
+        }
+
+        private void removeGutter(Element gutterElement) {
+            getElement().removeChild(gutterElement);
+        }
+
+        public void setAnimationEnabled(boolean enabled) {
+            // TODO: Re-enable animations when they are stable.
+            if (enabled) {
+                // getElement().addClassName(css.animationEnabled());
+            } else {
+                // getElement().removeClassName(css.animationEnabled());
+            }
+        }
+
+        public Resources getResources() {
+            return res;
+        }
     }
 
 }

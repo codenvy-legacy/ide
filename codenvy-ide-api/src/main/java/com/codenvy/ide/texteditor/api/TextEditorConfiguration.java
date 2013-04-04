@@ -124,8 +124,7 @@ public class TextEditorConfiguration {
      * @return the auto edit strategies or <code>null</code> if automatic editing is not to be enabled
      */
     public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView view, String contentType) {
-        //TODO return default
-        return null; //new AutoEditStrategy[]{getAutoIndentStrategy(display, contentType)};
+        return new AutoEditStrategy[]{new DefaultIndentLineAutoEditStrategy()};
     }
 
     /**

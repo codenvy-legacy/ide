@@ -16,11 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.text;
+package com.codenvy.ide.java.client;
 
 /** Definition of Java partitioning and its partitions. */
 //TODO move to java extensions
-public interface IJavaPartitions {
+public interface JavaPartitions {
 
     /** The identifier of the Java partitioning. */
     String JAVA_PARTITIONING = "___java_partitioning";  //$NON-NLS-1$

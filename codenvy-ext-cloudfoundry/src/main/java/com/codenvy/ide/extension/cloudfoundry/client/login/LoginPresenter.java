@@ -48,22 +48,15 @@ import com.google.web.bindery.event.shared.EventBus;
  */
 @Singleton
 public class LoginPresenter implements LoginView.ActionDelegate {
-    private LoginView view;
-
-    private ConsolePart console;
-
+    private LoginView                        view;
+    private ConsolePart                      console;
     /** The last server, that user logged in. */
-    private String server;
-
-    private LoggedInHandler loggedIn;
-
-    private LoginCanceledHandler loginCanceled;
-
-    private EventBus eventBus;
-
+    private String                           server;
+    private LoggedInHandler                  loggedIn;
+    private LoginCanceledHandler             loginCanceled;
+    private EventBus                         eventBus;
     private CloudFoundryLocalizationConstant constant;
-
-    private CloudFoundryAutoBeanFactory autoBeanFactory;
+    private CloudFoundryAutoBeanFactory      autoBeanFactory;
 
     /**
      * Create presenter.
@@ -237,9 +230,6 @@ public class LoginPresenter implements LoginView.ActionDelegate {
             CloudFoundryClientService.getInstance()
                                      .getTargets(
                                              new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
-
-
-
                                                                                                                          .<String>createArray())) {
                                                  @Override
                                                  protected void onSuccess(JsonArray<String> result) {
