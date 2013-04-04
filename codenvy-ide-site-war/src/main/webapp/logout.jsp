@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
+<%--
 
-    Copyright (C) 2010 eXo Platform SAS.
+    Copyright (C) 2012 eXo Platform SAS.
 
     This is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as
@@ -18,11 +17,17 @@
     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
--->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-
-    <import>cf-configuration.xml</import>
-    <import>ide-configuration.xml</import>
-</configuration>
+--%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Codenvy</title>
+</head>
+<body>
+<%
+    session.invalidate();
+    response.sendRedirect("/");
+%>
+</body>
+</html>

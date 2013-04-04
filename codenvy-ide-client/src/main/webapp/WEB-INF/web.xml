@@ -1,82 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
-   of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
-   or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
-   License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
-   site: http://www.fsf.org. -->
+<!--
+
+    Copyright (C) 2010 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
 <web-app>
-   <display-name>IDE</display-name>
+    <display-name>IDE</display-name>
 
-   <context-param>
-      <param-name>everrest.exoplatform.standalone.config</param-name>
-      <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
-   </context-param>
+    <context-param>
+        <param-name>everrest.exoplatform.standalone.config</param-name>
+        <param-value>war:/WEB-INF/classes/conf/exo-configuration.xml</param-value>
+    </context-param>
 
-   <listener>
-      <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
-   </listener>
+    <listener>
+        <listener-class>org.everrest.exoplatform.servlet.EverrestExoContextListener$StandaloneContainerStarter</listener-class>
+    </listener>
 
-   <!-- Servlets -->
+    <!-- Servlets -->
 
-   <!-- Default page to serve -->
-   <welcome-file-list>
-      <welcome-file>IDE.html</welcome-file>
-   </welcome-file-list>
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>IDE.html</welcome-file>
+    </welcome-file-list>
 
-   <servlet>
-      <servlet-name>EverrestServlet</servlet-name>
-      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
-   </servlet>
+    <servlet>
+        <servlet-name>EverrestServlet</servlet-name>
+        <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+    </servlet>
 
-   <servlet-mapping>
-      <servlet-name>EverrestServlet</servlet-name>
-      <url-pattern>/rest/*</url-pattern>
-   </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
 
-   <servlet-mapping>
-      <servlet-name>EverrestServlet</servlet-name>
-      <url-pattern>/rest/private/*</url-pattern>
-   </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EverrestServlet</servlet-name>
+        <url-pattern>/rest/private/*</url-pattern>
+    </servlet-mapping>
 
-   <filter>
-      <filter-name>SetCurrentIdentityFilter</filter-name>
-      <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
-   </filter>
+    <filter>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
+    </filter>
 
-   <filter-mapping>
-      <filter-name>SetCurrentIdentityFilter</filter-name>
-      <url-pattern>/rest/*</url-pattern>
-   </filter-mapping>
-      
-   <filter>
-      <filter-name>SetEnvironmentContextFilter</filter-name>
-      <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
-   </filter>
-   
-   	<filter>
-		<filter-name>StandaloneAuthenticationFilter</filter-name>
-		<filter-class>org.exoplatform.ide.authentication.StandaloneAuthenticationFilter</filter-class>
-	</filter>
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
 
-	<filter-mapping>
-		<filter-name>SetCurrentIdentityFilter</filter-name>
-		<url-pattern>/rest/*</url-pattern>
-	</filter-mapping>
-	
-	<filter-mapping>
-		<filter-name>SetEnvironmentContextFilter</filter-name>
-		<url-pattern>/rest/*</url-pattern>
-	</filter-mapping>
+    <filter>
+        <filter-name>SetEnvironmentContextFilter</filter-name>
+        <filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
+    </filter>
 
-   <session-config>
-      <session-timeout>30</session-timeout>
-   </session-config>
+    <filter>
+        <filter-name>StandaloneAuthenticationFilter</filter-name>
+        <filter-class>org.exoplatform.ide.authentication.StandaloneAuthenticationFilter</filter-class>
+    </filter>
 
-   <security-role>
-      <description>the user role</description>
-      <role-name>users</role-name>
-   </security-role>
+    <filter-mapping>
+        <filter-name>SetCurrentIdentityFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SetEnvironmentContextFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <security-role>
+        <description>the user role</description>
+        <role-name>developer</role-name>
+    </security-role>
 
 </web-app>

@@ -47,7 +47,7 @@
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>6.0.35</tomcat.version>
       <gwt.test.skip>true</gwt.test.skip>
-      <jgit.version>1.2.0.201112221803-r</jgit.version>
+      <jgit.version>2.3.1.201302201838-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
       <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
       <version.release.plugin>2.2.1</version.release.plugin>
@@ -448,5 +448,7 @@
       <module>codenvy-ext-cloudfoundry</module>
       <module>codenvy-ext-maven</module>
       <module>codenvy-ide-client</module>
+      <module>codenvy-ide-site-war</module>
+      <module>codenvy-packaging-standalone-tomcat</module>
    </modules>
 </project>

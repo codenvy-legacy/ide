@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2010 eXo Platform SAS.
+    Copyright (C) 2012 eXo Platform SAS.
 
     This is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as
@@ -19,10 +19,18 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<jbosscache xmlns="urn:jboss:jbosscache-core:config:3.1">
 
-    <import>cf-configuration.xml</import>
-    <import>ide-configuration.xml</import>
-</configuration>
+    <locking useLockStriping="false" concurrencyLevel="500" lockParentForChildInsertRemove="false"
+             lockAcquisitionTimeout="20000"/>
+
+    <!-- Eviction configuration -->
+    <eviction wakeUpInterval="5000">
+        <default algorithmClass="org.jboss.cache.eviction.ExpirationAlgorithm"
+                 actionPolicyClass="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.ParentNodeEvictionActionPolicy"
+                 eventQueueSize="1000000">
+            <property name="maxNodes" value="1000000"/>
+            <property name="warnNoExpirationKey" value="false"/>
+        </default>
+    </eviction>
+</jbosscache>
