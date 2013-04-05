@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.progress.ui;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -56,6 +57,7 @@ public class JobWidget extends Composite {
         body.setWidget(0, 0, image);
         body.setWidget(0, 1, message);
         body.getCellFormatter().setWidth(0, 0, "16px");
+        body.getCellFormatter().getElement(0, 0).getStyle().setPaddingTop(5.0, Style.Unit.PX);
         body.getCellFormatter().setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
         body.getCellFormatter().setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
 

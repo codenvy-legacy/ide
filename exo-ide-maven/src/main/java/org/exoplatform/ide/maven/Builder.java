@@ -45,8 +45,9 @@ public class Builder {
         if (async) {
             // Prevent running builder methods asynchronously in EverRest framework.
             // Builder uses BuildService that has own thread pool for running build jobs.
-            throw new WebApplicationException(Response.status(400).entity("Builder does not support asynchronous mode. ")
-                                                      .type(MediaType.TEXT_PLAIN).build());
+            throw new WebApplicationException(
+                    Response.status(400).entity("Builder does not support asynchronous mode. ")
+                            .type(MediaType.TEXT_PLAIN).build());
         }
     }
 
@@ -122,8 +123,10 @@ public class Builder {
                             result.getResult().getTime();
                             jsonObject.addElement("status", new StringValue("SUCCESSFUL"));
                             jsonObject.addElement("downloadUrl",
-                                                  new StringValue(uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID)
-                                                                         .toString()));
+                                                  new StringValue(
+                                                          uriInfo.getBaseUriBuilder().path(getClass(), "download")
+                                                                 .build(buildID)
+                                                                 .toString()));
                             jsonObject.addElement("time", new StringValue(Long.toString(result.getResult().getTime())));
                             return Response
                                     .status(200)
@@ -156,11 +159,13 @@ public class Builder {
                             String line;
                             while ((line = bReader.readLine()) != null) {
                                 // Replace location to surefire-reports by link accessible through the web.
-                                if (line.startsWith("[ERROR] Please refer to ") && line.endsWith(" for the individual test results.")) {
+                                if (line.startsWith("[ERROR] Please refer to ") &&
+                                    line.endsWith(" for the individual test results.")) {
                                     error.append("[ERROR] Please refer to ");
                                     error.append("<a href='");
                                     error.append(
-                                            uriInfo.getBaseUriBuilder().path(getClass(), "getSurefireReports").build(buildID).toString());
+                                            uriInfo.getBaseUriBuilder().path(getClass(), "getSurefireReports")
+                                                   .build(buildID).toString());
                                     error.append("' target='_blank'>surefire reports</a>");
                                     error.append(" for the individual test results.<br/>");
                                 } else {
@@ -180,6 +185,10 @@ public class Builder {
                                        .type(MediaType.APPLICATION_JSON).build();
                     }
                 } catch (MavenInvocationException e) {
+                    if (e.getMessage().contains("cancelled")) {
+                        jsonObject.addElement("status", new StringValue("CANCELLED"));
+                        return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
+                    }
                     throw new WebApplicationException(e);
                 } catch (IOException e) {
                     throw new WebApplicationException(e);
@@ -202,7 +211,8 @@ public class Builder {
                 File reports = new File(task.getProjectDirectory(), "target/surefire-reports");
                 final String[] files = reports.list();
                 if (files == null) {
-                    return Response.status(200).entity("Report files are not available.").type(MediaType.TEXT_PLAIN).build();
+                    return Response.status(200).entity("Report files are not available.").type(MediaType.TEXT_PLAIN)
+                                   .build();
                 }
                 StreamingOutput body = new StreamingOutput() {
                     @Override
@@ -210,8 +220,10 @@ public class Builder {
                         PrintWriter writer = new PrintWriter(output);
                         for (String name : files) {
                             writer.printf("<a href='%s'>%s</a><br/>", uriInfo.getBaseUriBuilder()
-                                                                             .path(Builder.this.getClass(), "getReportFile")
-                                                                             .queryParam("name", name).build(buildID), name);
+                                                                             .path(Builder.this.getClass(),
+                                                                                   "getReportFile")
+                                                                             .queryParam("name", name).build(buildID),
+                                          name);
                         }
                         writer.flush();
                     }
@@ -233,7 +245,8 @@ public class Builder {
             if (task.isDone()) {
                 File report = new File(task.getProjectDirectory(), "target/surefire-reports/" + name);
                 if (report.exists()) {
-                    String mediaType = report.getName().endsWith(".xml") ? MediaType.APPLICATION_XML : MediaType.TEXT_PLAIN;
+                    String mediaType =
+                            report.getName().endsWith(".xml") ? MediaType.APPLICATION_XML : MediaType.TEXT_PLAIN;
                     return Response.status(200).entity(report).type(mediaType).build();
                 }
                 return Response.status(200)
@@ -305,7 +318,8 @@ public class Builder {
             }
             // Sent location to check status method.
             final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
-            return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+            return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN)
+                           .build();
         }
         // Incorrect task ID.
         throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
@@ -344,7 +358,8 @@ public class Builder {
             }
             // Sent location to check status method.
             final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
-            return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+            return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN)
+                           .build();
         }
         // Incorrect task ID.
         throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
