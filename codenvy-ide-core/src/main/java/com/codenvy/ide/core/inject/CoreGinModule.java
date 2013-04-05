@@ -194,7 +194,7 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("restContext")
     @Singleton
     protected String provideDefaultRestContext() {
-        return "/rest/private";
+        return "/IDE/rest/private";
     }
 
     @Provides
@@ -207,6 +207,6 @@ public class CoreGinModule extends AbstractGinModule {
     @Named("registryContext")
     @Singleton
     protected String provideDefaultRegistryContext() {
-        return "/rest/private/registry/repository/exo:applications/IDE";
+        return "/IDE/rest/private/registry/repository/exo:applications/IDE";
     }
 }
