@@ -41,7 +41,7 @@ import java.util.List;
 
 /**
  * Delete repository command handler, performs deleting Git repository.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 21, 2011 5:57:30 PM anya $
  */
@@ -53,8 +53,10 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
         IDE.addHandler(DeleteRepositoryEvent.TYPE, this);
     }
 
-    /** @see org.exoplatform.ide.git.client.delete.DeleteRepositoryHandler#onDeleteRepository(org.exoplatform.ide.git.client.delete
-     * .DeleteRepositoryEvent) */
+    /**
+     * @see org.exoplatform.ide.git.client.delete.DeleteRepositoryHandler#onDeleteRepository(org.exoplatform.ide.git.client.delete
+     *      .DeleteRepositoryEvent)
+     */
     @Override
     public void onDeleteRepository(DeleteRepositoryEvent event) {
         if (makeSelectionCheck()) {
@@ -65,24 +67,23 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
 
     /**
      * Confirm, that user wants to delete Git repository.
-     *
+     * 
      * @param repository
      */
     protected void askBeforeDelete(String repository) {
         Dialogs.getInstance().ask(GitExtension.MESSAGES.deleteGitRepositoryTitle(),
                                   GitExtension.MESSAGES.deleteGitRepositoryQuestion(repository), new BooleanValueReceivedHandler() {
-            @Override
-            public void booleanValueReceived(Boolean value) {
-                if (value != null && value) {
-                    doDeleteRepository();
-                }
-            }
-        });
+                                      @Override
+                                      public void booleanValueReceived(Boolean value) {
+                                          if (value != null && value) {
+                                              doDeleteRepository();
+                                          }
+                                      }
+                                  });
     }
 
     /** Perform deleting Git repository. */
     public void doDeleteRepository() {
-//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
         ProjectModel project = getSelectedProject();
         if (project == null)
             return;
@@ -91,7 +92,7 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
 
     /**
      * Get the project's content.
-     *
+     * 
      * @param project
      */
     private void getChildren(ProjectModel project) {
@@ -105,24 +106,25 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
         }
 
         try {
-            VirtualFileSystem.getInstance().getChildren(project,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
+            VirtualFileSystem.getInstance()
+                             .getChildren(project,
+                                          new AsyncRequestCallback<List<Item>>(
+                                                                               new ChildrenUnmarshaller(new ArrayList<Item>())) {
 
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                for (Item item : result) {
-                                                                    if (".git".equals(item.getName())) {
-                                                                        deleteItem(item);
-                                                                    }
-                                                                }
-                                                            }
+                                              @Override
+                                              protected void onSuccess(List<Item> result) {
+                                                  for (Item item : result) {
+                                                      if (".git".equals(item.getName())) {
+                                                          deleteItem(item);
+                                                      }
+                                                  }
+                                              }
 
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                                            }
-                                                        });
+                                              @Override
+                                              protected void onFailure(Throwable exception) {
+                                                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                                              }
+                                          });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -130,9 +132,8 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
 
     /**
      * Delete item.
-     *
-     * @param item
-     *         item to delete
+     * 
+     * @param item item to delete
      */
     private void deleteItem(Item item) {
         try {
@@ -141,7 +142,6 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
                 @Override
                 protected void onSuccess(String result) {
                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
-//               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
                     IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
                 }
 

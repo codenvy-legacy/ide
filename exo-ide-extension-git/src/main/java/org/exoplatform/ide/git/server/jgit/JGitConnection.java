@@ -18,33 +18,105 @@
  */
 package org.exoplatform.ide.git.server.jgit;
 
-import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.AddCommand;
+import org.eclipse.jgit.api.CheckoutCommand;
+import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.CommitCommand;
+import org.eclipse.jgit.api.CreateBranchCommand;
+import org.eclipse.jgit.api.FetchCommand;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
-import org.eclipse.jgit.api.errors.*;
+import org.eclipse.jgit.api.LogCommand;
+import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.RmCommand;
+import org.eclipse.jgit.api.TagCommand;
+import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
+import org.eclipse.jgit.api.errors.DetachedHeadException;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.api.errors.NotMergedException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
 import org.eclipse.jgit.dircache.DirCacheCheckout;
-import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.lib.ConfigConstants;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryState;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.*;
+import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.RemoteConfig;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
-import org.exoplatform.ide.git.server.*;
-import org.exoplatform.ide.git.shared.*;
+import org.exoplatform.ide.git.server.DiffPage;
+import org.exoplatform.ide.git.server.GitConnection;
+import org.exoplatform.ide.git.server.GitException;
+import org.exoplatform.ide.git.server.LogPage;
+import org.exoplatform.ide.git.server.StatusImpl;
+import org.exoplatform.ide.git.shared.AddRequest;
+import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
+import org.exoplatform.ide.git.shared.BranchCreateRequest;
+import org.exoplatform.ide.git.shared.BranchDeleteRequest;
+import org.exoplatform.ide.git.shared.BranchListRequest;
+import org.exoplatform.ide.git.shared.CloneRequest;
+import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.DiffRequest;
+import org.exoplatform.ide.git.shared.FetchRequest;
+import org.exoplatform.ide.git.shared.GitUser;
+import org.exoplatform.ide.git.shared.InitRequest;
+import org.exoplatform.ide.git.shared.LogRequest;
+import org.exoplatform.ide.git.shared.MergeRequest;
 import org.exoplatform.ide.git.shared.MergeResult;
+import org.exoplatform.ide.git.shared.MoveRequest;
+import org.exoplatform.ide.git.shared.PullRequest;
+import org.exoplatform.ide.git.shared.PushRequest;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RemoteAddRequest;
+import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
+import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
+import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.Status;
+import org.exoplatform.ide.git.shared.Tag;
+import org.exoplatform.ide.git.shared.TagCreateRequest;
+import org.exoplatform.ide.git.shared.TagDeleteRequest;
+import org.exoplatform.ide.git.shared.TagListRequest;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -55,13 +127,11 @@ public class JGitConnection implements GitConnection {
     // -------------------------
     private final Repository repository;
 
-    private final GitUser user;
+    private final GitUser    user;
 
     /**
-     * @param repository
-     *         the JGit repository
-     * @param user
-     *         the user
+     * @param repository the JGit repository
+     * @param user the user
      */
     JGitConnection(Repository repository, GitUser user) {
         this.repository = repository;
@@ -195,105 +265,26 @@ public class JGitConnection implements GitConnection {
     }
 
     /** @see org.exoplatform.ide.git.server.GitConnection#clone(org.exoplatform.ide.git.shared.CloneRequest) */
-    public GitConnection clone(CloneRequest request) throws URISyntaxException, GitException {
+    public GitConnection clone(CloneRequest request) throws GitException {
         try {
-            File workDir = repository.getWorkTree();
-            if (!(workDir.exists() || workDir.mkdirs())) {
-                throw new GitException("Can't create working folder " + workDir + ". ");
+            CloneCommand cloneCom = Git.cloneRepository();
+            cloneCom.setRemote(request.getRemoteName());
+            cloneCom.setURI(request.getRemoteUri());
+            cloneCom.setDirectory(new File(request.getWorkingDir()));
+            if (request.getBranchesToFetch() != null) {
+                cloneCom.setBranchesToClone(Arrays.asList(request.getBranchesToFetch()));
             }
-            repository.create();
-
-            StoredConfig config = repository.getConfig();
-            String remoteName = request.getRemoteName();
-            if (remoteName == null) {
-                remoteName = Constants.DEFAULT_REMOTE_NAME;
+            else {
+                cloneCom.setCloneAllBranches(true);
             }
+            return new JGitConnection(cloneCom.call().getRepository(), this.user);
 
-            RemoteConfig remoteConfig = new RemoteConfig(config, remoteName);
-            remoteConfig.addURI(new URIish(request.getRemoteUri()));
-
-            RefSpec fetchRefSpec =
-                    new RefSpec(Constants.R_HEADS + "*" + ":" + Constants.R_REMOTES + remoteName + "/*").setForceUpdate(true);
-
-            String[] branchesToFetch = request.getBranchesToFetch();
-            if (branchesToFetch != null) {
-                for (int i = 0; i < branchesToFetch.length; i++) {
-                    if (fetchRefSpec.matchSource(branchesToFetch[i])) {
-                        remoteConfig.addFetchRefSpec(new RefSpec(branchesToFetch[i]));
-                    }
-                }
-            } else {
-                remoteConfig.addFetchRefSpec(fetchRefSpec);
-            }
-
-            remoteConfig.update(config);
-
-            final String branchName = "master";
-            final String branchRef = "refs/heads/master";
-
-            config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
-                             remoteName);
-            config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
-                             branchRef);
-
-            GitUser gitUser = getUser();
-            if (gitUser != null) {
-                config.setString("user", null, "name", gitUser.getName());
-                config.setString("user", null, "email", gitUser.getEmail());
-            }
-
-            config.save();
-
-            // Fetch data from remote repository.
-            Transport transport = Transport.open(repository, remoteConfig);
-
-            int timeout = request.getTimeout();
-            if (timeout > 0) {
-                transport.setTimeout(timeout);
-            }
-
-            FetchResult fetchResult;
-            try {
-                fetchResult = transport.fetch(NullProgressMonitor.INSTANCE, null);
-            } finally {
-                transport.close();
-            }
-
-            // Merge command is not work here. Looks like JGit bug. It fails with NPE that should not happen.
-            // But 'merge' command from C git (original) works as well on repository create and fetched with JGit.
-            Ref headRef = fetchResult.getAdvertisedRef(branchRef);
-            if (headRef == null || headRef.getObjectId() == null) {
-                return this;
-            }
-
-            RevWalk revWalk = new RevWalk(repository);
-            RevCommit commit;
-            try {
-                commit = revWalk.parseCommit(headRef.getObjectId());
-            } finally {
-                revWalk.release();
-            }
-
-            boolean detached = !headRef.getName().startsWith(Constants.R_HEADS);
-            RefUpdate updateRef = repository.updateRef(Constants.HEAD, detached);
-            updateRef.setNewObjectId(commit.getId());
-            updateRef.forceUpdate();
-
-            DirCache dirCache = null;
-            try {
-                dirCache = repository.lockDirCache();
-                DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
-                dirCacheCheckout.setFailOnConflict(true);
-                dirCacheCheckout.checkout();
-            } finally {
-                if (dirCache != null) {
-                    dirCache.unlock();
-                }
-            }
-
-            return this;
-        } catch (IOException e) {
-            throw new GitException(e.getMessage(), e);
+        } catch (InvalidRemoteException e) {
+            throw new GitException(e);
+        } catch (TransportException e) {
+            throw new GitException(e.getMessage());
+        } catch (GitAPIException e) {
+            throw new GitException(e);
         }
     }
 
@@ -381,8 +372,8 @@ public class JGitConnection implements GitConnection {
                 fetchRefSpecs = new ArrayList<RefSpec>(refSpec.length);
                 for (int i = 0; i < refSpec.length; i++) {
                     RefSpec fetchRefSpec = (refSpec[i].indexOf(':') < 0) //
-                                           ? new RefSpec(Constants.R_HEADS + refSpec[i] + ":") //
-                                           : new RefSpec(refSpec[i]);
+                        ? new RefSpec(Constants.R_HEADS + refSpec[i] + ":") //
+                        : new RefSpec(refSpec[i]);
                     fetchRefSpecs.add(fetchRefSpec);
                 }
             }
@@ -454,8 +445,9 @@ public class JGitConnection implements GitConnection {
                 RevCommit commit = revIterator.next();
                 PersonIdent committerIdentity = commit.getCommitterIdent();
                 commits.add(new Revision(commit.getId().getName(), commit.getFullMessage(),
-                                         (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(), committerIdentity
-                        .getEmailAddress())));
+                                         (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(),
+                                                                                          committerIdentity
+                                                                                                           .getEmailAddress())));
             }
             return new LogPage(commits);
         } catch (GitAPIException e) {
@@ -536,12 +528,12 @@ public class JGitConnection implements GitConnection {
             String refSpec = request.getRefSpec();
             if (refSpec != null) {
                 fetchRefSpecs = (refSpec.indexOf(':') < 0) //
-                                ? new RefSpec(Constants.R_HEADS + refSpec + ":" + fullBranch) //
-                                : new RefSpec(refSpec);
+                    ? new RefSpec(Constants.R_HEADS + refSpec + ":" + fullBranch) //
+                    : new RefSpec(refSpec);
                 remoteBranch = fetchRefSpecs.getSource();
             } else {
                 remoteBranch =
-                        config.getString(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_MERGE);
+                               config.getString(ConfigConstants.CONFIG_BRANCH_SECTION, branch, ConfigConstants.CONFIG_KEY_MERGE);
             }
 
             if (remoteBranch == null) {
@@ -582,7 +574,8 @@ public class JGitConnection implements GitConnection {
             }
         } catch (CheckoutConflictException e) {
             StringBuilder message =
-                    new StringBuilder("error: Your local changes to the following files would be overwritten by merge:</br>");
+                                    new StringBuilder(
+                                                      "error: Your local changes to the following files would be overwritten by merge:</br>");
             for (String path : e.getConflictingPaths()) {
                 message.append(path + "</br>");
             }
@@ -678,9 +671,9 @@ public class JGitConnection implements GitConnection {
         if (branches != null) {
             for (int i = 0; i < branches.length; i++) {
                 remoteConfig.addFetchRefSpec( //
-                                              new RefSpec(Constants.R_HEADS + branches[i] + ":" + Constants.R_REMOTES + remoteName + "/" +
-                                                          branches[i])
-                                                      .setForceUpdate(true));
+                new RefSpec(Constants.R_HEADS + branches[i] + ":" + Constants.R_REMOTES + remoteName + "/" +
+                            branches[i])
+                                        .setForceUpdate(true));
             }
         } else {
             remoteConfig.addFetchRefSpec(new RefSpec(Constants.R_HEADS + "*" + ":" + Constants.R_REMOTES + remoteName
@@ -797,9 +790,9 @@ public class JGitConnection implements GitConnection {
             // Add new refspec.
             for (int i = 0; i < tmp.length; i++) {
                 remoteConfig.addFetchRefSpec( //
-                                              new RefSpec(
-                                                      Constants.R_HEADS + tmp[i] + ":" + Constants.R_REMOTES + remoteName + "/" + tmp[i])
-                                                      .setForceUpdate(true));
+                new RefSpec(
+                            Constants.R_HEADS + tmp[i] + ":" + Constants.R_REMOTES + remoteName + "/" + tmp[i])
+                                                                                                               .setForceUpdate(true));
             }
         }
 
@@ -989,8 +982,8 @@ public class JGitConnection implements GitConnection {
             }
 
             TagCommand tagCommand =
-                    new Git(repository).tag().setName(request.getName()).setObjectId(revObject)
-                                       .setMessage(request.getMessage()).setForceUpdate(request.isForce());
+                                    new Git(repository).tag().setName(request.getName()).setObjectId(revObject)
+                                                       .setMessage(request.getMessage()).setForceUpdate(request.isForce());
 
             GitUser tagger = getUser();
             if (tagger != null) {

@@ -24,7 +24,7 @@ import com.google.gwt.i18n.client.Messages;
  * Interface to represent the constants contained in resource bundle: 'IdeSamplesLocalizationConstant.properties'.
  * <p/>
  * Localization message for forms from start page view.
- *
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: IdeSamplesLocalizationConstant.java Aug 25, 2011 5:57:11 PM vereshchaka $
  */
@@ -242,8 +242,8 @@ public interface SamplesLocalizationConstant extends Messages {
     @Key("import.github.title")
     String importFromGithubTitle();
 
-    @Key("import.github.text")
-    String importFromGithubText();
+    @Key("import.github.account")
+    String importFromGithubAccount();
 
     @Key("import.github.selectProjectType")
     String importFromGithubSelectProjectType();
