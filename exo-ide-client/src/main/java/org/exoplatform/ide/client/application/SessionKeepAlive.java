@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.application;
 
 import com.google.gwt.http.client.*;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.ide.client.IDE;
@@ -59,7 +60,7 @@ public class SessionKeepAlive implements InitializeServicesHandler {
 
     @Override
     public void onInitializeServices(InitializeServicesEvent event) {
-        url = event.getApplicationConfiguration().getContext() + "/ide/configuration/ping";
+        url = event.getApplicationConfiguration().getContext() + "/ide/configuration/ping?random" + Random.nextDouble();//avoid caching   
         timer.scheduleRepeating(PING_DELAY);
     }
 
