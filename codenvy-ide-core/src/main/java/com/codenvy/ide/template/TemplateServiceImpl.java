@@ -25,6 +25,9 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Random;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
@@ -37,8 +40,8 @@ import java.util.List;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
-
-public class TemplateServiceImpl extends TemplateService {
+@Singleton
+public class TemplateServiceImpl implements TemplateService {
 
     private final class DefaultFileTemplates {
         public static final String EMPTY_XML = "Empty XML";
@@ -77,7 +80,16 @@ public class TemplateServiceImpl extends TemplateService {
 
     private Loader loader;
 
-    public TemplateServiceImpl(Loader loader, String registryContext, String restContext) {
+    /**
+     * Create template service.
+     *
+     * @param loader
+     * @param registryContext
+     * @param restContext
+     */
+    @Inject
+    protected TemplateServiceImpl(Loader loader, @Named("registryContext") String registryContext,
+                                  @Named("restContext") String restContext) {
         this.loader = loader;
         this.registryContext = registryContext;
         this.restContext = restContext;
