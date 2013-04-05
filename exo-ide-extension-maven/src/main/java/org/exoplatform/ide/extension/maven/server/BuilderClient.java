@@ -324,10 +324,6 @@ public class BuilderClient {
                 fail(http);
             }
 
-            TimerTask task = checkStatusTasks.remove(buildID);
-            if (task != null) {
-                task.cancel();
-            }
         } finally {
             if (http != null) {
                 http.disconnect();
