@@ -23,6 +23,7 @@ import com.codenvy.ide.api.outline.OutlineModel;
 import com.codenvy.ide.java.client.JavaClientBundle;
 import com.codenvy.ide.java.client.JavaPartitions;
 import com.codenvy.ide.java.client.editor.outline.JavaNodeRenderer;
+import com.codenvy.ide.java.client.editor.outline.OutlineModelUpdater;
 import com.codenvy.ide.java.client.internal.ui.text.BracketInserter;
 import com.codenvy.ide.java.client.internal.ui.text.JavaAutoEditStrategy;
 import com.codenvy.ide.java.client.internal.ui.text.JavaDocAutoIndentStrategy;
@@ -124,9 +125,9 @@ public class JavaEditorConfiguration extends TextEditorConfiguration {
     /** {@inheritDoc} */
     @Override
     public OutlineModel getOutline(TextEditorPartView view) {
-//        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
-//        return outlineModel;
-        return super.getOutline(view);
+        new OutlineModelUpdater(outlineModel, reconcilerStrategy);
+        return outlineModel;
+//        return super.getOutline(view);
     }
 
     @Override
