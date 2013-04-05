@@ -130,20 +130,20 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
 
         try {
             GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), bare,
-                                                  new RequestCallback<String>() {
-                                                      @Override
-                                                      protected void onSuccess(String result) {
-                                                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                                                          IDE.fireEvent(new RefreshBrowserEvent(project));
-                                                          updateProjectProperties();
+                  new RequestCallback<String>() {
+                      @Override
+                      protected void onSuccess(String result) {
+                          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                          IDE.fireEvent(new RefreshBrowserEvent(project));
+                          updateProjectProperties();
 
-                                                      }
+                      }
 
-                                                      @Override
-                                                      protected void onFailure(Throwable exception) {
-                                                          handleError(exception);
-                                                      }
-                                                  });
+                      @Override
+                      protected void onFailure(Throwable exception) {
+                          handleError(exception);
+                      }
+                  });
             IDE.getInstance().closeView(display.asView().getId());
         } catch (WebSocketException e) {
             initRepositoryREST(project.getId(), project.getName(), bare);
@@ -159,18 +159,18 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
         try {
             VirtualFileSystem.getInstance().updateItem(getSelectedProject(), null,
-                                                       new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
-                                                           @Override
-                                                           protected void onSuccess(ItemWrapper result) {
-                                                               IDE.fireEvent(new RefreshBrowserEvent((ProjectModel)result.getItem()));
-                                                           }
-
-                                                           @Override
-                                                           protected void onFailure(Throwable exception) {
-                                                               handleError(exception);
-
-                                                           }
-                                                       });
+                   new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
+                       @Override
+                       protected void onSuccess(ItemWrapper result) {
+                           IDE.fireEvent(new RefreshBrowserEvent((ProjectModel)result.getItem()));
+                       }
+    
+                       @Override
+                       protected void onFailure(Throwable exception) {
+                           handleError(exception);
+    
+                       }
+                   });
         } catch (RequestException e) {
             handleError(e);
         }
@@ -181,19 +181,19 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
     private void initRepositoryREST(String projectId, String projectName, boolean bare) {
         try {
             GitClientService.getInstance().init(vfs.getId(), projectId, projectName, bare,
-                                                new AsyncRequestCallback<String>() {
-                                                    @Override
-                                                    protected void onSuccess(String result) {
-                                                        IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                                                        //                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-                                                        IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
-                                                    }
-
-                                                    @Override
-                                                    protected void onFailure(Throwable exception) {
-                                                        handleError(exception);
-                                                    }
-                                                });
+                    new AsyncRequestCallback<String>() {
+                        @Override
+                        protected void onSuccess(String result) {
+                            IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                            //                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                            IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
+                        }
+    
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            handleError(exception);
+                        }
+                    });
         } catch (RequestException e) {
             handleError(e);
         }
