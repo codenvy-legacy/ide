@@ -66,6 +66,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
         @Override
@@ -85,18 +87,18 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
      * @param view
      * @param eventBus
      * @param console
-     * @param resourceProvider
      * @param startAppPresenter
      * @param deleteAppPresenter
      * @param loginPresenter
      * @param constant
      * @param autoBeanFactory
+     * @param service
      */
     @Inject
     protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, ConsolePart console,
                                     StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
                                     LoginPresenter loginPresenter, CloudFoundryLocalizationConstant constant,
-                                    CloudFoundryAutoBeanFactory autoBeanFactory) {
+                                    CloudFoundryAutoBeanFactory autoBeanFactory, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -106,6 +108,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
         this.startAppPresenter = startAppPresenter;
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -123,27 +126,34 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** Gets list of available application for current user. */
     private void getApplicationList() {
         try {
-            CloudFoundryClientService.getInstance().getApplicationList(
-                    currentServer,
-                    new CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
-                            JsonCollections.<CloudFoundryApplication>createArray(), autoBeanFactory), new LoggedInHandler() {
-                        @Override
-                        public void onLoggedIn() {
-                            getApplicationList();
-                        }
-                    }, null, currentServer, eventBus, console, constant, loginPresenter) {
+            ApplicationListUnmarshaller unmarshaller = new ApplicationListUnmarshaller(
+                    JsonCollections.<CloudFoundryApplication>createArray(), autoBeanFactory);
+            LoggedInHandler loggedInHandler = new LoggedInHandler() {
+                @Override
+                public void
+                onLoggedIn() {
+                    getApplicationList();
+                }
+            };
 
-                        @Override
-                        protected void onSuccess(JsonArray<CloudFoundryApplication> result) {
-                            view.setApplications(result);
-                            view.setServer(currentServer);
+            service.getApplicationList(currentServer,
+                                       new CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>>(unmarshaller,
+                                                                                                                loggedInHandler, null,
+                                                                                                                currentServer,
+                                                                                                                eventBus, console, constant,
+                                                                                                                loginPresenter) {
 
-                            // update the list of servers, if was enter value, that doesn't present in list
-                            if (!servers.contains(currentServer)) {
-                                getServers();
-                            }
-                        }
-                    });
+                                           @Override
+                                           protected void onSuccess(JsonArray<CloudFoundryApplication> result) {
+                                               view.setApplications(result);
+                                               view.setServer(currentServer);
+
+                                               // update the list of servers, if was enter value, that doesn't present in list
+                                               if (!servers.contains(currentServer)) {
+                                                   getServers();
+                                               }
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -153,48 +163,20 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
     /** Gets servers. */
     private void getServers() {
         try {
-            CloudFoundryClientService.getInstance()
-                                     .getTargets(
-                                             new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+            service.getTargets(new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                @Override
+                protected void onSuccess(JsonArray<String> result) {
+                    servers = result;
+                    view.setServers(servers);
+                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                         .<String>createArray())) {
-                                                 @Override
-                                                 protected void onSuccess(JsonArray<String> result) {
-                                                     servers = result;
-                                                     view.setServers(servers);
-                                                 }
-
-                                                 @Override
-                                                 protected void onFailure(Throwable exception) {
-                                                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                                     console.print(exception.getMessage());
-                                                 }
-                                             });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    console.print(exception.getMessage());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -212,27 +194,26 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate {
      */
     private void checkLogginedToServer() {
         try {
-            CloudFoundryClientService.getInstance()
-                                     .getTargets(
-                                             new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
-                                                                                                                         .<String>createArray())) {
-                                                 @Override
-                                                 protected void onSuccess(JsonArray<String> result) {
-                                                     if (result.isEmpty()) {
-                                                         servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_SERVER);
-                                                     } else {
-                                                         servers = result;
-                                                     }
-                                                     // open view
-                                                     openView();
-                                                 }
+            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+            service.getTargets(
+                    new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                        @Override
+                        protected void onSuccess(JsonArray<String> result) {
+                            if (result.isEmpty()) {
+                                servers = JsonCollections.createArray(CloudFoundryExtension.DEFAULT_SERVER);
+                            } else {
+                                servers = result;
+                            }
+                            // open view
+                            openView();
+                        }
 
-                                                 @Override
-                                                 protected void onFailure(Throwable exception) {
-                                                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                                     console.print(exception.getMessage());
-                                                 }
-                                             });
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                            console.print(exception.getMessage());
+                        }
+                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

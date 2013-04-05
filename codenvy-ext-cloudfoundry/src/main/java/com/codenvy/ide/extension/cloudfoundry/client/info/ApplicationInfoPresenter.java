@@ -57,6 +57,8 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -67,12 +69,13 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
     protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
                                        ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                       CloudFoundryAutoBeanFactory autoBeanFactory,
-                                       LoginPresenter loginPresenter) {
+                                       CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
+                                       CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -81,6 +84,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -104,37 +108,34 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
             AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+            LoggedInHandler loggedInHandler = new LoggedInHandler() {
+                @Override
+                public void onLoggedIn() {
+                    showApplicationInfo(projectId);
+                }
+            };
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
-                                                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                                                                               unmarshaller, new LoggedInHandler() {
-                                                                           @Override
-                                                                           public void onLoggedIn() {
-                                                                               showApplicationInfo(projectId);
-                                                                           }
-                                                                       }, null, eventBus, console, constant, loginPresenter) {
-                                                                           @Override
-                                                                           protected void onSuccess(CloudFoundryApplication result) {
-                                                                               view.setName(result.getName());
-                                                                               view.setState(result.getState());
-                                                                               view.setInstances(String.valueOf(result.getInstances()));
-                                                                               view.setVersion(result.getVersion());
-                                                                               view.setDisk(
-                                                                                       String.valueOf(result.getResources().getDisk()));
-                                                                               view.setMemory(
-                                                                                       String.valueOf(result.getResources().getMemory()) +
-                                                                                       "MB");
-                                                                               view.setModel(
-                                                                                       String.valueOf(result.getStaging().getModel()));
-                                                                               view.setStack(
-                                                                                       String.valueOf(result.getStaging().getStack()));
-                                                                               view.setApplicationUris(result.getUris());
-                                                                               view.setApplicationServices(result.getServices());
-                                                                               view.setApplicationEnvironments(result.getEnv());
+            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+                                                                                                     eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               view.setName(result.getName());
+                                               view.setState(result.getState());
+                                               view.setInstances(String.valueOf(result.getInstances()));
+                                               view.setVersion(result.getVersion());
+                                               view.setDisk(String.valueOf(result.getResources().getDisk()));
+                                               view.setMemory(String.valueOf(result.getResources().getMemory()) + "MB");
+                                               view.setModel(String.valueOf(result.getStaging().getModel()));
+                                               view.setStack(String.valueOf(result.getStaging().getStack()));
+                                               view.setApplicationUris(result.getUris());
+                                               view.setApplicationServices(result.getServices());
+                                               view.setApplicationEnvironments(result.getEnv());
 
-                                                                               view.showDialog();
-                                                                           }
-                                                                       });
+                                               view.showDialog();
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

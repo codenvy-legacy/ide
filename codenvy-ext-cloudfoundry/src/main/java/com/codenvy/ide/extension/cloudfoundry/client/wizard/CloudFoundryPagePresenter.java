@@ -84,6 +84,8 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -95,13 +97,13 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
-    protected CloudFoundryPagePresenter(CloudFoundryPageView view, EventBus eventBus,
-                                        ResourceProvider resourcesProvider, CloudFoundryResources resources,
-                                        ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                        CloudFoundryAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter) {
+    protected CloudFoundryPagePresenter(CloudFoundryPageView view, EventBus eventBus, ResourceProvider resourcesProvider,
+                                        CloudFoundryResources resources, ConsolePart console, CloudFoundryLocalizationConstant constant,
+                                        CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
+                                        CloudFoundryClientService service) {
         super("Deploy project to Cloud Foundry", resources.cloudFoundry48());
 
         this.view = view;
@@ -112,6 +114,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -221,40 +224,31 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
         try {
             // Application will be started after creation (IDE-1618)
             boolean noStart = false;
-            CloudFoundryClientService.getInstance().create(
-                    server,
-                    name,
-                    null,
-                    url,
-                    0,
-                    0,
-                    noStart,
-                    resourcesProvider.getVfsId(),
-                    resourcesProvider.getActiveProject().getId(),
-                    warUrl,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, server,
-                                                                                  eventBus, console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(final CloudFoundryApplication result) {
-                            project.refreshProperties(new AsyncCallback<Project>() {
-                                @Override
-                                public void onSuccess(Project project) {
-                                    onAppCreatedSuccess(result);
-                                }
+            service.create(server, name, null, url, 0, 0, noStart, resourcesProvider.getVfsId(),
+                           resourcesProvider.getActiveProject().getId(), warUrl,
+                           new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, server,
+                                                                                         eventBus, console, constant, loginPresenter) {
+                               @Override
+                               protected void onSuccess(final CloudFoundryApplication result) {
+                                   project.refreshProperties(new AsyncCallback<Project>() {
+                                       @Override
+                                       public void onSuccess(Project project) {
+                                           onAppCreatedSuccess(result);
+                                       }
 
-                                @Override
-                                public void onFailure(Throwable caught) {
-                                    // do nothing
-                                }
-                            });
-                        }
+                                       @Override
+                                       public void onFailure(Throwable caught) {
+                                           // do nothing
+                                       }
+                                   });
+                               }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            console.print(constant.applicationCreationFailed());
-                            super.onFailure(exception);
-                        }
-                    });
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   console.print(constant.applicationCreationFailed());
+                                   super.onFailure(exception);
+                               }
+                           });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -265,7 +259,7 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
      * Performs action when application successfully created.
      *
      * @param app
-     *         @link CloudFoundryApplication} which is created
+     *         {@link CloudFoundryApplication} which is created
      */
     private void onAppCreatedSuccess(CloudFoundryApplication app) {
         warUrl = null;
@@ -307,80 +301,38 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
     /** Get the list of server and put them to select field. */
     private void getServers() {
         try {
-            CloudFoundryClientService.getInstance()
-                                     .getTargets(
-                                             new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+            service.getTargets(
+                    new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                        @Override
+                        protected void onSuccess(JsonArray<String> result) {
+                            if (result.isEmpty()) {
+                                JsonArray<String> servers = JsonCollections.createArray();
+                                servers.add(CloudFoundryExtension.DEFAULT_SERVER);
+                                view.setServerValues(servers);
+                                view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                            } else {
+                                view.setServerValues(result);
+                                view.setServer(result.get(0));
+                            }
+                            view.setName(projectName);
+                            // don't forget to init values, that are stored, when
+                            // values in form fields are changed.
+                            name = projectName;
+                            server = view.getServer();
+                            String urlSufix = server.substring(server.indexOf("."));
+                            view.setUrl(name + urlSufix);
+                            url = view.getUrl();
 
+                            delegate.updateControls();
+                        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                         .<String>createArray())) {
-                                                 @Override
-                                                 protected void onSuccess(JsonArray<String> result) {
-                                                     if (result.isEmpty()) {
-                                                         JsonArray<String> servers = JsonCollections.createArray();
-                                                         servers.add(CloudFoundryExtension.DEFAULT_SERVER);
-                                                         view.setServerValues(servers);
-                                                         view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
-                                                     } else {
-                                                         view.setServerValues(result);
-                                                         view.setServer(result.get(0));
-                                                     }
-                                                     view.setName(projectName);
-                                                     // don't forget to init values, that are stored, when
-                                                     // values in form fields are changed.
-                                                     name = projectName;
-                                                     server = view.getServer();
-                                                     String urlSufix = server.substring(server.indexOf("."));
-                                                     view.setUrl(name + urlSufix);
-                                                     url = view.getUrl();
-
-                                                     delegate.updateControls();
-                                                 }
-
-                                                 @Override
-                                                 protected void onFailure(Throwable exception) {
-                                                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                                     console.print(exception.getMessage());
-                                                 }
-                                             });
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                            console.print(exception.getMessage());
+                        }
+                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -397,24 +349,14 @@ public class CloudFoundryPagePresenter extends AbstractPaasWizardPagePresenter i
         };
 
         try {
-            CloudFoundryClientService.getInstance().validateAction(
-                    "create",
-                    server,
-                    name,
-                    null,
-                    url,
-                    resourcesProvider.getVfsId(),
-                    null,
-                    0,
-                    0,
-                    true,
-                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, console,
-                                                                 constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(String result) {
-                            beforeDeploy();
-                        }
-                    });
+            service.validateAction("create", server, name, null, url, resourcesProvider.getVfsId(), null, 0, 0, true,
+                                   new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, console,
+                                                                                constant, loginPresenter) {
+                                       @Override
+                                       protected void onSuccess(String result) {
+                                           beforeDeploy();
+                                       }
+                                   });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

@@ -105,6 +105,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -115,11 +117,13 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
     protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, ConsolePart console,
                                       CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant,
-                                      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter) {
+                                      CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
+                                      CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -128,6 +132,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -178,19 +183,17 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void deleteService(final ProvisionedService service) {
         try {
-            CloudFoundryClientService.getInstance().deleteService(null, service.getName(),
-                                                                  new CloudFoundryAsyncRequestCallback<Object>(null,
-                                                                                                               deleteServiceLoggedInHandler,
-                                                                                                               null, eventBus, console,
-                                                                                                               constant, loginPresenter) {
-                                                                      @Override
-                                                                      protected void onSuccess(Object result) {
-                                                                          getServices();
-                                                                          if (application.getServices().contains(service.getName())) {
-                                                                              getApplicationInfo();
-                                                                          }
-                                                                      }
-                                                                  });
+            this.service.deleteService(null, service.getName(),
+                                       new CloudFoundryAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null, eventBus,
+                                                                                    console, constant, loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(Object result) {
+                                               getServices();
+                                               if (application.getServices().contains(service.getName())) {
+                                                   getApplicationInfo();
+                                               }
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -205,23 +208,20 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void bindService(final ProvisionedService service) {
         try {
-            CloudFoundryClientService.getInstance().bindService(null, service.getName(), application.getName(), null,
-                                                                null,
-                                                                new CloudFoundryAsyncRequestCallback<Object>(null,
-                                                                                                             bindServiceLoggedInHandler,
-                                                                                                             null, eventBus, console,
-                                                                                                             constant, loginPresenter) {
-                                                                    @Override
-                                                                    protected void onSuccess(Object result) {
-                                                                        getApplicationInfo();
-                                                                    }
+            this.service.bindService(null, service.getName(), application.getName(), null, null,
+                                     new CloudFoundryAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus, console,
+                                                                                  constant, loginPresenter) {
+                                         @Override
+                                         protected void onSuccess(Object result) {
+                                             getApplicationInfo();
+                                         }
 
-                                                                    @Override
-                                                                    protected void onFailure(Throwable exception) {
-                                                                        super.onFailure(exception);
-                                                                        getApplicationInfo();
-                                                                    }
-                                                                });
+                                         @Override
+                                         protected void onFailure(Throwable exception) {
+                                             super.onFailure(exception);
+                                             getApplicationInfo();
+                                         }
+                                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -235,16 +235,14 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
      */
     private void unbindService(String service) {
         try {
-            CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null,
-                                                                  new CloudFoundryAsyncRequestCallback<Object>(null,
-                                                                                                               unBindServiceLoggedInHandler,
-                                                                                                               null, eventBus, console,
-                                                                                                               constant, loginPresenter) {
-                                                                      @Override
-                                                                      protected void onSuccess(Object result) {
-                                                                          getApplicationInfo();
-                                                                      }
-                                                                  });
+            this.service.unbindService(null, service, application.getName(), null, null,
+                                       new CloudFoundryAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus,
+                                                                                    console, constant, loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(Object result) {
+                                               getApplicationInfo();
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -268,21 +266,18 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                 new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
         try {
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    null,
-                    null,
-                    application.getName(),
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getApplicationInfoLoggedInHandler, null, eventBus,
-                                                                                  console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            application = result;
-                            getServices();
-                            view.setBoundedServices(result.getServices());
-                        }
-                    });
+            this.service.getApplicationInfo(null, null, application.getName(), null,
+                                            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+                                                                                                          getApplicationInfoLoggedInHandler,
+                                                                                                          null, eventBus, console, constant,
+                                                                                                          loginPresenter) {
+                                                @Override
+                                                protected void onSuccess(CloudFoundryApplication result) {
+                                                    application = result;
+                                                    getServices();
+                                                    view.setBoundedServices(result.getServices());
+                                                }
+                                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -292,20 +287,19 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     /** Get the list of CloudFoundry services (system and provisioned). */
     private void getServices() {
         try {
-            CloudFoundryClientService.getInstance().services(null,
-                                                             new AsyncRequestCallback<CloudFoundryServices>(
-                                                                     new CloudFoundryServicesUnmarshaller(autoBeanFactory)) {
-                                                                 @Override
-                                                                 protected void onSuccess(CloudFoundryServices result) {
-                                                                     view.setProvisionedServices(Arrays.asList(result.getProvisioned()));
-                                                                     view.setEnableDeleteButton(false);
-                                                                 }
+            CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller(autoBeanFactory);
+            this.service.services(null, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
+                @Override
+                protected void onSuccess(CloudFoundryServices result) {
+                    view.setProvisionedServices(Arrays.asList(result.getProvisioned()));
+                    view.setEnableDeleteButton(false);
+                }
 
-                                                                 @Override
-                                                                 protected void onFailure(Throwable exception) {
-                                                                     Window.alert(constant.retrieveServicesFailed());
-                                                                 }
-                                                             });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Window.alert(constant.retrieveServicesFailed());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

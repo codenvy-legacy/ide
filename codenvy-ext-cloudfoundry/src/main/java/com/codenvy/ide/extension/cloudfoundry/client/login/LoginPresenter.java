@@ -65,6 +65,8 @@ public class LoginPresenter implements LoginView.ActionDelegate {
 
     private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -73,16 +75,18 @@ public class LoginPresenter implements LoginView.ActionDelegate {
      * @param console
      * @param constant
      * @param autoBeanFactory
+     * @param service
      */
     @Inject
-    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console,
-                             CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory) {
+    protected LoginPresenter(LoginView view, EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
+                             CloudFoundryAutoBeanFactory autoBeanFactory, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.console = console;
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -98,43 +102,41 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         final String password = view.getPassword();
 
         try {
-            CloudFoundryClientService.getInstance().login(enteredServer, email, password,
-                                                          new AsyncRequestCallback<String>() {
-                                                              @Override
-                                                              protected void onSuccess(String result) {
-                                                                  server = enteredServer;
-                                                                  console.print(constant.loginSuccess());
-                                                                  if (loggedIn != null) {
-                                                                      loggedIn.onLoggedIn();
-                                                                  }
+            service.login(enteredServer, email, password, new AsyncRequestCallback<String>() {
+                @Override
+                protected void onSuccess(String result) {
+                    server = enteredServer;
+                    console.print(constant.loginSuccess());
+                    if (loggedIn != null) {
+                        loggedIn.onLoggedIn();
+                    }
 
-                                                                  view.close();
-                                                              }
+                    view.close();
+                }
 
-                                                              @Override
-                                                              protected void onFailure(Throwable exception) {
-                                                                  if (exception instanceof ServerException) {
-                                                                      ServerException serverException = (ServerException)exception;
-                                                                      if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
-                                                                          && serverException.getMessage() != null
-                                                                          &&
-                                                                          serverException.getMessage().contains("Can't access target.")) {
-                                                                          view.setError(constant.loginViewErrorUnknownTarget());
-                                                                          return;
-                                                                      } else if (HTTPStatus.OK != serverException.getHTTPStatus() &&
-                                                                                 serverException.getMessage() != null
-                                                                                 && serverException.getMessage()
-                                                                                                   .contains("Operation not permitted")) {
-                                                                          view.setError(constant.loginViewErrorInvalidUserOrPassword());
-                                                                          return;
-                                                                      }
-                                                                      // otherwise will be called method from superclass.
-                                                                  }
-                                                                  view.setError("");
-                                                                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                                                  console.print(exception.getMessage());
-                                                              }
-                                                          });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    if (exception instanceof ServerException) {
+                        ServerException serverException = (ServerException)exception;
+                        if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() &&
+                            serverException.getMessage() != null
+                            && serverException.getMessage().contains("Can't access target.")) {
+                            view.setError(constant.loginViewErrorUnknownTarget());
+                            return;
+                        } else if (HTTPStatus.OK != serverException.getHTTPStatus() &&
+                                   serverException.getMessage() != null
+                                   && serverException.getMessage().contains("Operation not permitted")) {
+                            view.setError(constant.loginViewErrorInvalidUserOrPassword());
+                            return;
+                        }
+                        // otherwise will be called method from superclass.
+                    }
+
+                    view.setError("");
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    console.print(exception.getMessage());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -178,7 +180,7 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         this.loginCanceled = loginCanceled;
         if (loginUrl != null) {
             server = loginUrl;
-            if (server != null && !server.startsWith("http")) {
+            if (!server.startsWith("http")) {
                 server = "http://" + server;
             }
         }
@@ -208,23 +210,22 @@ public class LoginPresenter implements LoginView.ActionDelegate {
         try {
             AutoBean<SystemInfo> systemInfo = autoBeanFactory.systemInfo();
             AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
-            CloudFoundryClientService.getInstance().getSystemInfo(server,
-                                                                  new AsyncRequestCallback<SystemInfo>(unmarshaller) {
-                                                                      @Override
-                                                                      protected void onSuccess(SystemInfo result) {
-                                                                          view.setEmail(result.getUser());
-                                                                          getServers();
-                                                                      }
+            service.getSystemInfo(server, new AsyncRequestCallback<SystemInfo>(unmarshaller) {
+                @Override
+                protected void onSuccess(SystemInfo result) {
+                    view.setEmail(result.getUser());
+                    getServers();
+                }
 
-                                                                      @Override
-                                                                      protected void onFailure(Throwable exception) {
-                                                                          if (exception instanceof UnmarshallerException) {
-                                                                              Window.alert(exception.getMessage());
-                                                                          } else {
-                                                                              getServers();
-                                                                          }
-                                                                      }
-                                                                  });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    if (exception instanceof UnmarshallerException) {
+                        Window.alert(exception.getMessage());
+                    } else {
+                        getServers();
+                    }
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -234,40 +235,35 @@ public class LoginPresenter implements LoginView.ActionDelegate {
     /** Get the list of server and put them to field. */
     private void getServers() {
         try {
-            CloudFoundryClientService.getInstance()
-                                     .getTargets(
-                                             new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+            service.getTargets(new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                @Override
+                protected void onSuccess(JsonArray<String> result) {
+                    if (result.isEmpty()) {
+                        JsonArray<String> servers = JsonCollections.createArray();
+                        servers.add(CloudFoundryExtension.DEFAULT_SERVER);
+                        view.setServerValues(servers);
+                        if (server == null || server.isEmpty()) {
+                            view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                        } else {
+                            view.setServer(server);
+                        }
+                    } else {
+                        view.setServerValues(result);
+                        if (server == null || server.isEmpty()) {
+                            view.setServer(result.get(0));
+                        } else {
+                            view.setServer(server);
+                        }
+                    }
+                }
 
-
-
-                                                                                                                         .<String>createArray())) {
-                                                 @Override
-                                                 protected void onSuccess(JsonArray<String> result) {
-                                                     if (result.isEmpty()) {
-                                                         JsonArray<String> servers = JsonCollections.createArray();
-                                                         servers.add(CloudFoundryExtension.DEFAULT_SERVER);
-                                                         view.setServerValues(servers);
-                                                         if (server == null || server.isEmpty()) {
-                                                             view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
-                                                         } else {
-                                                             view.setServer(server);
-                                                         }
-                                                     } else {
-                                                         view.setServerValues(result);
-                                                         if (server == null || server.isEmpty()) {
-                                                             view.setServer(result.get(0));
-                                                         } else {
-                                                             view.setServer(server);
-                                                         }
-                                                     }
-                                                 }
-
-                                                 @Override
-                                                 protected void onFailure(Throwable exception) {
-                                                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                                     console.print(exception.getMessage());
-                                                 }
-                                             });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                    console.print(exception.getMessage());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

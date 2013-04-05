@@ -121,6 +121,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -131,11 +133,13 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
-    protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view,
-                                         EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter) {
+    protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view, EventBus eventBus,
+                                         ConsolePart console, CloudFoundryLocalizationConstant constant,
+                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
+                                         CloudFoundryClientService service) {
         this.frameworks = JsonCollections.createArray();
 
         this.resourceProvider = resourceProvider;
@@ -146,6 +150,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -257,30 +262,21 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         Project project = resourceProvider.getActiveProject();
 
         try {
-            CloudFoundryClientService.getInstance().validateAction(
-                    "create",
-                    app.server,
-                    app.name,
-                    app.type,
-                    app.url,
-                    resourceProvider.getVfsId(),
-                    project.getId(),
-                    app.instances,
-                    app.memory,
-                    app.nostart,
-                    new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, console,
-                                                                 constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(String result) {
-                            if (isMavenProject) {
-                                buildApplication();
-                            } else {
-                                createApplication(appData);
-                            }
+            service.validateAction("create", app.server, app.name, app.type, app.url, resourceProvider.getVfsId(), project.getId(),
+                                   app.instances, app.memory, app.nostart,
+                                   new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, console,
+                                                                                constant, loginPresenter) {
+                                       @Override
+                                       protected void onSuccess(String result) {
+                                           if (isMavenProject) {
+                                               buildApplication();
+                                           } else {
+                                               createApplication(appData);
+                                           }
 
-                            view.close();
-                        }
-                    });
+                                           view.close();
+                                       }
+                                   });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -370,41 +366,32 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                 new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
         try {
-            CloudFoundryClientService.getInstance().create(
-                    appData.server,
-                    appData.name,
-                    appData.type,
-                    appData.url,
-                    appData.instances,
-                    appData.memory,
-                    appData.nostart,
-                    resourceProvider.getVfsId(),
-                    project.getId(),
-                    warUrl,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-                                                                                  appData.server, eventBus, console, constant,
-                                                                                  loginPresenter) {
-                        @Override
-                        protected void onSuccess(final CloudFoundryApplication cloudFoundryApp) {
-                            project.refreshProperties(new AsyncCallback<Project>() {
-                                @Override
-                                public void onSuccess(Project result) {
-                                    onAppCreatedSuccess(cloudFoundryApp);
-                                    eventBus.fireEvent(new RefreshBrowserEvent(project));
-                                }
+            service.create(appData.server, appData.name, appData.type, appData.url, appData.instances, appData.memory, appData.nostart,
+                           resourceProvider.getVfsId(), project.getId(), warUrl,
+                           new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+                                                                                         appData.server, eventBus, console, constant,
+                                                                                         loginPresenter) {
+                               @Override
+                               protected void onSuccess(final CloudFoundryApplication cloudFoundryApp) {
+                                   project.refreshProperties(new AsyncCallback<Project>() {
+                                       @Override
+                                       public void onSuccess(Project result) {
+                                           onAppCreatedSuccess(cloudFoundryApp);
+                                           eventBus.fireEvent(new RefreshBrowserEvent(project));
+                                       }
 
-                                @Override
-                                public void onFailure(Throwable caught) {
-                                }
-                            });
-                        }
+                                       @Override
+                                       public void onFailure(Throwable caught) {
+                                       }
+                                   });
+                               }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            console.print(constant.applicationCreationFailed());
-                            super.onFailure(exception);
-                        }
-                    });
+                               @Override
+                               protected void onFailure(Throwable exception) {
+                                   console.print(constant.applicationCreationFailed());
+                                   super.onFailure(exception);
+                               }
+                           });
         } catch (RequestException e) {
             console.print(constant.applicationCreationFailed());
         }
@@ -514,7 +501,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
         };
 
         try {
-            CloudFoundryClientService.getInstance().getFrameworks(
+            service.getFrameworks(
                     new CloudFoundryAsyncRequestCallback<JsonArray<Framework>>(new FrameworksUnmarshaller(
                             JsonCollections.<Framework>createArray(), autoBeanFactory), getFrameworksLoggedInHandler, null,
                                                                                eventBus, console, constant, loginPresenter) {
@@ -622,39 +609,31 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     /** Get the list of server and put them to select field. */
     private void getServers() {
         try {
-            CloudFoundryClientService.getInstance()
-                                     .getTargets(
-                                             new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
+            TargetsUnmarshaller unmarshaller = new TargetsUnmarshaller(JsonCollections.<String>createArray());
+            service.getTargets(
+                    new AsyncRequestCallback<JsonArray<String>>(unmarshaller) {
+                        @Override
+                        protected void onSuccess(JsonArray<String> result) {
+                            if (result.isEmpty()) {
+                                JsonArray<String> list = JsonCollections.createArray();
+                                list.add(CloudFoundryExtension.DEFAULT_SERVER);
+                                view.setServerValues(list);
+                                view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                            } else {
+                                view.setServerValues(result);
+                                view.setServer(result.get(0));
+                                getFrameworks(result.get(0));
+                            }
+                            view.setName(resourceProvider.getActiveProject().getName());
+                            updateUrlField();
+                        }
 
-
-
-
-
-
-
-                                                                                                                         .<String>createArray())) {
-                                                 @Override
-                                                 protected void onSuccess(JsonArray<String> result) {
-                                                     if (result.isEmpty()) {
-                                                         JsonArray<String> list = JsonCollections.createArray();
-                                                         list.add(CloudFoundryExtension.DEFAULT_SERVER);
-                                                         view.setServerValues(list);
-                                                         view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
-                                                     } else {
-                                                         view.setServerValues(result);
-                                                         view.setServer(result.get(0));
-                                                         getFrameworks(result.get(0));
-                                                     }
-                                                     view.setName(resourceProvider.getActiveProject().getName());
-                                                     updateUrlField();
-                                                 }
-
-                                                 @Override
-                                                 protected void onFailure(Throwable exception) {
-                                                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                                                     console.print(exception.getMessage());
-                                                 }
-                                             });
+                        @Override
+                        protected void onFailure(Throwable exception) {
+                            eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                            console.print(exception.getMessage());
+                        }
+                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

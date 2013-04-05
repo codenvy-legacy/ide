@@ -76,6 +76,8 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
+import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.websocket.rest.RESTMessageBus;
 import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
@@ -183,5 +185,18 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected PartStackEventHandler providePartStackEventHandler(FocusManager partAgentPresenter) {
         return partAgentPresenter.getPartStackHandler();
+    }
+
+    @Provides
+    @Named("restContext")
+    @Singleton
+    protected String provideDefaultRestContext() {
+        return "/rest/private";
+    }
+
+    @Provides
+    @Singleton
+    protected MessageBus provideMessageBus() {
+        return new RESTMessageBus("wss://localhost/websocket");
     }
 }

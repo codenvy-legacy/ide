@@ -65,7 +65,7 @@ public class WebSocket extends JavaScriptObject {
 
     /**
      * Closes the WebSocket connection. If the connection state
-     * is already {@link ReadyState#CLOSED}, this method does nothing.
+     * is already {@link com.codenvy.ide.websocket.MessageBus.ReadyState#CLOSED}, this method does nothing.
      */
     public final native void close()
    /*-{
@@ -139,8 +139,7 @@ public class WebSocket extends JavaScriptObject {
        this.onclose = $entry(function () {
            var webSocketClosedEventInstance = @com.codenvy.ide.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event
                .code, event.reason, event.wasClean);
-           handler.@com.codenvy.ide.websocket.events.ConnectionClosedHandler::onClose
-               (Lcom/codenvy/ide/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
+           handler.@com.codenvy.ide.websocket.events.ConnectionClosedHandler::onClose(Lcom/codenvy/ide/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
        });
    }-*/;
 

@@ -64,6 +64,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /** If user is not logged in to CloudFoundry, this handler will be called, after user logged in. */
     private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler() {
         @Override
@@ -81,11 +83,12 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
     protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, ConsolePart console,
                                      CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                     LoginPresenter loginPresenter) {
+                                     LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.eventBus = eventBus;
@@ -93,6 +96,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -110,21 +114,15 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
             AutoBeanUnmarshaller<ProvisionedService> unmarshaller =
                     new AutoBeanUnmarshaller<ProvisionedService>(provisionedService);
 
-            CloudFoundryClientService.getInstance().createService(
-                    null,
-                    type,
-                    name,
-                    null,
-                    null,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
-                                                                             eventBus, console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(ProvisionedService result) {
-                            createServiceCallback.onSuccess(result);
-                            view.close();
-                        }
-                    });
+            service.createService(null, type, name, null, null, null,
+                                  new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
+                                                                                           eventBus, console, constant, loginPresenter) {
+                                      @Override
+                                      protected void onSuccess(ProvisionedService result) {
+                                          createServiceCallback.onSuccess(result);
+                                          view.close();
+                                      }
+                                  });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -151,24 +149,22 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate 
     /** Get the list of CloudFoundry services (provisioned and system). */
     private void getServices() {
         try {
-            CloudFoundryClientService.getInstance().services(null,
-                                                             new AsyncRequestCallback<CloudFoundryServices>(
-                                                                     new CloudFoundryServicesUnmarshaller(autoBeanFactory)) {
-                                                                 @Override
-                                                                 protected void onSuccess(CloudFoundryServices result) {
-                                                                     LinkedHashMap<String, String> values =
-                                                                             new LinkedHashMap<String, String>();
-                                                                     for (SystemService service : result.getSystem()) {
-                                                                         values.put(service.getVendor(), service.getDescription());
-                                                                     }
-                                                                     view.setServices(values);
-                                                                 }
+            CloudFoundryServicesUnmarshaller unmarshaller = new CloudFoundryServicesUnmarshaller(autoBeanFactory);
+            service.services(null, new AsyncRequestCallback<CloudFoundryServices>(unmarshaller) {
+                @Override
+                protected void onSuccess(CloudFoundryServices result) {
+                    LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
+                    for (SystemService service : result.getSystem()) {
+                        values.put(service.getVendor(), service.getDescription());
+                    }
+                    view.setServices(values);
+                }
 
-                                                                 @Override
-                                                                 protected void onFailure(Throwable exception) {
-                                                                     Window.alert(constant.retrieveServicesFailed());
-                                                                 }
-                                                             });
+                @Override
+                protected void onFailure(Throwable exception) {
+                    Window.alert(constant.retrieveServicesFailed());
+                }
+            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
