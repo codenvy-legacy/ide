@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.packaging.ui;
 
 import com.google.gwt.resources.client.ImageResource;
 
+import org.eclipse.jdt.client.packaging.model.next.Dependencies;
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
@@ -106,22 +107,22 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
             index++;
         }
 
-        // /*
-        // * Dependencies
-        // */
-        // for (ClasspathFolder classpathFolder : javaProject.getClasspathFolders())
-        // {
-        // PackageExplorerTreeItem child = getChildByItemId(classpathFolder.getId());
-        // if (child == null) {
-        // child = new DependenciesTreeItem(classpathFolder);
-        // insertItem(index, child);
-        // } else {
-        // child.setUserObject(classpathFolder);
-        // child.refresh(false);
-        // }
-        //
-        // index++;
-        // }
+        /*
+         * Dependencies
+         */
+        for (Dependencies classpathFolder : javaProject.getClasspathFolders())
+        {
+            PackageExplorerTreeItem child = getChildByItemId(classpathFolder.getId());
+            if (child == null) {
+                child = new DependenciesTreeItem(classpathFolder);
+                insertItem(index, child);
+            } else {
+                child.setUserObject(classpathFolder);
+                child.refresh(false);
+            }
+
+            index++;
+        }
 
         /*
          * Folders and files
@@ -131,6 +132,10 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
         for (Item item : javaProject.getChildren().getItems()) {
             if (DirectoryFilter.get().matchWithPattern(item.getName())) {
+                continue;
+            }
+            
+            if (item instanceof JavaProject) {
                 continue;
             }
 
@@ -183,7 +188,7 @@ public class JavaProjectTreeItem extends PackageExplorerTreeItem {
 
         items.addAll(project.getModules());
         items.addAll(project.getSourceDirectories());
-        // items.addAll(project.getClasspathFolders());
+        items.addAll(project.getClasspathFolders());
 
         for (Item item : project.getChildren().getItems()) {
             if (DirectoryFilter.get().matchWithPattern(item.getName())) {

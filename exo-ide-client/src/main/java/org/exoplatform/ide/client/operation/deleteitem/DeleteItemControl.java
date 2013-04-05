@@ -29,7 +29,11 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
@@ -50,8 +54,10 @@ import java.util.List;
  * @version $
  */
 @RolesAllowed({"developer"})
-public class DeleteItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-                                                                ViewActivatedHandler, ProjectSelectedHandler, ItemDeletedHandler {
+public class DeleteItemControl extends SimpleControl implements 
+    IDEControl, ItemsSelectedHandler, VfsChangedHandler, ViewActivatedHandler, 
+    ProjectSelectedHandler, ItemDeletedHandler,
+    ProjectOpenedHandler, ProjectClosedHandler {
 
     private static final String ID = "File/Delete...";
 
@@ -70,6 +76,8 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
     private List<Item> selectedItems;
 
     private ProjectModel selectedProject;
+    
+    private ProjectModel openedProject;
 
     /**
      *
@@ -90,6 +98,9 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
         IDE.addHandler(ProjectSelectedEvent.TYPE, this);
         IDE.addHandler(ItemDeletedEvent.TYPE, this);
+        
+        IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+        IDE.addHandler(ProjectClosedEvent.TYPE, this);
     }
 
     @Override
@@ -125,15 +136,38 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
 
         setShowInContextMenu(navigatorSelected);
 
-        if ((selectedItems == null || selectedItems.size() != 1) && selectedProject == null) {
-            setEnabled(false);
-            return;
-        } else if (selectedItems != null && !selectedItems.isEmpty()
-                   && selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId())) {
-            setEnabled(false);
-            return;
+        if (openedProject != null) {
+            if (selectedItems != null && !selectedItems.isEmpty() &&
+                !selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId())) {
+                
+                setEnabled(navigatorSelected);
+            } else {
+                setEnabled(false);
+            }            
+        } else {
+            if (selectedProject != null) {
+                setEnabled(navigatorSelected);
+            } else {
+                setEnabled(false);
+            }
         }
-        setEnabled(navigatorSelected);
+        
+        
+//        if (selectedProject != null && (selectedItems == null || selectedItems.isEmpty())) {
+//            setEnabled(navigatorSelected);
+//            return;
+//        }
+//        
+//        if ((selectedItems == null || selectedItems.size() != 1) && selectedProject == null) {
+//            setEnabled(false);
+//            return;
+//        } else if (selectedItems != null && !selectedItems.isEmpty()
+//                   && selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId())) {
+//            setEnabled(false);
+//            return;
+//        }
+//        
+//        setEnabled(navigatorSelected);
     }
 
     /** @see org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler#onProjectSelected(org.exoplatform.ide.client.project
@@ -147,6 +181,16 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
     @Override
     public void onItemDeleted(ItemDeletedEvent event) {
         setEnabled(false);
+    }
+
+    @Override
+    public void onProjectOpened(ProjectOpenedEvent event) {
+        openedProject = event.getProject();
+    }
+
+    @Override
+    public void onProjectClosed(ProjectClosedEvent event) {
+        openedProject = null;
     }
 
 }

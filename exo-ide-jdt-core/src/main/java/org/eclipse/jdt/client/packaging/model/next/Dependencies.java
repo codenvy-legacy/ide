@@ -20,17 +20,26 @@ package org.eclipse.jdt.client.packaging.model.next;
 
 import org.exoplatform.ide.vfs.shared.ItemImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class Classpath extends ItemImpl {
+public class Dependencies extends ItemImpl {
 
-    public Classpath(String name) {
+    private List<Dependency> classpathList = new ArrayList<Dependency>();
+
+    public Dependencies(String name) {
         super(null);
-        setId("classpath-" + name);
+        setId("dependencies-" + name);
         setPath("");
         setName(name);
+    }
+
+    public List<Dependency> getClasspathList() {
+        return classpathList;
     }
 
 }
