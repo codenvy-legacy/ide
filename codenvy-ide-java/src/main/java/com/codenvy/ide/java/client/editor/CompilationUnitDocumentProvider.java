@@ -21,19 +21,23 @@ package com.codenvy.ide.java.client.editor;
 import com.codenvy.ide.api.editor.EditorInput;
 import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.java.client.JavaClientBundle;
+import com.codenvy.ide.java.client.JavaPartitions;
 import com.codenvy.ide.java.client.core.IProblemRequestor;
 import com.codenvy.ide.java.client.core.compiler.CategorizedProblem;
 import com.codenvy.ide.java.client.core.compiler.IProblem;
 import com.codenvy.ide.java.client.core.dom.CompilationUnit;
 import com.codenvy.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
+import com.codenvy.ide.java.client.internal.ui.text.FastJavaPartitionScanner;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
 import com.codenvy.ide.runtime.Assert;
+import com.codenvy.ide.text.Document;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.Position;
 import com.codenvy.ide.text.annotation.Annotation;
 import com.codenvy.ide.text.annotation.AnnotationModel;
 import com.codenvy.ide.text.annotation.AnnotationModelImpl;
+import com.codenvy.ide.text.rules.FastPartitioner;
 import com.codenvy.ide.texteditor.TextEditorViewImpl;
 import com.codenvy.ide.texteditor.TextEditorViewImpl.Css;
 import com.codenvy.ide.texteditor.api.quickassist.QuickFixableAnnotation;
@@ -49,26 +53,62 @@ import java.util.List;
  */
 public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
 
+    /** Array with legal content types. */
+    private final static String[] LEGAL_CONTENT_TYPES = new String[]{
+            JavaPartitions.JAVA_DOC,
+            JavaPartitions.JAVA_MULTI_LINE_COMMENT,
+            JavaPartitions.JAVA_SINGLE_LINE_COMMENT,
+            JavaPartitions.JAVA_STRING,
+            JavaPartitions.JAVA_CHARACTER
+    };
+    private AnnotationModel        annotationModel;
+    private TextEditorViewImpl.Css css;
+
+    /**
+     * @param css
+     * @param documentFactory
+     */
+    public CompilationUnitDocumentProvider(Css css, DocumentFactory documentFactory) {
+        super(documentFactory);
+        this.css = css;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AnnotationModel getAnnotationModel(EditorInput input) {
+        if (annotationModel == null) {
+            annotationModel = new JavaAnnotationModel();
+        }
+        return annotationModel;
+    }
+
+    @Override
+    public void getDocument(EditorInput input, final DocumentCallback callback) {
+        super.getDocument(input, new DocumentCallback() {
+            @Override
+            public void onDocument(Document document) {
+                FastPartitioner partitioner = new FastPartitioner(new FastJavaPartitionScanner(), LEGAL_CONTENT_TYPES);
+                document.setDocumentPartitioner(JavaPartitions.JAVA_PARTITIONING,
+                                                partitioner);
+                partitioner.connect(document);
+                callback.onDocument(document);
+            }
+        });
+    }
+
     /** Annotation representing an <code>IProblem</code>. */
     static public class ProblemAnnotation extends Annotation implements JavaAnnotation, QuickFixableAnnotation {
 
-        public static final String ERROR_ANNOTATION_TYPE = "org.eclipse.jdt.ui.error"; //$NON-NLS-1$
-
+        public static final String ERROR_ANNOTATION_TYPE   = "org.eclipse.jdt.ui.error"; //$NON-NLS-1$
         public static final String WARNING_ANNOTATION_TYPE = "org.eclipse.jdt.ui.warning"; //$NON-NLS-1$
-
-        public static final String INFO_ANNOTATION_TYPE = "org.eclipse.jdt.ui.info"; //$NON-NLS-1$
-
-        public static final String TASK_ANNOTATION_TYPE = "org.eclipse.ui.workbench.texteditor.task"; //$NON-NLS-1$
-
+        public static final String INFO_ANNOTATION_TYPE    = "org.eclipse.jdt.ui.info"; //$NON-NLS-1$
+        public static final String TASK_ANNOTATION_TYPE    = "org.eclipse.ui.workbench.texteditor.task"; //$NON-NLS-1$
         /** The layer in which task problem annotations are located. */
         private static final int TASK_LAYER;
-
         /** The layer in which info problem annotations are located. */
         private static final int INFO_LAYER;
-
         /** The layer in which warning problem annotations representing are located. */
         private static final int WARNING_LAYER;
-
         /** The layer in which error problem annotations representing are located. */
         private static final int ERROR_LAYER;
 
@@ -88,33 +128,19 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         //         else
         //            return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
         //      }
-
-        private static ImageResource fgQuickFixImage = JavaClientBundle.INSTANCE.markWarning();
-
+        private static ImageResource fgQuickFixImage      = JavaClientBundle.INSTANCE.markWarning();
         private static ImageResource fgQuickFixErrorImage = JavaClientBundle.INSTANCE.markError();
-
-        private static ImageResource fgTaskImage = JavaClientBundle.INSTANCE.taskmrk();
-
-        private static ImageResource fgInfoImage = JavaClientBundle.INSTANCE.imp_obj();
-
-        private static ImageResource fgWarningImage = JavaClientBundle.INSTANCE.markWarning();
-
-        private static ImageResource fgErrorImage = JavaClientBundle.INSTANCE.markError();
-
-        private CompilationUnit fCompilationUnit;
-
+        private static ImageResource fgTaskImage          = JavaClientBundle.INSTANCE.taskmrk();
+        private static ImageResource fgInfoImage          = JavaClientBundle.INSTANCE.imp_obj();
+        private static ImageResource fgWarningImage       = JavaClientBundle.INSTANCE.markWarning();
+        private static ImageResource fgErrorImage         = JavaClientBundle.INSTANCE.markError();
+        private CompilationUnit      fCompilationUnit;
         private List<JavaAnnotation> fOverlaids;
-
-        private IProblem fProblem;
-
-        private ImageResource fImage;
-
+        private IProblem             fProblem;
+        private ImageResource        fImage;
         private boolean fImageInitialized = false;
-
-        private int fLayer = 0;
-
+        private int     fLayer            = 0;
         private boolean fIsQuickFixable;
-
         private boolean fIsQuickFixableStateSet = false;
 
         public ProblemAnnotation(IProblem problem, CompilationUnit cu) {
@@ -234,12 +260,6 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         }
 
         /** {@inheritDoc} */
-        public void setQuickFixable(boolean state) {
-            fIsQuickFixable = state;
-            fIsQuickFixableStateSet = true;
-        }
-
-        /** {@inheritDoc} */
         public boolean isQuickFixableStateSet() {
             return fIsQuickFixableStateSet;
         }
@@ -248,6 +268,12 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
         public boolean isQuickFixable() {
             Assert.isTrue(isQuickFixableStateSet());
             return fIsQuickFixable;
+        }
+
+        /** {@inheritDoc} */
+        public void setQuickFixable(boolean state) {
+            fIsQuickFixable = state;
+            fIsQuickFixableStateSet = true;
         }
 
         /** {@inheritDoc} */
@@ -263,11 +289,9 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
     class JavaAnnotationModel extends AnnotationModelImpl implements AnnotationModel, IProblemRequestor {
 
         private List<IProblem> reportedProblems;
-
         //      private List<JavaMarkerAnnotation> fPreviouslyOverlaid= null;
         //
         //      private List<JavaMarkerAnnotation> fCurrentlyOverlaid= new ArrayList<JavaMarkerAnnotation>();
-
         private List<ProblemAnnotation> fGeneratedAnnotations = new ArrayList<ProblemAnnotation>();
 
         protected Position createPositionFromProblem(IProblem problem) {
@@ -373,27 +397,4 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider {
             return decorations;
         }
     }
-
-    private AnnotationModel annotationModel;
-
-    private TextEditorViewImpl.Css css;
-
-    /**
-     * @param css
-     * @param documentFactory
-     */
-    public CompilationUnitDocumentProvider(Css css, DocumentFactory documentFactory) {
-        super(documentFactory);
-        this.css = css;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public AnnotationModel getAnnotationModel(EditorInput input) {
-        if (annotationModel == null) {
-            annotationModel = new JavaAnnotationModel();
-        }
-        return annotationModel;
-    }
-
 }

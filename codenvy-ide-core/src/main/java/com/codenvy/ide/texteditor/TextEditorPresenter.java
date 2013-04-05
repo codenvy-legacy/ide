@@ -44,8 +44,6 @@ import com.google.inject.Inject;
  */
 public class TextEditorPresenter extends AbstractTextEditorPresenter {
 
-    protected TextEditorViewImpl editor;
-
     private final TextListener textListener = new TextListener() {
 
         @Override
@@ -55,10 +53,10 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
             }
         }
     };
-
-    private Resources resources;
-
-    private UserActivityManager userActivityManager;
+    protected TextEditorViewImpl  editor;
+    private   Resources           resources;
+    private   UserActivityManager userActivityManager;
+    private   OutlineImpl         outline;
 
     @Inject
     public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager) {
@@ -113,9 +111,14 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
     /** {@inheritDoc} */
     @Override
     public OutlinePresenter getOutline() {
+        if (outline != null) {
+            return outline;
+        }
         OutlineModel outlineModel = configuration.getOutline(editor);
         if (outlineModel != null) {
-            OutlineImpl outline = new OutlineImpl(resources, outlineModel, editor, this);
+            if (outline == null) {
+                outline = new OutlineImpl(resources, outlineModel, editor, this);
+            }
             return outline;
         } else {
             return null;
@@ -127,7 +130,6 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter {
         h.getElement().appendChild(editor.getElement());
         return h;
     }
-
 
     /** {@inheritDoc} */
     @Override
