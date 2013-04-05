@@ -36,10 +36,20 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -90,11 +100,16 @@ public class ExpressService {
     @POST
     @Path("apps/create")
     @Produces(MediaType.APPLICATION_JSON)
-    public AppInfo createApplication(@QueryParam("type") String type)
+    public AppInfo createApplication(@QueryParam("type") String type,
+                                     @DefaultValue("false") @QueryParam("scale") boolean scale,
+                                     @DefaultValue("small") @QueryParam("instance") String instanceType)
             throws ExpressException, VirtualFileSystemException, CredentialStoreException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
         AppInfo application =
-                express.createApplication(appName, type,
+                express.createApplication(appName,
+                                          type,
+                                          scale,
+                                          instanceType,
                                           (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
         if (projectId != null) {
@@ -113,20 +128,25 @@ public class ExpressService {
     }
 
     @GET
+    @Path("sys/embeddable_cartridges")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<String> embeddableCartridges() throws ExpressException, CredentialStoreException {
+        return express.embeddableCartridges();
+    }
+
+    @GET
     @Path("apps/info")
     @Produces(MediaType.APPLICATION_JSON)
     public AppInfo applicationInfo() throws ExpressException, VirtualFileSystemException, CredentialStoreException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        return express.applicationInfo(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
-                                                                    : null);
+        return express.applicationInfo(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
     }
 
     @POST
     @Path("apps/destroy")
     public void destroyApplication() throws ExpressException, VirtualFileSystemException, CredentialStoreException {
         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-        express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
-                                                                : null);
+        express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
         if (projectId != null) {
             // Update VFS properties. Need it to uniform client.
@@ -137,34 +157,56 @@ public class ExpressService {
         }
     }
 
-    @GET
-    @Path("user/info")
-    @Produces(MediaType.APPLICATION_JSON)
-    public RHUserInfo userInfo(@QueryParam("appsinfo") boolean appsInfo) throws ExpressException, CredentialStoreException {
-        return express.userInfo(appsInfo);
-    }
-
     @POST
     @Path("apps/stop")
-    public void stopApplication(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException {
+    public void stopApplication() throws ExpressException, CredentialStoreException {
         express.stopApplication(appName);
     }
 
     @POST
     @Path("apps/start")
-    public void startApplication(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException {
+    public void startApplication() throws ExpressException, CredentialStoreException {
         express.startApplication(appName);
     }
 
     @POST
     @Path("apps/restart")
-    public void restartApplication(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException {
+    public void restartApplication() throws ExpressException, CredentialStoreException {
         express.restartApplication(appName);
     }
 
     @GET
     @Path("apps/health")
-    public String getApplicationHealth(@QueryParam("appname") String appName) throws ExpressException, CredentialStoreException {
+    public String getApplicationHealth() throws ExpressException, CredentialStoreException {
         return express.getApplicationHealth(appName);
+    }
+
+    @POST
+    @Path("apps/embeddable_cartridges/add")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AppInfo addEmbeddableCartridges(@QueryParam("cartridge") List<String> embeddableCartridges)
+            throws ExpressException, CredentialStoreException, VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        return express.addEmbeddableCartridges(appName,
+                                               (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
+                                               embeddableCartridges);
+    }
+
+    @POST
+    @Path("apps/embedded_cartridges/remove")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AppInfo removeEmbeddableCartridge(@QueryParam("cartridge") String embeddableCartridge)
+            throws ExpressException, CredentialStoreException, VirtualFileSystemException {
+        VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+        return express.removeEmbeddableCartridge(appName,
+                                                 (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
+                                                 embeddableCartridge);
+    }
+
+    @GET
+    @Path("user/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    public RHUserInfo userInfo(@QueryParam("appsinfo") boolean appsInfo) throws ExpressException, CredentialStoreException {
+        return express.userInfo(appsInfo);
     }
 }
