@@ -23,27 +23,8 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
-
+               
     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
+        <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication</type>
     </component>
-
-    <component>
-        <type>org.exoplatform.ide.git.server.github.GitHub</type>
-        <init-params>
-            <value-param>
-                <name>github-user</name>
-                <value>eXoIDE</value>
-            </value-param>
-        </init-params>
-    </component>
-    
-    <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-    </component>
-    
-     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
-    </component>
-    
 </configuration>

@@ -36,18 +36,6 @@
 
     <!-- VirtualFileSystem -->
     <component>
-        <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
-    </component>
-
-    <component>
         <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
         <init-params>
             <values-param>
@@ -56,15 +44,6 @@
             </values-param>
         </init-params>
     </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
-    </component>
-
-    <component>
-        <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
-    </component>
-
 
     <!-- End VirtualFileSystem -->
 
@@ -160,36 +139,6 @@
     ***************************************************************************************
     -->
 
-    <!-- Cloudbees -->
-    <component>
-        <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
-    </component>
-
-    <component>
-        <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
-        <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
-        <init-params>
-            <value-param>
-                <name>workspace</name>
-                <value>production</value>
-            </value-param>
-            <value-param>
-                <name>user-config</name>
-                <value>/ide-home/users/</value>
-            </value-param>
-            <value-param>
-                <name>jenkins-user</name>
-                <value>vparfonov@codenvy.com</value>
-            </value-param>
-            <value-param>
-                <name>jenkins-password</name>
-                <value>1z4hWHxoIr</value>
-            </value-param>
-        </init-params>
-    </component>
-
-    <!-- End Cloudbees -->
-
 
     <component>
 
@@ -232,20 +181,6 @@
 
     </component>
     <!-- End CloudFoundry -->
-
-    <component>
-        <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
-    </component>
-
-    <component>
-        <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-        <type>org.exoplatform.ide.vfs.impl.fs.LocalPathResolverImpl</type>
-    </component>
-
-    <component>
-        <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-        <type>org.exoplatform.ide.vfs.impl.fs.GitUrlResolverFsImpl</type>
-    </component>
 
 
     <!-- Google AppEngine  -->

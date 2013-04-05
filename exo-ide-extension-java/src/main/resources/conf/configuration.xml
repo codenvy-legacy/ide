@@ -25,25 +25,11 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
+        <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
     </component>
-
+     
+                
     <component>
-        <type>org.exoplatform.ide.git.server.github.GitHub</type>
-        <init-params>
-            <value-param>
-                <name>github-user</name>
-                <value>eXoIDE</value>
-            </value-param>
-        </init-params>
+        <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
     </component>
-    
-    <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
-    </component>
-    
-     <component>
-        <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
-    </component>
-    
 </configuration>

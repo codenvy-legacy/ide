@@ -340,7 +340,7 @@ public class FoldingManager implements Document.TextListener {
 
                 if (foldMarker.isCollapsed()) {
                     slaveDocument.removeMasterDocumentRange(startOffset, length);
-                    processAnchorsInColapsedRange(firstLineNumber, linesArray);
+                    processAnchorsInCollapsedRange(firstLineNumber, linesArray);
                     dispatchCollapse(firstLineNumber/* + linesToCollapse.size() */, linesArray);
                 } else {
                     slaveDocument.addMasterDocumentRange(startOffset, length);
@@ -419,7 +419,7 @@ public class FoldingManager implements Document.TextListener {
         return false;
     }
 
-    private void processAnchorsInColapsedRange(int lineNumber, JsonArray<Line> linesToCollapse) {
+    private void processAnchorsInCollapsedRange(int lineNumber, JsonArray<Line> linesToCollapse) {
         for (Line line : linesToCollapse.asIterable()) {
             final int deleteCountForLine = line.getText().length();
             boolean isFirstLine = linesToCollapse.indexOf(line) == 0;
