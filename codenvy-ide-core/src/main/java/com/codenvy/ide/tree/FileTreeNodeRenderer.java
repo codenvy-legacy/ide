@@ -65,7 +65,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource> {
     }
 
     public interface Resources extends Tree.Resources {
-        @Source({"FileTreeNodeRenderer.css", "com/codenvy/ide/common/constants.css"})
+        @Source({"FileTreeNodeRenderer.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
         Css workspaceNavigationFileTreeNodeRendererCss();
 
         @Source("file.png")

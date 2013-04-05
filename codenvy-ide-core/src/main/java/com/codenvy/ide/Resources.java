@@ -49,7 +49,7 @@ public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resource
         String simpleListContainer();
     }
 
-    @Source({"Core.css", "com/codenvy/ide/common/constants.css"})
+    @Source({"Core.css", "com/codenvy/ide/common/constants.css","com/codenvy/ide/api/ui/style.css"})
     @NotStrict
     CoreCss coreCss();
 }

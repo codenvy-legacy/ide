@@ -33,8 +33,8 @@ public class GenericPerspectiveView extends Composite implements PerspectiveView
     interface GenericPerspectiveViewUiBinder extends UiBinder<Widget, GenericPerspectiveView> {
     }
 
-    @UiField
-    SplitLayoutPanel splitPanel;
+    @UiField(provided = true)
+    SplitLayoutPanel splitPanel = new SplitLayoutPanel(8);
 
     @UiField
     SimplePanel editorPanel;
@@ -61,7 +61,6 @@ public class GenericPerspectiveView extends Composite implements PerspectiveView
      */
     public GenericPerspectiveView() {
         initWidget(uiBinder.createAndBindUi(this));
-        splitPanel.getWidgetContainerElement(editorPanel).addClassName("ide-editor-area");
     }
 
     /** {@inheritDoc} */

@@ -716,7 +716,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
     /** ClientBundle for the editor. */
     public interface Resources
             extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources, ParenMatchHighlighter.Resources {
-        @Source({"Editor.css", "constants.css"})
+        @Source({"Editor.css", "com/codenvy/ide/api/ui/style.css"})
         Css workspaceEditorCss();
 
         @Source("squiggle.gif")

@@ -44,7 +44,7 @@ public class CursorView extends UiComponent<CursorView.View> {
     }
 
     public interface Resources extends ClientBundle {
-        @Source({"CursorView.css", "com/codenvy/ide/texteditor/constants.css"})
+        @Source({"CursorView.css", "com/codenvy/ide/api/ui/style.css"})
         Css workspaceEditorCursorCss();
     }
 

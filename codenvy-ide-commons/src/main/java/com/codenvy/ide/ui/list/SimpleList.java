@@ -121,7 +121,7 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> implements IsWid
     }
 
     public interface Resources extends ClientBundle {
-        @Source({"SimpleList.css", "com/codenvy/ide/common/constants.css"})
+        @Source({"SimpleList.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
         Css defaultSimpleListCss();
     }
 

@@ -46,7 +46,7 @@ public interface PartStackUIResources extends ClientBundle {
         String idePartStackFocused();
     }
 
-    @Source("PartStack.css")
+    @Source({"PartStack.css", "com/codenvy/ide/api/ui/style.css"})
     PartStackCss partStackCss();
 
     ImageResource close();

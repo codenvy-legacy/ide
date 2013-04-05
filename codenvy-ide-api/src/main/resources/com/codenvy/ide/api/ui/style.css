@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+/*Tabs*/
+@def tabBorder #D0D0D0;
+@def inactiveTabBackground #F0F0F0;
+@def activeTabBackground #FFFFFF;
+@def tabsPanelBackground #DDDDDD;
+@def highlightFocus #B6CCE8;
+
+@def hoverBackgroundColor #eee;
+@def lightTextColor #999;
+@def lightestTextColor #BCBCBC;
+@def lightGreyBackground #F1F1F1;
+@def barBackgroundColor #f5f5f5;
+    /* Indicates a completed action. Preferred text color is lightTextColor. */
+@def completedBackgroundColor #f9edbe;
+    /* Background color for an item selected with the keyboard */
+@def keyboardSelectionBackgroundColor #E0E0E0;
+@def anchorColor #1155CC;
+
+    /* Sizes */
+@def dividerThickness 1px;
+@def popupPadding 24px;
+@def titlePaddingBottom 16px;
+@def buttonSpacing 10px;
+@def labelPaddingBottom 6px;
+@def examplePaddingTop 4px;
+@def formButtonPaddingTop 18px;
+@def sideBarHorizontalPadding 12px;
+@def splitterWidth 8px;
+@def splitterOverlap 4px;
+
+    /* Font Sizes */
+@def fontSize 13px;
+@def largeFontSize 16px;
+@def productFontSize 20px;
+@def landingTitleFontSize 20px;
+@def titleFontSize 16px;
+@def secondaryTextFontSize 11px;
+@def largeLabel 14px;
+@def largeDropdownLabel 12px;
+
+    /* Fonts */
+@def alternativeFontFamily "Myriad Pro","open sans", arial, sans-serif;
+@def fileTreeFontFamily "Myriad Pro","Lucida Grande", Verdana, Arial;
+@def mainFontFamily "Myriad Pro",arial,Verdana,Verdana,sans-serif;
+@def editorLineHeight 15px;
+@def editorFontFamily 'Andale Mono', monospace;

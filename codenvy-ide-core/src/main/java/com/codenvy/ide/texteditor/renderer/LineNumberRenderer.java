@@ -121,7 +121,7 @@ public class LineNumberRenderer {
 
     /** Line number resources. */
     public interface Resources extends ClientBundle {
-        @Source({"com/codenvy/ide/common/constants.css", "LineNumberRenderer.css"})
+        @Source({"com/codenvy/ide/common/constants.css", "LineNumberRenderer.css", "com/codenvy/ide/api/ui/style.css"})
         Css lineNumberRendererCss();
     }
 

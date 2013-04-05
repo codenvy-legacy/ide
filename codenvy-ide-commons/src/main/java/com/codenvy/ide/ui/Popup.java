@@ -40,7 +40,7 @@ public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoH
     }
 
     public interface Resources extends ClientBundle {
-        @Source({"com/codenvy/ide/common/constants.css", "Popup.css"})
+        @Source({"com/codenvy/ide/common/constants.css", "Popup.css", "com/codenvy/ide/api/ui/style.css"})
         Css popupCss();
     }
 

@@ -144,7 +144,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
 
     /** ClientBundle for the editor. */
     public interface Resources extends ClientBundle {
-        @Source({"Buffer.css", "constants.css", "com/codenvy/ide/common/constants.css"})
+        @Source({"Buffer.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
         Css workspaceEditorBufferCss();
     }
 

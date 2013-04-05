@@ -71,7 +71,7 @@ public class ParenMatchHighlighter {
 
     /** Paren match highlighting resources. */
     public interface Resources extends ClientBundle {
-        @Source({"ParenMatchHighlighter.css", "com/codenvy/ide/texteditor/constants.css"})
+        @Source({"ParenMatchHighlighter.css", "com/codenvy/ide/api/ui/style.css"})
         Css parenMatchHighlighterCss();
     }
 

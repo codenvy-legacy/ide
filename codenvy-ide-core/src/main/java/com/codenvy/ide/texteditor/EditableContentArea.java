@@ -64,7 +64,7 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
 
     public interface Resources extends ClientBundle {
 
-        @Source({"com/codenvy/ide/common/constants.css", "EditableContentArea.css"})
+        @Source({"com/codenvy/ide/common/constants.css", "EditableContentArea.css", "com/codenvy/ide/api/ui/style.css"})
         Css editableContentAreaCss();
     }
 

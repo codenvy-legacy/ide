@@ -46,7 +46,7 @@ public interface MenuResources extends ClientBundle {
         String itemContainer();
     }
 
-    @Source({"com/codenvy/ide/menu/Menu.css", "com/codenvy/ide/common/constants.css"})
+    @Source({"com/codenvy/ide/menu/Menu.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
     ToolbarCSS menuCSS();
 
     @Source("com/codenvy/ide/menu/check.png")

@@ -207,7 +207,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget {
         ImageResource expansionIcon();
 
         // Default Stylesheet.
-        @Source({"com/codenvy/ide/common/constants.css", "Tree.css"})
+        @Source({"com/codenvy/ide/common/constants.css", "Tree.css", "com/codenvy/ide/api/ui/style.css"})
         Css treeCss();
     }
 

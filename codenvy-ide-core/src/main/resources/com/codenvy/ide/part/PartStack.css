@@ -1,11 +1,5 @@
 @CHARSET "UTF-8";
 
-@def tabBorder #D0D0D0;
-    /* @def activeTabBackground #F8F8F8; */
-@def inactiveTabBackground #F0F0F0;
-@def activeTabBackground #FFFFFF;
-@def tabsPanelBackground #DDDDDD;
-@def highlightFocus #FFB800;
 .ide-PartStack {
     /* fill */
 }
