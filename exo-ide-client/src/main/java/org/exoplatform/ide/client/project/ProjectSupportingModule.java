@@ -37,10 +37,6 @@ import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
-import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
-import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
-import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
-import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -49,9 +45,9 @@ import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
  * @version $
  */
 
-public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler, MigrateTemplatesHandler {
+public class ProjectSupportingModule implements ConfigurationReceivedSuccessfullyHandler{
 
-    private TemplatesMigratedCallback callback;
+    
 
     public ProjectSupportingModule() {
         IDE.getInstance().addControl(new NewProjectMenuGroup());
@@ -75,7 +71,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
         IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
 
         IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
-        IDE.addHandler(MigrateTemplatesEvent.TYPE, this);
+    
 
         new ProjectProcessor();
     }
@@ -92,31 +88,6 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
     }
 
 
-    protected void deleteTemplatesFromRegistry() {
-        try {
-            TemplateService.getInstance().deleteTemplatesFromRegistry(new AsyncRequestCallback<String>() {
-                @Override
-                protected void onSuccess(String result) {
-                    IDE.fireEvent(new TemplatesMigratedEvent());
-                    if (callback != null) {
-                        callback.onTemplatesMigrated();
-                    }
-                }
 
-                @Override
-                protected void onFailure(Throwable exception) {
-                    IDE.fireEvent(new ExceptionThrownEvent(exception));
-                }
-            });
-        } catch (RequestException e) {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-        }
-    }
-
-    /** @see org.exoplatform.ide.client.template.MigrateTemplatesHandler#onMigrateTemplates(org.exoplatform.ide.client.template
-     * .MigrateTemplatesEvent) */
-    @Override
-    public void onMigrateTemplates(MigrateTemplatesEvent event) {
-        this.callback = event.getTemplatesMigratedCallback();
-    }
+   
 }
