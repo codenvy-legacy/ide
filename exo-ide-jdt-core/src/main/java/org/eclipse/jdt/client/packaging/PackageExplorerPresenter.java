@@ -29,6 +29,7 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.ide.client.framework.control.Docking;
@@ -441,10 +442,24 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
         }
 
         display.setProject(null);
-
+        
+        updateCloseProjectTimer.cancel();
+        updateCloseProjectTimer.schedule(250);
+        
 //      display.getBrowserTree().setValue(null);
 //      display.setPackageExplorerTreeVisible(false);
     }
+
+    private Timer updateCloseProjectTimer = new Timer() {
+                                              @Override
+                                              public void run() {
+                                                  if (display == null) {
+                                                      return;
+                                                  }
+
+                                                  IDE.getInstance().closeView(display.asView().getId());
+                                              }
+                                          };
 
     @Override
     public void onViewOpened(ViewOpenedEvent event) {
