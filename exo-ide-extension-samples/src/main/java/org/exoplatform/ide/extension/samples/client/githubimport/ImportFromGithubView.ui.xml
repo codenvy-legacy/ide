@@ -63,7 +63,8 @@
 					width="30%"></f:ComboBoxField>
 				<f:Label text="Name:"
 					addStyleNames="{style.floatLeft} {style.label} {style.boldLabel}"></f:Label>
-				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatLeft} {style.border}"></f:TextInput>
+				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatLeft} {style.border}"
+					width="30%"></f:TextInput>
 			</g:FlowPanel>
 		</g:layer>
 		<g:layer top="30px" bottom="35px">
