@@ -86,7 +86,7 @@ public class JavaProject extends IDEProject {
 
     private List<SourceDirectory> sourceDirectories = new ArrayList<SourceDirectory>();
 
-    private List<ClasspathFolder> classpathFolders = new ArrayList<ClasspathFolder>();
+    private List<Dependencies> classpathFolders = new ArrayList<Dependencies>();
 
     public JavaProject(ProjectModel project) {
         super(project);
@@ -100,7 +100,7 @@ public class JavaProject extends IDEProject {
         return sourceDirectories;
     }
 
-    public List<ClasspathFolder> getClasspathFolders() {
+    public List<Dependencies> getClasspathFolders() {
         return classpathFolders;
     }
 
@@ -120,7 +120,6 @@ public class JavaProject extends IDEProject {
             updateManager.update(new AsyncCallback<Boolean>() {
                 @Override
                 public void onFailure(Throwable caught) {
-                    System.out.println("Update " + JavaProject.this.getPath() + " failed");
                     caught.printStackTrace();
 
                     if (originalFolderChangedHandler != null) {
@@ -309,12 +308,12 @@ public class JavaProject extends IDEProject {
     private void updateProjectReferences() {
         classpathFolders.clear();
 
-        ClasspathFolder classpathFolder = new ClasspathFolder("Maven Dependencies");
+        Dependencies classpathFolder = new Dependencies("Maven Dependencies");
         classpathFolders.add(classpathFolder);
 
-        List<String> dependencies = pom.getMavenDependencies();
-        for (String dependency : dependencies) {
-            Classpath classpath = new Classpath(dependency);
+        List<String> mavenDependencies = pom.getMavenDependencies();
+        for (String dependency : mavenDependencies) {
+            Dependency classpath = new Dependency(dependency);
             classpathFolder.getClasspathList().add(classpath);
         }
     }

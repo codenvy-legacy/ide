@@ -39,6 +39,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -54,8 +55,11 @@ import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildAndPublishProjectControl;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
-import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.control.BuildProjectStopControl;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectStopHandler;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectStopEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
@@ -80,7 +84,7 @@ import java.util.List;
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelectedHandler, ViewClosedHandler,
-                                              VfsChangedHandler, ItemDeletedHandler {
+                                              VfsChangedHandler, ItemDeletedHandler, BuildProjectStopHandler {
     public interface Display extends IsView {
         HasClickHandlers getClearOutputButton();
 
@@ -141,12 +145,14 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     public BuildProjectPresenter() {
         IDE.getInstance().addControl(new BuildProjectControl());
         IDE.getInstance().addControl(new BuildAndPublishProjectControl());
+        IDE.getInstance().addControl(new BuildProjectStopControl(), Docking.STATUSBAR_RIGHT);
 
         IDE.addHandler(BuildProjectEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ItemDeletedEvent.TYPE, this);
+        IDE.addHandler(BuildProjectStopEvent.TYPE, this);
     }
 
     /** @see org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler#onBuildProject(org.exoplatform.ide.extension.maven
@@ -172,14 +178,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             } else {
                 project = ((ItemContext)item).getProject();
             }
-
-            //project = ((ItemContext)selectedItems.get(0)).getProject();
         }
 
         statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1));
-
         publishAfterBuild = event.isPublish();
-
         buildApplicationIfNeed(event.isForce());
     }
 
@@ -326,7 +328,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
     private boolean isProjectChangedAfterLastBuild(ItemWrapper item) {
         long buildTime = 0;
-        long lastUpdateTime = 0;
+        long lastUpdateTime;
         Property buildTimeProperty = item.getItem().getProperty(LAST_SUCCESS_BUILD);
         if (buildTimeProperty != null && !buildTimeProperty.getValue().isEmpty()) {
             buildTime = Long.parseLong(buildTimeProperty.getValue().get(0));
@@ -391,9 +393,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                         display.stopAnimation();
                         IDE.fireEvent(new ExceptionThrownEvent(exception));
                     }
-
-                    ;
-
                 });
             } catch (RequestException e) {
                 setBuildInProgress(false);
@@ -418,9 +417,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
         }
 
         if ((status == Status.SUCCESSFUL && previousStatus != Status.SUCCESSFUL)
-            || (status == Status.FAILED && previousStatus != Status.FAILED)) {
+            || (status == Status.FAILED && previousStatus != Status.FAILED)
+            || status == Status.CANCELLED) {
             afterBuildFinished(buildStatus);
-            return;
         }
     }
 
@@ -461,11 +460,15 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             String errorMessage = buildStatus.getError();
             String exceptionMessage = "Building of project failed";
             if (errorMessage != null && !errorMessage.equals("null")) {
-                message.append("\r\n" + errorMessage);
+                message.append("\r\n");
+                message.append(errorMessage);
                 exceptionMessage += ": " + errorMessage;
             }
 
             statusHandler.requestError(projectId, new Exception("Building of project failed", new Throwable(exceptionMessage)));
+        } else if (buildStatus.getStatus() == Status.CANCELLED) {
+            String errorMessage = buildStatus.getError();
+            statusHandler.requestError(projectId, new Exception("Build cancelled", new Throwable(errorMessage)));
         }
         showBuildMessage(message.toString());
         display.stopAnimation();
@@ -590,8 +593,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
         });
     }
 
-    /** @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
-     * .event.ViewClosedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api
+     *      .event.ViewClosedEvent)
+     */
     @Override
     public void onViewClosed(ViewClosedEvent event) {
         if (event.getView() instanceof Display) {
@@ -599,15 +604,19 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
         }
     }
 
-    /** @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
-     * .framework.navigation.event.ItemsSelectedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client
+     *      .framework.navigation.event.ItemsSelectedEvent)
+     */
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
         this.selectedItems = event.getSelectedItems();
     }
 
-    /** @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
-     * .application.event.VfsChangedEvent) */
+    /**
+     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework
+     *      .application.event.VfsChangedEvent)
+     */
     @Override
     public void onVfsChanged(VfsChangedEvent event) {
         this.vfs = event.getVfsInfo();
@@ -630,13 +639,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
         }
 
         Dialogs.getInstance().showInfo("Project is not selected.");
-//      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
-//      {
-//         Dialogs.getInstance().showInfo("Project is not selected.");
-//         return false;
-//      }
-//
-//      return true;
         return false;
     }
 
@@ -699,4 +701,24 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
         }
     }
 
+    @Override
+    public void onBuildProjectStopEvent(BuildProjectStopEvent event) {
+        try {
+            BuilderClientService.getInstance().cancel(buildID, new AsyncRequestCallback<StringBuilder>() {
+                @Override
+                protected void onSuccess(StringBuilder result) {
+                    //nothing to do
+                }
+
+                @Override
+                protected void onFailure(Throwable exception) {
+                    //nothing to do
+                }
+            });
+        } catch (RequestException e) {
+            setBuildInProgress(false);
+            display.stopAnimation();
+            statusHandler.requestError(projectId, new Throwable(e.getMessage()));
+        }
+    }
 }

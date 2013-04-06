@@ -78,14 +78,15 @@ public abstract class PackageExplorerTreeItem extends TreeItem
         Item item = (Item)getUserObject();
         getElement().setId(PREFIX_ID + Utils.md5(item.getPath()));
 
-        if (!getState() && getItems() != null && !getItems().isEmpty())
+        List<Item> items = getItems();
+        if (!getState() && items != null && !items.isEmpty())
         {
             if (getChildCount() == 0)
             {
                 addItem("");
             }
         }
-        else if (!getState() && getItems() != null && getItems().isEmpty())
+        else if (!getState() && items != null && items.isEmpty())
         {
             removeItems();
         }
@@ -288,6 +289,21 @@ public abstract class PackageExplorerTreeItem extends TreeItem
 
             ((PackageExplorerTreeItem)child).removeIcons(icons);
         }
+    }
+    
+    public void insertItem(int beforeIndex, TreeItem item)
+        throws IndexOutOfBoundsException {
+        if (beforeIndex > getChildCount())
+        {
+            System.out.println("!!! ERR");
+            System.out.println("tree item > " + getItemTitle());
+            System.out.println("beforeIndex > " + beforeIndex);
+            System.out.println("child count > " + getChildCount());
+            
+            beforeIndex = getChildCount();
+        }
+        
+        super.insertItem(beforeIndex, item);
     }
 
 }

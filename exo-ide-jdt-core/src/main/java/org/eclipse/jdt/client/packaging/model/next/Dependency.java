@@ -24,11 +24,11 @@ import org.exoplatform.ide.vfs.shared.ItemImpl;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  */
-public class Classpath extends ItemImpl {
+public class Dependency extends ItemImpl {
 
-    public Classpath(String name) {
+    public Dependency(String name) {
         super(null);
-        setId("classpath-" + name);
+        setId("dependency-" + name);
         setPath("");
         setName(name);
     }

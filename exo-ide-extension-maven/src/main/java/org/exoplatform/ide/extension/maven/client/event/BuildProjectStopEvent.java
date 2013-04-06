@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,33 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.template;
+package org.exoplatform.ide.extension.maven.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Used to notify all presenters, that are somehow linked with templates, that templates were migrated from registry to plain text
- * file on server.
- * <p/>
- * This event called, when all templates are moved from registry to plain text file on server.
- *
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: TemplatesMigrated.java Aug 1, 2011 12:21:44 PM vereshchaka $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public class TemplatesMigratedEvent extends GwtEvent<TemplatesMigratedHandler> {
+public class BuildProjectStopEvent extends GwtEvent<BuildProjectStopHandler> {
 
-    public static final GwtEvent.Type<TemplatesMigratedHandler> TYPE = new GwtEvent.Type<TemplatesMigratedHandler>();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<BuildProjectStopHandler> TYPE = new Type<BuildProjectStopHandler>();
+
+    /**
+     *
+     */
+    public BuildProjectStopEvent() {
+    }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
     @Override
-    public com.google.gwt.event.shared.GwtEvent.Type<TemplatesMigratedHandler> getAssociatedType() {
+    public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectStopHandler> getAssociatedType() {
         return TYPE;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
     @Override
-    protected void dispatch(TemplatesMigratedHandler handler) {
-        handler.onTemplatesMigrated(this);
+    protected void dispatch(BuildProjectStopHandler handler) {
+        handler.onBuildProjectStopEvent(this);
     }
-
 }

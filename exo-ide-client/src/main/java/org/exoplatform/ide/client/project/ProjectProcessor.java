@@ -20,18 +20,30 @@ package org.exoplatform.ide.client.project;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.application.IDELoader;
-import org.exoplatform.ide.client.framework.event.*;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
+import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
+import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
+import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
+import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
+import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.project.api.IDEProject.FolderChangedHandler;
 import org.exoplatform.ide.client.framework.project.api.ProjectBuilder;
@@ -184,7 +196,6 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             @Override
             public void onSuccess(Folder result) {
                 IDELoader.hide();
-                //openedProject.dump();
 
                 refreshedFolders.add((FolderModel)result);
                 Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
@@ -198,22 +209,23 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
             @Override
             public void onFailure(Throwable caught) {
                 IDELoader.hide();
-                //openedProject.dump();
                 caught.printStackTrace();
                 //IDE.fireEvent(new ExceptionThrownEvent(caught));
             }
         });
-
     }
-
+    
+    HandlerRegistration allFilesClosedHandler;
+    
     @Override
     public void onCloseProject(CloseProjectEvent event) {
-        IDE.removeHandler(AllFilesClosedEvent.TYPE, this);
-
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {
-                IDE.addHandler(AllFilesClosedEvent.TYPE, ProjectProcessor.this);
+                if (allFilesClosedHandler == null)
+                {
+                    allFilesClosedHandler = IDE.addHandler(AllFilesClosedEvent.TYPE, ProjectProcessor.this);                    
+                }
 
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
@@ -223,23 +235,16 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
                 });
             }
         });
-
-//      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
-//      
-//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//      {
-//         @Override
-//         public void execute()
-//         {
-//            IDE.fireEvent(new CloseAllFilesEvent());
-//         }
-//      });
     }
 
     @Override
     public void onAllFilesClosed(AllFilesClosedEvent event) {
-        IDE.removeHandler(AllFilesClosedEvent.TYPE, this);
-
+        if (allFilesClosedHandler != null)
+        {
+            allFilesClosedHandler.removeHandler();
+            allFilesClosedHandler = null;
+        }
+        
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {

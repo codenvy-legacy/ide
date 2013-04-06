@@ -40,4 +40,7 @@ public interface BuilderClientBundle extends ClientBundle {
 
     @Source("org/exoplatform/ide/extension/maven/images/controls/clearOutput_Disabled.png")
     ImageResource clearOutputDisabled();
+
+    @Source("org/exoplatform/ide/extension/maven/images/controls/build_Stop.png")
+    ImageResource buildStop();
 }

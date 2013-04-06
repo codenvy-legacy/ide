@@ -37,19 +37,11 @@
             <scope>provided</scope>
         </dependency>
         <!-- CLIENT SIDE END -->
-
-        <!--dependency>
-           <groupId>org.easymock</groupId>
-           <artifactId>easymock</artifactId>
-           <version>3.0</version>
-           <scope>test</scope>
-        </dependency-->
         <dependency>
-            <groupId>org.exoplatform.log-reader</groupId>
-            <artifactId>log-reader-service</artifactId>
-            <version>1.0-M5</version>
-        </dependency>
-
+           <groupId>com.codenvy.commons</groupId>
+            <artifactId>codenvy-commons-log-reader</artifactId>
+            <version>0.3-SNAPSHOT</version>
+         </dependency>
     </dependencies>
     <build>
         <resources>
