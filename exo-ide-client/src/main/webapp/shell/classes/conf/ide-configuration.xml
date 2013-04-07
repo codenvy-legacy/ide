@@ -90,13 +90,10 @@
     <!-- End VirtualFileSystem -->
 
     <!-- LogReader -->
-    <component>
-        <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
-    </component>
 
     <component>
-        <key>org.exoplatform.logreader.LogPathProvider</key>
-        <type>org.exoplatform.logreader.SystemLogPathProvider</type>
+        <key>com.codenvy.logreader.LogPathProvider</key>
+        <type>com.codenvy.logreader.SystemLogPathProvider</type>
     </component>
     <!-- End LogReader -->
 
