@@ -25,8 +25,6 @@ import com.google.gwt.regexp.shared.RegExp;
 import org.exoplatform.ide.json.client.Jso;
 import org.exoplatform.ide.json.client.JsoArray;
 
-//import com.google.common.annotations.VisibleForTesting;
-
 /**
  * Based on the complete property list for CSS2, this partial parser parses
  * already existing values and proposes autocompletions for the slot where the
@@ -180,7 +178,6 @@ public class CssPartialParser {
      * @return an array of strings corresponding to the proposals that should be
      *         shown for the special value type
      */
-//  @VisibleForTesting
     public JsArrayString checkIfSpecialValueAndGetSpecialValueProposals(
             String maybeSpecialValue, String specialValueType) {
 
@@ -369,7 +366,6 @@ public class CssPartialParser {
         return specialValues;
     }
 
-    //  @VisibleForTesting
     public JsArray<JavaScriptObject> getPropertyValues(String property) {
         return allProperties.<Jso>cast().getJsObjectField(property).cast();
     }
