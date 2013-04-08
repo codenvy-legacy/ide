@@ -69,6 +69,8 @@ import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
 import com.codenvy.ide.selection.SelectionAgentImpl;
+import com.codenvy.ide.template.TemplateService;
+import com.codenvy.ide.template.TemplateServiceImpl;
 import com.codenvy.ide.text.DocumentFactory;
 import com.codenvy.ide.text.DocumentFactoryImpl;
 import com.codenvy.ide.texteditor.TextEditorPresenter;
@@ -76,6 +78,8 @@ import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
 import com.codenvy.ide.util.executor.UserActivityManager;
+import com.codenvy.ide.websocket.MessageBus;
+import com.codenvy.ide.websocket.rest.RESTMessageBus;
 import com.codenvy.ide.welcome.WelcomePartPresenter;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewGenericFilePageViewImpl;
@@ -102,6 +106,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(Resources.class).in(Singleton.class);
         bind(ExtensionRegistry.class).in(Singleton.class);
         bind(StandardComponentInitializer.class).in(Singleton.class);
+        bind(TemplateService.class).to(TemplateServiceImpl.class).in(Singleton.class);
 
         apiBindingConfigure();
 
@@ -183,5 +188,25 @@ public class CoreGinModule extends AbstractGinModule {
     @Singleton
     protected PartStackEventHandler providePartStackEventHandler(FocusManager partAgentPresenter) {
         return partAgentPresenter.getPartStackHandler();
+    }
+
+    @Provides
+    @Named("restContext")
+    @Singleton
+    protected String provideDefaultRestContext() {
+        return "/IDE/rest/private";
+    }
+
+    @Provides
+    @Singleton
+    protected MessageBus provideMessageBus() {
+        return new RESTMessageBus("wss://localhost/websocket");
+    }
+
+    @Provides
+    @Named("registryContext")
+    @Singleton
+    protected String provideDefaultRegistryContext() {
+        return "/IDE/rest/private/registry/repository/exo:applications/IDE";
     }
 }

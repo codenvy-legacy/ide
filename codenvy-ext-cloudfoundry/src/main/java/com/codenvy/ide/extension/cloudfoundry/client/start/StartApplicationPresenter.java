@@ -62,6 +62,8 @@ public class StartApplicationPresenter {
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -71,17 +73,19 @@ public class StartApplicationPresenter {
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
     protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
                                         CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter) {
+                                        LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     public void bindDisplay(List<Framework> frameworks) {
@@ -150,23 +154,22 @@ public class StartApplicationPresenter {
             AutoBean<CloudFoundryApplication> CloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    resourceProvider.getVfsId(),
-                    project.getId(),
-                    null,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStartedLoggedInHandler,
-                                                                                  null, eventBus, console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances()) {
-                                String msg = constant.applicationAlreadyStarted(result.getName());
-                                console.print(msg);
-                            } else {
-                                startApplication(null, appInfoChangedCallback);
-                            }
-                        }
-                    });
+            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+                                                                                                     checkIsStartedLoggedInHandler,
+                                                                                                     null, eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               if ("STARTED".equals(result.getState()) &&
+                                                   result.getInstances() == result.getRunningInstances()) {
+                                                   String msg = constant.applicationAlreadyStarted(result.getName());
+                                                   console.print(msg);
+                                               } else {
+                                                   startApplication(null, appInfoChangedCallback);
+                                               }
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -188,31 +191,30 @@ public class StartApplicationPresenter {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().startApplication(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    name,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
-                                                                                  eventBus, console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances()) {
-                                String msg = constant.applicationCreatedSuccessfully(result.getName());
-                                if (result.getUris().isEmpty()) {
-                                    msg += "<br>" + constant.applicationStartedWithNoUrls();
-                                } else {
-                                    msg += "<br>" + constant.applicationStartedOnUrls(result.getName(), getAppUrisAsString(result));
-                                }
+            service.startApplication(resourceProvider.getVfsId(), projectId, name, null,
+                                     new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
+                                                                                                   eventBus, console, constant,
+                                                                                                   loginPresenter) {
+                                         @Override
+                                         protected void onSuccess(CloudFoundryApplication result) {
+                                             if ("STARTED".equals(result.getState()) &&
+                                                 result.getInstances() == result.getRunningInstances()) {
+                                                 String msg = constant.applicationCreatedSuccessfully(result.getName());
+                                                 if (result.getUris().isEmpty()) {
+                                                     msg += "<br>" + constant.applicationStartedWithNoUrls();
+                                                 } else {
+                                                     msg += "<br>" +
+                                                            constant.applicationStartedOnUrls(result.getName(), getAppUrisAsString(result));
+                                                 }
 
-                                console.print(msg);
-                                callback.onSuccess(projectId);
-                            } else {
-                                String msg = constant.applicationWasNotStarted(result.getName());
-                                console.print(msg);
-                            }
-                        }
-                    });
+                                                 console.print(msg);
+                                                 callback.onSuccess(projectId);
+                                             } else {
+                                                 String msg = constant.applicationWasNotStarted(result.getName());
+                                                 console.print(msg);
+                                             }
+                                         }
+                                     });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -263,23 +265,21 @@ public class StartApplicationPresenter {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    resourceProvider.getVfsId(),
-                    project.getId(),
-                    null,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
-                                                                                  null, eventBus, console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            if ("STOPPED".equals(result.getState())) {
-                                String msg = constant.applicationAlreadyStopped(result.getName());
-                                console.print(msg);
-                            } else {
-                                stopApplication(null, appInfoChangedCallback);
-                            }
-                        }
-                    });
+            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+                                                                                                     checkIsStoppedLoggedInHandler,
+                                                                                                     null, eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               if ("STOPPED".equals(result.getState())) {
+                                                   String msg = constant.applicationAlreadyStopped(result.getName());
+                                                   console.print(msg);
+                                               } else {
+                                                   stopApplication(null, appInfoChangedCallback);
+                                               }
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -297,64 +297,36 @@ public class StartApplicationPresenter {
                 resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
 
         try {
-            CloudFoundryClientService.getInstance().stopApplication(resourceProvider.getVfsId(), projectId, name, null,
-                                                                    new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler,
-                                                                                                                 null, eventBus, console,
-                                                                                                                 constant,
-                                                                                                                 loginPresenter) {
-                                                                        @Override
-                                                                        protected void onSuccess(String result) {
-                                                                            try {
-                                                                                AutoBean<CloudFoundryApplication> CloudFoundryApplication =
-                                                                                        autoBeanFactory.cloudFoundryApplication();
-                                                                                AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                                                                                        new AutoBeanUnmarshaller<CloudFoundryApplication>(
-                                                                                                CloudFoundryApplication);
+            service.stopApplication(resourceProvider.getVfsId(), projectId, name, null,
+                                    new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, console,
+                                                                                 constant, loginPresenter) {
+                                        @Override
+                                        protected void onSuccess(String result) {
+                                            try {
+                                                AutoBean<CloudFoundryApplication> CloudFoundryApplication =
+                                                        autoBeanFactory.cloudFoundryApplication();
+                                                AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                                                        new AutoBeanUnmarshaller<CloudFoundryApplication>(
+                                                                CloudFoundryApplication);
 
-                                                                                CloudFoundryClientService.getInstance().getApplicationInfo(
-                                                                                        resourceProvider.getVfsId(),
-                                                                                        projectId,
-                                                                                        name,
-                                                                                        null,
-                                                                                        new
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                                                                                                unmarshaller, null, null,
-                                                                                                eventBus, console, constant,
-                                                                                                loginPresenter) {
-                                                                                            @Override
-                                                                                            protected void onSuccess(
-                                                                                                    CloudFoundryApplication result) {
-                                                                                                final String msg =
-                                                                                                        constant.applicationStopped(
-                                                                                                                result.getName());
-                                                                                                console.print(msg);
-                                                                                                callback.onSuccess(projectId);
-                                                                                            }
-                                                                                        });
-                                                                            } catch (RequestException e) {
-                                                                                eventBus.fireEvent(new ExceptionThrownEvent(e));
-                                                                                console.print(e.getMessage());
-                                                                            }
-                                                                        }
-                                                                    });
+                                                service.getApplicationInfo(resourceProvider.getVfsId(), projectId, name, null,
+                                                                           new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                                   unmarshaller, null, null, eventBus, console, constant,
+                                                                                   loginPresenter) {
+                                                                               @Override
+                                                                               protected void onSuccess(CloudFoundryApplication result) {
+                                                                                   final String msg =
+                                                                                           constant.applicationStopped(result.getName());
+                                                                                   console.print(msg);
+                                                                                   callback.onSuccess(projectId);
+                                                                               }
+                                                                           });
+                                            } catch (RequestException e) {
+                                                eventBus.fireEvent(new ExceptionThrownEvent(e));
+                                                console.print(e.getMessage());
+                                            }
+                                        }
+                                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -387,32 +359,29 @@ public class StartApplicationPresenter {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().restartApplication(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    name,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler, null,
-                                                                                  eventBus, console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            if (result.getInstances() == result.getRunningInstances()) {
-                                final String appUris = getAppUrisAsString(result);
-                                String msg = "";
-                                if (appUris.isEmpty()) {
-                                    msg = constant.applicationRestarted(result.getName());
-                                } else {
-                                    msg = constant.applicationRestartedUris(result.getName(), appUris);
-                                }
+            service.restartApplication(resourceProvider.getVfsId(), projectId, name, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler,
+                                                                                                     null, eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               if (result.getInstances() == result.getRunningInstances()) {
+                                                   final String appUris = getAppUrisAsString(result);
+                                                   String msg = "";
+                                                   if (appUris.isEmpty()) {
+                                                       msg = constant.applicationRestarted(result.getName());
+                                                   } else {
+                                                       msg = constant.applicationRestartedUris(result.getName(), appUris);
+                                                   }
 
-                                console.print(msg);
-                                callback.onSuccess(projectId);
-                            } else {
-                                String msg = constant.applicationWasNotStarted(result.getName());
-                                console.print(msg);
-                            }
-                        }
-                    });
+                                                   console.print(msg);
+                                                   callback.onSuccess(projectId);
+                                               } else {
+                                                   String msg = constant.applicationWasNotStarted(result.getName());
+                                                   console.print(msg);
+                                               }
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

@@ -28,10 +28,8 @@ import com.codenvy.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.wizard.CloudFoundryPagePresenter;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.loader.EmptyLoader;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Extension add Cloud Foundry support to the IDE Application.
@@ -56,10 +54,6 @@ public class CloudFoundryExtension {
      * @param loginCommand
      * @param showApplicationsCommand
      * @param showCloudFoundryProjectCommand
-     * @param eventBus
-     * @param deployAppPresenter
-     * @param constant
-     * @param autoBeanFactory
      * @param wizardPage
      */
     @Inject
@@ -67,17 +61,12 @@ public class CloudFoundryExtension {
                                  ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
                                  ShowApplicationsCommand showApplicationsCommand,
                                  ShowCloudFoundryProjectCommand showCloudFoundryProjectCommand,
-                                 EventBus eventBus, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
                                  CloudFoundryPagePresenter wizardPage) {
         resources.cloudFoundryCss().ensureInjected();
 
         // TODO change hard code types
         JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
         paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, wizardPage, null);
-
-        // TODO Needs to get service from DI?
-        String restContext = "/rest/private";
-        new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant, autoBeanFactory);
 
         menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
         menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);

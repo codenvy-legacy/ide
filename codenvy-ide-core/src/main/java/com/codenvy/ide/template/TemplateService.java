@@ -31,43 +31,26 @@ import java.util.List;
  * @version @version $Id: $
  */
 
-public abstract class TemplateService {
+public interface TemplateService {
 
-    private static TemplateService instance;
+    public void getTemplates(AsyncRequestCallback<List<AbstractTemplate>> callback) throws RequestException;
 
-    public static TemplateService getInstance() {
-        return instance;
-    }
+    public void createTemplate(Template template, AsyncRequestCallback<Object> callback) throws RequestException;
 
-    protected TemplateService() {
-        instance = this;
-    }
+    public void deleteTemplate(Template template, AsyncRequestCallback<Object> callback) throws RequestException;
 
-    public abstract void getTemplates(AsyncRequestCallback<List<AbstractTemplate>> callback) throws RequestException;
+    public void addFileTemplate(FileTemplate template, AsyncRequestCallback<FileTemplate> callback) throws RequestException;
 
-    public abstract void createTemplate(Template template, AsyncRequestCallback<Object> callback)
-            throws RequestException;
+    public void getFileTemplateList(AsyncRequestCallback<List<FileTemplate>> callback) throws RequestException;
 
-    public abstract void deleteTemplate(Template template, AsyncRequestCallback<Object> callback)
-            throws RequestException;
+    public void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback) throws RequestException;
 
-    public abstract void addFileTemplate(FileTemplate template, AsyncRequestCallback<FileTemplate> callback)
-            throws RequestException;
+    public void getProjectTemplateList(AsyncRequestCallback<List<ProjectTemplate>> callback) throws RequestException;
 
-    public abstract void getFileTemplateList(AsyncRequestCallback<List<FileTemplate>> callback)
-            throws RequestException;
+    public void deleteProjectTemplate(String templateName, AsyncRequestCallback<String> callback) throws RequestException;
 
-    public abstract void deleteFileTemplate(String templateName, AsyncRequestCallback<String> callback)
-            throws RequestException;
+    public void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
+                                          AsyncRequestCallback<Project> callback) throws RequestException;
 
-    public abstract void getProjectTemplateList(AsyncRequestCallback<List<ProjectTemplate>> callback)
-            throws RequestException;
-
-    public abstract void deleteProjectTemplate(String templateName, AsyncRequestCallback<String> callback)
-            throws RequestException;
-
-    public abstract void createProjectFromTemplate(String vfsId, String parentId, String name, String templateName,
-                                                   AsyncRequestCallback<Project> callback) throws RequestException;
-
-    public abstract void deleteTemplatesFromRegistry(AsyncRequestCallback<String> callback) throws RequestException;
+    public void deleteTemplatesFromRegistry(AsyncRequestCallback<String> callback) throws RequestException;
 }

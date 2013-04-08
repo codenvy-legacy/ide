@@ -31,9 +31,13 @@ import com.codenvy.ide.websocket.rest.RequestMessage;
 import com.codenvy.ide.websocket.rest.RequestMessageBuilder;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
+
+import javax.inject.Singleton;
 
 /**
  * Implementation for {@link CloudFoundryClientService}.
@@ -41,7 +45,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryClientServiceImpl.java Jul 12, 2011 10:25:10 AM vereshchaka $
  */
-public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
+@Singleton
+public class CloudFoundryClientServiceImpl implements CloudFoundryClientService {
     private static final String BASE_URL = "/ide/cloudfoundry";
 
     private static final String CREATE = BASE_URL + "/apps/create";
@@ -123,8 +128,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService {
      * @param constant
      * @param autoBeanFactory
      */
-    public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
-                                         CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory) {
+    @Inject
+    protected CloudFoundryClientServiceImpl(@Named("restContext") String restContext, Loader loader, MessageBus wsMessageBus,
+                                            EventBus eventBus, CloudFoundryLocalizationConstant constant,
+                                            CloudFoundryAutoBeanFactory autoBeanFactory) {
         this.loader = loader;
         this.restServiceContext = restContext;
         this.wsMessageBus = wsMessageBus;

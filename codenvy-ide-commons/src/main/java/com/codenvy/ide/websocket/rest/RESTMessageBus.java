@@ -26,6 +26,8 @@ import com.codenvy.ide.websocket.events.MessageReceivedEvent;
 import com.codenvy.ide.websocket.events.ReplyHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
@@ -52,8 +54,7 @@ public class RESTMessageBus extends MessageBus {
         super(url);
     }
 
-    /** @see com.codenvy.ide.client.framework.websocket.MessageBus#onMessageReceived(com.codenvy.ide.client.framework.websocket.events
-     * .MessageReceivedEvent) */
+    /** @see com.codenvy.ide.websocket.MessageBus#onMessageReceived(com.codenvy.ide.websocket.events.MessageReceivedEvent) */
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         Message message = parseMessage(event.getMessage());
@@ -71,13 +72,13 @@ public class RESTMessageBus extends MessageBus {
         super.onMessageReceived(event);
     }
 
-    /** @see com.codenvy.ide.client.framework.websocket.MessageBus#parseMessage(java.lang.String) */
+    /** @see com.codenvy.ide.websocket.MessageBus#parseMessage(java.lang.String) */
     @Override
     protected Message parseMessage(String message) {
         return AutoBeanCodex.decode(AUTO_BEAN_FACTORY, ResponseMessage.class, message).as();
     }
 
-    /** @see com.codenvy.ide.client.framework.websocket.MessageBus#getChannel(com.codenvy.ide.client.framework.websocket.Message) */
+    /** @see com.codenvy.ide.websocket.MessageBus#getChannel(com.codenvy.ide.websocket.Message) */
     @Override
     protected String getChannel(Message message) {
         if (!(message instanceof ResponseMessage)) {
@@ -96,8 +97,7 @@ public class RESTMessageBus extends MessageBus {
 
     /**
      * @throws WebSocketException
-     * @see com.codenvy.ide.client.framework.websocket.MessageBus#send(com.codenvy.ide.client.framework.websocket.Message,
-     *      com.codenvy.ide.client.framework.websocket.events.ReplyHandler)
+     * @see com.codenvy.ide.websocket.MessageBus#send(com.codenvy.ide.websocket.Message, com.codenvy.ide.websocket.events.ReplyHandler)
      */
     @Override
     public void send(Message message, ReplyHandler callback) throws WebSocketException {
@@ -126,7 +126,7 @@ public class RESTMessageBus extends MessageBus {
 
     /**
      * @throws WebSocketException
-     * @see com.codenvy.ide.client.framework.websocket.MessageBus#sendSubscribeMessage(java.lang.String)
+     * @see com.codenvy.ide.websocket.MessageBus#sendSubscribeMessage(java.lang.String)
      */
     @Override
     protected void sendSubscribeMessage(String channel) throws WebSocketException {
@@ -138,7 +138,7 @@ public class RESTMessageBus extends MessageBus {
 
     /**
      * @throws WebSocketException
-     * @see com.codenvy.ide.client.framework.websocket.MessageBus#sendUnsubscribeMessage(java.lang.String)
+     * @see com.codenvy.ide.websocket.MessageBus#sendUnsubscribeMessage(java.lang.String)
      */
     @Override
     protected void sendUnsubscribeMessage(String channel) throws WebSocketException {

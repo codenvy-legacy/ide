@@ -64,6 +64,8 @@ public class UpdatePropertiesPresenter {
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -73,17 +75,19 @@ public class UpdatePropertiesPresenter {
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
     protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
                                         CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                        LoginPresenter loginPresenter) {
+                                        LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /**
@@ -112,19 +116,16 @@ public class UpdatePropertiesPresenter {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    null,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getOldMemoryValueLoggedInHandler, null, eventBus, console,
-                                                                                  constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            askForNewMemoryValue(result.getResources().getMemory());
-                        }
-                    });
+            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+                                                                                                     getOldMemoryValueLoggedInHandler, null,
+                                                                                                     eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               askForNewMemoryValue(result.getResources().getMemory());
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -168,19 +169,16 @@ public class UpdatePropertiesPresenter {
         final String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            CloudFoundryClientService.getInstance().updateMemory(resourceProvider.getVfsId(), projectId, null, null,
-                                                                 memory,
-                                                                 new CloudFoundryAsyncRequestCallback<String>(null,
-                                                                                                              updateMemoryLoggedInHandler,
-                                                                                                              null, eventBus, console,
-                                                                                                              constant, loginPresenter) {
-                                                                     @Override
-                                                                     protected void onSuccess(String result) {
-                                                                         String msg = constant.updateMemorySuccess(String.valueOf(memory));
-                                                                         console.print(msg);
-                                                                         updatePropertiesCallback.onSuccess(projectId);
-                                                                     }
-                                                                 });
+            service.updateMemory(resourceProvider.getVfsId(), projectId, null, null, memory,
+                                 new CloudFoundryAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null, eventBus, console,
+                                                                              constant, loginPresenter) {
+                                     @Override
+                                     protected void onSuccess(String result) {
+                                         String msg = constant.updateMemorySuccess(String.valueOf(memory));
+                                         console.print(msg);
+                                         updatePropertiesCallback.onSuccess(projectId);
+                                     }
+                                 });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -214,19 +212,16 @@ public class UpdatePropertiesPresenter {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    null,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-                                                                                  getOldInstancesValueLoggedInHandler, null, eventBus,
-                                                                                  console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            askForInstancesNumber(result.getInstances());
-                        }
-                    });
+            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
+                                                                                                     getOldInstancesValueLoggedInHandler,
+                                                                                                     null, eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               askForInstancesNumber(result.getInstances());
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -277,89 +272,35 @@ public class UpdatePropertiesPresenter {
         String encodedExp = URL.encodePathSegment(instancesExpression);
 
         try {
-            CloudFoundryClientService.getInstance().updateInstances(resourceProvider.getVfsId(), projectId, null, null,
-                                                                    encodedExp,
-                                                                    new CloudFoundryAsyncRequestCallback<String>(null,
+            service.updateInstances(resourceProvider.getVfsId(), projectId, null, null, encodedExp,
+                                    new CloudFoundryAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null, eventBus,
+                                                                                 console, constant, loginPresenter) {
+                                        @Override
+                                        protected void onSuccess(String result) {
+                                            try {
+                                                AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+                                                        autoBeanFactory.cloudFoundryApplication();
+                                                AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+                                                        new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                 updateInstancesLoggedInHandler,
-                                                                                                                 null, eventBus, console,
-                                                                                                                 constant, loginPresenter) {
-                                                                        @Override
-                                                                        protected void onSuccess(String result) {
-                                                                            try {
-                                                                                AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-                                                                                        autoBeanFactory.cloudFoundryApplication();
-                                                                                AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-                                                                                        new AutoBeanUnmarshaller<CloudFoundryApplication>(
-                                                                                                cloudFoundryApplication);
-
-                                                                                CloudFoundryClientService.getInstance().getApplicationInfo(
-                                                                                        resourceProvider.getVfsId(),
-                                                                                        projectId,
-                                                                                        null,
-                                                                                        null,
-                                                                                        new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                                                                                                unmarshaller, null, null,
-                                                                                                eventBus, console, constant,
-                                                                                                loginPresenter) {
-                                                                                            @Override
-                                                                                            protected void onSuccess(
-                                                                                                    CloudFoundryApplication result) {
-                                                                                                String msg =
-                                                                                                        constant.updateInstancesSuccess(
-                                                                                                                String.valueOf(
-                                                                                                                        result.getInstances()));
-                                                                                                console.print(msg);
-                                                                                                updatePropertiesCallback
-                                                                                                        .onSuccess(projectId);
-                                                                                            }
-                                                                                        });
-                                                                            } catch (RequestException e) {
-                                                                                eventBus.fireEvent(new ExceptionThrownEvent(e));
-                                                                                console.print(e.getMessage());
-                                                                            }
-                                                                        }
-                                                                    });
+                                                service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                                                           new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
+                                                                                   unmarshaller, null, null, eventBus, console, constant,
+                                                                                   loginPresenter) {
+                                                                               @Override
+                                                                               protected void onSuccess(CloudFoundryApplication result) {
+                                                                                   String msg = constant.updateInstancesSuccess(
+                                                                                           String.valueOf(result.getInstances()));
+                                                                                   console.print(msg);
+                                                                                   updatePropertiesCallback.onSuccess(projectId);
+                                                                               }
+                                                                           });
+                                            } catch (RequestException e) {
+                                                eventBus.fireEvent(new ExceptionThrownEvent(e));
+                                                console.print(e.getMessage());
+                                            }
+                                        }
+                                    });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

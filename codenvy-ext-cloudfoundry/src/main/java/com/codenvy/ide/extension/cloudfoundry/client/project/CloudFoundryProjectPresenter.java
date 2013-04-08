@@ -85,6 +85,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /** The callback what execute when some application's information was changed. */
     private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>() {
         @Override
@@ -118,18 +120,17 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
      * @param startAppPresenter
      * @param deleteAppPresenter
      * @param loginPresenter
+     * @param service
      */
     @Inject
-    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view,
-                                           ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
-                                           UpdatePropertiesPresenter updateProperyPresenter,
+    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view, ApplicationInfoPresenter applicationInfoPresenter,
+                                           UnmapUrlPresenter unmapUrlPresenter, UpdatePropertiesPresenter updateProperyPresenter,
                                            ManageServicesPresenter manageServicesPresenter,
                                            UpdateApplicationPresenter updateApplicationPresenter, EventBus eventBus,
-                                           ResourceProvider resourceProvider,
-                                           ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                           CloudFoundryAutoBeanFactory autoBeanFactory,
+                                           ResourceProvider resourceProvider, ConsolePart console,
+                                           CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
                                            StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
-                                           LoginPresenter loginPresenter) {
+                                           LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.applicationInfoPresenter = applicationInfoPresenter;
@@ -145,6 +146,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
         this.startAppPresenter = startAppPresenter;
         this.deleteAppPresenter = deleteAppPresenter;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** Shows dialog. */
@@ -173,21 +175,20 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
     /** Getting logs for CloudFoundry Application. */
     protected void getLogs() {
         try {
-            CloudFoundryClientService.getInstance().getLogs(resourceProvider.getVfsId(),
-                                                            resourceProvider.getActiveProject().getId(),
-                                                            new AsyncRequestCallback<StringBuilder>(
-                                                                    new StringUnmarshaller(new StringBuilder())) {
-                                                                @Override
-                                                                protected void onSuccess(StringBuilder result) {
-                                                                    console.print("<pre>" + result.toString() + "</pre>");
-                                                                }
+            StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+            service.getLogs(resourceProvider.getVfsId(), resourceProvider.getActiveProject().getId(),
+                            new AsyncRequestCallback<StringBuilder>(unmarshaller) {
+                                @Override
+                                protected void onSuccess(StringBuilder result) {
+                                    console.print("<pre>" + result.toString() + "</pre>");
+                                }
 
-                                                                @Override
-                                                                protected void onFailure(Throwable exception) {
-                                                                    eventBus.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
-                                                                    console.print(exception.getMessage());
-                                                                }
-                                                            });
+                                @Override
+                                protected void onFailure(Throwable exception) {
+                                    eventBus.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
+                                    console.print(exception.getMessage());
+                                }
+                            });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e.getMessage()));
             console.print(e.getMessage());
@@ -212,25 +213,27 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
             AutoBean<CloudFoundryApplication> cloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-
-            CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null,
-                                                                       null, new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(
-                    unmarshaller, new LoggedInHandler() {
+            LoggedInHandler loggedInHandler = new LoggedInHandler() {
                 @Override
                 public void onLoggedIn() {
                     getApplicationInfo(project);
                 }
-            }, null, eventBus, console, constant, loginPresenter) {
-                @Override
-                protected void onSuccess(CloudFoundryApplication result) {
-                    if (!view.isShown()) {
-                        view.showDialog();
-                    }
+            };
 
-                    application = result;
-                    displayApplicationProperties(result);
-                }
-            });
+            service.getApplicationInfo(resourceProvider.getVfsId(), project.getId(), null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+                                                                                                     eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               if (!view.isShown()) {
+                                                   view.showDialog();
+                                               }
+
+                                               application = result;
+                                               displayApplicationProperties(result);
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

@@ -19,6 +19,8 @@
 package com.codenvy.ide.extension.cloudfoundry.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientServiceImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;
@@ -48,6 +50,9 @@ public class CloudFoundryGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
+        bind(CloudFoundryClientService.class).to(CloudFoundryClientServiceImpl.class).in(Singleton.class);
+
+        // Views
         bind(LoginView.class).to(LoginViewImpl.class).in(Singleton.class);
         bind(ApplicationsView.class).to(ApplicationsViewImpl.class).in(Singleton.class);
         bind(CreateApplicationView.class).to(CreateApplicationViewImpl.class).in(Singleton.class);

@@ -26,9 +26,7 @@ import com.codenvy.ide.api.ui.keybinding.KeyBuilder;
 import com.codenvy.ide.api.ui.menu.ToolbarAgent;
 import com.codenvy.ide.command.*;
 import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.loader.EmptyLoader;
 import com.codenvy.ide.menu.MainMenuPresenter;
-import com.codenvy.ide.template.TemplateServiceImpl;
 import com.codenvy.ide.toolbar.ToggleItemExpression;
 import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.codenvy.ide.wizard.newfile.NewTextFilePagePresenter;
@@ -106,9 +104,5 @@ public class StandardComponentInitializer {
 
         paasAgent.registerPaaS("None", "None", null, false, JsonCollections.<String>createArray("", "java", "War"),
                                null, null);
-
-        // TODO needs to get from DI?
-        new TemplateServiceImpl(new EmptyLoader(), "/rest/private/registry/repository/exo:applications/IDE",
-                                "rest/private");
     }
 }

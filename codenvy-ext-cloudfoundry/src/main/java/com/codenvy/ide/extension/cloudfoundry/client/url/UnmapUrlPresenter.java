@@ -71,6 +71,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
 
     private LoginPresenter loginPresenter;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -81,11 +83,12 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
     protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus,
                                 ConsolePart console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
-                                LoginPresenter loginPresenter) {
+                                LoginPresenter loginPresenter, CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
@@ -94,6 +97,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -157,26 +161,22 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    null,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus, console,
-                                                                                  constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            isBindingChanged = false;
+            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus,
+                                                                                                     console, constant, loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               isBindingChanged = false;
 
-                            registeredUrls = JsonCollections.createArray(result.getUris());
+                                               registeredUrls = JsonCollections.createArray(result.getUris());
 
-                            view.setEnableMapUrlButton(false);
-                            view.setRegisteredUrls(registeredUrls);
-                            view.setMapUrl("");
+                                               view.setEnableMapUrlButton(false);
+                                               view.setRegisteredUrls(registeredUrls);
+                                               view.setMapUrl("");
 
-                            view.showDialog();
-                        }
-                    });
+                                               view.showDialog();
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -200,29 +200,24 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
         String projectId = resourceProvider.getActiveProject().getId();
 
         try {
-            CloudFoundryClientService.getInstance().mapUrl(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    null,
-                    null,
-                    url,
-                    new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, console,
-                                                                 constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(String result) {
-                            isBindingChanged = true;
-                            String registeredUrl = url;
-                            if (!url.startsWith("http")) {
-                                registeredUrl = "http://" + url;
-                            }
-                            registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
-                            String msg = constant.mapUrlRegisteredSuccess(registeredUrl);
-                            console.print(msg);
-                            registeredUrls.add(url);
-                            view.setRegisteredUrls(registeredUrls);
-                            view.setMapUrl("");
-                        }
-                    });
+            service.mapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
+                           new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, console, constant,
+                                                                        loginPresenter) {
+                               @Override
+                               protected void onSuccess(String result) {
+                                   isBindingChanged = true;
+                                   String registeredUrl = url;
+                                   if (!url.startsWith("http")) {
+                                       registeredUrl = "http://" + url;
+                                   }
+                                   registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
+                                   String msg = constant.mapUrlRegisteredSuccess(registeredUrl);
+                                   console.print(msg);
+                                   registeredUrls.add(url);
+                                   view.setRegisteredUrls(registeredUrls);
+                                   view.setMapUrl("");
+                               }
+                           });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -257,27 +252,22 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate {
     private void unregisterUrl(final String url) {
         String projectId = resourceProvider.getActiveProject().getId();
         try {
-            CloudFoundryClientService.getInstance().unmapUrl(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    null,
-                    null,
-                    url,
-                    new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, console,
-                                                                 constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(Object result) {
-                            isBindingChanged = true;
-                            registeredUrls.remove(url);
-                            view.setRegisteredUrls(registeredUrls);
-                            String unmappedUrl = url;
-                            if (!unmappedUrl.startsWith("http")) {
-                                unmappedUrl = "http://" + unmappedUrl;
-                            }
-                            String msg = constant.unmapUrlSuccess(unmappedUrl);
-                            console.print(msg);
-                        }
-                    });
+            service.unmapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
+                             new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, console,
+                                                                          constant, loginPresenter) {
+                                 @Override
+                                 protected void onSuccess(Object result) {
+                                     isBindingChanged = true;
+                                     registeredUrls.remove(url);
+                                     view.setRegisteredUrls(registeredUrls);
+                                     String unmappedUrl = url;
+                                     if (!unmappedUrl.startsWith("http")) {
+                                         unmappedUrl = "http://" + unmappedUrl;
+                                     }
+                                     String msg = constant.unmapUrlSuccess(unmappedUrl);
+                                     console.print(msg);
+                                 }
+                             });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());

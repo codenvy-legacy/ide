@@ -67,6 +67,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
     private AsyncCallback<String> appDeleteCallback;
 
+    private CloudFoundryClientService service;
+
     /**
      * Create presenter.
      *
@@ -77,11 +79,13 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
      * @param constant
      * @param autoBeanFactory
      * @param loginPresenter
+     * @param service
      */
     @Inject
-    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
-                                         EventBus eventBus, ConsolePart console, CloudFoundryLocalizationConstant constant,
-                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter) {
+    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider, EventBus eventBus,
+                                         ConsolePart console, CloudFoundryLocalizationConstant constant,
+                                         CloudFoundryAutoBeanFactory autoBeanFactory, LoginPresenter loginPresenter,
+                                         CloudFoundryClientService service) {
         this.view = view;
         this.view.setDelegate(this);
         this.resourceProvider = resourceProvider;
@@ -90,6 +94,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
         this.loginPresenter = loginPresenter;
+        this.service = service;
     }
 
     /** {@inheritDoc} */
@@ -143,19 +148,16 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
             AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
                     new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-            CloudFoundryClientService.getInstance().getApplicationInfo(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    null,
-                    null,
-                    new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null,
-                                                                                  eventBus, console, constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(CloudFoundryApplication result) {
-                            appName = result.getName();
-                            showDialog(appName);
-                        }
-                    });
+            service.getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
+                                       new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler,
+                                                                                                     null, eventBus, console, constant,
+                                                                                                     loginPresenter) {
+                                           @Override
+                                           protected void onSuccess(CloudFoundryApplication result) {
+                                               appName = result.getName();
+                                               showDialog(appName);
+                                           }
+                                       });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
@@ -189,30 +191,27 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
         }
 
         try {
-            CloudFoundryClientService.getInstance().deleteApplication(
-                    resourceProvider.getVfsId(),
-                    projectId,
-                    appName,
-                    serverName,
-                    isDeleteServices,
-                    new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
-                                                                 constant, loginPresenter) {
-                        @Override
-                        protected void onSuccess(String result) {
-                            project.refreshProperties(new AsyncCallback<Project>() {
-                                @Override
-                                public void onSuccess(Project result) {
-                                    view.close();
-                                    console.print(constant.applicationDeletedMsg(appName));
-                                    appDeleteCallback.onSuccess(appName);
-                                }
+            service.deleteApplication(resourceProvider.getVfsId(), projectId, appName, serverName, isDeleteServices,
+                                      new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus, console,
+                                                                                   constant, loginPresenter) {
+                                          @Override
+                                          protected void onSuccess(String result) {
+                                              if (project != null) {
+                                                  project.refreshProperties(new AsyncCallback<Project>() {
+                                                      @Override
+                                                      public void onSuccess(Project result) {
+                                                          view.close();
+                                                          console.print(constant.applicationDeletedMsg(appName));
+                                                          appDeleteCallback.onSuccess(appName);
+                                                      }
 
-                                @Override
-                                public void onFailure(Throwable caught) {
-                                }
-                            });
-                        }
-                    });
+                                                      @Override
+                                                      public void onFailure(Throwable caught) {
+                                                      }
+                                                  });
+                                              }
+                                          }
+                                      });
         } catch (RequestException e) {
             eventBus.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
