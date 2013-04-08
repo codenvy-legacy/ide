@@ -21,6 +21,7 @@ import com.codenvy.ide.api.event.EditorDirtyStateChangedEvent;
 import com.codenvy.ide.api.mvp.Presenter;
 import com.codenvy.ide.api.ui.perspective.PartPresenter;
 import com.codenvy.ide.api.ui.perspective.PartStack;
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
 import com.codenvy.ide.api.ui.perspective.PropertyListener;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
@@ -85,10 +86,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /**
      * Creates PartStack with given instance of display and resources (CSS and Images)
      *
-     * @param partStackResources
      */
     @Inject
-    public PartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus,
+    public PartStackPresenter(PartStackView view, EventBus eventBus,
                               PartStackEventHandler partStackEventHandler) {
         this.view = view;
         this.eventBus = eventBus;

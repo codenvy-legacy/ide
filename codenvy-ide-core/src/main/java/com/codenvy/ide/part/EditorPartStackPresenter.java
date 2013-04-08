@@ -35,13 +35,12 @@ public class EditorPartStackPresenter extends PartStackPresenter implements Edit
 
     /**
      * @param view
-     * @param partStackResources
      * @param eventBus
      */
     @Inject
-    public EditorPartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus,
+    public EditorPartStackPresenter(PartStackView view, EventBus eventBus,
                                     PartStackEventHandler partStackEventHandler) {
-        super(view, partStackResources, eventBus, partStackEventHandler);
+        super(view, eventBus, partStackEventHandler);
     }
 
     /** {@inheritDoc} */

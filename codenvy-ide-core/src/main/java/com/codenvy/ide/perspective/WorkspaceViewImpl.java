@@ -45,6 +45,8 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
 
     @UiField
     SimplePanel toolbarPanel;
+    @UiField
+    SimplePanel statusPanel;
 
     /** Create view. */
     @Inject
