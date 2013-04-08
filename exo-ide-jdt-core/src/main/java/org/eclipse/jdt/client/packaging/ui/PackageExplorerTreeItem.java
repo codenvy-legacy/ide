@@ -165,13 +165,14 @@ public abstract class PackageExplorerTreeItem extends TreeItem
             if (child instanceof PackageExplorerTreeItem)
             {
                 String path = ((Item)child.getUserObject()).getPath();
-                if (child instanceof PackageExplorerTreeItem)
+                if (path == null || path.isEmpty()) {
+                    continue;
+                }
+                
+                if (item.getPath().startsWith(path))
                 {
-                    if (item.getPath().startsWith(path))
-                    {
-                        ((PackageExplorerTreeItem)child).refresh(true);
-                        return ((PackageExplorerTreeItem)child).select(item);
-                    }
+                    ((PackageExplorerTreeItem)child).refresh(true);
+                    return ((PackageExplorerTreeItem)child).select(item);
                 }
             }
         }
