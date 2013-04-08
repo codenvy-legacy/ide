@@ -19,7 +19,11 @@
 package org.exoplatform.ide.extension.aws.client.login;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -63,6 +67,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
 
     private LoggedInHandler loggedInHandler;
 
+    private LoginCanceledHandler loginCanceledHandler;
+
     public LoginPresenter() {
         IDE.getInstance().addControl(new SwitchAccountControl());
 
@@ -76,6 +82,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
             @Override
             public void onClick(ClickEvent event) {
                 IDE.getInstance().closeView(display.asView().getId());
+                if (loginCanceledHandler != null) {
+                    loginCanceledHandler.onLoginCanceled();
+                    loginCanceledHandler = null;
+                }
             }
         });
 
@@ -164,11 +174,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler {
         }
     }
 
-    /** @see org.exoplatform.ide.extension.aws.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.login
-     * .LoginEvent) */
+    /**
+     * @see org.exoplatform.ide.extension.aws.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.login.LoginEvent)
+     */
     @Override
     public void onLogin(LoginEvent event) {
         this.loggedInHandler = event.getLoggedInHandler();
+        this.loginCanceledHandler = event.getLoginCanceledHandler();
 
         if (display == null) {
             display = GWT.create(Display.class);

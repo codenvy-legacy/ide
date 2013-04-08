@@ -194,7 +194,7 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler {
                                                                         public void onLoggedIn() {
                                                                             getInstances();
                                                                         }
-                                                                    }) {
+                                                                    }, null) {
 
                         @Override
                         protected void onSuccess(List<InstanceInfo> result) {

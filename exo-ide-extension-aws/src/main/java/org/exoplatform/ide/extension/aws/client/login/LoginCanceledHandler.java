@@ -16,24 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.paas;
-
-import com.google.gwt.user.client.ui.Composite;
-
-import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.client.framework.template.ProjectTemplate;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+package org.exoplatform.ide.extension.aws.client.login;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Jul 24, 2012 12:44:17 PM anya $
+ * @version $Id: Sep 18, 2012 11:15:01 AM anya $
  */
-public interface HasPaaSActions {
-    void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler);
-
-    void deploy(ProjectModel project, DeployResultHandler deployResultHandler);
-
-    Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler);
-
-    boolean validate();
+public interface LoginCanceledHandler {
+    void onLoginCanceled();
 }
