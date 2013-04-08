@@ -22,6 +22,7 @@ import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
+import com.codenvy.ide.extension.maven.client.BuilderAutoBeanFactory;
 import com.codenvy.ide.extension.maven.client.BuilderClientService;
 import com.codenvy.ide.extension.maven.client.BuilderExtension;
 import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
@@ -105,6 +106,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
     private BuilderLocalizationConstant constant;
 
+    private BuilderAutoBeanFactory autoBeanFactory;
+
+    /** Handler for processing Maven build status which is received over WebSocket connection. */
+    private final SubscriptionHandler<BuildStatus> buildStatusHandler;
+
     /**
      * Create presenter.
      *
@@ -114,16 +120,46 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
      * @param console
      * @param service
      * @param constant
+     * @param autoBeanFactory
      */
     @Inject
-    protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider, ConsolePart console,
-                                    BuilderClientService service, BuilderLocalizationConstant constant) {
+    protected BuildProjectPresenter(final BuildProjectView view, final EventBus eventBus, ResourceProvider resourceProvider,
+                                    final ConsolePart console, BuilderClientService service, BuilderLocalizationConstant constant,
+                                    BuilderAutoBeanFactory autoBeanFactory) {
         this.view = view;
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.service = service;
         this.constant = constant;
+        this.autoBeanFactory = autoBeanFactory;
+
+        buildStatusHandler = new SubscriptionHandler<BuildStatus>(
+                new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
+            @Override
+            protected void onSuccess(BuildStatus buildStatus) {
+                updateBuildStatus(buildStatus);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception) {
+                // TODO need to fix it after port websocket support
+                // Problem with using Websocket
+                //         try
+                //         {
+                //            IDE.messageBus().unsubscribe(buildStatusChannel, this);
+                //         }
+                //         catch (WebSocketException e)
+                //         {
+                //            // nothing to do
+                //         }
+
+                setBuildInProgress(false);
+                view.stopAnimation();
+                eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                console.print(exception.getMessage());
+            }
+        };
 
         // TODO need to remove following code
         this.eventBus.addHandler(BuildProjectEvent.TYPE, this);
@@ -310,7 +346,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
             service.checkArtifactUrl(url, new AsyncRequestCallback<Object>() {
                 @Override
                 protected void onSuccess(Object result) {
-                    BuildStatus buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.buildStatus().as();
+                    BuildStatus buildStatus = autoBeanFactory.buildStatus().as();
                     buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                     buildStatus.setDownloadUrl(url);
                     eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
@@ -337,7 +373,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         @Override
         public void run() {
             try {
-                AutoBean<BuildStatus> buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class);
+                AutoBean<BuildStatus> buildStatus = autoBeanFactory.create(BuildStatus.class);
                 AutoBeanUnmarshaller<BuildStatus> unmarshaller = new AutoBeanUnmarshaller<BuildStatus>(buildStatus);
                 service.status(buildID, new AsyncRequestCallback<BuildStatus>(unmarshaller) {
                     @Override
@@ -580,20 +616,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
     }
 
     private boolean makeSelectionCheck() {
-        // TODO IDEX-57
-        // Check: does this snippent need?
-        //      if (selectedItems == null || selectedItems.size() <= 0)
-        //      {
-        //         Dialogs.getInstance().showInfo(BuilderExtension.LOCALIZATION_CONSTANT.selectedItemsFail());
-        //         return false;
-        //      }
-
-        //      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
-        //      {
-        //         Dialogs.getInstance().showInfo("Project is not selected.");
-        //         return false;
-        //      }
-
         if (resourceProvider.getActiveProject() == null) {
             Window.alert("Project is not selected.");
             return false;
@@ -617,34 +639,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         }
         return formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
     }
-
-    /** Handler for processing Maven build status which is received over WebSocket connection. */
-    private SubscriptionHandler<BuildStatus> buildStatusHandler = new SubscriptionHandler<BuildStatus>(
-            new AutoBeanUnmarshallerWS<BuildStatus>(BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class))) {
-        @Override
-        protected void onSuccess(BuildStatus buildStatus) {
-            updateBuildStatus(buildStatus);
-        }
-
-        @Override
-        protected void onFailure(Throwable exception) {
-            // TODO need to fix it after port websocket support
-            // Problem with using Websocket
-            //         try
-            //         {
-            //            IDE.messageBus().unsubscribe(buildStatusChannel, this);
-            //         }
-            //         catch (WebSocketException e)
-            //         {
-            //            // nothing to do
-            //         }
-
-            setBuildInProgress(false);
-            view.stopAnimation();
-            eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            console.print(exception.getMessage());
-        }
-    };
 
     /** Deserializer for responses body. */
     private class StringUnmarshaller implements Unmarshallable<StringBuilder> {

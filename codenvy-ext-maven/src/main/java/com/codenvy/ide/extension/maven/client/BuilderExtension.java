@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
-import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -33,8 +32,6 @@ import com.google.inject.Singleton;
 @Singleton
 @Extension(title = "Maven Support.", version = "3.0.0")
 public class BuilderExtension {
-    public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
-
     /** Channel for the messages containing status of the Maven build job. */
     public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
 
