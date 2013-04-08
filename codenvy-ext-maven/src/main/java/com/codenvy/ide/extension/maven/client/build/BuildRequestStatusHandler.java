@@ -19,6 +19,7 @@
 package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.extension.maven.client.BuilderExtension;
+import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
 import com.codenvy.ide.job.Job;
 import com.codenvy.ide.job.Job.JobStatus;
 import com.codenvy.ide.job.JobChangeEvent;
@@ -34,21 +35,24 @@ public class BuildRequestStatusHandler implements RequestStatusHandler {
 
     private EventBus eventBus;
 
+    private BuilderLocalizationConstant constant;
+
     /**
      * @param projectName
      *         project's name
      */
-    public BuildRequestStatusHandler(String projectName, EventBus eventBus) {
+    public BuildRequestStatusHandler(String projectName, EventBus eventBus, BuilderLocalizationConstant constant) {
         super();
         this.projectName = projectName;
         this.eventBus = eventBus;
+        this.constant = constant;
     }
 
     /** {@inheritDoc} */
     @Override
     public void requestInProgress(String id) {
         Job job = new Job(id, JobStatus.STARTED);
-        job.setStartMessage(BuilderExtension.LOCALIZATION_CONSTANT.buildStarted(projectName));
+        job.setStartMessage(constant.buildStarted(projectName));
         eventBus.fireEvent(new JobChangeEvent(job));
     }
 
@@ -56,7 +60,7 @@ public class BuildRequestStatusHandler implements RequestStatusHandler {
     @Override
     public void requestFinished(String id) {
         Job job = new Job(id, JobStatus.FINISHED);
-        job.setFinishMessage(BuilderExtension.LOCALIZATION_CONSTANT.buildFinished(projectName));
+        job.setFinishMessage(constant.buildFinished(projectName));
         eventBus.fireEvent(new JobChangeEvent(job));
     }
 

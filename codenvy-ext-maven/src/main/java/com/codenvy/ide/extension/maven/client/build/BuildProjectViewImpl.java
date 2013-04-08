@@ -25,7 +25,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-/** @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a> */
+/**
+ * The implementation of {@link BuildProjectView}.
+ *
+ * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ */
 @Singleton
 public class BuildProjectViewImpl extends Composite implements BuildProjectView {
     private static BuildProjectViewImplUiBinder uiBinder = GWT.create(BuildProjectViewImplUiBinder.class);

@@ -19,6 +19,8 @@
 package com.codenvy.ide.extension.maven.client.inject;
 
 import com.codenvy.ide.api.extension.ExtensionGinModule;
+import com.codenvy.ide.extension.maven.client.BuilderClientService;
+import com.codenvy.ide.extension.maven.client.BuilderClientServiceImpl;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -30,6 +32,8 @@ public class MavenGinModule extends AbstractGinModule {
     /** {@inheritDoc} */
     @Override
     protected void configure() {
+        bind(BuilderClientService.class).to(BuilderClientServiceImpl.class).in(Singleton.class);
+
         bind(BuildProjectView.class).to(BuildProjectViewImpl.class).in(Singleton.class);
     }
 }

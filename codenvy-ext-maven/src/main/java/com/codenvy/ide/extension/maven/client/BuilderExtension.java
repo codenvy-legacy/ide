@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.api.extension.Extension;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
-import com.codenvy.ide.loader.EmptyLoader;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,13 +38,7 @@ public class BuilderExtension {
     /** Channel for the messages containing status of the Maven build job. */
     public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
 
-    /** Localization constants. */
-    public static final BuilderLocalizationConstant LOCALIZATION_CONSTANT = GWT
-            .create(BuilderLocalizationConstant.class);
-
     @Inject
     public BuilderExtension(BuildProjectPresenter buildProjectPresenter) {
-        String restContext = "/rest/private";
-        new BuilderClientServiceImpl(restContext, new EmptyLoader());
     }
 }

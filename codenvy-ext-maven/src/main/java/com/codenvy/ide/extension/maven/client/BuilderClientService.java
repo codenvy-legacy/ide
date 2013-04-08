@@ -28,24 +28,7 @@ import com.google.gwt.http.client.RequestException;
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderClientService.java Feb 17, 2012 12:36:01 PM azatsarynnyy $
  */
-public abstract class BuilderClientService {
-
-    /** Maven builder client service. */
-    private static BuilderClientService instance;
-
-    /**
-     * Return the instance of {@link BuilderClientService}.
-     *
-     * @return maven builder client service
-     */
-    public static BuilderClientService getInstance() {
-        return instance;
-    }
-
-    protected BuilderClientService() {
-        instance = this;
-    }
-
+public interface BuilderClientService {
     /**
      * Start new build.
      *
@@ -57,8 +40,7 @@ public abstract class BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public abstract void build(String projectId, String vfsId, String projectName, String projectType,
-                               AsyncRequestCallback<StringBuilder> callback)
+    public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
             throws RequestException;
 
     /**
@@ -72,9 +54,8 @@ public abstract class BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public abstract void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
-                                         AsyncRequestCallback<StringBuilder> callback)
-            throws RequestException;
+    public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType,
+                                AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Cancel previously launched build.
@@ -85,7 +66,7 @@ public abstract class BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public abstract void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void cancel(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Check current status of previously launched build.
@@ -96,8 +77,7 @@ public abstract class BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public abstract void status(String buildid, AsyncRequestCallback<BuildStatus> callback)
-            throws RequestException;
+    public void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException;
 
     /**
      * Get build log.
@@ -108,7 +88,7 @@ public abstract class BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Get build result.
@@ -119,7 +99,7 @@ public abstract class BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public abstract void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+    public void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
     /**
      * Check is URL for download artifact is valid.
@@ -130,5 +110,5 @@ public abstract class BuilderClientService {
      *         callback
      * @throws RequestException
      */
-    public abstract void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
+    public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
 }
