@@ -20,12 +20,12 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.api.ui.perspective.AbstractPartPresenter;
+import com.codenvy.ide.api.ui.perspective.GenericPerspectivePresenter;
+import com.codenvy.ide.api.ui.perspective.PerspectivePresenter;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.extension.maven.client.BuilderAutoBeanFactory;
-import com.codenvy.ide.extension.maven.client.BuilderClientService;
-import com.codenvy.ide.extension.maven.client.BuilderExtension;
-import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
+import com.codenvy.ide.extension.maven.client.*;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectHandler;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -46,10 +46,12 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -62,7 +64,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
  */
 @Singleton
-public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
+public class BuildProjectPresenter extends AbstractPartPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate {
     private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
 
     private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
@@ -108,6 +110,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
     private BuilderAutoBeanFactory autoBeanFactory;
 
+    private BuilderResources resources;
+
+    private GenericPerspectivePresenter perspectivePresenter;
+
     /** Handler for processing Maven build status which is received over WebSocket connection. */
     private final SubscriptionHandler<BuildStatus> buildStatusHandler;
 
@@ -121,18 +127,24 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
      * @param service
      * @param constant
      * @param autoBeanFactory
+     * @param resources
+     * @param perspectivePresenter
      */
     @Inject
     protected BuildProjectPresenter(final BuildProjectView view, final EventBus eventBus, ResourceProvider resourceProvider,
                                     final ConsolePart console, BuilderClientService service, BuilderLocalizationConstant constant,
-                                    BuilderAutoBeanFactory autoBeanFactory) {
+                                    BuilderAutoBeanFactory autoBeanFactory, BuilderResources resources,
+                                    GenericPerspectivePresenter perspectivePresenter) {
         this.view = view;
+        this.view.setDelegate(this);
         this.eventBus = eventBus;
         this.resourceProvider = resourceProvider;
         this.console = console;
         this.service = service;
         this.constant = constant;
         this.autoBeanFactory = autoBeanFactory;
+        this.resources = resources;
+        this.perspectivePresenter = perspectivePresenter;
 
         buildStatusHandler = new SubscriptionHandler<BuildStatus>(
                 new AutoBeanUnmarshallerWS<BuildStatus>(this.autoBeanFactory.create(BuildStatus.class))) {
@@ -290,6 +302,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         }
     }
 
+    /**
+     * Builds application if it needs.
+     *
+     * @param force
+     *         <code>true</code> to force build, <code>false</code> to not force build
+     */
     private void buildApplicationIfNeed(boolean force) {
         //if isPublish true start build & publish process any way
         if (publishAfterBuild) {
@@ -326,6 +344,13 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         });
     }
 
+    /**
+     * Checks if the project is changed after last build.
+     *
+     * @param item
+     *         current project
+     * @return <code>true</code> if the project is changed, and <code>true</code> otherwise.
+     */
     private boolean isProjectChangedAfterLastBuild(Project item) {
         long buildTime = 0;
         long lastUpdateTime = 0;
@@ -341,6 +366,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         return buildTime > lastUpdateTime;
     }
 
+    /**
+     * Checks download url.
+     *
+     * @param url
+     *         download url
+     */
     private void checkDownloadUrl(final String url) {
         try {
             service.checkArtifactUrl(url, new AsyncRequestCallback<Object>() {
@@ -363,6 +394,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         }
     }
 
+    /**
+     * Sets build in progress.
+     *
+     * @param buildInProgress
+     */
     private void setBuildInProgress(boolean buildInProgress) {
         isBuildInProgress = buildInProgress;
         view.setClearOutputButtonEnabled(!buildInProgress);
@@ -509,6 +545,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         }
     }
 
+    /**
+     * Writes build info.
+     *
+     * @param buildStatus
+     *         build status
+     */
     private void writeBuildInfo(BuildStatus buildStatus) {
         project.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
         project.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
@@ -526,6 +568,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         });
     }
 
+    /** Checks if project is uder watching. */
     private void checkIfProjectIsUnderWatching() {
         project.refreshProperties(new AsyncCallback<Project>() {
             @Override
@@ -546,8 +589,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
         });
     }
 
+    /**
+     *
+     */
     private void startWatchingProjectChanges() {
-        // TODO IDEX-57
+        // TODO IDEX-62
         // We don't have vfs module. Need to create or use some analog method
         //      try
         //      {
@@ -579,42 +625,28 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
      *         message for output
      */
     private void showBuildMessage(String message) {
-        // TODO IDEX-57
-        // Review and change to new architecture
-        //      if (display != null)
-        //      {
-        //         if (isViewClosed)
-        //         {
-        //            IDE.getInstance().openView(display.asView());
-        //            isViewClosed = false;
-        //         }
-        //         else
-        //         {
-        //            display.asView().activate();
-        //         }
-        //      }
-        //      else
-        //      {
-        //         display = GWT.create(Display.class);
-        //         IDE.getInstance().openView(display.asView());
-        //         bindDisplay();
-        //         isViewClosed = false;
-        //      }
-        //
 
-        // TODO IDEX-57
-        // View does nothing
+        if (isViewClosed) {
+            perspectivePresenter.openPart(this, PerspectivePresenter.PartStackType.INFORMATION);
+            isViewClosed = false;
+        }
+
+        view.setClearOutputButtonEnabled(true);
         view.showMessageInOutput(message);
-        // This was added because need to see some message
-        console.print(message);
     }
 
     /** {@inheritDoc} */
     @Override
     public void onClearOutputClicked() {
         view.clearOutput();
+        view.setClearOutputButtonEnabled(false);
     }
 
+    /**
+     * Checks if some project is opened/selected.
+     *
+     * @return <code>true</code> if some project is opened, and <code>true</code> otherwise.
+     */
     private boolean makeSelectionCheck() {
         if (resourceProvider.getActiveProject() == null) {
             Window.alert("Project is not selected.");
@@ -625,8 +657,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
     }
 
     /**
+     * Formats dependency xml.
+     *
      * @param dep
-     * @return
+     * @return formated xml
      */
     private String formatDepXml(String dep) {
 
@@ -638,6 +672,31 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
             formatStr = formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
         }
         return formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getTitle() {
+        return "Output";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ImageResource getTitleImage() {
+        return resources.build();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getTitleToolTip() {
+        return "Displays maven output";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void go(AcceptsOneWidget container) {
+        view.setClearOutputButtonEnabled(false);
+        container.setWidget(view);
     }
 
     /** Deserializer for responses body. */

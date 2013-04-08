@@ -35,6 +35,11 @@ public class BuilderExtension {
     /** Channel for the messages containing status of the Maven build job. */
     public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
 
+    /**
+     * Create extension.
+     *
+     * @param buildProjectPresenter
+     */
     @Inject
     public BuilderExtension(BuildProjectPresenter buildProjectPresenter) {
     }

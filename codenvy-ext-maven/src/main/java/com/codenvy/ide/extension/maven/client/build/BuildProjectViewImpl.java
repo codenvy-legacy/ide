@@ -18,10 +18,14 @@
  */
 package com.codenvy.ide.extension.maven.client.build;
 
+import com.codenvy.ide.extension.maven.client.BuilderResources;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -37,45 +41,106 @@ public class BuildProjectViewImpl extends Composite implements BuildProjectView 
     interface BuildProjectViewImplUiBinder extends UiBinder<Widget, BuildProjectViewImpl> {
     }
 
+    @UiField
+    Button btnClearOutput;
+
+    @UiField
+    FlowPanel output;
+
+    private ActionDelegate delegate;
+
+    private int animationCharIndex = 1;
+
+    private Label progress;
+
+    /**
+     * Create view.
+     *
+     * @param resources
+     */
     @Inject
-    protected BuildProjectViewImpl() {
+    protected BuildProjectViewImpl(BuilderResources resources) {
         initWidget(uiBinder.createAndBindUi(this));
-        // TODO IDEX-57
-        // This view is empty. Need to add some elements and etc.
+
+        btnClearOutput.setHTML(new Image(resources.clearOutput()).toString());
     }
 
     /** {@inheritDoc} */
     @Override
     public void setDelegate(ActionDelegate delegate) {
-        // TODO Auto-generated method stub
+        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
     @Override
     public void showMessageInOutput(String text) {
-        // TODO Auto-generated method stub
+        output.add(new Label(text));
     }
 
     @Override
     public void startAnimation() {
-        // TODO Auto-generated method stub
+        animationCharIndex = 1;
+
+        progress = new Label();
+        output.add(progress);
+
+        animationTimer.scheduleRepeating(150);
     }
 
     /** {@inheritDoc} */
     @Override
     public void stopAnimation() {
-        // TODO Auto-generated method stub
+        animationTimer.cancel();
+        output.remove(progress);
+        progress = null;
     }
+
+    /** Animate of build progress. */
+    private Timer animationTimer = new Timer() {
+        @Override
+        public void run() {
+            String c = "";
+            switch (animationCharIndex) {
+                case 1:
+                    c = "/";
+                    break;
+
+                case 2:
+                    c = "-";
+                    break;
+
+                case 3:
+                    c = "\\";
+                    break;
+
+                case 4:
+                    c = "|";
+                    break;
+            }
+
+            progress.setText(c);
+
+            animationCharIndex++;
+            if (animationCharIndex > 4) {
+                animationCharIndex = 1;
+            }
+        }
+    };
 
     /** {@inheritDoc} */
     @Override
     public void clearOutput() {
-        // TODO Auto-generated method stub
+        output.clear();
     }
 
     /** {@inheritDoc} */
     @Override
     public void setClearOutputButtonEnabled(boolean isEnabled) {
-        // TODO Auto-generated method stub
+        btnClearOutput.setEnabled(isEnabled);
+    }
+
+    @UiHandler("btnClearOutput")
+    void onBtnCancelClick(ClickEvent event) {
+        delegate.onClearOutputClicked();
     }
 }
