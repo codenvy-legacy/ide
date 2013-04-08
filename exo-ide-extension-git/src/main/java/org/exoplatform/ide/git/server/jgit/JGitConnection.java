@@ -267,6 +267,12 @@ public class JGitConnection implements GitConnection {
     /** @see org.exoplatform.ide.git.server.GitConnection#clone(org.exoplatform.ide.git.shared.CloneRequest) */
     public GitConnection clone(CloneRequest request) throws GitException {
         try {
+            if (request.getRemoteName() == null) {
+                request.setRemoteName("origin");
+            }
+            if (request.getWorkingDir() == null) {
+                request.setWorkingDir(repository.getWorkTree().getCanonicalPath());
+            }
             CloneCommand cloneCom = Git.cloneRepository();
             cloneCom.setRemote(request.getRemoteName());
             cloneCom.setURI(request.getRemoteUri());
@@ -277,13 +283,24 @@ public class JGitConnection implements GitConnection {
             else {
                 cloneCom.setCloneAllBranches(true);
             }
-            return new JGitConnection(cloneCom.call().getRepository(), this.user);
+            Repository repo = cloneCom.call().getRepository();
+            StoredConfig config = repo.getConfig();
+            GitUser gitUser = getUser();
+            if (gitUser != null) {
+                config.setString("user", null, "name", gitUser.getName());
+                config.setString("user", null, "email", gitUser.getEmail());
+            }
+
+            config.save();
+            return new JGitConnection(repo, this.user);
 
         } catch (InvalidRemoteException e) {
             throw new GitException(e);
         } catch (TransportException e) {
             throw new GitException(e.getMessage());
         } catch (GitAPIException e) {
+            throw new GitException(e);
+        } catch (IOException e) {
             throw new GitException(e);
         }
     }
