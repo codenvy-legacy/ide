@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.google.gdata.data.extensions.Email;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,8 +95,16 @@ public class GoogleContact {
      * @param email
      *         the contact e-mail addresses to set
      */
-    public void setEmailAddresses(List<String> emailAddresses) {
-        this.emailAddresses = emailAddresses;
+    public void setEmailAddresses(List<Email> emailAddresses) {
+        if (this.emailAddresses == null) {
+            this.emailAddresses = new ArrayList<String>();
+        }
+
+        this.emailAddresses.clear();
+
+        for (Email email : emailAddresses) {
+            this.emailAddresses.add(email.getAddress());
+        }
     }
 
     /**
