@@ -28,7 +28,7 @@ import org.exoplatform.ide.shell.shared.UserInfo;
 public class ShellConfigurationBean implements ShellConfiguration {
     private UserInfo userInfo;
 
-    private String entryPoint;
+    private String   vfsBaseUrl;
 
     /**
      *
@@ -38,12 +38,12 @@ public class ShellConfigurationBean implements ShellConfiguration {
 
     /**
      * @param userInfo
-     * @param entryPoint
+     * @param vfsBaseUrl
      */
-    public ShellConfigurationBean(UserInfo userInfo, String entryPoint) {
+    public ShellConfigurationBean(UserInfo userInfo, String vfsBaseUrl) {
         super();
         this.userInfo = userInfo;
-        this.entryPoint = entryPoint;
+        this.vfsBaseUrl = vfsBaseUrl;
     }
 
     /** @see org.exoplatform.ide.shell.shared.ShellConfiguration#getUserInfo() */
@@ -58,16 +58,15 @@ public class ShellConfigurationBean implements ShellConfiguration {
         this.userInfo = userInfo;
     }
 
-    /** @see org.exoplatform.ide.shell.shared.ShellConfiguration#getDefaultEntrypoint() */
     @Override
-    public String getDefaultEntrypoint() {
-        return entryPoint;
+    public String getVfsBaseUrl() {
+        return vfsBaseUrl;
     }
 
-    /** @see org.exoplatform.ide.shell.shared.ShellConfiguration#setDefaultEntrypoint(java.lang.String) */
     @Override
-    public void setDefaultEntrypoint(String entryPoint) {
-        this.entryPoint = entryPoint;
+    public void setVfsBaseUrl(String vfsBaseUrl) {
+        this.vfsBaseUrl = vfsBaseUrl;
     }
+
 
 }

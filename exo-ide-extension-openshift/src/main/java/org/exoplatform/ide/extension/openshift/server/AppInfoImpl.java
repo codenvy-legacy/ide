@@ -19,21 +19,22 @@
 package org.exoplatform.ide.extension.openshift.server;
 
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+import org.exoplatform.ide.extension.openshift.shared.OpenShiftEmbeddableCartridge;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class AppInfoImpl implements AppInfo {
-    private String name;
-
-    private String type;
-
-    private String gitUrl;
-
-    private String publicUrl;
-
-    private double creationTime;
+    private String                             name;
+    private String                             type;
+    private String                             gitUrl;
+    private String                             publicUrl;
+    private double                             creationTime;
+    private List<OpenShiftEmbeddableCartridge> embeddedCartridges;
 
     public AppInfoImpl(String name, String type, String gitUrl, String publicUrl, long creationTime) {
         this.name = name;
@@ -106,10 +107,28 @@ public class AppInfoImpl implements AppInfo {
         this.creationTime = creationTime;
     }
 
-    /** @see java.lang.Object#toString() */
+    @Override
+    public List<OpenShiftEmbeddableCartridge> getEmbeddedCartridges() {
+        if (embeddedCartridges == null) {
+            embeddedCartridges = new ArrayList<OpenShiftEmbeddableCartridge>(2);
+        }
+        return embeddedCartridges;
+    }
+
+    @Override
+    public void setEmbeddedCartridges(List<OpenShiftEmbeddableCartridge> embeddedCartridges) {
+        this.embeddedCartridges = embeddedCartridges;
+    }
+
     @Override
     public String toString() {
-        return "AppInfo [name=" + name + ", type=" + type + ", gitUrl=" + gitUrl + ", publicUrl=" + publicUrl
-               + ", creationTime=" + creationTime + "]";
+        return "AppInfoImpl{" +
+               "name='" + name + '\'' +
+               ", type='" + type + '\'' +
+               ", gitUrl='" + gitUrl + '\'' +
+               ", publicUrl='" + publicUrl + '\'' +
+               ", creationTime=" + creationTime +
+               ", embeddedCartridges=" + embeddedCartridges +
+               '}';
     }
 }

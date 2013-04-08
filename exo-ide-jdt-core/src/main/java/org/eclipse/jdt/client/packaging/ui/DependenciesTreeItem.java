@@ -21,8 +21,8 @@ package org.eclipse.jdt.client.packaging.ui;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.packaging.model.next.Classpath;
-import org.eclipse.jdt.client.packaging.model.next.ClasspathFolder;
+import org.eclipse.jdt.client.packaging.model.next.Dependency;
+import org.eclipse.jdt.client.packaging.model.next.Dependencies;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
 public class DependenciesTreeItem extends PackageExplorerTreeItem
 {
 
-    public DependenciesTreeItem(ClasspathFolder classpathFolder)
+    public DependenciesTreeItem(Dependencies classpathFolder)
     {
         super(classpathFolder);
     }
@@ -49,13 +49,13 @@ public class DependenciesTreeItem extends PackageExplorerTreeItem
     @Override
     protected String getItemTitle()
     {
-        return ((ClasspathFolder)getUserObject()).getName();
+        return ((Dependencies)getUserObject()).getName();
     }
 
     @Override
     public List<Item> getItems()
     {
-        ClasspathFolder classpathFolder = ((ClasspathFolder)getUserObject());
+        Dependencies classpathFolder = ((Dependencies)getUserObject());
         List<Item> classPathItems = new ArrayList<Item>();
         classPathItems.addAll(classpathFolder.getClasspathList());
         return classPathItems;
@@ -82,13 +82,13 @@ public class DependenciesTreeItem extends PackageExplorerTreeItem
          * Add missing
          */
 
-        ClasspathFolder classpathFolder = ((ClasspathFolder)getUserObject());
+        Dependencies classpathFolder = ((Dependencies)getUserObject());
         int index = 0;
 
         /*
          * Classpath items
          */
-        for (Classpath classpath : classpathFolder.getClasspathList())
+        for (Dependency classpath : classpathFolder.getClasspathList())
         {
             PackageExplorerTreeItem child = getChildByItemId(classpath.getId());
             if (child == null)

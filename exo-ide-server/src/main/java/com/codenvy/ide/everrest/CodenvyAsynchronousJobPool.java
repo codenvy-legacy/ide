@@ -70,7 +70,7 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
             try {
                 return callable.call();
             } finally {
-                EnvironmentContext.setCurrent(null);
+                EnvironmentContext.reset();
                 ConversationState.setCurrent(null);
             }
         }

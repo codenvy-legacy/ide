@@ -28,7 +28,8 @@ public interface BuildStatus {
     public enum Status {
         IN_PROGRESS("In progress"), //
         SUCCESSFUL("Successful"), //
-        FAILED("Failed"); //
+        FAILED("Failed"), //
+        CANCELLED("Cancelled");
 
         private final String value;
 

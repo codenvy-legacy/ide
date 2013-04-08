@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.openshift.shared;
 
+import java.util.List;
+
 /**
  * Application info.
  *
@@ -35,8 +37,8 @@ public interface AppInfo {
     /**
      * Set the application name.
      *
-     * @param application
-     *         name.
+     * @param name
+     *         application name.
      */
     void setName(String name);
 
@@ -105,4 +107,19 @@ public interface AppInfo {
      *         time of creation the application.
      */
     void setCreationTime(double creationTime);
+
+    /**
+     * Get list of embeddable cartridges added to application.
+     *
+     * @return list of embeddable cartridges added to application.
+     */
+    List<OpenShiftEmbeddableCartridge> getEmbeddedCartridges();
+
+    /**
+     * Set list of embeddable cartridges added to application.
+     *
+     * @param embeddedCartridges
+     *         list of embeddable cartridges added to application.
+     */
+    void setEmbeddedCartridges(List<OpenShiftEmbeddableCartridge> embeddedCartridges);
 }

@@ -25,6 +25,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.shell.client.ShellPresenter.Display;
 import org.exoplatform.ide.shell.client.commands.*;
 import org.exoplatform.ide.shell.client.maven.BuildCommand;
@@ -48,6 +49,37 @@ import java.util.Set;
  */
 public class ShellInitializer {
 
+    private final class AsyncRequestCallbackExtension extends AsyncRequestCallback<ItemWrapper> {
+        private final Folder root;
+
+        private AsyncRequestCallbackExtension(Unmarshallable<ItemWrapper> unmarshaller, Folder root) {
+            super(unmarshaller);
+            this.root = root;
+        }
+
+        @Override
+        protected void onSuccess(ItemWrapper result) {
+            if (result.getItem() instanceof Folder) {
+                Environment.get().setCurrentFolder((Folder)result.getItem());
+                Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID,
+                                            result.getItem().getId());
+            } else {
+                Environment.get().setCurrentFolder(root);
+                Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID,
+                                            root.getId());
+            }
+            createShell();
+        }
+
+        @Override
+        protected void onFailure(Throwable exception) {
+            Environment.get().setCurrentFolder(root);
+            Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID,
+                                        root.getId());
+            createShell();
+        }
+    }
+
     private static native String getConfigurationURL()/*-{
         return $wnd.configurationURL;
     }-*/;
@@ -65,13 +97,12 @@ public class ShellInitializer {
                                                                 CloudShell.getCommands().add(new ClearCommand());
                                                                 Environment.get().saveValue(EnvironmentVariables.USER_NAME,
                                                                                             result.getUser().getUserId());
-                                                                if (result.getDefaultEntrypoint() != null) {
-                                                                    Environment.get().saveValue(EnvironmentVariables.ENTRY_POINT,
-                                                                                                result.getDefaultEntrypoint());
+                                                                if (result.getVfsBaseUrl() != null) {
+                                                                    Environment.get().saveValue(EnvironmentVariables.VFS_BASE_URL,
+                                                                                                result.getVfsBaseUrl());
                                                                     initCommands();
                                                                     try {
-                                                                        new VirtualFileSystem(Environment.get().getValue(
-                                                                                EnvironmentVariables.ENTRY_POINT) + "/")
+                                                                        new VirtualFileSystem(Environment.get().getValue(EnvironmentVariables.VFS_BASE_URL))
                                                                                 .init(new AsyncRequestCallback<VirtualFileSystemInfo>(
                                                                                         new VFSInfoUnmarshaller(
                                                                                                 new VirtualFileSystemInfoImpl())) {
@@ -168,31 +199,7 @@ public class ShellInitializer {
         String id = Location.getParameter("workdir");
         if (id != null && !id.isEmpty()) {
             try {
-                VirtualFileSystem.getInstance().getItemById(id,
-                                                            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper())) {
-
-                                                                @Override
-                                                                protected void onSuccess(ItemWrapper result) {
-                                                                    if (result.getItem() instanceof Folder) {
-                                                                        Environment.get().setCurrentFolder((Folder)result.getItem());
-                                                                        Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID,
-                                                                                                    result.getItem().getId());
-                                                                    } else {
-                                                                        Environment.get().setCurrentFolder(root);
-                                                                        Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID,
-                                                                                                    root.getId());
-                                                                    }
-                                                                    createShell();
-                                                                }
-
-                                                                @Override
-                                                                protected void onFailure(Throwable exception) {
-                                                                    Environment.get().setCurrentFolder(root);
-                                                                    Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID,
-                                                                                                root.getId());
-                                                                    createShell();
-                                                                }
-                                                            });
+                VirtualFileSystem.getInstance().getItemById(id, new AsyncRequestCallbackExtension(new ItemUnmarshaller(new ItemWrapper()), root));
             } catch (RequestException e) {
                 Environment.get().setCurrentFolder(root);
                 Environment.get().saveValue(EnvironmentVariables.CURRENT_FOLDER_ID, root.getId());
