@@ -89,14 +89,7 @@ public class InviteGitHubCollaboratorsControl extends SimpleControl implements I
             return;
         }
 
-        for (Item child : project.getChildren().getItems()) {
-            if (".git".equals(child.getName())) {
-                setEnabled(true);
-                return;
-            }
-        }
-
-        setEnabled(false);
+        setEnabled(project.hasProperty("isGitRepository"));
     }
 
     @Override

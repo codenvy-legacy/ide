@@ -24,17 +24,15 @@ import java.util.Comparator;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class InvitesComparator implements Comparator<Invite> {
+public class InvitesComparator implements Comparator<UserInvitations> {
     @Override
-    public int compare(Invite o1, Invite o2) {
-        Invite developerA = o1;
-        Invite developerB = o2;
+    public int compare(UserInvitations o1, UserInvitations o2) {
 
         //pick up workspace owner
-        if (o1.isActivated() == null || o2.isActivated() == null) {
+        if ("OWNER".equals(o1.getStatus()) || "OWNER".equals(o2.getStatus())) {
             return 1;
         }
 
-        return -developerA.isActivated().compareTo(developerB.isActivated());
+        return -o1.getStatus().compareTo(o2.getStatus());
     }
 }

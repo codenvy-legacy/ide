@@ -184,9 +184,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller) {
                 @Override
                 protected void onSuccess(StringBuilder s) {
-                    JSONObject object = JSONParser.parseStrict(s.toString()).isObject();
-                    String state = object.get("state").isString().stringValue();
-                    if ("valid".equals(state)) {
+                    if (s != null && !s.toString().isEmpty()) {
                         loadGoogleContacts();
                     } else {
                         showLoginWindow();
