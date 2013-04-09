@@ -32,10 +32,10 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class InvitedDeveloperUnmarshaller implements Unmarshallable<List<Invite>> {
-    private List<Invite> invites;
+public class InvitedDeveloperUnmarshaller implements Unmarshallable<List<UserInvitations>> {
+    private List<UserInvitations> invites;
 
-    public InvitedDeveloperUnmarshaller(List<Invite> invites) {
+    public InvitedDeveloperUnmarshaller(List<UserInvitations> invites) {
         this.invites = invites;
     }
 
@@ -45,7 +45,6 @@ public class InvitedDeveloperUnmarshaller implements Unmarshallable<List<Invite>
             if (response.getText() == null || response.getText().isEmpty()) {
                 return;
             }
-
             JSONArray array = JSONParser.parseStrict(response.getText()).isArray();
 
             if (array == null) {
@@ -54,12 +53,12 @@ public class InvitedDeveloperUnmarshaller implements Unmarshallable<List<Invite>
 
             for (int i = 0; i < array.size(); i++) {
                 JSONObject developer = array.get(i).isObject();
-                String email = developer.get("email").isString().stringValue();
-                String uuid = developer.get("uuid").isString().stringValue();
-                Boolean inviteActivated = developer.get("activated").isBoolean().booleanValue();
-                Boolean valid = developer.get("valid").isBoolean().booleanValue();
+                String id = developer.get("id").isString().stringValue();
+                String recipient = developer.get("recipient").isString().stringValue();
+                String status = developer.get("status").isString().stringValue();
+                UserInvitations invitation = new UserInvitations(id, recipient, status);
 
-                invites.add(new InvitedDeveloper(email, uuid, inviteActivated, valid));
+                invites.add(invitation);
             }
         } catch (Exception e) {
             throw new UnmarshallerException("Can't parse invites information.");
@@ -67,7 +66,7 @@ public class InvitedDeveloperUnmarshaller implements Unmarshallable<List<Invite>
     }
 
     @Override
-    public List<Invite> getPayload() {
+    public List<UserInvitations> getPayload() {
         return invites;
     }
 }

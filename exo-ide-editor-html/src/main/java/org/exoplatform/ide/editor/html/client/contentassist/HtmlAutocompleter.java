@@ -284,6 +284,8 @@ public class HtmlAutocompleter extends LanguageSpecificAutocompleter {
             }
             return ExplicitAction.DEFAULT;
         }
+
+        // auto-complete as you type feature
         if (!popupIsShown && (signalChar != 0)
             && (KeyCodes.KEY_ENTER != signalChar)
             && ('>' != signalChar)) {

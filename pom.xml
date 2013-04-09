@@ -45,7 +45,7 @@
       <appengine.version>1.7.2</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
-      <com.codenvy.commons.version>0.2</com.codenvy.commons.version>
+      <com.codenvy.commons.version>0.3-SNAPSHOT</com.codenvy.commons.version>
       <com.codenvy.organization.version>0.1-SNAPSHOT</com.codenvy.organization.version>
 
       <tomcat.version>7.0.32</tomcat.version>
@@ -77,6 +77,11 @@
       <dependency>
          <groupId>com.codenvy.organization</groupId>
          <artifactId>codenvy-organization-api</artifactId>
+         <version>${com.codenvy.organization.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>com.codenvy.organization</groupId>
+         <artifactId>codenvy-organization-invite</artifactId>
          <version>${com.codenvy.organization.version}</version>
       </dependency>
       <dependency>
@@ -178,7 +183,7 @@
             <artifactId>exo-ide-extension-java-runtime</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-python-runtime</artifactId>
@@ -310,7 +315,7 @@
             <artifactId>exo-ide-extension-git</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-aws</artifactId>
@@ -370,7 +375,7 @@
             <artifactId>exo-ide-extension-appfog</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-googleappengine</artifactId>
@@ -450,9 +455,9 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
             <type>war</type>
-            <version>${project.version}</version> 
+            <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
            <groupId>org.exoplatform.ide</groupId>
            <artifactId>exo-ide-shell</artifactId>
@@ -469,6 +474,9 @@
             <artifactId>codenvy-commons-log-reader</artifactId>
             <version>0.3-SNAPSHOT</version>
          </dependency>
+
+
+
          <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -570,14 +578,14 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
          </dependency>
-         
+
       <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
         <version>1.6</version>
       </dependency>
-         
-         
+
+
          <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
@@ -697,7 +705,7 @@
             <artifactId>eclipse-jdt-core</artifactId>
             <version>${project.version}</version>
          </dependency>
-         
+
          <dependency>
           <groupId>org.codehaus.jackson</groupId>
           <artifactId>jackson-core-asl</artifactId>
@@ -708,7 +716,7 @@
          <artifactId>jackson-mapper-asl</artifactId>
          <version>1.9.4</version>
       </dependency>
-        
+
       </dependencies>
    </dependencyManagement>
 
@@ -736,7 +744,7 @@
 
       <module>exo-ide-editor-api</module>
       <module>exo-ide-collabeditor</module>
-      
+
       <module>codenvy-ide-collaboration</module>
 
       <module>exo-ide-editor</module>

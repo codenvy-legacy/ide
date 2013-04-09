@@ -1,7 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui"
-             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
     <ui:style type='org.exoplatform.ide.extension.samples.client.inviting.manage.InvitedDeveloperTile.Style'>
 
@@ -18,14 +17,6 @@
             background: #F5F5FF;
         }
 
-        .imageCorrect {
-            margin-top: -3px;
-        }
-
-        .bold {
-            font-weight: bold;
-        }
-
         .userFieldBodySelected {
         }
 
@@ -36,15 +27,11 @@
     <g:HTMLPanel styleName="{style.userField}">
         <div style="">
             <div style="float:left; margin:10px">
-                <g:Label ui:field="invitedId"></g:Label>
+                <g:Label ui:field="recipient"></g:Label>
             </div>
             <div style="float:right; margin:10px">
                 <div style="float:left;">
-                    <g:Label ui:field="inviteRole"></g:Label>
-                </div>
-                <div style="float:right;">
-                    <f:ImageButton ui:field="revokeImage"
-                                   styleName="{style.imageCorrect}"></f:ImageButton>
+                    <g:Label ui:field="status"></g:Label>
                 </div>
             </div>
         </div>

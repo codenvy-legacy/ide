@@ -19,11 +19,14 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -57,6 +60,8 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.List;
+
 /**
  * Presenter for managing project, deployed on CloudFoundry.
  *
@@ -66,8 +71,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 public class CloudFoundryProjectPresenter extends GitPresenter implements
                                                                ManageCloudFoundryProjectHandler, ViewClosedHandler,
                                                                ApplicationDeletedHandler, ApplicationInfoChangedHandler
-
-//   ProjectOpenedHandler, ProjectClosedHandler, , ActiveProjectChangedHandler
 {
     interface Display extends IsView {
         HasClickHandlers getCloseButton();
@@ -108,29 +111,27 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
 
         HasClickHandlers getEditInstancesButton();
 
+        HasClickHandlers getShowUrisAnchor();
+
         void setStartButtonEnabled(boolean enabled);
 
         void setStopButtonEnabled(boolean enabled);
 
         void setRestartButtonEnabled(boolean enabled);
+
+        void setUrisPopupVisible(boolean visible);
     }
 
     /** Presenter's display. */
     private Display display;
 
-//   /**
-//    * Opened project in Project Explorer.
-//    */
-//   private ProjectModel openedProject;
-
     private CloudFoundryApplication application;
+
+    private List<String> appUris;
 
     public CloudFoundryProjectPresenter() {
         IDE.getInstance().addControl(new CloudFoundryControl());
 
-//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
         IDE.addHandler(ManageCloudFoundryProjectEvent.TYPE, this);
         IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
         IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -224,6 +225,35 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
             }
         });
 
+        display.getShowUrisAnchor().addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                final PopupPanel simplePopup = new PopupPanel();
+                simplePopup.ensureDebugId("cfUrisPopup");
+                simplePopup.setWidth("auto");
+                simplePopup.getElement().getStyle().setPadding(5.0, Style.Unit.PX);
+
+                StringBuilder uris = new StringBuilder();
+
+                //need to fill uris list from second uri, cause first uri is filled in project info window
+                for (int i = 1; i < appUris.size(); i++)
+                {
+                    uris.append("<div><a href=\">");
+                    uris.append(appUris.get(i));
+                    uris.append("\" >http://");
+                    uris.append(appUris.get(i));
+                    uris.append("</a></div>\n");
+                }
+
+                simplePopup.setWidget(new HTML("<div>" + uris.toString() + "</div>"));
+
+                int left = event.getClientX() + 10;
+                int top = event.getClientY() + 10;
+                simplePopup.setPopupPosition(left, top);
+                simplePopup.show();
+                simplePopup.setAutoHideEnabled(true);
+            }
+        });
     }
 
     protected void getLogs() {
@@ -266,32 +296,6 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         //getApplicationInfo(openedProject);
         getApplicationInfo(getSelectedProject());
     }
-
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework
-// .project.ProjectClosedEvent)
-//    */
-//   @Override
-//   public void onProjectClosed(ProjectClosedEvent event)
-//   {
-//      openedProject = null;
-//   }
-//
-//   /**
-//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework
-// .project.ProjectOpenedEvent)
-//    */
-//   @Override
-//   public void onProjectOpened(ProjectOpenedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
-//   
-//   @Override
-//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-//   {
-//      openedProject = event.getProject();
-//   }
 
     /**
      * Get application properties.
@@ -353,11 +357,19 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements
         display.getApplicationStatus().setValue(String.valueOf(application.getState()));
 
         if (application.getUris() != null && application.getUris().size() > 0) {
-            display.setApplicationURL(application.getUris().get(0));
+            appUris = application.getUris();
+            display.setApplicationURL(appUris.get(0));
+
+            if (appUris.size() == 1) {
+                display.setUrisPopupVisible(false);
+            } else {
+                display.setUrisPopupVisible(true);
+            }
         } else {
             //Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
             //info window will be appear old url, that is not good
             display.setApplicationURL(null);
+            display.setUrisPopupVisible(false);
         }
         boolean isStarted = ("STARTED".equals(application.getState()));
         display.setStartButtonEnabled(!isStarted);

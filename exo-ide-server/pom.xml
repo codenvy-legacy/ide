@@ -224,6 +224,10 @@
             <groupId>com.codenvy.organization</groupId>
             <artifactId>codenvy-organization-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.codenvy.organization</groupId>
+            <artifactId>codenvy-organization-invite</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

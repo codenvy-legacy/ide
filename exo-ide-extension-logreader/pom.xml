@@ -40,7 +40,7 @@
         <dependency>
            <groupId>com.codenvy.commons</groupId>
             <artifactId>codenvy-commons-log-reader</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>${com.codenvy.commons.version}</version>
          </dependency>
     </dependencies>
     <build>

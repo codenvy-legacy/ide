@@ -21,8 +21,6 @@ import com.google.gwt.regexp.shared.SplitResult;
 
 import org.exoplatform.ide.json.client.JsoArray;
 
-//import com.google.common.annotations.VisibleForTesting;
-
 /**
  * A completion query for a CSS autocompletion. Processes the relevant context
  * in the document.
@@ -49,6 +47,7 @@ public class CssCompletionQuery {
     private final JsArrayString    valuesBefore        = JsArrayString.createArray().cast();
 
     private String value = "";
+    private String className = "";
     private CompletionType completionType;
 
     /**
@@ -86,6 +85,10 @@ public class CssCompletionQuery {
 
     public String getProperty() {
         return property;
+    }
+
+    public String getClassName() {
+        return className;
     }
 
     private void parseCurrentPropertyAndValues(String incompletePropertyAndValues) {
@@ -133,11 +136,19 @@ public class CssCompletionQuery {
         }
 
         textBefore = textBefore.replaceAll("^\\s+", "");
+        // Don't include the comments; it is irrelevant for autocompletion.
+        textBefore = textBefore.replaceAll("/\\*[^(\\*/)]*\\*/", "");
 
         // Split first on ';'. The last one is the incomplete one.
         SplitResult parts = REGEXP_SEMICOLON.split(textBefore);
 
-        if ((textBefore.endsWith(";")) || (!parts.get(parts.length() - 1).contains(":"))) {
+        String lastPart = parts.get(parts.length() - 1);
+        if ((textBefore.endsWith(";")) || (!lastPart.contains(":"))) {
+            if (lastPart.contains(".")) {
+                className = lastPart.substring(lastPart.lastIndexOf('.'));
+                completionType = CompletionType.CLASS;
+                return;
+            }
             completionType = CompletionType.PROPERTY;
         } else {
             completionType = CompletionType.VALUE;
@@ -147,7 +158,7 @@ public class CssCompletionQuery {
         if (textBefore.endsWith(";")) {
             highestCompleteIndex = parts.length() - 1;
         } else {
-            parseCurrentPropertyAndValues(parts.get(parts.length() - 1));
+            parseCurrentPropertyAndValues(lastPart);
         }
         if (parts.length() > 1) {
             // Parse the completed properties, which we use for filtering.
@@ -206,11 +217,10 @@ public class CssCompletionQuery {
         }
     }
 
-    //  @VisibleForTesting
     public String getTriggeringString() {
         switch (completionType) {
             case CLASS:
-                return "";
+                return getClassName();
             case PROPERTY:
                 return getProperty();
             case VALUE:
