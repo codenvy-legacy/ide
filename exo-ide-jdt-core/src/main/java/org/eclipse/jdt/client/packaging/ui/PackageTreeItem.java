@@ -74,16 +74,16 @@ public class PackageTreeItem extends PackageExplorerTreeItem {
     public void refresh(boolean expand) {
         render();
 
-      /*
-       * Does not refresh children if tree item closed
-       */
+        /*
+         * Does not refresh children if tree item closed
+         */
         if (!getState() && !expand) {
             return;
         }
 
-      /*
-       * Remove nonexistent
-       */
+        /*
+         * Remove nonexistent
+         */
         removeNonexistendTreeItems();
 
         Package p = (Package)getUserObject();

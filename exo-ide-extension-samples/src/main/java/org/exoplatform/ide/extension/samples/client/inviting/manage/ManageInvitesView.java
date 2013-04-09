@@ -137,7 +137,7 @@ public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter
     private Map<String, InvitedDeveloperTile> cards = new HashMap<String, InvitedDeveloperTile>();
 
     @Override
-    public void setInvitedDevelopers(List<Invite> invites, RevokeInviteHandler revokeInviteHandler) {
+    public void setInvitedDevelopers(List<UserInvitations> invites) {
         if (userListWidget != null) {
             userListWidget.removeFromParent();
         }
@@ -145,15 +145,15 @@ public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter
         userListWidget = new UserListWidget((Element)userListElement.cast());
 
         //add self to invites for indicating that we are owner of this workspace
-        invites.add(new InvitedDeveloper(IDE.userId, null, null, null));
+        invites.add(new UserInvitations("owner", IDE.userId, "OWNER"));
+
         Collections.sort(invites, new InvitesComparator());
 
         cards.clear();
-        for (Invite invite : invites) {
+        for (UserInvitations invite : invites) {
             InvitedDeveloperTile card = new InvitedDeveloperTile(invite);
-            card.setRevokeInviteHandler(revokeInviteHandler);
             userListWidget.add(card);
-            cards.put(invite.getUuid(), card);
+            cards.put(invite.getId(), card);
         }
     }
 

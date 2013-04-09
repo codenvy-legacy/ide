@@ -16,26 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting.manage;
+package org.exoplatform.ide.extension.maven.client.event;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface Invite {
-    public void setEmail(String email);
+public class BuildProjectStopEvent extends GwtEvent<BuildProjectStopHandler> {
 
-    public String getEmail();
+    /** Type used to register this event. */
+    public static final GwtEvent.Type<BuildProjectStopHandler> TYPE = new Type<BuildProjectStopHandler>();
 
-    public void setUuid(String uuid);
+    /**
+     *
+     */
+    public BuildProjectStopEvent() {
+    }
 
-    public String getUuid();
+    /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
+    @Override
+    public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectStopHandler> getAssociatedType() {
+        return TYPE;
+    }
 
-    public void setActivated(Boolean activated);
-
-    public Boolean isActivated();
-
-    public void setValid(Boolean valid);
-
-    public Boolean isValid();
+    /** @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler) */
+    @Override
+    protected void dispatch(BuildProjectStopHandler handler) {
+        handler.onBuildProjectStopEvent(this);
+    }
 }

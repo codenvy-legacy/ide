@@ -23,6 +23,11 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
+/**
+ * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
+ * @version $Id: LocalPathResolverImpl.java Apr 3, 2013 vetal $
+ *
+ */
 public class LocalPathResolverImpl implements LocalPathResolver {
     @Override
     public String resolve(VirtualFileSystem vfs, String id) throws LocalPathResolveException {

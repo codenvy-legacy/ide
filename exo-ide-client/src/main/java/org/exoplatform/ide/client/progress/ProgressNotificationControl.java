@@ -102,7 +102,7 @@ public class ProgressNotificationControl extends StatusTextControl implements ID
                 " ellipsis;\">"
                 + message
                 + "</td>"
-                + "<td style=\"width:20px; height:16px;text-align: right;\">"
+                + "<td style=\"width:20px; height:16px;text-align: right; padding-top:3px;\">"
                 + "&nbsp;"
                 + ImageHelper.getImageHTML(icon) + "</td>" + "</tr>" + "</table>";
 

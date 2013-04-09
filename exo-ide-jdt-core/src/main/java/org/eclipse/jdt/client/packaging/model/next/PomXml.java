@@ -39,15 +39,15 @@ import java.util.Map;
  */
 public class PomXml {
 
-    private Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties        = new HashMap<String, String>();
 
-    private List<String> mavenDependencies = new ArrayList<String>();
+    private List<String>        mavenDependencies = new ArrayList<String>();
 
-    private List<String> modules = new ArrayList<String>();
+    private List<String>        modules           = new ArrayList<String>();
 
-    private List<String> sourceDirectories = new ArrayList<String>();
+    private List<String>        sourceDirectories = new ArrayList<String>();
 
-    private FileModel pomFile;
+    private FileModel           pomFile;
 
     public PomXml(FileModel pomFile) {
         this.pomFile = pomFile;
@@ -78,37 +78,28 @@ public class PomXml {
     }
 
     public void refresh(final AsyncCallback<Boolean> callback) {
-//      if (pomFile == null)
-//      {
-//         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//         {
-//            @Override
-//            public void execute()
-//            {
-//               callback.onFailure(new Exception("pom.xml not found in project " + project.getPath()));
-//            }
-//         });
-//
-//         return;
-//      }
+        properties.clear();
+        mavenDependencies.clear();
+        modules.clear();
+        sourceDirectories.clear();
 
-      /*
-       * Load pom.xml file content.
-       */
+        /*
+         * Load pom.xml file content.
+         */
         try {
             VirtualFileSystem.getInstance().getContent(
-                    new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(pomFile)) {
-                        @Override
-                        protected void onSuccess(FileModel result) {
-                            parsePom();
-                            callback.onSuccess(Boolean.TRUE);
-                        }
+               new AsyncRequestCallback<FileModel>(new FileContentUnmarshaller(pomFile)) {
+                   @Override
+                   protected void onSuccess(FileModel result) {
+                       parsePom();
+                       callback.onSuccess(Boolean.TRUE);
+                   }
 
-                        @Override
-                        protected void onFailure(Throwable exception) {
-                            callback.onFailure(exception);
-                        }
-                    });
+                   @Override
+                   protected void onFailure(Throwable exception) {
+                       callback.onFailure(exception);
+                   }
+               });
         } catch (Exception e) {
             callback.onFailure(e);
         }
@@ -132,7 +123,7 @@ public class PomXml {
 
     /**
      * Get list of maven properties
-     *
+     * 
      * @param projectElement
      * @return
      */
@@ -192,22 +183,6 @@ public class PomXml {
                     String dependency = artifact + (version != null ? "-" + version : "") + ".jar";
                     mavenDependencies.add(dependency);
                 }
-
-//            if (Node.TEXT_NODE == artifactElement.getChildNodes().item(0).getNodeType()
-//               && Node.TEXT_NODE == versionElement.getChildNodes().item(0).getNodeType())
-//            {
-//               String artifact = artifactElement.getChildNodes().item(0).getNodeValue();
-//               String version = versionElement.getChildNodes().item(0).getNodeValue();
-//
-//               if (version.startsWith("${") && version.endsWith("}"))
-//               {
-//                  version = version.substring(2, version.length() - 1);
-//                  version = properties.get(version);
-//               }
-//
-//               String dependency = artifact + "-" + version + ".jar";
-//               mavenDependencies.add(dependency);
-//            }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -277,35 +252,27 @@ public class PomXml {
                 return;
             }
 
-         /*
-          * <project>
-          *   <build>
-          *     <sourceDirectory> 
-          * 
-          */
+            /*
+             * <project> <build> <sourceDirectory>
+             */
             Element sourceDirectoryElement = getElementByName(buildElement, "sourceDirectory");
             if (sourceDirectoryElement != null) {
                 String sourceDirectory = getElementText(sourceDirectoryElement);
                 addSourceDirectory(sourceDirectory);
             }
 
-         /*
-          * <project>
-          *   <build>
-          *     <testSourceDirectory>
-          */
+            /*
+             * <project> <build> <testSourceDirectory>
+             */
             Element testSourceDirectoryElement = getElementByName(buildElement, "testSourceDirectory");
             if (testSourceDirectoryElement != null) {
                 String testSourceDirectory = getElementText(testSourceDirectoryElement);
                 addSourceDirectory(testSourceDirectory);
             }
 
-         /*
-          * <project>
-          *   <build>
-          *     <resources>
-          *       ...
-          */
+            /*
+             * <project> <build> <resources> ...
+             */
             Element resourcesElement = getElementByName(buildElement, "resources");
             if (resourcesElement != null) {
                 NodeList resourcesNodeList = resourcesElement.getElementsByTagName("resource");
@@ -317,12 +284,9 @@ public class PomXml {
                 }
             }
 
-         /*
-          * <project>
-          *   <build>
-          *     <testResources>
-          *       ...
-          */
+            /*
+             * <project> <build> <testResources> ...
+             */
             Element testResourcesElement = getElementByName(buildElement, "testResources");
             if (testResourcesElement != null) {
                 NodeList testResourcesNodeList = testResourcesElement.getElementsByTagName("testResource");
@@ -336,9 +300,9 @@ public class PomXml {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-         /*
-          * Add default maven source directories.
-          */
+            /*
+             * Add default maven source directories.
+             */
             if (sourceDirectories.isEmpty()) {
                 sourceDirectories.add("src/main/java");
                 sourceDirectories.add("src/main/resources");

@@ -149,6 +149,7 @@
                         **/lib/exo-ide-jdt-core*,
                         **/lib/exo-jcr-services*,
                         **/lib/exo-gwtframework*,
+                        **/exo.core.component.security.core*,
                         **/lib/slf4j-log4j*,
                         **/lib/log4j*,
                         **/lib/commons-logging-api*,

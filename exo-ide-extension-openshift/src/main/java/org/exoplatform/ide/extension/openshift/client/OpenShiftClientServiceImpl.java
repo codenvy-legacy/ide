@@ -90,8 +90,6 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
     private MessageBus wsMessageBus;
 
     /**
-     * @param eventBus
-     *         eventBus
      * @param restContext
      *         rest context
      * @param loader
@@ -135,11 +133,6 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
         AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
     }
 
-    /**
-     * @throws RequestException
-     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createApplication(java.lang.String,
-     *      java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-     */
     @Override
     public void createApplication(String name, String vfsId, String projectId, String type,
                                   AsyncRequestCallback<AppInfo> callback) throws RequestException {
@@ -165,11 +158,6 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
         wsMessageBus.send(message, callback);
     }
 
-    /**
-     * @throws RequestException
-     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#destroyApplication(java.lang.String,
-     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-     */
     @Override
     public void destroyApplication(String name, String vfsId, String projectId, AsyncRequestCallback<String> callback)
             throws RequestException {
@@ -192,11 +180,6 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
         AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
     }
 
-    /**
-     * @throws RequestException
-     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationInfo(java.lang.String,
-     *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-     */
     @Override
     public void getApplicationInfo(String applicationName, String vfsId, String projectId,
                                    AsyncRequestCallback<AppInfo> callback) throws RequestException {
@@ -208,11 +191,6 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
         AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader).send(callback);
     }
 
-    /**
-     * @throws RequestException
-     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationTypes(org.exoplatform.gwtframework
-     * .commons.rest.AsyncRequestCallback)
-     */
     @Override
     public void getApplicationTypes(AsyncRequestCallback<List<String>> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_TYPES;
@@ -225,27 +203,27 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService {
     public void getApplicationHealth(String appName, AsyncRequestCallback<StringBuilder> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_HEALTH;
 
-        AsyncRequest.build(RequestBuilder.GET, url + "?appname=" + appName).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.GET, url + "?name=" + appName).loader(loader).send(callback);
     }
 
     @Override
     public void startApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_START;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?appname=" + appName).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName).loader(loader).send(callback);
     }
 
     @Override
     public void stopApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_STOP;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?appname=" + appName).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName).loader(loader).send(callback);
     }
 
     @Override
     public void restartApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException {
         String url = restServiceContext + APPLICATION_RESTART;
 
-        AsyncRequest.build(RequestBuilder.POST, url + "?appname=" + appName).loader(loader).send(callback);
+        AsyncRequest.build(RequestBuilder.POST, url + "?name=" + appName).loader(loader).send(callback);
     }
 }

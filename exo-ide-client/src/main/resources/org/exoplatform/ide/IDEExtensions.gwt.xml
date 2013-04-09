@@ -26,10 +26,6 @@
     <inherits name="org.exoplatform.gwtframework.ui.UITextEditor"/>
     <!-- EDITOR EXTENSIONS -->
     <inherits name="org.exoplatform.ide.editor.gadget.GadgetEditorExtension"/>
-    <inherits name="org.exoplatform.ide.editor.groovy.GroovyEditorExtension"/>
-    <inherits name='org.exoplatform.ide.editor.gadget.GadgetEditorExtension'/>
-    <inherits name="org.exoplatform.ide.editor.gtmpl.GtmplEditorExtension"/>
-    <inherits name="org.exoplatform.ide.editor.chromattic.ChromatticEditorExtension"/>
     <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension"/>
     <inherits name="org.exoplatform.ide.editor.java.JdtEditorExtension"/>
     <inherits name="org.exoplatform.ide.editor.jsp.JspEditorExtension"/>

@@ -14,9 +14,20 @@
 
 package org.exoplatform.ide.editor.css.client.contentassist;
 
+import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.CLOSE;
+import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.OPEN;
+import static com.google.collide.codemirror2.TokenType.NULL;
+
+import com.codenvy.ide.client.util.Preconditions;
 import com.codenvy.ide.client.util.logging.Log;
-import com.google.collide.client.code.autocomplete.*;
+import com.google.collide.client.code.autocomplete.AbstractTrie;
+import com.google.collide.client.code.autocomplete.AutocompleteProposal;
+import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
+import com.google.collide.client.code.autocomplete.AutocompleteResult;
+import com.google.collide.client.code.autocomplete.DefaultAutocompleteResult;
+import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
+import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.documentparser.ParseResult;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -26,30 +37,26 @@ import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
+import com.google.gwt.event.dom.client.KeyCodes;
 
 import org.exoplatform.ide.json.shared.JsonArray;
-
-import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.CLOSE;
-import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.OPEN;
-import static com.google.collide.codemirror2.TokenType.NULL;
 
 /**
  * Autocompleter for CSS. Currently, this only supports CSS2.
  * <p/>
  * TODO: Support CSS3.
- * TODO: may be trigger on ":"?
  */
 public class CssAutocompleter extends LanguageSpecificAutocompleter {
 
-    private static final String PROPERTY_TERMINATOR = ";";
+    private static final String                             PROPERTY_TERMINATOR = ";";
 
-    private static final String PROPERTY_SEPARATOR = ": ";
+    private static final String                             PROPERTY_SEPARATOR  = ": ";
 
-    private static final String CLASS_SEPARATOR = "{\n  \n}";
+    private static final String                             CLASS_SEPARATOR     = "{\n  \n}";
 
-    private static final int CLASS_JUMPLENGTH = 4;
+    private static final int                                CLASS_JUMPLENGTH    = 4;
 
-    private static final AbstractTrie<AutocompleteProposal> cssTrie = CssTrie.createTrie();
+    private static final AbstractTrie<AutocompleteProposal> cssTrie             = CssTrie.createTrie();
 
     public static CssAutocompleter create() {
         return new CssAutocompleter();
@@ -60,7 +67,7 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
         int end = rawResult.indexOf('>');
         if ((start >= 0) && (start < end)) {
             return new DefaultAutocompleteResult(
-                    rawResult, (end + 1), 0, (end + 1) - start, 0, CLOSE, triggeringString);
+                                                 rawResult, (end + 1), 0, (end + 1) - start, 0, CLOSE, triggeringString);
         }
         return new DefaultAutocompleteResult(rawResult, triggeringString, rawResult.length());
     }
@@ -72,9 +79,8 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
     }
 
     @Override
-    public void attach(
-            DocumentParser parser/*, AutocompleteController controller, PathUtil filePath*/) {
-//    super.attach(parser, controller, filePath);
+    public void attach(DocumentParser parser/* , AutocompleteController controller, PathUtil filePath */) {
+        // super.attach(parser, controller, filePath);
         super.attach(parser);
         completionQuery = null;
     }
@@ -94,7 +100,7 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
             String addend = name + PROPERTY_SEPARATOR + PROPERTY_TERMINATOR;
             int jumpLength = addend.length() - PROPERTY_TERMINATOR.length();
             return new DefaultAutocompleteResult(
-                    addend, jumpLength, 0, 0, 0, OPEN, triggeringString);
+                                                 addend, jumpLength, 0, 0, 0, OPEN, triggeringString);
         } else if (CompletionType.VALUE == completionType) {
             return constructResult(name, triggeringString);
         }
@@ -103,23 +109,21 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
     }
 
     /**
-     * Creates a completion query from the position of the caret and the editor.
-     * The completion query contains the string to complete and the type of
-     * autocompletion.
+     * Creates a completion query from the position of the caret and the editor. The completion query contains the string to complete and
+     * the type of autocompletion.
      * <p/>
      * TODO: take care of quoted '{' and '}'
      */
-//  @VisibleForTesting
     CssCompletionQuery updateOrCreateQuery(CssCompletionQuery completionQuery, Position cursor) {
         Line line = cursor.getLine();
         int column = cursor.getColumn();
         Line lineWithCursor = line;
         boolean parsingLineWithCursor = true;
 
-    /*
-     * textSoFar will contain the text of the CSS rule (only the stuff within
-     * the curly braces). If we are not in an open rule, return false
-     */
+        /*
+         * textSoFar will contain the text of the CSS rule (only the stuff within the curly braces). If we are not in an open rule, return
+         * false
+         */
         String textBefore = "";
         while ((line != null) && (!textBefore.contains("{"))) {
             int lastOpen;
@@ -130,11 +134,10 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
                 text = line.getText().substring(0, column);
                 parsingLineWithCursor = false;
             } else {
-        /*
-         * Don't include the newline character; it is irrelevant for
-         * autocompletion.
-         */
-                text = line.getText();//.trim();
+                /*
+                 * Don't include the newline character; it is irrelevant for autocompletion.
+                 */
+                text = line.getText();// .trim();
             }
 
             textBefore = text + textBefore;
@@ -143,7 +146,7 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
 
             // Either we have only a } or the } appears after {
             if (lastOpen < lastClose) {
-//        return completionQuery;
+                // return completionQuery;
                 return new CssCompletionQuery(textBefore, "");
             } else if ((lastOpen == -1) && (lastClose == -1)) {
                 line = line.getPreviousLine();
@@ -172,10 +175,9 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
                 text = line.getText().substring(column);
                 parsingLineWithCursor = false;
             } else {
-        /*
-         * Don't include the newline character; it is irrelevant for
-         * autocompletion.
-         */
+                /*
+                 * Don't include the newline character; it is irrelevant for autocompletion.
+                 */
                 text = line.getText().trim();
             }
 
@@ -185,7 +187,8 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
 
             // Either we have only a } or the } appears after {
             if (lastClose < lastOpen) {
-                return completionQuery;
+//                return completionQuery;
+                return new CssCompletionQuery(textBefore, textAfter);
             } else if ((lastOpen == -1) && (lastClose == -1)) {
                 line = line.getNextLine();
             } else {
@@ -207,12 +210,11 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
 
     /**
      * Finds autocompletions for a given completion query.
-     *
+     * 
      * @return an array of autocompletion proposals
      */
     @Override
-    public AutocompleteProposals findAutocompletions(
-            SelectionModel selection, SignalEventEssence trigger) {
+    public AutocompleteProposals findAutocompletions(SelectionModel selection, SignalEventEssence trigger) {
         if (selection.hasSelection()) {
             // Doesn't make much sense to autocomplete CSS when something is selected.
             return AutocompleteProposals.EMPTY;
@@ -232,18 +234,22 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
             case PROPERTY:
                 return new AutocompleteProposals(SyntaxType.CSS, triggeringString,
                                                  CssTrie.findAndFilterAutocompletions(
-                                                         cssTrie, triggeringString, completionQuery.getCompletedProperties()));
+                                                                                      cssTrie, triggeringString,
+                                                                                      completionQuery.getCompletedProperties()));
 
             case VALUE:
                 return new AutocompleteProposals(SyntaxType.CSS, triggeringString,
                                                  CssPartialParser.getInstance().getAutocompletions(
-                                                         completionQuery.getProperty(), completionQuery.getValuesBefore(),
-                                                         triggeringString, completionQuery.getValuesAfter()));
+                                                                                                   completionQuery.getProperty(),
+                                                                                                   completionQuery.getValuesBefore(),
+                                                                                                   triggeringString,
+                                                                                                   completionQuery.getValuesAfter()));
 
             case CLASS:
-                // TODO: Implement css-class autocompletions (pseudoclasses
-                //               and HTML elements).
-                return AutocompleteProposals.EMPTY;
+                // TODO: Implement CSS-pseudoclass and HTML element autocompletions.
+                String documentText = selection.getCursorLine().getDocument().asText();
+                return new AutocompleteProposals(SyntaxType.CSS, triggeringString, CssClassNameFinder.findAutocompletions(triggeringString,
+                                                                                                                          documentText));
 
             default:
                 return AutocompleteProposals.EMPTY;
@@ -253,11 +259,17 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
     @Override
     public ExplicitAction getExplicitAction(SelectionModel selectionModel,
                                             SignalEventEssence signal, boolean popupIsShown) {
-        if (signal.getChar() != '{') {
+        if (selectionModel.hasSelection()) {
             return ExplicitAction.DEFAULT;
         }
 
-        if (selectionModel.hasSelection()) {
+        char signalChar = signal.getChar();
+
+        if (signalChar != '{') {
+            // auto-complete as you type feature
+            if (!popupIsShown && (signalChar != 0) && (KeyCodes.KEY_ENTER != signalChar)) {
+                return ExplicitAction.DEFERRED_COMPLETE;
+            }
             return ExplicitAction.DEFAULT;
         }
 
@@ -265,19 +277,13 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
 
         // 1) Check we are not in block already.
         ParseResult<CssState> parseResult = parser.getState(
-                CssState.class, selectionModel.getCursorPosition(), " ");
+                                                            CssState.class, selectionModel.getCursorPosition(), " ");
         if (parseResult == null) {
             return ExplicitAction.DEFAULT;
         }
         JsonArray<Token> tokens = parseResult.getTokens();
-//    Preconditions.checkNotNull(tokens);
-        if (!(tokens.size() > 0)) {
-            throw new IllegalStateException();
-        }
-//    Preconditions.checkState(tokens.size() > 0);
-        if (!(tokens.size() > 0)) {
-            throw new IllegalStateException();
-        }
+        Preconditions.checkNotNull(tokens, "");
+        Preconditions.checkState(tokens.size() > 0, "");
         CssToken lastToken = (CssToken)tokens.peek();
         if ("{".equals(lastToken.getContext())) {
             return ExplicitAction.DEFAULT;
@@ -289,20 +295,14 @@ public class CssAutocompleter extends LanguageSpecificAutocompleter {
             return ExplicitAction.DEFAULT;
         }
         tokens = parseResult.getTokens();
-//    Preconditions.checkNotNull(tokens);
-        if (tokens == null) {
-            throw new NullPointerException();
-        }
-//    Preconditions.checkState(tokens.size() > 0);
-        if (!(tokens.size() > 0)) {
-            throw new IllegalStateException();
-        }
+        Preconditions.checkNotNull(tokens, "");
+        Preconditions.checkState(tokens.size() > 0, "");
         lastToken = (CssToken)tokens.peek();
         String context = lastToken.getContext();
         boolean inBlock = context != null && context.endsWith("{");
         if (inBlock && NULL == lastToken.getType()) {
             return new ExplicitAction(
-                    new DefaultAutocompleteResult(CLASS_SEPARATOR, "", CLASS_JUMPLENGTH));
+                                      new DefaultAutocompleteResult(CLASS_SEPARATOR, "", CLASS_JUMPLENGTH));
         }
         return ExplicitAction.DEFAULT;
     }

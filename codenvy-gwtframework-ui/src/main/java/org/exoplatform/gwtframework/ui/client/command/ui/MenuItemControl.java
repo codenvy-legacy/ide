@@ -99,8 +99,11 @@ public class MenuItemControl implements Command, SimpleControlStateListener {
 
     public void execute() {
         if (command.getEvent() != null) {
-            //TODO
-            eventBus.fireEvent(command.getEvent());
+            try {
+                eventBus.fireEvent(command.getEvent());                
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
         }
     }
 

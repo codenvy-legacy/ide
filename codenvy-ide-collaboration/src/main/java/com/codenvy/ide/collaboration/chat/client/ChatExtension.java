@@ -100,7 +100,12 @@ public class ChatExtension extends Extension
 
     @Override
     public void onProjectClosed(ProjectClosedEvent event) {
-        IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);
+        try {
+            IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         currentProject = null;
         chatPresenter.projectClosed();
     }

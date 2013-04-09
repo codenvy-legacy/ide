@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.template;
+package org.exoplatform.ide.extension.maven.client.event;
 
-import org.exoplatform.ide.client.framework.template.FileTemplate;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Callback to return from {@link CreateFileFromTemplateView}, when submit button was clicked.
- * <p/>
- * Used to return from form, when create project template and need to add file template to project.
- *
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CreateFileFromTemplateCallback.java Aug 10, 2011 5:23:30 PM vereshchaka $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public interface CreateFileFromTemplateCallback {
-    void onSubmit(FileTemplate fileTemplate);
+public interface BuildProjectStopHandler extends EventHandler {
+    /**
+     * @param event
+     *         event generated when project is built
+     */
+    void onBuildProjectStopEvent(BuildProjectStopEvent event);
 }

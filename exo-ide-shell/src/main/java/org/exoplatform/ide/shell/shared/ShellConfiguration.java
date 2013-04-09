@@ -47,7 +47,7 @@ public interface ShellConfiguration {
      *
      * @return the entry point
      */
-    public String getDefaultEntrypoint();
+    public String getVfsBaseUrl();
 
     /**
      * Change the entry point.
@@ -55,6 +55,6 @@ public interface ShellConfiguration {
      * @param entryPoint
      *         the entry point
      */
-    public void setDefaultEntrypoint(String entryPoint);
+    public void setVfsBaseUrl(String vfsBaseUrl);
 
 }

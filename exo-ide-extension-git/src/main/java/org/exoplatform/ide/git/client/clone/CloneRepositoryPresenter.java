@@ -186,62 +186,24 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
         FolderModel folder = new FolderModel();
         folder.setName(workDir);
         try {
-            VirtualFileSystem.getInstance().createFolder(vfs.getRoot(),
-                                                         new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder)) {
-                                                             @Override
-                                                             protected void onSuccess(FolderModel result) {
-                                                                 cloneRepository(remoteUri, remoteName, result);
-                                                             }
+            VirtualFileSystem.getInstance().createFolder(vfs.getRoot(), 
+                new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder)) {
+                     @Override
+                     protected void onSuccess(FolderModel result) {
+                         cloneRepository(remoteUri, remoteName, result);
+                     }
 
-                                                             @Override
-                                                             protected void onFailure(Throwable exception) {
-                                                                 String errorMessage =
-                                                                         (exception.getMessage() != null &&
-                                                                          exception.getMessage().length() > 0) ? exception.getMessage()
-                                                                                                               : GitExtension.MESSAGES
-                                                                                                                             .cloneFailed(
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                                     remoteUri);
-                                                                 IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-                                                             }
-                                                         });
+                     @Override
+                     protected void onFailure(Throwable exception) {
+                         String errorMessage = (exception.getMessage() != null && exception.getMessage().length() > 0) ? 
+                                     exception.getMessage() : GitExtension.MESSAGES .cloneFailed(remoteUri);
+                         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                     }
+                });
         } catch (RequestException e) {
             e.printStackTrace();
-            String errorMessage =
-                    (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-                                                                                                           .cloneFailed(remoteUri);
+            String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? 
+                e.getMessage() : GitExtension.MESSAGES.cloneFailed(remoteUri);
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
         }
     }
@@ -259,18 +221,18 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     private void cloneRepository(final String remoteUri, String remoteName, final FolderModel folder) {
         try {
             GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
-                                                             new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo())) {
+                 new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo())) {
 
-                                                                 @Override
-                                                                 protected void onSuccess(RepoInfo result) {
-                                                                     onCloneSuccess(result, folder);
-                                                                 }
+                     @Override
+                     protected void onSuccess(RepoInfo result) {
+                         onCloneSuccess(result, folder);
+                     }
 
-                                                                 @Override
-                                                                 protected void onFailure(Throwable exception) {
-                                                                     handleError(exception, remoteUri);
-                                                                 }
-                                                             });
+                     @Override
+                     protected void onFailure(Throwable exception) {
+                         handleError(exception, remoteUri);
+                     }
+                 });
             IDE.getInstance().closeView(display.asView().getId());
         } catch (WebSocketException e) {
             cloneRepositoryREST(remoteUri, remoteName, folder);
@@ -290,17 +252,17 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     private void cloneRepositoryREST(final String remoteUri, String remoteName, final FolderModel folder) {
         try {
             GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName,
-                                                           new AsyncRequestCallback<RepoInfo>(new RepoInfoUnmarshaller(new RepoInfo())) {
-                                                               @Override
-                                                               protected void onSuccess(RepoInfo result) {
-                                                                   onCloneSuccess(result, folder);
-                                                               }
+               new AsyncRequestCallback<RepoInfo>(new RepoInfoUnmarshaller(new RepoInfo())) {
+                   @Override
+                   protected void onSuccess(RepoInfo result) {
+                       onCloneSuccess(result, folder);
+                   }
 
-                                                               @Override
-                                                               protected void onFailure(Throwable exception) {
-                                                                   handleError(exception, remoteUri);
-                                                               }
-                                                           });
+                   @Override
+                   protected void onFailure(Throwable exception) {
+                       handleError(exception, remoteUri);
+                   }
+               });
         } catch (RequestException e) {
             handleError(e, remoteUri);
         }
@@ -333,9 +295,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     }
 
     private void handleError(Throwable e, String remoteUri) {
-        String errorMessage =
-                (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-                                                                                                       .cloneFailed(remoteUri);
+        String errorMessage = (e.getMessage() != null && e.getMessage().length() > 0) ? 
+            e.getMessage() : GitExtension.MESSAGES.cloneFailed(remoteUri);
         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
     }
 

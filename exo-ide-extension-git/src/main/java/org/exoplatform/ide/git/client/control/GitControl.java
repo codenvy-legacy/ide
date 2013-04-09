@@ -28,13 +28,17 @@ import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHand
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedHandler;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -45,9 +49,9 @@ import java.util.List;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 10:06:58 AM anya $
  */
-public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-                                                                  FolderRefreshedHandler, ProjectOpenedHandler, ProjectClosedHandler,
-                                                                  ViewVisibilityChangedHandler {
+public abstract class GitControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, 
+        VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler, 
+        FolderRefreshedHandler, TreeRefreshedHandler {
 
     enum EnableState {
         BEFORE_INIT, AFTER_INIT;
@@ -107,6 +111,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
     public void initialize() {
         IDE.addHandler(ItemsSelectedEvent.TYPE, this);
         IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+        IDE.addHandler(TreeRefreshedEvent.TYPE, this);
         IDE.addHandler(VfsChangedEvent.TYPE, this);
         IDE.addHandler(ProjectOpenedEvent.TYPE, this);
         IDE.addHandler(ProjectClosedEvent.TYPE, this);
@@ -139,8 +144,27 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
     @Override
     public void onFolderRefreshed(FolderRefreshedEvent event) {
         //selectedProject = ((ItemContext)event.getFolder()).getProject();
+//        System.out.println("GitControl.onFolderRefreshed()");
+//        System.out.println("tree > " + event.getFolder().getPath());
+//        System.out.println("-------------------------------------------------------------");
+//        for (Property prop : selectedProject.getProperties()) {
+//            System.out.println("property: " + prop.getName() + "  values: " + prop.getValue());            
+//        }
+//        System.out.println("-------------------------------------------------------------");
         updateControlState();
     }
+    
+    @Override
+    public void onTreeRefreshed(TreeRefreshedEvent event) {
+//        System.out.println("GitControl.onTreeRefreshed()");
+//        System.out.println("tree > " + event.getFolder().getPath());
+//        System.out.println("-------------------------------------------------------------");
+//        for (Property prop : selectedProject.getProperties()) {
+//            System.out.println("property: " + prop.getName() + "  values: " + prop.getValue());            
+//        }
+//        System.out.println("-------------------------------------------------------------");
+        updateControlState();
+    }    
 
     protected void updateControlState() {
         if (workspace == null) {
@@ -210,5 +234,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
 
         updateControlState();
     }
+    
+    
 
 }

@@ -71,6 +71,11 @@
             </value-param>
         </init-params>
     </component>
+    
+    
+    <component>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBeesAuthenticator</type>
+    </component>
 
     <!-- End Cloudbees -->
 
