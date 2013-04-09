@@ -44,7 +44,7 @@ import org.exoplatform.ide.git.shared.Revision;
 
 /**
  * Presenter for view for reseting head to commit. The view must be pointed in Views.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 10:31:25 AM anya $
  */
@@ -53,68 +53,80 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
     interface Display extends IsView {
         /**
          * Get reset button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getResetButton();
 
         /**
          * Get cancel button click handler.
-         *
+         * 
          * @return {@link HasClickHandlers} click handler
          */
         HasClickHandlers getCancelButton();
 
         /**
          * Get grid with revisions.
-         *
+         * 
          * @return {@link ListGrid}
          */
         ListGridItem<Revision> getRevisionGrid();
 
         /**
          * Get selected revision in revision grid.
-         *
+         * 
          * @return {@link Revision} selected revision
          */
         Revision getSelectedRevision();
 
         /**
          * Get the soft mode radio field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getSoftMode();
 
         /**
          * Get the mix mode radio field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getMixMode();
 
         /**
          * Get the hard mode radio field.
-         *
+         * 
          * @return {@link HasValue}
          */
         HasValue<Boolean> getHardMode();
 
         /**
          * Set the enabled state of the reset button.
-         *
-         * @param enabled
-         *         enabled state
+         * 
+         * @param enabled enabled state
          */
         void enableResetButon(boolean enabled);
+
+        /**
+         * Set the enabled state of the reset button.
+         * 
+         * @param enabled enabled state
+         */
+        HasValue<Boolean> getKeepMode();
+
+        /**
+         * Set the enabled state of the reset button.
+         * 
+         * @param enabled enabled state
+         */
+        HasValue<Boolean> getMergeMode();
     }
 
     /** Presenter' display. */
     private Display display;
 
     /**
-     * @param eventBus
-     *         event handlers
+     * @param eventBus event handlers
      */
     public ResetToCommitPresenter() {
         IDE.addHandler(ResetToCommitEvent.TYPE, this);
@@ -149,8 +161,10 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
         });
     }
 
-    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitHandler#onResetToCommit(org.exoplatform.ide.git.client.reset
-     * .ResetToCommitEvent) */
+    /**
+     * @see org.exoplatform.ide.git.client.reset.ResetToCommitHandler#onResetToCommit(org.exoplatform.ide.git.client.reset
+     *      .ResetToCommitEvent)
+     */
     @Override
     public void onResetToCommit(ResetToCommitEvent event) {
         if (makeSelectionCheck()) {
@@ -159,32 +173,32 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
     }
 
     private void getCommits() {
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
 
         try {
-            GitClientService.getInstance().log(vfs.getId(), projectId, false,
-                                               new AsyncRequestCallback<LogResponse>(
-                                                       new LogResponseUnmarshaller(new LogResponse(), false)) {
+            GitClientService.getInstance()
+                            .log(vfs.getId(), projectId, false,
+                                 new AsyncRequestCallback<LogResponse>(
+                                                                       new LogResponseUnmarshaller(new LogResponse(), false)) {
 
-                                                   @Override
-                                                   protected void onSuccess(LogResponse result) {
-                                                       Display d = GWT.create(Display.class);
-                                                       IDE.getInstance().openView(d.asView());
-                                                       bindDisplay(d);
+                                     @Override
+                                     protected void onSuccess(LogResponse result) {
+                                         Display d = GWT.create(Display.class);
+                                         IDE.getInstance().openView(d.asView());
+                                         bindDisplay(d);
 
-                                                       display.getRevisionGrid().setValue(result.getCommits());
-                                                       display.getMixMode().setValue(true);
-                                                   }
+                                         display.getRevisionGrid().setValue(result.getCommits());
+                                         display.getMixMode().setValue(true);
+                                     }
 
-                                                   @Override
-                                                   protected void onFailure(Throwable exception) {
-                                                       String errorMessage =
+                                     @Override
+                                     protected void onFailure(Throwable exception) {
+                                         String errorMessage =
                                                                (exception.getMessage() != null) ? exception.getMessage()
-                                                                                                : GitExtension.MESSAGES.logFailed();
-                                                       IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
-                                                   }
-                                               });
+                                                                   : GitExtension.MESSAGES.logFailed();
+                                         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
+                                     }
+                                 });
         } catch (RequestException e) {
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
             IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
@@ -197,26 +211,27 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
         ResetType type = display.getMixMode().getValue() ? ResetType.MIXED : null;
         type = (type == null && display.getSoftMode().getValue()) ? ResetType.SOFT : type;
         type = (type == null && display.getHardMode().getValue()) ? ResetType.HARD : type;
+        type = (type == null && display.getKeepMode().getValue()) ? ResetType.KEEP : type;
+        type = (type == null && display.getMergeMode().getValue()) ? ResetType.MERGE : type;
 
-//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
         String projectId = getSelectedProject().getId();
 
         try {
-            GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type,
+            GitClientService.getInstance().reset(vfs.getId(), projectId, revision.getId(), type,
                                                  new AsyncRequestCallback<String>() {
 
                                                      @Override
                                                      protected void onSuccess(String result) {
                                                          IDE.fireEvent(
-                                                                 new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
+                                                            new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
                                                          IDE.getInstance().closeView(display.asView().getId());
                                                      }
 
                                                      @Override
                                                      protected void onFailure(Throwable exception) {
                                                          String errorMessage =
-                                                                 (exception.getMessage() != null) ? exception.getMessage()
-                                                                                                  : GitExtension.MESSAGES.resetFail();
+                                                                               (exception.getMessage() != null) ? exception.getMessage()
+                                                                                   : GitExtension.MESSAGES.resetFail();
                                                          IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                                                      }
                                                  });

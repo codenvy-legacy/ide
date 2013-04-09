@@ -21,7 +21,6 @@ package org.exoplatform.ide.git.server.jgit;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.exoplatform.ide.git.shared.ResetRequest;
-import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -111,55 +110,5 @@ public class ResetTest extends BaseTest {
         checkNoFilesInCache(repository, aaa);
         // Modified content.
         assertEquals("MODIFIED\n", readFile(new File(repository.getWorkTree(), "README.txt")));
-    }
-
-    public void testResetWithPath() throws Exception {
-        Repository repository = getDefaultRepository();
-        Git git = new Git(repository);
-
-        File aaa = addFile(repository.getWorkTree(), "aaa", "aaa\n");
-        File bbb = addFile(repository.getWorkTree(), "bbb", "bbb\n");
-
-        FileOutputStream fos = new FileOutputStream(new File(repository.getWorkTree(), "README.txt"));
-        fos.write("MODIFIED\n".getBytes());
-        fos.flush();
-        fos.close();
-
-        git.add().addFilepattern(".").call();
-
-        checkFilesInCache(repository, aaa);
-        checkFilesInCache(repository, bbb);
-
-        getDefaultConnection().reset(new ResetRequest(new String[]{"aaa"}));
-
-        // New files untouched.
-        assertTrue(aaa.exists());
-        checkNoFilesInCache(repository, aaa);
-        assertTrue(bbb.exists());
-        checkFilesInCache(repository, bbb);
-        // Modified content.
-        assertEquals("MODIFIED\n", readFile(new File(repository.getWorkTree(), "README.txt")));
-    }
-
-    public void testResetWithPathFail() throws Exception {
-        Repository repository = getDefaultRepository();
-        Git git = new Git(repository);
-
-        File aaa = addFile(repository.getWorkTree(), "aaa", "aaa\n");
-        File bbb = addFile(repository.getWorkTree(), "bbb", "bbb\n");
-
-        git.add().addFilepattern(".").call();
-
-        checkFilesInCache(repository, aaa);
-        checkFilesInCache(repository, bbb);
-
-        ResetRequest request = new ResetRequest(new String[]{"aaa"});
-        request.setType(ResetType.HARD);
-        try {
-            getDefaultConnection().reset(request);
-            fail("Expected exception was not thrown. ");
-        } catch (IllegalArgumentException e) {
-            // expected.
-        }
     }
 }

@@ -38,47 +38,55 @@ import org.exoplatform.ide.git.shared.Revision;
 
 /**
  * View for reseting head to the commit. Must be pointed in Views.gwt.xml.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 15, 2011 12:00:39 PM anya $
  */
 public class ResetToCommitView extends ViewImpl implements ResetToCommitPresenter.Display {
 
-    private static final int HEIGHT = 345;
+    private static final int    HEIGHT           = 530;
 
-    private static final int WIDTH = 610;
+    private static final int    WIDTH            = 540;
 
-    public static final String ID = "ideResetToCommitView";
+    public static final String  ID               = "ideResetToCommitView";
 
-   /* Elements IDs */
+    /* Elements IDs */
 
-    private static final String RESET_BUTTON_ID = "ideRevertToCommitViewRevertButton";
+    private static final String RESET_BUTTON_ID  = "ideRevertToCommitViewRevertButton";
 
     private static final String CANCEL_BUTTON_ID = "ideRevertToCommitViewCancelButton";
 
     /** Revert button. */
     @UiField
-    ImageButton resetButton;
+    ImageButton                 resetButton;
 
     /** Cancel button. */
     @UiField
-    ImageButton cancelButton;
+    ImageButton                 cancelButton;
 
     /** Grid with revisions. */
     @UiField
-    RevisionGrid revisionGrid;
+    RevisionGrid                revisionGrid;
 
     /** Mixed mode radio button. */
     @UiField
-    RadioButton mixedMode;
+    RadioButton                 mixedMode;
 
     /** Soft mode radio button. */
     @UiField
-    RadioButton softMode;
+    RadioButton                 softMode;
 
     /** Hard mode radio button. */
     @UiField
-    RadioButton hardMode;
+    RadioButton                 hardMode;
+
+    /** Keep mode radio button. */
+    @UiField
+    RadioButton                 keepMode;
+
+    /** Merge mode radio button. */
+    @UiField
+    RadioButton                 mergeMode;
 
     interface ResetToCommitViewUiBinder extends UiBinder<Widget, ResetToCommitView> {
     }
@@ -86,14 +94,13 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
     private static ResetToCommitViewUiBinder uiBinder = GWT.create(ResetToCommitViewUiBinder.class);
 
     public ResetToCommitView() {
-        super(ID, ViewType.MODAL, GitExtension.MESSAGES.resetCommitViewTitle(), null, WIDTH, HEIGHT);
+        super(ID, ViewType.MODAL, GitExtension.MESSAGES.resetCommitViewTitle(), null, WIDTH, HEIGHT, false);
         add(uiBinder.createAndBindUi(this));
-        // GitExtension.MESSAGES.resetSoftTypeTitle());
         addDescription(softMode, GitExtension.MESSAGES.resetSoftTypeDescription());
-        // GitExtension.MESSAGES.resetMixedTypeTitle());
         addDescription(mixedMode, GitExtension.MESSAGES.resetMixedTypeDescription());
-        // GitExtension.MESSAGES.resetHardTypeTitle());
         addDescription(hardMode, GitExtension.MESSAGES.resetHardTypeDescription());
+        addDescription(keepMode, GitExtension.MESSAGES.resetKeepTypeDescription());
+        addDescription(mergeMode, GitExtension.MESSAGES.resetMergeTypeDescription());
 
         resetButton.setButtonId(RESET_BUTTON_ID);
         cancelButton.setButtonId(CANCEL_BUTTON_ID);
@@ -101,11 +108,9 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
 
     /**
      * Add description to radio button title.
-     *
-     * @param radioItem
-     *         radio button
-     * @param description
-     *         description to add
+     * 
+     * @param radioItem radio button
+     * @param description description to add
      */
     private void addDescription(RadioButton radioItem, String description) {
         Element descElement = DOM.createSpan();
@@ -154,6 +159,18 @@ public class ResetToCommitView extends ViewImpl implements ResetToCommitPresente
     @Override
     public HasValue<Boolean> getHardMode() {
         return hardMode;
+    }
+
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getKeepMode() */
+    @Override
+    public HasValue<Boolean> getKeepMode() {
+        return keepMode;
+    }
+
+    /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#getMergeMode() */
+    @Override
+    public HasValue<Boolean> getMergeMode() {
+        return mergeMode;
     }
 
     /** @see org.exoplatform.ide.git.client.reset.ResetToCommitPresenter.Display#enableResetButon(boolean) */
