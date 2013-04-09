@@ -79,7 +79,7 @@
             margin-left: 0px;
         }
 
-        .welcomaLabel {
+        .welcomeLabel {
             font-size: 12px;
             color: #5E5E5E;
             font-family: Verdana, Arial, sans-serif;
@@ -143,7 +143,7 @@
                         <g:Button ui:field="projectLink" text="{locale.projectTitle}"
                                   styleName="{style.button-link}"></g:Button>
                         <g:Label text="{locale.projectText}"
-                                 styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                                 styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
                     </div>
                 </div>
                 <div class="{style.item}">
@@ -154,7 +154,7 @@
                         <g:Anchor ui:field="documentationLink" styleName="{style.a}"
                                   text="{locale.documentationTitle}"
                                   target="_blank" href="./docs"></g:Anchor>
-                        <g:Label text="{locale.documentationText}" styleName="{style.welcomaLabel}"></g:Label>
+                        <g:Label text="{locale.documentationText}" styleName="{style.welcomeLabel}"></g:Label>
                     </div>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                         <g:Button ui:field="importLink" text="{locale.importTitle}"
                                   styleName="{style.button-link}"></g:Button>
                         <g:Label text="{locale.importText}"
-                                 styleName="{style.linkText}  {style.welcomaLabel}"></g:Label>
+                                 styleName="{style.linkText}  {style.welcomeLabel}"></g:Label>
                     </div>
                 </div>
                 <div class="{style.item}">
@@ -178,7 +178,7 @@
                     <div class="{style.floatLeft} {style.linkWithText}">
                         <g:Button ui:field="invitationsLink" text="{locale.invitationTitle}"
                                   styleName="{style.button-link}"></g:Button>
-                        <g:Label text="{locale.invitationText}" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                        <g:Label text="{locale.invitationText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
                     </div>
                 </div>
             </div>
@@ -192,7 +192,7 @@
                         <g:Button ui:field="cloneLink" text="{locale.cloneTitle}"
                                   styleName="{style.button-link}"></g:Button>
                         <g:Label text="{locale.cloneText}"
-                                 styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                                 styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
                     </div>
                 </div>
                 <div class="{style.item}">
@@ -204,7 +204,7 @@
                                   styleName="{style.a}"
                                   href="javascript:UserVoice.showPopupWidget();"></g:Anchor>
                         <g:Label text="{locale.supportText}"
-                                 styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                                 styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
                     </div>
                 </div>
             </div>
