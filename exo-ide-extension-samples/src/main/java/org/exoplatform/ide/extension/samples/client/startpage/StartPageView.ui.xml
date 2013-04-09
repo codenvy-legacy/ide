@@ -44,7 +44,7 @@
         }
 
         .button-link {
-            margin-left: -10px;
+            margin-left: -6px;
         }
 
         .a:visited {
@@ -72,7 +72,7 @@
             width: 80px;
             height: 80px;
             margin-left: 15px;
-            margin-right: 10px;
+            margin-right: 15px;
         }
 
         .linkText {
