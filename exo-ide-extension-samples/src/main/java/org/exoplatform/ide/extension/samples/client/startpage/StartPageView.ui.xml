@@ -30,7 +30,7 @@
     <!-- To make button look like link -->
     <ui:style>
 
-        .button-link, .a {
+        .a {
             cursor: pointer;
             border: none;
             /* Disable the button-style */
@@ -43,20 +43,12 @@
             text-align: left;
         }
 
-        .button-link {
-            margin-left: -6px;
-        }
-
         .a:visited {
             color: #5E5E5E;
         }
 
         .a:hover {
             color: #5E5E5E;
-            text-decoration: underline;
-        }
-
-        .button-link:hover {
             text-decoration: underline;
         }
 
@@ -140,8 +132,8 @@
                         <g:Image resource="{resource.welcomeProject}"></g:Image>
                     </div>
                     <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Button ui:field="projectLink" text="{locale.projectTitle}"
-                                  styleName="{style.button-link}"></g:Button>
+                        <g:Anchor ui:field="projectLink" text="{locale.projectTitle}"
+                                  styleName="{style.a}"></g:Anchor>
                         <g:Label text="{locale.projectText}"
                                  styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
                     </div>
@@ -165,8 +157,8 @@
                         <g:Image resource="{resource.importFromGithub}"></g:Image>
                     </div>
                     <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Button ui:field="importLink" text="{locale.importTitle}"
-                                  styleName="{style.button-link}"></g:Button>
+                        <g:Anchor ui:field="importLink" text="{locale.importTitle}"
+                                  styleName="{style.a}"></g:Anchor>
                         <g:Label text="{locale.importText}"
                                  styleName="{style.linkText}  {style.welcomeLabel}"></g:Label>
                     </div>
@@ -176,8 +168,8 @@
                         <g:Image resource="{resource.invitation}"></g:Image>
                     </div>
                     <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Button ui:field="invitationsLink" text="{locale.invitationTitle}"
-                                  styleName="{style.button-link}"></g:Button>
+                        <g:Anchor ui:field="invitationsLink" text="{locale.invitationTitle}"
+                                  styleName="{style.a}"></g:Anchor>
                         <g:Label text="{locale.invitationText}" styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
                     </div>
                 </div>
@@ -189,8 +181,8 @@
                         <g:Image resource="{resource.welcomeClone}"></g:Image>
                     </div>
                     <div class="{style.floatLeft} {style.linkWithText}">
-                        <g:Button ui:field="cloneLink" text="{locale.cloneTitle}"
-                                  styleName="{style.button-link}"></g:Button>
+                        <g:Anchor ui:field="cloneLink" text="{locale.cloneTitle}"
+                                  styleName="{style.a}"></g:Anchor>
                         <g:Label text="{locale.cloneText}"
                                  styleName="{style.linkText} {style.welcomeLabel}"></g:Label>
                     </div>
