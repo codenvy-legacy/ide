@@ -10,17 +10,16 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search.indexing;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.jdt.internal.core.search.processing.IJob;
-
-import org.exoplatform.services.security.ConversationState;
 
 public abstract class IndexRequest implements IJob {
     protected boolean isCancelled = false;
     protected IPath        containerPath;
     protected IndexManager manager;
 
-    ConversationState state = ConversationState.getCurrent();
+    EnvironmentContext context = EnvironmentContext.getCurrent();
 
     public IndexRequest(IPath containerPath, IndexManager manager) {
         this.containerPath = containerPath;

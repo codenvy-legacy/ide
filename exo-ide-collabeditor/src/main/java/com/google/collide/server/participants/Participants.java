@@ -16,12 +16,15 @@ package com.google.collide.server.participants;
 
 import com.codenvy.commons.env.EnvironmentContext;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
-import com.google.collide.dto.server.DtoServerImpls.*;
+import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResponseImpl;
+import com.google.collide.dto.server.DtoServerImpls.ParticipantImpl;
+import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
+import com.google.collide.dto.server.DtoServerImpls.UserDetailsImpl;
+import com.google.collide.dto.server.DtoServerImpls.UserLogOutDtoImpl;
 import com.google.collide.server.WSUtil;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -164,10 +167,10 @@ public class Participants {
         if (environmentContext != null && environmentContext.getVariable(EnvironmentContext.WORKSPACE_ID) != null) {
             return (String)environmentContext.getVariable(EnvironmentContext.WORKSPACE_ID);
         } else {
-            if (ConversationState.getCurrent() == null) {
+            if (EnvironmentContext.getCurrent() == null) {
                 return null;
             }
-            String currentTenant = (String)ConversationState.getCurrent().getAttribute("currentTenant");
+            String currentTenant = (String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
             if (currentTenant == null) {
                 currentTenant = "StandAlone";
             }

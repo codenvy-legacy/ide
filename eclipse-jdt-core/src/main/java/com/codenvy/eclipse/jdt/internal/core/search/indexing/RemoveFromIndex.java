@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search.indexing;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
 import com.codenvy.eclipse.jdt.internal.core.index.Index;
-
-import org.exoplatform.services.security.ConversationState;
 
 class RemoveFromIndex extends IndexRequest {
     String resourceName;
@@ -25,14 +24,17 @@ class RemoveFromIndex extends IndexRequest {
     }
 
     public boolean execute(IProgressMonitor progressMonitor) {
-        ConversationState.setCurrent(state);
-        if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
+        EnvironmentContext.setCurrent(context);
+        if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled())
+            return true;
 
-		/* ensure no concurrent write access to index */
-        Index index = this.manager.getIndex(this.containerPath, true, /*reuse index file*/ false /*create if none*/);
-        if (index == null) return true;
+        /* ensure no concurrent write access to index */
+        Index index = this.manager.getIndex(this.containerPath, true, /* reuse index file */false /* create if none */);
+        if (index == null)
+            return true;
         ReadWriteMonitor monitor = index.monitor;
-        if (monitor == null) return true; // index got deleted since acquired
+        if (monitor == null)
+            return true; // index got deleted since acquired
 
         try {
             monitor.enterWrite(); // ask permission to write
