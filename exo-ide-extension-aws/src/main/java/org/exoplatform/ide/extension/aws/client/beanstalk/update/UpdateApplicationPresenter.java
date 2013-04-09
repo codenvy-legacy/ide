@@ -153,7 +153,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Vie
                                                                      public void onLoggedIn() {
                                                                          doUpdate();
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {

@@ -33,12 +33,16 @@ public class LoginEvent extends GwtEvent<LoginHandler> {
 
     private LoggedInHandler loggedInHandler;
 
+    private LoginCanceledHandler loginCanceledHandler;
+
     public LoginEvent() {
         loggedInHandler = null;
+        loginCanceledHandler = null;
     }
 
-    public LoginEvent(LoggedInHandler loggedInHandler) {
+    public LoginEvent(LoggedInHandler loggedInHandler, LoginCanceledHandler loginCanceledHandler) {
         this.loggedInHandler = loggedInHandler;
+        this.loginCanceledHandler = loginCanceledHandler;
     }
 
     /** @see com.google.gwt.event.shared.GwtEvent#getAssociatedType() */
@@ -56,5 +60,10 @@ public class LoginEvent extends GwtEvent<LoginHandler> {
     /** @return the loggedInHandler */
     public LoggedInHandler getLoggedInHandler() {
         return loggedInHandler;
+    }
+
+    /** @return the loginCanceledHandler */
+    public LoginCanceledHandler getLoginCanceledHandler() {
+        return loginCanceledHandler;
     }
 }
