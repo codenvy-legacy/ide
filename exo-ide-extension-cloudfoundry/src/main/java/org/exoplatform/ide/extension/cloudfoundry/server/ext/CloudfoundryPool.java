@@ -130,6 +130,11 @@ public class CloudfoundryPool {
         public String getTarget() throws CredentialStoreException {
             return myAuthenticator.getTarget();
         }
+
+        @Override
+        protected String getUserId() {
+            return null;
+        }
     }
 
     /**

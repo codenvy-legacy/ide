@@ -145,6 +145,9 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
     @UiField
     ImageButton editInstancesButton;
 
+    @UiField
+    Anchor showUrisAnchor;
+
     public CloudFoundryProjectView() {
         super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.manageProjectViewTitle(), new Image(
                 CloudFoundryClientBundle.INSTANCE.cloudFoundry()), WIDTH, HEIGHT);
@@ -310,5 +313,15 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
     @Override
     public HasClickHandlers getServicesButton() {
         return servicesButton;
+    }
+
+    @Override
+    public HasClickHandlers getShowUrisAnchor() {
+        return showUrisAnchor;
+    }
+
+    @Override
+    public void setUrisPopupVisible(boolean visible) {
+        showUrisAnchor.setVisible(visible);
     }
 }

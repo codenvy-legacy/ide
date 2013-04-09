@@ -150,6 +150,9 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
     @UiField
     ImageButton editInstancesButton;
 
+    @UiField
+    Anchor showUrisAnchor;
+
     public AppfogProjectView() {
         super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.manageProjectViewTitle(), new Image(
                 AppfogClientBundle.INSTANCE.appfog()), WIDTH, HEIGHT);
@@ -302,5 +305,15 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
     @Override
     public HasClickHandlers getServicesButton() {
         return servicesButton;
+    }
+
+    @Override
+    public HasClickHandlers getShowUrisAnchor() {
+        return showUrisAnchor;
+    }
+
+    @Override
+    public void setUrisPopupVisible(boolean visible) {
+        showUrisAnchor.setVisible(visible);
     }
 }

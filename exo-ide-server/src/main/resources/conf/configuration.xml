@@ -20,5 +20,13 @@
         <type>org.exoplatform.ide.jrebel.server.JRebelConsumerApplication</type>
     </component>
 
+    <component>
+         <type>com.codenvy.organization.invite.InviteService</type>
+    </component>
+
+    <component>
+        <type>org.exoplatform.ide.googlecontacts.GoogleContactsClient</type>
+    </component>
+
 
 </configuration>
