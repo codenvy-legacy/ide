@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.git.client.marshaller;
 
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 
@@ -27,7 +26,7 @@ import org.exoplatform.ide.git.shared.ResetRequest;
 
 /**
  * Marshaller for reset files request in JSON format.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 5:51:18 PM anya $
  */
@@ -36,8 +35,7 @@ public class ResetRequestMarshaller implements Marshallable, Constants {
     private ResetRequest resetRequest;
 
     /**
-     * @param resetRequest
-     *         reset request
+     * @param resetRequest reset request
      */
     public ResetRequestMarshaller(ResetRequest resetRequest) {
         this.resetRequest = resetRequest;
@@ -47,13 +45,6 @@ public class ResetRequestMarshaller implements Marshallable, Constants {
     @Override
     public String marshal() {
         JSONObject jsonObject = new JSONObject();
-        if (resetRequest.getPaths() != null && resetRequest.getPaths().length > 0) {
-            JSONArray array = new JSONArray();
-            for (int i = 0; i < resetRequest.getPaths().length; i++) {
-                array.set(i, new JSONString(resetRequest.getPaths()[i]));
-            }
-            jsonObject.put(PATHS, array);
-        }
 
         if (resetRequest.getCommit() != null) {
             jsonObject.put(COMMIT, new JSONString(resetRequest.getCommit()));
