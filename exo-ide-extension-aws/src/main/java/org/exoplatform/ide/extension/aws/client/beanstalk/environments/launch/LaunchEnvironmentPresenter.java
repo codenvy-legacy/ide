@@ -158,7 +158,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
                         public void onLoggedIn() {
                             getSolutionStacks();
                         }
-                    }) {
+                    }, null) {
                         @Override
                         protected void onSuccess(List<SolutionStack> result) {
                             List<String> values = new ArrayList<String>();
@@ -193,7 +193,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
                                                                                   public void onLoggedIn() {
                                                                                       getVersions(selectedVersionLabel);
                                                                                   }
-                                                                              }) {
+                                                                              }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {
@@ -239,7 +239,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
                                                                      public void onLoggedIn() {
                                                                          launchEnvironment();
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {

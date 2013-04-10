@@ -104,10 +104,8 @@ public class CssProposal implements CompletionProposal {
     private String computeProposalLabel() {
         switch (type) {
             case CLASS:
-                // In this case implicit autocompletion workflow should trigger,
-                // and so execution should never reach this point.
-                Log.warn(getClass(), "Invocation of this method in not allowed for type " + type);
-                return null;
+                jumpLength = proposal.length();
+                return proposal;
             case PROPERTY:
                 String addend = proposal + PROPERTY_SEPARATOR + PROPERTY_TERMINATOR;
                 jumpLength = addend.length() - PROPERTY_TERMINATOR.length();
@@ -194,7 +192,7 @@ public class CssProposal implements CompletionProposal {
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable() */
     @Override
     public boolean isAutoInsertable() {
-        return true;
+        return false;
     }
 
 }

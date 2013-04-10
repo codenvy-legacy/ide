@@ -144,10 +144,12 @@ public class ListGrid<T> extends FlowPanel implements ListGridItem<T> {
     public List<T> getSelectedItems() {
         List<T> selectedItems = new ArrayList<T>();
 
-        for (T item : items) {
-            if (getCellTable().getSelectionModel().isSelected(item)) {
-                selectedItems.add(item);
-            }
+        if (items != null) {
+            for (T item : items) {
+                if (getCellTable().getSelectionModel().isSelected(item)) {
+                    selectedItems.add(item);
+                }
+            }            
         }
 
         return selectedItems;

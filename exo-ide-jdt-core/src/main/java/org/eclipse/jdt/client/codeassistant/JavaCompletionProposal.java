@@ -147,6 +147,6 @@ public class JavaCompletionProposal extends AbstractJavaCompletionProposal
    @Override
    public boolean isAutoInsertable()
    {
-      return false;
+      return true;
    }
 }

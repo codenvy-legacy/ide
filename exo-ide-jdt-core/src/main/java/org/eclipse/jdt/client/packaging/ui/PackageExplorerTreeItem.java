@@ -78,14 +78,15 @@ public abstract class PackageExplorerTreeItem extends TreeItem
         Item item = (Item)getUserObject();
         getElement().setId(PREFIX_ID + Utils.md5(item.getPath()));
 
-        if (!getState() && getItems() != null && !getItems().isEmpty())
+        List<Item> items = getItems();
+        if (!getState() && items != null && !items.isEmpty())
         {
             if (getChildCount() == 0)
             {
                 addItem("");
             }
         }
-        else if (!getState() && getItems() != null && getItems().isEmpty())
+        else if (!getState() && items != null && items.isEmpty())
         {
             removeItems();
         }
@@ -164,13 +165,14 @@ public abstract class PackageExplorerTreeItem extends TreeItem
             if (child instanceof PackageExplorerTreeItem)
             {
                 String path = ((Item)child.getUserObject()).getPath();
-                if (child instanceof PackageExplorerTreeItem)
+                if (path == null || path.isEmpty()) {
+                    continue;
+                }
+                
+                if (item.getPath().startsWith(path))
                 {
-                    if (item.getPath().startsWith(path))
-                    {
-                        ((PackageExplorerTreeItem)child).refresh(true);
-                        return ((PackageExplorerTreeItem)child).select(item);
-                    }
+                    ((PackageExplorerTreeItem)child).refresh(true);
+                    return ((PackageExplorerTreeItem)child).select(item);
                 }
             }
         }
@@ -288,6 +290,21 @@ public abstract class PackageExplorerTreeItem extends TreeItem
 
             ((PackageExplorerTreeItem)child).removeIcons(icons);
         }
+    }
+    
+    public void insertItem(int beforeIndex, TreeItem item)
+        throws IndexOutOfBoundsException {
+        if (beforeIndex > getChildCount())
+        {
+            System.out.println("!!! ERR");
+            System.out.println("tree item > " + getItemTitle());
+            System.out.println("beforeIndex > " + beforeIndex);
+            System.out.println("child count > " + getChildCount());
+            
+            beforeIndex = getChildCount();
+        }
+        
+        super.insertItem(beforeIndex, item);
     }
 
 }

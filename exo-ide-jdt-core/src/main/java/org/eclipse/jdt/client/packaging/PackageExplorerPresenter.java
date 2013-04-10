@@ -29,7 +29,10 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Timer;
 
+import org.eclipse.jdt.client.packaging.model.next.Dependencies;
+import org.eclipse.jdt.client.packaging.model.next.Dependency;
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -225,7 +228,12 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
     private void treeItemSelected() {
         Item selectedItem = display.getSelectedItem();
-        if (selectedItem != null) {
+
+        if (selectedItem instanceof Dependencies ||
+            selectedItem instanceof Dependency) {
+
+            IDE.fireEvent(new ItemsSelectedEvent((Item)null, display.asView()));
+        } else if (selectedItem != null) {
             changeActiveFile(selectedItem);
             IDE.fireEvent(new ItemsSelectedEvent(selectedItem, display.asView()));
         }
@@ -275,6 +283,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
         applicationSettings
                            .setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, new Boolean(linkWithEditor), Store.COOKIES);
+
 
         IDE.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
 
@@ -355,7 +364,21 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
         }
 
         display.setProject(null);
+        
+        updateCloseProjectTimer.cancel();
+        updateCloseProjectTimer.schedule(250);
     }
+
+    private Timer updateCloseProjectTimer = new Timer() {
+                                              @Override
+                                              public void run() {
+                                                  if (display == null) {
+                                                      return;
+                                                  }
+
+                                                  IDE.getInstance().closeView(display.asView().getId());
+                                              }
+                                          };
 
     @Override
     public void onViewOpened(ViewOpenedEvent event) {
@@ -428,7 +451,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
         if (display == null) {
             return;
         }
-        
+
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             @Override
             public void execute() {

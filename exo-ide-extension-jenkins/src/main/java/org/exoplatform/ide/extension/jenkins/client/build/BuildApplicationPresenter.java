@@ -58,8 +58,11 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,29 +139,10 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     }
 
     private void checkIsGitRepository(final ProjectModel project) {
-        try {
-            VirtualFileSystem.getInstance().getChildren(project,
-                                                        new AsyncRequestCallback<List<Item>>(
-                                                                new ChildrenUnmarshaller(new ArrayList<Item>())) {
-
-                                                            @Override
-                                                            protected void onSuccess(List<Item> result) {
-                                                                for (Item item : result) {
-                                                                    if (".git".equals(item.getName())) {
-                                                                        beforeBuild();
-                                                                        return;
-                                                                    }
-                                                                }
-                                                                initRepository(project);
-                                                            }
-
-                                                            @Override
-                                                            protected void onFailure(Throwable exception) {
-                                                                initRepository(project);
-                                                            }
-                                                        });
-        } catch (RequestException e) {
-        }
+        if (project.getProperty(GitExtension.GIT_REPOSITORY_PROP) == null) 
+           initRepository(project);
+        else
+            createJob();
     }
 
     /** Perform check, that job already exists. If it doesn't exist, then create job. */
@@ -463,9 +447,32 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     /** Performs actions when initialization of Git-repository successfully completed. */
     private void onInitSuccess() {
         showBuildMessage(GitExtension.MESSAGES.initSuccess());
-        IDE.fireEvent(new RefreshBrowserEvent());
+        setGitRepositoryProperty();
         createJob();
     }
+    
+    private void setGitRepositoryProperty() {
+        project.getProperties().add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
+        ItemWrapper item = new ItemWrapper(project);
+        ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+        try {
+            VirtualFileSystem.getInstance().updateItem(project, null,
+                   new AsyncRequestCallback<ItemWrapper>(unmarshaller) {
+                       @Override
+                       protected void onSuccess(ItemWrapper result) {
+                           IDE.fireEvent(new RefreshBrowserEvent(project));                           
+                       }
+
+                       @Override
+                       protected void onFailure(Throwable exception) {
+                           handleError(exception);
+    
+                       }
+                   });
+        } catch (RequestException e) {
+            handleError(e);
+        }
+    }    
 
     private void handleError(Throwable e) {
         String errorMessage =

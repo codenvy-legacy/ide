@@ -1,5 +1,7 @@
 package org.exoplatform.ide.extension.openshift.shared;
 
+import java.util.Map;
+
 public interface OpenShiftEmbeddableCartridge {
     String getName();
 
@@ -13,4 +15,8 @@ public interface OpenShiftEmbeddableCartridge {
     String getCreationLog();
 
     void setCreationLog(String creationLog);
+
+    Map<String, String> getProperties();
+
+    void setProperties(Map<String, String> properties);
 }

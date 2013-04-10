@@ -229,6 +229,6 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal
    @Override
    public boolean isAutoInsertable()
    {
-      return false;
+      return true;
    }
 }

@@ -21,7 +21,7 @@ package org.eclipse.jdt.client.packaging.ui;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.packaging.model.next.Classpath;
+import org.eclipse.jdt.client.packaging.model.next.Dependency;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.List;
 public class DependencyTreeItem extends PackageExplorerTreeItem
 {
 
-    public DependencyTreeItem(Classpath classpath)
+    public DependencyTreeItem(Dependency classpath)
     {
         super(classpath);
     }
@@ -47,7 +47,7 @@ public class DependencyTreeItem extends PackageExplorerTreeItem
     @Override
     protected String getItemTitle()
     {
-        return ((Classpath)getUserObject()).getName();
+        return ((Dependency)getUserObject()).getName();
     }
 
     @Override

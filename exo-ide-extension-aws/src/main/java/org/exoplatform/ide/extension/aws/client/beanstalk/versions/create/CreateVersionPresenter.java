@@ -182,7 +182,7 @@ public class CreateVersionPresenter implements CreateVersionHandler, ViewClosedH
                         public void onLoggedIn() {
                             createVersion();
                         }
-                    }) {
+                    }, null) {
 
                         @Override
                         protected void onSuccess(ApplicationVersionInfo result) {

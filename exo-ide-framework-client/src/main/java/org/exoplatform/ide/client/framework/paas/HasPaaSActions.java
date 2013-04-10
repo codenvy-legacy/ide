@@ -33,7 +33,7 @@ public interface HasPaaSActions {
 
     void deploy(ProjectModel project, DeployResultHandler deployResultHandler);
 
-    Composite getDeployView(String projectName, ProjectType projectType);
+    Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler);
 
     boolean validate();
 }

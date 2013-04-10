@@ -48,7 +48,9 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler> {
 
     public ItemsSelectedEvent(Item item, View view) {
         selectedItems = new ArrayList<Item>();
-        selectedItems.add(item);
+        if (item != null) {
+            selectedItems.add(item);            
+        }
         this.view = view;
     }
 

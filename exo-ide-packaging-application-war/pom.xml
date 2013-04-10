@@ -57,22 +57,6 @@
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-groovy</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-gtmpl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-chromattic</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-jsp</artifactId>
         </dependency>
 
@@ -131,18 +115,7 @@
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-jdt-core</artifactId>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-groovy</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>exo.tool.framework.junit</artifactId>
-                    <groupId>org.exoplatform.tool</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+      
 
         <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -396,9 +369,7 @@
                         <phase>compile</phase>
                         <configuration>
                             <tasks>
-                                <echo
-                                        file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties"
-                                        append="false">
+                                <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties"  append="false">
                                     buildNumber = ${buildNumber}
                                     buildTime = ${timestamp}
                                     version = ${project.version}

@@ -192,7 +192,7 @@ public class Cloudfoundry {
         credentialStore.save(userId, "cloudfoundry", credential);
     }
 
-    private String getUserId() {
+    protected String getUserId() {
         return ConversationState.getCurrent().getIdentity().getUserId();
     }
 

@@ -20,7 +20,11 @@ package org.exoplatform.ide;
 
 import com.codenvy.commons.env.EnvironmentContext;
 
-import org.everrest.core.impl.provider.json.*;
+import org.everrest.core.impl.provider.json.ArrayValue;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.services.log.ExoLogger;
@@ -30,14 +34,24 @@ import org.exoplatform.services.security.Identity;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -45,11 +59,19 @@ import java.util.*;
  */
 @Path("/ide/configuration")
 public class IDEConfigurationService {
+
     private static Log LOG = ExoLogger.getLogger(IDEConfigurationService.class);
 
-
-    private String config = "/ide-home/users/";
-
+    
+    /**
+     * periodic request to prevent session expiration
+     * TODO: need find better solutions
+     */
+    @GET
+    @Path("ping")
+    public void ping()
+    {
+    }
 
     @GET
     @Path("/init")

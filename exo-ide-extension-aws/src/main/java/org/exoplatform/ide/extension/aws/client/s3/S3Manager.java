@@ -417,7 +417,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                         public void onLoggedIn() {
                             getBuckets();
                         }
-                    }) {
+                    }, null) {
 
                         @Override
                         protected void onSuccess(List<S3Bucket> result) {

@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -52,6 +53,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmar
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.*;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -97,6 +99,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     private DeployResultHandler deployResultHandler;
 
+    private InitializeDeployViewHandler initializeDeployViewHandler;
+
     private String projectName;
 
     public DeployApplicationPresenter() {
@@ -109,11 +113,12 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     /**
      * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
-     *      org.exoplatform.ide.client.framework.project.ProjectType)
+     *      org.exoplatform.ide.client.framework.project.ProjectType, org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler)
      */
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         this.projectName = projectName;
+        this.initializeDeployViewHandler = initializeDeployViewHandler;
         if (display == null) {
             display = GWT.create(Display.class);
         }
@@ -242,7 +247,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                                                                      public void onLoggedIn() {
                                                                          createApplication();
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void onSuccess(ApplicationInfo result) {
@@ -291,7 +296,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                                                                      public void onLoggedIn() {
                                                                          createEnvironment(applicationName);
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {
@@ -340,21 +345,31 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
     /** Get the list of solution stack and put them to the appropriate field. */
     private void getSolutionStacks() {
+        LoggedInHandler loggedInHandler = new LoggedInHandler() {
+            @Override
+            public void onLoggedIn() {
+                getSolutionStacks();
+            }
+        };
+
+        LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
+            @Override
+            public void onLoginCanceled() {
+                initializeDeployViewHandler.onInitializeDeployViewError();
+            }
+        };
+
         try {
             BeanstalkClientService.getInstance().getAvailableSolutionStacks(
-                    new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(), new LoggedInHandler() {
-                        @Override
-                        public void onLoggedIn() {
-                            getSolutionStacks();
-                        }
-                    }) {
+                    new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(), loggedInHandler, loginCanceledHandler) {
                         @Override
                         protected void onSuccess(List<SolutionStack> result) {
                             List<String> values = new ArrayList<String>();
                             for (SolutionStack solutionStack : result) {
                                 //For detail see https://jira.exoplatform.org/browse/IDE-1951
-                                if (solutionStack.getPermittedFileTypes().contains("war"))
+                                if (solutionStack.getPermittedFileTypes().contains("war")) {
                                     values.add(solutionStack.getName());
+                                }
                             }
                             display.setSolutionStackValues(values.toArray(new String[values.size()]));
                         }

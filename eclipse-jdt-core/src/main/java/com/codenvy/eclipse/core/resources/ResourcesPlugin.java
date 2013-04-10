@@ -13,6 +13,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.core.resources;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.jobs.IJobManager;
 import com.codenvy.eclipse.core.runtime.jobs.Job;
@@ -401,7 +402,7 @@ public final class ResourcesPlugin {
      *         plug-in class.
      */
     public static IWorkspace getWorkspace() {
-        Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID); 
         if (tenantName != null) {
             if (workspaceMap.containsKey(tenantName)) {
                 return workspaceMap.get(tenantName);
@@ -424,7 +425,7 @@ public final class ResourcesPlugin {
     }
 
     public static void addWorkspace(IWorkspace workspace) {
-        Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+        Object tenantName = EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID);
         workspaceMap.put((String)tenantName, workspace);
     }
 

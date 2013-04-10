@@ -49,12 +49,8 @@
 
     <!-- LogReader -->
     <component>
-        <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
-    </component>
-
-    <component>
-        <key>org.exoplatform.logreader.LogPathProvider</key>
-        <type>org.exoplatform.logreader.SystemLogPathProvider</type>
+        <key>com.codenvy.logreader.LogPathProvider</key>
+        <type>com.codenvy.logreader.SystemLogPathProvider</type>
     </component>
     <!-- End LogReader -->
 
@@ -248,7 +244,7 @@
 
     <!--
     ***************************************************************************************
-    ********************************** OAuth Support *************************************
+    ********************************** OAuth Support **************************************
     ***************************************************************************************
     -->
 
@@ -266,7 +262,7 @@
 
     <!--
     ***************************************************************************************
-    ********************************** Collaboration Editor *************************************
+    ********************************** Collaboration Editor *******************************
     ***************************************************************************************
     -->
     <component>
@@ -315,6 +311,15 @@
 
     <component>
         <type>com.codenvy.organization.client.http.WorkspaceServiceConnector</type>
+    </component>
+
+    <!--
+    ***************************************************************************************
+    ******************************* GitIgnoreConfigChecker ********************************
+    ***************************************************************************************
+    -->
+    <component>
+        <type>org.exoplatform.ide.git.server.GitIgnoreConfigChecker</type>
     </component>
 
 </configuration>

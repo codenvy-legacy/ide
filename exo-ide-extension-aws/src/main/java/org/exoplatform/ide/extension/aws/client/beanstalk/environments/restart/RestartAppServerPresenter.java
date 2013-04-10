@@ -111,32 +111,32 @@ public class RestartAppServerPresenter implements RestartAppServerHandler, ViewC
     private void restartAppServer() {
         try {
             BeanstalkClientService.getInstance().restartApplicationServer(environment.getId(),
-                                                                          new AwsAsyncRequestCallback<Object>(new LoggedInHandler() {
+                  new AwsAsyncRequestCallback<Object>(new LoggedInHandler() {
 
-                                                                              @Override
-                                                                              public void onLoggedIn() {
-                                                                                  restartAppServer();
-                                                                              }
-                                                                          }) {
+                      @Override
+                      public void onLoggedIn() {
+                          restartAppServer();
+                      }
+                  }, null) {
 
-                                                                              @Override
-                                                                              protected void processFail(Throwable exception) {
-                                                                                  String message = AWSExtension.LOCALIZATION_CONSTANT
-                                                                                                               .restartAppServerFailed(
-                                                                                                                       environment.getId());
-                                                                                  if (exception instanceof ServerException &&
-                                                                                      ((ServerException)exception).getMessage() != null) {
-                                                                                      message += "<br>" +
-                                                                                                 ((ServerException)exception).getMessage();
-                                                                                  }
-                                                                                  Dialogs.getInstance().showError(message);
-                                                                              }
+                      @Override
+                      protected void processFail(Throwable exception) {
+                          String message = AWSExtension.LOCALIZATION_CONSTANT
+                                                       .restartAppServerFailed(
+                                                               environment.getId());
+                          if (exception instanceof ServerException &&
+                              ((ServerException)exception).getMessage() != null) {
+                              message += "<br>" +
+                                         ((ServerException)exception).getMessage();
+                          }
+                          Dialogs.getInstance().showError(message);
+                      }
 
-                                                                              @Override
-                                                                              protected void onSuccess(Object result) {
-                                                                                  IDE.getInstance().closeView(display.asView().getId());
-                                                                              }
-                                                                          });
+                      @Override
+                      protected void onSuccess(Object result) {
+                          IDE.getInstance().closeView(display.asView().getId());
+                      }
+                  });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

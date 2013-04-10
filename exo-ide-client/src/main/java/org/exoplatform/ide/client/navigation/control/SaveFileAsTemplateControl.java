@@ -28,7 +28,6 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -59,7 +58,6 @@ public class SaveFileAsTemplateControl extends SimpleControl implements IDEContr
         setTitle(TITLE);
         setPrompt(TITLE);
         setImages(IDEImageBundle.INSTANCE.saveFileAsTemplate(), IDEImageBundle.INSTANCE.saveFileAsTemplateDisabled());
-        setEvent(new SaveFileAsTemplateEvent());
         setGroupName(GroupNames.SAVE);
     }
 

@@ -120,42 +120,36 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentHandle
             AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
             AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
             BeanstalkClientService.getInstance().stopEnvironment(environment.getId(),
-                                                                 new AwsAsyncRequestCallback<EnvironmentInfo>(unmarshaller,
-                                                                                                              new LoggedInHandler() {
+                 new AwsAsyncRequestCallback<EnvironmentInfo>(unmarshaller,
+                                                              new LoggedInHandler() {
 
-                                                                                                                  @Override
-                                                                                                                  public void onLoggedIn() {
+                                                                  @Override
+                                                                  public void onLoggedIn() {
+                                                                      terminateEnvironment();
+                                                                  }
+                                                              }, null) {
 
+                     @Override
+                     protected void processFail(Throwable exception) {
+                         String message = AWSExtension.LOCALIZATION_CONSTANT
+                                                      .terminateEnvironmentFailed(
+                                                              environment.getId());
+                         if (exception instanceof ServerException &&
+                             ((ServerException)exception).getMessage() != null) {
+                             message += "<br>" + ((ServerException)exception).getMessage();
+                         }
+                         Dialogs.getInstance().showError(message);
+                     }
 
-
-
-
-
-                                                                                                                      terminateEnvironment();
-                                                                                                                  }
-                                                                                                              }) {
-
-                                                                     @Override
-                                                                     protected void processFail(Throwable exception) {
-                                                                         String message = AWSExtension.LOCALIZATION_CONSTANT
-                                                                                                      .terminateEnvironmentFailed(
-                                                                                                              environment.getId());
-                                                                         if (exception instanceof ServerException &&
-                                                                             ((ServerException)exception).getMessage() != null) {
-                                                                             message += "<br>" + ((ServerException)exception).getMessage();
-                                                                         }
-                                                                         Dialogs.getInstance().showError(message);
-                                                                     }
-
-                                                                     @Override
-                                                                     protected void onSuccess(EnvironmentInfo result) {
-                                                                         IDE.getInstance().closeView(display.asView().getId());
-                                                                         if (terminateEnvironmentStartedHandler != null) {
-                                                                             terminateEnvironmentStartedHandler
-                                                                                     .onTerminateEnvironmentStarted(environment);
-                                                                         }
-                                                                     }
-                                                                 });
+                     @Override
+                     protected void onSuccess(EnvironmentInfo result) {
+                         IDE.getInstance().closeView(display.asView().getId());
+                         if (terminateEnvironmentStartedHandler != null) {
+                             terminateEnvironmentStartedHandler
+                                     .onTerminateEnvironmentStarted(environment);
+                         }
+                     }
+                 });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

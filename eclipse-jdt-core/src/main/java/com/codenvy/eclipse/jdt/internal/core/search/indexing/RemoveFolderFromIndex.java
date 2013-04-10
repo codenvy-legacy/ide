@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.codenvy.eclipse.jdt.internal.core.search.indexing;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.codenvy.eclipse.core.resources.IProject;
 import com.codenvy.eclipse.core.runtime.IPath;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
@@ -36,7 +37,7 @@ class RemoveFolderFromIndex extends IndexRequest {
     }
 
     public boolean execute(IProgressMonitor progressMonitor) {
-        ConversationState.setCurrent(state);
+        EnvironmentContext.setCurrent(context);
         if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
 
 		/* ensure no concurrent write access to index */
