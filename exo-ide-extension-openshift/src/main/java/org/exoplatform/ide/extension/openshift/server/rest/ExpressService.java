@@ -122,7 +122,7 @@ public class ExpressService {
                                           (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
         Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
-        List<Property> properties = new ArrayList<Property>(2);
+        List<Property> properties = new ArrayList<Property>(1);
         properties.add(isGitRepositoryProperty);
         vfs.updateItem(projectId, properties, null);
         
