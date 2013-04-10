@@ -121,16 +121,16 @@ public class ExpressService {
                                           instanceType,
                                           (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
-        Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
-        List<Property> properties = new ArrayList<Property>(1);
-        properties.add(isGitRepositoryProperty);
-        vfs.updateItem(projectId, properties, null);
-        
-        if (projectId != null) {
-            Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-            LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
-                     + "# PAAS#OpenShift#");
+        Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+        String value = project.getPropertyValue("isGitRepository");
+        if (!value.equals("true")) {
+            Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
+            List<Property> properties = new ArrayList<Property>(1);
+            properties.add(isGitRepositoryProperty);
+            vfs.updateItem(projectId, properties, null);
         }
+        LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+                 + "# PAAS#OpenShift#");
         return application;
     }
 
