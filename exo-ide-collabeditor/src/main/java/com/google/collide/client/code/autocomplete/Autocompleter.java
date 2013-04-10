@@ -451,7 +451,7 @@ public class Autocompleter implements ContentAssistant {
         int offset = getOffset(document);
         CompletionProposal[] proposals = contentAssistProcessor.computeCompletionProposals(exoEditor, offset);
         if (proposals != null && proposals.length > 0) {
-            if (proposals.length == 1 && !popup.isShowing()) {
+            if (proposals.length == 1 && !popup.isShowing() && proposals[0].isAutoInsertable()) {
                 onSelectCommand.scheduleAutocompletion(proposals[0]);
                 return;
             }

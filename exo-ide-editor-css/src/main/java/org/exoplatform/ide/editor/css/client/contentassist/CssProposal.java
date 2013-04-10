@@ -192,7 +192,7 @@ public class CssProposal implements CompletionProposal {
     /** @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable() */
     @Override
     public boolean isAutoInsertable() {
-        return true;
+        return false;
     }
 
 }
