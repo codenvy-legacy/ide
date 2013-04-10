@@ -35,7 +35,7 @@ public class DtoImplClientTemplate extends DtoImpl {
                                                     ".RoutableDtoClientImpl";
 
 
-    private static final String JSO_TYPE = "org.exoplatform.ide.json.client.Jso";
+    private static final String JSO_TYPE = "com.codenvy.ide.json.client.Jso";
 
     private static boolean isEnum(Class<?> type) {
         return type != null && (type.equals(Enum.class) || isEnum(type.getSuperclass()));

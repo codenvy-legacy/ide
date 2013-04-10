@@ -203,7 +203,7 @@ public class DtoTemplate {
         builder.append(packageName);
         builder.append(";\n\n");
         if (isServerType) {
-            builder.append("import org.exoplatform.ide.dtogen.server.JsonSerializable;\n");
+            builder.append("import com.codenvy.ide.dtogen.server.JsonSerializable;\n");
             builder.append("\n");
             builder.append("import com.google.gson.Gson;\n");
             builder.append("import com.google.gson.GsonBuilder;\n");
