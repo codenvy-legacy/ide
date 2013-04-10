@@ -49,7 +49,7 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
 
     private static final String PROMPT = "Close Project";
 
-    private boolean projectExplorerSelected = false;
+    private boolean navigationViewSelected = false;
 
     /**
      *
@@ -94,7 +94,7 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
     @Override
     public void onItemsSelected(ItemsSelectedEvent event) {
 
-        if (projectExplorerSelected && !event.getSelectedItems().isEmpty()) {
+        if (navigationViewSelected && !event.getSelectedItems().isEmpty()) {
             setShowInContextMenu(event.getSelectedItems().get(0) instanceof ProjectModel);
         } else {
             setShowInContextMenu(false);
@@ -105,7 +105,7 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
      * .ui.api.event.ViewActivatedEvent) */
     @Override
     public void onViewActivated(ViewActivatedEvent event) {
-        projectExplorerSelected = event.getView() instanceof ProjectExplorerDisplay;
+        navigationViewSelected = event.getView() instanceof ProjectExplorerDisplay || event.getView() instanceof PackageExplorerDisplay;
     }
 
 }

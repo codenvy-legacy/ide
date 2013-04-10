@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -48,6 +49,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.appfog.client.*;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.appfog.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.appfog.client.marshaller.InfrasUnmarshaller;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
@@ -109,6 +111,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
     private ProjectModel project;
 
     private DeployResultHandler deployResultHandler;
+
+    private InitializeDeployViewHandler initializeDeployViewHandler;
 
     public DeployApplicationPresenter() {
         IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -291,6 +295,12 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                 getInfras(server);
             }
         };
+        LoginCanceledHandler loginCanceledHandler = new LoginCanceledHandler() {
+            @Override
+            public void onLoginCanceled() {
+                initializeDeployViewHandler.onInitializeDeployViewError();
+            }
+        };
 
         try {
             AppfogClientService.getInstance().infras(
@@ -298,7 +308,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                     null,
                     null,
                     new AppfogAsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
-                                                                      getInfrasHandler, null, server) {
+                                                                      getInfrasHandler, loginCanceledHandler, server) {
                         @Override
                         protected void onSuccess(List<InfraDetail> result) {
                             if (result.isEmpty()) {
@@ -394,9 +404,14 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
         }
     }
 
+    /**
+     * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
+     *      org.exoplatform.ide.client.framework.project.ProjectType, org.exoplatform.ide.client.framework.paas.InitializeDeployViewHandler)
+     */
     @Override
-    public Composite getDeployView(String projectName, ProjectType projectType) {
+    public Composite getDeployView(String projectName, ProjectType projectType, InitializeDeployViewHandler initializeDeployViewHandler) {
         this.projectName = projectName;
+        this.initializeDeployViewHandler = initializeDeployViewHandler;
         if (display == null) {
             display = GWT.create(Display.class);
         }

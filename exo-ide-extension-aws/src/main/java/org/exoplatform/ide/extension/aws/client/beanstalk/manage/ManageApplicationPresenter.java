@@ -42,7 +42,12 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.*;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -458,111 +463,31 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
     private void deleteApplication(final String applicationName) {
         try {
             BeanstalkClientService.getInstance().deleteApplication(vfs.getId(), project.getId(),
-                                                                   new AwsAsyncRequestCallback<Object>(new LoggedInHandler() {
-
-                                                                       @Override
-                                                                       public void onLoggedIn() {
-                                                                           deleteApplication(applicationName);
-                                                                       }
-                                                                   }) {
-                                                                       @Override
-                                                                       protected void processFail(Throwable exception) {
-                                                                           String message = AWSExtension.LOCALIZATION_CONSTANT
-                                                                                                        .deleteApplicationFailed(
-                                                                                                                applicationName);
-                                                                           if (exception instanceof ServerException &&
-                                                                               ((ServerException)exception).getMessage() != null) {
-                                                                               message +=
-                                                                                       "<br>" + ((ServerException)exception).getMessage();
-                                                                           }
-                                                                           IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-                                                                       }
-
-                                                                       @Override
-                                                                       protected void onSuccess(Object result) {
-                                                                           IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                                                                                     .deleteApplicationSuccess(
-
-                                                                                                                             applicationName),
-                                                                                                         Type.INFO));
-                                                                           if (display != null) {
-                                                                               IDE.getInstance().closeView(display.asView().getId());
-                                                                           }
-                                                                       }
-                                                                   });
+               new AwsAsyncRequestCallback<Object>(new LoggedInHandler() {
+
+                   @Override
+                   public void onLoggedIn() {
+                       deleteApplication(applicationName);
+                   }
+               }, null) {
+                   @Override
+                   protected void processFail(Throwable exception) {
+                       String message = AWSExtension.LOCALIZATION_CONSTANT.deleteApplicationFailed(applicationName);
+                       if (exception instanceof ServerException &&
+                           ((ServerException)exception).getMessage() != null) {
+                           message += "<br>" + ((ServerException)exception).getMessage();
+                       }
+                       IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                   }
+
+                   @Override
+                   protected void onSuccess(Object result) {
+                       IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(applicationName), Type.INFO));
+                       if (display != null) {
+                           IDE.getInstance().closeView(display.asView().getId());
+                       }
+                   }
+               });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }
@@ -582,7 +507,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
                                                                      public void onLoggedIn() {
                                                                          getApplicationInfo();
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {
@@ -624,13 +549,13 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
                     vfs.getId(),
                     project.getId(),
                     new AwsAsyncRequestCallback<List<ApplicationVersionInfo>>(new ApplicationVersionListUnmarshaller(),
-                                                                              new LoggedInHandler() {
+                          new LoggedInHandler() {
 
-                                                                                  @Override
-                                                                                  public void onLoggedIn() {
-                                                                                      getVersions();
-                                                                                  }
-                                                                              }) {
+                              @Override
+                              public void onLoggedIn() {
+                                  getVersions();
+                              }
+                          }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {
@@ -653,13 +578,13 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
                     vfs.getId(),
                     project.getId(),
                     new AwsAsyncRequestCallback<List<EnvironmentInfo>>(new EnvironmentsInfoListUnmarshaller(),
-                                                                       new LoggedInHandler() {
+                           new LoggedInHandler() {
 
-                                                                           @Override
-                                                                           public void onLoggedIn() {
-                                                                               getEnvironments();
-                                                                           }
-                                                                       }) {
+                               @Override
+                               public void onLoggedIn() {
+                                   getEnvironments();
+                               }
+                           }, null) {
 
                         @Override
                         protected void processFail(Throwable exception) {
@@ -684,47 +609,42 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
     private void getLogs(final EnvironmentInfo environment) {
         try {
             BeanstalkClientService.getInstance().getEnvironmentLogs(environment.getId(),
-                                                                    new AwsAsyncRequestCallback<List<InstanceLog>>(
-                                                                            new EnvironmentsLogListUnmarshaller(), new LoggedInHandler() {
+                new AwsAsyncRequestCallback<List<InstanceLog>>(
+                        new EnvironmentsLogListUnmarshaller(), new LoggedInHandler() {
 
-                                                                        @Override
-                                                                        public void onLoggedIn() {
-                                                                            getLogs(environment);
-                                                                        }
-                                                                    }) {
+                    @Override
+                    public void onLoggedIn() {
+                        getLogs(environment);
+                    }
+                }, null) {
 
-                                                                        @Override
-                                                                        protected void processFail(Throwable exception) {
-                                                                            String message = AWSExtension.LOCALIZATION_CONSTANT
-                                                                                                         .logsEnvironmentFailed(
-                                                                                                                 environment.getName());
-                                                                            if (exception instanceof ServerException &&
-                                                                                ((ServerException)exception).getMessage() != null) {
-                                                                                message +=
-                                                                                        "<br>" + ((ServerException)exception).getMessage();
-                                                                            }
-                                                                            Dialogs.getInstance().showError(message);
-                                                                        }
+                    @Override
+                    protected void processFail(Throwable exception) {
+                        String message = AWSExtension.LOCALIZATION_CONSTANT
+                                                     .logsEnvironmentFailed(
+                                                             environment.getName());
+                        if (exception instanceof ServerException &&
+                            ((ServerException)exception).getMessage() != null) {
+                            message += "<br>" + ((ServerException)exception).getMessage();
+                        }
+                        Dialogs.getInstance().showError(message);
+                    }
 
-                                                                        @Override
-                                                                        protected void onSuccess(List<InstanceLog> result) {
-                                                                            if (result.size() == 0) {
-                                                                                Dialogs.getInstance().showInfo(
-                                                                                        AWSExtension.LOCALIZATION_CONSTANT.logsPreparing());
-                                                                                return;
-                                                                            }
+                    @Override
+                    protected void onSuccess(List<InstanceLog> result) {
+                        if (result.size() == 0) {
+                            Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.logsPreparing());
+                            return;
+                        }
 
-                                                                            StringBuffer message = new StringBuffer();
-                                                                            for (InstanceLog instanceLog : result) {
-                                                                                message.append(getUrl(instanceLog)).append("\n");
-                                                                            }
-                                                                            IDE.fireEvent(new OutputEvent(message.toString(),
-                                                                                                          OutputMessage.Type.INFO));
-                                                                            Dialogs.getInstance().showInfo(
-                                                                                    AWSExtension.LOCALIZATION_CONSTANT
-                                                                                                .seeOutputForLinkToLog());
-                                                                        }
-                                                                    });
+                        StringBuffer message = new StringBuffer();
+                        for (InstanceLog instanceLog : result) {
+                            message.append(getUrl(instanceLog)).append("\n");
+                        }
+                        IDE.fireEvent(new OutputEvent(message.toString(), OutputMessage.Type.INFO));
+                        Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.seeOutputForLinkToLog());
+                    }
+                });
         } catch (RequestException e) {
             IDE.fireEvent(new ExceptionThrownEvent(e));
         }

@@ -47,8 +47,8 @@
         }
     </ui:style>
 
-    <g:DockLayoutPanel unit="PCT">
-        <g:north size="33">
+    <g:SplitLayoutPanel>
+        <g:north size="130">
             <g:ScrollPanel addStyleNames="{style.participantsPanel}" ui:field="participantsPanel"/>
         </g:north>
         <g:center>
@@ -65,5 +65,5 @@
                 </g:south>
             </g:DockLayoutPanel>
         </g:center>
-    </g:DockLayoutPanel>
+    </g:SplitLayoutPanel>
 </ui:UiBinder> 

@@ -120,7 +120,7 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentHandler, V
                                                                         public void onLoggedIn() {
                                                                             rebuildEnvironment();
                                                                         }
-                                                                    }) {
+                                                                    }, null) {
 
                                                                         @Override
                                                                         protected void processFail(Throwable exception) {

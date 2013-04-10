@@ -262,7 +262,7 @@ public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClos
                                                                      public void onLoggedIn() {
                                                                          deployVersion();
                                                                      }
-                                                                 }) {
+                                                                 }, null) {
 
                         @Override
                         protected void onSuccess(EnvironmentInfo result) {
@@ -301,7 +301,7 @@ public class DeployVersionPresenter implements ProjectOpenedHandler, ProjectClos
                                                                            public void onLoggedIn() {
                                                                                getEnvironments();
                                                                            }
-                                                                       }) {
+                                                                       }, null) {
 
                         @Override
                         protected void onSuccess(List<EnvironmentInfo> result) {
