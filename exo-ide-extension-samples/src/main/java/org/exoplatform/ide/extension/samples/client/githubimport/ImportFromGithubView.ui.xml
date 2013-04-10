@@ -57,7 +57,7 @@
 					addStyleNames="{style.floatLeft} {style.label}"></g:Label>
 				<f:ComboBoxField ui:field="accountNameBox"
 					addStyleNames="{style.floatLeft}" height="20px" pickListHeight="100"
-					width="325px"></f:ComboBoxField>
+					width="355px"></f:ComboBoxField>
 			</g:FlowPanel>
 		</g:layer>
 		<g:layer top="30px" bottom="55px">
@@ -79,7 +79,7 @@
 		   <g:FlowPanel stylePrimaryName="{style.indents10}">
 				<f:Label text="{locale.projectName}" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
 				<f:TextInput ui:field="projectNameField" addStyleNames="{style.floatLeft} {style.border}"
-					width="335px" height="20px"></f:TextInput>
+					width="367px" height="20px"></f:TextInput>
 			</g:FlowPanel>
 		</g:layer>			
 		<g:layer height="22px" bottom="8">
