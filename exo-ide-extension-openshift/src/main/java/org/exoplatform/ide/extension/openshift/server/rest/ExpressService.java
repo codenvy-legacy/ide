@@ -123,7 +123,7 @@ public class ExpressService {
 
         Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
         String value = project.getPropertyValue("isGitRepository");
-        if (!value.equals("true")) {
+        if (value == null || !value.equals("true")) {
             Property isGitRepositoryProperty = new PropertyImpl("isGitRepository", "true");
             List<Property> properties = new ArrayList<Property>(1);
             properties.add(isGitRepositoryProperty);
