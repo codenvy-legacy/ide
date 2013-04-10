@@ -66,7 +66,7 @@ public class GitIgnoreConfigChecker implements Startable {
 
             final String fileContent = readFileContent(file.getAbsolutePath());
             final String data = getCodenvyIgnoreSectionContent();
-            if (!fileContent.contains(data)) {
+            if (!fileContent.contains(".vfs/")) {
                 writeFileContent(file.getAbsolutePath(), data, true);
             }
         } catch (IOException e) {
