@@ -21,6 +21,7 @@ package com.codenvy.ide.menu;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.DataResource;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Resources of menu.
@@ -44,10 +45,16 @@ public interface MenuResources extends ClientBundle {
         String hotKey();
 
         String itemContainer();
+
+        String toolbarHorizontal();
     }
 
     @Source({"com/codenvy/ide/menu/Menu.css", "com/codenvy/ide/common/constants.css", "com/codenvy/ide/api/ui/style.css"})
     ToolbarCSS menuCSS();
+
+    @Source("toolbar-background.png")
+    @ImageResource.ImageOptions(repeatStyle= ImageResource.RepeatStyle.Horizontal)
+    ImageResource toolbarBackground();
 
     @Source("com/codenvy/ide/menu/check.png")
     DataResource checkIcon();

@@ -38,12 +38,14 @@ import com.google.web.bindery.event.shared.EventBus;
  * @version $Id:
  */
 @Singleton
-public class OutlinePartPrenter extends AbstractPartPresenter implements ActivePartChangedHandler, OutlinePart {
+public class OutlinePartPresenter extends AbstractPartPresenter implements ActivePartChangedHandler, OutlinePart {
 
     public interface OutlinePartView extends IsWidget {
         AcceptsOneWidget getContainer();
 
         void showNoOutline();
+
+        void setTitle(String title);
     }
 
     private final OutlinePartView view;
@@ -54,9 +56,10 @@ public class OutlinePartPrenter extends AbstractPartPresenter implements ActiveP
      *
      */
     @Inject
-    public OutlinePartPrenter(OutlinePartView view, EventBus eventBus) {
+    public OutlinePartPresenter(OutlinePartView view, EventBus eventBus) {
         this.view = view;
         eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
+        view.setTitle("Outline");
     }
 
     /** {@inheritDoc} */

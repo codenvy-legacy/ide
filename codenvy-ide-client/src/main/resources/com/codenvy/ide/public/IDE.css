@@ -119,3 +119,29 @@ body {
 .gwt-Button[disabled] img {
     opacity: 0.7;
 }
+
+.gwt-MenuBar-horizontal{
+    background: url("menu-background.png") repeat-x scroll 0 0 #FFFFFF;
+    border: 0px solid #BBBBBB;
+}
+.gwt-MenuItem-selected{
+    background: url("menu-item-selected.png") repeat-x scroll 0 0 #FFFFFF;
+    color: #333333;
+}
+.hsplitter, .gwt-SplitLayoutPanel-HDragger {
+    background: #91C0EF url(vsplit.png) repeat-y !important;
+}
+
+.vsplitter, .gwt-SplitLayoutPanel-VDragger {
+    background: #91C0EF url(hsplit.png) repeat-x !important;
+}
+
+.gwt-MenuItem{
+    cursor: default;
+    font-family: Verdana,Bitstream Vera Sans,sans-serif !important;
+    font-size: 11px !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    color: #333333 !important;
+    padding: 0 5px !important;
+}

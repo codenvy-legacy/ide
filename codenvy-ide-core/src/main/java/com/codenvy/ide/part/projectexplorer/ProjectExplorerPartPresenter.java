@@ -55,6 +55,7 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
     public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus) {
         this.view = view;
         this.eventBus = eventBus;
+        view.setTitle("Project");
         bind();
     }
 

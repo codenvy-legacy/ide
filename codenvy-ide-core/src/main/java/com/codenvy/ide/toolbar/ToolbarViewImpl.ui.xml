@@ -1,5 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    <g:MenuBar ui:field="menu" focusOnHoverEnabled="false"/>
+    <g:MenuBar ui:field="menu" focusOnHoverEnabled="false" autoOpen="false"/>
 </ui:UiBinder> 

@@ -39,6 +39,7 @@ public class ConsolePartPresenter extends AbstractPartPresenter implements Conso
     @Inject
     public ConsolePartPresenter(ConsolePartView view) {
         this.view = view;
+        view.setTitle(TITLE);
         this.view.setDelegate(this);
     }
 

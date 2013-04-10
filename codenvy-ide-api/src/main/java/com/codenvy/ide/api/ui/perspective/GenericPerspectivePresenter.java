@@ -19,6 +19,7 @@ package com.codenvy.ide.api.ui.perspective;
 import com.codenvy.ide.api.parts.ConsolePart;
 import com.codenvy.ide.api.parts.OutlinePart;
 import com.codenvy.ide.api.parts.ProjectExplorerPart;
+import com.codenvy.ide.api.parts.SearchPart;
 import com.codenvy.ide.api.parts.WelcomePart;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -35,6 +36,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class GenericPerspectivePresenter extends PerspectivePresenter {
+    private GenericPerspectiveView view;
+
     /**
      * Instantiate the Perspective
      *
@@ -49,12 +52,32 @@ public class GenericPerspectivePresenter extends PerspectivePresenter {
     @Inject
     public GenericPerspectivePresenter(GenericPerspectiveView view, EditorPartStack editorPartStackPresenter,
                                        Provider<PartStack> partStackProvider, OutlinePart outlinePart, ConsolePart consolePart,
-                                       ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart) {
+                                       ProjectExplorerPart projectExplorerPart, WelcomePart welcomePart, SearchPart searchPart) {
         super(view, editorPartStackPresenter, partStackProvider);
+        this.view = view;
         // show required parts
         openPart(welcomePart, PartStackType.EDITING);
         openPart(projectExplorerPart, PartStackType.NAVIGATION);
         openPart(outlinePart, PartStackType.TOOLING);
         openPart(consolePart, PartStackType.INFORMATION);
+        openPart(searchPart, PartStackType.INFORMATION);
+    }
+
+    @Override
+    public void openPart(PartPresenter part, PartStackType type) {
+        PartStack destPartStack = partStacks.get(type.toString());
+        destPartStack.addPart(part);
+        if(type == PartStackType.NAVIGATION)
+        {
+            view.splitPanel.setWidgetSize(view.navPanel, 240);
+        }
+        if(type == PartStackType.TOOLING)
+        {
+            view.splitPanel.setWidgetSize(view.toolPanel, 240);
+        }
+        if(type == PartStackType.INFORMATION)
+        {
+            view.splitPanel.setWidgetSize(view.infoPanel, 240);
+        }
     }
 }

@@ -19,6 +19,7 @@ package com.codenvy.ide.part.projectexplorer;
 import elemental.html.DragEvent;
 
 import com.codenvy.ide.Resources;
+import com.codenvy.ide.part.view.BaseView;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.tree.FileTreeNodeRenderer;
 import com.codenvy.ide.tree.ResourceTreeNodeDataAdapter;
@@ -35,7 +36,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ProjectExplorerViewImpl implements ProjectExplorerView {
+public class ProjectExplorerViewImpl extends BaseView<ProjectExplorerView.ActionDelegate> implements ProjectExplorerView {
     protected Tree<Resource> tree;
 
     protected ActionDelegate delegate;
@@ -47,14 +48,16 @@ public class ProjectExplorerViewImpl implements ProjectExplorerView {
      */
     @Inject
     public ProjectExplorerViewImpl(Resources resources) {
+        super(resources);
         tree = Tree.create(resources, new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources));
+        container.add(tree);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Widget asWidget() {
-        return tree.asWidget();
-    }
+//    /** {@inheritDoc} */
+//    @Override
+//    public Widget asWidget() {
+//        return tree.asWidget();
+//    }
 
     /** {@inheritDoc} */
     @Override

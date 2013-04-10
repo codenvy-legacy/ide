@@ -35,6 +35,8 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
      */
     void setItems(Resource resource);
 
+    void setTitle(String title);
+
     /** Needs for delegate some function into ProjectTree view. */
     public interface ActionDelegate {
         /**

@@ -75,4 +75,5 @@ public interface PartStack extends Presenter {
      */
     public void setActivePart(PartPresenter part);
 
+    void setType(PerspectivePresenter.PartStackType type);
 }

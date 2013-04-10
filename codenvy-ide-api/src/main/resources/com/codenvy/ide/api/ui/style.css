@@ -1,10 +1,10 @@
 @CHARSET "UTF-8";
 /*Tabs*/
-@def tabBorder #D0D0D0;
-@def inactiveTabBackground #F0F0F0;
-@def activeTabBackground #FFFFFF;
-@def tabsPanelBackground #DDDDDD;
-@def highlightFocus #B6CCE8;
+@def tabBorder #bdbdbd;
+@def inactiveTabBackground #d6d6d6;
+@def activeTabBackground #ffffff;
+@def tabsPanelBackground #f6f6f6;
+@def highlightFocus #ffffff;
 
 @def hoverBackgroundColor #eee;
 @def lightTextColor #999;

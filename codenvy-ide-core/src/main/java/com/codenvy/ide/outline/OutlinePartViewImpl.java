@@ -18,11 +18,12 @@
  */
 package com.codenvy.ide.outline;
 
-import com.codenvy.ide.outline.OutlinePartPrenter.OutlinePartView;
+import com.codenvy.ide.outline.OutlinePartPresenter.OutlinePartView;
+import com.codenvy.ide.part.PartStackUIResources;
+import com.codenvy.ide.part.view.BaseView;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 
@@ -30,24 +31,27 @@ import com.google.inject.Inject;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class OutlinePartViewImpl implements OutlinePartView {
+public class OutlinePartViewImpl extends BaseView<OutlinePartView> implements OutlinePartView {
 
     private SimplePanel container;
 
     private Label noOutline;
 
     @Inject
-    public OutlinePartViewImpl() {
+    public OutlinePartViewImpl(PartStackUIResources resources) {
+
+        super(resources);
         //TODO extract message constant
         noOutline = new Label("An outline is not available.");
         container = new SimplePanel();
+        super.container.add(container);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Widget asWidget() {
-        return container;
-    }
+//    /** {@inheritDoc} */
+//    @Override
+//    public Widget asWidget() {
+//        return container;
+//    }
 
     /** {@inheritDoc} */
     @Override
@@ -62,4 +66,8 @@ public class OutlinePartViewImpl implements OutlinePartView {
         return container;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void setDelegate(OutlinePartView delegate) {
+    }
 }

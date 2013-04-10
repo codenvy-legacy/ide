@@ -16,25 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.part.console;
+package com.codenvy.ide.api.parts;
 
-import com.codenvy.ide.api.mvp.View;
+import com.codenvy.ide.api.extension.SDK;
+import com.codenvy.ide.api.ui.perspective.PartPresenter;
 
 /**
- * View of {@link ConsolePartPresenter}.
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public interface ConsolePartView extends View<ConsolePartView.ActionDelegate> {
-    public interface ActionDelegate {
-    }
-
-    /**
-     * Print message in console area.
-     *
-     * @param message
-     */
-    public void print(String message);
-
-    public void setTitle(String title);
+@SDK(title = "ide.api.ui.search")
+public interface SearchPart extends PartPresenter {
 }

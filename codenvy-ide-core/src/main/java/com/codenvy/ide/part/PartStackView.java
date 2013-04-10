@@ -10,10 +10,16 @@ import com.google.gwt.user.client.ui.Image;
 
 /** PartStack View interface */
 public interface PartStackView extends View<PartStackView.ActionDelegate> {
+
+    void setTabPosition(TabPosition tabPosition);
+
     /** Tab which can be clicked and closed */
     public interface TabItem extends HasCloseHandlers<PartStackView.TabItem>, HasClickHandlers {
     }
 
+    public enum TabPosition{
+        ABOVE, BELOW, LEFT, RIGHT
+    }
     /** Add Tab */
     public PartStackView.TabItem addTabButton(Image icon, String title, String toolTip, boolean closable);
 

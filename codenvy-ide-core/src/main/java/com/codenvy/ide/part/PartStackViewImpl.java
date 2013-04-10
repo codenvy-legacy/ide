@@ -19,6 +19,8 @@ package com.codenvy.ide.part;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -29,8 +31,18 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
+import static com.codenvy.ide.part.PartStackView.TabPosition.ABOVE;
+import static com.codenvy.ide.part.PartStackView.TabPosition.BELOW;
 
 
 /**
@@ -40,34 +52,22 @@ import com.google.inject.Inject;
  */
 public class PartStackViewImpl extends Composite implements PartStackView {
     private static PartStackUiBinder uiBinder = GWT.create(PartStackUiBinder.class);
-
-    private ActionDelegate delegate;
-
     private final PartStackUIResources resources;
-
-    private TabButton activeTab;
-
-    private boolean focused;
-
     // DOM Handler
     private final FocusRequstDOMHandler focusRequstHandler = new FocusRequstDOMHandler();
-
-    private HandlerRegistration focusRequstHandlerRegistration;
-
     // list of tabs
-    private final JsonArray<TabButton> tabs = JsonCollections.createArray();
-
+    private final JsonArray<TabButton>  tabs               = JsonCollections.createArray();
     @UiField
     DockLayoutPanel parent;
-
     @UiField
-    FlowPanel tabsPanel;
-
+    FlowPanel       tabsPanel;
     @UiField
-    SimplePanel contentPanel;
-
-    interface PartStackUiBinder extends UiBinder<Widget, PartStackViewImpl> {
-    }
+    SimplePanel     contentPanel;
+    private ActionDelegate      delegate;
+    private TabButton           activeTab;
+    private boolean             focused;
+    private HandlerRegistration focusRequstHandlerRegistration;
+    private TabPosition         tabPosition;
 
     /**
      * Create View
@@ -84,6 +84,77 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
 
         addFocusRequestHandler();
+        //DEFAULT
+        tabPosition = ABOVE;
+    }
+
+    @Override
+    public void setTabPosition(TabPosition tabPosition) {
+        this.tabPosition = tabPosition;
+        if (tabPosition == ABOVE)
+            return;
+        parent.clear();
+        switch (tabPosition) {
+            case BELOW:
+                parent.addSouth(tabsPanel, 22);
+                updateBelowTabs();
+                break;
+            case LEFT:
+                parent.addWest(tabsPanel, 22);
+                updateLeftTabs();
+                break;
+            case RIGHT:
+                parent.addEast(tabsPanel, 22);
+                updateRightTabs();
+                break;
+        }
+        parent.add(contentPanel);
+
+    }
+
+    private void updateBelowTabs() {
+        for (TabButton tabItem : tabs.asIterable()) {
+            tabItem.setStyleName(resources.partStackCss().idePartStackTabBelow());
+        }
+    }
+
+    private void updateRightTabs() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                int top = 16;
+                for (TabButton tabItem : tabs.asIterable()) {
+                    tabItem.getElement().getStyle().setHeight(16, Style.Unit.PX);
+                    tabItem.getElement().getStyle().setWidth(tabItem.offsetWidth, Style.Unit.PX);
+                    tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);
+                    tabItem.addStyleName(resources.partStackCss().idePartStackTabRight());
+                    top += tabItem.offsetWidth - 16;
+
+                }
+            }
+        });
+    }
+
+    private void updateLeftTabs() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                int top = 0;
+                boolean first = true;
+                for (TabButton tabItem : tabs.asIterable()) {
+                    tabItem.getElement().getStyle().setHeight(16, Style.Unit.PX);
+                    if (first) {
+                        top += tabItem.offsetWidth + 8;
+                        first = false;
+                    } else {
+                        top += tabItem.offsetWidth - 16;
+                    }
+                    tabItem.getElement().getStyle().setWidth(tabItem.offsetWidth, Style.Unit.PX);
+                    tabItem.getElement().getStyle().setTop(top, Style.Unit.PX);
+                    tabItem.addStyleName(resources.partStackCss().idePartStackTabLeft());
+                }
+            }
+        });
     }
 
     /** {@inheritDoc} */
@@ -114,12 +185,20 @@ public class PartStackViewImpl extends Composite implements PartStackView {
     @Override
     public void setActiveTabButton(int index) {
         if (activeTab != null) {
-            activeTab.removeStyleName(resources.partStackCss().idePartStackTabSelected());
+            if (tabPosition == BELOW) {
+                activeTab.removeStyleName(resources.partStackCss().idePartStackTabSelectedBelow());
+            } else {
+                activeTab.removeStyleName(resources.partStackCss().idePartStackTabSelected());
+            }
         }
 
         if (index >= 0 && index < tabs.size()) {
             activeTab = tabs.get(index);
-            activeTab.addStyleName(resources.partStackCss().idePartStackTabSelected());
+            if (tabPosition == BELOW) {
+                activeTab.addStyleName(resources.partStackCss().idePartStackTabSelectedBelow());
+            } else {
+                activeTab.addStyleName(resources.partStackCss().idePartStackTabSelected());
+            }
         }
     }
 
@@ -170,14 +249,16 @@ public class PartStackViewImpl extends Composite implements PartStackView {
         tabButton.setTitle(toolTip);
     }
 
+    interface PartStackUiBinder extends UiBinder<Widget, PartStackViewImpl> {
+    }
+
     /** Special button for tab title. */
     private class TabButton extends Composite implements PartStackView.TabItem {
 
-        private Image image;
-
-        private FlowPanel tabItem;
-
+        private Image       image;
+        private FlowPanel   tabItem;
         private InlineLabel tabItemTittle;
+        private int         offsetWidth;
 
         /**
          * Create button.
@@ -222,6 +303,12 @@ public class PartStackViewImpl extends Composite implements PartStackView {
                     CloseEvent.fire(TabButton.this, TabButton.this);
                 }
             });
+        }
+
+        @Override
+        protected void onLoad() {
+            super.onLoad();
+            offsetWidth = getElement().getOffsetWidth();
         }
     }
 

@@ -44,11 +44,30 @@ public interface PartStackUIResources extends ClientBundle {
 
         @ClassName("ide-PartStack-focused")
         String idePartStackFocused();
+
+        @ClassName("ide-PartStack-Tab-Left")
+        String idePartStackTabLeft();
+
+        @ClassName("ide-PartStack-Tab-Right")
+        String idePartStackTabRight();
+
+        @ClassName("ide-PartStack-Tab-Below")
+        String idePartStackTabBelow();
+
+        @ClassName("ide-PartStack-Tab-selected-Below")
+        String idePartStackTabSelectedBelow();
+
+        @ClassName("ide-Base-Part-Toolbar")
+        String ideBasePartToolbar();
     }
 
     @Source({"PartStack.css", "com/codenvy/ide/api/ui/style.css"})
     PartStackCss partStackCss();
 
     ImageResource close();
+
+    ImageResource minimize();
+
+    ImageResource settings();
 
 }

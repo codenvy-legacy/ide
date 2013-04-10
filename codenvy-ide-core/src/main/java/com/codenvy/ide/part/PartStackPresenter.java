@@ -51,24 +51,13 @@ import com.google.web.bindery.event.shared.EventBus;
 public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate, PartStack {
     /** list of parts */
     private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
-
     /** view implementation */
-    private final PartStackView view;
-
+    private final PartStackView                      view;
+    private final EventBus                           eventBus;
     /** current active part */
-    private PartPresenter activePart;
-
-    private PartStackEventHandler partStackHandler;
-
-    /** Handles PartStack actions */
-    public interface PartStackEventHandler {
-        /** PartStack is being clicked and requests Focus */
-        void onActivePartChanged(PartPresenter part);
-
-        /** PartStack is being clicked and requests Focus */
-        void onRequestFocus(PartStack partStack);
-    }
-
+    private       PartPresenter                      activePart;
+    private       PartStackEventHandler              partStackHandler;
+    private       PerspectivePresenter.PartStackType type;
     private PropertyListener propertyListener = new PropertyListener() {
 
         @Override
@@ -81,12 +70,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         }
     };
 
-    private final EventBus eventBus;
-
-    /**
-     * Creates PartStack with given instance of display and resources (CSS and Images)
-     *
-     */
+    /** Creates PartStack with given instance of display and resources (CSS and Images) */
     @Inject
     public PartStackPresenter(PartStackView view, EventBus eventBus,
                               PartStackEventHandler partStackEventHandler) {
@@ -112,9 +96,25 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     /** {@inheritDoc} */
     @Override
     public void go(AcceptsOneWidget container) {
+        view.setTabPosition(getTabPosition());
         container.setWidget(view);
         if (activePart != null) {
             activePart.go(view.getContentPanel());
+        }
+    }
+
+    private PartStackView.TabPosition getTabPosition() {
+        switch (type) {
+            case EDITING:
+                return PartStackView.TabPosition.ABOVE;
+            case NAVIGATION:
+                return PartStackView.TabPosition.LEFT;
+            case TOOLING:
+                return PartStackView.TabPosition.RIGHT;
+            case INFORMATION:
+                return PartStackView.TabPosition.BELOW;
+            default:
+                return PartStackView.TabPosition.ABOVE;
         }
     }
 
@@ -140,7 +140,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         ImageResource titleImage = part.getTitleImage();
         TabItem tabItem =
                 view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
-                                  true);
+                                  type == PerspectivePresenter.PartStackType.EDITING);
         bindEvents(tabItem, part);
         setActivePart(part);
         // requst focus
@@ -184,6 +184,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         onRequestFocus();
         // notify handler, that part changed
         partStackHandler.onActivePartChanged(activePart);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void setType(PerspectivePresenter.PartStackType type) {
+        this.type = type;
     }
 
     /**
@@ -235,5 +241,14 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
         // notify partStackHandler
         // notify handler, that part changed
         partStackHandler.onRequestFocus(PartStackPresenter.this);
+    }
+
+    /** Handles PartStack actions */
+    public interface PartStackEventHandler {
+        /** PartStack is being clicked and requests Focus */
+        void onActivePartChanged(PartPresenter part);
+
+        /** PartStack is being clicked and requests Focus */
+        void onRequestFocus(PartStack partStack);
     }
 }

@@ -2,5 +2,5 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <g:MenuBar ui:field="parentMenuBar" animationEnabled="true"
-               autoOpen="true"/>
+               autoOpen="false"/>
 </ui:UiBinder> 

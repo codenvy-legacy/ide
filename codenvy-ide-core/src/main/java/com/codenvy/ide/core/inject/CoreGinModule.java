@@ -51,7 +51,7 @@ import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
-import com.codenvy.ide.outline.OutlinePartPrenter;
+import com.codenvy.ide.outline.OutlinePartPresenter;
 import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.part.*;
@@ -68,6 +68,10 @@ import com.codenvy.ide.perspective.WorkspaceViewImpl;
 import com.codenvy.ide.preferences.PreferencesAgentImpl;
 import com.codenvy.ide.resources.ResourceProviderComponent;
 import com.codenvy.ide.resources.model.GenericModelProvider;
+import com.codenvy.ide.api.parts.SearchPart;
+import com.codenvy.ide.search.SearchPartPresenter;
+import com.codenvy.ide.search.SearchPartView;
+import com.codenvy.ide.search.SearchPartViewImpl;
 import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.template.TemplateService;
 import com.codenvy.ide.template.TemplateServiceImpl;
@@ -135,7 +139,8 @@ public class CoreGinModule extends AbstractGinModule {
         // Parts
         bind(ConsolePart.class).to(ConsolePartPresenter.class).in(Singleton.class);
         bind(WelcomePart.class).to(WelcomePartPresenter.class).in(Singleton.class);
-        bind(OutlinePart.class).to(OutlinePartPrenter.class).in(Singleton.class);
+        bind(OutlinePart.class).to(OutlinePartPresenter.class).in(Singleton.class);
+        bind(SearchPart.class).to(SearchPartPresenter.class).in(Singleton.class);
         bind(ProjectExplorerPart.class).to(ProjectExplorerPartPresenter.class).in(Singleton.class);
 
     }
@@ -150,7 +155,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
         bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
         bind(UserActivityManager.class).in(Singleton.class);
-        bind(OutlinePartPrenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
+        bind(OutlinePartPresenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
     }
 
     /** Configures binding for Resource API (Resource Manager) */
@@ -172,6 +177,7 @@ public class CoreGinModule extends AbstractGinModule {
         bind(PartStackView.class).to(PartStackViewImpl.class);
         bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
         bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
+        bind(SearchPartView.class).to(SearchPartViewImpl.class).in(Singleton.class);
 
         bind(NewGenericProjectPageView.class).to(NewGenericProjectPageViewImpl.class);
     }

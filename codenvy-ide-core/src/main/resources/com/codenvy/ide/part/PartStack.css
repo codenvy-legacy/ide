@@ -7,12 +7,20 @@
 .ide-PartStack .ide-PartStack-Tabs {
     /* panel where tab-buttons created*/
     background: tabsPanelBackground;
-    border-bottom: 1px solid tabBorder;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: tabBorder;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: tabBorder;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: tabBorder;
 }
 
 .ide-PartStack .ide-PartStack-Content {
     /* content panel */
-    border: 2px solid activeTabBackground;
+    /*border: 2px solid activeTabBackground;*/
     background-color: activeTabBackground;
 }
 
@@ -37,6 +45,7 @@
     /* margin between text and image */
     margin-right: 4px;
     margin-left: 4px;
+    white-space: nowrap;
 }
 
 .ide-PartStack .ide-PartStack-Tab img {
@@ -58,7 +67,7 @@
 .ide-PartStack .ide-PartStack-Tab-selected {
     /* tab that is currently selected (active) */
     cursor: default;
-    font-weight: bold;
+    /*font-weight: bold;*/
     padding: 3px;
     border-bottom: 2px solid activeTabBackground;
     background: activeTabBackground;
@@ -69,10 +78,80 @@
 }
 
 .ide-PartStack-focused .ide-PartStack-Content {
-    border: 2px solid highlightFocus;
+    /*border: 2px solid highlightFocus;*/
 }
 
 .ide-PartStack-focused .ide-PartStack-Tab-selected {
     background: highlightFocus;
     border-bottom: 2px solid highlightFocus;
+}
+
+.ide-PartStack-Tab-Left{
+    -webkit-transform: rotate(270deg);
+    -moz-transform: rotate(270deg);
+    transform: rotate(270deg);
+    writing-mode: lr-tb;
+    transform-origin: 8px 8px;
+    -webkit-transform-origin:8px 8px; /* Safari and Chrome */
+    -moz-transform-origin:8px 8px; /* Firefox */
+
+}
+
+.ide-PartStack-Tab-Right{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+    writing-mode: lr-tb;
+    transform-origin: 8px 8px;
+    -webkit-transform-origin:8px 8px; /* Safari and Chrome */
+    -moz-transform-origin:8px 8px; /* Firefox */
+
+}
+.ide-PartStack-Tab-Below {
+    /* tab button */
+    margin-left: 3px;
+    margin-bottom: 3px;
+    background: inactiveTabBackground;
+    border-radius: 0 0 4px 4px ;
+    -moz-border-radius: 0 0 4px 4px ;
+    -webkit-border-radius: 0 0 4px 4px ;
+    border: 1px solid tabBorder;
+    top: -2px;
+    cursor: pointer;
+    cursor: hand;
+    position: relative;
+    display: inline-block;
+    height: 15px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.ide-PartStack .ide-PartStack-Tab-selected-Below {
+    /* tab that is currently selected (active) */
+    cursor: default;
+    /*font-weight: bold;*/
+    /*padding: 3px;*/
+    border-top: 2px solid activeTabBackground;
+    background: activeTabBackground;
+}
+.ide-PartStack-focused .ide-PartStack-Tab-selected-Below {
+    background: highlightFocus;
+    border-top: 2px solid highlightFocus;
+}
+
+.ide-Base-Part-Toolbar{
+    background: -webkit-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    background: -o-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    background: -ms-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    background: -moz-linear-gradient(top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    background: linear-gradient(to bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(212, 212, 212) 100%);
+    /*background: -webkit-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
+    /*background: -o-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
+    /*background: -ms-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
+    /*background: -moz-linear-gradient(bottom, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
+    /*background: linear-gradient(to top, rgb(150, 150, 150) 0%, rgb(231, 231, 231) 4%, rgb(224, 224, 224) 39%, rgb(212, 212, 212) 100%);*/
+    padding-left: 3px;
+    padding-right: 5px;
+    /*border-left: 1px solid  rgb(150, 150, 150);*/
 }

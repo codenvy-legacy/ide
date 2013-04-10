@@ -73,7 +73,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView {
     public ToolbarViewImpl(MenuResources resources) {
         initWidget(uiBinder.createAndBindUi(this));
 
-        this.addStyleName(resources.menuCSS().menuHorizontal());
+        this.addStyleName(resources.menuCSS().toolbarHorizontal());
 
         this.resources = resources;
         this.menuItems = JsonCollections.createStringMap();

@@ -80,6 +80,7 @@ public abstract class PerspectivePresenter implements Presenter {
             // use global Editor Part Stack
             PartStack partStack =
                     (partStackType == PartStackType.EDITING) ? editorPartStackPresenter : partStackProvider.get();
+            partStack.setType(partStackType);
             partStacks.put(partStackType.toString(), partStack);
         }
 
